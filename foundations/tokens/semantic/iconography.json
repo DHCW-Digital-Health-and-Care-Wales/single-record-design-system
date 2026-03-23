@@ -1,0 +1,26 @@
+{
+  "sr": {
+    "icon": {
+      "size": {
+        "xs": { "$type": "dimension", "$value": "{icon.size.xs}", "$description": "16px — inline icons within dense content (dense stroke)" },
+        "sm": { "$type": "dimension", "$value": "{icon.size.sm}", "$description": "20px — standard inline icons (dense stroke)" },
+        "md": { "$type": "dimension", "$value": "{icon.size.md}", "$description": "24px — default icon size (standard stroke)" },
+        "lg": { "$type": "dimension", "$value": "{icon.size.lg}", "$description": "32px — prominent icons, empty states (standard stroke)" }
+      },
+      "stroke": {
+        "default": { "$type": "number", "$value": "{icon.stroke.default}", "$description": "2px stroke — applied at md and lg" },
+        "dense":   { "$type": "number", "$value": "{icon.stroke.dense}",   "$description": "1.75px stroke — applied at xs and sm" }
+      },
+      "color": {
+        "default":     { "$type": "color", "$value": "{sr.color.text.primary}",        "$description": "Default icon colour — matches primary text" },
+        "subtle":      { "$type": "color", "$value": "{sr.color.text.secondary}",      "$description": "Subdued icon — matches secondary text" },
+        "inverse":     { "$type": "color", "$value": "{sr.color.text.inverse}",        "$description": "Icon on dark or coloured surfaces" },
+        "interactive": { "$type": "color", "$value": "{sr.color.interactive.primary}", "$description": "Interactive icon (clickable, hoverable)" },
+        "critical":    { "$type": "color", "$value": "{sr.color.status.critical}",     "$description": "Critical / error state icon" },
+        "warning":     { "$type": "color", "$value": "{sr.color.status.warning}",      "$description": "Warning state icon" },
+        "success":     { "$type": "color", "$value": "{sr.color.status.success}",      "$description": "Success / confirmed state icon" },
+        "info":        { "$type": "color", "$value": "{sr.color.status.info}",         "$description": "Informational icon" }
+      }
+    }
+  }
+}

@@ -16,6 +16,7 @@ DDRs exist to:
 |---|---|---|---|
 | DDR-001 | 4px base spacing unit | Accepted | 2026-03-18 |
 | DDR-002 | WCAG 2.2 AA as mandatory baseline | Accepted | 2026-03-18 |
+| DDR-003 | Lucide as icon library | Accepted | 2026-03-23 |
 
 ---
 
