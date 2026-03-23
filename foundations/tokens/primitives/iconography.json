@@ -1,0 +1,18 @@
+{
+  "icon": {
+    "size": {
+      "xs": { "$type": "dimension", "$value": "16px", "$description": "Smallest inline icon — dense stroke (1.75)" },
+      "sm": { "$type": "dimension", "$value": "20px", "$description": "Small inline icon — dense stroke (1.75)" },
+      "md": { "$type": "dimension", "$value": "24px", "$description": "Default icon size — standard stroke (2)" },
+      "lg": { "$type": "dimension", "$value": "32px", "$description": "Large icon, e.g. empty-state illustrations — standard stroke (2)" }
+    },
+    "stroke": {
+      "default": { "$type": "number", "$value": 2,    "$description": "Standard stroke weight — used at md and lg sizes" },
+      "dense":   { "$type": "number", "$value": 1.75, "$description": "Dense stroke weight — used at xs and sm sizes to preserve legibility at small scale" }
+    },
+    "variant": {
+      "outline": { "$type": "string", "$value": "outline", "$description": "Default variant for all icons. Stroke only, no fill." },
+      "filled":  { "$type": "string", "$value": "filled",  "$description": "Reserved for navigation active states only. Filled variants are not assigned speculatively — each must be explicitly required by a navigation component." }
+    }
+  }
+}
