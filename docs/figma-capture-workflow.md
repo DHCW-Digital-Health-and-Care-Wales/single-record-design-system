@@ -63,7 +63,7 @@ In the VS Code Figma MCP panel, invoke:
 ```
 generate_figma_design
   source: http://127.0.0.1:3000/figma/{guide-name}/{guide-name}.html
-  target: https://www.figma.com/design/x5fwyefxxgD03csz8ld7SZ/...
+  target: https://www.figma.com/design/<FILE_KEY>/...
   page:   {target-page-node-id}
 ```
 
@@ -124,7 +124,7 @@ Typography and future guides may also get generator scripts as the token set gro
 | Item | Value |
 |---|---|
 | File | `SINGLE-RECORD-DS-FIGMA--WIP-` |
-| File key | `x5fwyefxxgD03csz8ld7SZ` |
+| File key | `<FILE_KEY>` — see `.mcp.json` (gitignored) |
 | Colours page | node `12:3270` |
 | Typography page | TBD — create page in Figma when capturing first typography guide |
 
