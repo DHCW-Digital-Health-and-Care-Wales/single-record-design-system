@@ -17,6 +17,16 @@
     "desktop": {
       "$description": "Desktop viewport — full experience with desktop semantic token variants",
       "min": { "$type": "dimension", "$value": "1024px", "$description": "Minimum width for desktop styles and desktop typography tokens. Use: @media (min-width: 1024px)" }
+    },
+
+    "large": {
+      "$description": "Large desktop — standard Blazor web app width. 12-column grid, 64px margin.",
+      "min": { "$type": "dimension", "$value": "1280px", "$description": "Minimum width for large desktop layouts. Use: @media (min-width: 1280px)" }
+    },
+
+    "xlarge": {
+      "$description": "Extra-large desktop — wide Blazor web app (1440px target). 12-column grid, 80px margin.",
+      "min": { "$type": "dimension", "$value": "1440px", "$description": "Minimum width for extra-large desktop layouts. Use: @media (min-width: 1440px)" }
     }
 
   }
