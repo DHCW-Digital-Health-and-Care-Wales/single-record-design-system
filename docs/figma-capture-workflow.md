@@ -1,20 +1,33 @@
-# Figma Capture Workflow — VS Code + Figma MCP
+# Figma Capture Workflow
 
-This guide covers the current workflow for converting design system HTML documentation pages into live Figma designs.
+This guide covers how to write design system content into the Figma file. Two methods are available; the direct MCP write method is now preferred for most tasks.
 
 ---
 
-## Why this workflow
+## Preferred method: direct Figma write via `use_figma`
 
-The Figma REST API and Figma MCP server are both **read-only** for design canvas content. Neither can write frames, shapes, or text into a Figma file remotely. The only write paths are:
+The `use_figma` MCP tool runs JavaScript directly in the Figma file via the Plugin API. It can create frames, text, shapes, components, and variables without any HTML file or live server.
 
-| Method | When available |
+**See [`figma/mcp-write-guide.md`](../figma/mcp-write-guide.md) for the full workflow**, including:
+- The page-switching pattern that works (`return promise.then(...)`)
+- Text and font constraints
+- Variables: create, update, delete, alias
+- Components from SVG
+- Guide page layout patterns
+
+---
+
+## Legacy method: HTML capture via VS Code + Figma MCP
+
+The HTML-to-design workflow is retained for cases where an HTML guide already exists and needs to be re-captured, or where a rich rendered layout is easier to author in HTML first.
+
+The Figma REST API and Figma MCP server are both **read-only** for design canvas content outside of `use_figma`. The only write paths are:
+
+| Method | When to use |
 |---|---|
-| Figma Plugin API | Requires Figma desktop app + plugin running inside Figma |
-| VS Code Figma MCP (`generate_figma_design`) | Available now — requires VS Code + Figma MCP extension |
-| REST API — Variables only | Colour/token pushes via `scripts/push-variables.js` |
-
-Until Node.js / CI is available for running the plugin headlessly, **VS Code with Figma MCP is the primary capture method.**
+| `use_figma` (MCP Plugin API) | Preferred — variables, components, guide pages, anything new |
+| VS Code Figma MCP (`generate_figma_design`) | Re-capturing existing HTML guides |
+| REST API — Variables only | Legacy token pushes via `scripts/push-variables.js` |
 
 ---
 
