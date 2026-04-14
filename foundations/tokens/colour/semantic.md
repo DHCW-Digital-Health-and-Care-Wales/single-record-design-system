@@ -46,11 +46,12 @@ Defined in Figma as **semantic colour variables**, aliased to primitive variable
 
 ## Border
 
-| Token | Maps to | Usage |
-|---|---|---|
-| `sr.color.border.default` | `grey.200` | Default borders |
-| `sr.color.border.strong` | `grey.600` | Dividers, section edges |
-| `sr.color.border.focus` | `focus-yellow` | Focus ring — all interactive elements |
+| Token | Light | Dark | Usage |
+|---|---|---|---|
+| `sr.color.border.subtle`  | `grey.100` (#f0f4f5) | `navy.700` (#464c64) | Row dividers and internal table separators. Use only where Default would be too prominent. |
+| `sr.color.border.default` | `grey.200` (#d8dde0) | `navy.500` (#707488) | Standard borders — inputs, cards, section dividers. |
+| `sr.color.border.strong`  | `grey.600` (#4c6272) | `navy.300` (#9ea1af) | High-contrast borders — active rows, structural dividers. |
+| `sr.color.border.focus`   | `focus-yellow` (#ffeb3b) | same | Focus ring. Pair with `Border/Width/Strong` (2px) and an inner dark ring. |
 
 ---
 

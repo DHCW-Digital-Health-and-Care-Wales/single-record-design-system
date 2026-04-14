@@ -1,0 +1,37 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$description": "DHCW Single Record Design System — Touch target size tokens. Establishes three tiers of interactive target sizing aligned to WCAG 2.2 AA requirements and the clinical-desktop context of the Single Record programme. Height (and equally width, for square targets) is the controlled dimension.",
+
+  "size": {
+    "touch": {
+      "$description": "Global touch target primitives. Raw values in the Primitives Figma variable collection. Scoped to WIDTH_HEIGHT.",
+      "24": { "$type": "dimension", "$value": "24px", "$description": "Global: WCAG 2.2 AA minimum (SC 2.5.8). Requires ≥10px inactive spacing on all sides." },
+      "32": { "$type": "dimension", "$value": "32px", "$description": "Global: desktop compact target. Desktop mouse contexts only." },
+      "44": { "$type": "dimension", "$value": "44px", "$description": "Global: WCAG 2.2 AAA (SC 2.5.5). Required for all touch interfaces." }
+    }
+  },
+
+  "touch": {
+    "$description": "Semantic touch target tokens. Alias tier in the Single Record Figma variable collection.",
+
+    "default": {
+      "$type": "dimension",
+      "$value": "{size.touch.44}",
+      "$description": "44px. WCAG 2.2 AAA (SC 2.5.5). REQUIRED for all MAUI (touch) interactive elements — no exceptions. Strongly recommended as the default for Blazor desktop. Use this unless a compact variant is explicitly justified."
+    },
+
+    "compact": {
+      "$type": "dimension",
+      "$value": "{size.touch.32}",
+      "$description": "32px. Desktop (Blazor) only — never use on MAUI. Permitted for secondary actions in genuinely dense layouts: row-level action icons, inline icon buttons in data tables. Requires documented rationale in the component spec. Must not be used for primary or destructive actions."
+    },
+
+    "minimum": {
+      "$type": "dimension",
+      "$value": "{size.touch.24}",
+      "$description": "24px. WCAG 2.2 AA floor (SC 2.5.8) — only valid with the spacing exception: the target must have ≥10px of inactive space on all sides (total interactive area ≥44px). Desktop only. Absolute last resort for extreme-density contexts such as icon-only action columns in data grids. Document the spacing justification in the component spec."
+    }
+
+  }
+
+}

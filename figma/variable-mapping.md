@@ -110,12 +110,13 @@ All semantic variables alias primitives — no raw hex values.
 | `SR/Text/Secondary` | `sr.color.text.secondary` | `color.grey.600` |
 | `SR/Text/Inverse` | `sr.color.text.inverse` | `color.white` |
 
-### Border
-| Figma Variable | Token | Aliases |
-|---|---|---|
-| `SR/Border/Default` | `sr.color.border.default` | `color.grey.200` |
-| `SR/Border/Strong` | `sr.color.border.strong` | `color.grey.600` |
-| `SR/Border/Focus` | `sr.color.border.focus` | `color.focus-yellow` |
+### Border colours
+| Figma Variable | Token | Light alias | Dark alias |
+|---|---|---|---|
+| `SR/Border/Subtle`  | `sr.color.border.subtle`  | `color.grey.100` | `color.navy.700` |
+| `SR/Border/Default` | `sr.color.border.default` | `color.grey.200` | `color.navy.500` |
+| `SR/Border/Strong`  | `sr.color.border.strong`  | `color.grey.600` | `color.navy.300` |
+| `SR/Border/Focus`   | `sr.color.border.focus`   | `color.focus-yellow` | `color.focus-yellow` |
 
 ### Status
 | Figma Variable | Token | Aliases |
@@ -128,6 +129,40 @@ All semantic variables alias primitives — no raw hex values.
 | `SR/Status/Warning Surface` | `sr.color.status.warning-surface` | `color.yellow.100` |
 | `SR/Status/Info` | `sr.color.status.info` | `color.info-blue` |
 | `SR/Status/Info Surface` | `sr.color.status.info-surface` | `color.info-blue.100` |
+
+---
+
+### Border widths
+| Figma Variable | Token | Value | CSS property |
+|---|---|---|---|
+| `Primitives/Border/Width/1` | `border.width.1` | 1px | — |
+| `Primitives/Border/Width/2` | `border.width.2` | 2px | — |
+| `SR/Border/Width/Default` | `sr.border.width.default` | → `border.width.1` | `--border-width-default` |
+| `SR/Border/Width/Strong`  | `sr.border.width.strong`  | → `border.width.2` | `--border-width-strong` |
+
+### Radius
+| Figma Variable | Token | Value | CSS property |
+|---|---|---|---|
+| `Primitives/Radius/0`    | `radius.0`    | 0px    | — |
+| `Primitives/Radius/2`    | `radius.2`    | 2px    | — |
+| `Primitives/Radius/4`    | `radius.4`    | 4px    | — |
+| `Primitives/Radius/8`    | `radius.8`    | 8px    | — |
+| `Primitives/Radius/9999` | `radius.9999` | 9999px | — |
+| `SR/Radius/None` | `sr.radius.none` | → `radius.0`    | `--radius-none` |
+| `SR/Radius/SM`   | `sr.radius.sm`   | → `radius.2`    | `--radius-sm`   |
+| `SR/Radius/MD`   | `sr.radius.md`   | → `radius.4`    | `--radius-md`   |
+| `SR/Radius/LG`   | `sr.radius.lg`   | → `radius.8`    | `--radius-lg`   |
+| `SR/Radius/Full` | `sr.radius.full` | → `radius.9999` | `--radius-full` |
+
+### Touch targets
+| Figma Variable | Token | Value | Note |
+|---|---|---|---|
+| `Primitives/Size/Touch/24` | `size.touch.24` | 24px | Global primitive |
+| `Primitives/Size/Touch/32` | `size.touch.32` | 32px | Global primitive |
+| `Primitives/Size/Touch/44` | `size.touch.44` | 44px | Global primitive |
+| `SR/Touch/Default`  | `sr.touch.default`  | → `size.touch.44` | All platforms. WCAG 2.2 AAA. |
+| `SR/Touch/Compact`  | `sr.touch.compact`  | → `size.touch.32` | Desktop (Blazor) only. |
+| `SR/Touch/Minimum`  | `sr.touch.minimum`  | → `size.touch.24` | Desktop only, with ≥10px spacing. |
 
 ---
 
