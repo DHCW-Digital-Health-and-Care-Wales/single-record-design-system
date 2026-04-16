@@ -1,0 +1,57 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$description": "DHCW Single Record Design System — Logo sizing tokens. Three-tier model: Global (raw pixel values) → Alias (semantic intent) → Component (applied to Logo component). Height is the controlled dimension; width always scales proportionally. Sync source: Figma variable collections 'Primitives' (global tier) and 'Single Record' (alias + component tiers).",
+
+  "size": {
+
+    "logo": {
+
+      "$description": "Global logo sizing scale. Raw pixel values, no semantic meaning. Lives in the Primitives variable collection in Figma.",
+
+      "xs":  { "$type": "dimension", "$value": "24px", "$description": "Absolute minimum. Reserved for compact icon-only usage in dense UI." },
+      "sm":  { "$type": "dimension", "$value": "32px", "$description": "Small — icon in compact placement, full logo in footers." },
+      "md":  { "$type": "dimension", "$value": "48px", "$description": "Standard — default for both icon and full logo in primary UI." },
+      "lg":  { "$type": "dimension", "$value": "64px", "$description": "Large — prominent full logo placement." },
+      "xl":  { "$type": "dimension", "$value": "80px", "$description": "Extra large — hero areas and splash screens." },
+      "2xl": { "$type": "dimension", "$value": "96px", "$description": "Maximum — print, marketing, and full-bleed digital layouts." },
+
+      "icon": {
+        "$description": "Alias tokens for the icon logo variant (square, 1:1 aspect ratio). Maps semantic intent to global values. Lives in the Single Record variable collection in Figma.",
+        "default":   { "$type": "dimension", "$value": "{size.logo.sm}",  "$description": "Icon in standard UI contexts: headers, navigation, app chrome. → 32px" },
+        "compact":   { "$type": "dimension", "$value": "{size.logo.xs}",  "$description": "Icon in dense UI: breadcrumbs, chips, inline context labels. → 24px" },
+        "prominent": { "$type": "dimension", "$value": "{size.logo.md}",  "$description": "Icon in hero areas and authentication screens. → 48px" }
+      },
+
+      "full": {
+        "$description": "Alias tokens for the full lockup logo variant (horizontal, aspect ratio varies per brand). Height controls scale; width is proportional. Lives in the Single Record variable collection in Figma.",
+        "default":   { "$type": "dimension", "$value": "{size.logo.md}",  "$description": "Full lockup in page headers and primary placement. → 48px" },
+        "compact":   { "$type": "dimension", "$value": "{size.logo.sm}",  "$description": "Full lockup in footers and secondary placement. → 32px" },
+        "prominent": { "$type": "dimension", "$value": "{size.logo.lg}",  "$description": "Full lockup in splash screens, print, and marketing. → 64px" }
+      }
+
+    }
+
+  },
+
+  "logo": {
+    "$description": "Component-level tokens applied directly to the Logos component in Figma and consumed by platform implementations. Lives in the Single Record variable collection in Figma.",
+
+    "icon": {
+      "size": {
+        "$type": "dimension",
+        "$value": "{size.logo.icon.default}",
+        "$description": "Controls the height (and equal width) of all Logos component icon variants (Type=Icon). Default: 32px. Override at instance level by referencing a different Size/Logo/Icon/* alias token."
+      }
+    },
+
+    "full": {
+      "height": {
+        "$type": "dimension",
+        "$value": "{size.logo.full.default}",
+        "$description": "Controls the height of all Logos component full lockup variants (Type=Full). Width scales proportionally per brand aspect ratio. Default: 48px. Override at instance level by referencing a different Size/Logo/Full/* alias token."
+      }
+    }
+
+  }
+
+}

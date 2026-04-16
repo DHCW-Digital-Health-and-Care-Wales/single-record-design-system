@@ -1,0 +1,87 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$description": "DHCW Single Record Design System — Border tokens. Covers border colours (including the fourth 'subtle' variant), border widths, and corner radii. Three-tier model: Global (Primitives) → Semantic (Single Record). Sync source: Figma variable collections.",
+
+  "color": {
+    "border": {
+      "$description": "Semantic border colour tokens. Alias tier — lives in the Single Record Figma variable collection with Light and Dark mode values.",
+      "subtle":  {
+        "$type": "color",
+        "$value": "{color.grey.100}",
+        "$description": "Ultra-light border for row dividers and internal table separators. Use only on white or near-white backgrounds where Border/Default would be too prominent. Do not use as the only structural indicator on a surface."
+      },
+      "default": {
+        "$type": "color",
+        "$value": "{color.grey.200}",
+        "$description": "Standard border for inputs, cards, and section dividers."
+      },
+      "strong":  {
+        "$type": "color",
+        "$value": "{color.grey.600}",
+        "$description": "High-contrast border for section edges, active table rows, and structural dividers that must be clearly visible."
+      },
+      "focus":   {
+        "$type": "color",
+        "$value": "{color.focus-yellow.default}",
+        "$description": "Focus ring colour. Applied to all interactive elements on keyboard focus. Always paired with Border/Width/Strong (2px) and an inner dark ring to meet WCAG 2.2 SC 1.4.11."
+      }
+    }
+  },
+
+  "border": {
+    "width": {
+      "$description": "Border width tokens. Integer pixel values only — no sub-pixel widths. Global values in Primitives; semantic aliases in Single Record.",
+
+      "1": { "$type": "dimension", "$value": "1px", "$description": "Global: raw 1px border width." },
+      "2": { "$type": "dimension", "$value": "2px", "$description": "Global: raw 2px border width." },
+
+      "default": {
+        "$type": "dimension",
+        "$value": "{border.width.1}",
+        "$description": "Standard 1px border for inputs, cards, dividers, and section edges."
+      },
+      "strong": {
+        "$type": "dimension",
+        "$value": "{border.width.2}",
+        "$description": "Emphasis border for active states, selected rows, and focus ring outer stroke."
+      }
+    }
+  },
+
+  "radius": {
+    "$description": "Corner radius tokens. Conservative scale suited to clinical and administrative UI. Prefer flatter radii for data-dense contexts; reserve Radius/LG and Radius/Full for overlay and decorative elements.",
+
+    "0":    { "$type": "dimension", "$value": "0px",    "$description": "Global: no rounding." },
+    "2":    { "$type": "dimension", "$value": "2px",    "$description": "Global: minimal rounding." },
+    "4":    { "$type": "dimension", "$value": "4px",    "$description": "Global: standard rounding." },
+    "8":    { "$type": "dimension", "$value": "8px",    "$description": "Global: prominent rounding." },
+    "9999": { "$type": "dimension", "$value": "9999px", "$description": "Global: pill / full-round." },
+
+    "none": {
+      "$type": "dimension",
+      "$value": "{radius.0}",
+      "$description": "No rounding. Use for tables, data grids, full-bleed containers, elements that must butt against screen edges or adjacent cells."
+    },
+    "sm": {
+      "$type": "dimension",
+      "$value": "{radius.2}",
+      "$description": "Subtle rounding. Use for form inputs, text areas, select controls, inline tags, small badges, and chips."
+    },
+    "md": {
+      "$type": "dimension",
+      "$value": "{radius.4}",
+      "$description": "Standard rounding. Use for buttons, cards, panels, notification banners, and tooltips. Default for most interactive components."
+    },
+    "lg": {
+      "$type": "dimension",
+      "$value": "{radius.8}",
+      "$description": "Prominent rounding. Use for modals, side drawers, floating menus, and large overlay surfaces."
+    },
+    "full": {
+      "$type": "dimension",
+      "$value": "{radius.9999}",
+      "$description": "Pill shape. Use for status chips, avatar rings, toggle switches, and search input end-caps. Not appropriate for rectangular content containers."
+    }
+  }
+
+}
