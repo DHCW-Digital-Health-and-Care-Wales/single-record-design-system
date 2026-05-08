@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Patient Record — Concept</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue-900: #003087;
+      --blue-700: #005eb8;
+      --blue-100: #d8e8f5;
+      --blue-50:  #f0f6fc;
+      --grey-900: #212b32;
+      --grey-700: #4c6272;
+      --grey-500: #768692;
+      --grey-400: #adb5bd;
+      --grey-200: #e8edee;
+      --grey-100: #f4f6f7;
+      --white:    #ffffff;
+      --green:    #007f3b;
+      --green-50: #e6f3ec;
+      --amber:    #b8651b;
+      --amber-50: #fff4e5;
+      --amber-100:#ffe2b8;
+      --red:      #d5281b;
+      --red-50:   #fbe9e7;
+      --red-100:  #f9c6c0;
+      --focus:    #ffeb3b;
+      --shadow:   0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
+      --radius:   4px;
+    }
+
+    body {
+      font-family: "Frutiger", "Arial", sans-serif;
+      font-size: 15px;
+      background: var(--grey-100);
+      color: var(--grey-900);
+      min-height: 100vh;
+    }
+
+    /* ── Demo bar ──────────────────────────────────────── */
+    .demo-bar {
+      background: #1a1a2e;
+      color: #aaa;
+      padding: 8px 20px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .demo-bar strong { color: #fff; }
+
+    .demo-tab {
+      padding: 4px 12px;
+      border-radius: 4px;
+      border: 1px solid #444;
+      background: none;
+      color: #ccc;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .demo-tab.active { background: var(--blue-700); color: white; border-color: var(--blue-700); }
+
+    /* ── Top utility strip (sensitive info / logout) ───── */
+    .utility-strip {
+      background: var(--blue-900);
+      color: var(--white);
+      padding: 8px 24px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .utility-strip .left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+    }
+
+    .utility-strip .right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .utility-link {
+      color: white;
+      text-decoration: none;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .utility-link:hover { text-decoration: underline; }
+
+    /* ── Topbar (sub-nav) ──────────────────────────────── */
+    .topbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--grey-200);
+      height: 56px;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 24px;
+    }
+
+    .topbar-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      color: var(--blue-900);
+      font-size: 14px;
+    }
+
+    .topbar-logo svg { width: 36px; height: 36px; }
+
+    .topbar-nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: 16px;
+    }
+
+    .topbar-nav a {
+      padding: 8px 14px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--grey-700);
+      text-decoration: none;
+      border-radius: var(--radius);
+    }
+
+    .topbar-nav a:hover { background: var(--grey-100); }
+    .topbar-nav a.active { background: var(--blue-50); color: var(--blue-700); }
+
+    .topbar-search {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--grey-100);
+      border: 1px solid var(--grey-200);
+      border-radius: 24px;
+      padding: 7px 14px;
+      font-size: 14px;
+      color: var(--grey-500);
+      width: 280px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--blue-700);
+      color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700;
+    }
+
+    /* ── Patient banner ────────────────────────────────── */
+    .patient-banner {
+      background: var(--white);
+      border-bottom: 2px solid var(--grey-200);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    /* Banner top action row */
+    .banner-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 24px;
+      background: var(--grey-100);
+      border-bottom: 1px solid var(--grey-200);
+      font-size: 13px;
+    }
+
+    .back-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--blue-700);
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .back-link:hover { text-decoration: underline; }
+
+    .recently-viewed {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--grey-700);
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: var(--radius);
+      border: 1px solid var(--grey-200);
+      background: var(--white);
+    }
+
+    .recently-viewed:hover { background: var(--grey-100); }
+
+    .banner-actions .right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .active-users {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--grey-700);
+    }
+
+    .active-users-dot {
+      width: 8px; height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+    }
+
+    .icon-btn {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--white);
+      border: 1px solid var(--grey-200);
+      border-radius: var(--radius);
+      cursor: pointer;
+      color: var(--grey-700);
+    }
+
+    .icon-btn:hover { background: var(--grey-100); color: var(--grey-900); }
+
+    .close-btn {
+      width: 32px; height: 32px;
+      background: var(--white);
+      border: 1px solid var(--red);
+      color: var(--red);
+      border-radius: var(--radius);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .close-btn:hover { background: var(--red); color: var(--white); }
+
+    /* Banner main */
+    .banner-main {
+      display: grid;
+      grid-template-columns: minmax(280px, 1fr) minmax(280px, 1fr) minmax(380px, 1.2fr);
+      gap: 20px;
+      padding: 16px 24px;
+    }
+
+    .patient-identity {
+      border-right: 1px solid var(--grey-200);
+      padding-right: 20px;
+    }
+
+    .patient-name {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--grey-900);
+      margin-bottom: 4px;
+      line-height: 1.2;
+    }
+
+    .patient-pronouns {
+      display: inline-block;
+      font-size: 12px;
+      color: var(--grey-700);
+      background: var(--grey-100);
+      padding: 1px 8px;
+      border-radius: 10px;
+      margin-left: 6px;
+      vertical-align: middle;
+      font-weight: 500;
+    }
+
+    .patient-meta {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      column-gap: 12px;
+      row-gap: 4px;
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    .meta-label {
+      color: var(--grey-700);
+      font-weight: 500;
+    }
+
+    .meta-value {
+      color: var(--grey-900);
+      font-weight: 600;
+    }
+
+    .meta-value.copyable {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .copy-icon {
+      width: 14px; height: 14px;
+      cursor: pointer;
+      opacity: 0.5;
+      color: var(--blue-700);
+    }
+
+    .copy-icon:hover { opacity: 1; }
+
+    .deceased-flag {
+      display: inline-block;
+      background: var(--grey-900);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 3px;
+      margin-left: 6px;
+      letter-spacing: 0.05em;
+    }
+
+    .demographics-block {
+      padding-right: 20px;
+      border-right: 1px solid var(--grey-200);
+    }
+
+    .demographics-block .patient-meta {
+      grid-template-columns: 110px 1fr;
+    }
+
+    /* Alerts area */
+    .alerts-block {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .alert-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: var(--radius);
+      border: 1px solid;
+      font-size: 13px;
+    }
+
+    .alert-card .alert-icon {
+      width: 18px; height: 18px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .alert-card .alert-body { flex: 1; min-width: 0; }
+
+    .alert-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .alert-content {
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    .alert-action {
+      background: none;
+      border: none;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 0;
+      margin-left: auto;
+      align-self: flex-start;
+      flex-shrink: 0;
+    }
+
+    /* Alert variants */
+    .alert-card.alert-critical {
+      background: var(--red-50);
+      border-color: var(--red-100);
+      color: var(--red);
+    }
+    .alert-card.alert-critical .alert-action { color: var(--red); }
+    .alert-card.alert-critical .alert-content { color: var(--grey-900); }
+
+    .alert-card.alert-warning {
+      background: var(--amber-50);
+      border-color: var(--amber-100);
+      color: var(--amber);
+    }
+    .alert-card.alert-warning .alert-action { color: var(--amber); }
+    .alert-card.alert-warning .alert-content { color: var(--grey-900); }
+
+    .alert-card.alert-clear {
+      background: var(--green-50);
+      border-color: #c1e0c1;
+      color: var(--green);
+    }
+    .alert-card.alert-clear .alert-action { color: var(--green); }
+
+    .alert-card.alert-empty {
+      background: var(--grey-100);
+      border-color: var(--grey-200);
+      color: var(--grey-700);
+    }
+    .alert-card.alert-empty .alert-action { color: var(--blue-700); }
+    .alert-card.alert-empty .alert-content { color: var(--grey-700); font-weight: 500; font-style: italic; }
+
+    .alert-pill {
+      display: inline-block;
+      background: rgba(255,255,255,0.7);
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-right: 4px;
+      margin-bottom: 2px;
+      color: var(--grey-900);
+      border: 1px solid currentColor;
+    }
+
+    .alert-card.alert-critical .alert-pill { border-color: rgba(213,40,27,0.4); }
+    .alert-card.alert-warning .alert-pill { border-color: rgba(184,101,27,0.4); }
+
+    /* Banner secondary actions row */
+    .banner-secondary {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 8px 24px;
+      border-top: 1px solid var(--grey-200);
+      background: var(--blue-50);
+      font-size: 13px;
+    }
+
+    .banner-secondary a {
+      color: var(--blue-700);
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: var(--radius);
+    }
+
+    .banner-secondary a:hover { background: var(--blue-100); }
+
+    .banner-secondary .divider {
+      width: 1px;
+      height: 16px;
+      background: var(--blue-100);
+    }
+
+    .watchlist-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: auto;
+      font-size: 13px;
+      color: var(--grey-900);
+      cursor: pointer;
+    }
+
+    .watchlist-checkbox input { accent-color: var(--blue-700); }
+
+    /* ── Tabs ──────────────────────────────────────────── */
+    .tabs-bar {
+      background: var(--white);
+      border-bottom: 1px solid var(--grey-200);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 2px;
+      overflow-x: auto;
+    }
+
+    .tab {
+      padding: 14px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--grey-700);
+      cursor: pointer;
+      border: none;
+      background: none;
+      border-bottom: 3px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      transition: all 0.12s;
+    }
+
+    .tab:hover { color: var(--blue-700); }
+    .tab.active {
+      color: var(--blue-700);
+      border-bottom-color: var(--blue-700);
+    }
+
+    .tab .tab-badge {
+      background: var(--grey-200);
+      color: var(--grey-700);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 10px;
+      min-width: 18px;
+      text-align: center;
+    }
+
+    .tab.active .tab-badge { background: var(--blue-700); color: var(--white); }
+
+    .tab.disabled {
+      color: var(--grey-400);
+      cursor: not-allowed;
+    }
+
+    .tab .alert-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--red);
+      border-radius: 50%;
+    }
+
+    .tabs-actions {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-left: 12px;
+    }
+
+    .btn-primary {
+      background: var(--blue-700);
+      color: var(--white);
+      border: 2px solid var(--blue-700);
+      border-radius: var(--radius);
+      padding: 7px 18px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover { background: var(--blue-900); border-color: var(--blue-900); }
+
+    .btn-secondary {
+      background: var(--white);
+      color: var(--grey-900);
+      border: 2px solid var(--grey-400);
+      border-radius: var(--radius);
+      padding: 7px 14px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* ── Content ───────────────────────────────────────── */
+    .content {
+      padding: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--grey-200);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--grey-200);
+      background: var(--white);
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--grey-900);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-body { padding: 18px; }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px 32px;
+    }
+
+    .info-row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 12px;
+      font-size: 14px;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--grey-100);
+    }
+
+    .info-row:last-child { border-bottom: none; }
+
+    .info-row .info-label {
+      color: var(--grey-700);
+      font-weight: 500;
+    }
+
+    .info-row .info-value {
+      color: var(--grey-900);
+      font-weight: 600;
+    }
+
+    .system-warning {
+      background: var(--red-50);
+      border: 1px solid var(--red-100);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      color: var(--red);
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 1100px) {
+      .banner-main { grid-template-columns: 1fr; }
+      .patient-identity, .demographics-block {
+        border-right: none;
+        border-bottom: 1px solid var(--grey-200);
+        padding-right: 0;
+        padding-bottom: 12px;
+      }
+      .two-col { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Demo controls -->
+<div class="demo-bar">
+  <strong>Concept view:</strong>
+  <button class="demo-tab active" onclick="setScenario('critical', this)">1 · Critical alerts</button>
+  <button class="demo-tab" onclick="setScenario('mild', this)">2 · Mild warnings</button>
+  <button class="demo-tab" onclick="setScenario('clear', this)">3 · No known alerts</button>
+  <button class="demo-tab" onclick="setScenario('unrecorded', this)">4 · Nothing recorded</button>
+  <button class="demo-tab" onclick="setScenario('deceased', this)">5 · Deceased patient</button>
+</div>
+
+<!-- Utility strip -->
+<div class="utility-strip">
+  <div class="left">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+    Highly Sensitive information is <u>DISPLAYED</u> · <a class="utility-link" style="display:inline">HIDE</a>
+  </div>
+  <div class="right">
+    <span>08-May-2026 &nbsp;18:10</span>
+    <span>TEST Swansea Bay UHB</span>
+    <span>Chukwunonso Nweke (Consultant)</span>
+    <a class="utility-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/></svg>
+      Log Out
+    </a>
+  </div>
+</div>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div class="topbar-logo">
+    <svg viewBox="0 0 40 40" fill="none">
+      <rect width="40" height="40" rx="4" fill="#003087"/>
+      <text x="7" y="26" font-size="11" font-weight="700" fill="white" font-family="Arial">NHS</text>
+    </svg>
+    <span>GIG Cymru<br>DHCW</span>
+  </div>
+  <div class="topbar-nav">
+    <a>Patient Search</a>
+    <a class="active">Patient Record</a>
+    <a>Patient Lists</a>
+    <a>Caseload Management</a>
+  </div>
+  <div class="topbar-search">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="#768692"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg>
+    Quick search NHS number...
+  </div>
+  <div class="user-info">
+    <div class="avatar">CN</div>
+  </div>
+</div>
+
+<!-- Patient banner -->
+<div class="patient-banner">
+
+  <!-- Action row -->
+  <div class="banner-actions">
+    <a class="back-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      Back to patient search
+    </a>
+    <button class="recently-viewed">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+      Change patient
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+    </button>
+    <div class="right">
+      <div class="active-users" title="1 other clinician viewing this record">
+        <span class="active-users-dot"></span>
+        1 other user viewing
+      </div>
+      <button class="icon-btn" title="Print">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+      </button>
+      <button class="icon-btn" title="More actions">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
+      </button>
+      <button class="close-btn" title="Close patient">×</button>
+    </div>
+  </div>
+
+  <!-- Main banner -->
+  <div class="banner-main">
+
+    <!-- Identity column -->
+    <div class="patient-identity">
+      <div class="patient-name" id="patientName">
+        JOHN, Elvet George <span class="patient-pronouns">Mr · he/him</span>
+        <span class="deceased-flag" id="deceasedFlag" style="display:none">DECEASED</span>
+      </div>
+      <div class="patient-meta">
+        <span class="meta-label">NHS number</span>
+        <span class="meta-value copyable">626 993 2734
+          <svg class="copy-icon" viewBox="0 0 24 24" fill="currentColor" title="Copy"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+        </span>
+        <span class="meta-label">Hospital number</span>
+        <span class="meta-value copyable">N122127
+          <svg class="copy-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+        </span>
+        <span class="meta-label">Preferred name</span>
+        <span class="meta-value">Elvet</span>
+      </div>
+    </div>
+
+    <!-- Demographics column -->
+    <div class="demographics-block">
+      <div class="patient-meta">
+        <span class="meta-label">Date of birth</span>
+        <span class="meta-value">15 Dec 1992 (33y)</span>
+        <span class="meta-label">Sex</span>
+        <span class="meta-value">Male</span>
+        <span class="meta-label">Date of death</span>
+        <span class="meta-value" id="dod">—</span>
+        <span class="meta-label">Address</span>
+        <span class="meta-value" style="font-weight:500; line-height:1.4;">Penrhiw, Gwynfe<br>Llangadog, Dyfed, SA19 9PU</span>
+        <span class="meta-label">Registered GP</span>
+        <span class="meta-value">Dr S. Patel — Llangadog Surgery</span>
+      </div>
+    </div>
+
+    <!-- Alerts column -->
+    <div class="alerts-block" id="alertsBlock">
+      <!-- Populated by JS -->
+    </div>
+
+  </div>
+
+  <!-- Secondary actions -->
+  <div class="banner-secondary">
+    <a>Set future care plan alert</a>
+    <span class="divider"></span>
+    <a>Set patient preferences</a>
+    <span class="divider"></span>
+    <a>Communication needs</a>
+    <label class="watchlist-checkbox">
+      <input type="checkbox" /> Add to my watch list
+    </label>
+  </div>
+</div>
+
+<!-- Tabs -->
+<div class="tabs-bar">
+  <button class="tab active">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+    Demographics
+  </button>
+  <button class="tab">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>
+    Documents
+    <span class="tab-badge">12</span>
+  </button>
+  <button class="tab">
+    Tests
+    <span class="tab-badge">3</span>
+    <span class="alert-dot" title="Recent abnormal result"></span>
+  </button>
+  <button class="tab">
+    Medicines
+    <span class="tab-badge">7</span>
+  </button>
+  <button class="tab">GP Record</button>
+  <button class="tab">
+    Events
+    <span class="tab-badge">24</span>
+  </button>
+  <button class="tab">WNCR</button>
+  <button class="tab">
+    Other
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style="margin-left:4px"><path d="M7 10l5 5 5-5z"/></svg>
+  </button>
+  <div class="tabs-actions">
+    <button class="btn-secondary">Forms</button>
+  </div>
+</div>
+
+<!-- Content -->
+<div class="content">
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v6M12 16v.01" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        Patient details
+      </div>
+      <button class="btn-secondary" style="padding:6px 12px; font-size:13px;">Edit</button>
+    </div>
+    <div class="card-body">
+      <div class="info-grid">
+        <div>
+          <div class="info-row"><span class="info-label">NHS number</span><span class="info-value">626 993 2734</span></div>
+          <div class="info-row"><span class="info-label">Hospital number</span><span class="info-value">N122127</span></div>
+          <div class="info-row"><span class="info-label">Title</span><span class="info-value">Mr</span></div>
+          <div class="info-row"><span class="info-label">Surname</span><span class="info-value">JOHN</span></div>
+          <div class="info-row"><span class="info-label">Forenames</span><span class="info-value">Elvet George</span></div>
+          <div class="info-row"><span class="info-label">Sex</span><span class="info-value">Male</span></div>
+          <div class="info-row"><span class="info-label">Date of birth</span><span class="info-value">15 Dec 1992 (33y)</span></div>
+        </div>
+        <div>
+          <div class="info-row"><span class="info-label">Preferred name</span><span class="info-value">Elvet</span></div>
+          <div class="info-row"><span class="info-label">Pronouns</span><span class="info-value">he / him</span></div>
+          <div class="info-row"><span class="info-label">Spoken language</span><span class="info-value">Welsh (preferred), English</span></div>
+          <div class="info-row"><span class="info-label">Marital status</span><span class="info-value">Single</span></div>
+          <div class="info-row"><span class="info-label">Religion</span><span class="info-value">Not stated</span></div>
+          <div class="info-row"><span class="info-label">Ethnicity</span><span class="info-value">White Welsh</span></div>
+          <div class="info-row"><span class="info-label">Occupation</span><span class="info-value">Teacher</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Patient address</div>
+        <button class="btn-secondary" style="padding:6px 12px; font-size:13px;">Edit</button>
+      </div>
+      <div class="card-body">
+        <div class="info-row"><span class="info-label">Address</span><span class="info-value">Penrhiw, Gwynfe, Llangadog, Dyfed, SA19 9PU</span></div>
+        <div class="info-row"><span class="info-label">Daytime phone</span><span class="info-value">01550 555 0123</span></div>
+        <div class="info-row"><span class="info-label">Evening phone</span><span class="info-value">07700 900 123</span></div>
+        <div class="info-row"><span class="info-label">Email</span><span class="info-value">e.john@example.wales</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">NHS All Wales record</div>
+        <button class="btn-secondary" style="padding:6px 12px; font-size:13px;">Refresh</button>
+      </div>
+      <div class="card-body">
+        <div class="system-warning">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+          The NHS All Wales service did not respond in time. Showing local record only.
+        </div>
+        <div style="margin-top:14px; font-size:13px; color:var(--grey-700);">
+          Last successful sync: <strong>07-May-2026 09:14</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const scenarios = {
+    critical: {
+      name: 'JOHN, Elvet George',
+      reactions: { state: 'critical', items: ['Penicillin (severe)', 'Latex'] },
+      warnings:  { state: 'critical', items: ['HIV+', 'Falls Risk'] },
+      deceased: false
+    },
+    mild: {
+      name: 'JONES, Sarah Anne',
+      reactions: { state: 'warning', items: ['Aspirin (mild)'] },
+      warnings:  { state: 'warning', items: ['Hearing impaired'] },
+      deceased: false
+    },
+    clear: {
+      name: 'EVANS, David',
+      reactions: { state: 'clear', items: ['No known reactions'] },
+      warnings:  { state: 'clear', items: ['No active warnings'] },
+      deceased: false
+    },
+    unrecorded: {
+      name: 'WILLIAMS, Megan',
+      reactions: { state: 'empty', items: ['Not yet recorded'] },
+      warnings:  { state: 'empty', items: ['Not yet recorded'] },
+      deceased: false
+    },
+    deceased: {
+      name: 'MORGAN, Robert',
+      reactions: { state: 'critical', items: ['Penicillin'] },
+      warnings:  { state: 'warning', items: ['DNACPR in place'] },
+      deceased: true,
+      dod: '02-Mar-2026'
+    }
+  };
+
+  function setScenario(key, btnEl) {
+    document.querySelectorAll('.demo-tab').forEach(b => b.classList.remove('active'));
+    btnEl.classList.add('active');
+
+    const s = scenarios[key];
+    document.getElementById('patientName').innerHTML =
+      s.name + ' <span class="patient-pronouns">Mr · he/him</span>' +
+      (s.deceased ? ' <span class="deceased-flag">DECEASED</span>' : '');
+
+    document.getElementById('dod').textContent = s.deceased ? s.dod : '—';
+
+    renderAlerts(s);
+  }
+
+  function renderAlerts(s) {
+    const block = document.getElementById('alertsBlock');
+    block.innerHTML = '';
+    block.appendChild(makeAlert('Adverse reactions', s.reactions));
+    block.appendChild(makeAlert('Warnings', s.warnings));
+  }
+
+  function makeAlert(title, data) {
+    const variantClass = {
+      critical: 'alert-critical',
+      warning:  'alert-warning',
+      clear:    'alert-clear',
+      empty:    'alert-empty'
+    }[data.state];
+
+    const iconSvg = {
+      critical: '<svg class="alert-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>',
+      warning:  '<svg class="alert-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>',
+      clear:    '<svg class="alert-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>',
+      empty:    '<svg class="alert-icon" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>'
+    }[data.state];
+
+    const actionLabel = data.state === 'empty' ? 'Record now' : (data.state === 'clear' ? 'Confirm' : 'Confirm / Edit');
+
+    const card = document.createElement('div');
+    card.className = 'alert-card ' + variantClass;
+
+    let contentHtml;
+    if (data.state === 'critical' || data.state === 'warning') {
+      contentHtml = data.items.map(i => '<span class="alert-pill">' + i + '</span>').join('');
+    } else {
+      contentHtml = data.items.join(', ');
+    }
+
+    card.innerHTML = `
+      ${iconSvg}
+      <div class="alert-body">
+        <div class="alert-title">${title}</div>
+        <div class="alert-content">${contentHtml}</div>
+      </div>
+      <button class="alert-action">${actionLabel}</button>
+    `;
+    return card;
+  }
+
+  // Initial render
+  setScenario('critical', document.querySelector('.demo-tab.active'));
+</script>
+</body>
+</html>
