@@ -13,9 +13,9 @@
       "surface": {
         "background":   { "$type": "color", "$value": "{color.grey.100}",       "$description": "Default page/app background" },
         "small-cards":  { "$type": "color", "$value": "{color.white.default}",  "$description": "Card and panel surfaces" },
-        "accent":       { "$type": "color", "$value": "{color.cyan.100}" },
-        "subtle":       { "$type": "color", "$value": "{color.blue.50}" },
-        "header":       { "$type": "color", "$value": "{color.white.default}",  "$description": "Application header bar — light mode" }
+        "accent":         { "$type": "color", "$value": "{color.cyan.100}" },
+        "subtle":         { "$type": "color", "$value": "{color.blue.50}" },
+        "section-cards":  { "$type": "color", "$value": "{color.white.default}", "$description": "Primary background for card sections in modular layout" }
       },
       "text": {
         "primary":   { "$type": "color", "$value": "{color.grey.900}" },

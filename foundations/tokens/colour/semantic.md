@@ -28,7 +28,7 @@ All semantic tokens use the `sr` prefix (Single Record). They are defined in Fig
 | `sr.color.surface.small-cards` | `white` | `cyan.900` | Cards, panels, modals |
 | `sr.color.surface.accent` | `cyan.100` | `blue.900` | Accent/highlight backgrounds |
 | `sr.color.surface.subtle` | `blue.50` | `navy.700` | Subtle section backgrounds |
-| `sr.color.surface.header` | `white` | `navy.900` | Application header bar |
+| `sr.color.surface.section-cards` | `white` | `blue.900` | Primary background for card sections in modular layout |
 
 ---
 

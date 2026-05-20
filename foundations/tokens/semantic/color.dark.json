@@ -16,9 +16,9 @@
       "surface": {
         "background":  { "$type": "color", "$value": "{color.navy.900}",  "$description": "Main page background in dark mode" },
         "small-cards": { "$type": "color", "$value": "{color.cyan.900}",  "$description": "Card and panel surfaces in dark mode" },
-        "accent":      { "$type": "color", "$value": "{color.blue.900}",  "$description": "Deep blue for accent / highlighted areas" },
-        "subtle":      { "$type": "color", "$value": "{color.navy.700}",  "$description": "Subtle section background — table rows, inactive tabs" },
-        "header":      { "$type": "color", "$value": "{color.navy.900}",  "$description": "Application header bar — dark mode" }
+        "accent":         { "$type": "color", "$value": "{color.blue.900}",  "$description": "Deep blue for accent / highlighted areas" },
+        "subtle":         { "$type": "color", "$value": "{color.navy.700}",  "$description": "Subtle section background — table rows, inactive tabs" },
+        "section-cards":  { "$type": "color", "$value": "{color.blue.900}",  "$description": "Primary background for card sections in modular layout — dark mode" }
       },
 
       "text": {

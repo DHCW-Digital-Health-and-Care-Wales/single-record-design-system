@@ -125,7 +125,7 @@ All semantic variables alias primitives — no raw hex values.
 | `SR/Surface/Small Cards` | `sr.color.surface.small-cards` | `color.white` | `color.cyan.900` |
 | `SR/Surface/Accent` | `sr.color.surface.accent` | `color.cyan.100` | `color.blue.900` |
 | `SR/Surface/Subtle` | `sr.color.surface.subtle` | `color.blue.50` | `color.navy.700` |
-| `SR/Surface/Header` | `sr.color.surface.header` | `color.white` | `color.navy.900` |
+| `SR/Surface/Section Cards` | `sr.color.surface.section-cards` | `color.white` | `color.blue.900` |
 
 ### Text
 | Figma Variable | Token | Light alias | Dark alias |
