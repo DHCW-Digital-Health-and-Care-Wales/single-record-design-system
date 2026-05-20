@@ -37,8 +37,16 @@
     },
     "red": {
       "$description": "Status — error/critical",
+      "900": { "$type": "color", "$value": "#5F110A" },
+      "800": { "$type": "color", "$value": "#8B190F" },
+      "700": { "$type": "color", "$value": "#B32014" },
       "600": { "$type": "color", "$value": "#D5281B" },
-      "100": { "$type": "color", "$value": "#FCDBD9" }
+      "500": { "$type": "color", "$value": "#E03A31" },
+      "400": { "$type": "color", "$value": "#EC5E56" },
+      "300": { "$type": "color", "$value": "#F48B85" },
+      "200": { "$type": "color", "$value": "#F9B5B1" },
+      "100": { "$type": "color", "$value": "#FCDBD9" },
+      "50":  { "$type": "color", "$value": "#FEF3F2" }
     },
     "green": {
       "$description": "Status — success",
@@ -51,9 +59,18 @@
       "100": { "$type": "color", "$value": "#FDF6DC" }
     },
     "info-blue": {
-      "$description": "Status — informational",
-      "default": { "$type": "color", "$value": "#005AA8" },
-      "100":     { "$type": "color", "$value": "#D6E8F5" }
+      "$description": "Status — informational. Full scale added to support semantic aliasing. info-blue.700 is the primary semantic value (#005AA8).",
+      "default": { "$type": "color", "$value": "#005AA8", "$description": "Alias for 700 — retained for backward compatibility" },
+      "900": { "$type": "color", "$value": "#002E5C" },
+      "800": { "$type": "color", "$value": "#004483" },
+      "700": { "$type": "color", "$value": "#005AA8" },
+      "600": { "$type": "color", "$value": "#0D62A3" },
+      "500": { "$type": "color", "$value": "#267AB8" },
+      "400": { "$type": "color", "$value": "#4E95CA" },
+      "300": { "$type": "color", "$value": "#7EB0D9" },
+      "200": { "$type": "color", "$value": "#AECCE8" },
+      "100": { "$type": "color", "$value": "#D6E8F5" },
+      "50":  { "$type": "color", "$value": "#EEF5FC" }
     },
     "focus-yellow": {
       "$description": "Focus ring colour",

@@ -1,98 +1,122 @@
 # Typography Tokens
 
-All type decisions are defined here. Components reference these tokens — do not hardcode font values.
+All type decisions for the Single Record design system are defined here. Components reference these tokens — font values must not be hardcoded in component files.
+
+Machine-readable source of truth: `/foundations/tokens/primitives/typography.json` (primitive scale) and `/foundations/tokens/semantic/typography.json` (semantic styles).
 
 ---
 
 ## Typeface
 
-| Role | Family | Rationale |
+| Role | Family | Notes |
 |---|---|---|
-| Primary (UI) | `Inter` | High legibility at small sizes; extensive weight range; free and widely supported |
-| Fallback | `system-ui, -apple-system, sans-serif` | Graceful degradation |
-| Monospace | `'Roboto Mono', 'Courier New', monospace` | Clinical codes, identifiers, reference numbers |
+| Primary (UI) | `Roboto` | Primary typeface across all Single Record products |
+| Fallback | `Arial, sans-serif` | System fallback |
 
-**Note:** Typeface selection requires design lead sign-off. Inter is provisionally recommended pending review against NHS England guidance.
-
----
-
-## Scale
-
-Based on a modular scale with a 1.25 ratio (Major Third), anchored at 16px base.
-
-| Token | Size (rem) | Size (px) | Usage |
-|---|---|---|---|
-| `type.size.xs`   | `0.75rem`  | 12px | Labels, badges, legal text |
-| `type.size.sm`   | `0.875rem` | 14px | Secondary body, captions |
-| `type.size.base` | `1rem`     | 16px | Default body text |
-| `type.size.lg`   | `1.125rem` | 18px | Lead text, intro paragraphs |
-| `type.size.xl`   | `1.25rem`  | 20px | H4, card titles |
-| `type.size.2xl`  | `1.5rem`   | 24px | H3 |
-| `type.size.3xl`  | `1.875rem` | 30px | H2 |
-| `type.size.4xl`  | `2.25rem`  | 36px | H1 |
-
-Minimum body text: **16px** — consistent with WCAG 2.2 and NHS guidance for clinical readability.
+Typeface is defined as `font.family.primary` in the primitive token file and as a Figma variable (`Font/Family/Primary`) in the `Primitives` collection.
 
 ---
 
-## Weight
+## Font Weight Scale
 
 | Token | Value | Usage |
 |---|---|---|
-| `type.weight.regular` | `400` | Body text |
-| `type.weight.medium`  | `500` | Labels, table headers |
-| `type.weight.semibold`| `600` | UI labels, sub-headings |
-| `type.weight.bold`    | `700` | Headings, key data |
+| `font.weight.regular` | `400` | Body text, captions |
+| `font.weight.medium`  | `500` | Labels, table column headers |
+| `font.weight.bold`    | `700` | Headings |
 
 ---
 
-## Line Height
+## Font Size Scale
 
-| Token | Value | Usage |
+All sizes are in px. Referenced via semantic tokens — do not use primitive size tokens in components.
+
+| Token | Value | Usage context |
 |---|---|---|
-| `type.leading.tight`   | `1.2` | Headings |
-| `type.leading.snug`    | `1.35` | Table cells, compact UI |
-| `type.leading.normal`  | `1.5` | Body text |
-| `type.leading.relaxed` | `1.75` | Long-form documentation |
+| `font.size.12` | 12px | Caption |
+| `font.size.14` | 14px | Label, Body S |
+| `font.size.16` | 16px | Body M, Heading XS |
+| `font.size.19` | 19px | Heading S mobile |
+| `font.size.22` | 22px | Heading M mobile, Heading S desktop |
+| `font.size.26` | 26px | Heading M desktop |
+| `font.size.27` | 27px | Heading L mobile |
+| `font.size.32` | 32px | Heading XL mobile |
+| `font.size.36` | 36px | Heading L desktop |
+| `font.size.48` | 48px | Heading XL desktop |
+| `font.size.64` | 64px | Reserved — display use only |
 
-Minimum line height for body text: **1.5** — WCAG 2.2 requirement.
+---
+
+## Line Height Scale
+
+Paired with font sizes via semantic tokens.
+
+| Token | Value |
+|---|---|
+| `font.line-height.16` | 16px |
+| `font.line-height.20` | 20px |
+| `font.line-height.24` | 24px |
+| `font.line-height.27` | 27px |
+| `font.line-height.28` | 28px |
+| `font.line-height.29` | 29px |
+| `font.line-height.30` | 30px |
+| `font.line-height.32` | 32px |
+| `font.line-height.33` | 33px |
+| `font.line-height.38` | 38px |
+| `font.line-height.42` | 42px |
+| `font.line-height.54` | 54px |
+| `font.line-height.72` | 72px |
 
 ---
 
 ## Letter Spacing
 
+Values in px, matching Figma variable definitions.
+
 | Token | Value | Usage |
 |---|---|---|
-| `type.tracking.tight`  | `-0.01em` | Large headings only |
-| `type.tracking.normal` | `0` | Default |
-| `type.tracking.wide`   | `0.05em` | All-caps labels |
-| `type.tracking.wider`  | `0.1em` | Badges, status chips |
+| `font.letter-spacing.default` | `0px`    | Body text, headings |
+| `font.letter-spacing.wide`    | `0.7px`  | Labels and UI controls |
+| `font.letter-spacing.caption` | `0.24px` | Caption text |
 
 ---
 
 ## Semantic Text Styles
 
-These combine the tokens above into named styles used directly in Figma and referenced in component specs.
+These are the named styles used in Figma and referenced in all component specs. They combine primitive tokens into ready-to-use definitions. The JSON source is in `/foundations/tokens/semantic/typography.json`.
 
-| Style | Size | Weight | Leading | Usage |
+### Headings
+
+| Style token | Desktop | Mobile | Weight |
+|---|---|---|---|
+| `sr.typography.heading-xl` | 48px / 54px lh | 32px / 38px lh | Bold |
+| `sr.typography.heading-l`  | 36px / 42px lh | 27px / 33px lh | Bold |
+| `sr.typography.heading-m`  | 26px / 32px lh | 22px / 29px lh | Bold |
+| `sr.typography.heading-s`  | 22px / 30px lh | 19px / 27px lh | Bold |
+| `sr.typography.heading-xs` | 16px / 24px lh | 16px / 24px lh | Bold |
+
+### Body
+
+| Style token | Desktop | Mobile | Weight | Notes |
 |---|---|---|---|---|
-| `heading.h1` | 4xl | bold | tight | Page titles |
-| `heading.h2` | 3xl | bold | tight | Section headings |
-| `heading.h3` | 2xl | semibold | snug | Sub-sections |
-| `heading.h4` | xl | semibold | snug | Card/panel headings |
-| `body.default` | base | regular | normal | All body text |
-| `body.lead` | lg | regular | normal | Intro/summary paragraphs |
-| `body.small` | sm | regular | normal | Supporting, secondary |
-| `label.default` | sm | medium | snug | Form labels |
-| `label.strong` | sm | semibold | snug | Required field labels |
-| `data.mono` | sm | regular | snug | Clinical codes, IDs, reference numbers |
-| `caption` | xs | regular | normal | Table footnotes, image captions |
+| `sr.typography.body-m` | 16px / 24px lh | 16px / 24px lh | Regular | Default body text. Minimum size for clinical content. |
+| `sr.typography.body-s` | 14px / 24px lh | 14px / 24px lh | Regular | Supporting text, secondary content. Do not use for primary clinical content. |
+
+### UI Text
+
+| Style token | Desktop | Mobile | Weight | Tracking |
+|---|---|---|---|---|
+| `sr.typography.label`   | 14px / 20px lh | 14px / 20px lh | Medium | Wide (0.7px) |
+| `sr.typography.caption` | 12px / 16px lh | 12px / 16px lh | Regular | Caption (0.24px) |
 
 ---
 
 ## Accessibility Notes
 
-- Do not use `type.size.xs` for any text that conveys essential meaning without a visible alternative.
+- `body-m` (16px) is the **minimum** font size for primary clinical content — consistent with WCAG 2.2 and NHS guidance.
+- `body-s` (14px) may be used for supporting text only. Do not use for essential clinical information.
+- Do not use `caption` (12px) for any text that conveys essential meaning without a visible alternative.
 - Do not use colour alone to distinguish text styles — use weight or size differences as well.
 - Ensure text can be resized to 200% without loss of content or functionality (WCAG 1.4.4).
-- Line length (measure) should be 60–80 characters for body text. Use layout constraints, not `max-width` on text tokens.
+- Line length (measure) for body text: 60–80 characters. Enforce via layout constraints, not type tokens.
+- Minimum line height for body text is met by all tokens in this scale (all ≥ 1.5 ratio).

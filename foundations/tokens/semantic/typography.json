@@ -113,11 +113,11 @@
         "$description": "Extra-small heading. Inline section labels, tight UI contexts.",
         "desktop": {
           "$type": "typography",
-          "$description": "heading-xs at desktop (≥1024px): 19/28 bold",
+          "$description": "heading-xs at desktop (≥1024px): 16/24 bold",
           "$value": {
             "fontFamily":    "{font.family.primary}",
-            "fontSize":      "{font.size.19}",
-            "lineHeight":    "{font.line-height.28}",
+            "fontSize":      "{font.size.16}",
+            "lineHeight":    "{font.line-height.24}",
             "fontWeight":    "{font.weight.bold}",
             "letterSpacing": "{font.letter-spacing.default}"
           }
@@ -135,22 +135,22 @@
         }
       },
 
-      "body": {
-        "$description": "Default body text. Prose, descriptions, clinical notes.",
+      "body-m": {
+        "$description": "Medium body text. Default prose, clinical notes, descriptions. 16px — meets NHS and WCAG minimum body text guidance.",
         "desktop": {
           "$type": "typography",
-          "$description": "body at desktop (≥1024px): 19/28 regular",
+          "$description": "body-m at desktop (≥1024px): 16/24 regular",
           "$value": {
             "fontFamily":    "{font.family.primary}",
-            "fontSize":      "{font.size.19}",
-            "lineHeight":    "{font.line-height.28}",
+            "fontSize":      "{font.size.16}",
+            "lineHeight":    "{font.line-height.24}",
             "fontWeight":    "{font.weight.regular}",
             "letterSpacing": "{font.letter-spacing.default}"
           }
         },
         "mobile": {
           "$type": "typography",
-          "$description": "body at mobile (<768px): 16/24 regular",
+          "$description": "body-m at mobile (<768px): 16/24 regular",
           "$value": {
             "fontFamily":    "{font.family.primary}",
             "fontSize":      "{font.size.16}",
@@ -162,13 +162,24 @@
       },
 
       "body-s": {
-        "$description": "Small body text. Supporting prose, secondary content, help text.",
+        "$description": "Small body text. Supporting content, secondary prose, help text. 14px — do not use for primary clinical content.",
         "desktop": {
           "$type": "typography",
-          "$description": "body-s at desktop (≥1024px): 16/24 regular. No separate mobile variant — same as mobile body.",
+          "$description": "body-s at desktop (≥1024px): 14/24 regular",
           "$value": {
             "fontFamily":    "{font.family.primary}",
-            "fontSize":      "{font.size.16}",
+            "fontSize":      "{font.size.14}",
+            "lineHeight":    "{font.line-height.24}",
+            "fontWeight":    "{font.weight.regular}",
+            "letterSpacing": "{font.letter-spacing.default}"
+          }
+        },
+        "mobile": {
+          "$type": "typography",
+          "$description": "body-s at mobile (<768px): 14/24 regular",
+          "$value": {
+            "fontFamily":    "{font.family.primary}",
+            "fontSize":      "{font.size.14}",
             "lineHeight":    "{font.line-height.24}",
             "fontWeight":    "{font.weight.regular}",
             "letterSpacing": "{font.letter-spacing.default}"

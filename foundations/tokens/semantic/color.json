@@ -1,6 +1,6 @@
 {
   "$schema": "https://design-tokens.github.io/community-group/format/",
-  "$description": "DHCW Single Record Design System — Semantic colour tokens (Tier 2). All values reference primitive tokens. Prefix: sr (Single Record).",
+  "$description": "DHCW Single Record Design System — Semantic colour tokens (Tier 2). All values reference primitive tokens. Prefix: sr (Single Record). Light mode. Dark mode overrides are in color.dark.json.",
   "sr": {
     "color": {
       "interactive": {
@@ -11,11 +11,11 @@
         "destructive":   { "$type": "color", "$value": "{color.red.600}" }
       },
       "surface": {
-        "default": { "$type": "color", "$value": "{color.grey.100}" },
-        "card":    { "$type": "color", "$value": "{color.white.default}" },
-        "accent":  { "$type": "color", "$value": "{color.cyan.100}" },
-        "subtle":  { "$type": "color", "$value": "{color.blue.50}" },
-        "header":  { "$type": "color", "$value": "{color.navy.900}" }
+        "background":   { "$type": "color", "$value": "{color.grey.100}",       "$description": "Default page/app background" },
+        "small-cards":  { "$type": "color", "$value": "{color.white.default}",  "$description": "Card and panel surfaces" },
+        "accent":       { "$type": "color", "$value": "{color.cyan.100}" },
+        "subtle":       { "$type": "color", "$value": "{color.blue.50}" },
+        "header":       { "$type": "color", "$value": "{color.white.default}",  "$description": "Application header bar — light mode" }
       },
       "text": {
         "primary":   { "$type": "color", "$value": "{color.grey.900}" },
@@ -23,6 +23,7 @@
         "inverse":   { "$type": "color", "$value": "{color.white.default}" }
       },
       "border": {
+        "subtle":  { "$type": "color", "$value": "{color.grey.100}" },
         "default": { "$type": "color", "$value": "{color.grey.200}" },
         "strong":  { "$type": "color", "$value": "{color.grey.600}" },
         "focus":   { "$type": "color", "$value": "{color.focus-yellow.default}" }
@@ -34,7 +35,7 @@
         "success-surface":  { "$type": "color", "$value": "{color.green.100}" },
         "warning":          { "$type": "color", "$value": "{color.yellow.500}" },
         "warning-surface":  { "$type": "color", "$value": "{color.yellow.100}" },
-        "info":             { "$type": "color", "$value": "{color.info-blue.default}" },
+        "info":             { "$type": "color", "$value": "{color.info-blue.700}" },
         "info-surface":     { "$type": "color", "$value": "{color.info-blue.100}" }
       }
     }

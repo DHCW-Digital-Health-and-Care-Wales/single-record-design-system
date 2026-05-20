@@ -4,7 +4,7 @@ Primitive tokens define the raw palette. They are **not used directly** in compo
 
 Machine-readable source of truth: `/foundations/tokens/primitives/color.json` (W3C Design Token format).
 
-These values are defined in Figma as **primitive colour variables**.
+These values are defined in Figma as **primitive colour variables** in the `Primitives` collection.
 
 ---
 
@@ -51,10 +51,20 @@ These values are defined in Figma as **primitive colour variables**.
 
 ### Red (Status — error/critical)
 
+Full scale added for component-level flexibility. Components reference via semantic tokens only.
+
 | Token | Value | Notes |
 |---|---|---|
-| `color.red.600` | `#D5281B` | NHS red |
+| `color.red.900` | `#5F110A` | Darkest |
+| `color.red.800` | `#8B190F` | |
+| `color.red.700` | `#B32014` | |
+| `color.red.600` | `#D5281B` | NHS red — primary semantic value |
+| `color.red.500` | `#E03A31` | |
+| `color.red.400` | `#EC5E56` | |
+| `color.red.300` | `#F48B85` | |
+| `color.red.200` | `#F9B5B1` | |
 | `color.red.100` | `#FCDBD9` | Error surface |
+| `color.red.50`  | `#FEF3F2` | Lightest |
 
 ### Green (Status — success)
 
@@ -72,10 +82,20 @@ These values are defined in Figma as **primitive colour variables**.
 
 ### Info Blue (Status — informational)
 
+Full scale added to support semantic aliasing. `info-blue.700` is the primary semantic value.
+
 | Token | Value | Notes |
 |---|---|---|
-| `color.info-blue`     | `#005AA8` | Informational |
+| `color.info-blue.900` | `#002E5C` | Darkest |
+| `color.info-blue.800` | `#004483` | |
+| `color.info-blue.700` | `#005AA8` | Primary semantic value |
+| `color.info-blue.600` | `#0D62A3` | |
+| `color.info-blue.500` | `#267AB8` | |
+| `color.info-blue.400` | `#4E95CA` | |
+| `color.info-blue.300` | `#7EB0D9` | |
+| `color.info-blue.200` | `#AECCE8` | |
 | `color.info-blue.100` | `#D6E8F5` | Info surface |
+| `color.info-blue.50`  | `#EEF5FC` | Lightest |
 
 ### Focus
 
@@ -108,5 +128,5 @@ Contrast checks are documented in `/foundations/tokens/colour/semantic.md`.
 ## Notes
 
 - Do not reference `color.*` primitive tokens in component files — use semantic tokens.
-- Palette must support both light mode (current) and dark mode (future consideration).
+- Palette supports light mode and dark mode. Dark mode aliases are in `semantic/color.dark.json`.
 - Machine-readable source: `/foundations/tokens/primitives/color.json`.

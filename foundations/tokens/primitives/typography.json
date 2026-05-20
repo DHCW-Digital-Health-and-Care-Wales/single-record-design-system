@@ -50,10 +50,10 @@
     },
 
     "letter-spacing": {
-      "$description": "Letter spacing values for use in semantic typography tokens",
-      "default": { "$type": "dimension", "$value": "0",      "$description": "No additional letter spacing — used for body and headings" },
-      "wide":    { "$type": "dimension", "$value": "0.05em", "$description": "Slightly expanded — used for labels and UI controls" },
-      "caption": { "$type": "dimension", "$value": "0.02em", "$description": "Gentle expansion — used for captions and supporting text" }
+      "$description": "Letter spacing values in px, matching Figma variable definitions. Applied to semantic typography tokens.",
+      "default": { "$type": "dimension", "$value": "0px",    "$description": "No additional letter spacing — body text and headings" },
+      "wide":    { "$type": "dimension", "$value": "0.7px",  "$description": "Expanded tracking — labels and UI controls" },
+      "caption": { "$type": "dimension", "$value": "0.24px", "$description": "Gentle expansion — captions and supporting text" }
     }
 
   }

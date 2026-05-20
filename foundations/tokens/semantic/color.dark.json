@@ -14,23 +14,24 @@
       },
 
       "surface": {
-        "default": { "$type": "color", "$value": "{color.grey.900}",  "$description": "Main page background in dark mode" },
-        "card":    { "$type": "color", "$value": "{color.navy.900}",  "$description": "Card and panel surfaces — sits above page background" },
-        "accent":  { "$type": "color", "$value": "{color.blue.900}",  "$description": "Deep blue for accent / highlighted areas" },
-        "subtle":  { "$type": "color", "$value": "{color.navy.700}",  "$description": "Subtle section background — table rows, inactive tabs" },
-        "header":  { "$type": "color", "$value": "{color.navy.900}",  "$description": "Unchanged — header is already dark in light mode" }
+        "background":  { "$type": "color", "$value": "{color.navy.900}",  "$description": "Main page background in dark mode" },
+        "small-cards": { "$type": "color", "$value": "{color.cyan.900}",  "$description": "Card and panel surfaces in dark mode" },
+        "accent":      { "$type": "color", "$value": "{color.blue.900}",  "$description": "Deep blue for accent / highlighted areas" },
+        "subtle":      { "$type": "color", "$value": "{color.navy.700}",  "$description": "Subtle section background — table rows, inactive tabs" },
+        "header":      { "$type": "color", "$value": "{color.navy.900}",  "$description": "Application header bar — dark mode" }
       },
 
       "text": {
-        "primary":   { "$type": "color", "$value": "{color.white.default}", "$description": "Primary text on dark — 13.8:1 on grey-900 (AAA)" },
-        "secondary": { "$type": "color", "$value": "{color.grey.200}",      "$description": "Secondary text on dark — 9.9:1 on grey-900 (AAA)" },
+        "primary":   { "$type": "color", "$value": "{color.white.default}", "$description": "Primary text on dark — 13.8:1 on navy-900 (AAA)" },
+        "secondary": { "$type": "color", "$value": "{color.grey.200}",      "$description": "Secondary text on dark" },
         "inverse":   { "$type": "color", "$value": "{color.grey.900}",      "$description": "Text on light elements within a dark-mode interface" }
       },
 
       "border": {
-        "default": { "$type": "color", "$value": "{color.navy.500}",          "$description": "Subtle dividers and input borders on dark surfaces" },
-        "strong":  { "$type": "color", "$value": "{color.navy.300}",          "$description": "More visible borders and section edges" },
-        "focus":   { "$type": "color", "$value": "{color.focus-yellow.default}", "$description": "Unchanged — NHS/GDS focus yellow is highly visible on both light and dark" }
+        "subtle":  { "$type": "color", "$value": "{color.navy.700}",             "$description": "Subtle dividers on dark surfaces" },
+        "default": { "$type": "color", "$value": "{color.navy.500}",             "$description": "Standard borders on dark surfaces" },
+        "strong":  { "$type": "color", "$value": "{color.navy.300}",             "$description": "High-contrast borders on dark surfaces" },
+        "focus":   { "$type": "color", "$value": "{color.focus-yellow.default}", "$description": "Unchanged — focus yellow is visible on both light and dark" }
       },
 
       "status": {
@@ -38,9 +39,9 @@
         "critical-surface": { "$type": "color", "$value": "{color.blue.900}",         "$description": "Deep blue dark surface for critical banners — red-100 text differentiates" },
         "success":          { "$type": "color", "$value": "{color.green.100}",        "$description": "Light green for success text/icon — high contrast on dark" },
         "success-surface":  { "$type": "color", "$value": "{color.navy.900}",         "$description": "Dark navy surface for success banners" },
-        "warning":          { "$type": "color", "$value": "{color.yellow.500}",       "$description": "Yellow retained — 7.6:1 contrast on grey-900 (AAA)" },
+        "warning":          { "$type": "color", "$value": "{color.yellow.500}",       "$description": "Yellow retained — 7.6:1 contrast on navy-900 (AAA)" },
         "warning-surface":  { "$type": "color", "$value": "{color.navy.700}",         "$description": "Mid-dark surface for warning banners" },
-        "info":             { "$type": "color", "$value": "{color.cyan.300}",         "$description": "Light cyan for info text/icon — ~10:1 on dark surfaces" },
+        "info":             { "$type": "color", "$value": "{color.info-blue.700}",    "$description": "Info Blue 700 — matches light mode. Verify contrast against final surface colour at implementation." },
         "info-surface":     { "$type": "color", "$value": "{color.navy.900}",         "$description": "Dark navy surface for informational banners" }
       }
 
