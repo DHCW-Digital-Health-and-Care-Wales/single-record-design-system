@@ -112,8 +112,8 @@ All semantic variables alias primitives — no raw hex values.
 ### Interactive
 | Figma Variable | Token | Light alias | Dark alias |
 |---|---|---|---|
-| `SR/Interactive/Primary` | `sr.color.interactive.primary` | `color.blue.800` | `color.cyan.700` |
-| `SR/Interactive/Primary Hover` | `sr.color.interactive.primary-hover` | `color.blue.900` | `color.cyan.600` |
+| `SR/Interactive/Primary` | `sr.color.interactive.primary` | `color.blue.800` | `color.cyan.900` |
+| `SR/Interactive/Primary Hover` | `sr.color.interactive.primary-hover` | `color.blue.900` | `color.cyan.800` |
 | `SR/Interactive/Secondary` | `sr.color.interactive.secondary` | `color.navy.900` | `color.blue.300` |
 | `SR/Interactive/Link` | `sr.color.interactive.link` | `color.info-blue` | `color.cyan.400` |
 | `SR/Interactive/Destructive` | `sr.color.interactive.destructive` | `color.red.600` | `color.red.600` |
@@ -153,6 +153,14 @@ All semantic variables alias primitives — no raw hex values.
 | `SR/Status/Warning Surface` | `sr.color.status.warning-surface` | `color.yellow.100` | `color.navy.700` |
 | `SR/Status/Info` | `sr.color.status.info` | `color.info-blue.700` | `color.info-blue.700` |
 | `SR/Status/Info Surface` | `sr.color.status.info-surface` | `color.info-blue.100` | `color.navy.900` |
+
+### Brand
+
+| Figma Variable | Token | Light alias | Dark alias |
+|---|---|---|---|
+| `SR/Brand/Accent` | `sr.color.brand.accent` | `color.cyan.700` | `color.cyan.700` |
+
+> Cyan-700 (#12A3C9) is decorative only — borders, icon strokes, chart accents, tab indicators. White text on cyan-700 = 2.6:1 (fails AA). For any filled surface with white text, use `sr.color.interactive.primary` (cyan-900 dark / blue-800 light).
 
 ---
 
