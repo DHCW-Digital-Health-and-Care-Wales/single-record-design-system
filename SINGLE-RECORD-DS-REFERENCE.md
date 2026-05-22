@@ -423,9 +423,19 @@ Shadow colour is derived from `color.navy.900` (`#1B294A`) rather than pure blac
 
 | Token | CSS `box-shadow` | Used for |
 |---|---|---|
-| `sr.elevation.button`  | `0 4px 0 #1B294A`                    | Primary button press affordance |
+| `sr.elevation.button`  | `0 2px 0 #1B294A`                    | Primary and outline button press affordance (GDS-aligned) |
 | `sr.elevation.raised`  | `0 1px 4px rgba(27,41,74,0.12)`      | Cards, panels — gentle lift from page |
 | `sr.elevation.overlay` | `0 4px 16px rgba(27,41,74,0.18)`     | Modals, drawers, dropdowns, tooltips |
+
+**Button shadow by variant:**
+
+| Button variant | Shadow |
+|---|---|
+| Primary | `sr.elevation.button` — `0 2px 0 #1B294A` |
+| Outline / secondary | `sr.elevation.button` — `0 2px 0 #1B294A` |
+| Ghost | `none` — affordance carried by border and colour only |
+| Warning / destructive | `sr.elevation.button` — `0 2px 0 #1B294A` |
+| Disabled (any variant) | `none` — shadow removed to reinforce unavailability |
 
 Rules:
 - Do not stack multiple elevations on one element.

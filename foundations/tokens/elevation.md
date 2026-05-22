@@ -20,11 +20,21 @@ SR extends this deliberately and sparingly:
 
 | Token | CSS `box-shadow` | Used for |
 |---|---|---|
-| `sr.elevation.button` | `0 4px 0 #1B294A` | Primary button press affordance |
+| `sr.elevation.button` | `0 2px 0 #1B294A` | Primary and outline button press affordance |
 | `sr.elevation.raised` | `0 1px 4px rgba(27,41,74,0.12)` | Cards, panels — gentle lift from page |
 | `sr.elevation.overlay` | `0 4px 16px rgba(27,41,74,0.18)` | Modals, drawers, dropdowns, tooltips |
 
 No `elevation.0` token is needed — the absence of shadow is expressed by not applying any shadow, or by `box-shadow: none` explicitly in a reset context.
+
+### Button shadow by variant
+
+| Button variant | Shadow |
+|---|---|
+| Primary | `sr.elevation.button` — `0 2px 0 #1B294A` |
+| Outline / secondary | `sr.elevation.button` — `0 2px 0 #1B294A` |
+| Ghost | `none` — ghost buttons communicate affordance through border and colour only. Shadow would compete with the low-weight intent. |
+| Warning / destructive | `sr.elevation.button` — `0 2px 0 #1B294A` |
+| Disabled (any variant) | `none` — disabled state removes shadow to reinforce unavailability. |
 
 ---
 
