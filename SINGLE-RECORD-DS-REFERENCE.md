@@ -222,8 +222,8 @@ The `Single Record` Figma collection exposes these with **Light** and **Dark** m
 
 | Token | Light | Light hex | Dark | Dark hex | Usage |
 |---|---|---|---|---|---|
-| `sr.color.interactive.primary` | `color.blue.800` | `#325083` | `color.cyan.700` | `#12A3C9` | Primary buttons, active nav |
-| `sr.color.interactive.primary-hover` | `color.blue.900` | `#1E3050` | `color.cyan.600` | `#71ACCD` | Hover on primary |
+| `sr.color.interactive.primary` | `color.blue.800` | `#325083` | `color.cyan.900` | `#0A6A84` | Primary buttons, active nav. Dark uses cyan-900 — 5.8:1 white contrast (AA). |
+| `sr.color.interactive.primary-hover` | `color.blue.900` | `#1E3050` | `color.cyan.800` | `#0D8BAD` | Hover on primary. Dark: pair with inner border. White on cyan-800 = 4.2:1 (AA large/bold). |
 | `sr.color.interactive.secondary` | `color.navy.900` | `#1B294A` | `color.blue.300` | `#AAB1C6` | Secondary interactive elements |
 | `sr.color.interactive.link` | `color.info-blue.700` | `#005AA8` | `color.cyan.400` | `#AFD4E5` | Inline links |
 | `sr.color.interactive.destructive` | `color.red.600` | `#D5281B` | `color.red.600` | `#D5281B` | Destructive actions |
@@ -254,6 +254,14 @@ The `Single Record` Figma collection exposes these with **Light** and **Dark** m
 | `sr.color.border.default` | `color.grey.200` | `#D8DDE0` | `color.navy.500` | `#707488` | Standard borders — inputs, cards, dividers |
 | `sr.color.border.strong` | `color.grey.600` | `#4C6272` | `color.navy.300` | `#9EA1AF` | Active/selected rows, structural dividers |
 | `sr.color.border.focus` | `color.focus-yellow` | `#FFEB3B` | `color.focus-yellow` | `#FFEB3B` | Focus ring — pair with 2px dark inner ring |
+
+### Brand
+
+| Token | Light | Light hex | Dark | Dark hex | Usage |
+|---|---|---|---|---|---|
+| `sr.color.brand.accent` | `color.cyan.700` | `#12A3C9` | `color.cyan.700` | `#12A3C9` | **Decorative only.** Borders, icon strokes, chart series, tab underlines. Never use as a filled surface with white text — contrast is 2.6:1 (fails AA). |
+
+> **Cyan usage rule:** Cyan-700 (`brand.accent`) = decorative. Cyan-900 (`interactive.primary` dark) = filled surfaces with white text (5.8:1 AA). Never mix these roles.
 
 ### Status
 
@@ -415,9 +423,19 @@ Shadow colour is derived from `color.navy.900` (`#1B294A`) rather than pure blac
 
 | Token | CSS `box-shadow` | Used for |
 |---|---|---|
-| `sr.elevation.button`  | `0 4px 0 #1B294A`                    | Primary button press affordance |
+| `sr.elevation.button`  | `0 2px 0 #1B294A`                    | Primary and outline button press affordance (GDS-aligned) |
 | `sr.elevation.raised`  | `0 1px 4px rgba(27,41,74,0.12)`      | Cards, panels — gentle lift from page |
 | `sr.elevation.overlay` | `0 4px 16px rgba(27,41,74,0.18)`     | Modals, drawers, dropdowns, tooltips |
+
+**Button shadow by variant:**
+
+| Button variant | Shadow |
+|---|---|
+| Primary | `sr.elevation.button` — `0 2px 0 #1B294A` |
+| Outline / secondary | `sr.elevation.button` — `0 2px 0 #1B294A` |
+| Ghost | `none` — affordance carried by border and colour only |
+| Warning / destructive | `sr.elevation.button` — `0 2px 0 #1B294A` |
+| Disabled (any variant) | `none` — shadow removed to reinforce unavailability |
 
 Rules:
 - Do not stack multiple elevations on one element.
@@ -1126,8 +1144,8 @@ Adopt Lucide Icons as the SR icon library (ISC licence, 24×24px grid, 2px strok
 
 | Figma Variable | Token | Light alias | Dark alias |
 |---|---|---|---|
-| `SR/Interactive/Primary` | `sr.color.interactive.primary` | `color.blue.800` | `color.cyan.700` |
-| `SR/Interactive/Primary Hover` | `sr.color.interactive.primary-hover` | `color.blue.900` | `color.cyan.600` |
+| `SR/Interactive/Primary` | `sr.color.interactive.primary` | `color.blue.800` | `color.cyan.900` |
+| `SR/Interactive/Primary Hover` | `sr.color.interactive.primary-hover` | `color.blue.900` | `color.cyan.800` |
 | `SR/Interactive/Secondary` | `sr.color.interactive.secondary` | `color.navy.900` | `color.blue.300` |
 | `SR/Interactive/Link` | `sr.color.interactive.link` | `color.info-blue.700` | `color.cyan.400` |
 | `SR/Interactive/Destructive` | `sr.color.interactive.destructive` | `color.red.600` | `color.red.600` |
@@ -1158,6 +1176,12 @@ Adopt Lucide Icons as the SR icon library (ISC licence, 24×24px grid, 2px strok
 | `SR/Border/Default` | `sr.color.border.default` | `color.grey.200` | `color.navy.500` |
 | `SR/Border/Strong`  | `sr.color.border.strong`  | `color.grey.600` | `color.navy.300` |
 | `SR/Border/Focus`   | `sr.color.border.focus`   | `color.focus-yellow` | `color.focus-yellow` |
+
+### Semantic Colour — Brand
+
+| Figma Variable | Token | Light alias | Dark alias |
+|---|---|---|---|
+| `SR/Brand/Accent` | `sr.color.brand.accent` | `color.cyan.700` | `color.cyan.700` |
 
 ### Semantic Colour — Status
 

@@ -6,8 +6,8 @@
     "color": {
 
       "interactive": {
-        "primary":       { "$type": "color", "$value": "{color.cyan.700}",   "$description": "DHCW brand secondary — vibrant and distinct on dark surfaces" },
-        "primary-hover": { "$type": "color", "$value": "{color.cyan.600}",   "$description": "Lighter step for hover — dark mode hover moves lighter, not darker" },
+        "primary":       { "$type": "color", "$value": "{color.cyan.900}",   "$description": "DHCW brand — cyan-900 ensures 5.8:1 white-text contrast (AA)" },
+        "primary-hover": { "$type": "color", "$value": "{color.cyan.800}",   "$description": "Hover step for primary — pair with inner border. White on cyan-800 = 4.2:1 (AA large/bold text)." },
         "secondary":     { "$type": "color", "$value": "{color.blue.300}",   "$description": "Muted blue for secondary interactive elements" },
         "link":          { "$type": "color", "$value": "{color.cyan.400}",   "$description": "Soft cyan — readable as inline link text on dark backgrounds" },
         "destructive":   { "$type": "color", "$value": "{color.red.600}",    "$description": "Unchanged — white text on red-600 meets AA (5.18:1). Non-text contrast is borderline; enforce a visible border at component level." }
@@ -32,6 +32,10 @@
         "default": { "$type": "color", "$value": "{color.navy.500}",             "$description": "Standard borders on dark surfaces" },
         "strong":  { "$type": "color", "$value": "{color.navy.300}",             "$description": "High-contrast borders on dark surfaces" },
         "focus":   { "$type": "color", "$value": "{color.focus-yellow.default}", "$description": "Unchanged — focus yellow is visible on both light and dark" }
+      },
+
+      "brand": {
+        "accent": { "$type": "color", "$value": "{color.cyan.700}", "$description": "Decorative accent only. Same as light mode — cyan-700 used purely for visual interest, not as a surface requiring text." }
       },
 
       "status": {

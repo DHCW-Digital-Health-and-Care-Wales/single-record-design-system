@@ -12,8 +12,8 @@ All semantic tokens use the `sr` prefix (Single Record). They are defined in Fig
 
 | Token | Light | Dark | Usage |
 |---|---|---|---|
-| `sr.color.interactive.primary` | `blue.800` | `cyan.700` | Primary buttons, active nav |
-| `sr.color.interactive.primary-hover` | `blue.900` | `cyan.600` | Hover state for primary |
+| `sr.color.interactive.primary` | `blue.800` | `cyan.900` | Primary buttons, active nav. Dark: cyan-900 gives 5.8:1 white-text contrast (AA). |
+| `sr.color.interactive.primary-hover` | `blue.900` | `cyan.800` | Hover state. Dark: pair with inner border; white on cyan-800 = 4.2:1 (AA large/bold). |
 | `sr.color.interactive.secondary` | `navy.900` | `blue.300` | Secondary interactive elements |
 | `sr.color.interactive.link` | `info-blue` | `cyan.400` | Inline links |
 | `sr.color.interactive.destructive` | `red.600` | `red.600` | Destructive actions |
@@ -50,6 +50,16 @@ All semantic tokens use the `sr` prefix (Single Record). They are defined in Fig
 | `sr.color.border.default` | `grey.200` | `navy.500` | Standard borders — inputs, cards, section dividers. |
 | `sr.color.border.strong`  | `grey.600` | `navy.300` | High-contrast borders — active rows, structural dividers. |
 | `sr.color.border.focus`   | `focus-yellow` | `focus-yellow` | Focus ring. Pair with `Border/Width/Strong` (2px) and an inner dark ring. |
+
+---
+
+## Brand
+
+| Token | Light | Dark | Usage |
+|---|---|---|---|
+| `sr.color.brand.accent` | `cyan.700` | `cyan.700` | Decorative accent only — borders, icon strokes, chart accents, active-tab underlines. **Never use as a filled surface requiring white text.** |
+
+Cyan-700 (#12A3C9) does not meet AA contrast with white text (2.6:1). Use `sr.color.interactive.primary` (which maps to cyan-900 in dark mode) for any filled surface that needs white text on top.
 
 ---
 

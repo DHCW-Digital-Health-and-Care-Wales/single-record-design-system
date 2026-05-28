@@ -28,6 +28,9 @@
         "strong":  { "$type": "color", "$value": "{color.grey.600}" },
         "focus":   { "$type": "color", "$value": "{color.focus-yellow.default}" }
       },
+      "brand": {
+        "accent": { "$type": "color", "$value": "{color.cyan.700}", "$description": "Decorative accent only. Use for borders, icon strokes, chart accents, tab indicators. Never use as a filled surface with text on top." }
+      },
       "status": {
         "critical":         { "$type": "color", "$value": "{color.red.600}" },
         "critical-surface": { "$type": "color", "$value": "{color.red.100}" },
