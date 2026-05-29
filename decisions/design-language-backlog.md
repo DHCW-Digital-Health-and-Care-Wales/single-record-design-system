@@ -10,8 +10,7 @@ Add new items to **Pending**. Move to **In Progress** when a batch is being appl
 
 | # | Change | Affects | Notes |
 |---|---|---|---|
-| DL-002 | Create semantic disabled tokens: `Interactive/Disabled`, `Text/Disabled` | All components with disabled state | Defer until 2–3 components share the same disabled pattern. Currently using primitives `Blue/400` (surfaces) and `Navy/300` (text). |
-| DL-003 | Resolve Interactive Primary colour scale for hover/active/pressed | Button (Primary), any future interactive controls | Recommendation: shift scale — Blue/700 default · Blue/800 hover · Blue/900 active/pressed. Confirm with design lead before applying. |
+| DL-003 | Decide approach for active/pressed state on Primary button | Button (Primary), any future interactive controls | `Interactive/Primary` = Blue/800. Blue/900 taken by hover. Active/pressed deferred — revisit when needed. Do not change the default Blue/800 without explicit permission. |
 
 ---
 
@@ -25,7 +24,9 @@ Add new items to **Pending**. Move to **In Progress** when a batch is being appl
 
 ## Done
 
-_Nothing yet._
+| # | Change | Completed | Components updated | Notes |
+|---|---|---|---|---|
+| DL-002 | Create semantic disabled tokens: `Interactive/Disabled` (→ Blue/400), `Text/Disabled` (→ Navy/300), `Border/Disabled` (→ Navy/300) | 2026-05-29 | Button (all 12 disabled variants) | Confirmed pattern across secondary buttons, toggles, input fields, tab menus. Primitives replaced with semantic tokens in Button. Apply to other components as they are built. |
 
 ---
 
@@ -34,3 +35,4 @@ _Nothing yet._
 - **Batching:** group related changes into a single session. Update multiple components at once rather than one at a time.
 - **DDR threshold:** if a change affects a core token, a pattern, or an architectural decision, write a full DDR in `/decisions/` before applying.
 - **Component audit:** when closing an item, list every component that was checked (not just the ones that changed).
+- **Key decisions:** colour scale, token naming, and structural changes require explicit sign-off before applying — do not act on recommendations without confirmation.
