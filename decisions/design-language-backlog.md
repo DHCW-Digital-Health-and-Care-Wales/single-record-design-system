@@ -16,9 +16,7 @@ Add new items to **Pending**. Move to **In Progress** when a batch is being appl
 
 ## In Progress
 
-| # | Change | Affects | Notes |
-|---|---|---|---|
-| DL-001 | Heading XS Desktop + Mobile font weight → Medium (500) | Button (Large), any component using Heading XS typography | Variable updated in Figma. Button Large labels updated 2026-05-29. Audit other components for Heading XS usage before closing. |
+_Nothing currently in progress._
 
 ---
 
@@ -26,6 +24,7 @@ Add new items to **Pending**. Move to **In Progress** when a batch is being appl
 
 | # | Change | Completed | Components updated | Notes |
 |---|---|---|---|---|
+| DL-001 | Heading XS Desktop + Mobile font weight → Medium (500) | All text using SR Typography/Desktop/Heading XS or SR Typography/Mobile/Heading XS | Root fix: Text Style `fontName` updated to Roboto Medium. Variable binding alone was insufficient — style definition is authoritative. Applies to all existing and new text using the style. | 2026-05-29 |
 | DL-002 | Create semantic disabled tokens: `Interactive/Disabled` (→ Blue/400), `Text/Disabled` (→ Navy/300), `Border/Disabled` (→ Navy/300) | 2026-05-29 | Button (all 12 disabled variants) | Confirmed pattern across secondary buttons, toggles, input fields, tab menus. Primitives replaced with semantic tokens in Button. Apply to other components as they are built. |
 
 ---
