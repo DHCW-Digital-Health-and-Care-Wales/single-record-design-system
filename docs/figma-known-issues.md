@@ -30,6 +30,35 @@ Any text using the style — existing and new — will immediately reflect the c
 
 ## Variables & Tokens
 
+### `setBoundVariableForPaint` must receive the resolved colour as the static base — not black
+
+**Symptom:** After binding a colour variable to a fill via `setBoundVariableForPaint`, the node renders as solid black in the Figma canvas even though the variable's Light-mode value is white or another colour.
+
+**Why:** Figma stores the `paint.color` property as the rendered value and only re-resolves the variable when the mode is explicitly switched in the canvas. If you pass `{type:'SOLID', color:{r:0,g:0,b:0}}` as the base paint, Figma keeps black as `paint.color` — the variable binding alone does not trigger an immediate re-render to the resolved value.
+
+**Fix:** Resolve the variable's value (following alias chains if needed) before constructing the base paint, and pass the resolved colour as the static value:
+
+```js
+function cp(varName) {
+  const v = varByName[varName];
+  const resolved = resolveColor(varName); // follow alias chain to concrete {r,g,b,a}
+  const base = resolved || { r: 0, g: 0, b: 0, a: 1 };
+  return figma.variables.setBoundVariableForPaint(
+    { type: 'SOLID', color: { r: base.r, g: base.g, b: base.b } },
+    'color',
+    v
+  );
+}
+```
+
+The `paint.color` will then hold the correct Light-mode value, and the variable binding will still update it correctly when the mode is switched.
+
+**Status:** Resolved 2026-06-01. Applied to input field component fills after initial binding used black fallback.
+
+---
+
+
+
 ### Variable alias chains must be resolved manually in Plugin API code
 
 **Symptom:** Reading a variable value via `variable.valuesByMode[modeId]` returns an object `{ type: "VARIABLE_ALIAS", id: "..." }` instead of a number or colour.
