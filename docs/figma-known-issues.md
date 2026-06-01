@@ -128,6 +128,32 @@ child.layoutSizingVertical = 'FIXED';
 
 ---
 
+### DROP_SHADOW on nodes inside a component set is always clipped — use OUTSIDE stroke for focus rings on components
+
+**Symptom:** A `DROP_SHADOW` effect (spread: 3, radius: 0, offset: 0) applied to a node inside a component variant is invisible in the Figma canvas, even after setting `clipsContent = false` on both the variant and the component set.
+
+**Why:** Figma component sets enforce overflow clipping on their child variants at the canvas rendering level, regardless of the `clipsContent` property. Effects that need to render outside a variant's bounding box (such as a spread-only shadow used as a focus ring) are silently clipped. This applies even when the shadow is on a filled child node (e.g. `Inner Frame`) rather than the variant itself.
+
+**Fix:** Use an `OUTSIDE` stroke on the component variant node for focus rings. A stroke with `strokeAlign: 'OUTSIDE'` on the variant renders correctly. Apply only to focus state variants — do not add a hidden stroke to non-focus states.
+
+```js
+// Focus variant only — no stroke on default/hover/disabled
+variant.strokes = [focusStrokePaint];
+variant.strokeWeight = 3;
+variant.strokeAlign = 'OUTSIDE';
+
+// Non-focus variants — no stroke at all
+variant.strokes = [];
+```
+
+**Code equivalence:** In CSS/Blazor this still maps to `outline: 3px solid var(--color-border-focus)`. The Figma mechanism differs but the design intent is the same — a ring that does not affect layout.
+
+**Note:** DROP_SHADOW works correctly on non-component frames (e.g. input field rows inside a component variant have enough internal space for the shadow to remain within the variant bounds). The limitation only applies when the shadow must overflow the variant's outer edge.
+
+**Status:** Resolved 2026-06-01. Button component uses OUTSIDE stroke. Input field uses DROP_SHADOW (ring stays within variant bounds).
+
+---
+
 ### `combineAsVariants` must target a page or frame — not a text or shape node
 
 **Symptom:** `figma.combineAsVariants(components, targetNode)` silently does nothing or creates the component set in the wrong place.
