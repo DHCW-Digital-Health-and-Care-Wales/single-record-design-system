@@ -11,6 +11,7 @@ Add new items to **Pending**. Move to **In Progress** when a batch is being appl
 | # | Change | Affects | Notes |
 |---|---|---|---|
 | DL-003 | Decide approach for active/pressed state on Primary button | Button (Primary), any future interactive controls | `Interactive/Primary` = Blue/800. Blue/900 taken by hover. Active/pressed deferred — revisit when needed. Do not change the default Blue/800 without explicit permission. |
+| DL-006 | Add `Border/Error` semantic token (→ `Interactive/Destructive` → Red/600) | All form components using error borders (Input Field, Select, Checkbox, Radio) | Currently `Interactive/Destructive` is used directly for error borders, which reads semantically wrong in code. A dedicated `Border/Error` alias makes the intent explicit. `Interactive/Destructive` stays for destructive action buttons. Apply to all form components when token is created. |
 
 ---
 
