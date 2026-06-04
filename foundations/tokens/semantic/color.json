@@ -1,35 +1,38 @@
 {
   "$schema": "https://design-tokens.github.io/community-group/format/",
-  "$description": "DHCW Single Record Design System — Semantic colour tokens (Tier 2). All values reference primitive tokens. Prefix: sr (Single Record). Light mode. Dark mode overrides are in color.dark.json.",
+  "$description": "DHCW Single Record Design System — Semantic colour tokens (Tier 2). Light mode. All values reference primitive tokens. Prefix: sr (Single Record). Dark mode overrides are in color.dark.json. Source of truth: the Single Record Figma variable collection — keep in sync.",
   "sr": {
     "color": {
       "interactive": {
-        "primary":       { "$type": "color", "$value": "{color.blue.800}" },
-        "primary-hover": { "$type": "color", "$value": "{color.blue.900}" },
-        "secondary":     { "$type": "color", "$value": "{color.navy.900}" },
-        "link":          { "$type": "color", "$value": "{color.info-blue.default}" },
-        "destructive":   { "$type": "color", "$value": "{color.red.600}" }
+        "primary":       { "$type": "color", "$value": "{color.blue.800}",       "$description": "Brand primary. White text on blue-800 = 7.1:1 (AAA)." },
+        "primary-hover": { "$type": "color", "$value": "{color.blue.900}",       "$description": "Hover step for primary." },
+        "secondary":     { "$type": "color", "$value": "{color.navy.900}",       "$description": "Muted dark for secondary interactive elements." },
+        "link":          { "$type": "color", "$value": "{color.info-blue.700}",  "$description": "Inline link colour. 6.8:1 on surface/background (AA)." },
+        "destructive":   { "$type": "color", "$value": "{color.red.600}",        "$description": "Destructive UI action (delete, remove). Pair with confirmation." },
+        "disabled":      { "$type": "color", "$value": "{color.blue.400}",       "$description": "Disabled interactive element fill." }
       },
       "surface": {
-        "background":   { "$type": "color", "$value": "{color.grey.100}",       "$description": "Default page/app background" },
-        "small-cards":  { "$type": "color", "$value": "{color.white.default}",  "$description": "Card and panel surfaces" },
-        "accent":         { "$type": "color", "$value": "{color.cyan.100}" },
-        "subtle":         { "$type": "color", "$value": "{color.blue.50}" },
-        "section-cards":  { "$type": "color", "$value": "{color.white.default}", "$description": "Primary background for card sections in modular layout" }
+        "background":     { "$type": "color", "$value": "{color.blue.50}",       "$description": "Default page/app background." },
+        "small-cards":    { "$type": "color", "$value": "{color.white.default}", "$description": "Card and panel surfaces." },
+        "section-cards":  { "$type": "color", "$value": "{color.white.default}", "$description": "Primary background for card sections in modular layout." },
+        "accent":         { "$type": "color", "$value": "{color.cyan.100}",      "$description": "Tinted surface — highlighted regions, callouts." },
+        "subtle":         { "$type": "color", "$value": "{color.blue.50}",       "$description": "Subtle section background — table rows, inactive tabs." }
       },
       "text": {
-        "primary":   { "$type": "color", "$value": "{color.grey.900}" },
-        "secondary": { "$type": "color", "$value": "{color.grey.600}" },
-        "inverse":   { "$type": "color", "$value": "{color.white.default}" }
+        "primary":   { "$type": "color", "$value": "{color.grey.900}",     "$description": "Default text. 15.6:1 on surface/background (AAA)." },
+        "secondary": { "$type": "color", "$value": "{color.grey.600}",     "$description": "Supporting text. 7.2:1 on surface/background (AAA)." },
+        "inverse":   { "$type": "color", "$value": "{color.white.default}","$description": "Text on dark or saturated surfaces." },
+        "disabled":  { "$type": "color", "$value": "{color.navy.500}",     "$description": "Disabled text. 4.6:1 on surface/background (AA)." }
       },
       "border": {
-        "subtle":  { "$type": "color", "$value": "{color.grey.100}" },
-        "default": { "$type": "color", "$value": "{color.grey.200}" },
-        "strong":  { "$type": "color", "$value": "{color.grey.600}" },
-        "focus":   { "$type": "color", "$value": "{color.focus-yellow.default}" }
+        "subtle":   { "$type": "color", "$value": "{color.grey.100}" },
+        "default":  { "$type": "color", "$value": "{color.grey.200}" },
+        "strong":   { "$type": "color", "$value": "{color.grey.600}" },
+        "focus":    { "$type": "color", "$value": "{color.cyan.700}",  "$description": "Focus ring — cyan/700 in both modes (DDR-006). Supersedes the previous focus-yellow." },
+        "disabled": { "$type": "color", "$value": "{color.navy.300}" }
       },
       "brand": {
-        "accent": { "$type": "color", "$value": "{color.cyan.700}", "$description": "Decorative accent only. Use for borders, icon strokes, chart accents, tab indicators. Never use as a filled surface with text on top." }
+        "accent": { "$type": "color", "$value": "{color.cyan.700}", "$description": "Decorative accent only. Borders, icon strokes, chart accents, tab indicators. Never use as a filled surface with text on top." }
       },
       "status": {
         "critical":         { "$type": "color", "$value": "{color.red.600}" },

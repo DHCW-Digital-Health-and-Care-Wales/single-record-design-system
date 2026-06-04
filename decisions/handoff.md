@@ -15,6 +15,20 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Weekly Checkpoint — 2026-06-04
+
+This week's accepted changes (now reflected in Figma, tokens, and docs):
+
+- **DDR-005** — typography scale cleaned to 4px grid. New desktop scale XS 16/24 · S 20/28 · M 24/32 · L 28/36 · XL 36/44. New mobile XS 16/24 · S 18/24 · M 20/28 · L 24/32 · XL 28/36. Letter-spacing aligned to Figma (`wide` 0.3, `caption` 0.2). Off-grid primitives deleted from Figma.
+- **DDR-006** — focus ring changed from `Focus Yellow` (#FFEB3B) to `Cyan/700` (#12A3C9) in both modes. `focus-yellow` primitive deprecated, not yet removed.
+- Dark mode `Interactive/Primary` updated to `Info Blue/600` (#0D62A3), hover to `Info Blue/800`. Supersedes the earlier Cyan/850 decision.
+- New semantic tokens added: `Interactive/Disabled`, `Text/Disabled`, `Border/Disabled` (now bound across components).
+- Surface/Background (light) shifted from `Grey/100` to `Blue/50` (#F4F5F8) for a slightly cooler page tone.
+- Status surfaces in dark mode kept light (red.100, green.100, yellow.100, info-blue.100) — banners use light fills in both modes for contrast against the bright status colour.
+- New components: **Link** component set (36 variants) — see `/components/link/spec.md`, Figma node `1633:320`.
+
+---
+
 ## Current Design System State (as of 2026-06-04)
 
 ### Tokens in Figma
@@ -69,9 +83,9 @@ For the full log of design language changes, see `design-language-backlog.md`.
 |---|---|
 | `Interactive/Destructive` vs `Status/Critical` | Same colour (Red/600), different roles. `Interactive/Destructive` = UI action risk (delete button, error border on forms). `Status/Critical` = clinical severity label (badge, tag). Never swap them. |
 | Show/hide on components | Boolean property for optional decoration. Variant for structural layout changes. Hidden = `visible=false`, never deleted. |
-| Dark mode Interactive/Primary | Cyan/850 (`#0c7b99`). Was Cyan/900. Gives 4.88:1 contrast (WCAG AA) with white text. Do not revert. |
-| Heading scale (desktop) | XS=16px, S=20px, M=24px, L=28px, XL=36px. Mobile scale unchanged. |
-| Focus rings | Yellow (`Border/Focus`), OUTSIDE stroke, applied to the interactive element itself — not a wrapper frame that includes a label. |
+| Dark mode Interactive/Primary | `Info Blue/600` (#0D62A3) — replaces the earlier Cyan/850. Hover step `Info Blue/800`. 5.1:1 with white text (AA). Do not revert. |
+| Heading scale | Governed by **DDR-005** (supersedes DDR-004). Desktop XS=16/24, S=20/28, M=24/32, L=28/36, XL=36/44. Mobile XS=16/24, S=18/24, M=20/28, L=24/32, XL=28/36. All line-heights on the 4px grid; letter-spacing aligned to Figma (wide=0.3, caption=0.2). |
+| Focus rings | **`Cyan/700` (DDR-006)** in both modes. OUTSIDE stroke, applied to the interactive element itself — not a wrapper frame that includes a label. The `focus-yellow` primitive is deprecated. |
 
 ---
 
@@ -87,7 +101,8 @@ For the full log of design language changes, see `design-language-backlog.md`.
 | Nav Item component set | 368:3682 | Use this. The old flat component 368:3681 is deprecated. |
 | Sidebar Navigation | 725:8903 | 140 Nav Item instances, all pointing to 368:3682 |
 | Stroke/icon colour variable | VariableID:203:100 | Text/Default — used for all icon strokes |
-| Border/Focus variable | VariableID:203:105 | Yellow focus ring |
+| Border/Focus variable | VariableID:203:105 | Cyan/700 focus ring (DDR-006) |
+| Link component set | 1633:320 | On the Buttons page (1318:14904), below the Button frame |
 | Interactive/Destructive | VariableID:203:94 | Red/600 — error borders, destructive actions |
 | Border/Disabled | VariableID:1351:22 | |
 | Text/Disabled | VariableID:1351:21 | |

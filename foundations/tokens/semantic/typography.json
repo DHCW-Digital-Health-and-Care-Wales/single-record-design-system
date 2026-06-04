@@ -1,6 +1,6 @@
 {
   "$schema": "https://design-tokens.github.io/community-group/format/",
-  "$description": "DHCW Single Record Design System — Semantic typography tokens (Tier 2). All values reference primitive tokens via {path} syntax. Prefix: sr (Single Record). Desktop and mobile variants are separated; apply via breakpoints defined in tokens/breakpoints.json.",
+  "$description": "DHCW Single Record Design System — Semantic typography tokens (Tier 2). All values reference primitive tokens via {path} syntax. Prefix: sr (Single Record). Desktop and mobile variants are separated; apply via breakpoints defined in tokens/breakpoints.json. Scale governed by DDR-005.",
 
   "sr": {
     "typography": {
@@ -9,22 +9,22 @@
         "$description": "Extra-large heading. Page-level titles and hero text.",
         "desktop": {
           "$type": "typography",
-          "$description": "heading-xl at desktop (≥1024px): 48/54 bold",
+          "$description": "heading-xl desktop (≥1024px): 36/44 bold",
           "$value": {
             "fontFamily":    "{font.family.primary}",
-            "fontSize":      "{font.size.48}",
-            "lineHeight":    "{font.line-height.54}",
+            "fontSize":      "{font.size.36}",
+            "lineHeight":    "{font.line-height.44}",
             "fontWeight":    "{font.weight.bold}",
             "letterSpacing": "{font.letter-spacing.default}"
           }
         },
         "mobile": {
           "$type": "typography",
-          "$description": "heading-xl at mobile (<768px): 32/38 bold",
+          "$description": "heading-xl mobile (<768px): 28/36 bold",
           "$value": {
             "fontFamily":    "{font.family.primary}",
-            "fontSize":      "{font.size.32}",
-            "lineHeight":    "{font.line-height.38}",
+            "fontSize":      "{font.size.28}",
+            "lineHeight":    "{font.line-height.36}",
             "fontWeight":    "{font.weight.bold}",
             "letterSpacing": "{font.letter-spacing.default}"
           }
@@ -35,22 +35,22 @@
         "$description": "Large heading. Section titles and major content groupings.",
         "desktop": {
           "$type": "typography",
-          "$description": "heading-l at desktop (≥1024px): 36/42 bold",
+          "$description": "heading-l desktop (≥1024px): 28/36 bold",
           "$value": {
             "fontFamily":    "{font.family.primary}",
-            "fontSize":      "{font.size.36}",
-            "lineHeight":    "{font.line-height.42}",
+            "fontSize":      "{font.size.28}",
+            "lineHeight":    "{font.line-height.36}",
             "fontWeight":    "{font.weight.bold}",
             "letterSpacing": "{font.letter-spacing.default}"
           }
         },
         "mobile": {
           "$type": "typography",
-          "$description": "heading-l at mobile (<768px): 27/33 bold",
+          "$description": "heading-l mobile (<768px): 24/32 bold",
           "$value": {
             "fontFamily":    "{font.family.primary}",
-            "fontSize":      "{font.size.27}",
-            "lineHeight":    "{font.line-height.33}",
+            "fontSize":      "{font.size.24}",
+            "lineHeight":    "{font.line-height.32}",
             "fontWeight":    "{font.weight.bold}",
             "letterSpacing": "{font.letter-spacing.default}"
           }
@@ -61,10 +61,10 @@
         "$description": "Medium heading. Sub-section titles, card headings, panel headers.",
         "desktop": {
           "$type": "typography",
-          "$description": "heading-m at desktop (≥1024px): 26/32 bold",
+          "$description": "heading-m desktop (≥1024px): 24/32 bold",
           "$value": {
             "fontFamily":    "{font.family.primary}",
-            "fontSize":      "{font.size.26}",
+            "fontSize":      "{font.size.24}",
             "lineHeight":    "{font.line-height.32}",
             "fontWeight":    "{font.weight.bold}",
             "letterSpacing": "{font.letter-spacing.default}"
@@ -72,11 +72,11 @@
         },
         "mobile": {
           "$type": "typography",
-          "$description": "heading-m at mobile (<768px): 22/29 bold",
+          "$description": "heading-m mobile (<768px): 20/28 bold",
           "$value": {
             "fontFamily":    "{font.family.primary}",
-            "fontSize":      "{font.size.22}",
-            "lineHeight":    "{font.line-height.29}",
+            "fontSize":      "{font.size.20}",
+            "lineHeight":    "{font.line-height.28}",
             "fontWeight":    "{font.weight.bold}",
             "letterSpacing": "{font.letter-spacing.default}"
           }
@@ -87,22 +87,22 @@
         "$description": "Small heading. List group labels, sidebar headings, modal titles.",
         "desktop": {
           "$type": "typography",
-          "$description": "heading-s at desktop (≥1024px): 22/30 bold",
+          "$description": "heading-s desktop (≥1024px): 20/28 bold",
           "$value": {
             "fontFamily":    "{font.family.primary}",
-            "fontSize":      "{font.size.22}",
-            "lineHeight":    "{font.line-height.30}",
+            "fontSize":      "{font.size.20}",
+            "lineHeight":    "{font.line-height.28}",
             "fontWeight":    "{font.weight.bold}",
             "letterSpacing": "{font.letter-spacing.default}"
           }
         },
         "mobile": {
           "$type": "typography",
-          "$description": "heading-s at mobile (<768px): 19/27 bold",
+          "$description": "heading-s mobile (<768px): 18/24 bold",
           "$value": {
             "fontFamily":    "{font.family.primary}",
-            "fontSize":      "{font.size.19}",
-            "lineHeight":    "{font.line-height.27}",
+            "fontSize":      "{font.size.18}",
+            "lineHeight":    "{font.line-height.24}",
             "fontWeight":    "{font.weight.bold}",
             "letterSpacing": "{font.letter-spacing.default}"
           }
@@ -113,7 +113,7 @@
         "$description": "Extra-small heading. Inline section labels, tight UI contexts.",
         "desktop": {
           "$type": "typography",
-          "$description": "heading-xs at desktop (≥1024px): 16/24 bold",
+          "$description": "heading-xs desktop (≥1024px): 16/24 bold",
           "$value": {
             "fontFamily":    "{font.family.primary}",
             "fontSize":      "{font.size.16}",
@@ -124,7 +124,7 @@
         },
         "mobile": {
           "$type": "typography",
-          "$description": "heading-xs at mobile (<768px): 16/24 bold",
+          "$description": "heading-xs mobile (<768px): 16/24 bold",
           "$value": {
             "fontFamily":    "{font.family.primary}",
             "fontSize":      "{font.size.16}",
@@ -139,7 +139,7 @@
         "$description": "Medium body text. Default prose, clinical notes, descriptions. 16px — meets NHS and WCAG minimum body text guidance.",
         "desktop": {
           "$type": "typography",
-          "$description": "body-m at desktop (≥1024px): 16/24 regular",
+          "$description": "body-m: 16/24 regular",
           "$value": {
             "fontFamily":    "{font.family.primary}",
             "fontSize":      "{font.size.16}",
@@ -150,7 +150,7 @@
         },
         "mobile": {
           "$type": "typography",
-          "$description": "body-m at mobile (<768px): 16/24 regular",
+          "$description": "body-m: 16/24 regular",
           "$value": {
             "fontFamily":    "{font.family.primary}",
             "fontSize":      "{font.size.16}",
@@ -165,22 +165,22 @@
         "$description": "Small body text. Supporting content, secondary prose, help text. 14px — do not use for primary clinical content.",
         "desktop": {
           "$type": "typography",
-          "$description": "body-s at desktop (≥1024px): 14/24 regular",
+          "$description": "body-s: 14/20 regular",
           "$value": {
             "fontFamily":    "{font.family.primary}",
             "fontSize":      "{font.size.14}",
-            "lineHeight":    "{font.line-height.24}",
+            "lineHeight":    "{font.line-height.20}",
             "fontWeight":    "{font.weight.regular}",
             "letterSpacing": "{font.letter-spacing.default}"
           }
         },
         "mobile": {
           "$type": "typography",
-          "$description": "body-s at mobile (<768px): 14/24 regular",
+          "$description": "body-s: 14/20 regular",
           "$value": {
             "fontFamily":    "{font.family.primary}",
             "fontSize":      "{font.size.14}",
-            "lineHeight":    "{font.line-height.24}",
+            "lineHeight":    "{font.line-height.20}",
             "fontWeight":    "{font.weight.regular}",
             "letterSpacing": "{font.letter-spacing.default}"
           }
@@ -191,7 +191,7 @@
         "$description": "UI labels. Form field labels, navigation items, button text, data table column headers.",
         "desktop": {
           "$type": "typography",
-          "$description": "label at desktop (≥1024px): 14/20 medium, wide tracking",
+          "$description": "label: 14/20 medium, wide tracking",
           "$value": {
             "fontFamily":    "{font.family.primary}",
             "fontSize":      "{font.size.14}",
@@ -202,7 +202,7 @@
         },
         "mobile": {
           "$type": "typography",
-          "$description": "label at mobile (<768px): 14/20 medium, wide tracking",
+          "$description": "label: 14/20 medium, wide tracking",
           "$value": {
             "fontFamily":    "{font.family.primary}",
             "fontSize":      "{font.size.14}",
@@ -217,7 +217,7 @@
         "$description": "Caption text. Timestamps, metadata, image captions, status annotations.",
         "desktop": {
           "$type": "typography",
-          "$description": "caption at desktop (≥1024px): 12/16 regular, caption tracking",
+          "$description": "caption: 12/16 regular, caption tracking",
           "$value": {
             "fontFamily":    "{font.family.primary}",
             "fontSize":      "{font.size.12}",
@@ -228,7 +228,7 @@
         },
         "mobile": {
           "$type": "typography",
-          "$description": "caption at mobile (<768px): 12/16 regular, caption tracking",
+          "$description": "caption: 12/16 regular, caption tracking",
           "$value": {
             "fontFamily":    "{font.family.primary}",
             "fontSize":      "{font.size.12}",

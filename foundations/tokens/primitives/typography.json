@@ -1,6 +1,6 @@
 {
   "$schema": "https://design-tokens.github.io/community-group/format/",
-  "$description": "DHCW Single Record Design System — Primitive typography tokens (Tier 1). Raw scale values only. Never reference these directly in components — use semantic tokens.",
+  "$description": "DHCW Single Record Design System — Primitive typography tokens (Tier 1). Raw scale values only. Never reference these directly in components — use semantic tokens. Scale revised by DDR-005 (supersedes DDR-004): clean 4px-grid line-heights, no off-grid sizes.",
 
   "font": {
 
@@ -22,38 +22,29 @@
       "12": { "$type": "dimension", "$value": "12px" },
       "14": { "$type": "dimension", "$value": "14px" },
       "16": { "$type": "dimension", "$value": "16px" },
-      "19": { "$type": "dimension", "$value": "19px" },
-      "22": { "$type": "dimension", "$value": "22px" },
-      "26": { "$type": "dimension", "$value": "26px" },
-      "27": { "$type": "dimension", "$value": "27px" },
-      "32": { "$type": "dimension", "$value": "32px" },
-      "36": { "$type": "dimension", "$value": "36px" },
-      "48": { "$type": "dimension", "$value": "48px" },
-      "64": { "$type": "dimension", "$value": "64px" }
+      "18": { "$type": "dimension", "$value": "18px" },
+      "20": { "$type": "dimension", "$value": "20px" },
+      "24": { "$type": "dimension", "$value": "24px" },
+      "28": { "$type": "dimension", "$value": "28px" },
+      "36": { "$type": "dimension", "$value": "36px" }
     },
 
     "line-height": {
-      "$description": "Line height scale (px). Paired with font sizes via semantic tokens.",
+      "$description": "Line height scale (px). All values are multiples of 4 — aligned to the 4px base spacing grid (DDR-001).",
       "16": { "$type": "dimension", "$value": "16px" },
       "20": { "$type": "dimension", "$value": "20px" },
       "24": { "$type": "dimension", "$value": "24px" },
-      "27": { "$type": "dimension", "$value": "27px" },
       "28": { "$type": "dimension", "$value": "28px" },
-      "29": { "$type": "dimension", "$value": "29px" },
-      "30": { "$type": "dimension", "$value": "30px" },
       "32": { "$type": "dimension", "$value": "32px" },
-      "33": { "$type": "dimension", "$value": "33px" },
-      "38": { "$type": "dimension", "$value": "38px" },
-      "42": { "$type": "dimension", "$value": "42px" },
-      "54": { "$type": "dimension", "$value": "54px" },
-      "72": { "$type": "dimension", "$value": "72px" }
+      "36": { "$type": "dimension", "$value": "36px" },
+      "44": { "$type": "dimension", "$value": "44px" }
     },
 
     "letter-spacing": {
-      "$description": "Letter spacing values in px, matching Figma variable definitions. Applied to semantic typography tokens.",
-      "default": { "$type": "dimension", "$value": "0px",    "$description": "No additional letter spacing — body text and headings" },
-      "wide":    { "$type": "dimension", "$value": "0.7px",  "$description": "Expanded tracking — labels and UI controls" },
-      "caption": { "$type": "dimension", "$value": "0.24px", "$description": "Gentle expansion — captions and supporting text" }
+      "$description": "Letter spacing values in px. Source of truth: Single Record Figma variables (Font/Letter Spacing/*).",
+      "default": { "$type": "dimension", "$value": "0px",   "$description": "No additional tracking — body text and headings" },
+      "wide":    { "$type": "dimension", "$value": "0.3px", "$description": "Expanded tracking — labels and UI controls" },
+      "caption": { "$type": "dimension", "$value": "0.2px", "$description": "Gentle expansion — captions and supporting text" }
     }
 
   }

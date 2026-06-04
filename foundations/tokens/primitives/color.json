@@ -5,24 +5,25 @@
     "blue": {
       "$description": "NHS Wales Blue — primary brand",
       "900": { "$type": "color", "$value": "#1E3050" },
-      "800": { "$type": "color", "$value": "#325083", "$description": "Brand primary" },
+      "800": { "$type": "color", "$value": "#325083", "$description": "Brand primary (light mode)" },
       "700": { "$type": "color", "$value": "#3D6199" },
       "600": { "$type": "color", "$value": "#4C72AE" },
       "500": { "$type": "color", "$value": "#5C6991" },
-      "400": { "$type": "color", "$value": "#828DAC" },
+      "400": { "$type": "color", "$value": "#828DAC", "$description": "Interactive/Disabled — semantic anchor" },
       "300": { "$type": "color", "$value": "#AAB1C6" },
       "200": { "$type": "color", "$value": "#D4D8E2" },
       "100": { "$type": "color", "$value": "#ECEEF3" },
-      "50":  { "$type": "color", "$value": "#F4F5F8" }
+      "50":  { "$type": "color", "$value": "#F4F5F8", "$description": "Default page background (light mode)" }
     },
     "cyan": {
-      "$description": "DHCW Blue — secondary/accent",
+      "$description": "DHCW Blue — secondary/accent. Cyan/700 is the focus-ring colour (DDR-006).",
       "900": { "$type": "color", "$value": "#0A6A84" },
+      "850": { "$type": "color", "$value": "#0C7B99", "$description": "Surface/Small Cards in dark mode" },
       "800": { "$type": "color", "$value": "#0D8BAD" },
-      "700": { "$type": "color", "$value": "#12A3C9", "$description": "Brand secondary" },
+      "700": { "$type": "color", "$value": "#12A3C9", "$description": "Brand secondary + Border/Focus (both modes)" },
       "600": { "$type": "color", "$value": "#71ACCD" },
       "500": { "$type": "color", "$value": "#8DC0DA" },
-      "400": { "$type": "color", "$value": "#AFD4E5" },
+      "400": { "$type": "color", "$value": "#AFD4E5", "$description": "Interactive/Link in dark mode" },
       "300": { "$type": "color", "$value": "#D6EAF2" },
       "100": { "$type": "color", "$value": "#EBF5FA" },
       "50":  { "$type": "color", "$value": "#F4FAFC" }
@@ -31,8 +32,8 @@
       "$description": "DHCW Navy",
       "900": { "$type": "color", "$value": "#1B294A" },
       "700": { "$type": "color", "$value": "#464C64" },
-      "500": { "$type": "color", "$value": "#707488" },
-      "300": { "$type": "color", "$value": "#9EA1AF" },
+      "500": { "$type": "color", "$value": "#707488", "$description": "Text/Disabled in light mode" },
+      "300": { "$type": "color", "$value": "#9EA1AF", "$description": "Border/Disabled, Text/Disabled (dark)" },
       "100": { "$type": "color", "$value": "#CDCFD6" }
     },
     "red": {
@@ -50,8 +51,16 @@
     },
     "green": {
       "$description": "Status — success",
+      "900": { "$type": "color", "$value": "#003319" },
+      "800": { "$type": "color", "$value": "#004D24" },
+      "700": { "$type": "color", "$value": "#006630" },
       "600": { "$type": "color", "$value": "#007F3B" },
-      "100": { "$type": "color", "$value": "#D9EFE5" }
+      "500": { "$type": "color", "$value": "#1FA66D" },
+      "400": { "$type": "color", "$value": "#4AB88B" },
+      "300": { "$type": "color", "$value": "#7BCAAA" },
+      "200": { "$type": "color", "$value": "#AEDDC9" },
+      "100": { "$type": "color", "$value": "#D9EFE5" },
+      "50":  { "$type": "color", "$value": "#F0FAF4" }
     },
     "yellow": {
       "$description": "Status — warning",
@@ -59,12 +68,12 @@
       "100": { "$type": "color", "$value": "#FDF6DC" }
     },
     "info-blue": {
-      "$description": "Status — informational. Full scale added to support semantic aliasing. info-blue.700 is the primary semantic value (#005AA8).",
+      "$description": "Status — informational. info-blue.700 is the link/info semantic value in light mode. info-blue.600/800 anchor dark-mode Interactive/Primary and its hover step.",
       "default": { "$type": "color", "$value": "#005AA8", "$description": "Alias for 700 — retained for backward compatibility" },
       "900": { "$type": "color", "$value": "#002E5C" },
-      "800": { "$type": "color", "$value": "#004483" },
-      "700": { "$type": "color", "$value": "#005AA8" },
-      "600": { "$type": "color", "$value": "#0D62A3" },
+      "800": { "$type": "color", "$value": "#004483", "$description": "Interactive/Primary Hover (dark mode)" },
+      "700": { "$type": "color", "$value": "#005AA8", "$description": "Interactive/Link (light), Status/Info" },
+      "600": { "$type": "color", "$value": "#0D62A3", "$description": "Interactive/Primary (dark mode)" },
       "500": { "$type": "color", "$value": "#267AB8" },
       "400": { "$type": "color", "$value": "#4E95CA" },
       "300": { "$type": "color", "$value": "#7EB0D9" },
@@ -73,7 +82,7 @@
       "50":  { "$type": "color", "$value": "#EEF5FC" }
     },
     "focus-yellow": {
-      "$description": "Focus ring colour",
+      "$description": "DEPRECATED — superseded by cyan.700 for focus rings (DDR-006). Primitive retained for any legacy reference; do not use in new work.",
       "default": { "$type": "color", "$value": "#FFEB3B" }
     },
     "grey": {

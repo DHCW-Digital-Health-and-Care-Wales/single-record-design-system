@@ -34,13 +34,33 @@
     /* ── Header ── */
     .site-header {
       background: var(--navy-900);
-      padding: 20px var(--page-pad);
+      padding: 16px var(--page-pad);
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 12px;
     }
-    .site-logo { height: 40px; width: auto; display: block; }
-    .site-header-title { color: rgba(255,255,255,0.85); font-size: 20px; font-weight: 700; letter-spacing: 0.007em; }
+    .site-mark {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .site-mark-badge {
+      background: #12A3C9;
+      color: #fff;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+    .site-mark-name {
+      color: rgba(255,255,255,0.85);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+    }
 
     /* ── Hero ── */
     .hero {
@@ -69,7 +89,7 @@
     .hero-subtitle {
       font-size: 16px;
       color: var(--grey-600);
-      font-weight: 400;
+      font-weight: 300;
       max-width: 560px;
       line-height: 1.6;
       margin-bottom: 32px;
@@ -149,6 +169,7 @@
       font-size: 14px;
       color: var(--grey-600);
       margin-bottom: 0;
+      font-weight: 300;
     }
     .tier-rule {
       height: 1px;
@@ -306,217 +327,6 @@
       max-width: 320px;
     }
 
-    /* ── Dark mode stage ── */
-    .dark-stage {
-      background: #212B32;
-      border-radius: 12px;
-      padding: 40px;
-      margin-bottom: 40px;
-    }
-    .dark-stage-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 32px;
-    }
-    .dark-stage-title {
-      font-size: 16px;
-      font-weight: 600;
-      color: #FFFFFF;
-    }
-    .mode-pills {
-      display: inline-flex;
-      border: 1px solid #464C64;
-      border-radius: 20px;
-      overflow: hidden;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-    }
-    .mode-pill {
-      padding: 4px 14px;
-      color: #9EA1AF;
-    }
-    .mode-pill--active {
-      background: #464C64;
-      color: #FFFFFF;
-    }
-    .dark-group { margin-bottom: 32px; }
-    .dark-group-label {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #707488;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .dark-group-label::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: #464C64;
-    }
-    .dark-token-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    .dark-token-table tbody tr {
-      border-bottom: 1px solid #2D3B45;
-    }
-    .dark-token-table tbody tr:last-child { border-bottom: none; }
-    .dark-token-table tbody td {
-      padding: 10px 12px;
-      vertical-align: middle;
-      font-size: 13px;
-      color: #D8DDE0;
-    }
-    .dark-token-table tbody td:first-child { padding-left: 0; }
-    .dark-token-name {
-      font-family: 'Roboto Mono', monospace;
-      font-size: 11px;
-      color: #AFD4E5;
-      background: rgba(18,163,201,0.12);
-      padding: 3px 7px;
-      border-radius: 4px;
-      white-space: nowrap;
-    }
-    .dark-inline-swatch {
-      width: 120px;
-      height: 32px;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      padding: 0 8px;
-      font-family: 'Roboto Mono', monospace;
-      font-size: 10px;
-      font-weight: 500;
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-    .dark-alias-badge {
-      font-family: 'Roboto Mono', monospace;
-      font-size: 11px;
-      color: #707488;
-      background: #2D3B45;
-      padding: 3px 7px;
-      border-radius: 4px;
-      white-space: nowrap;
-    }
-
-    /* ── Contrast pairs ── */
-    .contrast-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 12px;
-      margin-top: 20px;
-    }
-    .contrast-pair {
-      border-radius: 8px;
-      overflow: hidden;
-      border: 1px solid #2D3B45;
-    }
-    .contrast-pair-preview {
-      padding: 20px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .contrast-pair-text { font-size: 16px; font-weight: 600; }
-    .contrast-pair-sub  { font-size: 12px; opacity: 0.75; }
-    .contrast-pair-meta {
-      background: #1B294A;
-      padding: 8px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .contrast-pair-tokens { font-size: 11px; font-family: 'Roboto Mono', monospace; color: #707488; }
-    .contrast-badge {
-      font-size: 11px;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 10px;
-      letter-spacing: 0.04em;
-    }
-    .contrast-badge--aaa { background: #D9EFE5; color: #007F3B; }
-    .contrast-badge--aa  { background: #EBF5FA; color: #0A6A84; }
-    .contrast-badge--warn { background: #FDF6DC; color: #6B5000; }
-
-    /* ── Dark impl note ── */
-    .dark-impl-note {
-      background: rgba(18,163,201,0.10);
-      border-left: 3px solid #12A3C9;
-      border-radius: 0 6px 6px 0;
-      padding: 14px 18px;
-      margin-top: 20px;
-      font-size: 13px;
-      color: #D8DDE0;
-      line-height: 1.6;
-    }
-    .dark-impl-note strong { font-weight: 600; color: #FFFFFF; }
-    .dark-impl-note code {
-      font-family: 'Roboto Mono', monospace;
-      font-size: 11px;
-      background: rgba(255,255,255,0.08);
-      padding: 1px 5px;
-      border-radius: 3px;
-    }
-
-    /* ── Change history ── */
-    .change-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    .change-table thead th {
-      text-align: left;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--grey-600);
-      border-bottom: 2px solid var(--grey-200);
-      padding: 8px 12px;
-    }
-    .change-table thead th:first-child { padding-left: 0; }
-    .change-table tbody tr { border-bottom: 1px solid var(--grey-200); }
-    .change-table tbody tr:last-child { border-bottom: none; }
-    .change-table tbody td { padding: 14px 12px; font-size: 13px; vertical-align: top; }
-    .change-table tbody td:first-child { padding-left: 0; white-space: nowrap; color: var(--grey-600); }
-    .change-table .by { font-size: 12px; color: var(--grey-600); }
-
-    /* ── References ── */
-    .ref-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 8px;
-    }
-    .ref-list li {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13px;
-    }
-    .ref-list a {
-      color: var(--blue-800);
-      text-decoration: none;
-      font-weight: 500;
-    }
-    .ref-list a:hover { text-decoration: underline; }
-    .ref-list li::before {
-      content: '';
-      display: block;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--blue-800);
-      flex-shrink: 0;
-    }
-
     /* ── Footer ── */
     .site-footer {
       border-top: 1px solid var(--grey-200);
@@ -531,13 +341,14 @@
     }
     .site-footer a { color: var(--blue-800); text-decoration: none; }
   </style>
-  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
 </head>
 <body>
 
   <header class="site-header">
-    <img class="site-logo" src="../assets/dhcw-logo-white.png" alt="DHCW — Digital Health and Care Wales">
-    <span class="site-header-title">Single Record Design System</span>
+    <div class="site-mark">
+      <span class="site-mark-badge">SR</span>
+      <span class="site-mark-name">Single Record Design System</span>
+    </div>
   </header>
 
   <div class="hero">
@@ -553,11 +364,6 @@
       <div class="nav-divider"></div>
       <span class="nav-tier-label">Tier 2</span>
       <a href="#sr-interactive">Interactive</a><a href="#sr-surface">Surface</a><a href="#sr-text">Text</a><a href="#sr-border">Border</a><a href="#sr-status">Status</a>
-      <div class="nav-divider"></div>
-      <a href="#dark-mode">Dark mode</a>
-      <div class="nav-divider"></div>
-      <a href="#change-history">Change history</a>
-      <a href="#references">References</a>
     </nav>
   </div>
 
@@ -1298,383 +1104,11 @@
       </table>
     </section>
 
-    <!-- ── Dark mode ── -->
-    <div class="tier-heading" id="dark-mode">
-      <p class="tier-label">Tier 2 — Semantic</p>
-      <h2 class="tier-title">Dark Mode</h2>
-      <p class="tier-desc">All tokens in the Single Record Figma collection have two modes: <strong>Light</strong> and <strong>Dark</strong>. Dark mode values are designed for clinical environments with reduced ambient light. All pairs meet WCAG 2.2 AA; most meet AAA.</p>
-    </div>
-    <hr class="tier-rule">
-
-    <section class="colour-group">
-
-      <div class="dark-stage">
-
-        <div class="dark-stage-header">
-          <span class="dark-stage-title">Single Record — Dark mode token values</span>
-          <div class="mode-pills">
-            <span class="mode-pill">Light</span>
-            <span class="mode-pill mode-pill--active">Dark</span>
-          </div>
-        </div>
-
-        <!-- Interactive -->
-        <div class="dark-group">
-          <div class="dark-group-label">Interactive</div>
-          <table class="dark-token-table">
-            <tbody>
-              <tr>
-                <td><span class="dark-token-name">sr.color.interactive.primary</span></td>
-                <td><div class="dark-inline-swatch" style="background:#12A3C9;color:#FFFFFF">#12A3C9</div></td>
-                <td><span class="dark-alias-badge">cyan-700</span></td>
-                <td>Primary action. DHCW brand secondary — vibrant on dark surfaces.</td>
-              </tr>
-              <tr>
-                <td><span class="dark-token-name">sr.color.interactive.primary-hover</span></td>
-                <td><div class="dark-inline-swatch" style="background:#71ACCD;color:#212B32">#71ACCD</div></td>
-                <td><span class="dark-alias-badge">cyan-600</span></td>
-                <td>Hover state. Dark mode hover moves <em>lighter</em>, not darker.</td>
-              </tr>
-              <tr>
-                <td><span class="dark-token-name">sr.color.interactive.secondary</span></td>
-                <td><div class="dark-inline-swatch" style="background:#AAB1C6;color:#1B294A">#AAB1C6</div></td>
-                <td><span class="dark-alias-badge">blue-300</span></td>
-                <td>Secondary interactive elements — muted blue.</td>
-              </tr>
-              <tr>
-                <td><span class="dark-token-name">sr.color.interactive.link</span></td>
-                <td><div class="dark-inline-swatch" style="background:#AFD4E5;color:#1B294A">#AFD4E5</div></td>
-                <td><span class="dark-alias-badge">cyan-400</span></td>
-                <td>Inline link text on dark backgrounds.</td>
-              </tr>
-              <tr>
-                <td><span class="dark-token-name">sr.color.interactive.destructive</span></td>
-                <td><div class="dark-inline-swatch" style="background:#D5281B;color:#FFFFFF">#D5281B</div></td>
-                <td><span class="dark-alias-badge">red-600</span></td>
-                <td>Unchanged. White on red-600 = 5.18:1 (AA). Enforce visible border for non-text contrast.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Surface -->
-        <div class="dark-group">
-          <div class="dark-group-label">Surface</div>
-          <table class="dark-token-table">
-            <tbody>
-              <tr>
-                <td><span class="dark-token-name">sr.color.surface.default</span></td>
-                <td><div class="dark-inline-swatch" style="background:#212B32;color:#FFFFFF;border:1px solid #464C64">#212B32</div></td>
-                <td><span class="dark-alias-badge">grey-900</span></td>
-                <td>Main page background in dark mode.</td>
-              </tr>
-              <tr>
-                <td><span class="dark-token-name">sr.color.surface.card</span></td>
-                <td><div class="dark-inline-swatch" style="background:#1B294A;color:#FFFFFF">#1B294A</div></td>
-                <td><span class="dark-alias-badge">navy-900</span></td>
-                <td>Card and panel surfaces — sits above page background.</td>
-              </tr>
-              <tr>
-                <td><span class="dark-token-name">sr.color.surface.accent</span></td>
-                <td><div class="dark-inline-swatch" style="background:#1E3050;color:#FFFFFF">#1E3050</div></td>
-                <td><span class="dark-alias-badge">blue-900</span></td>
-                <td>Deep blue for accent / highlighted areas.</td>
-              </tr>
-              <tr>
-                <td><span class="dark-token-name">sr.color.surface.subtle</span></td>
-                <td><div class="dark-inline-swatch" style="background:#464C64;color:#FFFFFF">#464C64</div></td>
-                <td><span class="dark-alias-badge">navy-700</span></td>
-                <td>Subtle section background — table rows, inactive tabs.</td>
-              </tr>
-              <tr>
-                <td><span class="dark-token-name">sr.color.surface.header</span></td>
-                <td><div class="dark-inline-swatch" style="background:#1B294A;color:#FFFFFF">#1B294A</div></td>
-                <td><span class="dark-alias-badge">navy-900</span></td>
-                <td>Unchanged — header is already dark in light mode.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Text -->
-        <div class="dark-group">
-          <div class="dark-group-label">Text</div>
-          <table class="dark-token-table">
-            <tbody>
-              <tr>
-                <td><span class="dark-token-name">sr.color.text.primary</span></td>
-                <td><div class="dark-inline-swatch" style="background:#FFFFFF;color:#212B32">#FFFFFF</div></td>
-                <td><span class="dark-alias-badge">white</span></td>
-                <td>Primary text on dark — 13.8:1 on grey-900 (AAA).</td>
-              </tr>
-              <tr>
-                <td><span class="dark-token-name">sr.color.text.secondary</span></td>
-                <td><div class="dark-inline-swatch" style="background:#D8DDE0;color:#212B32">#D8DDE0</div></td>
-                <td><span class="dark-alias-badge">grey-200</span></td>
-                <td>Secondary text on dark — 9.9:1 on grey-900 (AAA).</td>
-              </tr>
-              <tr>
-                <td><span class="dark-token-name">sr.color.text.inverse</span></td>
-                <td><div class="dark-inline-swatch" style="background:#212B32;color:#FFFFFF;border:1px solid #464C64">#212B32</div></td>
-                <td><span class="dark-alias-badge">grey-900</span></td>
-                <td>Text on light elements within a dark-mode interface.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Border -->
-        <div class="dark-group">
-          <div class="dark-group-label">Border</div>
-          <table class="dark-token-table">
-            <tbody>
-              <tr>
-                <td><span class="dark-token-name">sr.color.border.default</span></td>
-                <td><div class="dark-inline-swatch" style="background:#707488;color:#FFFFFF">#707488</div></td>
-                <td><span class="dark-alias-badge">navy-500</span></td>
-                <td>Subtle dividers and input borders on dark surfaces.</td>
-              </tr>
-              <tr>
-                <td><span class="dark-token-name">sr.color.border.strong</span></td>
-                <td><div class="dark-inline-swatch" style="background:#9EA1AF;color:#1B294A">#9EA1AF</div></td>
-                <td><span class="dark-alias-badge">navy-300</span></td>
-                <td>More visible borders and section edges.</td>
-              </tr>
-              <tr>
-                <td><span class="dark-token-name">sr.color.border.focus</span></td>
-                <td><div class="dark-inline-swatch" style="background:#FFEB3B;color:#212B32">#FFEB3B</div></td>
-                <td><span class="dark-alias-badge">focus-yellow</span></td>
-                <td>Unchanged — NHS/GDS focus yellow is highly visible on both light and dark.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Status -->
-        <div class="dark-group">
-          <div class="dark-group-label">Status</div>
-          <table class="dark-token-table">
-            <tbody>
-              <tr>
-                <td><span class="dark-token-name">sr.color.status.critical</span></td>
-                <td><div class="dark-inline-swatch" style="background:#FCDBD9;color:#212B32">#FCDBD9</div></td>
-                <td><span class="dark-alias-badge">red-100</span></td>
-                <td>Light red for critical text/icon — high contrast on dark surfaces.</td>
-              </tr>
-              <tr>
-                <td><span class="dark-token-name">sr.color.status.critical-surface</span></td>
-                <td><div class="dark-inline-swatch" style="background:#1E3050;color:#FCDBD9">#1E3050</div></td>
-                <td><span class="dark-alias-badge">blue-900</span></td>
-                <td>Dark surface for critical banners — red-100 text differentiates.</td>
-              </tr>
-              <tr>
-                <td><span class="dark-token-name">sr.color.status.success</span></td>
-                <td><div class="dark-inline-swatch" style="background:#D9EFE5;color:#212B32">#D9EFE5</div></td>
-                <td><span class="dark-alias-badge">green-100</span></td>
-                <td>Light green for success text/icon — high contrast on dark.</td>
-              </tr>
-              <tr>
-                <td><span class="dark-token-name">sr.color.status.success-surface</span></td>
-                <td><div class="dark-inline-swatch" style="background:#1B294A;color:#D9EFE5">#1B294A</div></td>
-                <td><span class="dark-alias-badge">navy-900</span></td>
-                <td>Dark navy surface for success banners.</td>
-              </tr>
-              <tr>
-                <td><span class="dark-token-name">sr.color.status.warning</span></td>
-                <td><div class="dark-inline-swatch" style="background:#F8CA4D;color:#212B32">#F8CA4D</div></td>
-                <td><span class="dark-alias-badge">yellow-500</span></td>
-                <td>Yellow retained — 7.6:1 on grey-900 (AAA).</td>
-              </tr>
-              <tr>
-                <td><span class="dark-token-name">sr.color.status.warning-surface</span></td>
-                <td><div class="dark-inline-swatch" style="background:#464C64;color:#F8CA4D">#464C64</div></td>
-                <td><span class="dark-alias-badge">navy-700</span></td>
-                <td>Mid-dark surface for warning banners.</td>
-              </tr>
-              <tr>
-                <td><span class="dark-token-name">sr.color.status.info</span></td>
-                <td><div class="dark-inline-swatch" style="background:#D6EAF2;color:#212B32">#D6EAF2</div></td>
-                <td><span class="dark-alias-badge">cyan-300</span></td>
-                <td>Light cyan for info text/icon — ~10:1 on dark surfaces (AAA).</td>
-              </tr>
-              <tr>
-                <td><span class="dark-token-name">sr.color.status.info-surface</span></td>
-                <td><div class="dark-inline-swatch" style="background:#1B294A;color:#D6EAF2">#1B294A</div></td>
-                <td><span class="dark-alias-badge">navy-900</span></td>
-                <td>Dark navy surface for informational banners.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-      </div><!-- /.dark-stage -->
-
-      <!-- Contrast pairs -->
-      <h3 style="font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#4C6272;margin:32px 0 4px">Key contrast pairs — dark mode</h3>
-      <p style="font-size:13px;color:#4C6272;margin-bottom:4px">All critical text pairs verified against WCAG 2.2 SC 1.4.3. Ratios calculated against the primary page background (grey-900 #212B32).</p>
-
-      <div class="contrast-grid">
-
-        <div class="contrast-pair">
-          <div class="contrast-pair-preview" style="background:#212B32">
-            <span class="contrast-pair-text" style="color:#FFFFFF">Primary text</span>
-            <span class="contrast-pair-sub" style="color:#FFFFFF">Body copy, headings</span>
-          </div>
-          <div class="contrast-pair-meta">
-            <span class="contrast-pair-tokens">text.primary / surface.default</span>
-            <span class="contrast-badge contrast-badge--aaa">13.8:1 AAA</span>
-          </div>
-        </div>
-
-        <div class="contrast-pair">
-          <div class="contrast-pair-preview" style="background:#212B32">
-            <span class="contrast-pair-text" style="color:#D8DDE0">Secondary text</span>
-            <span class="contrast-pair-sub" style="color:#D8DDE0">Labels, captions</span>
-          </div>
-          <div class="contrast-pair-meta">
-            <span class="contrast-pair-tokens">text.secondary / surface.default</span>
-            <span class="contrast-badge contrast-badge--aaa">9.9:1 AAA</span>
-          </div>
-        </div>
-
-        <div class="contrast-pair">
-          <div class="contrast-pair-preview" style="background:#212B32">
-            <span class="contrast-pair-text" style="color:#F8CA4D">Warning</span>
-            <span class="contrast-pair-sub" style="color:#F8CA4D">Warning icons and labels</span>
-          </div>
-          <div class="contrast-pair-meta">
-            <span class="contrast-pair-tokens">status.warning / surface.default</span>
-            <span class="contrast-badge contrast-badge--aaa">7.6:1 AAA</span>
-          </div>
-        </div>
-
-        <div class="contrast-pair">
-          <div class="contrast-pair-preview" style="background:#1E3050">
-            <span class="contrast-pair-text" style="color:#FCDBD9">Critical alert</span>
-            <span class="contrast-pair-sub" style="color:#FCDBD9">Critical banner text</span>
-          </div>
-          <div class="contrast-pair-meta">
-            <span class="contrast-pair-tokens">status.critical / critical-surface</span>
-            <span class="contrast-badge contrast-badge--aaa">8.4:1 AAA</span>
-          </div>
-        </div>
-
-        <div class="contrast-pair">
-          <div class="contrast-pair-preview" style="background:#1B294A">
-            <span class="contrast-pair-text" style="color:#D9EFE5">Success</span>
-            <span class="contrast-pair-sub" style="color:#D9EFE5">Success banner text</span>
-          </div>
-          <div class="contrast-pair-meta">
-            <span class="contrast-pair-tokens">status.success / success-surface</span>
-            <span class="contrast-badge contrast-badge--aaa">10.2:1 AAA</span>
-          </div>
-        </div>
-
-        <div class="contrast-pair">
-          <div class="contrast-pair-preview" style="background:#1B294A">
-            <span class="contrast-pair-text" style="color:#D6EAF2">Info</span>
-            <span class="contrast-pair-sub" style="color:#D6EAF2">Info banner text</span>
-          </div>
-          <div class="contrast-pair-meta">
-            <span class="contrast-pair-tokens">status.info / info-surface</span>
-            <span class="contrast-badge contrast-badge--aaa">9.7:1 AAA</span>
-          </div>
-        </div>
-
-        <div class="contrast-pair">
-          <div class="contrast-pair-preview" style="background:#12A3C9">
-            <span class="contrast-pair-text" style="color:#FFFFFF">Primary button</span>
-            <span class="contrast-pair-sub" style="color:#FFFFFF">White label on cyan-700</span>
-          </div>
-          <div class="contrast-pair-meta">
-            <span class="contrast-pair-tokens">white / interactive.primary</span>
-            <span class="contrast-badge contrast-badge--aa">5.18:1 AA</span>
-          </div>
-        </div>
-
-        <div class="contrast-pair">
-          <div class="contrast-pair-preview" style="background:#212B32">
-            <span class="contrast-pair-text" style="color:#AFD4E5">Link text</span>
-            <span class="contrast-pair-sub" style="color:#AFD4E5">Inline hyperlinks</span>
-          </div>
-          <div class="contrast-pair-meta">
-            <span class="contrast-pair-tokens">interactive.link / surface.default</span>
-            <span class="contrast-badge contrast-badge--aaa">6.3:1 AAA</span>
-          </div>
-        </div>
-
-      </div><!-- /.contrast-grid -->
-
-      <!-- Implementation note -->
-      <div class="dark-impl-note">
-        <strong>Implementation — Blazor &amp; MAUI</strong><br>
-        Apply dark mode by toggling a <code>data-theme="dark"</code> attribute on the root element. Map each <code>sr.color.*</code> token to a CSS custom property and swap values per theme. In .NET MAUI, use <code>AppThemeBinding</code> with the same token names. The Figma <strong>Single Record</strong> variable collection exposes both <strong>Light</strong> and <strong>Dark</strong> modes — inspect a component to copy the correct token reference. Never hard-code hex values; always reference the semantic token so the correct value is resolved at runtime.
-      </div>
-
-    </section>
-
-    <!-- ── Change history ── -->
-    <div class="tier-heading" id="change-history">
-      <p class="tier-label">History</p>
-      <h2 class="tier-title">Change History</h2>
-    </div>
-    <hr class="tier-rule">
-
-    <section class="colour-group">
-      <table class="change-table">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Change</th>
-            <th>Changed by</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Mar 2026</td>
-            <td>Dark mode semantic tokens added — 21 tokens across Interactive, Surface, Text, Border, and Status groups. All pairs meet WCAG 2.2 AA minimum; key pairs achieve AAA. Figma Single Record collection updated to two modes: Light and Dark.</td>
-            <td class="by">SR DS</td>
-          </tr>
-          <tr>
-            <td>Mar 2026</td>
-            <td>Aligned to typography guide format — DHCW logo header, change history and references added</td>
-            <td class="by">SR DS</td>
-          </tr>
-          <tr>
-            <td>2024</td>
-            <td>Status colour palette established — critical, success, warning, info with surface variants. Focus ring added (WCAG 2.2 SC 1.4.11).</td>
-            <td class="by">SR DS</td>
-          </tr>
-          <tr>
-            <td>2024</td>
-            <td>Three-tier colour token architecture introduced — primitives, semantic, component. NHS Wales Blue (blue-800) confirmed as primary brand colour.</td>
-            <td class="by">SR DS</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-
-    <!-- ── References ── -->
-    <div class="tier-heading" id="references">
-      <p class="tier-label">References</p>
-      <h2 class="tier-title">References</h2>
-    </div>
-    <hr class="tier-rule">
-
-    <section class="colour-group">
-      <ul class="ref-list">
-        <li><a href="https://service-manual.nhs.uk/design-system/styles/colour" target="_blank" rel="noopener">NHS England Design System — Colour</a></li>
-        <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum" target="_blank" rel="noopener">WCAG 2.2 SC 1.4.3 — Contrast (Minimum)</a></li>
-        <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast" target="_blank" rel="noopener">WCAG 2.2 SC 1.4.11 — Non-text Contrast</a></li>
-        <li><a href="https://www.w3.org/community/design-tokens/" target="_blank" rel="noopener">W3C Design Token Community Group</a></li>
-      </ul>
-    </section>
-
   </main>
 
   <footer class="site-footer">
     <span>Single Record Design System — DHCW</span>
-    <span>Generated from <code>foundations/tokens/primitives/color.json</code> + <code>foundations/tokens/semantic/color.json</code> + <code>foundations/tokens/semantic/color.dark.json</code></span>
+    <span>Generated from <code>foundations/tokens/primitives/color.json</code> + <code>foundations/tokens/semantic/color.json</code></span>
   </footer>
 
 </body>
