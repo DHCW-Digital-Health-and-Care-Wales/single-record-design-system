@@ -4,6 +4,8 @@ All type decisions for the Single Record design system are defined here. Compone
 
 Machine-readable source of truth: `/foundations/tokens/primitives/typography.json` (primitive scale) and `/foundations/tokens/semantic/typography.json` (semantic styles).
 
+Scale governed by **DDR-005** (supersedes DDR-004).
+
 ---
 
 ## Typeface
@@ -31,53 +33,46 @@ Typeface is defined as `font.family.primary` in the primitive token file and as 
 
 All sizes are in px. Referenced via semantic tokens — do not use primitive size tokens in components.
 
-| Token | Value | Usage context |
+| Token | Value | Used by |
 |---|---|---|
 | `font.size.12` | 12px | Caption |
 | `font.size.14` | 14px | Label, Body S |
-| `font.size.16` | 16px | Body M, Heading XS |
-| `font.size.19` | 19px | Heading S mobile |
-| `font.size.22` | 22px | Heading M mobile, Heading S desktop |
-| `font.size.26` | 26px | Heading M desktop |
-| `font.size.27` | 27px | Heading L mobile |
-| `font.size.32` | 32px | Heading XL mobile |
-| `font.size.36` | 36px | Heading L desktop |
-| `font.size.48` | 48px | Heading XL desktop |
-| `font.size.64` | 64px | Reserved — display use only |
+| `font.size.16` | 16px | Body M, Heading XS, Mobile Heading XS |
+| `font.size.18` | 18px | Mobile Heading S |
+| `font.size.20` | 20px | Mobile Heading M, Desktop Heading S |
+| `font.size.24` | 24px | Mobile Heading L, Desktop Heading M |
+| `font.size.28` | 28px | Mobile Heading XL, Desktop Heading L |
+| `font.size.36` | 36px | Desktop Heading XL |
+
+Heading sizes follow a 4-step modular progression (16 → 20 → 24 → 28 → 36). Mobile is the same scale shifted down by one step at the top — no 36px on mobile.
 
 ---
 
 ## Line Height Scale
 
-Paired with font sizes via semantic tokens.
+All line heights are multiples of 4 — aligned to the 4px base spacing grid (DDR-001). This keeps vertical rhythm consistent across body text, headings, and components.
 
-| Token | Value |
-|---|---|
-| `font.line-height.16` | 16px |
-| `font.line-height.20` | 20px |
-| `font.line-height.24` | 24px |
-| `font.line-height.27` | 27px |
-| `font.line-height.28` | 28px |
-| `font.line-height.29` | 29px |
-| `font.line-height.30` | 30px |
-| `font.line-height.32` | 32px |
-| `font.line-height.33` | 33px |
-| `font.line-height.38` | 38px |
-| `font.line-height.42` | 42px |
-| `font.line-height.54` | 54px |
-| `font.line-height.72` | 72px |
+| Token | Value | Used by |
+|---|---|---|
+| `font.line-height.16` | 16px | Caption |
+| `font.line-height.20` | 20px | Label, Body S |
+| `font.line-height.24` | 24px | Body M, Heading XS, Mobile Heading S |
+| `font.line-height.28` | 28px | Heading S, Mobile Heading M |
+| `font.line-height.32` | 32px | Heading M, Mobile Heading L |
+| `font.line-height.36` | 36px | Heading L, Mobile Heading XL |
+| `font.line-height.44` | 44px | Heading XL |
 
 ---
 
 ## Letter Spacing
 
-Values in px, matching Figma variable definitions.
+Values match the live Figma variables (`Font/Letter Spacing/*`) — the implementation source of truth.
 
 | Token | Value | Usage |
 |---|---|---|
-| `font.letter-spacing.default` | `0px`    | Body text, headings |
-| `font.letter-spacing.wide`    | `0.7px`  | Labels and UI controls |
-| `font.letter-spacing.caption` | `0.24px` | Caption text |
+| `font.letter-spacing.default` | `0px`   | Body text, headings |
+| `font.letter-spacing.wide`    | `0.3px` | Labels and UI controls |
+| `font.letter-spacing.caption` | `0.2px` | Caption text |
 
 ---
 
@@ -87,27 +82,29 @@ These are the named styles used in Figma and referenced in all component specs. 
 
 ### Headings
 
-| Style token | Desktop | Mobile | Weight |
+| Style token | Desktop (size / line height) | Mobile (size / line height) | Weight |
 |---|---|---|---|
-| `sr.typography.heading-xl` | 48px / 54px lh | 32px / 38px lh | Bold |
-| `sr.typography.heading-l`  | 36px / 42px lh | 27px / 33px lh | Bold |
-| `sr.typography.heading-m`  | 26px / 32px lh | 22px / 29px lh | Bold |
-| `sr.typography.heading-s`  | 22px / 30px lh | 19px / 27px lh | Bold |
-| `sr.typography.heading-xs` | 16px / 24px lh | 16px / 24px lh | Bold |
+| `sr.typography.heading-xl` | 36 / 44 | 28 / 36 | Bold |
+| `sr.typography.heading-l`  | 28 / 36 | 24 / 32 | Bold |
+| `sr.typography.heading-m`  | 24 / 32 | 20 / 28 | Bold |
+| `sr.typography.heading-s`  | 20 / 28 | 18 / 24 | Bold |
+| `sr.typography.heading-xs` | 16 / 24 | 16 / 24 | Bold |
+
+Line-height ratios decrease monotonically as size grows (desktop: 1.50 → 1.40 → 1.33 → 1.29 → 1.22), following industry practice for type scales (GDS, NHS England, Material).
 
 ### Body
 
 | Style token | Desktop | Mobile | Weight | Notes |
 |---|---|---|---|---|
-| `sr.typography.body-m` | 16px / 24px lh | 16px / 24px lh | Regular | Default body text. Minimum size for clinical content. |
-| `sr.typography.body-s` | 14px / 24px lh | 14px / 24px lh | Regular | Supporting text, secondary content. Do not use for primary clinical content. |
+| `sr.typography.body-m` | 16 / 24 | 16 / 24 | Regular | Default body text. Minimum size for clinical content. |
+| `sr.typography.body-s` | 14 / 20 | 14 / 20 | Regular | Supporting text, secondary content. Do not use for primary clinical content. |
 
 ### UI Text
 
 | Style token | Desktop | Mobile | Weight | Tracking |
 |---|---|---|---|---|
-| `sr.typography.label`   | 14px / 20px lh | 14px / 20px lh | Medium | Wide (0.7px) |
-| `sr.typography.caption` | 12px / 16px lh | 12px / 16px lh | Regular | Caption (0.24px) |
+| `sr.typography.label`   | 14 / 20 | 14 / 20 | Medium  | Wide (0.3px) |
+| `sr.typography.caption` | 12 / 16 | 12 / 16 | Regular | Caption (0.2px) |
 
 ---
 
@@ -119,4 +116,4 @@ These are the named styles used in Figma and referenced in all component specs. 
 - Do not use colour alone to distinguish text styles — use weight or size differences as well.
 - Ensure text can be resized to 200% without loss of content or functionality (WCAG 1.4.4).
 - Line length (measure) for body text: 60–80 characters. Enforce via layout constraints, not type tokens.
-- Minimum line height for body text is met by all tokens in this scale (all ≥ 1.5 ratio).
+- All body-text line-height ratios are ≥ 1.5; the largest heading sits at 1.22, comfortably within WCAG 1.4.12 text-spacing tolerances.

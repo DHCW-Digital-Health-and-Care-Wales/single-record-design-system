@@ -70,7 +70,7 @@ For the full log of design language changes, see `design-language-backlog.md`.
 | `Interactive/Destructive` vs `Status/Critical` | Same colour (Red/600), different roles. `Interactive/Destructive` = UI action risk (delete button, error border on forms). `Status/Critical` = clinical severity label (badge, tag). Never swap them. |
 | Show/hide on components | Boolean property for optional decoration. Variant for structural layout changes. Hidden = `visible=false`, never deleted. |
 | Dark mode Interactive/Primary | Cyan/850 (`#0c7b99`). Was Cyan/900. Gives 4.88:1 contrast (WCAG AA) with white text. Do not revert. |
-| Heading scale (desktop) | XS=16px, S=20px, M=24px, L=28px, XL=36px. Mobile scale unchanged. |
+| Heading scale | Governed by **DDR-005** (supersedes DDR-004). Desktop XS=16/24, S=20/28, M=24/32, L=28/36, XL=36/44. Mobile XS=16/24, S=18/24, M=20/28, L=24/32, XL=28/36. All line-heights on the 4px grid; letter-spacing aligned to Figma (wide=0.3, caption=0.2). |
 | Focus rings | Yellow (`Border/Focus`), OUTSIDE stroke, applied to the interactive element itself — not a wrapper frame that includes a label. |
 
 ---
