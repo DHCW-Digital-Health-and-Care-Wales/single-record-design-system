@@ -92,12 +92,12 @@ The colour system is built from four brand palettes (Blue, Cyan, Navy, Grey) and
 | Palette | Primary role |
 |---|---|
 | Blue | NHS Wales brand primary — buttons, links, interactive states |
-| Cyan | DHCW brand secondary — accents, highlights |
+| Cyan | DHCW brand secondary — accents, highlights, focus ring (Cyan/700 per DDR-006) |
 | Navy | Deep brand navy — headers, structure |
 | Grey | Neutral UI — text, borders, surfaces |
 | Red | Error / critical status |
 | Green | Success status |
-| Yellow | Warning status / focus ring |
+| Yellow | Warning status |
 | Info Blue | Informational status |
 
 See `/foundations/tokens/colour/global.md` for the full primitive palette and `/foundations/tokens/colour/semantic.md` for semantic token definitions and contrast ratios.
