@@ -51,6 +51,7 @@ This is a healthcare system. Decisions affect real clinical staff and patients. 
 ## Working Rules for AI-Assisted Sessions
 
 ### Before making changes
+- **Read `/decisions/handoff.md` first.** It contains the current state of the design system, hard constraints, open work items, and key Figma node references. Do not skip this.
 - Read relevant existing files before editing or creating anything
 - Check `/decisions/` for prior decisions that may affect your work
 - Do not assume anything about component behaviour — look it up or ask
