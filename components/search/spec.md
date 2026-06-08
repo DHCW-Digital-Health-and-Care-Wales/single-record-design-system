@@ -81,7 +81,7 @@ Dock it directly under a Typeahead Search instance. Width defaults to 360 — re
 | State | Visual |
 |---|---|
 | Default | Border `Border/Default`. Placeholder visible. |
-| Focus | Border `Border/Focus` (Cyan/700, DDR-006), 2px stroke inside. |
+| Focus | Border/Default kept (1px inside). 3px **outer** focus ring in `Border/Focus` (Cyan/700) sits outside the field — does not displace layout. Matches the system focus pattern (DDR-006). |
 | Filled | Value shown in `Text/Primary`, clear (×) trailing affordance present. |
 | Loading | Spinner replaces clear. Border unchanged from prior state. |
 | Disabled | Background `Surface/Background`, border `Border/Disabled`, text `Text/Disabled`. `aria-disabled="true"`. |
