@@ -1,6 +1,6 @@
 # Search
 
-**Status:** In Figma (component sets `1705:363` and `1707:160` on page `1701:17851`)
+**Status:** In Figma (component sets `1715:375` and `1716:238` on page `1701:17851`)
 **Last updated:** 2026-06-04
 
 ---
@@ -10,6 +10,20 @@
 Lets a user find content by typing. Covers inline filtering, submitted queries (with both text and icon-only buttons), and lookup with suggested completions.
 
 For "what's an action vs what's a search" — if the result is a navigation/list change driven by the input value, use Search. If the user is choosing from a known set, use Select. If they're triggering an action, use Button.
+
+---
+
+## Icons used
+
+All icons are instances of existing icon components on the Icons page (`103:760`):
+
+| Slot | Icon component | Node |
+|---|---|---|
+| Leading search glyph | `Icon/nav/search` | `190:114` |
+| Clear (×) trailing affordance | `Icon/nav/clear` | `190:264` |
+| Loading indicator | `Icon/status/loading` | `190:275` |
+
+Stroke colour is recoloured per state via semantic variables (`Text/Secondary`, `Text/Disabled`, `Text/Inverse`, `Interactive/Primary`) — never hardcoded.
 
 ---
 
