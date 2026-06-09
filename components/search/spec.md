@@ -84,7 +84,7 @@ Dock it directly under a Typeahead Search instance. Width defaults to 360 — re
                   (filled / placeholder)     (text or icon)
 ```
 
-- **Container**: 44px height (`Touch/Default`), `Radius/4`, 1px border (2px on focus).
+- **Container**: 40px height (matches Button Default and Input Field), `Radius/4`, 1px border. Focus state keeps the border and adds a 3px outer ring (see Focus below).
 - **Leading icon**: 18×18 magnifying glass, stroke = `Text/Secondary` (or `Text/Disabled`).
 - **Value**: `SR Typography/Desktop/Body M`. `Text/Primary` when filled, `Text/Secondary` when showing placeholder.
 - **Trailing**: clear (×) when filled, spinner when loading, otherwise empty.
