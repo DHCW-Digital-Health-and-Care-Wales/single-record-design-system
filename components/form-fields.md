@@ -45,14 +45,15 @@ Radio and Checkbox individual items do not carry `Required` — the marker belon
 
 ## Search inputs
 
-The in-form `Type=Search` variants previously in the Input component set have been **removed**.
+The in-form `Type=Search` variants previously in the Input component set have been **removed**. The Search component set (`1715:375`) is canonical and now carries its own form-field properties — no Input wrapper needed.
 
-| Need | Use |
-|---|---|
-| Search input anywhere | `Search` component set (`1715:375`) |
-| Search input that needs a labelled form field with hint and error message | Wrap a `Search` instance with a label row and hint/error row using the same vertical layout as Input. |
+| Property on Search | Default | Behaviour |
+|---|---|---|
+| `Label` | `false` | Show label row above the input |
+| `Hint` | `false` | Show hint row between label and input |
+| `Required` | `false` | Inline `*` after the label (when `Label=true`) |
 
-A reusable "Form Field" wrapper component is a candidate for a future addition; until then, compose manually.
+Toggle these on any Search variant (`Type=Basic`, `With Button`, `With Icon Button`, `Typeahead`). The existing `State=Error` variant still owns the inline error message.
 
 ---
 

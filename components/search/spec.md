@@ -11,7 +11,21 @@ Lets a user find content by typing. Covers inline filtering, submitted queries (
 
 For "what's an action vs what's a search" — if the result is a navigation/list change driven by the input value, use Search. If the user is choosing from a known set, use Select. If they're triggering an action, use Button.
 
-**Canonical**: `Search` is the only search component. The previous `Type=Search` variants in the Input set were removed on 2026-06-04. For a labelled / hinted search inside a form, wrap a Search instance with the label and hint rows used by Input (see `/components/form-fields.md`).
+**Canonical**: `Search` is the only search component. The previous `Type=Search` variants in the Input set were removed on 2026-06-04. To put a search inside a labelled form field, toggle the `Label` / `Hint` / `Required` boolean properties on a Search instance — no Input wrapper needed.
+
+---
+
+## Form-field properties
+
+The set carries three boolean properties so a single instance can be used both as a standalone search bar and as a labelled form field:
+
+| Property | Default | Behaviour |
+|---|---|---|
+| `Label` | `false` | Shows a "Field label" row above the input. Style: `Label` (14/20 Medium). |
+| `Hint` | `false` | Shows a hint row between the label and the input. Style: `Caption` (12/16 Regular), `Text/Secondary`. |
+| `Required` | `false` | When `Label=true`, adds a `*` in `Status/Critical` after the label text. Decorative — pair with `aria-required` in code. |
+
+These work alongside the existing `Type` and `State` variants. The `Error` state still renders its own inline error message at the bottom of the field.
 
 ---
 
