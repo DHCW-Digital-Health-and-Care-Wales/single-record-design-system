@@ -97,7 +97,7 @@ Line-height ratios decrease monotonically as size grows (desktop: 1.50 → 1.40 
 | Style token | Desktop | Mobile | Weight | Notes |
 |---|---|---|---|---|
 | `sr.typography.body-m` | 16 / 24 | 16 / 24 | Regular | Default body text. Minimum size for clinical content. |
-| `sr.typography.body-s` | 14 / 20 | 14 / 20 | Regular | Supporting text, secondary content. Do not use for primary clinical content. |
+| `sr.typography.body-s` | 14 / 20 | 14 / 20 | Regular | Supporting text, secondary content. **Also: form-field values and placeholders.** Do not use for primary clinical content. |
 
 ### UI Text
 
@@ -105,6 +105,20 @@ Line-height ratios decrease monotonically as size grows (desktop: 1.50 → 1.40 
 |---|---|---|---|---|
 | `sr.typography.label`   | 14 / 20 | 14 / 20 | Medium  | Wide (0.3px) |
 | `sr.typography.caption` | 12 / 16 | 12 / 16 | Regular | Caption (0.2px) |
+
+---
+
+## Form fields (denser scale)
+
+Form fields across Input, Select, Radio, Checkbox use a denser typography pairing than body content. This is documented in full at `/components/form-fields.md`.
+
+| Slot | Style |
+|---|---|
+| Label / Legend | `Label` (14/20 Medium) |
+| Value / Placeholder / Option text | `Body S` (14/20 Regular) |
+| Hint / Description / Error message | `Caption` (12/16 Regular) |
+
+This pairing is mandatory for form-field text. Body-text scale (Body M 16) still applies in prose and clinical notes.
 
 ---
 

@@ -15,6 +15,18 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Form fields rebound — 2026-06-04 (later in day)
+
+Cross-cutting change applied to Input, Select, Radio, Checkbox:
+
+- **Typography**: Label/Legend → `Label` (14/20 M), Value/Placeholder/Option text → `Body S` (14/20 R), Hint/Description/Error → `Caption` (12/16 R). 336 text nodes rebound across all sets and templates. See `/components/form-fields.md`.
+- **Required boolean** added to Input and Select sets (`Required#1835:0`, `Required#1835:38`). Toggling shows an inline `*` in `Status/Critical` after the label. Pair with `aria-required` in code; the asterisk is decorative only.
+- **Search variants removed from Input** (8 variants gone). The standalone `Search` component set (`1715:375`) is now canonical. For labelled/hinted search in a form, wrap a Search instance with label/hint rows.
+- **Textarea variants added to Input** (4 — one per state, Label=Shown, Hint=Hidden, 120px min-height).
+- See `/components/form-fields.md` for the full mapping and the Form Field wrapper as a future task.
+
+---
+
 ## Weekly Checkpoint — 2026-06-04
 
 This week's accepted changes (now reflected in Figma, tokens, and docs):

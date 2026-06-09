@@ -11,6 +11,8 @@ Lets a user find content by typing. Covers inline filtering, submitted queries (
 
 For "what's an action vs what's a search" — if the result is a navigation/list change driven by the input value, use Search. If the user is choosing from a known set, use Select. If they're triggering an action, use Button.
 
+**Canonical**: `Search` is the only search component. The previous `Type=Search` variants in the Input set were removed on 2026-06-04. For a labelled / hinted search inside a form, wrap a Search instance with the label and hint rows used by Input (see `/components/form-fields.md`).
+
 ---
 
 ## Icons used
