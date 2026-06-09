@@ -60,6 +60,7 @@ This is a healthcare system. Decisions affect real clinical staff and patients. 
 - Follow the file format defined in `/docs/contributing-components.md`
 - Every component needs: purpose, anatomy, usage guidance, accessibility notes, and known variants
 - Do not invent new design tokens — use or extend those in `/foundations/tokens/`
+- **Always use existing icon components** from the Icons page (`103:760`, `Icon/{group}/{name}`) when a component needs an icon. Do not draw inline vector/SVG placeholders. If an appropriate icon does not exist, ask the user before importing a new one from the Lucide library.
 
 ### When creating design tokens
 - Tokens must use a three-tier structure: **global → semantic → component**
