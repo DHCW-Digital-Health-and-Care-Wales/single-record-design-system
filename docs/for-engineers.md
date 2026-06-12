@@ -4,6 +4,23 @@ How to consume and contribute to this design system as an engineer.
 
 ---
 
+## Framework Support
+
+The design system is **implementation-agnostic at the design level** — components and tokens are defined once and consumed per platform. Tokens are the contract; every framework binds to the same token names.
+
+| Target | Status | How tokens are consumed |
+|---|---|---|
+| **Standard HTML / CSS** | Supported (reference baseline) | CSS custom properties (`var(--…)`). This is the canonical implementation — other web targets map onto it. |
+| **Blazor / .NET** | Supported | CSS custom properties, scoped CSS, or component CSS isolation. |
+| **React** | Supported | CSS custom properties via CSS Modules / plain CSS, or a CSS-in-JS theme object. |
+| **.NET MAUI** | Supported | XAML `ResourceDictionary`. |
+| **.NET Framework 4.8 (legacy web)** | Limited | CSS custom properties only — see *Legacy .NET Framework 4.8* below. |
+| **Delphi (legacy desktop)** | Maintained, not extended | Manual colour/spacing values from the token tables; no automated binding. |
+
+> If you are starting a **new** product surface, prefer standard semantic HTML + CSS custom properties (and React or Blazor on top). That path gets the full token set, focus rings, and accessibility behaviour for free.
+
+---
+
 ## Getting Started
 
 1. **Read `CLAUDE.md`** — project rules, conventions, and what not to do.
@@ -17,9 +34,9 @@ How to consume and contribute to this design system as an engineer.
 
 Tokens are defined in `/foundations/tokens/` and mapped in `/figma/variable-mapping.md`.
 
-### Web (Blazor)
+### Standard HTML / CSS (reference baseline)
 
-Consume as CSS custom properties:
+Define the tokens once as CSS custom properties, then reference them everywhere. This is the canonical web implementation — Blazor and React both build on it.
 
 ```css
 :root {
@@ -36,6 +53,36 @@ Consume as CSS custom properties:
 }
 ```
 
+Use native semantic elements (`<button>`, `<input>`, `<select>`, `<fieldset>`/`<legend>`) so accessibility and focus behaviour come for free — see *Semantic HTML* below.
+
+### Web (Blazor)
+
+Same CSS custom properties as above. Put the `:root` token block in a global stylesheet (e.g. `wwwroot/css/tokens.css`) and consume via scoped component CSS or CSS isolation (`Component.razor.css`). Do not hard-code hex values in components — always reference `var(--…)`.
+
+### React
+
+Consume the same CSS custom properties via CSS Modules or plain CSS:
+
+```tsx
+// Button.module.css uses the same :root tokens
+import styles from "./Button.module.css";
+
+export function Button({ children }: { children: React.ReactNode }) {
+  return <button className={styles.buttonPrimary}>{children}</button>;
+}
+```
+
+Or, if you use a CSS-in-JS / theme provider, build the theme object from the same token names so there is a single source of truth:
+
+```ts
+export const theme = {
+  color: { interactivePrimary: "var(--color-interactive-primary)" },
+  spacing: { componentMd: "var(--spacing-component-md)" },
+};
+```
+
+Prefer binding to the CSS variables (not raw hex) so light/dark mode switching keeps working.
+
 ### .NET MAUI
 
 Consume as XAML resource dictionary:
@@ -46,6 +93,17 @@ Consume as XAML resource dictionary:
 ```
 
 Reference token names from `/figma/variable-mapping.md` (MAUI column).
+
+### Legacy .NET Framework 4.8 (WebForms / older MVC)
+
+Older Single Record web apps still run on .NET Framework 4.8. The design system **can** help these, but support is limited and pragmatic:
+
+- **What works:** the visual layer. Drop the `:root` CSS custom-property block into a shared stylesheet and reference `var(--…)` from your existing markup. Colour, spacing, typography, and focus-ring tokens all apply with no framework upgrade.
+- **What to expect:** you will not get the Blazor/React component models. Treat these apps as **token consumers only** — match colours, spacing, and focus styles to bring them visually in line, but don't expect drop-in components.
+- **Priority order:** fix focus rings and colour-contrast first (accessibility), then spacing/typography. These give the biggest consistency win for the least effort.
+- **IE / very old browsers:** CSS custom properties are unsupported in IE11. If an app must support IE11, fall back to the literal hex/px values in `/figma/variable-mapping.md` rather than `var(--…)`.
+
+If you maintain a 4.8 app and aren't sure whether a given component is feasible, raise it — see *Raising Issues*. It's better to scope realistically than to half-implement.
 
 ### Token source of truth
 

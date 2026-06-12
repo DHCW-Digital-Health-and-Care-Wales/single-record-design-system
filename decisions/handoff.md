@@ -15,6 +15,17 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-06-12
+
+Snapshot taken as engineers were onboarded to the Figma library and this repo.
+
+- **Required marker now on all form fields.** Checkbox (`Required#2287:0`) and Radio (`Required#2287:13`) joined Input, Select, and Search. See `/components/form-fields.md`.
+- **Framework support broadened in docs.** Standard HTML/CSS (reference baseline), Blazor, React, and .NET MAUI are documented as current targets in `/docs/for-engineers.md`, with per-framework token consumption examples. Legacy **.NET Framework 4.8** added as *limited* (CSS custom properties / token values only — visual layer, no component model). Delphi noted as maintained, not extended. Tech tables in `README.md`, `DESIGN-SYSTEM.md`, and `CLAUDE.md` updated to match.
+- **Concept prototypes removed.** `concept-patient-record.html` and `concept-patient-search.html` deleted from the repo root — they used hardcoded NHS colours, not design-system tokens, and were not referenced anywhere. Production patterns live in `/patterns/`.
+- README status moved from "Initialising" to "Active development" with a pointer to the live component catalogue.
+
+---
+
 ## Form fields rebound — 2026-06-04 (later in day)
 
 Cross-cutting change applied to Input, Select, Radio, Checkbox:
