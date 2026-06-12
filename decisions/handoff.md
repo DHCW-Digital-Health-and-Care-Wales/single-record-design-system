@@ -21,6 +21,7 @@ Cross-cutting change applied to Input, Select, Radio, Checkbox:
 
 - **Typography**: Label/Legend → `Label` (14/20 M), Value/Placeholder/Option text → `Body S` (14/20 R), Hint/Description/Error → `Caption` (12/16 R). 336 text nodes rebound across all sets and templates. See `/components/form-fields.md`.
 - **Required boolean** added to Input and Select sets (`Required#1835:0`, `Required#1835:38`). Toggling shows an inline `*` in `Status/Critical` after the label. Pair with `aria-required` in code; the asterisk is decorative only.
+- **Required boolean now on all form fields** (2026-06-12). Added to **Checkbox** (`Required#2287:0`) and **Radio** (`Required#2287:13`) — the asterisk renders after the group legend (Legend=Shown only). Each legend was wrapped in a horizontal `Label Row` to hold the inline `*`. **Search** already carried `Required#1851:50`. So Input, Select, Search, Checkbox, Radio all expose `Required` now.
 - **Search variants removed from Input** (8 variants gone). The standalone `Search` component set (`1715:375`) is now canonical. For labelled/hinted search in a form, wrap a Search instance with label/hint rows.
 - **Textarea variants added to Input** (4 — one per state, Label=Shown, Hint=Hidden, 120px min-height).
 - See `/components/form-fields.md` for the full mapping and the Form Field wrapper as a future task.

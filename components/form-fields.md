@@ -24,11 +24,15 @@ Applied in: Input (45 variants), Select (9), Select Building Blocks (4), Select 
 
 ## Required marker
 
-Input and Select both expose a boolean component property:
+Every form field now exposes a boolean component property:
 
-| Property | Default | Behaviour |
-|---|---|---|
-| `Required` | `false` | When `true`, an inline asterisk (`*` in `Status/Critical`) appears immediately after the label/legend text. |
+| Component set | Property | Default | Behaviour |
+|---|---|---|---|
+| Input | `Required` | `false` | Inline asterisk (`*` in `Status/Critical`) immediately after the label text. |
+| Select | `Required` | `false` | As above. |
+| Search | `Required` | `false` | Inline `*` after the label (when `Label=true`). |
+| Checkbox | `Required` | `false` | Inline `*` after the **group legend** (shown only when `Legend=Shown`). |
+| Radio | `Required` | `false` | Inline `*` after the **group legend** (shown only when `Legend=Shown`). |
 
 The asterisk is **decorative only** — it does not replace `aria-required`. In code:
 
@@ -37,9 +41,16 @@ The asterisk is **decorative only** — it does not replace `aria-required`. In 
 <input id="nhs-number" required aria-required="true" />
 ```
 
-The `visually-hidden` "required" span ensures screen-reader users get the same information sighted users get from the symbol. Do not rely on `*` alone.
+For Radio and Checkbox the marker sits on the group `<legend>`, not the individual options:
 
-Radio and Checkbox individual items do not carry `Required` — the marker belongs on the group legend, which is composed at form-field level.
+```html
+<fieldset>
+  <legend>Preferred contact method <span class="asterisk" aria-hidden="true">*</span><span class="visually-hidden"> required</span></legend>
+  ...
+</fieldset>
+```
+
+The `visually-hidden` "required" span ensures screen-reader users get the same information sighted users get from the symbol. Do not rely on `*` alone.
 
 ---
 
