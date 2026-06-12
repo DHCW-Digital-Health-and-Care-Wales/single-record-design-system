@@ -7,7 +7,7 @@ A design system for the Single Record programme within NHS Wales (DHCW). Provide
 ## Who This Is For
 
 - **Designers** working on Single Record products in Figma
-- **Engineers** implementing components in Blazor, .NET MAUI, or future frameworks
+- **Engineers** implementing components in standard HTML/CSS, Blazor, React, or .NET MAUI
 - **Anyone** making decisions that affect the visual or interactive consistency of these products
 
 ---
@@ -56,12 +56,12 @@ A design system for the Single Record programme within NHS Wales (DHCW). Provide
 
 ## Technology
 
-Blazor / .NET · .NET MAUI · Legacy Delphi (maintained) · Future frameworks (expected)
+Standard HTML / CSS · Blazor / .NET · React · .NET MAUI · Legacy .NET Framework 4.8 (limited) · Legacy Delphi (maintained)
 
-The design system is implementation-agnostic at the design level. Code guidance lives in `/docs/for-engineers.md`.
+The design system is implementation-agnostic at the design level — tokens are the shared contract and each framework binds to the same token names. Per-framework consumption and a support matrix live in `/docs/for-engineers.md`.
 
 ---
 
 ## Status
 
-**Initialising** — foundations, component catalogue, and core patterns under active development.
+**Active development** — foundations, tokens, and a growing component library (Button, Input, Select, Checkbox, Radio, Search, Link, Progress Indicators, Patient Banner, and more) are in use. Designers and engineers are onboarded to the Figma library and this repository. See `/decisions/handoff.md` for the current checkpoint and `/components/README.md` for the live component catalogue.

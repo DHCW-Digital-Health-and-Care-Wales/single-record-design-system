@@ -101,12 +101,14 @@ Current products under the Single Record programme: **EPR**, **patient administr
 
 | Platform | Technology | Status |
 |---|---|---|
+| Web (reference baseline) | Standard HTML / CSS | Current |
 | Web applications | Blazor / .NET | Current |
+| Web applications | React | Current |
 | Desktop / Mobile | .NET MAUI | Current |
-| Legacy systems | Delphi | Maintained |
-| Future platforms | TBD | Expected |
+| Legacy web | .NET Framework 4.8 | Limited — tokens (CSS custom properties) only |
+| Legacy desktop | Delphi | Maintained, not extended |
 
-Components and patterns must be implementation-agnostic at the design level. Code references live in `/docs/engineering/`.
+Components and patterns must be implementation-agnostic at the design level. Per-framework consumption guidance lives in `/docs/for-engineers.md`.
 
 ---
 

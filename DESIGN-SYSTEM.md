@@ -204,10 +204,12 @@ The design system is **implementation-agnostic at the design level**. Tokens are
 
 | Platform | Technology | Status |
 |---|---|---|
+| Web (reference baseline) | Standard HTML / CSS | Current |
 | Web applications | Blazor / .NET | Current |
+| Web applications | React | Current |
 | Desktop / Mobile | .NET MAUI | Current |
-| Legacy systems | Delphi | Maintained |
-| Future platforms | TBD | Expected |
+| Legacy web | .NET Framework 4.8 | Limited — tokens via CSS only |
+| Legacy desktop | Delphi | Maintained, not extended |
 
 Code implementation guidance lives in `/docs/for-engineers.md`.
 
