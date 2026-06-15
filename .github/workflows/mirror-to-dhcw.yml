@@ -1,0 +1,45 @@
+name: Mirror main to DHCW
+
+# Mirrors this repo's `main` branch to the official DHCW-org repository
+# (DHCW-Digital-Health-and-Care-Wales/single-record-design-system) on every
+# push to main. Authentication uses a write deploy key stored as the
+# DHCW_MIRROR_SSH_KEY secret. See docs/repo-mirroring.md for setup.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+# Prevent overlapping mirror runs from racing each other.
+concurrency:
+  group: mirror-to-dhcw
+  cancel-in-progress: false
+
+jobs:
+  mirror:
+    name: Push main to DHCW org repo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (full history)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure SSH deploy key
+        env:
+          DEPLOY_KEY: ${{ secrets.DHCW_MIRROR_SSH_KEY }}
+        run: |
+          if [ -z "$DEPLOY_KEY" ]; then
+            echo "::error::DHCW_MIRROR_SSH_KEY secret is not set. See docs/repo-mirroring.md."
+            exit 1
+          fi
+          mkdir -p ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Push to DHCW
+        run: |
+          git remote add dhcw git@github.com:DHCW-Digital-Health-and-Care-Wales/single-record-design-system.git
+          # Fast-forward only: never clobber the DHCW repo if it has diverged.
+          git push dhcw HEAD:main
