@@ -1,0 +1,60 @@
+name: Deploy Storybook to GitHub Pages
+
+# Builds the design tokens and the Storybook static site, then publishes it to
+# GitHub Pages on every push to main. The published catalogue is the URL that
+# designers, reviewers, and clinical staff browse — always in sync with main.
+#
+# One-time setup: in the repo Settings → Pages, set "Source" to "GitHub Actions".
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+# Allow this workflow to publish to Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one concurrent deployment; let an in-progress run finish.
+concurrency:
+  group: deploy-storybook
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build Storybook
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build tokens + Storybook
+        run: npm run build-storybook
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: packages/storybook/storybook-static
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

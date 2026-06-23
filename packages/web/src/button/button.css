@@ -1,0 +1,94 @@
+/**
+ * DHCW Single Record — Button
+ * Reference HTML/CSS implementation. Consumes @dhcw/sr-tokens CSS custom properties.
+ * Figma source: Button component set (1346:500).
+ *
+ * Types:  Primary, Secondary, Ghost, Warning
+ * Sizes:  Large, Default (no modifier), Small
+ * States: default, hover, focus-visible, disabled
+ */
+
+.sr-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: var(--font-size-16);
+  line-height: var(--font-line-height-24);
+  font-weight: 600;
+  padding: var(--space-3) var(--space-5);
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+/* Focus ring — SR accent ring (DDR-006: Cyan/700) */
+.sr-button:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--sr-color-surface-background),
+    0 0 0 5px var(--color-cyan-700);
+}
+
+/* --- Type: Primary --- */
+.sr-button--primary {
+  background-color: var(--sr-color-interactive-primary);
+  color: var(--sr-color-text-inverse);
+}
+.sr-button--primary:hover {
+  background-color: var(--sr-color-interactive-primary-hover);
+}
+
+/* --- Type: Secondary --- */
+.sr-button--secondary {
+  background-color: transparent;
+  color: var(--sr-color-interactive-primary);
+  border-color: var(--sr-color-interactive-primary);
+}
+.sr-button--secondary:hover {
+  background-color: var(--sr-color-surface-accent);
+}
+
+/* --- Type: Ghost --- */
+.sr-button--ghost {
+  background-color: transparent;
+  color: var(--sr-color-interactive-primary);
+}
+.sr-button--ghost:hover {
+  background-color: var(--sr-color-surface-accent);
+}
+
+/* --- Type: Warning --- */
+.sr-button--warning {
+  background-color: var(--color-yellow-500);
+  color: var(--color-yellow-900);
+}
+.sr-button--warning:hover {
+  background-color: var(--color-yellow-600);
+}
+
+/* --- Size: Large --- */
+.sr-button--large {
+  font-size: var(--font-size-18);
+  padding: var(--space-4) var(--space-6);
+}
+
+/* --- Size: Small --- */
+.sr-button--small {
+  font-size: var(--font-size-14);
+  line-height: var(--font-line-height-20);
+  padding: var(--space-2) var(--space-4);
+}
+
+/* --- Disabled --- */
+.sr-button:disabled,
+.sr-button[aria-disabled="true"] {
+  background-color: var(--sr-color-interactive-disabled);
+  border-color: transparent;
+  color: var(--sr-color-text-inverse);
+  cursor: not-allowed;
+}
