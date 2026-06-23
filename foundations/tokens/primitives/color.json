@@ -64,8 +64,16 @@
     },
     "yellow": {
       "$description": "Status — warning",
+      "900": { "$type": "color", "$value": "#4A3000", "$description": "Darkest warning text on light surfaces" },
+      "800": { "$type": "color", "$value": "#6B4400" },
+      "700": { "$type": "color", "$value": "#8A5A00", "$description": "Warning banner/pill text colour" },
+      "600": { "$type": "color", "$value": "#B47800" },
       "500": { "$type": "color", "$value": "#F8CA4D" },
-      "100": { "$type": "color", "$value": "#FDF6DC" }
+      "400": { "$type": "color", "$value": "#FACE62" },
+      "300": { "$type": "color", "$value": "#FBD97F" },
+      "200": { "$type": "color", "$value": "#FDE8AB" },
+      "100": { "$type": "color", "$value": "#FDF3D7" },
+      "50":  { "$type": "color", "$value": "#FFFAEB" }
     },
     "info-blue": {
       "$description": "Status — informational. info-blue.700 is the link/info semantic value in light mode. info-blue.600/800 anchor dark-mode Interactive/Primary and its hover step.",
