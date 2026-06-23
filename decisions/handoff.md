@@ -15,6 +15,17 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-06-23
+
+This session's accepted changes (in Figma, tokens, docs):
+
+- **Notification banner** built (`2561:19825`). GDS-aligned name. 5 severity types (Information, Success, Warning, Error, Critical) + structural variants (Global/system, Inline, composed title+body+actions, Minimal). All bound to `Status/*` and `Status/* Surface`, icons from `Icon/status/*` and `Icon/warnings/*`. Critical tier is NHS-specific (above Error) for patient-safety alerts.
+- **Yellow primitive scale expanded** from 2 stops (500, 100) to a full 50–900 scale, matching Red/Green. Added darker variants (`Yellow/700` `#8A5A00` for warning banner/pill text, plus 600/800/900). `Yellow/100` corrected to `#FDF3D7`, `Yellow/50` `#FFFAEB`. Applied in both `foundations/tokens/primitives/color.json` and the Figma Primitives collection.
+- **Modal dialog** built (`2561:22206`). See **DDR-008**: one base `Modal dialog` component, with **Confirmation** and **Result** as composed patterns. Confirmation: Standard, Destructive, Warning, Acknowledgement, High-stakes (checkbox gate), Processing. Result: Success (simple / next-step / summary), Error. Includes usage/dev-handoff panels (when-to-use vs toast/inline banner, anatomy, accessibility, do-not, tokens). Uses `Elevation/Overlay`, `Button`, `Icon`, `Checkbox/Boxes`.
+- **Packages monorepo + token build pipeline** landed earlier (DDR-007): Style Dictionary outputs CSS/SCSS/XAML/JSON from the DTCG sources. .NET 4.8 gets tokens (CSS custom properties) only — no component library; GovUk.Frontend.AspNetCore is incompatible with 4.8.
+
+---
+
 ## Checkpoint — 2026-06-12
 
 Snapshot taken as engineers were onboarded to the Figma library and this repo.
@@ -97,6 +108,7 @@ This week's accepted changes (now reflected in Figma, tokens, and docs):
 | Apply disabled tokens to remaining components | Tabs, form controls beyond Button still use primitives. Pattern: `Interactive/Disabled` (Blue/400), `Text/Disabled` (Navy/300), `Border/Disabled` (Navy/300) |
 | DL-005 component audit | Desktop heading scale changed (XS=16, S=20, M=24, L=28, XL=36). Need visual check on Button, Input Field, Select, and any component using SR Typography/Desktop/Heading S–XL |
 | Toggle building blocks | `_Toggle/Track` and related building blocks not yet formalised |
+| **Destructive button type** | `Button` set (`1346:500`) has Primary/Secondary/Ghost/Warning but **no Destructive**. Modal patterns currently instance Primary + override fill to `Interactive/Destructive`. Add a first-class `Type=Destructive` (Default/Hover/Focus/Disabled) bound to `Interactive/Destructive`, then re-point modal patterns. See DDR-008. |
 | Show/hide pattern for component parts | Decision made: boolean Component Property for optional decoration (icons, badges); variant for layout-shifting show/hide (label, hint). Hidden layers = `visible=false`, never delete. Apply consistently when building new components. |
 
 ---
