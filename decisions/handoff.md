@@ -114,6 +114,7 @@ This week's accepted changes (now reflected in Figma, tokens, and docs):
 | ~~Enable GitHub Pages for Storybook~~ **(resolved 2026-06-24)** | Pages enabled on the DHCW org repo (Source = GitHub Actions). Storybook deploys to `https://dhcw-digital-health-and-care-wales.github.io/single-record-design-system/`. Personal repo doesn't have Pages (free plan); disable the workflow there via Actions → ⋯ → Disable workflow to avoid red-X noise. Mirror pushes via deploy key don't auto-trigger workflows on the org repo — use "Run workflow" manually after each mirror. |
 | Narrow root `.gitignore` | Root `.gitignore` ignores bare `package.json`/`package-lock.json`; workspace manifests are force-added. Tighten the rules so package manifests track normally. |
 | Grow Storybook coverage | Add stories alongside each new `@dhcw/sr-web` component; enable the `@dhcw/sr-react` stories glob in `.storybook/main.js` once that package has components. Storybook MCP deferred (DDR-009). |
+| Blazor WASM component gallery | Scaffold a Blazor WebAssembly "gallery" app that renders `@dhcw/sr-blazor` components (starting with `SrButton`) in their full variant matrix. Deploy as a second GitHub Pages site via a `dotnet publish` workflow. **Priority: this week.** The existing Blazor product team needs a live-preview URL to evaluate adopting the design system. Pattern: static WASM output → `actions/upload-pages-artifact` → deploy. |
 
 ---
 
