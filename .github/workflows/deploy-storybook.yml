@@ -1,14 +1,15 @@
 name: Deploy Storybook to GitHub Pages
 
 # Builds the design tokens and the Storybook static site, then publishes it to
-# GitHub Pages on every push to main. The published catalogue is the URL that
-# designers, reviewers, and clinical staff browse — always in sync with main.
+# GitHub Pages. Runs on pushes to main (the canonical catalogue) and also on the
+# claude/eloquent-ride-0upljc branch so the catalogue can be previewed before it
+# is merged to main. The latter can be removed once Storybook lands on main.
 #
 # One-time setup: in the repo Settings → Pages, set "Source" to "GitHub Actions".
 
 on:
   push:
-    branches: [main]
+    branches: [main, claude/eloquent-ride-0upljc]
   workflow_dispatch: {}
 
 # Allow this workflow to publish to Pages.
