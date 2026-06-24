@@ -50,8 +50,8 @@ export default {
     label: { control: 'text', description: 'Button text — name the action, not "OK".' },
     type: {
       control: { type: 'select' },
-      options: ['primary', 'secondary', 'ghost', 'warning'],
-      description: 'Figma: Type. NOTE: "warning" renders red (destructive) — see DDR-008.',
+      options: ['primary', 'secondary', 'ghost', 'destructive'],
+      description: 'Figma: Type. "destructive" renders red for irreversible actions — see DDR-008.',
     },
     size: {
       control: { type: 'inline-radio' },
@@ -79,7 +79,7 @@ export default {
 export const Primary = {};
 export const Secondary = { args: { type: 'secondary', label: 'Cancel' } };
 export const Ghost = { args: { type: 'ghost', label: 'Dismiss' } };
-export const Warning = { args: { type: 'warning', label: 'Delete record' } };
+export const Destructive = { args: { type: 'destructive', label: 'Delete record' } };
 
 export const Disabled = { args: { state: 'disabled' } };
 export const NoIcons = { args: { leadingIcon: false, trailingIcon: false } };
@@ -90,7 +90,7 @@ export const Matrix = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.style.cssText = 'display:flex;flex-direction:column;gap:24px;';
-    ['primary', 'secondary', 'ghost', 'warning'].forEach((type) => {
+    ['primary', 'secondary', 'ghost', 'destructive'].forEach((type) => {
       const row = document.createElement('div');
       row.style.cssText = 'display:flex;gap:16px;align-items:center;flex-wrap:wrap;';
       ['large', 'default', 'small'].forEach((size) => {

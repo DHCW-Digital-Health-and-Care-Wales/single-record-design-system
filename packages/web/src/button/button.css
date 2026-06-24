@@ -4,10 +4,11 @@
  * Consumes @dhcw/sr-tokens CSS custom properties.
  *
  * Properties (mirroring the Figma component):
- *   Type:  Primary | Secondary | Ghost | Warning
- *          NOTE: the "Warning" type renders RED (Interactive/Destructive) in
- *          Figma, i.e. it is effectively the destructive button. Naming gap
- *          tracked in DDR-008.
+ *   Type:  Primary | Secondary | Ghost | Destructive
+ *          Destructive renders RED (Interactive/Destructive) for irreversible
+ *          actions (delete, remove). Aligns with the GDS "Warning" button
+ *          (which is also red); renamed Destructive here to avoid colliding
+ *          with the amber Status/Warning language used elsewhere. See DDR-008.
  *   Size:  Large | Default | Small
  *   State: Default | Hover | Focus | Disabled (CSS pseudo-classes)
  *   Slots: optional leading / trailing icon (16px), via .sr-button__icon
@@ -92,12 +93,12 @@
   border-color: var(--sr-color-interactive-primary);
 }
 
-/* ---------- Type: Warning (destructive / red — see DDR-008) ---------- */
-.sr-button--warning {
+/* ---------- Type: Destructive (red — irreversible actions) ---------- */
+.sr-button--destructive {
   background-color: var(--sr-color-interactive-destructive);
   color: var(--sr-color-text-inverse);
 }
-.sr-button--warning:hover {
+.sr-button--destructive:hover {
   background-color: var(--color-red-700);
 }
 
@@ -131,8 +132,8 @@
 .sr-button--ghost[aria-disabled="true"] {
   border-color: transparent;
 }
-.sr-button--warning:disabled,
-.sr-button--warning[aria-disabled="true"] {
+.sr-button--destructive:disabled,
+.sr-button--destructive[aria-disabled="true"] {
   background-color: var(--sr-color-status-critical-surface);
   color: var(--sr-color-interactive-destructive);
 }
