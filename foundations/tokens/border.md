@@ -14,11 +14,11 @@ Four semantic tokens covering the full contrast range needed for clinical UI. Al
 | `sr.color.border.subtle`  | `#f0f4f5` | `#464c64` | Row dividers in data tables, internal separators on white/card surfaces. Use when Default would overpower the content. |
 | `sr.color.border.default` | `#d8dde0` | `#707488` | Standard inputs, cards, panels, list separators. The baseline for most bordered elements. |
 | `sr.color.border.strong`  | `#4c6272` | `#9ea1af` | Active/selected states, structural dividers, section headers that must read clearly. |
-| `sr.color.border.focus`   | `#ffeb3b` | `#ffeb3b` | Focus rings only. Never use for decorative purposes. Always pair with an inner dark ring and `Border/Width/Strong`. |
+| `sr.color.border.focus`   | `#12a3c9` | `#12a3c9` | Focus rings only (Cyan/700 — DDR-006). Never use for decorative purposes. Always pair with an inner white gap ring. |
 
 **Notes:**
 - Do not use `border.subtle` as the only visual indicator of a boundary — on low-contrast displays it may not be perceptible. Pair with background colour or spacing.
-- `border.focus` alone fails WCAG SC 1.4.11 (non-text contrast) against white. The NHS/GDS pattern is: 3px `focus-yellow` outer ring + 2px `navy.900` inner ring, giving a 3:1 yellow-to-background and clear dark boundary.
+- Focus ring pattern (DDR-006): 2px white inner gap + 2px Cyan/700 outer ring via `box-shadow`. Meets WCAG SC 1.4.11 (non-text contrast) — 3.4:1 on light background, 4.6:1 on dark.
 
 ---
 

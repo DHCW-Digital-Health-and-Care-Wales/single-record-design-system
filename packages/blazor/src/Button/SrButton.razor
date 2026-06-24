@@ -1,0 +1,31 @@
+@namespace DHCW.SingleRecord.Components
+
+<button type="button"
+        class="@CssClass"
+        disabled="@Disabled"
+        @attributes="AdditionalAttributes"
+        @onclick="OnClick">
+    @if (LeadingIcon is not null)
+    {
+        <span class="sr-button__icon">@LeadingIcon</span>
+    }
+    <span>@ChildContent</span>
+    @if (TrailingIcon is not null)
+    {
+        <span class="sr-button__icon">@TrailingIcon</span>
+    }
+</button>
+
+@code {
+    [Parameter] public ButtonType Type { get; set; } = ButtonType.Primary;
+    [Parameter] public ButtonSize Size { get; set; } = ButtonSize.Default;
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public RenderFragment? LeadingIcon { get; set; }
+    [Parameter] public RenderFragment? TrailingIcon { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public EventCallback<Microsoft.AspNetCore.Components.Web.MouseEventArgs> OnClick { get; set; }
+    [Parameter(CaptureUnmatched = true)] public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string CssClass =>
+        $"sr-button sr-button--{Type.ToString().ToLowerInvariant()} sr-button--{Size.ToString().ToLowerInvariant()}";
+}

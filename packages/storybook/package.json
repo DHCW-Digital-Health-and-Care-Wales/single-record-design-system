@@ -10,9 +10,12 @@
   },
   "dependencies": {
     "@dhcw/sr-tokens": "0.1.0",
-    "@dhcw/sr-web": "0.1.0"
+    "@dhcw/sr-web": "0.1.0",
+    "@dhcw/sr-react": "0.1.0"
   },
   "devDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "@storybook/addon-a11y": "^8.6.0",
     "@storybook/addon-essentials": "^8.6.0",
     "@storybook/html-vite": "^8.6.0",

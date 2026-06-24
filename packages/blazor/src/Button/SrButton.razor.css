@@ -1,0 +1,6 @@
+/*
+ * Blazor CSS isolation file.
+ * The actual button styles come from @dhcw/sr-web button.css,
+ * which must be included in the host app's stylesheet bundle.
+ * This file exists only to satisfy the Blazor CSS isolation convention.
+ */

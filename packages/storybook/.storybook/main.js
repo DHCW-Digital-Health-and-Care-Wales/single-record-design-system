@@ -3,8 +3,7 @@ const config = {
   // Stories live next to the components they document, in the sibling packages.
   stories: [
     '../../web/src/**/*.stories.@(js|mdx)',
-    // React stories can be added here once @dhcw/sr-react has components:
-    // '../../react/src/**/*.stories.@(js|jsx|ts|tsx|mdx)',
+    '../../react/src/**/*.stories.@(js|jsx|mdx)',
   ],
   addons: [
     '@storybook/addon-essentials',

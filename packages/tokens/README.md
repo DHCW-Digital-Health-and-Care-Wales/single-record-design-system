@@ -4,6 +4,8 @@ Design tokens for the DHCW Single Record Design System.
 
 Transforms the canonical JSON token source (`/foundations/tokens/`) into consumable formats for all supported frameworks.
 
+> **Note:** the generated `build/` directory **is committed** to the repo. The source of truth is still `/foundations/tokens/` — `build/` is the compiled output. It is tracked (rather than gitignored) so the outputs are visible without running a build, consumers using the workspace get the files immediately, and the Storybook/Pages deploy is reproducible. Re-run `npm run build:tokens` from the repo root after any change to the source tokens, then commit the regenerated `build/`.
+
 ## Outputs
 
 | File | Format | Target |
@@ -38,8 +40,8 @@ Then reference tokens as CSS custom properties:
 
 ```css
 .button-primary {
-  background-color: var(--sr-sr-color-interactive-primary);
-  color: var(--sr-sr-color-text-inverse);
+  background-color: var(--sr-color-interactive-primary);
+  color: var(--sr-color-text-inverse);
 }
 ```
 
@@ -72,7 +74,7 @@ Then reference tokens:
 @use 'path/to/tokens' as sr;
 
 .button-primary {
-  background-color: sr.$sr-sr-color-interactive-primary;
+  background-color: sr.$sr-color-interactive-primary;
 }
 ```
 

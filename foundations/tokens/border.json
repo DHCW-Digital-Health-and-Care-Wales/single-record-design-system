@@ -22,8 +22,8 @@
       },
       "focus":   {
         "$type": "color",
-        "$value": "{color.focus-yellow.default}",
-        "$description": "Focus ring colour. Applied to all interactive elements on keyboard focus. Always paired with Border/Width/Strong (2px) and an inner dark ring to meet WCAG 2.2 SC 1.4.11."
+        "$value": "{color.cyan.700}",
+        "$description": "Focus ring colour — Cyan/700 (DDR-006). Applied to all interactive elements on keyboard focus. Always paired with Border/Width/Strong (2px) and an inner gap ring."
       }
     }
   },
