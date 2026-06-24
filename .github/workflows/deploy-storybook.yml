@@ -1,15 +1,17 @@
 name: Deploy Storybook to GitHub Pages
 
 # Builds the design tokens and the Storybook static site, then publishes it to
-# GitHub Pages. Runs on pushes to main (the canonical catalogue) and also on the
-# claude/eloquent-ride-0upljc branch so the catalogue can be previewed before it
-# is merged to main. The latter can be removed once Storybook lands on main.
+# GitHub Pages. Runs on pushes to main (the canonical catalogue) and can also be
+# triggered manually from the Actions tab ("Run workflow").
 #
 # One-time setup: in the repo Settings → Pages, set "Source" to "GitHub Actions".
+#
+# Note: pushes mirrored into another repo via a deploy key do NOT trigger
+# workflows in that repo — run this manually there after a mirror.
 
 on:
   push:
-    branches: [main, claude/eloquent-ride-0upljc]
+    branches: [main]
   workflow_dispatch: {}
 
 # Allow this workflow to publish to Pages.
@@ -29,12 +31,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
