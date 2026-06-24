@@ -15,7 +15,17 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
-## Checkpoint — 2026-06-23
+## Checkpoint — 2026-06-24
+
+This session's accepted changes (code + docs; no Figma changes):
+
+- **Storybook live on GitHub Pages.** Pages enabled on the DHCW org repo (Source = GitHub Actions); Storybook publishes to `https://dhcw-digital-health-and-care-wales.github.io/single-record-design-system/`. Deploy workflow (`.github/workflows/deploy-storybook.yml`) cleaned up: removed the temporary feature-branch trigger (now `main` + manual `workflow_dispatch` only); bumped `actions/checkout`/`actions/setup-node` to v5 and Node to 22 to clear Node 20 deprecation warnings. **Gotcha for next session:** mirror pushes via deploy key do NOT auto-trigger workflows on the org repo — use "Run workflow" manually after each merge to main. Personal repo has no Pages (free plan) — disable the workflow there to avoid red-X noise.
+- **React Button shipped** (`packages/react/src/button/Button.jsx`): `forwardRef` wrapper around the shared `@dhcw/sr-web` `button.css`, full prop API (type/size/disabled/leadingIcon/trailingIcon). Story renders in the HTML Storybook via `createRoot` → appears as **React/Button** alongside **Components/Button**. `react`/`react-dom` added as Storybook devDeps; React glob enabled in `.storybook/main.js`. `@dhcw/sr-react` added to root workspaces.
+- **Blazor Button shipped** (`packages/blazor/src/Button/SrButton.razor` + `ButtonType.cs`/`ButtonSize.cs`): Razor component, icon `RenderFragment` slots, `EventCallback<MouseEventArgs>`, consumes the same `sr-button` CSS. **Cannot render in Storybook** (needs .NET runtime) — live preview will come from the planned Blazor WASM gallery (see Open Work Items).
+- **Token drift fixed.** `foundations/tokens/border.json` had `color.border.focus` still aliasing the deprecated `focus-yellow`; corrected to `{color.cyan.700}` per DDR-006. Rebuilt all token outputs; updated `border.md`. Verified all other Button-relevant tokens match the Figma variables (`1346:500`).
+- **Tokens `build/` now tracked.** Removed `build/` from `packages/tokens/.gitignore` so the generated CSS/SCSS/XAML/JSON are visible in editors and version-controlled (source of truth remains `/foundations/tokens/`; re-run `npm run build:tokens` and commit after token changes). Fixed a doubled-prefix bug in the tokens README examples (`--sr-color-*`, not `--sr-sr-color-*`).
+
+
 
 This session's accepted changes (in Figma, tokens, docs):
 
