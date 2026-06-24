@@ -1,0 +1,19 @@
+{
+  "name": "@dhcw/sr-design-system",
+  "version": "0.1.0",
+  "description": "DHCW Single Record Design System — monorepo root. Manages the tokens, web, react, blazor, maui, icons, and storybook packages.",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/tokens",
+    "packages/icons",
+    "packages/web",
+    "packages/react",
+    "packages/storybook"
+  ],
+  "scripts": {
+    "build:tokens": "npm run build -w @dhcw/sr-tokens",
+    "storybook": "npm run storybook -w @dhcw/sr-storybook",
+    "build-storybook": "npm run build -w @dhcw/sr-tokens && npm run build-storybook -w @dhcw/sr-storybook"
+  }
+}

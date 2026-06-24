@@ -73,13 +73,18 @@ Rationale: the two patterns are structurally different layouts (confirmation = i
 
 ---
 
-## Known gap — Destructive button type
+## Destructive button type — RESOLVED (2026-06-24)
 
-The `Button` component set (`1346:500`) has **Primary, Secondary, Ghost, Warning** but **no Destructive type**. The spec requires red (destructive) to be distinct from amber (warning): red for irreversible actions, warning for recoverable risky ones.
+The `Button` component set (`1346:500`) had a fourth type named **Warning** that was already styled **red** (`Interactive/Destructive`), not amber. So functionally it was the destructive button under a misleading name — "warning" elsewhere in the system means **amber** (`Status/Warning`, warning banners, pills, the yellow scale).
 
-**Interim:** destructive buttons in these patterns instance `Primary` and override the fill to `Interactive/Destructive`.
+**Decision: rename the red type `Warning` → `Destructive`. Do not add an amber button.**
 
-**Follow-up (tracked):** add a first-class `Type=Destructive` to the Button component set (with Default/Hover/Focus/Disabled states bound to `Interactive/Destructive` and its hover step), then re-point the modal patterns at it. Until then the override is the sanctioned approach — do not hand-roll new red buttons elsewhere.
+Rationale:
+- GDS has exactly three button styles — Primary, Secondary, and a red "Warning" button for destructive actions. **There is no amber button in GDS or NHS England.** Our red type matches that convention; only the name was wrong for our context.
+- GDS can name its red button "Warning" because it has no wider amber warning language to collide with. Single Record does (banners, status tokens, pills), so `Destructive` is the unambiguous name here.
+- There is no established pattern or real need for a "medium-severity" amber action button. Actions are safe or dangerous; severity nuance belongs in the confirmation dialog copy, not a third button colour.
+
+**Applied:** the type is renamed `Destructive` in the Figma component set and in the coded reference (`packages/web/src/button/`, `.sr-button--destructive`), bound to `Interactive/Destructive` with `Red/700` hover and `Status/Critical Surface` disabled. Modal patterns instance this type directly — the earlier Primary-with-fill-override workaround is retired.
 
 ---
 

@@ -1,0 +1,139 @@
+/**
+ * DHCW Single Record — Button
+ * Reference HTML/CSS implementation, matched to the Figma Button set (1346:500).
+ * Consumes @dhcw/sr-tokens CSS custom properties.
+ *
+ * Properties (mirroring the Figma component):
+ *   Type:  Primary | Secondary | Ghost | Destructive
+ *          Destructive renders RED (Interactive/Destructive) for irreversible
+ *          actions (delete, remove). Aligns with the GDS "Warning" button
+ *          (which is also red); renamed Destructive here to avoid colliding
+ *          with the amber Status/Warning language used elsewhere. See DDR-008.
+ *   Size:  Large | Default | Small
+ *   State: Default | Hover | Focus | Disabled (CSS pseudo-classes)
+ *   Slots: optional leading / trailing icon (16px), via .sr-button__icon
+ */
+
+.sr-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2); /* 8px */
+  box-sizing: border-box;
+  font-family: "Roboto", system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.sr-button__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+}
+.sr-button__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- Sizes (fixed height + horizontal padding, content centred) ---------- */
+.sr-button--large {
+  height: 48px;
+  padding: 0 var(--space-6); /* 24px */
+  border-radius: var(--radius-lg); /* 8px */
+  font-size: var(--font-size-16);
+  line-height: var(--font-line-height-24);
+}
+.sr-button--default {
+  height: 40px;
+  padding: 0 var(--space-6); /* 24px */
+  border-radius: var(--radius-lg); /* 8px */
+  font-size: var(--font-size-16);
+  line-height: var(--font-line-height-24);
+}
+.sr-button--small {
+  height: 32px;
+  padding: 0 var(--space-3); /* 12px */
+  border-radius: var(--radius-md); /* 4px */
+  font-size: var(--font-size-12);
+  line-height: var(--font-line-height-16);
+}
+
+/* ---------- Type: Primary ---------- */
+.sr-button--primary {
+  background-color: var(--sr-color-interactive-primary);
+  color: var(--sr-color-text-inverse);
+}
+.sr-button--primary:hover {
+  background-color: var(--sr-color-interactive-primary-hover);
+}
+
+/* ---------- Type: Secondary ---------- */
+.sr-button--secondary {
+  background-color: transparent;
+  color: var(--sr-color-interactive-primary);
+  border-color: var(--sr-color-interactive-primary);
+}
+.sr-button--secondary:hover {
+  background-color: var(--color-cyan-100);
+}
+
+/* ---------- Type: Ghost ---------- */
+.sr-button--ghost {
+  background-color: transparent;
+  color: var(--sr-color-interactive-primary);
+  border-color: transparent;
+}
+.sr-button--ghost:hover {
+  background-color: var(--color-cyan-100);
+  border-color: var(--sr-color-interactive-primary);
+}
+
+/* ---------- Type: Destructive (red — irreversible actions) ---------- */
+.sr-button--destructive {
+  background-color: var(--sr-color-interactive-destructive);
+  color: var(--sr-color-text-inverse);
+}
+.sr-button--destructive:hover {
+  background-color: var(--color-red-700);
+}
+
+/* ---------- Focus (all types) — SR cyan ring, DDR-006 ---------- */
+.sr-button:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--sr-color-surface-background),
+    0 0 0 4px var(--color-cyan-700);
+}
+
+/* ---------- Disabled (all types) ---------- */
+.sr-button:disabled,
+.sr-button[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+.sr-button--primary:disabled,
+.sr-button--primary[aria-disabled="true"] {
+  background-color: var(--sr-color-interactive-disabled);
+  color: var(--sr-color-text-inverse);
+}
+.sr-button--secondary:disabled,
+.sr-button--secondary[aria-disabled="true"],
+.sr-button--ghost:disabled,
+.sr-button--ghost[aria-disabled="true"] {
+  background-color: transparent;
+  color: var(--sr-color-text-disabled);
+  border-color: var(--color-border-subtle);
+}
+.sr-button--ghost:disabled,
+.sr-button--ghost[aria-disabled="true"] {
+  border-color: transparent;
+}
+.sr-button--destructive:disabled,
+.sr-button--destructive[aria-disabled="true"] {
+  background-color: var(--sr-color-status-critical-surface);
+  color: var(--sr-color-interactive-destructive);
+}
