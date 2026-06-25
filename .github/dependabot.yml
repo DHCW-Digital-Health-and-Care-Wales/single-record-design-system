@@ -1,0 +1,38 @@
+# Dependabot configuration for the DHCW Single Record Design System.
+# Surfaces dependency updates as reviewable PRs (in addition to security alerts).
+# See DDR-010. The toolchain is dev-only; nothing here ships in published packages.
+version: 2
+updates:
+  # npm workspaces — the root manifest + lockfile cover all packages/*.
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+    # Keep the alert/PR feed signal-rich: batch low-risk dev updates together,
+    # and surface the Storybook/Vite toolchain as its own group.
+    groups:
+      storybook:
+        patterns:
+          - "storybook"
+          - "@storybook/*"
+          - "vite"
+          - "@vitest/*"
+      dev-minor-patch:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # Keep the GitHub Actions used by the workflows (deploy-storybook, etc.) current.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "dependencies"
+      - "github-actions"

@@ -6,7 +6,8 @@ const config = {
     '../../react/src/**/*.stories.@(js|jsx|mdx)',
   ],
   addons: [
-    '@storybook/addon-essentials',
+    // addon-essentials (controls, actions, viewport, backgrounds, toolbars,
+    // measure, outline) is folded into Storybook core as of v9 — no longer listed.
     '@storybook/addon-a11y', // axe-core accessibility checks on every story (WCAG 2.2)
   ],
   framework: {

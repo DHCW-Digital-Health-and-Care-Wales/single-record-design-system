@@ -15,6 +15,13 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-06-25
+
+- **Storybook toolchain security upgrade (DDR-010).** Dependabot raised 8 alerts (1 high, 7 moderate) — all dev-only (Vite/esbuild/uuid via Storybook), none in published packages or the deployed static site. Cleared by upgrading `packages/storybook` to **Storybook 9.1.x on Vite 7.x** (`storybook`, `@storybook/html-vite`, `@storybook/addon-a11y` → `^9.1.0`; `vite` → `^7`). `@storybook/addon-essentials` removed (folded into Storybook 9 core); `.storybook/main.js` and `preview.js` migrated (v9 `backgrounds.options` + `initialGlobals`). Verified: `npm audit` = **0 vulnerabilities**, `npm run build-storybook` builds on SB 9.1.20 / Vite 7.3.6. Lockfile pins vite 7.x + esbuild ≥ 0.25 everywhere (incl. the `@vitest/mocker` copy, deduped) — deterministic via `npm ci`, no `overrides` needed.
+- **`.github/dependabot.yml` added.** Weekly npm + github-actions version-update PRs, grouped (Storybook/Vite toolchain group + batched dev minor/patch) to keep the feed signal-rich.
+
+---
+
 ## Checkpoint — 2026-06-24
 
 This session's accepted changes (code + docs; no Figma changes):
@@ -25,7 +32,9 @@ This session's accepted changes (code + docs; no Figma changes):
 - **Token drift fixed.** `foundations/tokens/border.json` had `color.border.focus` still aliasing the deprecated `focus-yellow`; corrected to `{color.cyan.700}` per DDR-006. Rebuilt all token outputs; updated `border.md`. Verified all other Button-relevant tokens match the Figma variables (`1346:500`).
 - **Tokens `build/` now tracked.** Removed `build/` from `packages/tokens/.gitignore` so the generated CSS/SCSS/XAML/JSON are visible in editors and version-controlled (source of truth remains `/foundations/tokens/`; re-run `npm run build:tokens` and commit after token changes). Fixed a doubled-prefix bug in the tokens README examples (`--sr-color-*`, not `--sr-sr-color-*`).
 
+---
 
+## Checkpoint — 2026-06-23
 
 This session's accepted changes (in Figma, tokens, docs):
 
