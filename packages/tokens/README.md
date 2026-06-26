@@ -12,6 +12,7 @@ Transforms the canonical JSON token source (`/foundations/tokens/`) into consuma
 |---|---|---|
 | `build/css/tokens.css` | CSS custom properties (`:root`) | HTML/CSS, Blazor, React, .NET 4.8 legacy |
 | `build/css/tokens-dark.css` | CSS custom properties (`[data-theme="dark"]`) | Dark mode — all web targets |
+| `build/css/typography.css` | Responsive `.sr-type-*` utility classes (mobile-first; desktop scale at ≥1024px) | HTML/CSS, Blazor, React — type scale (composites can't be single CSS vars). See DDR-011 |
 | `build/scss/_tokens.scss` | SCSS variables | Build-time consumption where Sass is used |
 | `build/scss/_tokens-dark.scss` | SCSS variables (dark) | Build-time dark mode |
 | `build/xaml/Tokens.xaml` | XAML ResourceDictionary | .NET MAUI |

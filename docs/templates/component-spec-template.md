@@ -40,7 +40,7 @@ Label each part of the component. Use a simple ASCII diagram if useful.
 |---|---|
 | Default | ... |
 | Hover | ... |
-| Focus | 3px amber focus ring + 2px dark inner shadow |
+| Focus | `Border/Focus` (Cyan/700) ring, outside the element — DDR-006 |
 | Active | ... |
 | Disabled | Muted colours; `aria-disabled="true"` |
 | Error | (if applicable) |
@@ -55,6 +55,25 @@ Label each part of the component. Use a simple ASCII diagram if useful.
 | Default | ... | ... |
 
 Minimum touch target: 44×44px (WCAG 2.2 SC 2.5.8).
+
+---
+
+## Responsive behaviour
+
+Classify the component (see DDR-011) and document accordingly:
+
+- **Form factor:** [Responsive | Adaptive | Distinct]
+  - *Responsive* — one component; only tokens/sizes change across breakpoints (the common case).
+  - *Adaptive* — one component with a `Breakpoint=Desktop/Mobile` variant where the layout rearranges.
+  - *Distinct* — a separate component for the mobile vs desktop job (e.g. header/footer); cross-link the counterpart under Related.
+
+| Breakpoint | Behaviour |
+|---|---|
+| Mobile (≤767px) | ... |
+| Tablet (768–1023px) | ... |
+| Desktop (≥1024px) | ... |
+
+Form factor is **not** a separate package — web (HTML/React/Blazor) adapts responsively in one codebase; MAUI uses `OnIdiom`. Use the responsive typography utilities (`.sr-type-*`) and breakpoint tokens rather than hard-coded sizes.
 
 ---
 

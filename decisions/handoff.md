@@ -15,6 +15,16 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-06-26
+
+- **Desktop/mobile form-factor model decided (DDR-011).** Two orthogonal axes: **platform** = `packages/*` (incl. MAUI); **form factor** = responsive tokens/variants *inside* each platform — **no separate desktop/mobile trees**. Per-component class: **Responsive** (most; tokens only), **Adaptive** (a `Breakpoint=Desktop/Mobile` variant), **Distinct** (separate components, e.g. header/footer/nav). Web adapts responsively in one codebase; MAUI uses `OnIdiom`.
+- **Typography token build fixed.** Composites were emitting `--sr-typography-*: [object Object];`. `@dhcw/sr-tokens` now generates `build/css/typography.css` — mobile-first `.sr-type-*` utility classes, desktop override at ≥1024px — and filters the composites out of the CSS/SCSS/XAML var dumps. No `[object Object]` left in the build.
+- **Storybook previews all breakpoints.** `.storybook/preview.js` adds SR viewports (Mobile/Tablet/Desktop/Large/X-Large) from `breakpoints.json` and imports `typography.css`; new **Foundations → Typography** story shows the responsive scale. Build verified.
+- **Dark mode is the third token-driven axis (DDR-011) and now previews for real.** Structure was already complete (`color.dark.json` → `tokens-dark.css`/scss/XAML, `[data-theme="dark"]`, Figma Dark mode). Preview was faked (a dark *background* swatch that never activated dark tokens) — replaced with a **Theme** toolbar toggle that imports `tokens-dark.css`, sets `data-theme`, and paints the canvas from tokens. axe-core now runs in both themes; theme × form factor are both togglable.
+- **Spec template updated:** new **Responsive behaviour** section (form-factor class + per-breakpoint table); fixed the stale "amber focus ring" line to `Border/Focus` Cyan/700 (DDR-006).
+
+---
+
 ## Checkpoint — 2026-06-25
 
 - **Storybook toolchain security upgrade (DDR-010).** Dependabot raised 8 alerts (1 high, 7 moderate) — all dev-only (Vite/esbuild/uuid via Storybook), none in published packages or the deployed static site. Cleared by upgrading `packages/storybook` to **Storybook 9.1.x on Vite 7.x** (`storybook`, `@storybook/html-vite`, `@storybook/addon-a11y` → `^9.1.0`; `vite` → `^7`). `@storybook/addon-essentials` removed (folded into Storybook 9 core); `.storybook/main.js` and `preview.js` migrated (v9 `backgrounds.options` + `initialGlobals`). Verified: `npm audit` = **0 vulnerabilities**, `npm run build-storybook` builds on SB 9.1.20 / Vite 7.3.6. Lockfile pins vite 7.x + esbuild ≥ 0.25 everywhere (incl. the `@vitest/mocker` copy, deduped) — deterministic via `npm ci`, no `overrides` needed.
