@@ -13,7 +13,7 @@ See [DDR-003](../decisions/DDR-003-lucide-icon-library.md) for the full decision
 | Attribute | Detail |
 |---|---|
 | Library | Lucide Icons |
-| Licence | ISC (permissive; no attribution required in UI) |
+| Licence | ISC (permissive; copyright notice required in source, not in UI) |
 | Grid | 24 × 24 px |
 | Stroke | 2px, round linecap, round linejoin |
 | Coverage | 1,500+ icons; 106 SR aliases defined across 10 clinical/admin domains |

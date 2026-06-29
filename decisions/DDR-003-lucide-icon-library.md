@@ -19,7 +19,7 @@ An icon library decision was deferred at project start. The `foundations/iconogr
 
 **Lucide Icons** is adopted as the SR icon library.
 
-- Licence: ISC (fully permissive — suitable for NHS/public sector internal use, no attribution required in UI)
+- Licence: ISC (fully permissive — suitable for NHS/public sector internal use; copyright notice required in source, not in UI)
 - Grid: 24 × 24 px
 - Stroke: 2px, round linecap, round linejoin
 - Variant: outline only (filled deferred to navigation component phase)
