@@ -83,8 +83,9 @@ There are three distinct ways this system interacts with Figma. Each has a speci
 |---|---|---|
 | Push design tokens (variables) | **REST API** via `scripts/push-variables.js` + GitHub Actions | Variables API is the only REST endpoint that supports writes |
 | Read design content (specs, layouts, screenshots) | **Figma MCP** (`get_design_context`, `get_metadata`, `get_screenshot`) | MCP provides structured output optimised for code generation |
-| Write design content to canvas | **Figma MCP** `use_figma` — Plugin API via MCP | Confirmed working: executes JS directly in Figma via the Plugin API |
-| Generate documentation pages | `generate.js` → HTML file | Self-contained HTML for reference; primary write path is now `use_figma` |
+| Write design content to canvas | **Figma MCP** `use_figma` — Plugin API via MCP | Confirmed working: executes JS directly in Figma via the Plugin API. Single write path for frames, components and guide pages. |
+
+> **Note (2026-06-29):** the legacy self-contained HTML guides (`colour-guide.html`, `typography-guide.html`, `spacing-guide.html`, `elevation-guide.html`, `icon-preview.html`) and the `generate.js` generator have been removed. They predated the `use_figma` write path, which captured guide pages by rendering HTML and importing it into Figma. Guide and documentation pages are now authored directly on the canvas via `use_figma`.
 
 ### MCP write capability — confirmed working
 
@@ -103,7 +104,6 @@ Key patterns:
 | Push colour variables | REST API → GitHub Actions | ✅ Live |
 | Read design content | Figma MCP (`get_design_context`, `get_screenshot`) | ✅ Live |
 | Write design content to canvas | Figma MCP `use_figma` (Plugin API) | ✅ Live |
-| Colour palette page | `figma/colour-guide/colour-guide.html` | ✅ Generated |
 
 
 ---
