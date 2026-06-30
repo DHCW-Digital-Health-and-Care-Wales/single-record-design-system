@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '@dhcw/sr-web/src/navigation/navigation.css';
 import Icon from '../icon/Icon.jsx';
 
@@ -6,28 +6,67 @@ import Icon from '../icon/Icon.jsx';
  * Navigation / Sidebar — DHCW Single Record Design System
  * Figma: Navigation/Sidebar/Desktop (725:8903), Type=Sectioned, State=Expanded
  *
- * `sections` shape: [{ label, items: [{ icon, label, href, badge, submenu }] }]
- * `current` matches an item's `label` and renders aria-current="page".
+ * `sections` shape:
+ *   [{ label, items: [{ icon, label, href, badge, children: [{ label, href }] }] }]
+ * Items with a non-empty `children` array render an expandable submenu; the
+ * chevron and aria-expanded reflect open state. `current` matches an item's
+ * (or child's) `label` and renders aria-current="page".
  */
 
-function NavItem({ icon, label, href, badge, submenu, current, onSelect }) {
-  const Tag = href ? 'a' : 'button';
+function NavItem({ icon, label, href, badge, children, current, onSelect }) {
+  const [open, setOpen] = useState(false);
+  const hasChildren = Array.isArray(children) && children.length > 0;
   const isCurrent = current === label;
+  // A parent with children is always a button (it toggles); otherwise it links.
+  const Tag = href && !hasChildren ? 'a' : 'button';
+
+  const handleClick = () => {
+    if (hasChildren) setOpen((o) => !o);
+    else if (onSelect) onSelect(label);
+  };
+
   return (
-    <Tag
-      type={href ? undefined : 'button'}
-      href={href}
-      className="sr-nav__item"
-      aria-current={isCurrent ? 'page' : undefined}
-      onClick={onSelect ? () => onSelect(label) : undefined}
-    >
-      <span className="sr-nav__item-main">
-        <Icon name={icon} size="xs" color="inherit" className="sr-nav__item-icon" />
-        <span className="sr-nav__item-label">{label}</span>
-        {badge && <span className="sr-nav__item-badge">{badge}</span>}
-      </span>
-      {submenu && <Icon name="nav/chevron-down" size="xs" className="sr-nav__item-chevron" />}
-    </Tag>
+    <>
+      <Tag
+        type={Tag === 'button' ? 'button' : undefined}
+        href={Tag === 'a' ? href : undefined}
+        className="sr-nav__item"
+        aria-label={label}
+        aria-current={isCurrent ? 'page' : undefined}
+        aria-expanded={hasChildren ? open : undefined}
+        onClick={handleClick}
+      >
+        <span className="sr-nav__item-main">
+          <Icon name={icon} size="xs" color="inherit" className="sr-nav__item-icon" />
+          <span className="sr-nav__item-label">{label}</span>
+          {badge && <span className="sr-nav__item-badge">{badge}</span>}
+        </span>
+        {hasChildren && (
+          <Icon
+            name="nav/chevron-down"
+            size="xs"
+            className={`sr-nav__item-chevron${open ? ' sr-nav__item-chevron--open' : ''}`}
+          />
+        )}
+      </Tag>
+
+      {hasChildren && open && (
+        <ul className="sr-nav__submenu">
+          {children.map((child) => (
+            <li key={child.label}>
+              <a
+                className="sr-nav__subitem"
+                href={child.href || '#'}
+                aria-current={current === child.label ? 'page' : undefined}
+                onClick={onSelect ? () => onSelect(child.label) : undefined}
+              >
+                {child.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
   );
 }
 

@@ -12,7 +12,8 @@
     "./navigation": "./src/navigation/Navigation.jsx",
     "./header": "./src/header/Header.jsx",
     "./footer": "./src/footer/Footer.jsx",
-    "./breadcrumbs": "./src/breadcrumbs/Breadcrumbs.jsx"
+    "./breadcrumbs": "./src/breadcrumbs/Breadcrumbs.jsx",
+    "./bottom-nav": "./src/bottom-nav/BottomNav.jsx"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",

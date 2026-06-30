@@ -1,0 +1,65 @@
+/**
+ * DHCW Single Record — Bottom navigation (mobile)
+ * Reference HTML/CSS implementation, matched to the Figma Footer Nav mobile
+ * variant (665:16526). This is primary navigation for small screens — a fixed
+ * bar of icon-over-label tabs — NOT the desktop Footer (save/version bar).
+ * Consumes @dhcw/sr-tokens CSS custom properties.
+ *
+ * Anatomy: a row of equal-width tabs; the active tab uses aria-current="page"
+ * and the interactive-link colour.
+ */
+
+.sr-bottom-nav {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-around;
+  width: 100%;
+  height: 60px;
+  box-sizing: border-box;
+  background-color: var(--sr-color-surface-section-cards);
+  border-top: 1px solid var(--sr-color-border-subtle);
+  font-family: "Roboto", system-ui, -apple-system, sans-serif;
+}
+
+.sr-bottom-nav__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  flex: 1 1 0;
+  min-width: 0;
+  padding: var(--space-2) var(--space-1);
+  border: none;
+  background: transparent;
+  color: var(--sr-color-text-secondary);
+  text-decoration: none;
+  cursor: pointer;
+}
+.sr-bottom-nav__item:hover {
+  color: var(--sr-color-text-primary);
+}
+.sr-bottom-nav__item:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--color-cyan-700);
+}
+.sr-bottom-nav__item[aria-current="page"] {
+  color: var(--sr-color-interactive-link);
+}
+
+.sr-bottom-nav__icon {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+}
+.sr-bottom-nav__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.sr-bottom-nav__label {
+  font-size: var(--font-size-12);
+  line-height: var(--font-line-height-16);
+  letter-spacing: var(--font-letter-spacing-caption);
+  white-space: nowrap;
+}

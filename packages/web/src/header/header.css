@@ -8,10 +8,8 @@
  *     .sr-header__utility     — top strip: "Report an issue" + language toggle
  *     .sr-header__main        — logo + search + notification + avatar
  *
- * Note: the Figma "Cymraeg" utility link carries a leading globe/language
- * icon not yet in @dhcw/sr-icons (no exact match in the current 106-icon
- * set) — rendered text-only for now; add the icon before reinstating it,
- * per CLAUDE.md ("ask before importing a new one from the Lucide library").
+ * Note: the "Cymraeg" utility link carries a leading globe icon
+ * (location/language, from the Figma icon set 2962:53479).
  */
 
 .sr-header {
@@ -52,6 +50,16 @@
 }
 .sr-header__utility-link:hover {
   text-decoration: underline;
+}
+.sr-header__utility-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+}
+.sr-header__utility-icon svg {
+  width: 100%;
+  height: 100%;
 }
 .sr-header__utility-link:focus-visible {
   outline: none;
@@ -181,4 +189,57 @@
   border-radius: var(--radius-full);
   background-color: var(--sr-color-status-success);
   border: 1.5px solid var(--sr-color-surface-section-cards);
+}
+
+/* ---------- Hamburger (mobile) ---------- */
+.sr-header__menu {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--sr-color-text-primary);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+.sr-header__menu:hover {
+  background-color: var(--sr-color-surface-subtle);
+}
+.sr-header__menu:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--color-cyan-700);
+}
+.sr-header__menu svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ---------- Mobile variants (Figma Type=Mobile 1 / Mobile 2) ---------- */
+/* Single compact bar: no utility strip, no inline search. The logo uses the
+ * symbol mark. Mobile 1 centres the logo with a leading hamburger; Mobile 2
+ * left-aligns the logo with no hamburger. */
+.sr-header--mobile .sr-header__utility,
+.sr-header--mobile .sr-header__search {
+  display: none;
+}
+.sr-header--mobile .sr-header__main {
+  height: 56px;
+  padding: var(--space-3) var(--space-4);
+  gap: var(--space-3);
+}
+.sr-header--mobile .sr-header__logo {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.sr-header--mobile .sr-header__logo img {
+  height: 32px;
+}
+/* Mobile 1 — centred logo between the hamburger and the actions. */
+.sr-header--mobile.sr-header--centered .sr-header__logo {
+  display: flex;
+  justify-content: center;
 }

@@ -1,6 +1,7 @@
 import './navigation.css';
 import '@dhcw/sr-tokens/build/css/tokens.css';
 import { iconMarkup } from '@dhcw/sr-icons/build/icons.js';
+import { logoFullSrc } from '../assets/logo.js';
 
 /**
  * Navigation / Sidebar — DHCW Single Record Design System
@@ -12,11 +13,7 @@ import { iconMarkup } from '@dhcw/sr-icons/build/icons.js';
  * 106-icon set is used instead (e.g. data/table for the dashboard grid).
  */
 
-const LOGO_SRC =
-  'data:image/svg+xml;utf8,' +
-  encodeURIComponent(
-    '<svg xmlns="http://www.w3.org/2000/svg" width="129" height="40" viewBox="0 0 129 40"><rect width="129" height="40" rx="4" fill="%23325083"/><text x="10" y="25" font-family="Roboto, sans-serif" font-size="13" fill="white">DHCW Single Record</text></svg>'
-  );
+const LOGO_SRC = logoFullSrc;
 
 const SECTIONS = [
   {
@@ -27,30 +24,49 @@ const SECTIONS = [
     label: 'Patients',
     items: [
       { icon: 'nav/search', label: 'Patient Search' },
-      { icon: 'nav/sort', label: 'Referrals', badge: '20', submenu: true },
-      { icon: 'schedule/appointment', label: 'Appointments', badge: '20', submenu: true },
-      { icon: 'schedule/waiting-list', label: 'Watchlists', submenu: true },
+      {
+        icon: 'nav/sort',
+        label: 'Referrals',
+        badge: '20',
+        children: [
+          { label: 'New referrals', href: '#' },
+          { label: 'Pending', href: '#' },
+          { label: 'Accepted', href: '#' },
+          { label: 'Rejected', href: '#' },
+        ],
+      },
+      {
+        icon: 'schedule/appointment',
+        label: 'Appointments',
+        badge: '20',
+        children: [
+          { label: 'Upcoming', href: '#' },
+          { label: 'Past', href: '#' },
+          { label: 'Cancelled', href: '#' },
+        ],
+      },
+      { icon: 'schedule/waiting-list', label: 'Watchlists' },
     ],
   },
   {
     label: 'Clinical',
     items: [
-      { icon: 'people/specialist', label: 'Specialists', submenu: true },
-      { icon: 'clinical/lab-result', label: 'Tests', submenu: true },
+      { icon: 'people/specialist', label: 'Specialists' },
+      { icon: 'clinical/lab-result', label: 'Tests' },
     ],
   },
   {
     label: 'Nursing',
     items: [
-      { icon: 'people/patient', label: 'Adults', submenu: true },
-      { icon: 'people/contact', label: 'Paediatrics', submenu: true },
+      { icon: 'people/patient', label: 'Adults' },
+      { icon: 'people/contact', label: 'Paediatrics' },
     ],
   },
   {
     label: 'Urgent & Emergency',
     items: [
-      { icon: 'location/bed', label: 'Nursing', submenu: true },
-      { icon: 'clinical/cross', label: 'Urgent & Emergency', submenu: true },
+      { icon: 'location/bed', label: 'Nursing' },
+      { icon: 'clinical/cross', label: 'Urgent & Emergency' },
     ],
   },
 ];
@@ -67,11 +83,19 @@ const buildIcon = (name, className) => {
   return span;
 };
 
-const buildItem = ({ icon, label, badge, submenu }, { current }) => {
+const buildItem = ({ icon, label, badge, children }, { current }) => {
+  const hasChildren = Array.isArray(children) && children.length > 0;
+  const frag = document.createDocumentFragment();
+
   const item = document.createElement('button');
   item.type = 'button';
   item.className = 'sr-nav__item';
+  // Accessible name is always present so the icon-only collapsed state is not
+  // an unlabelled button (WCAG 2.2 — button-name). When expanded it matches
+  // the visible label text.
+  item.setAttribute('aria-label', label);
   if (current === label) item.setAttribute('aria-current', 'page');
+  if (hasChildren) item.setAttribute('aria-expanded', 'false');
 
   const main = document.createElement('span');
   main.className = 'sr-nav__item-main';
@@ -87,11 +111,36 @@ const buildItem = ({ icon, label, badge, submenu }, { current }) => {
     main.appendChild(badgeEl);
   }
   item.appendChild(main);
+  frag.appendChild(item);
 
-  if (submenu) {
+  if (hasChildren) {
     item.appendChild(buildIcon('nav/chevron-down', 'sr-nav__item-chevron'));
+
+    const submenu = document.createElement('ul');
+    submenu.className = 'sr-nav__submenu';
+    submenu.hidden = true;
+    children.forEach((child) => {
+      const li = document.createElement('li');
+      const link = document.createElement('a');
+      link.className = 'sr-nav__subitem';
+      link.href = child.href || '#';
+      link.textContent = child.label;
+      if (current === child.label) link.setAttribute('aria-current', 'page');
+      li.appendChild(link);
+      submenu.appendChild(li);
+    });
+
+    item.addEventListener('click', () => {
+      const isOpen = item.getAttribute('aria-expanded') === 'true';
+      item.setAttribute('aria-expanded', String(!isOpen));
+      submenu.hidden = isOpen;
+      item.querySelector('.sr-nav__item-chevron').classList.toggle('sr-nav__item-chevron--open', !isOpen);
+    });
+
+    frag.appendChild(submenu);
   }
-  return item;
+
+  return frag;
 };
 
 const buildSection = (section, opts) => {
