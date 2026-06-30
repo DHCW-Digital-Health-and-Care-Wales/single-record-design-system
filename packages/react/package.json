@@ -7,7 +7,9 @@
   "main": "src/index.js",
   "exports": {
     ".": "./src/index.js",
-    "./button": "./src/button/Button.jsx"
+    "./button": "./src/button/Button.jsx",
+    "./icon": "./src/icon/Icon.jsx",
+    "./navigation": "./src/navigation/Navigation.jsx"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
@@ -15,6 +17,7 @@
   },
   "dependencies": {
     "@dhcw/sr-web": "0.1.0",
-    "@dhcw/sr-tokens": "0.1.0"
+    "@dhcw/sr-tokens": "0.1.0",
+    "@dhcw/sr-icons": "0.1.0"
   }
 }

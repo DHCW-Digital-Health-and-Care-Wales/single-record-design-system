@@ -9,6 +9,7 @@
     "src/"
   ],
   "dependencies": {
-    "@dhcw/sr-tokens": "0.1.0"
+    "@dhcw/sr-tokens": "0.1.0",
+    "@dhcw/sr-icons": "0.1.0"
   }
 }
