@@ -43,7 +43,8 @@ export default function Header({
             Report an issue
           </a>
           <a className="sr-header__utility-link" href="#" onClick={onLanguageToggle}>
-            Cymraeg
+            <Icon name="location/language" size="xs" className="sr-header__utility-icon" />
+            <span>Cymraeg</span>
           </a>
         </div>
       )}

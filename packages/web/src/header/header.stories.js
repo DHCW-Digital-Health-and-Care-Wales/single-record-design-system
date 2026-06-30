@@ -64,11 +64,17 @@ const render = ({ variant, initials, search, menu }) => {
   if (!isMobile) {
     const utility = document.createElement('div');
     utility.className = 'sr-header__utility';
-    ['Report an issue', 'Cymraeg'].forEach((text) => {
+    [
+      { text: 'Report an issue' },
+      { text: 'Cymraeg', icon: 'location/language' },
+    ].forEach(({ text, icon }) => {
       const link = document.createElement('a');
       link.className = 'sr-header__utility-link';
       link.href = '#';
-      link.textContent = text;
+      if (icon) link.appendChild(buildIcon(icon, 'sr-header__utility-icon'));
+      const span = document.createElement('span');
+      span.textContent = text;
+      link.appendChild(span);
       utility.appendChild(link);
     });
     header.appendChild(utility);

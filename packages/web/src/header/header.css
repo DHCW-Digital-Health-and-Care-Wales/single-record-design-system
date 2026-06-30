@@ -8,10 +8,8 @@
  *     .sr-header__utility     — top strip: "Report an issue" + language toggle
  *     .sr-header__main        — logo + search + notification + avatar
  *
- * Note: the Figma "Cymraeg" utility link carries a leading globe/language
- * icon not yet in @dhcw/sr-icons (no exact match in the current 106-icon
- * set) — rendered text-only for now; add the icon before reinstating it,
- * per CLAUDE.md ("ask before importing a new one from the Lucide library").
+ * Note: the "Cymraeg" utility link carries a leading globe icon
+ * (location/language, from the Figma icon set 2962:53479).
  */
 
 .sr-header {
@@ -52,6 +50,16 @@
 }
 .sr-header__utility-link:hover {
   text-decoration: underline;
+}
+.sr-header__utility-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+}
+.sr-header__utility-icon svg {
+  width: 100%;
+  height: 100%;
 }
 .sr-header__utility-link:focus-visible {
   outline: none;
