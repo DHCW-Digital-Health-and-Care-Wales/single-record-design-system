@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import '@dhcw/sr-tokens/build/css/tokens.css';
+import { logoFullSrc } from '@dhcw/sr-web/src/assets/logo.js';
 import Navigation from './Navigation.jsx';
 
-const LOGO_SRC =
-  'data:image/svg+xml;utf8,' +
-  encodeURIComponent(
-    '<svg xmlns="http://www.w3.org/2000/svg" width="129" height="40" viewBox="0 0 129 40"><rect width="129" height="40" rx="4" fill="%23325083"/><text x="10" y="25" font-family="Roboto, sans-serif" font-size="13" fill="white">DHCW Single Record</text></svg>'
-  );
+const LOGO_SRC = logoFullSrc;
 
 const SECTIONS = [
   { label: 'Home', items: [{ icon: 'data/table', label: 'Dashboard' }] },
@@ -15,30 +12,49 @@ const SECTIONS = [
     label: 'Patients',
     items: [
       { icon: 'nav/search', label: 'Patient Search' },
-      { icon: 'nav/sort', label: 'Referrals', badge: '20', submenu: true },
-      { icon: 'schedule/appointment', label: 'Appointments', badge: '20', submenu: true },
-      { icon: 'schedule/waiting-list', label: 'Watchlists', submenu: true },
+      {
+        icon: 'nav/sort',
+        label: 'Referrals',
+        badge: '20',
+        children: [
+          { label: 'New referrals', href: '#' },
+          { label: 'Pending', href: '#' },
+          { label: 'Accepted', href: '#' },
+          { label: 'Rejected', href: '#' },
+        ],
+      },
+      {
+        icon: 'schedule/appointment',
+        label: 'Appointments',
+        badge: '20',
+        children: [
+          { label: 'Upcoming', href: '#' },
+          { label: 'Past', href: '#' },
+          { label: 'Cancelled', href: '#' },
+        ],
+      },
+      { icon: 'schedule/waiting-list', label: 'Watchlists' },
     ],
   },
   {
     label: 'Clinical',
     items: [
-      { icon: 'people/specialist', label: 'Specialists', submenu: true },
-      { icon: 'clinical/lab-result', label: 'Tests', submenu: true },
+      { icon: 'people/specialist', label: 'Specialists' },
+      { icon: 'clinical/lab-result', label: 'Tests' },
     ],
   },
   {
     label: 'Nursing',
     items: [
-      { icon: 'people/patient', label: 'Adults', submenu: true },
-      { icon: 'people/contact', label: 'Paediatrics', submenu: true },
+      { icon: 'people/patient', label: 'Adults' },
+      { icon: 'people/contact', label: 'Paediatrics' },
     ],
   },
   {
     label: 'Urgent & Emergency',
     items: [
-      { icon: 'location/bed', label: 'Nursing', submenu: true },
-      { icon: 'clinical/cross', label: 'Urgent & Emergency', submenu: true },
+      { icon: 'location/bed', label: 'Nursing' },
+      { icon: 'clinical/cross', label: 'Urgent & Emergency' },
     ],
   },
 ];
@@ -58,7 +74,7 @@ const Demo = ({ initialCollapsed, current }) => {
         current={current}
         collapsed={collapsed}
         onCollapseToggle={() => setCollapsed((c) => !c)}
-        logo={<img src={LOGO_SRC} alt="DHCW Single Record" style={{ height: 40 }} />}
+        logo={<img src={LOGO_SRC} alt="DHCW Single Record" style={{ height: 28 }} />}
       />
     </div>
   );

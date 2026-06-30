@@ -50,7 +50,7 @@
 
 .sr-nav__logo img {
   display: block;
-  height: 40px;
+  height: 28px;
   width: auto;
 }
 
@@ -77,6 +77,13 @@
 }
 .sr-nav--collapsed .sr-nav__collapse {
   transform: rotate(180deg);
+}
+/* Collapsed: the brand lockup is hidden; only the toggle remains, centred. */
+.sr-nav--collapsed .sr-nav__logo {
+  display: none;
+}
+.sr-nav--collapsed .sr-nav__header {
+  justify-content: center;
 }
 
 /* ---------- Body / sections ---------- */
@@ -191,10 +198,52 @@
   width: 16px;
   height: 16px;
   color: var(--sr-color-text-secondary);
+  transition: transform 0.15s ease;
 }
 .sr-nav__item-chevron svg {
   width: 100%;
   height: 100%;
+}
+/* Expanded submenu — chevron points up. */
+.sr-nav__item-chevron--open {
+  transform: rotate(180deg);
+}
+
+/* ---------- Submenu ---------- */
+.sr-nav__submenu {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  /* Indent children under the parent's label (icon width + gaps). */
+  padding: var(--space-1) var(--space-3) var(--space-1) calc(var(--space-3) + 16px + var(--space-2));
+}
+
+.sr-nav__subitem {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--sr-color-text-secondary);
+  font-size: var(--font-size-14);
+  line-height: var(--font-line-height-20);
+  text-decoration: none;
+}
+.sr-nav__subitem:hover {
+  background-color: var(--sr-color-surface-subtle);
+  color: var(--sr-color-text-primary);
+}
+.sr-nav__subitem:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--color-cyan-700);
+}
+.sr-nav__subitem[aria-current="page"] {
+  color: var(--sr-color-interactive-primary);
+  font-weight: 500;
+}
+
+/* Collapsed rail never shows submenus. */
+.sr-nav--collapsed .sr-nav__submenu {
+  display: none;
 }
 
 .sr-nav--collapsed .sr-nav__item-label,

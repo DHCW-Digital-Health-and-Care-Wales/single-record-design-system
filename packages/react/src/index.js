@@ -4,3 +4,4 @@ export { default as Navigation } from './navigation/Navigation.jsx';
 export { default as Header } from './header/Header.jsx';
 export { default as Footer } from './footer/Footer.jsx';
 export { default as Breadcrumbs } from './breadcrumbs/Breadcrumbs.jsx';
+export { default as BottomNav } from './bottom-nav/BottomNav.jsx';
