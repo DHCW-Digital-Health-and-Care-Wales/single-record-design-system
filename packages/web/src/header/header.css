@@ -1,0 +1,184 @@
+/**
+ * DHCW Single Record — Header
+ * Reference HTML/CSS implementation, matched to the Figma Header bar set
+ * (475:19980, Type=Desktop 1). Consumes @dhcw/sr-tokens CSS custom properties.
+ *
+ * Anatomy:
+ *   .sr-header              — wrapper (utility bar + main bar)
+ *     .sr-header__utility     — top strip: "Report an issue" + language toggle
+ *     .sr-header__main        — logo + search + notification + avatar
+ *
+ * Note: the Figma "Cymraeg" utility link carries a leading globe/language
+ * icon not yet in @dhcw/sr-icons (no exact match in the current 106-icon
+ * set) — rendered text-only for now; add the icon before reinstating it,
+ * per CLAUDE.md ("ask before importing a new one from the Lucide library").
+ */
+
+.sr-header {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: var(--sr-color-surface-section-cards);
+  font-family: "Roboto", system-ui, -apple-system, sans-serif;
+}
+
+/* ---------- Utility bar ---------- */
+.sr-header__utility {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-1);
+  height: 40px;
+  padding: var(--space-4) var(--space-10);
+  box-sizing: border-box;
+}
+
+.sr-header__utility-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  height: 32px;
+  padding: var(--space-1) var(--space-4);
+  border: none;
+  background: transparent;
+  color: var(--sr-color-interactive-primary);
+  font-size: var(--font-size-12);
+  line-height: var(--font-line-height-16);
+  letter-spacing: var(--font-letter-spacing-caption);
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+.sr-header__utility-link:hover {
+  text-decoration: underline;
+}
+.sr-header__utility-link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--color-cyan-700);
+}
+
+/* ---------- Main bar ---------- */
+.sr-header__main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  padding: var(--space-4) var(--space-10);
+  box-sizing: border-box;
+  border-bottom: 1px solid var(--sr-color-border-default);
+}
+
+.sr-header__logo img {
+  display: block;
+  height: 48px;
+  width: auto;
+}
+
+/* ---------- Search (compact header instance) ---------- */
+.sr-header__search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 240px;
+  height: 40px;
+  box-sizing: border-box;
+  padding: 0 var(--space-3);
+  background-color: var(--sr-color-surface-section-cards);
+  border: 1px solid var(--sr-color-border-default);
+  border-radius: var(--radius-md);
+}
+.sr-header__search-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  color: var(--sr-color-text-secondary);
+}
+.sr-header__search-icon svg {
+  width: 100%;
+  height: 100%;
+}
+.sr-header__search-input {
+  flex: 1 1 0;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  font-size: var(--font-size-14);
+  line-height: var(--font-line-height-20);
+  color: var(--sr-color-text-primary);
+}
+.sr-header__search-input::placeholder {
+  color: var(--sr-color-text-secondary);
+}
+.sr-header__search-input:focus {
+  outline: none;
+}
+.sr-header__search:focus-within {
+  border-color: var(--sr-color-interactive-primary);
+}
+
+/* ---------- Actions (notification + avatar) ---------- */
+.sr-header__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-1);
+}
+
+.sr-header__notification {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--sr-color-text-secondary);
+  cursor: pointer;
+}
+.sr-header__notification:hover {
+  background-color: var(--sr-color-surface-subtle);
+  color: var(--sr-color-text-primary);
+}
+.sr-header__notification:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--color-cyan-700);
+}
+.sr-header__notification svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ---------- Avatar (Initials, SM) ---------- */
+.sr-header__avatar {
+  position: relative;
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background-color: var(--sr-color-interactive-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.sr-header__avatar-initials {
+  color: var(--sr-color-text-inverse);
+  font-size: var(--font-size-14);
+  line-height: var(--font-line-height-20);
+  font-weight: 500;
+  letter-spacing: var(--font-letter-spacing-wide);
+}
+.sr-header__avatar-status {
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background-color: var(--sr-color-status-success);
+  border: 1.5px solid var(--sr-color-surface-section-cards);
+}
