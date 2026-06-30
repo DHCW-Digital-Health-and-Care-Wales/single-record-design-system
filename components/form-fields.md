@@ -89,4 +89,4 @@ For long-form content (clinical notes ≥ 500 characters), prefer a dedicated no
 
 - Build a **Form Field** wrapper component that composes a Search / DatePicker / custom input with the label / hint / error rows used by Input — currently composed manually.
 - Add `Hint=Shown` and `Label=Hidden` permutations to Textarea — currently only Hint=Hidden / Label=Shown variants exist (4 of a potential 16).
-- The `typography-guide.html` static page still shows pre-DDR-005 sizes. Regenerate when a typography-guide generator is in place.
+- When a Typography guide page is next authored in Figma (via `use_figma`), make sure it reflects the post-DDR-005 sizes. (The old `typography-guide.html` static page that showed pre-DDR-005 sizes was removed on 2026-06-29.)

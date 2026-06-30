@@ -1,0 +1,36 @@
+/**
+ * DHCW Single Record — Footer (page action bar)
+ * Reference HTML/CSS implementation, matched to the Figma Footer Nav set
+ * (665:16525, Type=Desktop). Consumes @dhcw/sr-tokens CSS custom properties.
+ * Action buttons reuse .sr-button (Secondary/Primary, Small) — see
+ * packages/web/src/button/button.css.
+ */
+
+.sr-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+  height: 60px;
+  box-sizing: border-box;
+  padding: var(--space-3);
+  background-color: var(--sr-color-surface-small-cards);
+  border-top: 1px solid var(--sr-color-border-subtle);
+  font-family: "Roboto", system-ui, -apple-system, sans-serif;
+}
+
+.sr-footer__version {
+  flex: 1 1 0;
+  min-width: 0;
+  color: var(--sr-color-text-secondary);
+  font-size: var(--font-size-12);
+  line-height: var(--font-line-height-16);
+  letter-spacing: var(--font-letter-spacing-caption);
+}
+
+.sr-footer__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}

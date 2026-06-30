@@ -1,0 +1,54 @@
+/**
+ * DHCW Single Record — Breadcrumbs
+ * Reference HTML/CSS implementation, matched to the Figma Breadcrumbs set
+ * (1307:19303, Device=Desktop, Levels=Four). Consumes @dhcw/sr-tokens
+ * CSS custom properties.
+ *
+ * Anatomy: ordered list of links separated by "/", the last (current page)
+ * item rendered as plain text with aria-current="page".
+ */
+
+.sr-breadcrumbs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: "Roboto", system-ui, -apple-system, sans-serif;
+}
+
+.sr-breadcrumbs__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.sr-breadcrumbs__link {
+  color: var(--sr-color-interactive-link);
+  font-size: var(--font-size-12);
+  line-height: var(--font-line-height-16);
+  letter-spacing: var(--font-letter-spacing-caption);
+  text-decoration: underline;
+}
+.sr-breadcrumbs__link:hover {
+  color: var(--sr-color-interactive-primary);
+}
+.sr-breadcrumbs__link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--color-cyan-700);
+}
+
+.sr-breadcrumbs__separator {
+  color: var(--sr-color-text-secondary);
+  font-size: var(--font-size-16);
+  line-height: var(--font-line-height-24);
+}
+
+.sr-breadcrumbs__current {
+  color: var(--sr-color-text-secondary);
+  font-size: var(--font-size-12);
+  line-height: var(--font-line-height-16);
+  letter-spacing: var(--font-letter-spacing-caption);
+}

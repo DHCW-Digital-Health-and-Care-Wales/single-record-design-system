@@ -2,6 +2,7 @@
 const config = {
   // Stories live next to the components they document, in the sibling packages.
   stories: [
+    '../../icons/src/**/*.stories.@(js|mdx)',
     '../../web/src/**/*.stories.@(js|mdx)',
     '../../react/src/**/*.stories.@(js|jsx|mdx)',
   ],

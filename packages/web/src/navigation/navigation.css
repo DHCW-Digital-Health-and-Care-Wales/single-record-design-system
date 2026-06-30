@@ -1,0 +1,215 @@
+/**
+ * DHCW Single Record — Navigation (Sidebar)
+ * Reference HTML/CSS implementation, matched to the Figma Navigation set
+ * (Navigation/Sidebar/Desktop, 725:8903 — Type=Sectioned, State=Expanded).
+ * Consumes @dhcw/sr-tokens CSS custom properties.
+ *
+ * Anatomy:
+ *   .sr-nav                 — sidebar container (fixed width, full height column)
+ *     .sr-nav__header        — logo + collapse toggle, bottom border
+ *     .sr-nav__body          — scrollable section list (grows to fill space)
+ *       .sr-nav__section      — one labelled group (e.g. PATIENTS)
+ *         .sr-nav__section-label
+ *         .sr-nav__list
+ *           .sr-nav__item      — nav row: icon + label + optional badge/chevron
+ *     .sr-nav__footer        — Settings / Log out, top border, pinned to bottom
+ *
+ * State: Default | Hover | Focus (CSS pseudo-classes) | Active (aria-current="page")
+ * Submenu: items with children render trailing chevron-down; current item
+ *          uses aria-current="page" rather than a bespoke "active" class so
+ *          assistive tech announces the current section.
+ */
+
+.sr-nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 220px;
+  height: 100%;
+  box-sizing: border-box;
+  background-color: var(--sr-color-surface-section-cards);
+  /* Figma Elevation/Raised — no elevation token exists yet, value matches spec */
+  box-shadow: 0 1px 4px rgba(27, 41, 74, 0.12);
+  font-family: "Roboto", system-ui, -apple-system, sans-serif;
+}
+
+.sr-nav--collapsed {
+  width: 72px;
+}
+
+/* ---------- Header ---------- */
+.sr-nav__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+  padding: var(--space-4) var(--space-3);
+  border-bottom: 1px solid var(--sr-color-border-default);
+  box-sizing: border-box;
+}
+
+.sr-nav__logo img {
+  display: block;
+  height: 40px;
+  width: auto;
+}
+
+.sr-nav__collapse {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--sr-color-text-secondary);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+.sr-nav__collapse:hover {
+  color: var(--sr-color-text-primary);
+}
+.sr-nav__collapse:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--color-cyan-700);
+}
+.sr-nav--collapsed .sr-nav__collapse {
+  transform: rotate(180deg);
+}
+
+/* ---------- Body / sections ---------- */
+.sr-nav__body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4) 0;
+}
+
+.sr-nav__section-label {
+  display: block;
+  padding: var(--space-1) var(--space-5);
+  font-size: var(--font-size-12);
+  line-height: var(--font-line-height-16);
+  letter-spacing: var(--font-letter-spacing-caption);
+  color: var(--sr-color-text-secondary);
+  text-transform: uppercase;
+}
+
+.sr-nav__list {
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--space-3);
+  list-style: none;
+  margin: 0;
+}
+
+.sr-nav--collapsed .sr-nav__section-label {
+  display: none;
+}
+
+/* ---------- Nav item ---------- */
+.sr-nav__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  border: none;
+  background: transparent;
+  color: var(--sr-color-text-primary);
+  font-size: var(--font-size-14);
+  line-height: var(--font-line-height-20);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.sr-nav__item:hover {
+  background-color: var(--sr-color-surface-subtle);
+}
+.sr-nav__item:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--color-cyan-700);
+}
+.sr-nav__item[aria-current="page"] {
+  background-color: var(--sr-color-surface-accent);
+  color: var(--sr-color-interactive-primary);
+  font-weight: 500;
+}
+
+.sr-nav__item-main {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.sr-nav__item-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  color: inherit;
+}
+.sr-nav__item-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.sr-nav__item-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sr-nav__item-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-width: 32px;
+  height: 20px;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-full);
+  background-color: var(--sr-color-interactive-primary);
+  color: var(--sr-color-text-inverse);
+  font-size: var(--font-size-12);
+  line-height: var(--font-line-height-16);
+  letter-spacing: var(--font-letter-spacing-caption);
+  text-align: center;
+}
+
+.sr-nav__item-chevron {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  color: var(--sr-color-text-secondary);
+}
+.sr-nav__item-chevron svg {
+  width: 100%;
+  height: 100%;
+}
+
+.sr-nav--collapsed .sr-nav__item-label,
+.sr-nav--collapsed .sr-nav__item-badge,
+.sr-nav--collapsed .sr-nav__item-chevron {
+  display: none;
+}
+.sr-nav--collapsed .sr-nav__item {
+  justify-content: center;
+}
+
+/* ---------- Footer ---------- */
+.sr-nav__footer {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-2) var(--space-3) var(--space-6);
+  border-top: 1px solid var(--sr-color-border-default);
+}
