@@ -1,0 +1,15 @@
+{
+  "name": "@dhcw/sr-icons",
+  "version": "0.1.0",
+  "description": "SVG icon library for the DHCW Single Record Design System — generated from foundations/iconography/svg (Lucide-derived, DDR-003).",
+  "private": true,
+  "type": "module",
+  "main": "build/icons.js",
+  "scripts": {
+    "build": "node build.js",
+    "clean": "rm -rf build"
+  },
+  "files": [
+    "build/"
+  ]
+}
