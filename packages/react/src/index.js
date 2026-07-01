@@ -5,3 +5,6 @@ export { default as Header } from './header/Header.jsx';
 export { default as Footer } from './footer/Footer.jsx';
 export { default as Breadcrumbs } from './breadcrumbs/Breadcrumbs.jsx';
 export { default as BottomNav } from './bottom-nav/BottomNav.jsx';
+export { default as Input } from './input/Input.jsx';
+export { default as Switch } from './switch/Switch.jsx';
+export { default as SegmentedControl } from './segmented-control/SegmentedControl.jsx';
