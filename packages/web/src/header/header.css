@@ -191,6 +191,57 @@
   border: 1.5px solid var(--sr-color-surface-section-cards);
 }
 
+/* ---------- Desktop 2 (single 80px bar: search + org + language) ---------- */
+/* No logo — this variant pairs with the sidebar Navigation, which carries the
+ * brand lockup. Figma Header bar Type=Desktop 2 (815:20262). */
+.sr-header--bar .sr-header__main {
+  height: 80px;
+  border-bottom: none;
+  border: 1px solid var(--sr-color-border-default);
+}
+.sr-header__cluster {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.sr-header__org,
+.sr-header__lang {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  height: 36px;
+  padding: 0 var(--space-3);
+  border: none;
+  border-right: 1px solid var(--sr-color-border-subtle);
+  background: transparent;
+  font-size: var(--font-size-14);
+  font-weight: 500;
+  letter-spacing: var(--font-letter-spacing-wide);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.sr-header__org {
+  color: var(--sr-color-text-secondary);
+}
+.sr-header__lang {
+  color: var(--sr-color-interactive-primary);
+}
+.sr-header__org svg,
+.sr-header__lang svg {
+  width: 16px;
+  height: 16px;
+}
+.sr-header__org:hover,
+.sr-header__lang:hover {
+  text-decoration: none;
+  color: var(--sr-color-text-primary);
+}
+.sr-header__org:focus-visible,
+.sr-header__lang:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sr-color-border-focus);
+}
+
 /* ---------- Hamburger (mobile) ---------- */
 .sr-header__menu {
   display: inline-flex;

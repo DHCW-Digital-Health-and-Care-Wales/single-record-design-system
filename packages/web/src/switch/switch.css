@@ -1,0 +1,83 @@
+/**
+ * DHCW Single Record — Toggle switch
+ * Reference HTML/CSS implementation, matched to the Figma Toggle/Switch set
+ * (958:10576): State=Default|Hover|Focus|Disabled × Checked=On|Off.
+ * Consumes @dhcw/sr-tokens.
+ *
+ * Rendered as a <button role="switch" aria-checked>; the visible label is the
+ * accessible name. Track 44×24, thumb 20 with a 2px inset (20px travel).
+ */
+
+.sr-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: "Roboto", system-ui, -apple-system, sans-serif;
+}
+
+.sr-switch__track {
+  position: relative;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background-color: var(--sr-color-border-default);
+  transition: background-color 0.15s ease;
+}
+.sr-switch__thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+  background-color: var(--sr-color-surface-section-cards);
+  box-shadow: 0 1px 2px rgba(27, 41, 74, 0.24);
+  transition: transform 0.15s ease;
+}
+
+.sr-switch__label {
+  font-size: var(--font-size-14);
+  line-height: var(--font-line-height-20);
+  font-weight: 500;
+  letter-spacing: var(--font-letter-spacing-wide);
+  color: var(--sr-color-text-primary);
+}
+
+.sr-switch[aria-checked="true"] .sr-switch__track {
+  background-color: var(--sr-color-interactive-primary);
+}
+.sr-switch[aria-checked="true"] .sr-switch__thumb {
+  transform: translateX(20px);
+}
+
+.sr-switch:hover .sr-switch__track {
+  background-color: var(--sr-color-border-strong);
+}
+.sr-switch[aria-checked="true"]:hover .sr-switch__track {
+  background-color: var(--sr-color-interactive-primary-hover);
+}
+
+.sr-switch:focus-visible {
+  outline: none;
+}
+.sr-switch:focus-visible .sr-switch__track {
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--sr-color-border-focus);
+}
+
+.sr-switch:disabled {
+  cursor: not-allowed;
+}
+.sr-switch:disabled .sr-switch__track {
+  background-color: var(--sr-color-border-disabled);
+}
+.sr-switch[aria-checked="true"]:disabled .sr-switch__track {
+  background-color: var(--sr-color-interactive-disabled);
+}
+.sr-switch:disabled .sr-switch__label {
+  color: var(--sr-color-text-disabled);
+}
