@@ -44,7 +44,7 @@ export const Error = {
 export const Disabled = { args: { disabled: true } };
 export const Password = { args: { type: 'password', label: 'Password', placeholder: 'Enter password' } };
 export const Phone = { args: { type: 'phone', label: 'Phone number', placeholder: '07000 000000' } };
-export const Calendar = { args: { type: 'calendar', label: 'Date of birth', placeholder: 'DD/MM/YYYY' } };
+export const Calendar = { args: { type: 'calendar', label: 'Appointment date', placeholder: 'DD/MM/YYYY' } };
 export const Time = { args: { type: 'time', label: 'Appointment time', placeholder: 'HH:MM' } };
 export const Textarea = {
   args: { type: 'textarea', label: 'Notes', hint: 'Add any relevant details', placeholder: 'Type here…' },

@@ -11,3 +11,4 @@ export { default as SegmentedControl } from './segmented-control/SegmentedContro
 export { default as DateInput } from './date-input/DateInput.jsx';
 export { default as DatePicker } from './date-picker/DatePicker.jsx';
 export { default as TimeSelect } from './time-select/TimeSelect.jsx';
+export { default as StatusIndicator } from './status-indicator/StatusIndicator.jsx';

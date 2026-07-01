@@ -54,12 +54,58 @@ const buildLogo = (src, alt) => {
   return logo;
 };
 
-const render = ({ variant, initials, search, menu }) => {
+const buildSearch = (placeholder) => {
+  const searchEl = document.createElement('div');
+  searchEl.className = 'sr-header__search';
+  searchEl.appendChild(buildIcon('nav/search', 'sr-header__search-icon'));
+  const input = document.createElement('input');
+  input.className = 'sr-header__search-input';
+  input.type = 'search';
+  input.placeholder = placeholder;
+  searchEl.appendChild(input);
+  return searchEl;
+};
+
+const render = ({ variant, initials, search, menu, org }) => {
   const header = document.createElement('header');
   const isMobile = variant === 'mobile';
+  const isBar = variant === 'desktop-2';
   header.className = `sr-header${isMobile ? ' sr-header--mobile' : ''}${
     isMobile && menu ? ' sr-header--centered' : ''
-  }`;
+  }${isBar ? ' sr-header--bar' : ''}`;
+
+  // Desktop 2 — single bar: search + org selector + Cymraeg + notification + avatar.
+  if (isBar) {
+    const main = document.createElement('div');
+    main.className = 'sr-header__main';
+    main.appendChild(buildSearch(search));
+
+    const cluster = document.createElement('div');
+    cluster.className = 'sr-header__cluster';
+
+    const orgBtn = document.createElement('button');
+    orgBtn.type = 'button';
+    orgBtn.className = 'sr-header__org';
+    const orgText = document.createElement('span');
+    orgText.textContent = org;
+    orgBtn.appendChild(orgText);
+    orgBtn.appendChild(buildIcon('nav/chevron-down'));
+    cluster.appendChild(orgBtn);
+
+    const langBtn = document.createElement('button');
+    langBtn.type = 'button';
+    langBtn.className = 'sr-header__lang';
+    langBtn.appendChild(buildIcon('location/language'));
+    const langText = document.createElement('span');
+    langText.textContent = 'Cymraeg';
+    langBtn.appendChild(langText);
+    cluster.appendChild(langBtn);
+
+    cluster.appendChild(buildActions(initials));
+    main.appendChild(cluster);
+    header.appendChild(main);
+    return header;
+  }
 
   if (!isMobile) {
     const utility = document.createElement('div');
@@ -125,20 +171,26 @@ export default {
   tags: ['autodocs'],
   render,
   argTypes: {
-    variant: { control: 'inline-radio', options: ['desktop', 'mobile'] },
+    variant: { control: 'inline-radio', options: ['desktop', 'desktop-2', 'mobile'] },
     menu: { control: 'boolean', description: 'Mobile: show leading hamburger (Mobile 1).' },
     initials: { control: 'text' },
     search: { control: 'text' },
+    org: { control: 'text', description: 'Desktop 2: organisation selector label.' },
   },
   args: {
     variant: 'desktop',
     menu: true,
     initials: 'AB',
     search: 'Type here to begin search',
+    org: 'Cardiff and Vale UHB',
   },
 };
 
 export const Desktop = { args: { variant: 'desktop' } };
+export const Desktop2 = {
+  name: 'Desktop 2 (org selector)',
+  args: { variant: 'desktop-2' },
+};
 export const MobileWithMenu = {
   name: 'Mobile 1 (hamburger)',
   args: { variant: 'mobile', menu: true },

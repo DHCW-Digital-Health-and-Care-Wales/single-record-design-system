@@ -35,6 +35,7 @@ export default function TimeSelect({
   interval = 30,
   placeholder = 'Select a time',
   disabled = false,
+  invalid = false,
   id,
   className,
   ...rest
@@ -42,7 +43,7 @@ export default function TimeSelect({
   const reactId = useId();
   const selectId = id || reactId;
   const slots = options || buildSlots(start, end, interval);
-  const classes = ['sr-time-select', className].filter(Boolean).join(' ');
+  const classes = ['sr-time-select', invalid ? 'sr-time-select--error' : '', className].filter(Boolean).join(' ');
 
   return (
     <div className={classes}>
@@ -57,6 +58,7 @@ export default function TimeSelect({
         value={value}
         defaultValue={defaultValue}
         disabled={disabled}
+        aria-invalid={invalid || undefined}
         onChange={onChange ? (e) => onChange(e.target.value) : undefined}
         {...rest}
       >

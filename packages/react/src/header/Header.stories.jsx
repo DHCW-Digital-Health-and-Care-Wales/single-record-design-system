@@ -34,7 +34,7 @@ export default {
   tags: ['autodocs'],
   render,
   argTypes: {
-    variant: { control: 'inline-radio', options: ['desktop', 'mobile'] },
+    variant: { control: 'inline-radio', options: ['desktop', 'desktop-2', 'mobile'] },
     menu: { control: 'boolean', description: 'Mobile: show leading hamburger (Mobile 1).' },
     initials: { control: 'text' },
     searchPlaceholder: { control: 'text' },
@@ -48,6 +48,10 @@ export default {
 };
 
 export const Desktop = { args: { variant: 'desktop' } };
+export const Desktop2 = {
+  name: 'Desktop 2 (org selector)',
+  args: { variant: 'desktop-2' },
+};
 export const MobileWithMenu = {
   name: 'Mobile 1 (hamburger)',
   args: { variant: 'mobile', menu: true },

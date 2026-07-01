@@ -1,18 +1,20 @@
 import React, { useId, useState } from 'react';
 import '@dhcw/sr-web/src/input/input.css';
 import Icon from '../icon/Icon.jsx';
+import DatePicker from '../date-picker/DatePicker.jsx';
+import TimeSelect from '../time-select/TimeSelect.jsx';
 
 /**
  * Input — DHCW Single Record Design System
  * Figma: Input set (840:14593). Types: text | password | phone | calendar |
  * time | textarea. States: default, focus (:focus-within), error, disabled.
  *
- * Calendar/Time render as a field with a trailing icon; the picker popover
- * (date picker) is a separate, deferred component.
+ * Calendar delegates to the DatePicker (calendar popover) and Time to the
+ * TimeSelect (slot select), wrapped in the shared label/hint/error scaffold —
+ * see DDR-012 for when to prefer the 3-field DateInput instead.
  */
 
-const TRAILING_ICON = { calendar: 'schedule/appointment', time: 'schedule/time' };
-const HTML_TYPE = { text: 'text', password: 'password', phone: 'tel', calendar: 'text', time: 'text' };
+const HTML_TYPE = { text: 'text', password: 'password', phone: 'tel' };
 
 export default function Input({
   type = 'text',
@@ -33,9 +35,10 @@ export default function Input({
   const isPassword = type === 'password';
   const [reveal, setReveal] = useState(false);
 
+  const isCalendar = type === 'calendar';
+  const isTime = type === 'time';
   const hasError = Boolean(error);
   const errorText = typeof error === 'string' ? error : null;
-  const trailingIconName = TRAILING_ICON[type];
 
   const classes = [
     'sr-input',
@@ -79,31 +82,33 @@ export default function Input({
         </span>
       )}
 
-      <div className={`sr-input__field${isTextarea ? ' sr-input__field--textarea' : ''}`}>
-        {leadingIcon && <span className="sr-input__icon">{leadingIcon}</span>}
+      {isCalendar ? (
+        <DatePicker id={inputId} label={label || 'Choose date'} placeholder={placeholder} disabled={disabled} invalid={hasError} />
+      ) : isTime ? (
+        <TimeSelect id={inputId} placeholder={placeholder} disabled={disabled} invalid={hasError} />
+      ) : (
+        <div className={`sr-input__field${isTextarea ? ' sr-input__field--textarea' : ''}`}>
+          {leadingIcon && <span className="sr-input__icon">{leadingIcon}</span>}
 
-        {isTextarea ? (
-          <textarea {...controlProps} />
-        ) : (
-          <input type={isPassword ? (reveal ? 'text' : 'password') : HTML_TYPE[type]} {...controlProps} />
-        )}
+          {isTextarea ? (
+            <textarea {...controlProps} />
+          ) : (
+            <input type={isPassword ? (reveal ? 'text' : 'password') : HTML_TYPE[type]} {...controlProps} />
+          )}
 
-        {isPassword && (
-          <button
-            type="button"
-            className="sr-input__toggle"
-            aria-label={reveal ? 'Hide password' : 'Show password'}
-            onClick={() => setReveal((r) => !r)}
-            disabled={disabled}
-          >
-            <Icon name={reveal ? 'action/eye-off' : 'action/eye'} size="sm" color="inherit" />
-          </button>
-        )}
-
-        {trailingIconName && !isPassword && (
-          <Icon name={trailingIconName} size="sm" color="subtle" className="sr-input__icon" />
-        )}
-      </div>
+          {isPassword && (
+            <button
+              type="button"
+              className="sr-input__toggle"
+              aria-label={reveal ? 'Hide password' : 'Show password'}
+              onClick={() => setReveal((r) => !r)}
+              disabled={disabled}
+            >
+              <Icon name={reveal ? 'action/eye-off' : 'action/eye'} size="sm" color="inherit" />
+            </button>
+          )}
+        </div>
+      )}
 
       {errorText && (
         <span className="sr-input__error" id={`${inputId}-error`}>

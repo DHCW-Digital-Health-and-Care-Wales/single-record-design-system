@@ -52,6 +52,8 @@ export default function DatePicker({
   label = 'Choose date',
   placeholder = 'DD/MM/YYYY',
   disabled = false,
+  invalid = false,
+  id,
   className,
   ...rest
 }) {
@@ -133,17 +135,19 @@ export default function DatePicker({
   });
 
   const weeks = buildWeeks(view.year, view.month);
-  const classes = ['sr-datepicker', className].filter(Boolean).join(' ');
+  const classes = ['sr-datepicker', invalid ? 'sr-datepicker--error' : '', className].filter(Boolean).join(' ');
 
   return (
     <div className={classes} ref={rootRef} {...rest}>
       <div className="sr-datepicker__field">
         <input
+          id={id}
           className="sr-datepicker__input"
           type="text"
           inputMode="numeric"
           placeholder={placeholder}
           aria-label={label}
+          aria-invalid={invalid || undefined}
           disabled={disabled}
           value={fmt(selected)}
           readOnly
