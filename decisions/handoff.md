@@ -458,6 +458,49 @@ Landed this session (branch `claude/table-icon-colors-9j96s1`, merged to main):
 
 ---
 
+## Checkpoint — 2026-07-01
+
+Code session — coded reference components shipped to Storybook (web `@dhcw/sr-web`
++ React `@dhcw/sr-react`), no Figma writes. All verified with axe (0
+serious/critical) and screenshots against Figma.
+
+- **Repo build fix.** Root `.gitignore` blanket-ignored `package.json`, so
+  `packages/icons/package.json` had never been committed — CI/fresh clones
+  couldn't resolve `@dhcw/sr-icons` and `build-storybook` failed. Removed the
+  blanket rules and committed the manifest. (Closes the "Narrow root .gitignore"
+  open item.)
+- **Components shipped (web + React, in Storybook):** Header (Desktop 1,
+  **Desktop 2** = org selector + Cymraeg, Mobile 1/2), Footer (desktop
+  save/version bar), Breadcrumbs, **Bottom navigation** (mobile tab bar,
+  665:16526), Navigation (expandable submenus with real children; icon-only
+  collapsed rail now has `aria-label` per item — fixed 13 axe button-name
+  violations; logo hidden when collapsed), **Input** (text/password/phone/
+  textarea + calendar→DatePicker, time→TimeSelect), **Toggle switch**,
+  **Segmented control**, **Date input** (3-field GDS/NHS), **Date picker**
+  (custom calendar popover, no dep, full keyboard), **Time select**,
+  **Status indicator** (filled success/error/warning).
+- **Icon set synced with Figma** → 118 icons. Added globe `location/language`
+  (2962:53479) + 12 outline icons (action/check·edit2·eye·eye-off·scan,
+  data/grid-2x2·grid-3x3, nav/clear·dashboard·menu2, status/alert·error-circle),
+  each matched to its Lucide source by sight. `status/error` (circle-x) relocated
+  to `nav/clear` to match Figma. `warnings/determinate` **deferred** (purpose
+  unknown); the other warnings/* ship as the StatusIndicator component.
+- **DDR-012** — date/time entry: 3-field DateInput is the default for *known*
+  dates (not just DOB); calendar picker only for *choosing* (scheduling); time
+  is a text field or select, never a wheel. WCAG 2.2 AA applies to new internal
+  tools; the 3-field pattern is the GDS/NHS design standard.
+- **DDR-013** — the filled warnings/* group ships as `StatusIndicator`, colour
+  driven by status tokens, geometry **derived from Lucide (ISC), not traced** —
+  no licensing exposure.
+- **Logo is a neutral placeholder** (`packages/web/src/assets/logo.js`, symbol +
+  wordmark). The real NHS/GIG lockups are trademarked raster assets and Figma
+  egress is blocked from the coding env — swap the placeholder for the official
+  exported SVG/PNGs (or enable figma.com egress) when available. Header/Nav take
+  the logo as a prop, so it's a one-line change per consumer.
+- **Next:** Tables (queued, not started).
+
+---
+
 ## Checkpoint — 2026-06-26
 
 - **Desktop/mobile form-factor model decided (DDR-011).** Two orthogonal axes: **platform** = `packages/*` (incl. MAUI); **form factor** = responsive tokens/variants *inside* each platform — **no separate desktop/mobile trees**. Per-component class: **Responsive** (most; tokens only), **Adaptive** (a `Breakpoint=Desktop/Mobile` variant), **Distinct** (separate components, e.g. header/footer/nav). Web adapts responsively in one codebase; MAUI uses `OnIdiom`.
@@ -584,7 +627,7 @@ This week's accepted changes (now reflected in Figma, tokens, and docs):
 | ~~Destructive button type~~ **(resolved 2026-06-24)** | The red 4th button type was named `Warning` but styled red. Renamed `Warning` → `Destructive` (Figma `1346:500` + coded `.sr-button--destructive`). No amber button added — GDS/NHS have no amber button; severity nuance lives in the confirmation dialog. Modal patterns instance `Destructive` directly. See DDR-008. |
 | Show/hide pattern for component parts | Decision made: boolean Component Property for optional decoration (icons, badges); variant for layout-shifting show/hide (label, hint). Hidden layers = `visible=false`, never delete. Apply consistently when building new components. |
 | ~~Enable GitHub Pages for Storybook~~ **(resolved 2026-06-24)** | Pages enabled on the DHCW org repo (Source = GitHub Actions). Storybook deploys to `https://dhcw-digital-health-and-care-wales.github.io/single-record-design-system/`. Personal repo doesn't have Pages (free plan); disable the workflow there via Actions → ⋯ → Disable workflow to avoid red-X noise. Mirror pushes via deploy key don't auto-trigger workflows on the org repo — use "Run workflow" manually after each mirror. |
-| Narrow root `.gitignore` | Root `.gitignore` ignores bare `package.json`/`package-lock.json`; workspace manifests are force-added. Tighten the rules so package manifests track normally. |
+| ~~Narrow root `.gitignore`~~ **(resolved 2026-07-01)** | Removed the blanket `package.json`/`package-lock.json` ignore rules and committed the previously-untracked `packages/icons/package.json` (its absence was breaking CI/fresh-clone Storybook builds). Package manifests now track normally. |
 | Grow Storybook coverage | Add stories alongside each new `@dhcw/sr-web` component; enable the `@dhcw/sr-react` stories glob in `.storybook/main.js` once that package has components. Storybook MCP deferred (DDR-009). |
 | Blazor WASM component gallery | Scaffold a Blazor WebAssembly "gallery" app that renders `@dhcw/sr-blazor` components (starting with `SrButton`) in their full variant matrix. Deploy as a second GitHub Pages site via a `dotnet publish` workflow. **Priority: this week.** The existing Blazor product team needs a live-preview URL to evaluate adopting the design system. Pattern: static WASM output → `actions/upload-pages-artifact` → deploy. |
 
