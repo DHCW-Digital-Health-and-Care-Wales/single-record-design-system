@@ -1,0 +1,184 @@
+/**
+ * DHCW Single Record — Date picker (calendar popover)
+ * Custom calendar built against SR tokens (no third-party date library — see
+ * DDR-012). For CHOOSING dates (scheduling, availability), not for known dates
+ * — use Date input (3-field) for those.
+ *
+ * Anatomy:
+ *   .sr-datepicker                — positioning wrapper
+ *     .sr-datepicker__field        — text field + calendar trigger button
+ *     .sr-datepicker__popover      — role="dialog" calendar
+ *       .sr-datepicker__header      — prev / month-year / next
+ *       .sr-datepicker__grid        — weekday row + day cells
+ */
+
+.sr-datepicker {
+  position: relative;
+  display: inline-block;
+  font-family: "Roboto", system-ui, -apple-system, sans-serif;
+}
+
+.sr-datepicker__field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 220px;
+  min-height: 40px;
+  box-sizing: border-box;
+  padding: 0 var(--space-2) 0 var(--space-3);
+  background-color: var(--sr-color-surface-section-cards);
+  border: 1px solid var(--sr-color-border-default);
+  border-radius: var(--radius-sm);
+}
+.sr-datepicker__field:focus-within {
+  border-color: var(--sr-color-border-focus);
+  box-shadow: inset 0 0 0 1px var(--sr-color-border-focus);
+}
+.sr-datepicker__input {
+  flex: 1 1 0;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-size: var(--font-size-14);
+  line-height: var(--font-line-height-20);
+  color: var(--sr-color-text-primary);
+}
+.sr-datepicker__input::placeholder {
+  color: var(--sr-color-text-secondary);
+}
+.sr-datepicker__input:focus {
+  outline: none;
+}
+.sr-datepicker__trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--sr-color-text-secondary);
+  cursor: pointer;
+}
+.sr-datepicker__trigger:hover {
+  color: var(--sr-color-text-primary);
+}
+.sr-datepicker__trigger:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sr-color-border-focus);
+}
+.sr-datepicker__trigger svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ---------- Popover ---------- */
+.sr-datepicker__popover {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  left: 0;
+  z-index: 20;
+  width: 280px;
+  box-sizing: border-box;
+  padding: var(--space-3);
+  background-color: var(--sr-color-surface-section-cards);
+  border: 1px solid var(--sr-color-border-default);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 16px rgba(27, 41, 74, 0.16);
+}
+
+.sr-datepicker__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+}
+.sr-datepicker__title {
+  font-size: var(--font-size-14);
+  line-height: var(--font-line-height-20);
+  font-weight: 500;
+  letter-spacing: var(--font-letter-spacing-wide);
+  color: var(--sr-color-text-primary);
+}
+.sr-datepicker__nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--sr-color-text-secondary);
+  cursor: pointer;
+}
+.sr-datepicker__nav:hover {
+  background-color: var(--sr-color-surface-subtle);
+  color: var(--sr-color-text-primary);
+}
+.sr-datepicker__nav:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sr-color-border-focus);
+}
+.sr-datepicker__nav svg {
+  width: 20px;
+  height: 20px;
+}
+
+.sr-datepicker__weekdays,
+.sr-datepicker__week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+.sr-datepicker__weekday {
+  padding: var(--space-1) 0;
+  text-align: center;
+  font-size: var(--font-size-12);
+  line-height: var(--font-line-height-16);
+  letter-spacing: var(--font-letter-spacing-caption);
+  color: var(--sr-color-text-secondary);
+}
+
+.sr-datepicker__day {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  margin: 1px 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--sr-color-text-primary);
+  font: inherit;
+  font-size: var(--font-size-14);
+  line-height: var(--font-line-height-20);
+  cursor: pointer;
+}
+.sr-datepicker__day:hover {
+  background-color: var(--sr-color-surface-subtle);
+}
+.sr-datepicker__day:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sr-color-border-focus);
+}
+.sr-datepicker__day--outside {
+  color: var(--sr-color-text-disabled);
+}
+.sr-datepicker__day--today {
+  box-shadow: inset 0 0 0 1px var(--sr-color-border-strong);
+}
+.sr-datepicker__day[aria-selected="true"] {
+  background-color: var(--sr-color-interactive-primary);
+  color: var(--sr-color-text-inverse);
+}
+.sr-datepicker__day:disabled {
+  color: var(--sr-color-text-disabled);
+  cursor: not-allowed;
+}

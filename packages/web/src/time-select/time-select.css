@@ -1,0 +1,46 @@
+/**
+ * DHCW Single Record — Time select
+ * Constrained time entry as a native <select> of slots (DDR-012 — no wheel /
+ * spinner picker). For free time entry use Input type="time" instead.
+ * Consumes @dhcw/sr-tokens.
+ */
+
+.sr-time-select {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-family: "Roboto", system-ui, -apple-system, sans-serif;
+}
+
+.sr-time-select__label {
+  font-size: var(--font-size-14);
+  line-height: var(--font-line-height-20);
+  font-weight: 500;
+  letter-spacing: var(--font-letter-spacing-wide);
+  color: var(--sr-color-text-primary);
+}
+
+.sr-time-select__control {
+  width: 140px;
+  height: 40px;
+  box-sizing: border-box;
+  padding: 0 var(--space-3);
+  background-color: var(--sr-color-surface-section-cards);
+  border: 1px solid var(--sr-color-border-default);
+  border-radius: var(--radius-sm);
+  color: var(--sr-color-text-primary);
+  font: inherit;
+  font-size: var(--font-size-14);
+  line-height: var(--font-line-height-20);
+}
+.sr-time-select__control:focus {
+  outline: none;
+  border-color: var(--sr-color-border-focus);
+  box-shadow: inset 0 0 0 1px var(--sr-color-border-focus);
+}
+.sr-time-select__control:disabled {
+  background-color: var(--sr-color-surface-subtle);
+  border-color: var(--sr-color-border-disabled);
+  color: var(--sr-color-text-disabled);
+  cursor: not-allowed;
+}

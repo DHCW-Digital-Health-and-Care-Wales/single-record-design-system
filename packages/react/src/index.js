@@ -8,3 +8,6 @@ export { default as BottomNav } from './bottom-nav/BottomNav.jsx';
 export { default as Input } from './input/Input.jsx';
 export { default as Switch } from './switch/Switch.jsx';
 export { default as SegmentedControl } from './segmented-control/SegmentedControl.jsx';
+export { default as DateInput } from './date-input/DateInput.jsx';
+export { default as DatePicker } from './date-picker/DatePicker.jsx';
+export { default as TimeSelect } from './time-select/TimeSelect.jsx';
