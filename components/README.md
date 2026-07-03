@@ -59,7 +59,7 @@ Each component lives in its own folder: `/components/{component-name}/`.
 ### Data display
 | Component | Status | Notes |
 |---|---|---|
-| `table` | Planned | Sortable, filterable data table |
+| `table` | In development | Data table with row actions ([spec](table/spec.md)). Sorting/filtering/pagination planned. |
 | `summary-list` | Planned | Key-value record display (GDS pattern) |
 | `data-card` | Planned | Single record summary — patient-facing |
 | `timeline` | Planned | Chronological event display |
