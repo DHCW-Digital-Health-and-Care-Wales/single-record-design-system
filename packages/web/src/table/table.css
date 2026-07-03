@@ -1,0 +1,149 @@
+/**
+ * DHCW Single Record — Data table
+ * Reference HTML/CSS implementation for tabular clinical/administrative data.
+ * Consumes @dhcw/sr-tokens CSS custom properties.
+ *
+ * Structure:
+ *   .sr-table-wrap          — horizontal scroll container (tables never break the page)
+ *   .sr-table               — the <table>; square corners (radius.none — data grids are full-bleed)
+ *   .sr-table__head th      — column headers (medium weight, left border cue for sortable)
+ *   .sr-table__row          — body row; hover + selected states
+ *   .sr-table__cell         — body cell (compact padding for dense clinical views)
+ *   .sr-table__actions      — trailing cell holding row-level icon buttons
+ *   .sr-table__action       — icon-only row action button
+ *
+ * Row action icons render in Interactive/Primary (brand blue), NOT the default
+ * black icon colour — a row action is an interactive affordance and must read
+ * as one. Destructive row actions (delete/remove) opt into red via
+ * .sr-table__action--destructive. See spec.md.
+ */
+
+.sr-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.sr-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: var(--radius-none, 0); /* data grids are full-bleed — DDR reference §Radius */
+  font-family: "Roboto", system-ui, -apple-system, sans-serif;
+  font-size: var(--font-size-16);
+  line-height: var(--font-line-height-24);
+  color: var(--sr-color-text-primary);
+  background-color: var(--sr-color-surface-section-cards);
+}
+
+/* ---------- Header ---------- */
+.sr-table__head th {
+  text-align: left;
+  font-weight: 500; /* medium — table column headers */
+  color: var(--sr-color-text-primary);
+  background-color: var(--sr-color-surface-subtle);
+  padding: var(--space-3) var(--space-4); /* 12px 16px */
+  border-bottom: 1px solid var(--sr-color-border-default);
+  white-space: nowrap;
+}
+.sr-table__head th.sr-table__head--numeric {
+  text-align: right;
+}
+.sr-table__head th.sr-table__head--actions {
+  text-align: right;
+}
+
+/* Accessible label with no visual footprint (e.g. the actions column header). */
+.sr-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- Body ---------- */
+.sr-table__cell {
+  padding: var(--space-2) var(--space-4); /* 8px 16px — compact clinical density */
+  border-bottom: 1px solid var(--sr-color-border-subtle);
+  vertical-align: middle;
+}
+.sr-table__cell--numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.sr-table__row:hover .sr-table__cell {
+  background-color: var(--sr-color-surface-subtle);
+}
+.sr-table__row--selected .sr-table__cell {
+  background-color: var(--sr-color-surface-accent);
+}
+.sr-table__row:last-child .sr-table__cell {
+  border-bottom: none;
+}
+
+/* ---------- Row actions (icon-only buttons) ---------- */
+.sr-table__actions {
+  padding: var(--space-1) var(--space-3); /* 4px 12px */
+  border-bottom: 1px solid var(--sr-color-border-subtle);
+  white-space: nowrap;
+  text-align: right;
+}
+.sr-table__row:last-child .sr-table__actions {
+  border-bottom: none;
+}
+
+.sr-table__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;   /* sr.touch.compact — dense in-table secondary action */
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-md); /* 4px */
+  background-color: transparent;
+  /* Interactive blue — the icon (stroke=currentColor) inherits this, so row
+     action icons are brand blue, never black. */
+  color: var(--sr-color-interactive-primary);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.sr-table__action svg,
+.sr-table__action .sr-button__icon {
+  width: 20px;
+  height: 20px;
+}
+.sr-table__action .sr-button__icon svg {
+  width: 100%;
+  height: 100%;
+}
+.sr-table__action:hover {
+  background-color: var(--sr-color-surface-accent);
+  color: var(--sr-color-interactive-primary-hover);
+}
+.sr-table__action:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--sr-color-surface-section-cards),
+    0 0 0 4px var(--color-cyan-700);
+}
+.sr-table__action:disabled,
+.sr-table__action[aria-disabled="true"] {
+  color: var(--sr-color-text-disabled);
+  cursor: not-allowed;
+}
+
+/* Destructive row action (delete/remove) — red, not blue. */
+.sr-table__action--destructive {
+  color: var(--sr-color-interactive-destructive);
+}
+.sr-table__action--destructive:hover {
+  background-color: var(--sr-color-status-critical-surface, var(--sr-color-surface-subtle));
+  color: var(--color-red-700);
+}
