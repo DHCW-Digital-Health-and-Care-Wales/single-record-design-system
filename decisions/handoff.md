@@ -27,10 +27,15 @@ Landed this session (branch `claude/table-icon-colors-9j96s1`, merged to main):
 - **Status contrast fix (AA).** `Status/Critical` Red/600 → **Red/700 (#B32014)**, `Status/Success` Green/600 → **Green/700 (#006630)** in both light and dark semantic tokens. `Interactive/Destructive` unchanged (Red/600 — separate role). Token outputs rebuilt.
 - **Icons:** `nav/dashboard` now used for the Dashboard nav item (was `data/table`), in web + React storybooks. New **`action/hold`** icon added. ⚠️ The Figma asset host is blocked by egress policy, so `action/hold` uses the Lucide `pause` glyph (two bars) as a faithful stand-in — **confirm it matches the Figma artwork.**
 
+### Fixes (follow-up, after PR #49)
+- **Tag refactored into two variants** matching the new Figma split: `status` (filled — Blue/Green/Red/Yellow/Grey/Outline, no close, `399:7984`) and `filter` (outline only + close — Blue/Green/Red/Yellow/**Black**, `3229:71674`). Class contract: `.sr-tag--status|--filter` + type + size. Web + React stories rebuilt (old Closable/Matrix previews removed).
+- **Select hover** now distinct from active/selected: hover = Info Blue/50 wash (secondary text); keyboard-active + selected = Interactive/Primary fill (white). Matches option-items `1517:14856`.
+- **React icon fixes:** Select error icon (was 24px black → 16px red), nested-option chevron on active blue (was black → white), trigger chevron, and Autocomplete search/clear icons — all now pass `size` + `color="inherit"` to `<Icon>` so the wrapper's size/colour win.
+
 ### Open follow-ups for next session
-- Confirm the `action/hold` glyph vs Figma (egress-blocked this session).
+- Confirm the `action/hold` glyph vs Figma (egress-blocked).
 - Autocomplete needs a dedicated Figma design to ratify the interim reference.
-- **Table toolbar/filter + pagination pattern** — the natural home for the closable filter tags + segmented control + autocomplete. Not started (wants a Figma design first).
+- **Table toolbar/filter + pagination pattern** — the natural home for the filter tags + segmented control + autocomplete. Not started (wants a Figma design first).
 
 ---
 

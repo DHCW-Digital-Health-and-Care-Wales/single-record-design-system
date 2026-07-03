@@ -4,23 +4,28 @@ import { iconMarkup } from '@dhcw/sr-icons/build/icons.js';
 
 /**
  * Tag — DHCW Single Record Design System
- * Figma: Tags set (399:7984)
+ * Figma: Tags/status (399:7984) and Tags/filter (3229:71674)
  *
- * Pill-shaped status/label tags. Six colour types × two sizes, with an
- * optional close button for dismissible filter tags. Colour is a secondary
- * signal — the text always carries the meaning (WCAG 1.4.1).
+ * Two variants:
+ *   status — filled pill, non-interactive label. Blue/Green/Red/Yellow/Grey/
+ *            Outline.
+ *   filter — outline pill with a close button, for dismissible filters.
+ *            Blue/Green/Red/Yellow/Black.
+ *
+ * Colour is a secondary signal — the text always carries the meaning (WCAG 1.4.1).
  */
 
-const TYPES = ['blue', 'green', 'red', 'yellow', 'grey', 'outline'];
+const STATUS_TYPES = ['blue', 'green', 'red', 'yellow', 'grey', 'outline'];
+const FILTER_TYPES = ['blue', 'green', 'red', 'yellow', 'black'];
 
-/** Build one tag element. Pass `closable` for a dismissible filter tag. */
-const buildTag = (label, type = 'blue', size = 'default', closable = false) => {
+/** Build one tag. variant 'status' | 'filter'; filter tags always get a close button. */
+const buildTag = (label, { variant = 'status', type = 'blue', size = 'default' } = {}) => {
   const span = document.createElement('span');
-  span.className = `sr-tag sr-tag--${type} sr-tag--${size}${closable ? ' sr-tag--closable' : ''}`;
+  span.className = `sr-tag sr-tag--${variant} sr-tag--${type} sr-tag--${size}`;
   const text = document.createElement('span');
   text.textContent = label;
   span.appendChild(text);
-  if (closable) {
+  if (variant === 'filter') {
     const close = document.createElement('button');
     close.type = 'button';
     close.className = 'sr-tag__close';
@@ -31,7 +36,7 @@ const buildTag = (label, type = 'blue', size = 'default', closable = false) => {
   return span;
 };
 
-const render = ({ label, type, size, closable }) => buildTag(label, type, size, closable);
+const render = ({ label, variant, type, size }) => buildTag(label, { variant, type, size });
 
 export default {
   title: 'Components/Tag',
@@ -39,23 +44,50 @@ export default {
   render,
   argTypes: {
     label: { control: 'text', description: 'Tag text — carries the meaning; keep it short.' },
-    type: { control: { type: 'select' }, options: TYPES, description: 'Figma: Type.' },
-    size: { control: { type: 'inline-radio' }, options: ['default', 'small'], description: 'Figma: Size.' },
-    closable: { control: 'boolean', description: 'Figma: Close icon. Adds a dismiss button — use for filter tags.' },
+    variant: { control: { type: 'inline-radio' }, options: ['status', 'filter'], description: 'status = filled label; filter = outline + close.' },
+    type: { control: { type: 'select' }, options: [...new Set([...STATUS_TYPES, ...FILTER_TYPES])], description: 'Colour. Grey/Outline are status-only; Black is filter-only.' },
+    size: { control: { type: 'inline-radio' }, options: ['default', 'small'] },
   },
-  args: { label: 'Status', type: 'blue', size: 'default', closable: false },
+  args: { label: 'Status', variant: 'status', type: 'blue', size: 'default' },
 };
 
-export const Blue = {};
-export const Green = { args: { type: 'green', label: 'Active' } };
-export const Red = { args: { type: 'red', label: 'Critical' } };
-export const Yellow = { args: { type: 'yellow', label: 'Pending' } };
-export const Grey = { args: { type: 'grey', label: 'Inactive' } };
-export const Outline = { args: { type: 'outline', label: 'Draft' } };
-export const Small = { args: { size: 'small' } };
+// --- Status tags ---
+export const Status = { args: { variant: 'status', type: 'blue' } };
+export const StatusGreen = { args: { variant: 'status', type: 'green', label: 'Active' } };
+export const StatusOutline = { args: { variant: 'status', type: 'outline', label: 'Draft' } };
 
-/** Dismissible filter tag with a close button. */
-export const Closable = { args: { closable: true, label: 'Ward: Aneurin' } };
+/** All status types × sizes. */
+export const StatusMatrix = {
+  render: () => {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'display:flex;flex-direction:column;gap:16px;';
+    ['default', 'small'].forEach((size) => {
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;gap:12px;align-items:center;flex-wrap:wrap;';
+      STATUS_TYPES.forEach((type) => row.appendChild(buildTag('Status', { variant: 'status', type, size })));
+      wrap.appendChild(row);
+    });
+    return wrap;
+  },
+};
+
+// --- Filter tags ---
+export const Filter = { args: { variant: 'filter', type: 'blue', label: 'Ward: Aneurin' } };
+
+/** All filter types × sizes (outline + close). */
+export const FilterMatrix = {
+  render: () => {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'display:flex;flex-direction:column;gap:16px;';
+    ['default', 'small'].forEach((size) => {
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;gap:12px;align-items:center;flex-wrap:wrap;';
+      FILTER_TYPES.forEach((type) => row.appendChild(buildTag('Status', { variant: 'filter', type, size })));
+      wrap.appendChild(row);
+    });
+    return wrap;
+  },
+};
 
 /** A row of active filter tags, as used above a filtered list or table. */
 export const FilterTags = {
@@ -66,24 +98,8 @@ export const FilterTags = {
       ['Ward: Aneurin', 'blue'],
       ['Status: Active', 'green'],
       ['Priority: Urgent', 'red'],
-    ].forEach(([label, type]) => row.appendChild(buildTag(label, type, 'default', true)));
+      ['Coded', 'black'],
+    ].forEach(([label, type]) => row.appendChild(buildTag(label, { variant: 'filter', type })));
     return row;
-  },
-};
-
-/** Full Type × Size × Close matrix, mirroring the Figma component set. */
-export const Matrix = {
-  render: () => {
-    const wrap = document.createElement('div');
-    wrap.style.cssText = 'display:flex;flex-direction:column;gap:16px;';
-    ['default', 'small'].forEach((size) => {
-      [false, true].forEach((closable) => {
-        const row = document.createElement('div');
-        row.style.cssText = 'display:flex;gap:12px;align-items:center;flex-wrap:wrap;';
-        TYPES.forEach((type) => row.appendChild(buildTag('Status', type, size, closable)));
-        wrap.appendChild(row);
-      });
-    });
-    return wrap;
   },
 };

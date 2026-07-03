@@ -106,7 +106,7 @@ export default function Autocomplete({
       <div className="sr-autocomplete__control">
         <div className="sr-input__field">
           <span className="sr-input__icon">
-            <Icon name="nav/search" />
+            <Icon name="nav/search" size="sm" color="inherit" />
           </span>
           <input
             ref={inputRef}
@@ -143,7 +143,7 @@ export default function Autocomplete({
                 inputRef.current?.focus();
               }}
             >
-              <Icon name="nav/close" />
+              <Icon name="nav/close" size="xs" color="inherit" />
             </button>
           )}
         </div>
@@ -162,7 +162,6 @@ export default function Autocomplete({
                   role="option"
                   className={`sr-select__option${i === activeIndex ? ' is-active' : ''}`}
                   aria-selected={opt.value === value}
-                  onMouseEnter={() => setActiveIndex(i)}
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => choose(i)}
                 >

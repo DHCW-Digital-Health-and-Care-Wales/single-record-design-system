@@ -4,25 +4,27 @@ import Icon from '../icon/Icon.jsx';
 
 /**
  * Tag — DHCW Single Record Design System (React)
- * Wraps the shared @dhcw/sr-web tags.css. Figma Tags set (399:7984).
+ * Wraps the shared @dhcw/sr-web tags.css.
+ * Figma: Tags/status (399:7984) and Tags/filter (3229:71674).
  *
  * Props:
- *   type   Blue | Green | Red | Yellow | Grey | Outline  (default 'blue')
- *   size   'default' | 'small'                            (default 'default')
- *   onClose  when provided, renders a dismiss button (dismissible filter tag);
- *            called with the click event. Requires `closeLabel` for the a11y name.
+ *   variant  'status' (filled label) | 'filter' (outline + close). Default 'status'.
+ *   type     status: Blue|Green|Red|Yellow|Grey|Outline
+ *            filter: Blue|Green|Red|Yellow|Black
+ *   size     'default' | 'small'
+ *   onClose  filter tags: called when the close button is pressed.
  *   closeLabel  accessible name for the close button (e.g. "Remove Ward: Aneurin").
  */
 const Tag = forwardRef(function Tag(
-  { type = 'blue', size = 'default', onClose, closeLabel, children, className, ...rest },
+  { variant = 'status', type = 'blue', size = 'default', onClose, closeLabel, children, className, ...rest },
   ref
 ) {
-  const closable = typeof onClose === 'function';
+  const isFilter = variant === 'filter';
   const classes = [
     'sr-tag',
+    `sr-tag--${variant}`,
     `sr-tag--${type}`,
     `sr-tag--${size}`,
-    closable && 'sr-tag--closable',
     className,
   ]
     .filter(Boolean)
@@ -31,14 +33,14 @@ const Tag = forwardRef(function Tag(
   return (
     <span ref={ref} className={classes} {...rest}>
       <span>{children}</span>
-      {closable && (
+      {isFilter && (
         <button
           type="button"
           className="sr-tag__close"
           aria-label={closeLabel || 'Remove'}
           onClick={onClose}
         >
-          <Icon name="nav/close" />
+          <Icon name="nav/close" size="xs" color="inherit" />
         </button>
       )}
     </span>

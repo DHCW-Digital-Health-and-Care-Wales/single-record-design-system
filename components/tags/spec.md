@@ -15,25 +15,38 @@ Reference implementation: `packages/web/src/tags/tags.css` + `tags.stories.js` (
 
 ## Variants
 
-| Type | Fill | Border / Text | Typical use |
-|---|---|---|---|
-| Blue | `Status/Info Surface` | `Status/Info` | Informational / neutral status |
-| Green | `Status/Success Surface` | `Status/Success` | Positive / active / complete |
-| Red | `Status/Critical Surface` | `Status/Critical` (Red/700) | Error / critical / urgent |
-| Yellow | `Status/Warning Surface` | `Yellow/700` | Warning / pending |
-| Grey | `Surface/Background` | `Text/Secondary` | Inactive / archived |
-| Outline | transparent | `Border/Strong` border, `Text/Primary` text | Low-emphasis / draft |
+Two variants (Figma **Tags/status** `399:7984`, **Tags/filter** `3229:71674`):
 
-| Size | Height | Padding H |
+### `status` — filled label (non-interactive)
+
+| Type | Fill | Border / Text |
 |---|---|---|
-| Default | 24px | 16px |
-| Small | 16px | 8px |
+| Blue | `Status/Info Surface` | `Status/Info` |
+| Green | `Status/Success Surface` | `Status/Success` (Green/700) |
+| Red | `Status/Critical Surface` | `Status/Critical` (Red/700) |
+| Yellow | `Status/Warning Surface` | `Yellow/700` |
+| Grey | `Surface/Background` | `Text/Secondary` |
+| Outline | transparent | `Border/Strong` border, `Text/Primary` text |
 
-**Close icon (`.sr-tag--closable`)** — adds a 16px dismiss button (`nav/close`) for
-filter tags (e.g. active search filters). Trailing padding tightens to make
-room. The close icon inherits the tag's text colour. The button carries an
-`aria-label` ("Remove {label}"); the tag stays a `<span>` wrapping the label
-text and the `<button>`.
+### `filter` — outline + close (dismissible)
+
+Transparent fill, coloured border + text, and a 16px `nav/close` button.
+
+| Type | Border / Text |
+|---|---|
+| Blue | `Status/Info` |
+| Green | `Status/Success` |
+| Red | `Status/Critical` |
+| Yellow | `Yellow/700` |
+| Black | `Border/Strong` border, `Text/Primary` text |
+
+| Size | Height | Padding (status / filter) |
+|---|---|---|
+| Default | 24px | 16px / 12px left · 8px right |
+| Small | 16px | 8px / 8px left · 4px right |
+
+The close button inherits the tag's text colour, carries an `aria-label`
+("Remove {label}"), and sits alongside the label `<span>` inside the tag.
 
 ---
 

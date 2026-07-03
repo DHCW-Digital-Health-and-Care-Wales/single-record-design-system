@@ -3,17 +3,13 @@ import { createRoot } from 'react-dom/client';
 import '@dhcw/sr-tokens/build/css/tokens.css';
 import Tag from './Tag.jsx';
 
-const TYPES = ['blue', 'green', 'red', 'yellow', 'grey', 'outline'];
+const STATUS_TYPES = ['blue', 'green', 'red', 'yellow', 'grey', 'outline'];
+const FILTER_TYPES = ['blue', 'green', 'red', 'yellow', 'black'];
 
-const render = ({ label, type, size, closable }) => {
+const render = ({ label, variant, type, size }) => {
   const container = document.createElement('div');
   createRoot(container).render(
-    <Tag
-      type={type}
-      size={size}
-      onClose={closable ? () => {} : undefined}
-      closeLabel={`Remove ${label}`}
-    >
+    <Tag variant={variant} type={type} size={size} onClose={() => {}} closeLabel={`Remove ${label}`}>
       {label}
     </Tag>
   );
@@ -26,17 +22,16 @@ export default {
   render,
   argTypes: {
     label: { control: 'text' },
-    type: { control: { type: 'select' }, options: TYPES },
+    variant: { control: { type: 'inline-radio' }, options: ['status', 'filter'] },
+    type: { control: { type: 'select' }, options: [...new Set([...STATUS_TYPES, ...FILTER_TYPES])] },
     size: { control: { type: 'inline-radio' }, options: ['default', 'small'] },
-    closable: { control: 'boolean', description: 'Renders a dismiss button (filter tag).' },
   },
-  args: { label: 'Status', type: 'blue', size: 'default', closable: false },
+  args: { label: 'Status', variant: 'status', type: 'blue', size: 'default' },
 };
 
-export const Blue = {};
-export const Green = { args: { type: 'green', label: 'Active' } };
-export const Outline = { args: { type: 'outline', label: 'Draft' } };
-export const Closable = { args: { closable: true, label: 'Ward: Aneurin' } };
+export const Status = {};
+export const StatusOutline = { args: { variant: 'status', type: 'outline', label: 'Draft' } };
+export const Filter = { args: { variant: 'filter', type: 'blue', label: 'Ward: Aneurin' } };
 
 /** A row of active filter tags. */
 export const FilterTags = {
@@ -44,9 +39,10 @@ export const FilterTags = {
     const container = document.createElement('div');
     createRoot(container).render(
       <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-        <Tag type="blue" onClose={() => {}} closeLabel="Remove Ward: Aneurin">Ward: Aneurin</Tag>
-        <Tag type="green" onClose={() => {}} closeLabel="Remove Status: Active">Status: Active</Tag>
-        <Tag type="red" onClose={() => {}} closeLabel="Remove Priority: Urgent">Priority: Urgent</Tag>
+        <Tag variant="filter" type="blue" onClose={() => {}} closeLabel="Remove Ward: Aneurin">Ward: Aneurin</Tag>
+        <Tag variant="filter" type="green" onClose={() => {}} closeLabel="Remove Status: Active">Status: Active</Tag>
+        <Tag variant="filter" type="red" onClose={() => {}} closeLabel="Remove Priority: Urgent">Priority: Urgent</Tag>
+        <Tag variant="filter" type="black" onClose={() => {}} closeLabel="Remove Coded">Coded</Tag>
       </div>
     );
     return container;

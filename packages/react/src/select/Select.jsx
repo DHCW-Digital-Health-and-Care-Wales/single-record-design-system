@@ -137,7 +137,7 @@ export default function Select({
         >
           <span className="sr-select__value">{chosen ? chosen.label : placeholder}</span>
           <span className="sr-select__chevron">
-            <Icon name="nav/chevron-down" />
+            <Icon name="nav/chevron-down" size="sm" color="inherit" />
           </span>
         </button>
 
@@ -156,13 +156,12 @@ export default function Select({
               className={`sr-select__option${i === activeIndex ? ' is-active' : ''}`}
               aria-selected={opt.value === selected}
               aria-disabled={opt.disabled || undefined}
-              onMouseEnter={() => setActiveIndex(i)}
               onClick={() => choose(i)}
             >
               <span>{opt.label}</span>
               {opt.childMenu && (
                 <span className="sr-select__option-chevron">
-                  <Icon name="nav/chevron-right" />
+                  <Icon name="nav/chevron-right" size="sm" color="inherit" />
                 </span>
               )}
             </li>
@@ -173,7 +172,7 @@ export default function Select({
       {hasError && (
         <div className="sr-select__error" id={`${rid}-error`}>
           <span className="sr-select__error-icon">
-            <Icon name="status/error-circle" />
+            <Icon name="status/error-circle" size="xs" color="inherit" />
           </span>
           <span>{error}</span>
         </div>

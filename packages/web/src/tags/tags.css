@@ -1,16 +1,18 @@
 /**
  * DHCW Single Record — Tag
- * Pill-shaped status/label tag. Figma Tags set (399:7984).
- * Consumes @dhcw/sr-tokens CSS custom properties.
+ * Pill-shaped label. Figma Tags sets: Tags/status (399:7984) and
+ * Tags/filter (3229:71674). Consumes @dhcw/sr-tokens.
  *
- * Type:  Blue | Green | Red | Yellow | Grey | Outline
- *        Each colour is a soft surface fill + matching border + text, driven
- *        by the Status/* semantic tokens. Colour is a secondary signal only —
- *        always pair with text (never colour alone) for meaning.
- * Size:  Default (24px) | Small (16px)
- * Close: add `.sr-tag--closable` and an `.sr-tag__close` button for dismissible
- *        filter tags (e.g. active search filters). The close icon inherits the
- *        tag's text colour via currentColor.
+ * Two variants:
+ *   .sr-tag--status  (default) — soft surface FILL + matching border + text.
+ *                    Types: Blue | Green | Red | Yellow | Grey | Outline.
+ *                    Non-interactive label (status, category).
+ *   .sr-tag--filter  — OUTLINE only (transparent fill) + a close button, for
+ *                    dismissible filters. Types: Blue | Green | Red | Yellow |
+ *                    Black. Always carries an .sr-tag__close button.
+ *
+ * Colour is a secondary signal only — the text always carries the meaning.
+ * Size: Default (24px) | Small (16px).
  */
 
 .sr-tag {
@@ -29,7 +31,7 @@
   white-space: nowrap;
 }
 
-/* ---------- Sizes ---------- */
+/* ---------- Sizes (status: symmetric padding) ---------- */
 .sr-tag--default {
   height: 24px;
   padding: 0 var(--space-4); /* 16px */
@@ -39,15 +41,37 @@
   padding: 0 var(--space-2); /* 8px */
 }
 
-/* Closable (filter) tag — trim trailing padding so the close button sits neatly. */
-.sr-tag--closable.sr-tag--default {
-  padding-right: var(--space-2); /* 8px */
+/* Filter tags trim the trailing padding so the close button sits neatly. */
+.sr-tag--filter.sr-tag--default {
+  gap: var(--space-2);
+  padding: 0 var(--space-2) 0 var(--space-3); /* pl 12, pr 8 */
 }
-.sr-tag--closable.sr-tag--small {
-  padding-right: var(--space-1); /* 4px */
+.sr-tag--filter.sr-tag--small {
+  gap: var(--space-1);
+  padding: 0 var(--space-1) 0 var(--space-2); /* pl 8, pr 4 */
 }
 
-/* ---------- Close button (dismissible filter tags) ---------- */
+/* ---------- Type colours (border + text — shared by both variants) ---------- */
+.sr-tag--blue   { border-color: var(--sr-color-status-info);     color: var(--sr-color-status-info); }
+.sr-tag--green  { border-color: var(--sr-color-status-success);  color: var(--sr-color-status-success); }
+.sr-tag--red    { border-color: var(--sr-color-status-critical); color: var(--sr-color-status-critical); }
+.sr-tag--yellow { border-color: var(--color-yellow-700);         color: var(--color-yellow-700); }
+.sr-tag--grey   { border-color: var(--sr-color-text-secondary);  color: var(--sr-color-text-secondary); }
+.sr-tag--outline,
+.sr-tag--black  { border-color: var(--sr-color-border-strong);   color: var(--sr-color-text-primary); }
+
+/* ---------- Status variant: soft surface fill ---------- */
+.sr-tag--status.sr-tag--blue   { background-color: var(--sr-color-status-info-surface); }
+.sr-tag--status.sr-tag--green  { background-color: var(--sr-color-status-success-surface); }
+.sr-tag--status.sr-tag--red    { background-color: var(--sr-color-status-critical-surface); }
+.sr-tag--status.sr-tag--yellow { background-color: var(--sr-color-status-warning-surface); }
+.sr-tag--status.sr-tag--grey   { background-color: var(--sr-color-surface-background); }
+.sr-tag--status.sr-tag--outline { background-color: transparent; }
+
+/* ---------- Filter variant: outline only (transparent fill) ---------- */
+.sr-tag--filter { background-color: transparent; }
+
+/* ---------- Close button (filter tags) ---------- */
 .sr-tag__close {
   display: inline-flex;
   align-items: center;
@@ -72,36 +96,4 @@
 .sr-tag__close:focus-visible {
   outline: none;
   box-shadow: 0 0 0 2px var(--color-cyan-700);
-}
-
-/* ---------- Types (surface fill + border + text) ---------- */
-.sr-tag--blue {
-  background-color: var(--sr-color-status-info-surface);
-  border-color: var(--sr-color-status-info);
-  color: var(--sr-color-status-info);
-}
-.sr-tag--green {
-  background-color: var(--sr-color-status-success-surface);
-  border-color: var(--sr-color-status-success);
-  color: var(--sr-color-status-success);
-}
-.sr-tag--red {
-  background-color: var(--sr-color-status-critical-surface);
-  border-color: var(--sr-color-status-critical);
-  color: var(--sr-color-status-critical);
-}
-.sr-tag--yellow {
-  background-color: var(--sr-color-status-warning-surface);
-  border-color: var(--color-yellow-700);
-  color: var(--color-yellow-700);
-}
-.sr-tag--grey {
-  background-color: var(--sr-color-surface-background);
-  border-color: var(--sr-color-text-secondary);
-  color: var(--sr-color-text-secondary);
-}
-.sr-tag--outline {
-  background-color: transparent;
-  border-color: var(--sr-color-border-strong);
-  color: var(--sr-color-text-primary);
 }
