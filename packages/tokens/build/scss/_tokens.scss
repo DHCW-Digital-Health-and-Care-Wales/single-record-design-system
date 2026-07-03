@@ -98,9 +98,9 @@ $sr-color-border-strong: #4c6272;
 $sr-color-border-focus: #12a3c9; // Focus ring — cyan/700 in both modes (DDR-006). Supersedes the previous focus-yellow.
 $sr-color-border-disabled: #9ea1af;
 $sr-color-brand-accent: #12a3c9; // Decorative accent only. Borders, icon strokes, chart accents, tab indicators. Never use as a filled surface with text on top.
-$sr-color-status-critical: #d5281b;
+$sr-color-status-critical: #b32014; // Red/700 (#B32014) — raised from Red/600 for AA contrast on light status surfaces and text.
 $sr-color-status-critical-surface: #fcdbd9;
-$sr-color-status-success: #007f3b;
+$sr-color-status-success: #006630; // Green/700 (#006630) — raised from Green/600 for AA contrast on light status surfaces and text.
 $sr-color-status-success-surface: #d9efe5;
 $sr-color-status-warning: #f8ca4d;
 $sr-color-status-warning-surface: #fdf3d7;

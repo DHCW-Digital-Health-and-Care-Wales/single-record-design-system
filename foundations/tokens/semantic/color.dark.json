@@ -41,9 +41,9 @@
       },
 
       "status": {
-        "critical":         { "$type": "color", "$value": "{color.red.600}" },
+        "critical":         { "$type": "color", "$value": "{color.red.700}", "$description": "Red/700 — matched to light mode; status surfaces stay light in dark mode, so the darker red keeps AA contrast." },
         "critical-surface": { "$type": "color", "$value": "{color.red.100}", "$description": "Light status surface kept across modes — banners switch to light fills in dark mode for legibility against the bright status colour." },
-        "success":          { "$type": "color", "$value": "{color.green.600}" },
+        "success":          { "$type": "color", "$value": "{color.green.700}", "$description": "Green/700 — matched to light mode; status surfaces stay light in dark mode." },
         "success-surface":  { "$type": "color", "$value": "{color.green.100}" },
         "warning":          { "$type": "color", "$value": "{color.yellow.500}" },
         "warning-surface":  { "$type": "color", "$value": "{color.yellow.100}" },

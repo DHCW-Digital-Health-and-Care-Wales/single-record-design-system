@@ -8,6 +8,9 @@
  *        by the Status/* semantic tokens. Colour is a secondary signal only —
  *        always pair with text (never colour alone) for meaning.
  * Size:  Default (24px) | Small (16px)
+ * Close: add `.sr-tag--closable` and an `.sr-tag__close` button for dismissible
+ *        filter tags (e.g. active search filters). The close icon inherits the
+ *        tag's text colour via currentColor.
  */
 
 .sr-tag {
@@ -34,6 +37,41 @@
 .sr-tag--small {
   height: 16px;
   padding: 0 var(--space-2); /* 8px */
+}
+
+/* Closable (filter) tag — trim trailing padding so the close button sits neatly. */
+.sr-tag--closable.sr-tag--default {
+  padding-right: var(--space-2); /* 8px */
+}
+.sr-tag--closable.sr-tag--small {
+  padding-right: var(--space-1); /* 4px */
+}
+
+/* ---------- Close button (dismissible filter tags) ---------- */
+.sr-tag__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: inherit; /* inherits the tag's text colour */
+  cursor: pointer;
+}
+.sr-tag__close svg {
+  width: 14px;
+  height: 14px;
+}
+.sr-tag__close:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+.sr-tag__close:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-cyan-700);
 }
 
 /* ---------- Types (surface fill + border + text) ---------- */

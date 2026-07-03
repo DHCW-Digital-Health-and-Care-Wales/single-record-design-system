@@ -19,7 +19,7 @@ Reference implementation: `packages/web/src/tags/tags.css` + `tags.stories.js` (
 |---|---|---|---|
 | Blue | `Status/Info Surface` | `Status/Info` | Informational / neutral status |
 | Green | `Status/Success Surface` | `Status/Success` | Positive / active / complete |
-| Red | `Status/Critical Surface` | `Status/Critical` | Error / critical / urgent |
+| Red | `Status/Critical Surface` | `Status/Critical` (Red/700) | Error / critical / urgent |
 | Yellow | `Status/Warning Surface` | `Yellow/700` | Warning / pending |
 | Grey | `Surface/Background` | `Text/Secondary` | Inactive / archived |
 | Outline | transparent | `Border/Strong` border, `Text/Primary` text | Low-emphasis / draft |
@@ -28,6 +28,12 @@ Reference implementation: `packages/web/src/tags/tags.css` + `tags.stories.js` (
 |---|---|---|
 | Default | 24px | 16px |
 | Small | 16px | 8px |
+
+**Close icon (`.sr-tag--closable`)** — adds a 16px dismiss button (`nav/close`) for
+filter tags (e.g. active search filters). Trailing padding tightens to make
+room. The close icon inherits the tag's text colour. The button carries an
+`aria-label` ("Remove {label}"); the tag stays a `<span>` wrapping the label
+text and the `<button>`.
 
 ---
 

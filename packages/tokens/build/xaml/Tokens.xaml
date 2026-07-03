@@ -99,9 +99,9 @@
     <Color x:Key="SrColorBorderFocus">#12a3c9</Color>
     <Color x:Key="SrColorBorderDisabled">#9ea1af</Color>
     <Color x:Key="SrColorBrandAccent">#12a3c9</Color>
-    <Color x:Key="SrColorStatusCritical">#d5281b</Color>
+    <Color x:Key="SrColorStatusCritical">#b32014</Color>
     <Color x:Key="SrColorStatusCriticalSurface">#fcdbd9</Color>
-    <Color x:Key="SrColorStatusSuccess">#007f3b</Color>
+    <Color x:Key="SrColorStatusSuccess">#006630</Color>
     <Color x:Key="SrColorStatusSuccessSurface">#d9efe5</Color>
     <Color x:Key="SrColorStatusWarning">#f8ca4d</Color>
     <Color x:Key="SrColorStatusWarningSurface">#fdf3d7</Color>

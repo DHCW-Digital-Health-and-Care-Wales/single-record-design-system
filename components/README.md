@@ -13,11 +13,11 @@ Each component lives in its own folder: `/components/{component-name}/`.
 |---|---|---|
 | `text-input` | Planned | Single-line text entry |
 | `textarea` | Planned | Multi-line text entry |
-| `select` | Planned | Dropdown selection |
+| `select` | In development | Dropdown selection ([spec](select/spec.md)) |
 | `radio` | Planned | Single choice from a group |
 | `checkbox` | Planned | Multiple selection |
 | `date-input` | Planned | Structured date entry (day/month/year) |
-| `autocomplete` | Planned | Searchable select — clinical code lookup |
+| `autocomplete` | In development | Searchable select — clinical code lookup ([spec](autocomplete/spec.md)) |
 | `file-upload` | Planned | Attachment input |
 
 ### Actions

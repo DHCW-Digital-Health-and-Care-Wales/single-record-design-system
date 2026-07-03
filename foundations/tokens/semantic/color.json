@@ -35,9 +35,9 @@
         "accent": { "$type": "color", "$value": "{color.cyan.700}", "$description": "Decorative accent only. Borders, icon strokes, chart accents, tab indicators. Never use as a filled surface with text on top." }
       },
       "status": {
-        "critical":         { "$type": "color", "$value": "{color.red.600}" },
+        "critical":         { "$type": "color", "$value": "{color.red.700}", "$description": "Red/700 (#B32014) — raised from Red/600 for AA contrast on light status surfaces and text." },
         "critical-surface": { "$type": "color", "$value": "{color.red.100}" },
-        "success":          { "$type": "color", "$value": "{color.green.600}" },
+        "success":          { "$type": "color", "$value": "{color.green.700}", "$description": "Green/700 (#006630) — raised from Green/600 for AA contrast on light status surfaces and text." },
         "success-surface":  { "$type": "color", "$value": "{color.green.100}" },
         "warning":          { "$type": "color", "$value": "{color.yellow.500}" },
         "warning-surface":  { "$type": "color", "$value": "{color.yellow.100}" },

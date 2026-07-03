@@ -15,6 +15,25 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-07-03
+
+Landed this session (branch `claude/table-icon-colors-9j96s1`, merged to main):
+
+- **Table** (`packages/web/src/table/`, Figma 1363:22598): Info Blue/50 header, Body S cells, Border/Subtle dividers. `layout` toggle — `plain` / `kebab-left` (nav/menu2) / `icons-left` / `row-headers`. Row action / menu icons render Interactive/Primary (blue), delete red. Spec `/components/table/spec.md`.
+- **Tag** (`packages/web/src/tags/` + `packages/react/src/tags/`, Figma 399:7984): Blue/Green/Red/Yellow/Grey/Outline × Default/Small, with a **closable** filter-tag variant (`.sr-tag--closable` + `.sr-tag__close`, `nav/close`). Spec `/components/tags/spec.md`.
+- **Select** (`packages/web/src/select/` + React, Figma 1517:14471): custom listbox — button trigger (`aria-haspopup`), `role="listbox"`/`option`, full keyboard, 3px Cyan/700 focus ring, error/disabled, nested-menu chevron. Spec `/components/select/spec.md`.
+- **Autocomplete** (`packages/web/src/autocomplete/` + React): searchable select **composed** from Input search field + Select listbox (no new tokens). Combobox ARIA, live filter, match-bolding, clear button. **A dedicated Figma component is still TBD** — this reference is the interim contract. Spec `/components/autocomplete/spec.md`.
+- **Segmented control** (`packages/web/src/segmented-control/`) restyled to the Figma segment building block (2752:40): 8px-radius track, hover = Info Blue/50 wash + brand-blue text, disabled-selected = muted outline, Cyan/700 focus ring. Distinct from the Toggle Switch. React consumes the same shared CSS.
+- **Status contrast fix (AA).** `Status/Critical` Red/600 → **Red/700 (#B32014)**, `Status/Success` Green/600 → **Green/700 (#006630)** in both light and dark semantic tokens. `Interactive/Destructive` unchanged (Red/600 — separate role). Token outputs rebuilt.
+- **Icons:** `nav/dashboard` now used for the Dashboard nav item (was `data/table`), in web + React storybooks. New **`action/hold`** icon added. ⚠️ The Figma asset host is blocked by egress policy, so `action/hold` uses the Lucide `pause` glyph (two bars) as a faithful stand-in — **confirm it matches the Figma artwork.**
+
+### Open follow-ups for next session
+- Confirm the `action/hold` glyph vs Figma (egress-blocked this session).
+- Autocomplete needs a dedicated Figma design to ratify the interim reference.
+- **Table toolbar/filter + pagination pattern** — the natural home for the closable filter tags + segmented control + autocomplete. Not started (wants a Figma design first).
+
+---
+
 ## Checkpoint — 2026-06-26
 
 - **Desktop/mobile form-factor model decided (DDR-011).** Two orthogonal axes: **platform** = `packages/*` (incl. MAUI); **form factor** = responsive tokens/variants *inside* each platform — **no separate desktop/mobile trees**. Per-component class: **Responsive** (most; tokens only), **Adaptive** (a `Breakpoint=Desktop/Mobile` variant), **Distinct** (separate components, e.g. header/footer/nav). Web adapts responsively in one codebase; MAUI uses `OnIdiom`.

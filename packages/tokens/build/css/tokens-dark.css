@@ -100,9 +100,9 @@
   --sr-color-border-focus: #12a3c9; /** Focus ring — cyan/700 in both modes (DDR-006). Same primitive as light mode for consistency. */
   --sr-color-border-disabled: #9ea1af;
   --sr-color-brand-accent: #12a3c9; /** Same primitive as light mode — cyan-700 used purely for visual interest, not as a surface requiring text. */
-  --sr-color-status-critical: #d5281b;
+  --sr-color-status-critical: #b32014; /** Red/700 — matched to light mode; status surfaces stay light in dark mode, so the darker red keeps AA contrast. */
   --sr-color-status-critical-surface: #fcdbd9; /** Light status surface kept across modes — banners switch to light fills in dark mode for legibility against the bright status colour. */
-  --sr-color-status-success: #007f3b;
+  --sr-color-status-success: #006630; /** Green/700 — matched to light mode; status surfaces stay light in dark mode. */
   --sr-color-status-success-surface: #d9efe5;
   --sr-color-status-warning: #f8ca4d;
   --sr-color-status-warning-surface: #fdf3d7;

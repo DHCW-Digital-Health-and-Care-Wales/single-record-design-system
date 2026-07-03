@@ -1,0 +1,72 @@
+/**
+ * DHCW Single Record — Autocomplete (searchable select / combobox)
+ * A composition of the Input search field and the Select listbox popover —
+ * it deliberately reuses `.sr-input__*` (field) and `.sr-select__*` (menu,
+ * option) so the two read as one system. Consumes @dhcw/sr-tokens.
+ *
+ * Use for long, known option lists where typing to filter beats scrolling —
+ * clinical code lookup, ward/clinician pickers. For a short fixed list use
+ * Select; for free text use Input.
+ *
+ * Anatomy:
+ *   .sr-autocomplete            — vertical stack (label / hint / control / error)
+ *   .sr-autocomplete__control   — positioning context for the popover
+ *   .sr-input__field            — the search field (leading search icon + input)
+ *   .sr-select__menu            — results listbox (reused from Select)
+ *   .sr-autocomplete__empty     — "no results" row
+ *
+ * Semantics: input is role="combobox" aria-autocomplete="list"; the results
+ * are role="listbox"/role="option" (same ARIA as Select).
+ */
+
+.sr-autocomplete {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  width: 100%;
+  box-sizing: border-box;
+  font-family: "Roboto", system-ui, -apple-system, sans-serif;
+}
+
+.sr-autocomplete__control {
+  position: relative;
+  width: 100%;
+}
+
+/* Clear button (shown once there is a query). */
+.sr-autocomplete__clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--sr-color-text-secondary);
+  cursor: pointer;
+}
+.sr-autocomplete__clear svg { width: 16px; height: 16px; }
+.sr-autocomplete__clear:hover { color: var(--sr-color-text-primary); }
+.sr-autocomplete__clear:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sr-color-border-focus);
+}
+
+/* "No results" row inside the reused Select menu. */
+.sr-autocomplete__empty {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 var(--space-3);
+  color: var(--sr-color-text-secondary);
+  font-size: var(--font-size-14);
+  line-height: var(--font-line-height-20);
+}
+
+/* Bold the portion of an option label that matches the query. */
+.sr-autocomplete__match { font-weight: 700; }
+.sr-select__option:hover .sr-autocomplete__match,
+.sr-select__option.is-active .sr-autocomplete__match { color: inherit; }

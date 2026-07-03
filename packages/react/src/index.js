@@ -12,3 +12,6 @@ export { default as DateInput } from './date-input/DateInput.jsx';
 export { default as DatePicker } from './date-picker/DatePicker.jsx';
 export { default as TimeSelect } from './time-select/TimeSelect.jsx';
 export { default as StatusIndicator } from './status-indicator/StatusIndicator.jsx';
+export { default as Tag } from './tags/Tag.jsx';
+export { default as Select } from './select/Select.jsx';
+export { default as Autocomplete } from './autocomplete/Autocomplete.jsx';
