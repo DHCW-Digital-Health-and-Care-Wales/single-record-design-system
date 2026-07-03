@@ -1,0 +1,69 @@
+/**
+ * DHCW Single Record — Tag
+ * Pill-shaped status/label tag. Figma Tags set (399:7984).
+ * Consumes @dhcw/sr-tokens CSS custom properties.
+ *
+ * Type:  Blue | Green | Red | Yellow | Grey | Outline
+ *        Each colour is a soft surface fill + matching border + text, driven
+ *        by the Status/* semantic tokens. Colour is a secondary signal only —
+ *        always pair with text (never colour alone) for meaning.
+ * Size:  Default (24px) | Small (16px)
+ */
+
+.sr-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  gap: var(--space-2); /* 8px */
+  border: 0.5px solid transparent;
+  border-radius: var(--radius-full); /* pill */
+  font-family: "Roboto", system-ui, -apple-system, sans-serif;
+  font-weight: 400;
+  font-size: var(--font-size-12);
+  line-height: var(--font-line-height-16);
+  letter-spacing: var(--font-letter-spacing-caption); /* 0.2px */
+  white-space: nowrap;
+}
+
+/* ---------- Sizes ---------- */
+.sr-tag--default {
+  height: 24px;
+  padding: 0 var(--space-4); /* 16px */
+}
+.sr-tag--small {
+  height: 16px;
+  padding: 0 var(--space-2); /* 8px */
+}
+
+/* ---------- Types (surface fill + border + text) ---------- */
+.sr-tag--blue {
+  background-color: var(--sr-color-status-info-surface);
+  border-color: var(--sr-color-status-info);
+  color: var(--sr-color-status-info);
+}
+.sr-tag--green {
+  background-color: var(--sr-color-status-success-surface);
+  border-color: var(--sr-color-status-success);
+  color: var(--sr-color-status-success);
+}
+.sr-tag--red {
+  background-color: var(--sr-color-status-critical-surface);
+  border-color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-critical);
+}
+.sr-tag--yellow {
+  background-color: var(--sr-color-status-warning-surface);
+  border-color: var(--color-yellow-700);
+  color: var(--color-yellow-700);
+}
+.sr-tag--grey {
+  background-color: var(--sr-color-surface-background);
+  border-color: var(--sr-color-text-secondary);
+  color: var(--sr-color-text-secondary);
+}
+.sr-tag--outline {
+  background-color: transparent;
+  border-color: var(--sr-color-border-strong);
+  color: var(--sr-color-text-primary);
+}

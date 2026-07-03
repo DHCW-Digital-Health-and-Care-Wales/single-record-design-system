@@ -7,7 +7,7 @@ import Navigation from './Navigation.jsx';
 const LOGO_SRC = logoFullSrc;
 
 const SECTIONS = [
-  { label: 'Home', items: [{ icon: 'data/table', label: 'Dashboard' }] },
+  { label: 'Home', items: [{ icon: 'nav/dashboard', label: 'Dashboard' }] },
   {
     label: 'Patients',
     items: [
