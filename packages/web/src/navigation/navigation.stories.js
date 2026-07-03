@@ -7,10 +7,9 @@ import { logoFullSrc } from '../assets/logo.js';
  * Navigation / Sidebar — DHCW Single Record Design System
  * Figma: Navigation/Sidebar/Desktop (725:8903), Type=Sectioned, State=Expanded
  *
- * Icon mapping note: the source Figma instance references a handful of
- * Lucide icons not yet in @dhcw/sr-icons (e.g. "dashboard"). Where no
- * direct equivalent exists, the closest semantic icon from the existing
- * 106-icon set is used instead (e.g. data/table for the dashboard grid).
+ * Icon mapping note: where the source Figma instance references a Lucide
+ * icon not yet in @dhcw/sr-icons, the closest semantic icon from the
+ * existing 106-icon set is used instead.
  */
 
 const LOGO_SRC = logoFullSrc;
@@ -18,7 +17,7 @@ const LOGO_SRC = logoFullSrc;
 const SECTIONS = [
   {
     label: 'Home',
-    items: [{ icon: 'data/table', label: 'Dashboard' }],
+    items: [{ icon: 'nav/dashboard', label: 'Dashboard' }],
   },
   {
     label: 'Patients',

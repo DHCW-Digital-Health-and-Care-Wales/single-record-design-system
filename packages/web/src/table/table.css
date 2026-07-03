@@ -1,21 +1,23 @@
 /**
  * DHCW Single Record — Data table
  * Reference HTML/CSS implementation for tabular clinical/administrative data.
- * Consumes @dhcw/sr-tokens CSS custom properties.
+ * Matched to the Figma Table set (1363:22598). Consumes @dhcw/sr-tokens.
  *
- * Structure:
- *   .sr-table-wrap          — horizontal scroll container (tables never break the page)
- *   .sr-table               — the <table>; square corners (radius.none — data grids are full-bleed)
- *   .sr-table__head th      — column headers (medium weight, left border cue for sortable)
- *   .sr-table__row          — body row; hover + selected states
- *   .sr-table__cell         — body cell (compact padding for dense clinical views)
- *   .sr-table__actions      — trailing cell holding row-level icon buttons
- *   .sr-table__action       — icon-only row action button
+ * Styling (from Figma):
+ *   Header row — Info Blue/50 fill, 36px, Label type (Roboto Medium 14/20,
+ *                letter-spacing wide), Text/Primary.
+ *   Body cell  — 40px, Body S (Roboto Regular 14/20), Text/Secondary,
+ *                Border/Subtle bottom divider.
  *
- * Row action icons render in Interactive/Primary (brand blue), NOT the default
- * black icon colour — a row action is an interactive affordance and must read
- * as one. Destructive row actions (delete/remove) opt into red via
- * .sr-table__action--destructive. See spec.md.
+ * Layouts (`.sr-table--{layout}` — the Storybook "layout" toggle):
+ *   plain        — column headers only.
+ *   kebab-left   — leading column of kebab (nav/menu2) row-menu buttons.
+ *   icons-left   — leading column of direct row-action icon buttons.
+ *   row-headers  — column headers on top AND a row-header cell down the left.
+ *
+ * Row action / menu icons render in Interactive/Primary (brand blue), NOT the
+ * default black icon colour — a row action is an interactive affordance.
+ * Destructive actions (delete/remove) opt into red. See spec.md.
  */
 
 .sr-table-wrap {
@@ -27,29 +29,38 @@
 .sr-table {
   width: 100%;
   border-collapse: collapse;
-  border-radius: var(--radius-none, 0); /* data grids are full-bleed — DDR reference §Radius */
+  border-radius: var(--radius-none, 0); /* data grids are full-bleed */
   font-family: "Roboto", system-ui, -apple-system, sans-serif;
-  font-size: var(--font-size-16);
-  line-height: var(--font-line-height-24);
-  color: var(--sr-color-text-primary);
   background-color: var(--sr-color-surface-section-cards);
 }
 
 /* ---------- Header ---------- */
-.sr-table__head th {
+.sr-table__head th,
+.sr-table th.sr-table__rowhead {
+  height: 36px;
   text-align: left;
-  font-weight: 500; /* medium — table column headers */
+  vertical-align: middle;
+  font-weight: 500; /* Label — medium */
+  font-size: var(--font-size-14);
+  line-height: var(--font-line-height-20);
+  letter-spacing: var(--font-letter-spacing-wide); /* 0.3px */
   color: var(--sr-color-text-primary);
-  background-color: var(--sr-color-surface-subtle);
-  padding: var(--space-3) var(--space-4); /* 12px 16px */
-  border-bottom: 1px solid var(--sr-color-border-default);
+  background-color: var(--color-info-blue-50);
+  padding: var(--space-2); /* 8px */
   white-space: nowrap;
 }
 .sr-table__head th.sr-table__head--numeric {
   text-align: right;
 }
 .sr-table__head th.sr-table__head--actions {
-  text-align: right;
+  width: 57px;
+  text-align: center;
+}
+
+/* Row-header cell (left column of the row-headers layout) — 40px like a body row. */
+.sr-table th.sr-table__rowhead {
+  height: 40px;
+  border-bottom: 1px solid var(--sr-color-border-subtle);
 }
 
 /* Accessible label with no visual footprint (e.g. the actions column header). */
@@ -68,34 +79,44 @@
 
 /* ---------- Body ---------- */
 .sr-table__cell {
-  padding: var(--space-2) var(--space-4); /* 8px 16px — compact clinical density */
+  height: 40px;
+  padding: var(--space-2); /* 8px */
   border-bottom: 1px solid var(--sr-color-border-subtle);
   vertical-align: middle;
+  font-weight: 400; /* Body S — regular */
+  font-size: var(--font-size-14);
+  line-height: var(--font-line-height-20);
+  letter-spacing: var(--font-letter-spacing-default);
+  color: var(--sr-color-text-secondary);
 }
 .sr-table__cell--numeric {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-.sr-table__row:hover .sr-table__cell {
+.sr-table__row:hover .sr-table__cell,
+.sr-table__row:hover .sr-table__actions {
   background-color: var(--sr-color-surface-subtle);
 }
-.sr-table__row--selected .sr-table__cell {
+.sr-table__row--selected .sr-table__cell,
+.sr-table__row--selected .sr-table__actions {
   background-color: var(--sr-color-surface-accent);
 }
-.sr-table__row:last-child .sr-table__cell {
+.sr-table__row:last-child .sr-table__cell,
+.sr-table__row:last-child .sr-table__actions,
+.sr-table__row:last-child .sr-table__rowhead {
   border-bottom: none;
 }
 
-/* ---------- Row actions (icon-only buttons) ---------- */
+/* ---------- Row actions (leading or trailing icon cell) ---------- */
 .sr-table__actions {
-  padding: var(--space-1) var(--space-3); /* 4px 12px */
+  padding: var(--space-3) var(--space-2); /* 12px 8px */
   border-bottom: 1px solid var(--sr-color-border-subtle);
   white-space: nowrap;
-  text-align: right;
+  text-align: center;
 }
-.sr-table__row:last-child .sr-table__actions {
-  border-bottom: none;
+.sr-table__actions--trailing {
+  text-align: right;
 }
 
 .sr-table__action {
@@ -109,7 +130,7 @@
   border-radius: var(--radius-md); /* 4px */
   background-color: transparent;
   /* Interactive blue — the icon (stroke=currentColor) inherits this, so row
-     action icons are brand blue, never black. */
+     action / menu icons are brand blue, never black. */
   color: var(--sr-color-interactive-primary);
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;

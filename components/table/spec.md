@@ -19,7 +19,20 @@ Reference implementation: `packages/web/src/table/table.css` + `table.stories.js
 |---|---|
 | Default | Standard data table with header row and body rows |
 | Selectable rows | A row can be marked selected (`--selected`) — e.g. the active patient |
-| With row actions | Trailing actions column of icon-only buttons (view / edit / delete) |
+
+### Layouts (`.sr-table--{layout}` — Storybook "layout" toggle)
+
+| Layout | Usage |
+|---|---|
+| `plain` | Column headers only, no row actions |
+| `kebab-left` | Leading column of kebab (`nav/menu2`) row-menu buttons — matches the Figma default (1363:22598) |
+| `icons-left` | Leading column of direct row-action icon buttons (view / edit) |
+| `row-headers` | Column headers on top **and** a `<th scope="row">` header cell down the left edge |
+
+Pick `kebab-left` when a row has many actions or space is tight (the menu holds
+them); `icons-left` when there are one or two frequent actions worth surfacing
+directly. `row-headers` suits matrices where each row names an entity that the
+columns describe (e.g. observation type × time).
 
 ---
 
@@ -36,9 +49,10 @@ Reference implementation: `packages/web/src/table/table.css` + `table.stories.js
 ```
 
 - **`.sr-table-wrap`**: Scroll container. Tables scroll horizontally here rather than breaking the page layout.
-- **`.sr-table__head`**: Column headers — medium weight (500), `Surface/Subtle` fill, `<th scope="col">`.
-- **`.sr-table__row` / `.sr-table__cell`**: Body rows and cells. Compact padding (8px 16px) for dense clinical density. Row dividers use `Border/Subtle`.
-- **`.sr-table__actions` / `.sr-table__action`**: Trailing cell holding row-level icon-only buttons.
+- **`.sr-table__head`**: Column headers — `Label` type (Roboto Medium 14/20, letter-spacing wide 0.3px), `Info Blue/50` fill, `Text/Primary`, `<th scope="col">`, 36px tall.
+- **`.sr-table__row` / `.sr-table__cell`**: Body rows and cells — `Body S` (Roboto Regular 14/20), `Text/Secondary`, 8px padding, 40px tall. Row dividers use `Border/Subtle`.
+- **`.sr-table__rowhead`**: Left row-header cell (`row-headers` layout) — styled like a header (`Info Blue/50`, Label type).
+- **`.sr-table__actions` / `.sr-table__action`**: Leading (or trailing, via `--trailing`) cell holding row-level icon-only buttons / the kebab menu.
 
 ---
 
@@ -67,8 +81,8 @@ Destructive row actions (delete / remove) are the exception: `.sr-table__action-
 
 | Element | Dimensions | Notes |
 |---|---|---|
-| Header cell padding | 12px 16px | Medium weight labels |
-| Body cell padding | 8px 16px | `spacing.component.sm` — compact clinical density |
+| Header row | 36px, 8px padding | `Label` type, `Info Blue/50` fill |
+| Body cell | 40px, 8px padding | `Body S`, compact clinical density |
 | Row action button | 32×32px | `sr.touch.compact` — secondary action in a dense context |
 | Row action icon | 20px | `sr.icon.size.sm` |
 

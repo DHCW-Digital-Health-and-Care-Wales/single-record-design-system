@@ -34,7 +34,7 @@ Each component lives in its own folder: `/components/{component-name}/`.
 | `inline-error` | Planned | Field-level validation message |
 | `notification` | Planned | Toast / system notification |
 | `badge` | Planned | Status indicator — count, state label |
-| `tag` | Planned | Categorical label |
+| `tag` | In development | Categorical / status label ([spec](tags/spec.md)) |
 
 ### Navigation
 | Component | Status | Notes |
