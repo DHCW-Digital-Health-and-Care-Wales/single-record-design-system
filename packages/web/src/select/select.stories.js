@@ -145,7 +145,9 @@ const buildSelect = ({
     if (disabled) return;
     menu.hidden = false;
     trigger.setAttribute('aria-expanded', 'true');
-    setActive(activeIndex >= 0 ? activeIndex : 0);
+    // Only highlight the currently-selected option on open (Figma "Active"
+    // state). With no value, nothing is highlighted until the user arrows.
+    setActive(activeIndex);
     document.addEventListener('click', onOutside, true);
   };
   const close = () => {

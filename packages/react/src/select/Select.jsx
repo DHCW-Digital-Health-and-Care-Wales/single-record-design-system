@@ -48,8 +48,9 @@ export default function Select({
 
   const openMenu = () => {
     if (disabled) return;
-    const start = chosen ? options.indexOf(chosen) : 0;
-    setActiveIndex(start);
+    // Only highlight the currently-selected option on open (Figma "Active"
+    // state). With no value, nothing is highlighted until the user arrows.
+    setActiveIndex(chosen ? options.indexOf(chosen) : -1);
     setOpen(true);
   };
   const close = () => {
