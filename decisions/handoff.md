@@ -15,6 +15,41 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-07-07
+
+Way-of-working formalised this session (branch `claude/design-system-workflow-j4xir6`):
+
+- **DDR-014 — Design-to-Publish Workflow.** Records the full pipeline: two export
+  lanes (non-code → `main` via auto-checked PR; code → `feature/{component}` →
+  PR → `main`); **read-only fast-forward mirror**, single writer on org `main`;
+  **design owns the entire DS repo** (incl. `/products`), **devs own their own
+  product repos** and consume + file GitHub issues; **preview** (Storybook + VS
+  gallery, from `main`, cron + manual) vs **published** (DS website, from the
+  release tag, gated); releases performed in the **org** repo (Gate 2). Evolution
+  path noted: mirror-to-branch + CODEOWNERS when a second writer appears.
+- **Preview CI wired.** `deploy-storybook.yml` gains `schedule` (every 30 min,
+  tunable) + `workflow_dispatch`, and both jobs are guarded to the org repo
+  (`if: github.repository == …`) so the personal repo never red-Xes on a
+  scheduled run. Storybook stays at Pages root until the website ships, then
+  moves to `/catalogue/` (website takes root).
+- **Workflow diagram** added to the FigJam DESIGN-SYSTEM-BOARD for sharing.
+
+### Open follow-ups from this session
+- **DS website build** (Concept B) — not started. Needs its own DDRs (Website IA &
+  Translator Placement; Token Translator Architecture) + the `release`-triggered
+  publish workflow (deferred until the site build exists — no placeholder CI).
+- **Stale reference hexes to correct** in the website brief + concept before
+  build: `interactive.primary` is **#325083** (not #185FA5); focus ring
+  `border.focus` is **#12a3c9 / Cyan-700** (not #00A9CE). Public token API is the
+  **`--sr-color-*`** prefix. Site must bind live tokens, never inline hex.
+- **Adoption guide** (engineer-facing) reviewed — pending decision on the feedback
+  channel (GitHub issues per DDR-014 vs the guide's Azure DevOps references)
+  before it lands in `/docs/engineering/`.
+- **VS Blazor+MAUI preview** (single gallery) — org repo now open; setup guide TBD.
+- **Figma guidelines ↔ website guidelines** sync — to design.
+
+---
+
 ## Checkpoint — 2026-07-03
 
 Landed this session (branch `claude/table-icon-colors-9j96s1`, merged to main):
