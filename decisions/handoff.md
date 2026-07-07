@@ -47,12 +47,20 @@ Way-of-working formalised this session (branch `claude/design-system-workflow-j4
   (linked from `for-engineers.md`). Feedback channel decided: **GitHub issues on
   the org repo** (matches DDR-014). Token examples corrected to the real build API
   (`--sr-color-*`, `--space-*`, `text-inverse`; MAUI `SrColor*` / `Space*`).
-- ✅ **VS Blazor+MAUI preview** setup guide landed at
-  `docs/engineering/visual-studio-preview.md` (one RCL → Blazor Web host + MAUI
-  Blazor Hybrid host, one solution). Surfaced two gaps to action when building it:
-  `packages/blazor` has **no `.csproj`** yet (components are loose source), and
-  `packages/web` `main` points at a **missing `src/index.css`** (no CSS bundle).
-  No .NET SDK in the web session, so projects are created/verified in VS.
+- ✅ **Blazor Button is now a buildable Razor Class Library.** Added
+  `packages/blazor/DHCW.SingleRecord.Components.csproj` (net8.0, RCL),
+  `_Imports.razor`, a shared `src/Gallery.razor` (Button variant matrix), and
+  `wwwroot/css/` (copied `tokens.css`/`tokens-dark.css`/`button.css`, served at
+  `_content/DHCW.SingleRecord.Components/css/…`). ⚠️ **No .NET SDK in the web
+  session** — the library is authored but **not compile-verified**; if VS shows a
+  build error, report it for a fix.
+- ✅ **VS Blazor+MAUI preview guide** at `docs/engineering/visual-studio-preview.md`
+  — answers "clone vs new project" (clone the repo), then create a Blazor Web host
+  + a MAUI Blazor Hybrid host via VS templates, reference the RCL, render
+  `<Gallery />`, F5. MAUI preview = the Blazor component rendered natively via
+  Blazor Hybrid (no separate native-XAML Button by design, DDR-011).
+- Still open: `packages/web` `main` points at a **missing `src/index.css`** (no
+  aggregated CSS bundle); host apps + `preview/*.sln` are created by the user in VS.
 - **Figma guidelines ↔ website guidelines** sync — to design.
 
 ---
