@@ -1,18 +1,27 @@
-name: Deploy Storybook to GitHub Pages
+name: Deploy Storybook to GitHub Pages (preview)
 
-# Builds the design tokens and the Storybook static site, then publishes it to
-# GitHub Pages. Runs on pushes to main (the canonical catalogue) and can also be
-# triggered manually from the Actions tab ("Run workflow").
+# The PREVIEW surface (DDR-014): publishes the Storybook catalogue built from the
+# current state of `main`. This is the working preview — NOT the gated, published
+# design-system website (that is built from a release tag and added with the site
+# build). Preview refreshes on a schedule plus a manual trigger, because the
+# mirror's deploy-key push does NOT trigger workflows in the org repo.
 #
-# One-time setup: in the repo Settings → Pages, set "Source" to "GitHub Actions".
+# Runs only on the DHCW org repo (which has GitHub Pages). The personal repo has
+# no Pages on its plan, so the job is guarded to skip there — no red-X noise.
 #
-# Note: pushes mirrored into another repo via a deploy key do NOT trigger
-# workflows in that repo — run this manually there after a mirror.
+# One-time setup (org repo): Settings → Pages → Source = "GitHub Actions".
+#
+# When the DS website ships, Storybook moves to the /catalogue/ subpath and the
+# website takes the site root (see DDR-014).
 
 on:
+  schedule:
+    # Every 30 minutes — safety net for the hosted preview. Tunable; use the
+    # manual trigger below for an immediate refresh after a mirror.
+    - cron: '*/30 * * * *'
+  workflow_dispatch: {}
   push:
     branches: [main]
-  workflow_dispatch: {}
 
 # Allow this workflow to publish to Pages.
 permissions:
@@ -28,6 +37,9 @@ concurrency:
 jobs:
   build:
     name: Build Storybook
+    # Only the org repo has Pages; skip cleanly everywhere else (e.g. the
+    # personal source repo, where a scheduled run would otherwise fail).
+    if: github.repository == 'DHCW-Digital-Health-and-Care-Wales/single-record-design-system'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -53,6 +65,7 @@ jobs:
   deploy:
     name: Deploy to GitHub Pages
     needs: build
+    if: github.repository == 'DHCW-Digital-Health-and-Care-Wales/single-record-design-system'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>DHCW.SingleRecord.Components</RootNamespace>
+    <!-- Publishes the design-system CSS under wwwroot as RCL static web assets,
+         served to any host at _content/DHCW.SingleRecord.Components/css/… -->
+    <StaticWebAssetBasePath>_content/DHCW.SingleRecord.Components</StaticWebAssetBasePath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.*" />
+  </ItemGroup>
+
+  <!--
+    CSS under wwwroot/css is a copied mirror of the design-system source of truth
+    (packages/tokens/build/css/*.css and packages/web/src/**/*.css). Refresh it
+    after a token/component change with:
+        npm run build:tokens
+        cp packages/tokens/build/css/tokens*.css   packages/blazor/wwwroot/css/
+        cp packages/web/src/button/button.css       packages/blazor/wwwroot/css/
+    (add more component CSS here as components are added)
+  -->
+
+</Project>

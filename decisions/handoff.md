@@ -15,6 +15,56 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-07-07
+
+Way-of-working formalised this session (branch `claude/design-system-workflow-j4xir6`):
+
+- **DDR-014 — Design-to-Publish Workflow.** Records the full pipeline: two export
+  lanes (non-code → `main` via auto-checked PR; code → `feature/{component}` →
+  PR → `main`); **read-only fast-forward mirror**, single writer on org `main`;
+  **design owns the entire DS repo** (incl. `/products`), **devs own their own
+  product repos** and consume + file GitHub issues; **preview** (Storybook + VS
+  gallery, from `main`, cron + manual) vs **published** (DS website, from the
+  release tag, gated); releases performed in the **org** repo (Gate 2). Evolution
+  path noted: mirror-to-branch + CODEOWNERS when a second writer appears.
+- **Preview CI wired.** `deploy-storybook.yml` gains `schedule` (every 30 min,
+  tunable) + `workflow_dispatch`, and both jobs are guarded to the org repo
+  (`if: github.repository == …`) so the personal repo never red-Xes on a
+  scheduled run. Storybook stays at Pages root until the website ships, then
+  moves to `/catalogue/` (website takes root).
+- **Workflow diagram** added to the FigJam DESIGN-SYSTEM-BOARD for sharing.
+
+### Open follow-ups from this session
+- **DS website build** (Concept B) — not started. Needs its own DDRs (Website IA &
+  Translator Placement; Token Translator Architecture) + the `release`-triggered
+  publish workflow (deferred until the site build exists — no placeholder CI).
+- ✅ **Website build brief** committed at `docs/website-build-brief.md` with the
+  stale hexes corrected (`interactive.primary #325083`, `border.focus #12a3c9`,
+  `text.secondary #4c6272`), Button `Warning`→`Destructive`, hosting decided per
+  DDR-014, and a *Prototype & corrections* table. The concept HTML is **not**
+  committed (hardcoded hex; corrections captured in the brief instead).
+- ✅ **Adoption guide** landed at `docs/engineering/adopting-components.md`
+  (linked from `for-engineers.md`). Feedback channel decided: **GitHub issues on
+  the org repo** (matches DDR-014). Token examples corrected to the real build API
+  (`--sr-color-*`, `--space-*`, `text-inverse`; MAUI `SrColor*` / `Space*`).
+- ✅ **Blazor Button is now a buildable Razor Class Library.** Added
+  `packages/blazor/DHCW.SingleRecord.Components.csproj` (net8.0, RCL),
+  `_Imports.razor`, a shared `src/Gallery.razor` (Button variant matrix), and
+  `wwwroot/css/` (copied `tokens.css`/`tokens-dark.css`/`button.css`, served at
+  `_content/DHCW.SingleRecord.Components/css/…`). ⚠️ **No .NET SDK in the web
+  session** — the library is authored but **not compile-verified**; if VS shows a
+  build error, report it for a fix.
+- ✅ **VS Blazor+MAUI preview guide** at `docs/engineering/visual-studio-preview.md`
+  — answers "clone vs new project" (clone the repo), then create a Blazor Web host
+  + a MAUI Blazor Hybrid host via VS templates, reference the RCL, render
+  `<Gallery />`, F5. MAUI preview = the Blazor component rendered natively via
+  Blazor Hybrid (no separate native-XAML Button by design, DDR-011).
+- Still open: `packages/web` `main` points at a **missing `src/index.css`** (no
+  aggregated CSS bundle); host apps + `preview/*.sln` are created by the user in VS.
+- **Figma guidelines ↔ website guidelines** sync — to design.
+
+---
+
 ## Checkpoint — 2026-07-03
 
 Landed this session (branch `claude/table-icon-colors-9j96s1`, merged to main):

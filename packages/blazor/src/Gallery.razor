@@ -1,0 +1,40 @@
+@namespace DHCW.SingleRecord.Components
+
+@* Shared component gallery — rendered identically by the Blazor web host and the
+   MAUI Blazor Hybrid host, so the preview is authored once. Add sections here as
+   components are added to the library. *@
+
+<div class="sr-gallery">
+    <h1>Single Record — Component Gallery</h1>
+
+    <h2>Button</h2>
+    @foreach (var size in Enum.GetValues<ButtonSize>())
+    {
+        <h3>Size: @size</h3>
+        <div class="sr-gallery__row">
+            @foreach (var type in Enum.GetValues<ButtonType>())
+            {
+                <SrButton Type="type" Size="size">@type.ToString()</SrButton>
+                <SrButton Type="type" Size="size" Disabled="true">@type.ToString() (disabled)</SrButton>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .sr-gallery {
+        font-family: "Roboto", system-ui, -apple-system, sans-serif;
+        color: var(--sr-color-text-default, #1a1a2e);
+        padding: 24px;
+        max-width: 960px;
+    }
+    .sr-gallery h1 { font-size: 28px; margin: 0 0 8px; }
+    .sr-gallery h2 { font-size: 22px; margin: 24px 0 4px; }
+    .sr-gallery h3 { font-size: 14px; color: var(--sr-color-text-secondary, #4c6272); margin: 16px 0 8px; font-weight: 500; }
+    .sr-gallery__row {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+</style>

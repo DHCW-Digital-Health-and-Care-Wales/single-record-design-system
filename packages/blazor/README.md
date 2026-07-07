@@ -6,7 +6,13 @@ Razor components wrapping `@dhcw/sr-web` HTML/CSS, consuming `@dhcw/sr-tokens` C
 
 Follows the pattern established by `GovUk.Frontend.AspNetCore` — Razor Tag Helpers that auto-host the design system's CSS/JS/fonts.
 
-**Status:** In progress — Button (`SrButton`) is the first component.
+**Status:** In progress — Button (`SrButton`) is the first component. Now a
+buildable Razor Class Library (`DHCW.SingleRecord.Components.csproj`, net8.0) with
+a shared `<Gallery />` and the design-system CSS bundled as static web assets
+(`wwwroot/css`, served at `_content/DHCW.SingleRecord.Components/css/…`).
+
+To preview in Visual Studio (Blazor web + native MAUI), see
+[`docs/engineering/visual-studio-preview.md`](../../docs/engineering/visual-studio-preview.md).
 
 ## Usage
 
@@ -39,4 +45,7 @@ The host app must include `button.css` from `@dhcw/sr-web` and the generated `to
 
 ## Preview
 
-Blazor components cannot render in the Storybook (HTML/JS) catalogue. For live preview, use the `dotnet watch` dev server with the companion test app (to be scaffolded), or the Blazor component playground in Visual Studio.
+Blazor components cannot render in the Storybook (HTML/JS) catalogue. Preview
+them in Visual Studio instead: add a Blazor Web host and/or a MAUI Blazor Hybrid
+host, reference this library, and render `<Gallery />`. Full steps in
+[`docs/engineering/visual-studio-preview.md`](../../docs/engineering/visual-studio-preview.md).
