@@ -38,10 +38,11 @@ Way-of-working formalised this session (branch `claude/design-system-workflow-j4
 - **DS website build** (Concept B) — not started. Needs its own DDRs (Website IA &
   Translator Placement; Token Translator Architecture) + the `release`-triggered
   publish workflow (deferred until the site build exists — no placeholder CI).
-- **Stale reference hexes to correct** in the website brief + concept before
-  build: `interactive.primary` is **#325083** (not #185FA5); focus ring
-  `border.focus` is **#12a3c9 / Cyan-700** (not #00A9CE). Public token API is the
-  **`--sr-color-*`** prefix. Site must bind live tokens, never inline hex.
+- ✅ **Website build brief** committed at `docs/website-build-brief.md` with the
+  stale hexes corrected (`interactive.primary #325083`, `border.focus #12a3c9`,
+  `text.secondary #4c6272`), Button `Warning`→`Destructive`, hosting decided per
+  DDR-014, and a *Prototype & corrections* table. The concept HTML is **not**
+  committed (hardcoded hex; corrections captured in the brief instead).
 - ✅ **Adoption guide** landed at `docs/engineering/adopting-components.md`
   (linked from `for-engineers.md`). Feedback channel decided: **GitHub issues on
   the org repo** (matches DDR-014). Token examples corrected to the real build API
