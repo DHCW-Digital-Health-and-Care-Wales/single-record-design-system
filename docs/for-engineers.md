@@ -23,6 +23,11 @@ The design system is **implementation-agnostic at the design level** — compone
 
 ## Getting Started
 
+> **Adopting the system in an existing product?** See
+> **[`engineering/adopting-components.md`](engineering/adopting-components.md)** —
+> the token-first / wrapper / replacement paths, phased strategy, and how to
+> report bugs or request changes (GitHub issues on the org repo, per DDR-014).
+
 1. **Read `CLAUDE.md`** — project rules, conventions, and what not to do.
 2. **Understand the token system** — all design values come from tokens. Start with `/foundations/tokens/`.
 3. **Read the component spec** before implementing any component — `/components/{name}/spec.md`.
