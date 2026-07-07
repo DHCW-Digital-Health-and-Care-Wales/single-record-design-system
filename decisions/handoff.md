@@ -47,7 +47,12 @@ Way-of-working formalised this session (branch `claude/design-system-workflow-j4
   (linked from `for-engineers.md`). Feedback channel decided: **GitHub issues on
   the org repo** (matches DDR-014). Token examples corrected to the real build API
   (`--sr-color-*`, `--space-*`, `text-inverse`; MAUI `SrColor*` / `Space*`).
-- **VS Blazor+MAUI preview** (single gallery) — org repo now open; setup guide TBD.
+- ✅ **VS Blazor+MAUI preview** setup guide landed at
+  `docs/engineering/visual-studio-preview.md` (one RCL → Blazor Web host + MAUI
+  Blazor Hybrid host, one solution). Surfaced two gaps to action when building it:
+  `packages/blazor` has **no `.csproj`** yet (components are loose source), and
+  `packages/web` `main` points at a **missing `src/index.css`** (no CSS bundle).
+  No .NET SDK in the web session, so projects are created/verified in VS.
 - **Figma guidelines ↔ website guidelines** sync — to design.
 
 ---
