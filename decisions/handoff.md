@@ -42,9 +42,10 @@ Way-of-working formalised this session (branch `claude/design-system-workflow-j4
   build: `interactive.primary` is **#325083** (not #185FA5); focus ring
   `border.focus` is **#12a3c9 / Cyan-700** (not #00A9CE). Public token API is the
   **`--sr-color-*`** prefix. Site must bind live tokens, never inline hex.
-- **Adoption guide** (engineer-facing) reviewed — pending decision on the feedback
-  channel (GitHub issues per DDR-014 vs the guide's Azure DevOps references)
-  before it lands in `/docs/engineering/`.
+- ✅ **Adoption guide** landed at `docs/engineering/adopting-components.md`
+  (linked from `for-engineers.md`). Feedback channel decided: **GitHub issues on
+  the org repo** (matches DDR-014). Token examples corrected to the real build API
+  (`--sr-color-*`, `--space-*`, `text-inverse`; MAUI `SrColor*` / `Space*`).
 - **VS Blazor+MAUI preview** (single gallery) — org repo now open; setup guide TBD.
 - **Figma guidelines ↔ website guidelines** sync — to design.
 
