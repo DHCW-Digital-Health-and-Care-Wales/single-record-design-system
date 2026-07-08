@@ -58,7 +58,7 @@ preview" — the same Blazor components running natively.
 
 | Piece | State |
 |---|---|
-| `packages/blazor/DHCW.SingleRecord.Components.csproj` | ✅ Razor Class Library (net8.0). |
+| `packages/blazor/DHCW.SingleRecord.Components.csproj` | ✅ Razor Class Library (net10.0). |
 | `SrButton.razor` / `ButtonType.cs` / `ButtonSize.cs` | ✅ The Button component (Primary/Secondary/Ghost/Destructive × Large/Default/Small). |
 | `src/Gallery.razor` | ✅ Shared variant matrix — render `<Gallery />` from any host. |
 | `wwwroot/css/` | ✅ `tokens.css`, `tokens-dark.css`, `button.css` — served to hosts at `_content/DHCW.SingleRecord.Components/css/…`. |
@@ -70,7 +70,7 @@ preview" — the same Blazor components running natively.
 ## Prerequisites (one-time)
 
 1. **Visual Studio 2022** (17.8+).
-2. **.NET 8 SDK** (LTS). Keep every project on the same TFM.
+2. **.NET 10 SDK** (LTS) — matches the library. Keep every project on the same TFM.
 3. **VS workloads** — Installer → *Modify* → *Workloads*, tick:
    - **ASP.NET and web development** (Blazor web host)
    - **.NET Multi-platform App UI development** (MAUI Blazor Hybrid)
@@ -170,7 +170,7 @@ tracks a release tag.
 | `_content/...` 404 | Host missing the project reference | Add the reference to `DHCW.SingleRecord.Components.csproj` |
 | Windows target greyed out | Not on Windows | Use an Android emulator target |
 | CSS edits don't hot-reload | Static CSS isn't part of .NET Hot Reload | Re-run the host; use the **web** host for fast CSS iteration |
-| Version conflicts | Mixed .NET versions | Put RCL + hosts on the **same** TFM (`net8.0` / `net8.0-*`) |
+| Version conflicts | Mixed .NET versions | Put RCL + hosts on the **same** TFM (`net10.0` / `net10.0-*`) |
 
 ---
 
