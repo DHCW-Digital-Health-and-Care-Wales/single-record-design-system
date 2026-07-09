@@ -30,6 +30,13 @@ Branch `claude/single-record-ds-guidelines-v003fa`. Guidelines programme kicked 
   typography.guidelines.md`. Grounded in DDR-005 tokens; NHS/GDS structure; folds in
   carried-forward clinical requirements (zoomable relative sizing, Body M 16px min,
   sentence case) with source anchors. `typography.md` stays the token reference.
+- **Design-language shift: primary-content minimum is now Body S (14px), not 16px.**
+  Directed by the design lead for this table/data-heavy clinical system. Stays WCAG 2.2
+  AA (no min font-size SC; resize/reflow/contrast all met). Body M (16px) preferred for
+  long-form/clinical notes. Applied to `typography.guidelines.md` and the token
+  reference `typography.md` (accessibility notes + Body M/S rows). **Consider a DDR** to
+  formalise the divergence. Also: guideline copy switched to **bulleted** critical
+  points and **em dashes removed**.
 - **Guidelines panel built IN FIGMA** on the Typography page (`12:3378`). Cloned the
   former "Guidelines/Usage notes" panel format (`3446:8762`) → new
   **`Guidelines/Typography` (`3460:20`)** at x=0, y=850 (below the original, which is
