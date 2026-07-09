@@ -63,6 +63,29 @@ Branch `claude/single-record-ds-guidelines-v003fa`. Guidelines programme kicked 
 
 ---
 
+## Checkpoint — 2026-07-09 (later)
+
+- **Placeholder decision finalised.** No separate placeholder semantic token.
+  Placeholder text defers to **`Text/Secondary` (Grey/600, 4.5:1+ AA)**; distinguish an
+  entered value (`Text/Default` Grey/900) from a placeholder by lightness. `Grey/500`
+  (#768692) is disabled/muted/non-text only. **Deleted the `Text/Placeholder` Figma
+  variable** (`3417:22607`) — verified unused on Input/Select pages first. To be written
+  up fully in the Input and Select guidelines.
+- **Colour guideline authored** — `foundations/tokens/colour/colour.guidelines.md`
+  (single source) and the **`Guidelines/Colours` Figma panel (`3468:9073`)** repopulated
+  (8 bulleted sections incl. the placeholder decision). Same clone-and-repopulate pattern.
+- **Typography Figma frame (`89:3074`) synced to the 14px direction** — Body M usage →
+  "Long-form reading, prose, clinical notes"; Body S usage → "Primary content in tables
+  and data-dense views; supporting text; form values".
+- **Colour-tokens frame (`125:5188`) — grey grid NOT yet extended.** Its primitives grey
+  group is a hand-built absolute-positioned row of the 4 in-use greys (raw fills, not
+  variables). Extending to the full 10-stop ramp is a two-row grid rebuild; deferred (not
+  in the Figma→website pipeline path). Token JSON + Figma variables already carry the full
+  ramp.
+- **Next:** DS website build to test the Figma→website CI/CD for Typography + Colour.
+
+---
+
 ## Checkpoint — 2026-07-07
 
 Way-of-working formalised this session (branch `claude/design-system-workflow-j4xir6`):
