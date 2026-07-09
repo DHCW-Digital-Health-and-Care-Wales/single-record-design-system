@@ -36,11 +36,15 @@ Branch `claude/single-record-ds-guidelines-v003fa`. Guidelines programme kicked 
   Appendix CSS are **superseded by tokens**. **UI-standards review project opened** at
   `docs/ui-standards-review/` (README + `standards-inventory.md` triage worksheet, 57
   standards catalogued with disposition codes).
-- **Grey primitive expansion — PENDING SIGN-OFF.** Proposed a full 50–900 grey ramp
-  (adds 800/700/500/400/300/50; keeps 900/600/200/100 unchanged so no rebinding),
-  anchored to the NHS neutral greys, incl. **Grey/500 `#768692`** for placeholder/
-  muted use. Additive only. **Not yet applied** to `color.json` or Figma — awaiting
-  colour sign-off (hard constraint). Contrast table in session notes.
+- **Grey primitive expanded to a full 50–900 ramp — SIGNED OFF & APPLIED.** Additive
+  (900/600/200/100 unchanged, no rebinding); added 800/700/500/400/300/50 anchored to
+  the NHS neutral greys, incl. **Grey/500 `#768692`** for placeholder/muted use.
+  Applied to `foundations/tokens/primitives/color.json`, rebuilt token outputs, updated
+  the palette-frame plugin, and created the six new variables in the **Figma Primitives
+  collection** (`VariableCollectionId:203:2`, single Default mode, `ALL_SCOPES` to match
+  siblings). Placeholder **semantic** token deferred (user will set later) — for
+  accessible placeholder *text* use Grey/600 (4.5:1); Grey/500 is for muted fills/
+  borders/disabled (3.75:1, non-text).
 
 ---
 
@@ -279,6 +283,12 @@ This week's accepted changes (now reflected in Figma, tokens, and docs):
 | Interactive/Destructive | VariableID:203:94 | Red/600 — error borders, destructive actions |
 | Border/Disabled | VariableID:1351:22 | |
 | Text/Disabled | VariableID:1351:21 | |
+| Grey/800 | VariableID:3455:20 | #2C3A44 — added 2026-07-09 |
+| Grey/700 | VariableID:3455:21 | #3B4E5B |
+| Grey/500 | VariableID:3455:22 | #768692 — placeholder/muted |
+| Grey/400 | VariableID:3455:23 | #AEB7BD |
+| Grey/300 | VariableID:3455:24 | #C6CDD1 |
+| Grey/50 | VariableID:3455:25 | #F7FAFA |
 
 ---
 
