@@ -15,6 +15,35 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-07-09
+
+Branch `claude/single-record-ds-guidelines-v003fa`. Guidelines programme kicked off.
+
+- **Reusable guidelines format defined** — `docs/templates/guidelines-template.md`.
+  One `*.guidelines.md` per DS topic (Foundation/Component/Pattern) is the **single
+  source** for both the Figma "Guidelines / Usage notes" panel (format seeded from
+  node `3446:8762`) and the topic's DS-website page. Shape mirrors NHS England / GDS
+  (When to use · When not to use · How it works · Do & don't · Accessibility ·
+  Content · Frameworks · Clinical/DHCW notes). Framework coverage now spells out
+  **Web (HTML/CSS) + React** alongside Blazor/MAUI (new SR app is likely React).
+- **Typography guideline authored** (first exemplar) — `foundations/tokens/
+  typography.guidelines.md`. Grounded in DDR-005 tokens; NHS/GDS structure; folds in
+  carried-forward clinical requirements (zoomable relative sizing, Body M 16px min,
+  sentence case) with source anchors. `typography.md` stays the token reference.
+- **DHCW UI Standards Guide v1.3 extracted** to `docs/reference/dhcw-ui-standards-v1.3.md`
+  (faithful, page-anchored `[p.N]`). Legacy WCP/eForms content standards — clinical/
+  content/interaction rules are authoritative *input*; hex colours / rem sizes / the
+  Appendix CSS are **superseded by tokens**. **UI-standards review project opened** at
+  `docs/ui-standards-review/` (README + `standards-inventory.md` triage worksheet, 57
+  standards catalogued with disposition codes).
+- **Grey primitive expansion — PENDING SIGN-OFF.** Proposed a full 50–900 grey ramp
+  (adds 800/700/500/400/300/50; keeps 900/600/200/100 unchanged so no rebinding),
+  anchored to the NHS neutral greys, incl. **Grey/500 `#768692`** for placeholder/
+  muted use. Additive only. **Not yet applied** to `color.json` or Figma — awaiting
+  colour sign-off (hard constraint). Contrast table in session notes.
+
+---
+
 ## Checkpoint — 2026-07-07
 
 Way-of-working formalised this session (branch `claude/design-system-workflow-j4xir6`):
