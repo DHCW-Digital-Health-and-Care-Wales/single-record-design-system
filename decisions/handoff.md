@@ -30,6 +30,14 @@ Branch `claude/single-record-ds-guidelines-v003fa`. Guidelines programme kicked 
   typography.guidelines.md`. Grounded in DDR-005 tokens; NHS/GDS structure; folds in
   carried-forward clinical requirements (zoomable relative sizing, Body M 16px min,
   sentence case) with source anchors. `typography.md` stays the token reference.
+- **Guidelines panel built IN FIGMA** on the Typography page (`12:3378`). Cloned the
+  former "Guidelines/Usage notes" panel format (`3446:8762`) → new
+  **`Guidelines/Typography` (`3460:20`)** at x=0, y=850 (below the original, which is
+  left intact as the template). Repopulated with 8 sections (When to use · Type scale ·
+  Typeface & weight · Minimum size · Responsive · Hierarchy · Accessibility · Content).
+  All fills variable-bound (navy header `203:92`, title Interactive/Primary `203:90`,
+  body Text/Default `92:1488`, divider Grey/200 `203:103`) so dark-mode/token switches
+  flow through. **Pattern to reuse for every other guidelines page.**
 - **DHCW UI Standards Guide v1.3 extracted** to `docs/reference/dhcw-ui-standards-v1.3.md`
   (faithful, page-anchored `[p.N]`). Legacy WCP/eForms content standards — clinical/
   content/interaction rules are authoritative *input*; hex colours / rem sizes / the
