@@ -82,7 +82,19 @@ Branch `claude/single-record-ds-guidelines-v003fa`. Guidelines programme kicked 
   variables). Extending to the full 10-stop ramp is a two-row grid rebuild; deferred (not
   in the Figma→website pipeline path). Token JSON + Figma variables already carry the full
   ramp.
-- **Next:** DS website build to test the Figma→website CI/CD for Typography + Colour.
+- **DS website Phase A shipped — Figma→website pipeline proven.** New `packages/website`
+  (`@dhcw/sr-website`, **zero runtime deps** — self-contained md renderer in `build.mjs`).
+  Generates Overview + Typography + Colour pages from the **built token artifact**
+  (`packages/tokens/build`) and the single-source guideline docs. Colour page renders the
+  full grey ramp (all 10 stops incl. the new ones) + semantic swatches straight from
+  `tokens-flat.json`; Typography page renders the live `.sr-type-*` scale. Site chrome is
+  token-bound (no hardcoded palette), dark-mode toggle wired. Root scripts: `build:site`;
+  workspace added. CI: `.github/workflows/deploy-website.yml` — build+artifact on every
+  push/PR (runs everywhere), Pages deploy is manual + org-guarded so it won't clobber the
+  Storybook preview at root (DDR-014). Verified end to end via headless Chromium.
+- **Next options:** (a) extend the colour-tokens Figma grey grid (task still open);
+  (b) grow the site toward Concept B (framework/variant switchers, more foundations,
+  translator); (c) write DDR-015 for the 14px minimum + a Website IA DDR.
 
 ---
 

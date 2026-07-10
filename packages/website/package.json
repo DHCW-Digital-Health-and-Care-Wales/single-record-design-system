@@ -1,0 +1,11 @@
+{
+  "name": "@dhcw/sr-website",
+  "version": "0.1.0",
+  "description": "DHCW Single Record Design System — reference website (Phase A pipeline test: renders foundation guideline pages from the built tokens). No runtime dependencies.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "clean": "rm -rf dist"
+  }
+}

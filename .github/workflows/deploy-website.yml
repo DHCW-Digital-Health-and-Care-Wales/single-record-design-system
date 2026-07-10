@@ -1,0 +1,82 @@
+name: Build DS website (Phase A pipeline test)
+
+# Proves the Figma -> tokens -> website chain for the first two foundations
+# (Typography, Colour). The site is generated from the BUILT token artifact and
+# the single-source guideline docs (packages/website/build.mjs), so a token
+# change flows straight through to these pages.
+#
+# This is a PREVIEW/test surface (DDR-014). The gated, published DS website (at
+# Pages root, built from a release tag) ships with the full site build. To avoid
+# clobbering the live Storybook preview that currently owns Pages root, the Pages
+# deploy job here is manual-only (workflow_dispatch) and guarded to the org repo.
+# The build job runs everywhere and uploads the site as a downloadable artifact,
+# so every push exercises the pipeline — including on the personal repo.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'foundations/tokens/**'
+      - 'packages/tokens/**'
+      - 'packages/website/**'
+      - '.github/workflows/deploy-website.yml'
+  pull_request:
+    paths:
+      - 'foundations/tokens/**'
+      - 'packages/tokens/**'
+      - 'packages/website/**'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-website-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build website from tokens
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Install
+        run: npm ci
+      - name: Build tokens + site
+        run: npm run build:site
+      - name: Upload site artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sr-website
+          path: packages/website/dist
+          if-no-files-found: error
+
+  deploy-pages:
+    name: Deploy preview to GitHub Pages (org repo, manual)
+    needs: build
+    # Manual only, and only on the org repo which has Pages. Keeps the live
+    # Storybook preview at root untouched until the catalogue move (DDR-014).
+    if: github.event_name == 'workflow_dispatch' && github.repository == 'dhcw-digital-health-and-care-wales/single-record-design-system'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm run build:site
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: packages/website/dist
+      - id: deploy
+        uses: actions/deploy-pages@v4
