@@ -60,9 +60,10 @@ jobs:
     # Only the org repo has Pages; never deploy on pull requests.
     if: >-
       github.event_name != 'pull_request' &&
-      github.repository == 'dhcw-digital-health-and-care-wales/single-record-design-system'
+      github.repository == 'DHCW-Digital-Health-and-Care-Wales/single-record-design-system'
     runs-on: ubuntu-latest
     permissions:
+      contents: read   # required by actions/checkout — a job-level permissions block resets all others to none
       pages: write
       id-token: write
     environment:
