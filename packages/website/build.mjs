@@ -112,6 +112,7 @@ const NAV = [
   { href: 'index.html', label: 'Overview' },
   { href: 'foundations/typography.html', label: 'Typography' },
   { href: 'foundations/colour.html', label: 'Colour' },
+  { href: 'storybook/index.html', label: 'Catalogue' },
 ];
 function shell({ title, prefix, activeHref, body }) {
   const nav = NAV.map((n) => {

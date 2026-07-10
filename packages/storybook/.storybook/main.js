@@ -20,6 +20,14 @@ const config = {
   core: {
     disableTelemetry: true,
   },
+  // Relative base so the static build can be served from a subpath: the DS site
+  // serves Storybook at /storybook (DDR-016), independent of the Pages base path.
+  // If a manager asset ever 404s under the subpath, replace with an absolute base
+  // of the repo Pages path instead.
+  async viteFinal(config) {
+    config.base = './';
+    return config;
+  },
 };
 
 export default config;

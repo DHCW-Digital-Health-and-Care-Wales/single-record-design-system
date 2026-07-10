@@ -92,9 +92,17 @@ Branch `claude/single-record-ds-guidelines-v003fa`. Guidelines programme kicked 
   workspace added. CI: `.github/workflows/deploy-website.yml` — build+artifact on every
   push/PR (runs everywhere), Pages deploy is manual + org-guarded so it won't clobber the
   Storybook preview at root (DDR-014). Verified end to end via headless Chromium.
-- **Next options:** (a) extend the colour-tokens Figma grey grid (task still open);
-  (b) grow the site toward Concept B (framework/variant switchers, more foundations,
-  translator); (c) write DDR-015 for the 14px minimum + a Website IA DDR.
+- **DDR-015** (primary-content min = Body S 14px) and **DDR-016** (website IA + single
+  Pages publisher) written and Accepted.
+- **Publishing consolidated (DDR-016).** One Pages site: **website at `/`, Storybook at
+  `/storybook`**. `npm run build:pages` builds tokens → website → Storybook and assembles
+  `site-dist/` via `scripts/assemble-pages.mjs`. Storybook `.storybook/main.js` now sets
+  Vite `base:'./'` for subpath serving; website has a **Catalogue** nav link → `/storybook`.
+  Replaced `deploy-storybook.yml` + `deploy-website.yml` with **`deploy-pages.yml`** (build
+  everywhere + artifact; deploy org-guarded, never on PRs; 30-min preview cron). Verified
+  end to end over HTTP — Storybook renders correctly at the subpath.
+- **Still open:** colour-tokens Figma grey grid (`125:5188`) full-ramp rebuild; grow site
+  toward Concept B (switchers, translator, more foundations); gated release publish.
 
 ---
 

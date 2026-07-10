@@ -1,3 +1,7 @@
 node_modules/
 # MCP config — contains API tokens, do not commit
 .mcp.json
+
+# Assembled Pages deploy dir (generated)
+site-dist/
+packages/storybook/storybook-static/
