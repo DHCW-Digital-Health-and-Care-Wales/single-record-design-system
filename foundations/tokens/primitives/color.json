@@ -94,11 +94,17 @@
       "default": { "$type": "color", "$value": "#FFEB3B" }
     },
     "grey": {
-      "$description": "Neutral/UI palette",
-      "900": { "$type": "color", "$value": "#212B32" },
-      "600": { "$type": "color", "$value": "#4C6272" },
-      "200": { "$type": "color", "$value": "#D8DDE0" },
-      "100": { "$type": "color", "$value": "#F0F4F5" }
+      "$description": "Neutral/UI palette. Full 50–900 ramp anchored to the NHS neutral greys. Existing stops (900/600/200/100) unchanged; 800/700/500/400/300/50 added 2026-07-09 (additive, no rebinding). Contrast on white noted for guidance.",
+      "900": { "$type": "color", "$value": "#212B32", "$description": "Primary text (14.4:1 on white)" },
+      "800": { "$type": "color", "$value": "#2C3A44", "$description": "Strong text on tinted surfaces (11.7:1)" },
+      "700": { "$type": "color", "$value": "#3B4E5B", "$description": "Headings on grey surfaces (8.7:1)" },
+      "600": { "$type": "color", "$value": "#4C6272", "$description": "Secondary/hint text (6.4:1 — AA). NHS grey-1. Accessible placeholder-text value." },
+      "500": { "$type": "color", "$value": "#768692", "$description": "Muted/placeholder fill, disabled text, icons, strong borders (3.75:1 — passes 3:1 non-text; below 4.5:1 for body text). NHS grey-2." },
+      "400": { "$type": "color", "$value": "#AEB7BD", "$description": "Borders, dividers — non-text (2.0:1). NHS grey-3." },
+      "300": { "$type": "color", "$value": "#C6CDD1", "$description": "Subtle dividers, disabled fills (1.6:1)" },
+      "200": { "$type": "color", "$value": "#D8DDE0", "$description": "Default borders. NHS grey-4." },
+      "100": { "$type": "color", "$value": "#F0F4F5", "$description": "Grey background. NHS grey-5." },
+      "50":  { "$type": "color", "$value": "#F7FAFA", "$description": "Lightest neutral wash" }
     },
     "white": {
       "default": { "$type": "color", "$value": "#FFFFFF" }

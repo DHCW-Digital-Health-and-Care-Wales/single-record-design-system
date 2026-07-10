@@ -69,9 +69,15 @@
     <Color x:Key="ColorInfoBlue900">#002e5c</Color>
     <Color x:Key="ColorInfoBlueDefault">#005aa8</Color>
     <Color x:Key="ColorFocusYellowDefault">#ffeb3b</Color>
+    <Color x:Key="ColorGrey50">#f7fafa</Color>
     <Color x:Key="ColorGrey100">#f0f4f5</Color>
     <Color x:Key="ColorGrey200">#d8dde0</Color>
+    <Color x:Key="ColorGrey300">#c6cdd1</Color>
+    <Color x:Key="ColorGrey400">#aeb7bd</Color>
+    <Color x:Key="ColorGrey500">#768692</Color>
     <Color x:Key="ColorGrey600">#4c6272</Color>
+    <Color x:Key="ColorGrey700">#3b4e5b</Color>
+    <Color x:Key="ColorGrey800">#2c3a44</Color>
     <Color x:Key="ColorGrey900">#212b32</Color>
     <Color x:Key="ColorWhiteDefault">#ffffff</Color>
     <Color x:Key="ColorBorderSubtle">#f0f4f5</Color>

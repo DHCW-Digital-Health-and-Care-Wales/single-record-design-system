@@ -9,10 +9,13 @@
     "packages/icons",
     "packages/web",
     "packages/react",
-    "packages/storybook"
+    "packages/storybook",
+    "packages/website"
   ],
   "scripts": {
     "build:tokens": "npm run build -w @dhcw/sr-tokens",
+    "build:site": "npm run build -w @dhcw/sr-tokens && npm run build -w @dhcw/sr-website",
+    "build:pages": "npm run build -w @dhcw/sr-tokens && npm run build -w @dhcw/sr-website && npm run build-storybook -w @dhcw/sr-storybook && node scripts/assemble-pages.mjs",
     "storybook": "npm run storybook -w @dhcw/sr-storybook",
     "build-storybook": "npm run build -w @dhcw/sr-tokens && npm run build-storybook -w @dhcw/sr-storybook"
   }

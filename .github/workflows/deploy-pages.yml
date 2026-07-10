@@ -1,0 +1,83 @@
+name: Deploy DS site (website + Storybook) to GitHub Pages
+
+# Single Pages publisher (DDR-016). Assembles ONE artifact:
+#   /            → the DS website (packages/website)
+#   /storybook/  → the Storybook catalogue (packages/storybook)
+# Replaces the former deploy-storybook.yml and deploy-website.yml (which would
+# have clobbered each other on one Pages site).
+#
+# The build job runs everywhere (PRs included) and uploads a downloadable
+# artifact, so the Figma -> tokens -> site pipeline is exercised on every change.
+# The deploy job is guarded to the org repo (which has Pages) and never runs on
+# pull requests. Mirror-key pushes do NOT trigger workflows on the org repo — the
+# schedule and manual dispatch cover post-mirror refreshes (DDR-014).
+#
+# One-time org setup: Settings → Pages → Source = "GitHub Actions".
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - 'foundations/tokens/**'
+      - 'packages/**'
+      - 'scripts/assemble-pages.mjs'
+      - '.github/workflows/deploy-pages.yml'
+  schedule:
+    # Preview refresh safety net (mirror pushes don't trigger workflows on the org repo).
+    - cron: '*/30 * * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build site (website + Storybook)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - run: npm ci
+      - name: Build tokens, website, Storybook, and assemble
+        run: npm run build:pages
+      - name: Upload site artifact (preview / download)
+        uses: actions/upload-artifact@v4
+        with:
+          name: sr-site
+          path: site-dist
+          if-no-files-found: error
+
+  deploy:
+    name: Deploy to GitHub Pages (org repo)
+    needs: build
+    # Only the org repo has Pages; never deploy on pull requests.
+    if: >-
+      github.event_name != 'pull_request' &&
+      github.repository == 'dhcw-digital-health-and-care-wales/single-record-design-system'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm run build:pages
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site-dist
+      - id: deploy
+        uses: actions/deploy-pages@v4

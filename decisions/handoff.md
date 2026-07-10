@@ -15,6 +15,97 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-07-09
+
+Branch `claude/single-record-ds-guidelines-v003fa`. Guidelines programme kicked off.
+
+- **Reusable guidelines format defined** — `docs/templates/guidelines-template.md`.
+  One `*.guidelines.md` per DS topic (Foundation/Component/Pattern) is the **single
+  source** for both the Figma "Guidelines / Usage notes" panel (format seeded from
+  node `3446:8762`) and the topic's DS-website page. Shape mirrors NHS England / GDS
+  (When to use · When not to use · How it works · Do & don't · Accessibility ·
+  Content · Frameworks · Clinical/DHCW notes). Framework coverage now spells out
+  **Web (HTML/CSS) + React** alongside Blazor/MAUI (new SR app is likely React).
+- **Typography guideline authored** (first exemplar) — `foundations/tokens/
+  typography.guidelines.md`. Grounded in DDR-005 tokens; NHS/GDS structure; folds in
+  carried-forward clinical requirements (zoomable relative sizing, Body M 16px min,
+  sentence case) with source anchors. `typography.md` stays the token reference.
+- **Design-language shift: primary-content minimum is now Body S (14px), not 16px.**
+  Directed by the design lead for this table/data-heavy clinical system. Stays WCAG 2.2
+  AA (no min font-size SC; resize/reflow/contrast all met). Body M (16px) preferred for
+  long-form/clinical notes. Applied to `typography.guidelines.md` and the token
+  reference `typography.md` (accessibility notes + Body M/S rows). **Consider a DDR** to
+  formalise the divergence. Also: guideline copy switched to **bulleted** critical
+  points and **em dashes removed**.
+- **Guidelines panel built IN FIGMA** on the Typography page (`12:3378`). Cloned the
+  former "Guidelines/Usage notes" panel format (`3446:8762`) → new
+  **`Guidelines/Typography` (`3460:20`)** at x=0, y=850 (below the original, which is
+  left intact as the template). Repopulated with 8 sections (When to use · Type scale ·
+  Typeface & weight · Minimum size · Responsive · Hierarchy · Accessibility · Content).
+  All fills variable-bound (navy header `203:92`, title Interactive/Primary `203:90`,
+  body Text/Default `92:1488`, divider Grey/200 `203:103`) so dark-mode/token switches
+  flow through. **Pattern to reuse for every other guidelines page.**
+- **DHCW UI Standards Guide v1.3 extracted** to `docs/reference/dhcw-ui-standards-v1.3.md`
+  (faithful, page-anchored `[p.N]`). Legacy WCP/eForms content standards — clinical/
+  content/interaction rules are authoritative *input*; hex colours / rem sizes / the
+  Appendix CSS are **superseded by tokens**. **UI-standards review project opened** at
+  `docs/ui-standards-review/` (README + `standards-inventory.md` triage worksheet, 57
+  standards catalogued with disposition codes).
+- **Grey primitive expanded to a full 50–900 ramp — SIGNED OFF & APPLIED.** Additive
+  (900/600/200/100 unchanged, no rebinding); added 800/700/500/400/300/50 anchored to
+  the NHS neutral greys, incl. **Grey/500 `#768692`** for placeholder/muted use.
+  Applied to `foundations/tokens/primitives/color.json`, rebuilt token outputs, updated
+  the palette-frame plugin, and created the six new variables in the **Figma Primitives
+  collection** (`VariableCollectionId:203:2`, single Default mode, `ALL_SCOPES` to match
+  siblings). Placeholder **semantic** token deferred (user will set later) — for
+  accessible placeholder *text* use Grey/600 (4.5:1); Grey/500 is for muted fills/
+  borders/disabled (3.75:1, non-text).
+
+---
+
+## Checkpoint — 2026-07-09 (later)
+
+- **Placeholder decision finalised.** No separate placeholder semantic token.
+  Placeholder text defers to **`Text/Secondary` (Grey/600, 4.5:1+ AA)**; distinguish an
+  entered value (`Text/Default` Grey/900) from a placeholder by lightness. `Grey/500`
+  (#768692) is disabled/muted/non-text only. **Deleted the `Text/Placeholder` Figma
+  variable** (`3417:22607`) — verified unused on Input/Select pages first. To be written
+  up fully in the Input and Select guidelines.
+- **Colour guideline authored** — `foundations/tokens/colour/colour.guidelines.md`
+  (single source) and the **`Guidelines/Colours` Figma panel (`3468:9073`)** repopulated
+  (8 bulleted sections incl. the placeholder decision). Same clone-and-repopulate pattern.
+- **Typography Figma frame (`89:3074`) synced to the 14px direction** — Body M usage →
+  "Long-form reading, prose, clinical notes"; Body S usage → "Primary content in tables
+  and data-dense views; supporting text; form values".
+- **Colour-tokens frame (`125:5188`) — grey grid NOT yet extended.** Its primitives grey
+  group is a hand-built absolute-positioned row of the 4 in-use greys (raw fills, not
+  variables). Extending to the full 10-stop ramp is a two-row grid rebuild; deferred (not
+  in the Figma→website pipeline path). Token JSON + Figma variables already carry the full
+  ramp.
+- **DS website Phase A shipped — Figma→website pipeline proven.** New `packages/website`
+  (`@dhcw/sr-website`, **zero runtime deps** — self-contained md renderer in `build.mjs`).
+  Generates Overview + Typography + Colour pages from the **built token artifact**
+  (`packages/tokens/build`) and the single-source guideline docs. Colour page renders the
+  full grey ramp (all 10 stops incl. the new ones) + semantic swatches straight from
+  `tokens-flat.json`; Typography page renders the live `.sr-type-*` scale. Site chrome is
+  token-bound (no hardcoded palette), dark-mode toggle wired. Root scripts: `build:site`;
+  workspace added. CI: `.github/workflows/deploy-website.yml` — build+artifact on every
+  push/PR (runs everywhere), Pages deploy is manual + org-guarded so it won't clobber the
+  Storybook preview at root (DDR-014). Verified end to end via headless Chromium.
+- **DDR-015** (primary-content min = Body S 14px) and **DDR-016** (website IA + single
+  Pages publisher) written and Accepted.
+- **Publishing consolidated (DDR-016).** One Pages site: **website at `/`, Storybook at
+  `/storybook`**. `npm run build:pages` builds tokens → website → Storybook and assembles
+  `site-dist/` via `scripts/assemble-pages.mjs`. Storybook `.storybook/main.js` now sets
+  Vite `base:'./'` for subpath serving; website has a **Catalogue** nav link → `/storybook`.
+  Replaced `deploy-storybook.yml` + `deploy-website.yml` with **`deploy-pages.yml`** (build
+  everywhere + artifact; deploy org-guarded, never on PRs; 30-min preview cron). Verified
+  end to end over HTTP — Storybook renders correctly at the subpath.
+- **Still open:** colour-tokens Figma grey grid (`125:5188`) full-ramp rebuild; grow site
+  toward Concept B (switchers, translator, more foundations); gated release publish.
+
+---
+
 ## Checkpoint — 2026-07-07
 
 Way-of-working formalised this session (branch `claude/design-system-workflow-j4xir6`):
@@ -250,6 +341,12 @@ This week's accepted changes (now reflected in Figma, tokens, and docs):
 | Interactive/Destructive | VariableID:203:94 | Red/600 — error borders, destructive actions |
 | Border/Disabled | VariableID:1351:22 | |
 | Text/Disabled | VariableID:1351:21 | |
+| Grey/800 | VariableID:3455:20 | #2C3A44 — added 2026-07-09 |
+| Grey/700 | VariableID:3455:21 | #3B4E5B |
+| Grey/500 | VariableID:3455:22 | #768692 — placeholder/muted |
+| Grey/400 | VariableID:3455:23 | #AEB7BD |
+| Grey/300 | VariableID:3455:24 | #C6CDD1 |
+| Grey/50 | VariableID:3455:25 | #F7FAFA |
 
 ---
 

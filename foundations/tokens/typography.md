@@ -96,8 +96,8 @@ Line-height ratios decrease monotonically as size grows (desktop: 1.50 → 1.40 
 
 | Style token | Desktop | Mobile | Weight | Notes |
 |---|---|---|---|---|
-| `sr.typography.body-m` | 16 / 24 | 16 / 24 | Regular | Default body text. Minimum size for clinical content. |
-| `sr.typography.body-s` | 14 / 20 | 14 / 20 | Regular | Supporting text, secondary content. **Also: form-field values and placeholders.** Do not use for primary clinical content. |
+| `sr.typography.body-m` | 16 / 24 | 16 / 24 | Regular | Preferred for long-form reading and clinical notes. |
+| `sr.typography.body-s` | 14 / 20 | 14 / 20 | Regular | **Minimum for primary content in tables and data-dense views**, plus supporting text and form-field values/placeholders. |
 
 ### UI Text
 
@@ -124,8 +124,7 @@ This pairing is mandatory for form-field text. Body-text scale (Body M 16) still
 
 ## Accessibility Notes
 
-- `body-m` (16px) is the **minimum** font size for primary clinical content — consistent with WCAG 2.2 and NHS guidance.
-- `body-s` (14px) may be used for supporting text only. Do not use for essential clinical information.
+- `body-s` (14px) is the **minimum** font size for primary content, including tables and data-dense views. This is a deliberate divergence from the NHS/GDS 16px default, made for this clinical, data-heavy system. It stays WCAG 2.2 AA (there is no minimum font-size criterion; resize, reflow and AA contrast are all still met). Prefer `body-m` (16px) for long-form reading and clinical notes.
 - Do not use `caption` (12px) for any text that conveys essential meaning without a visible alternative.
 - Do not use colour alone to distinguish text styles — use weight or size differences as well.
 - Ensure text can be resized to 200% without loss of content or functionality (WCAG 1.4.4).
