@@ -101,8 +101,20 @@ Branch `claude/single-record-ds-guidelines-v003fa`. Guidelines programme kicked 
   Replaced `deploy-storybook.yml` + `deploy-website.yml` with **`deploy-pages.yml`** (build
   everywhere + artifact; deploy org-guarded, never on PRs; 30-min preview cron). Verified
   end to end over HTTP — Storybook renders correctly at the subpath.
-- **Still open:** colour-tokens Figma grey grid (`125:5188`) full-ramp rebuild; grow site
-  toward Concept B (switchers, translator, more foundations); gated release publish.
+- **Colour-tokens Figma grey grid rebuilt** (`125:5188`, Neutral section `125:5524`). The
+  primitives grey row is now the full 10-stop ramp in a wrapping auto-layout (2 rows), each
+  cell with role label + stop + hex, legible on-swatch text (white on 900–500, dark on
+  400–50). Section set to hug; the two fixed ancestor frames grown +142px so nothing clips.
+- **Website grown toward Concept B.** `packages/website/build.mjs` now emits: Overview, 3
+  **foundations** (Typography, Colour, **Spacing** — new `spacing.guidelines.md` + live
+  `--space-*` scale & radius), a **Button component page** with **variant + size + framework
+  switchers** (Web/React/Blazor/MAUI) driving a live `button.css` preview and copyable code,
+  and a **token translator** (Tools) — client-side, no external calls: pastes CSS, matches
+  `#hex` by CIELAB ΔE and `px` against the 4px grid into Exact / Close / No-match buckets
+  (verified: `#325083`→blue-800 ΔE0, `#ff4400`→no-match ΔE21.7). Site CSS moved to
+  `packages/website/site.css`. All token-bound, dark-mode toggle. Verified via headless Chromium.
+- **Still open:** gated release publish (build from release tag, DDR-014); more components;
+  Welsh-language toggle; translator file-upload + CSV/JSON export; DDR for Website IA is DDR-016.
 
 ---
 
