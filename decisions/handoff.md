@@ -115,13 +115,16 @@ Branch `claude/single-record-ds-guidelines-v003fa`. Guidelines programme kicked 
   `packages/website/site.css`. All token-bound, dark-mode toggle. Verified via headless Chromium.
 - **Still open:** gated release publish (build from release tag, DDR-014); more components;
   Welsh-language toggle; translator file-upload + CSV/JSON export; DDR for Website IA is DDR-016.
-- **Open decision — date display format (to formalise).** Design lead's approach: show dates
-  as **day + 3-letter abbreviated month + 4-digit year, space-separated — e.g. `10 Jan 2020`**
-  — to save table/column space. This **diverges from the legacy DHCW standard** `dd-Mmm-yyyy`
-  with leading zero and hyphens (e.g. `06-Dec-2021`, UI Standards [p.24](../docs/reference/dhcw-ui-standards-v1.3.md#page-24)).
-  Open sub-details to confirm: leading zero on single-digit days (`1 Jan` vs `01 Jan`), and
-  date-time pairing. To land in a **content/dates guideline** (and the Tables guideline) and be
-  reconciled in the UI-standards review. Flagged, not yet built — user will return to it.
+- **Tables guideline — seed content (to formalise).** Two content rules captured for a future
+  Tables guideline (component `components/table/`, Figma Tables page):
+  - **Dates: keep the legacy DHCW format `dd-Mmm-yyyy`** with leading zero and hyphens
+    (e.g. `06-Dec-2021`) — UI Standards [p.24](../docs/reference/dhcw-ui-standards-v1.3.md#page-24).
+    (Earlier `10 Jan 2020` idea dropped; legacy standard retained.)
+  - **Table headings: allow `No.` as the abbreviation for "Number"** where column width is
+    tight. This is a deliberate **exception** to the general "avoid abbreviations / no full
+    stops" rule (UI Standards [p.10](../docs/reference/dhcw-ui-standards-v1.3.md#page-10)),
+    justified by table space constraints and limited to headings.
+  Flagged, not yet built — user will return to the Tables guideline.
 
 ---
 
