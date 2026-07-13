@@ -115,6 +115,13 @@ Branch `claude/single-record-ds-guidelines-v003fa`. Guidelines programme kicked 
   `packages/website/site.css`. All token-bound, dark-mode toggle. Verified via headless Chromium.
 - **Still open:** gated release publish (build from release tag, DDR-014); more components;
   Welsh-language toggle; translator file-upload + CSV/JSON export; DDR for Website IA is DDR-016.
+- **Open decision — date display format (to formalise).** Design lead's approach: show dates
+  as **day + 3-letter abbreviated month + 4-digit year, space-separated — e.g. `10 Jan 2020`**
+  — to save table/column space. This **diverges from the legacy DHCW standard** `dd-Mmm-yyyy`
+  with leading zero and hyphens (e.g. `06-Dec-2021`, UI Standards [p.24](../docs/reference/dhcw-ui-standards-v1.3.md#page-24)).
+  Open sub-details to confirm: leading zero on single-digit days (`1 Jan` vs `01 Jan`), and
+  date-time pairing. To land in a **content/dates guideline** (and the Tables guideline) and be
+  reconciled in the UI-standards review. Flagged, not yet built — user will return to it.
 
 ---
 
