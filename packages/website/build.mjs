@@ -1,12 +1,15 @@
 /**
- * DHCW Single Record Design System — website build (Concept B, growing).
+ * DHCW Single Record Design System — website build.
  *
- * Consumes the BUILT token artifact (packages/tokens/build) and the single-source
- * guideline docs. Never hardcodes a colour/size/space. Proves the
- * Figma -> tokens -> website pipeline. Zero runtime dependencies.
+ * A real implementation of the design system: every page consumes the BUILT
+ * token artifact (packages/tokens/build) and the actual reference component CSS
+ * (packages/web/src). No colour/size/space is ever hardcoded. Zero runtime deps.
  *
- * Pages: Overview · Foundations (Typography, Colour, Spacing) ·
- *        Components (Button — variant + framework switchers) · Tools (Translator).
+ * IA (DDR-016 rev.): two-level navigation —
+ *   Top nav:  Get Started · Styles · Components · Patterns · Pages · Figma · Contributions
+ *   Sidebar:  per-section pages (Styles, Components)
+ * Header:  NHS Wales logo · Report an issue (MS Forms) · Cymraeg toggle (stub).
+ * Storybook is not in the nav but stays reachable at /storybook (linked from Figma).
  */
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, rmSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -16,6 +19,11 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..', '..');
 const TOKENS = resolve(ROOT, 'packages', 'tokens', 'build');
 const DIST = resolve(__dirname, 'dist');
+
+// ── Placeholder intake URLs (point 4). Replace when supplied. ──────────────────
+const REPORT_ISSUE_URL = 'https://forms.office.com/REPLACE-with-report-an-issue-form'; // MS Forms — bug / issue reports
+const CONTRIBUTION_URL = 'https://dev.azure.com/REPLACE-with-azure-devops-intake';      // Azure DevOps — component / change requests
+const STORYBOOK_URL = 'storybook/index.html'; // reachable, not in nav
 
 // ─── Markdown → HTML (subset used by our guideline docs) ──────────────────────
 function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
@@ -101,31 +109,58 @@ const radiusSamples = radiusEntries.map(([k, px]) =>
   `<figure class="radius"><div class="radius__box" style="border-radius: var(--${k}, ${px}px)"></div>
    <figcaption><code>--${k}</code><span class="hex">${px}px</span></figcaption></figure>`).join('');
 
-// ─── page shell ───────────────────────────────────────────────────────────────
-const NAV = [
-  { href: 'index.html', label: 'Overview' },
-  { href: 'foundations/typography.html', label: 'Typography' },
-  { href: 'foundations/colour.html', label: 'Colour' },
-  { href: 'foundations/spacing.html', label: 'Spacing' },
-  { href: 'components/button.html', label: 'Button' },
-  { href: 'tools/translator.html', label: 'Translator' },
-  { href: 'storybook/index.html', label: 'Catalogue' },
+// ─── Navigation model ─────────────────────────────────────────────────────────
+// Top-level sections. `side` lists sidebar pages; `href` is the section landing.
+const SECTIONS = [
+  { id: 'get-started', label: 'Get Started', href: 'index.html' },
+  {
+    id: 'styles', label: 'Styles', href: 'styles/typography.html',
+    side: [
+      { href: 'styles/typography.html', label: 'Typography' },
+      { href: 'styles/colour.html', label: 'Colours' },
+      { href: 'styles/spacing.html', label: 'Spacing & Elevation' },
+      { href: 'styles/icons.html', label: 'Icons' },
+      { href: 'styles/grids.html', label: 'Grids' },
+      { href: 'styles/token-translator.html', label: 'Token Translator' },
+    ],
+  },
+  {
+    id: 'components', label: 'Components', href: 'components/button.html',
+    side: [
+      { href: 'components/button.html', label: 'Buttons' },
+      { href: 'components/table.html', label: 'Tables' },
+    ],
+  },
+  { id: 'patterns', label: 'Patterns', href: 'patterns.html' },
+  { id: 'pages', label: 'Pages', href: 'pages.html' },
+  { id: 'figma', label: 'Figma', href: 'figma.html' },
+  { id: 'contributions', label: 'Contributions', href: 'contributions.html' },
 ];
-function shell({ title, prefix, activeHref, body, extraHead = '', extraScript = '' }) {
-  const nav = NAV.map((n) => {
-    const active = n.href === activeHref ? ' aria-current="page"' : '';
-    return `<a href="${prefix + n.href}"${active}>${n.label}</a>`;
-  }).join('');
+
+const LOGO = readFileSync(resolve(__dirname, 'static', 'nhs-wales-logo.svg'), 'utf8').replace(/\n\s*/g, '');
+
+function shell({ title, prefix, sectionId, activeHref, body, extraHead = '', extraScript = '' }) {
+  const section = SECTIONS.find((s) => s.id === sectionId);
+  const topnav = SECTIONS.map((s) =>
+    `<a href="${prefix + s.href}"${s.id === sectionId ? ' aria-current="page"' : ''}>${s.label}</a>`).join('');
+  const sidebar = section && section.side
+    ? `<nav class="sidebar" aria-label="${section.label}">
+        <p class="sidebar__title">${section.label}</p>
+        ${section.side.map((n) =>
+          `<a href="${prefix + n.href}"${n.href === activeHref ? ' aria-current="page"' : ''}>${n.label}</a>`).join('')}
+       </nav>`
+    : '';
   return `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${title} — SR Design System</title>
+<title>${title} — Single Record Design System</title>
 <link rel="stylesheet" href="${prefix}assets/tokens.css">
 <link rel="stylesheet" href="${prefix}assets/typography.css">
 <link rel="stylesheet" href="${prefix}assets/tokens-dark.css">
 <link rel="stylesheet" href="${prefix}assets/button.css">
+<link rel="stylesheet" href="${prefix}assets/table.css">
 <link rel="stylesheet" href="${prefix}assets/site.css">
 ${extraHead}
 </head>
@@ -133,24 +168,45 @@ ${extraHead}
 <a class="skip" href="#main">Skip to content</a>
 <header class="masthead">
   <div class="masthead__inner">
-    <span class="masthead__brand">Single Record Design System</span>
-    <button id="theme" class="theme-toggle" type="button" aria-pressed="false">Dark mode</button>
+    <a class="masthead__brand" href="${prefix}index.html" aria-label="Single Record Design System — home">
+      ${LOGO}
+      <span class="masthead__brandtext">Single Record<br>Design System</span>
+    </a>
+    <div class="masthead__actions">
+      <a class="masthead__link" href="${REPORT_ISSUE_URL}" target="_blank" rel="noopener">Report an issue</a>
+      <button id="lang" class="lang-toggle" type="button" aria-pressed="false" data-en="Cymraeg" data-cy="English">Cymraeg</button>
+      <button id="theme" class="theme-toggle" type="button" aria-pressed="false">Dark</button>
+    </div>
   </div>
-  <nav class="primary-nav" aria-label="Primary">${nav}</nav>
+  <nav class="primary-nav" aria-label="Primary">${topnav}</nav>
 </header>
-<main id="main" class="content">
+<div class="layout">
+  ${sidebar}
+  <main id="main" class="content">
 ${body}
-</main>
+  </main>
+</div>
 <footer class="site-footer">
-  <p>DHCW Single Record Design System · Concept B preview · pages rendered from the built design tokens.</p>
+  <p>DHCW Single Record Design System · rendered from the built design tokens and reference components.
+     <a href="${prefix}contributions.html">Contribute or request a component</a>.</p>
 </footer>
 <script>
-  const btn = document.getElementById('theme'), root = document.documentElement;
-  btn.addEventListener('click', () => {
-    const dark = root.getAttribute('data-theme') === 'dark';
+  var themeBtn = document.getElementById('theme'), root = document.documentElement;
+  themeBtn.addEventListener('click', function(){
+    var dark = root.getAttribute('data-theme') === 'dark';
     root.setAttribute('data-theme', dark ? 'light' : 'dark');
-    btn.setAttribute('aria-pressed', String(!dark));
-    btn.textContent = dark ? 'Dark mode' : 'Light mode';
+    themeBtn.setAttribute('aria-pressed', String(!dark));
+    themeBtn.textContent = dark ? 'Dark' : 'Light';
+  });
+  // Welsh toggle — stub. Flips the label + lang attribute; content parity is tracked
+  // separately (CDPS). Falls back to English until translations land.
+  var langBtn = document.getElementById('lang');
+  langBtn.addEventListener('click', function(){
+    var cy = root.getAttribute('lang') === 'cy';
+    root.setAttribute('lang', cy ? 'en' : 'cy');
+    langBtn.setAttribute('aria-pressed', String(!cy));
+    langBtn.textContent = cy ? langBtn.dataset.en : langBtn.dataset.cy;
+    if(!cy){ langBtn.title = 'Welsh content is in progress — showing English for now'; }
   });
 </script>
 ${extraScript}
@@ -160,7 +216,47 @@ ${extraScript}
 
 const SITE_CSS = readFileSync(resolve(__dirname, 'site.css'), 'utf8');
 
-// ─── Button component page (variant + framework switchers) ────────────────────
+// ─── shared building blocks ───────────────────────────────────────────────────
+// Framework tabs — identical order + styling everywhere (point 2).
+const FRAMEWORKS = ['HTML', 'React', 'Blazor', 'MAUI'];
+function frameworkTabs(id, snippets) {
+  const tabs = FRAMEWORKS.map((f, idx) =>
+    `<button class="switch__btn${idx === 0 ? ' is-active' : ''}" role="tab" data-fw="${f}" data-target="${id}">${f}</button>`).join('');
+  return `<div class="switch switch--tabs" role="tablist" aria-label="Framework">${tabs}</div>
+    <div class="code"><button class="code__copy" type="button" data-target="${id}">Copy</button>
+    <pre><code id="${id}-code">${esc(snippets.HTML)}</code></pre></div>
+    <script>window.__snips=window.__snips||{};window.__snips[${JSON.stringify(id)}]=${JSON.stringify(snippets)};</script>`;
+}
+const FRAMEWORK_SCRIPT = `<script>
+(function(){
+  document.querySelectorAll('[data-fw]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var id=b.dataset.target, snips=(window.__snips||{})[id]||{};
+      b.parentNode.querySelectorAll('.switch__btn').forEach(function(x){x.classList.remove('is-active');});
+      b.classList.add('is-active');
+      var code=document.getElementById(id+'-code');
+      if(code) code.textContent = snips[b.dataset.fw]||'';
+    });
+  });
+  document.querySelectorAll('.code__copy').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var code=document.getElementById(btn.dataset.target+'-code');
+      if(code && navigator.clipboard) navigator.clipboard.writeText(code.textContent);
+      btn.textContent='Copied'; setTimeout(function(){btn.textContent='Copy';},1200);
+    });
+  });
+})();
+</script>`;
+
+// Accessibility table — LOCKED structure (point 5). Content is SR-specific per row.
+function accessibilityTable(rows) {
+  const head = `<thead><tr><th>Requirement</th><th>WCAG SC</th><th>How Single Record meets it</th><th>Test method</th></tr></thead>`;
+  const body = rows.map((r) =>
+    `<tr><td>${inline(r.req)}</td><td>${inline(r.sc)}</td><td>${inline(r.how)}</td><td>${inline(r.test)}</td></tr>`).join('');
+  return `<h2>Accessibility</h2><div class="table-wrap"><table class="a11y-table">${head}<tbody>${body}</tbody></table></div>`;
+}
+
+// ─── Component: Button (playground — 3 axes: variant + size + framework) ───────
 function buttonPage() {
   const variants = [
     { id: 'primary', label: 'Primary', cls: 'sr-button--primary' },
@@ -173,30 +269,33 @@ function buttonPage() {
     { id: 'default', label: 'Default', cls: '' },
     { id: 'large', label: 'Large', cls: 'sr-button--large' },
   ];
-  const frameworks = ['Web (HTML)', 'React', 'Blazor', 'MAUI'];
+  const a11y = accessibilityTable([
+    { req: 'Every button has a visible, descriptive label', sc: '2.4.6 / 4.1.2', how: 'Labels name the action and subject (e.g. "Confirm patient"), not "OK".', test: 'Manual review · screen-reader announce' },
+    { req: 'Focus is clearly visible', sc: '2.4.7', how: '`Border/Focus` (Cyan/700) ring outside the element, paired with a 2px border (DDR-006).', test: 'Keyboard tab · contrast check' },
+    { req: 'Target size adequate', sc: '2.5.8', how: 'Default 40px tall; Small still ≥ 24×24px with spacing. Primary touch controls use 44px.', test: 'Measure · touch device' },
+    { req: 'Not colour alone', sc: '1.4.1', how: 'Destructive pairs red with an explicit label and a confirmation step.', test: 'Greyscale review' },
+    { req: 'Contrast', sc: '1.4.3', how: 'White on `Interactive/Primary` = 7.1:1 (AAA). Validated per variant.', test: 'Automated contrast' },
+  ]);
   const body = `
-<h1>Button</h1>
-<p>Triggers an action. Pick the variant, size and framework — the preview and code
-update live. Preview and code are driven by the built <code>button.css</code> and tokens.</p>
+<p class="breadcrumbs">Components / Buttons</p>
+<h1>Buttons</h1>
+<p>Buttons let users take an action — submitting a form or confirming a patient. Based on the
+GDS button, themed with Single Record tokens and clinical target sizes. Pick the variant, size
+and framework; the preview and code update live from the built <code>button.css</code>.</p>
 
 <section class="demo">
   <div class="demo__toolbar">
-    <div class="switch" role="group" aria-label="Variant">
+    <div class="switch" role="group" aria-label="Type">
       ${variants.map((v, idx) => `<button class="switch__btn${idx === 0 ? ' is-active' : ''}" data-variant="${v.id}" data-cls="${v.cls}">${v.label}</button>`).join('')}
     </div>
     <div class="switch" role="group" aria-label="Size">
       ${sizes.map((s) => `<button class="switch__btn${s.id === 'default' ? ' is-active' : ''}" data-size="${s.id}" data-cls="${s.cls}">${s.label}</button>`).join('')}
     </div>
   </div>
-  <div class="demo__preview"><button id="preview-btn" class="sr-button sr-button--primary">Save record</button></div>
+  <div class="demo__preview"><button id="preview-btn" class="sr-button sr-button--primary">Confirm patient</button></div>
 </section>
 
-<section>
-  <div class="switch switch--tabs" role="tablist" aria-label="Framework">
-    ${frameworks.map((f, idx) => `<button class="switch__btn${idx === 0 ? ' is-active' : ''}" role="tab" data-fw="${f}">${f}</button>`).join('')}
-  </div>
-  <div class="code"><button class="code__copy" type="button">Copy</button><pre><code id="code-block"></code></pre></div>
-</section>
+<section id="btn-fw"></section>
 
 <h2>When to use</h2>
 <ul>
@@ -205,57 +304,116 @@ update live. Preview and code are driven by the built <code>button.css</code> an
   <li><strong>Ghost</strong> for low-emphasis actions (cancel, back).</li>
   <li><strong>Destructive</strong> for permanent deletion — pair with a confirmation dialog.</li>
 </ul>
-<p>Full contract: <code>components/button/spec.md</code>. Focus ring is <code>Border/Focus</code> (Cyan/700, DDR-006).</p>`;
+<p>For general button UX (grouping, order, one primary per page), follow
+<a href="https://design-system.service.gov.uk/components/button/" target="_blank" rel="noopener">GDS</a> /
+<a href="https://service-manual.nhs.uk/design-system/components/buttons" target="_blank" rel="noopener">NHS England</a>.
+Single Record specifics: focus ring <code>Border/Focus</code> (Cyan/700, DDR-006); full contract in
+<code>components/button/spec.md</code>.</p>
+${a11y}`;
 
   const script = `<script>
 (function(){
-  var preview = document.getElementById('preview-btn');
-  var codeEl = document.getElementById('code-block');
-  var state = { variant:'primary', variantCls:'sr-button--primary', size:'default', sizeCls:'', fw:'Web (HTML)' };
-  function labelFor(){ return state.variant.charAt(0).toUpperCase()+state.variant.slice(1); }
-  function apply(){
-    preview.className = 'sr-button ' + state.variantCls + (state.sizeCls ? ' ' + state.sizeCls : '');
-    codeEl.textContent = snippet();
+  var preview=document.getElementById('preview-btn');
+  var state={variant:'primary',variantCls:'sr-button--primary',size:'default',sizeCls:''};
+  function snippets(){
+    var v=state.variant, size=state.size;
+    var cls='sr-button sr-button--'+v+(state.sizeCls?' '+state.sizeCls:'');
+    var T=v.charAt(0).toUpperCase()+v.slice(1);
+    var S=size!=='default'?size.charAt(0).toUpperCase()+size.slice(1):'';
+    return {
+      HTML:'<button class="'+cls+'">Confirm patient</button>',
+      React:'<Button variant="'+v+'"'+(size!=='default'?' size="'+size+'"':'')+'>Confirm patient</Button>',
+      Blazor:'<SrButton Type="ButtonType.'+T+'"'+(S?' Size="ButtonSize.'+S+'"':'')+'>Confirm patient</SrButton>',
+      MAUI:'<!-- MAUI renders the Blazor component via Blazor Hybrid (DDR-011). -->\\n<SrButton Type="ButtonType.'+T+'">Confirm patient</SrButton>'
+    };
   }
-  function snippet(){
-    var v = state.variant, size = state.size;
-    var cls = 'sr-button sr-button--' + v + (state.sizeCls ? ' ' + state.sizeCls : '');
-    if(state.fw === 'Web (HTML)') return '<button class="' + cls + '">Save record</button>';
-    if(state.fw === 'React'){ var props = 'variant="' + v + '"' + (size!=='default'?' size="'+size+'"':''); return '<Button ' + props + '>Save record</Button>'; }
-    if(state.fw === 'Blazor'){ var t = v.charAt(0).toUpperCase()+v.slice(1); var s = size!=='default'?(' Size="ButtonSize.'+size.charAt(0).toUpperCase()+size.slice(1)+'"'):''; return '<SrButton Type="ButtonType.' + t + '"' + s + '>Save record</SrButton>'; }
-    // MAUI
-    return '<!-- MAUI renders the Blazor component via Blazor Hybrid (DDR-011). -->\\n<SrButton Type="ButtonType.' + (v.charAt(0).toUpperCase()+v.slice(1)) + '">Save record</SrButton>';
-  }
-  function wire(group, keyCls, keyId){
-    document.querySelectorAll(group).forEach(function(b){
+  var container=document.getElementById('btn-fw');
+  function renderFw(){
+    var snips=snippets();
+    window.__snips=window.__snips||{}; window.__snips['btn']=snips;
+    var active=(container.querySelector('.switch__btn.is-active')||{}).dataset;
+    var fw=(active&&active.fw)||'HTML';
+    container.innerHTML='<div class="switch switch--tabs" role="tablist" aria-label="Framework">'+
+      ['HTML','React','Blazor','MAUI'].map(function(f){return '<button class="switch__btn'+(f===fw?' is-active':'')+'" role="tab" data-fw="'+f+'" data-target="btn">'+f+'</button>';}).join('')+
+      '</div><div class="code"><button class="code__copy" type="button" data-target="btn">Copy</button><pre><code id="btn-code"></code></pre></div>';
+    document.getElementById('btn-code').textContent=snips[fw];
+    container.querySelectorAll('[data-fw]').forEach(function(b){
       b.addEventListener('click', function(){
-        b.parentNode.querySelectorAll('.switch__btn').forEach(function(x){ x.classList.remove('is-active'); });
+        container.querySelectorAll('.switch__btn').forEach(function(x){x.classList.remove('is-active');});
         b.classList.add('is-active');
-        if(keyId==='variant'){ state.variant = b.dataset.variant; state.variantCls = b.dataset.cls; }
-        if(keyId==='size'){ state.size = b.dataset.size; state.sizeCls = b.dataset.cls; }
-        if(keyId==='fw'){ state.fw = b.dataset.fw; }
-        apply();
+        document.getElementById('btn-code').textContent=window.__snips['btn'][b.dataset.fw];
       });
     });
+    container.querySelector('.code__copy').addEventListener('click', function(e){
+      if(navigator.clipboard) navigator.clipboard.writeText(document.getElementById('btn-code').textContent);
+      e.target.textContent='Copied'; setTimeout(function(){e.target.textContent='Copy';},1200);
+    });
   }
-  wire('[data-variant]', 'cls', 'variant');
-  wire('[data-size]', 'cls', 'size');
-  wire('[data-fw]', 'fw', 'fw');
-  document.querySelector('.code__copy').addEventListener('click', function(e){
-    navigator.clipboard && navigator.clipboard.writeText(codeEl.textContent);
-    e.target.textContent = 'Copied'; setTimeout(function(){ e.target.textContent = 'Copy'; }, 1200);
-  });
+  function apply(){ preview.className='sr-button '+state.variantCls+(state.sizeCls?' '+state.sizeCls:''); renderFw(); }
+  document.querySelectorAll('[data-variant]').forEach(function(b){b.addEventListener('click',function(){
+    b.parentNode.querySelectorAll('.switch__btn').forEach(function(x){x.classList.remove('is-active');});
+    b.classList.add('is-active'); state.variant=b.dataset.variant; state.variantCls=b.dataset.cls; apply();});});
+  document.querySelectorAll('[data-size]').forEach(function(b){b.addEventListener('click',function(){
+    b.parentNode.querySelectorAll('.switch__btn').forEach(function(x){x.classList.remove('is-active');});
+    b.classList.add('is-active'); state.size=b.dataset.size; state.sizeCls=b.dataset.cls; apply();});});
   apply();
 })();
 </script>`;
-  return shell({ title: 'Button', prefix: '../', activeHref: 'components/button.html', body, extraScript: script });
+  return shell({ title: 'Buttons', prefix: '../', sectionId: 'components', activeHref: 'components/button.html', body, extraScript: script });
 }
 
-// ─── Token translator (Tools) — deterministic, client-side, no external calls ──
+// ─── Component: Table (flat/static — a11y table reused) ────────────────────────
+function tablePage() {
+  const tableMd = readFileSync(resolve(ROOT, 'components', 'table', 'guidelines.md'), 'utf8');
+  const demo = `
+<section class="demo">
+  <div class="demo__preview demo__preview--wide">
+    <div class="sr-table-wrap">
+      <table class="sr-table">
+        <thead class="sr-table__head"><tr>
+          <th scope="col">No.</th><th scope="col">Patient</th><th scope="col">NHS number</th><th scope="col">DoB</th><th scope="col">Status</th>
+        </tr></thead>
+        <tbody>
+          <tr class="sr-table__row"><td class="sr-table__cell">1</td><td class="sr-table__cell">JONES, Alis</td><td class="sr-table__cell">123 456 7890</td><td class="sr-table__cell">06-Dec-1974</td><td class="sr-table__cell">Confirmed</td></tr>
+          <tr class="sr-table__row sr-table__row--selected"><td class="sr-table__cell">2</td><td class="sr-table__cell">OWEN, Rhys</td><td class="sr-table__cell">234 567 8901</td><td class="sr-table__cell">14-Mar-1988</td><td class="sr-table__cell">In review</td></tr>
+          <tr class="sr-table__row"><td class="sr-table__cell">3</td><td class="sr-table__cell">PATEL, Nia</td><td class="sr-table__cell">345 678 9012</td><td class="sr-table__cell">02-Jul-1991</td><td class="sr-table__cell">Draft</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+<p class="muted">Row 2 shows the selected state (<code>Surface/Accent</code>); hover any row to see <code>Surface/Subtle</code>. Dates use <code>dd-Mmm-yyyy</code>; the header uses the <code>No.</code> abbreviation exception.</p>`;
+  const snippets = {
+    HTML: '<div class="sr-table-wrap">\n  <table class="sr-table">\n    <thead class="sr-table__head">…</thead>\n    <tbody>\n      <tr class="sr-table__row sr-table__row--selected">…</tr>\n    </tbody>\n  </table>\n</div>',
+    React: '<SrTable\n  columns={columns}\n  rows={rows}\n  selectedId={activePatientId}\n/>',
+    Blazor: '<SrTable Items="@patients" SelectedId="@activePatientId" />',
+    MAUI: '<!-- MAUI renders the Blazor component via Blazor Hybrid (DDR-011). -->\n<SrTable Items="@patients" SelectedId="@activePatientId" />',
+  };
+  const a11y = accessibilityTable([
+    { req: 'Semantic table structure', sc: '1.3.1', how: 'Real `<table>`/`<thead>`/`<th scope>`; row-header layout adds `<th scope="row">`.', test: 'Markup review · screen reader' },
+    { req: 'Icon-only row actions are named', sc: '4.1.2', how: 'Each action has an `aria-label` naming action + subject ("Edit Jones, Alis"); icons `aria-hidden`.', test: 'Screen-reader announce' },
+    { req: 'Selected row not colour alone', sc: '1.4.1', how: 'Selected rows carry a non-colour signal (selection control / left accent), not just `Surface/Accent`.', test: 'Greyscale review' },
+    { req: 'Target size for dense actions', sc: '2.5.8', how: '32×32px is a documented dense-desktop exception; promoted to full size on touch/mobile.', test: 'Measure · touch device' },
+    { req: 'Focus visible', sc: '2.4.7', how: '`Border/Focus` (Cyan/700) ring on action buttons, outside the element (DDR-006).', test: 'Keyboard tab' },
+  ]);
+  const body = `
+<p class="breadcrumbs">Components / Tables</p>
+${demo}
+<hr>
+${renderMarkdown(tableMd)}
+<hr>
+<h2>Code</h2>
+${frameworkTabs('table', snippets)}
+${a11y}`;
+  return shell({ title: 'Tables', prefix: '../', sectionId: 'components', activeHref: 'components/table.html', body, extraScript: FRAMEWORK_SCRIPT });
+}
+
+// ─── Styles: Token translator (deterministic, client-side, no external calls) ──
 function translatorPage() {
   const colourData = colourEntries.map(([k, v]) => ({ n: '--' + k, hex: v }));
   const spaceData = spaceEntries.map(([k, px]) => ({ n: '--' + k, px }));
   const body = `
+<p class="breadcrumbs">Styles / Token Translator</p>
 <h1>Token translator</h1>
 <blockquote><p>The translator matches <strong>values</strong>, not intent. It won't decide whether a
 colour is "primary" or "warning" — that stays a design decision. It never changes your code,
@@ -321,7 +479,7 @@ and <strong>nothing leaves your browser</strong>. Always review flagged items be
     if(!total){ el.innerHTML='<p>No <code>#hex</code> colours or <code>px</code> values found.</p>'; return; }
     el.innerHTML = bucket('Exact', exact, 'exact') + bucket('Close / review', close, 'close') +
       bucket('No match', none, 'none') +
-      '<p class="muted">No-match items should go to a component/token request (GitHub issue on the org repo). The translator never changes your code.</p>';
+      '<p class="muted">No-match items should go to a component/token request (Contributions → Azure DevOps). The translator never changes your code.</p>';
   }
   document.getElementById('run').addEventListener('click', run);
   document.getElementById('sample').addEventListener('click', function(){
@@ -330,7 +488,20 @@ and <strong>nothing leaves your browser</strong>. Always review flagged items be
   });
 })();
 </script>`;
-  return shell({ title: 'Token translator', prefix: '../', activeHref: 'tools/translator.html', body, extraScript: script });
+  return shell({ title: 'Token translator', prefix: '../', sectionId: 'styles', activeHref: 'styles/token-translator.html', body, extraScript: script });
+}
+
+// ─── "Planned" page — honest status + upstream links (not an empty placeholder) ─
+function plannedPage({ title, prefix, sectionId, activeHref, crumb, intro, links = [] }) {
+  const body = `
+<p class="breadcrumbs">${crumb}</p>
+<h1>${title}</h1>
+<p>${intro}</p>
+<div class="callout"><p><strong>Status: planned.</strong> This page is part of the design-system
+information architecture but its content is not yet authored. It is listed here so the structure
+is visible and reviewable — we don't ship empty pages with fabricated guidance.</p></div>
+${links.length ? `<h2>In the meantime</h2><ul>${links.map((l) => `<li><a href="${l.href}"${/^https?:/.test(l.href) ? ' target="_blank" rel="noopener"' : ''}>${l.label}</a> — ${l.note}</li>`).join('')}</ul>` : ''}`;
+  return shell({ title, prefix, sectionId, activeHref, body });
 }
 
 // ─── read guideline sources ───────────────────────────────────────────────────
@@ -341,49 +512,123 @@ const spacingMd = readFileSync(resolve(ROOT, 'foundations', 'tokens', 'spacing.g
 // ─── build ────────────────────────────────────────────────────────────────────
 rmSync(DIST, { recursive: true, force: true });
 mkdirSync(resolve(DIST, 'assets'), { recursive: true });
-mkdirSync(resolve(DIST, 'foundations'), { recursive: true });
+mkdirSync(resolve(DIST, 'styles'), { recursive: true });
 mkdirSync(resolve(DIST, 'components'), { recursive: true });
-mkdirSync(resolve(DIST, 'tools'), { recursive: true });
 
 for (const f of ['tokens.css', 'tokens-dark.css', 'typography.css']) copyFileSync(resolve(TOKENS, 'css', f), resolve(DIST, 'assets', f));
 copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'button', 'button.css'), resolve(DIST, 'assets', 'button.css'));
+copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'table', 'table.css'), resolve(DIST, 'assets', 'table.css'));
 writeFileSync(resolve(DIST, 'assets', 'site.css'), SITE_CSS);
 
-const overview = `
+// Get Started (home)
+const getStarted = `
 <h1>Single Record Design System</h1>
-<p>Reference site (Concept B, in progress). Pages are generated from the single-source
-guideline documents and the <strong>built design tokens</strong> — the same artifact the Figma
-variables feed. Foundations, a first component with framework switchers, and the token
-translator are wired.</p>
+<p>The design system for the Single Record programme in NHS Wales (DHCW). It supports clinical
+and administrative products across web, Blazor/.NET, React and .NET MAUI. Every page here is a
+<strong>real implementation</strong> of the system — rendered from the built design tokens and the
+actual reference components, not a mockup.</p>
 <div class="cards">
-  <a class="card" href="foundations/typography.html"><h3>Typography</h3><p>Type scale, weights, usage.</p></a>
-  <a class="card" href="foundations/colour.html"><h3>Colour</h3><p>Semantic tokens and the grey ramp.</p></a>
-  <a class="card" href="foundations/spacing.html"><h3>Spacing</h3><p>The 4px grid and scale.</p></a>
-  <a class="card" href="components/button.html"><h3>Button</h3><p>Variant + framework switchers, live.</p></a>
-  <a class="card" href="tools/translator.html"><h3>Token translator</h3><p>Match product values to tokens, in-browser.</p></a>
-  <a class="card" href="storybook/index.html"><h3>Catalogue</h3><p>Storybook component catalogue.</p></a>
-</div>`;
-writeFileSync(resolve(DIST, 'index.html'), shell({ title: 'Overview', prefix: '', activeHref: 'index.html', body: overview }));
+  <a class="card" href="styles/typography.html"><h3>Styles</h3><p>Typography, colour, spacing, and the token translator.</p></a>
+  <a class="card" href="components/button.html"><h3>Components</h3><p>Buttons, tables — live previews with framework code.</p></a>
+  <a class="card" href="figma.html"><h3>Figma &amp; catalogue</h3><p>The Figma library and the Storybook component catalogue.</p></a>
+  <a class="card" href="contributions.html"><h3>Contribute</h3><p>Report an issue or request a component/change.</p></a>
+</div>
+<h2>Principles</h2>
+<ul>
+  <li><strong>Accessibility is a hard requirement</strong> — WCAG 2.2 AA minimum, AAA where feasible.</li>
+  <li><strong>Consistency over novelty</strong> — align with GDS and NHS England before inventing.</li>
+  <li><strong>Tokens are the source of truth</strong> — Figma variables build to the same tokens this site consumes.</li>
+</ul>
+<h2>How content works here</h2>
+<p>For general UX guidance we link out to <a href="https://www.nhs.uk/" target="_blank" rel="noopener">NHS.UK</a> /
+<a href="https://www.gov.uk/" target="_blank" rel="noopener">GOV.UK</a> rather than duplicate maintained upstream content.
+We write original guidance only for Single Record specifics — tokens, clinical rationale, and SR component behaviour.</p>`;
+writeFileSync(resolve(DIST, 'index.html'), shell({ title: 'Get Started', prefix: '', sectionId: 'get-started', activeHref: 'index.html', body: getStarted }));
 
-writeFileSync(resolve(DIST, 'foundations', 'typography.html'), shell({
-  title: 'Typography', prefix: '../', activeHref: 'foundations/typography.html',
-  body: `${renderMarkdown(typoMd)}<hr><h2>Live type scale (from tokens)</h2>
+// Styles — foundations from markdown + live token specimens
+writeFileSync(resolve(DIST, 'styles', 'typography.html'), shell({
+  title: 'Typography', prefix: '../', sectionId: 'styles', activeHref: 'styles/typography.html',
+  body: `<p class="breadcrumbs">Styles / Typography</p>${renderMarkdown(typoMd)}<hr><h2>Live type scale (from tokens)</h2>
     <p>Rendered with the built <code>.sr-type-*</code> utility classes.</p><div>${typeSamples}</div>`,
 }));
-writeFileSync(resolve(DIST, 'foundations', 'colour.html'), shell({
-  title: 'Colour', prefix: '../', activeHref: 'foundations/colour.html',
-  body: `${renderMarkdown(colourMd)}<hr><h2>Semantic tokens (from tokens)</h2>${swatchGrid((k) => k.startsWith('sr-color-'))}
+writeFileSync(resolve(DIST, 'styles', 'colour.html'), shell({
+  title: 'Colours', prefix: '../', sectionId: 'styles', activeHref: 'styles/colour.html',
+  body: `<p class="breadcrumbs">Styles / Colours</p>${renderMarkdown(colourMd)}<hr><h2>Semantic tokens (from tokens)</h2>${swatchGrid((k) => k.startsWith('sr-color-'))}
     <h2>Grey ramp (from tokens)</h2><p>The full 50–900 neutral ramp.</p>${swatchGrid((k) => /^color-grey-/.test(k))}`,
 }));
-writeFileSync(resolve(DIST, 'foundations', 'spacing.html'), shell({
-  title: 'Spacing', prefix: '../', activeHref: 'foundations/spacing.html',
-  body: `${renderMarkdown(spacingMd)}<hr><h2>Live spacing scale (from tokens)</h2>
+writeFileSync(resolve(DIST, 'styles', 'spacing.html'), shell({
+  title: 'Spacing & Elevation', prefix: '../', sectionId: 'styles', activeHref: 'styles/spacing.html',
+  body: `<p class="breadcrumbs">Styles / Spacing &amp; Elevation</p>${renderMarkdown(spacingMd)}<hr><h2>Live spacing scale (from tokens)</h2>
     <p>Bar widths are set with the built <code>--space-*</code> custom properties.</p><div class="space-scale">${spacingScale}</div>
     <h2>Radius (from tokens)</h2><div class="radii">${radiusSamples}</div>`,
 }));
+writeFileSync(resolve(DIST, 'styles', 'icons.html'), plannedPage({
+  title: 'Icons', prefix: '../', sectionId: 'styles', activeHref: 'styles/icons.html', crumb: 'Styles / Icons',
+  intro: 'The Single Record icon set (restricted, from the Figma Icons page) and its colour/size tokens.',
+  links: [{ href: STORYBOOK_URL, label: 'Storybook catalogue', note: 'browse rendered icon usage in components' }],
+}));
+writeFileSync(resolve(DIST, 'styles', 'grids.html'), plannedPage({
+  title: 'Grids', prefix: '../', sectionId: 'styles', activeHref: 'styles/grids.html', crumb: 'Styles / Grids',
+  intro: 'Layout grid and breakpoints for Single Record products.',
+  links: [{ href: 'https://service-manual.nhs.uk/design-system/styles/layout', label: 'NHS England layout', note: 'upstream grid guidance we build on' }],
+}));
+writeFileSync(resolve(DIST, 'styles', 'token-translator.html'), translatorPage());
+
+// Components
 writeFileSync(resolve(DIST, 'components', 'button.html'), buttonPage());
-writeFileSync(resolve(DIST, 'tools', 'translator.html'), translatorPage());
+writeFileSync(resolve(DIST, 'components', 'table.html'), tablePage());
+
+// Patterns / Pages — planned section indexes
+writeFileSync(resolve(DIST, 'patterns.html'), plannedPage({
+  title: 'Patterns', prefix: '', sectionId: 'patterns', activeHref: 'patterns.html', crumb: 'Patterns',
+  intro: 'Composed, multi-component interactions — patient banner, forms, search, sign-off flows.',
+  links: [{ href: 'https://service-manual.nhs.uk/design-system/patterns', label: 'NHS England patterns', note: 'reference patterns we adapt' }],
+}));
+writeFileSync(resolve(DIST, 'pages.html'), plannedPage({
+  title: 'Pages', prefix: '', sectionId: 'pages', activeHref: 'pages.html', crumb: 'Pages',
+  intro: 'Whole-page templates assembled from patterns and components.',
+}));
+
+// Figma — library link + reachable Storybook catalogue (not in nav)
+writeFileSync(resolve(DIST, 'figma.html'), shell({
+  title: 'Figma', prefix: '', sectionId: 'figma', activeHref: 'figma.html',
+  body: `<p class="breadcrumbs">Figma</p><h1>Figma &amp; catalogue</h1>
+<p>The Single Record Figma library is the canonical source for variables (tokens), components and
+usage-notes panels. Variables build to the same token artifact this website consumes.</p>
+<div class="cards">
+  <a class="card" href="${STORYBOOK_URL}"><h3>Storybook catalogue →</h3><p>Every reference component, rendered with all variants and controls.</p></a>
+</div>
+<h2>Handoff conventions</h2>
+<ul>
+  <li>Design in Figma first; document in <code>/foundations</code> or <code>/components</code> before code.</li>
+  <li>Use existing icon components from the Icons page — never inline vector placeholders.</li>
+  <li>Token names follow <code>{tier}.{category}.{variant}</code> (e.g. <code>color.interactive.primary</code>).</li>
+</ul>`,
+}));
+
+// Contributions — two distinct intake channels (point 4)
+writeFileSync(resolve(DIST, 'contributions.html'), shell({
+  title: 'Contributions', prefix: '', sectionId: 'contributions', activeHref: 'contributions.html',
+  body: `<p class="breadcrumbs">Contributions</p><h1>Contributing</h1>
+<p>Two separate channels — pick by intent so requests land in the right queue.</p>
+<div class="cards">
+  <a class="card" href="${REPORT_ISSUE_URL}" target="_blank" rel="noopener"><h3>Report an issue →</h3>
+    <p>Something is broken, wrong, or inaccessible on the site, a component, or the docs. Goes to the
+    Microsoft Forms intake.</p></a>
+  <a class="card" href="${CONTRIBUTION_URL}" target="_blank" rel="noopener"><h3>Request a component or change →</h3>
+    <p>A new component, variant, token, or a change to an existing one. Goes to the Azure DevOps
+    intake for triage against the roadmap.</p></a>
+</div>
+<div class="callout"><p>Both links are placeholders until the final form URLs are supplied.</p></div>
+<h2>Before you request a new component</h2>
+<ul>
+  <li>Check <a href="https://design-system.service.gov.uk/components/" target="_blank" rel="noopener">GDS</a> and
+    <a href="https://service-manual.nhs.uk/design-system/components" target="_blank" rel="noopener">NHS England</a> — align before inventing.</li>
+  <li>Run product values through the <a href="styles/token-translator.html">token translator</a> — many "new" needs are existing tokens.</li>
+  <li>Non-trivial choices need a Design Decision Record (DDR).</li>
+</ul>`,
+}));
 
 console.log('Website built to', DIST);
-console.log('Pages: overview, 3 foundations, button (switchers), translator');
+console.log('Sections: Get Started · Styles (5) · Components (2) · Patterns · Pages · Figma · Contributions');
 console.log('Tokens available →', colourEntries.length, 'colours,', spaceEntries.length, 'space,', radiusEntries.length, 'radius');

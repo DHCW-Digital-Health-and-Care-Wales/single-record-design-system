@@ -36,7 +36,7 @@ Every standard in the guide, grouped by theme, with a source anchor and a
 | 5 | **Sentence case** for all text | [p.9](../reference/dhcw-ui-standards-v1.3.md#page-9) | |
 | 6 | **Display of users' names**: `SURNAME, First M, Title (GMC:…), Role, Speciality`; never show nurse PIN | [p.9](../reference/dhcw-ui-standards-v1.3.md#page-9) | |
 | 7 | Dropdown symbol must be an **arrow, never a triangle** | [p.10](../reference/dhcw-ui-standards-v1.3.md#page-10) | |
-| 8 | **Abbreviations**: avoid; no full stops (ECG not E.C.G.); tooltip + dashed underline when unavoidable; micrograms in full | [p.10](../reference/dhcw-ui-standards-v1.3.md#page-10) | |
+| 8 | **Abbreviations**: avoid; no full stops (ECG not E.C.G.); tooltip + dashed underline when unavoidable; micrograms in full | [p.10](../reference/dhcw-ui-standards-v1.3.md#page-10) | `ADAPT` — add a table-heading **exception**: allow `No.` for "Number" in column headings where width is tight. Land in the Tables guideline. |
 | 9 | Apostrophes/contractions: avoid; Ampersand → "and"; Forward slash → "or" | [p.11](../reference/dhcw-ui-standards-v1.3.md#page-11) | |
 | 10 | Use **default values** where possible; never blank | [p.11](../reference/dhcw-ui-standards-v1.3.md#page-11), [p.23](../reference/dhcw-ui-standards-v1.3.md#page-23) | |
 | 11 | **Standard DHCW date of birth**: DoB followed by age in brackets | [p.11](../reference/dhcw-ui-standards-v1.3.md#page-11) | |
@@ -58,7 +58,7 @@ Every standard in the guide, grouped by theme, with a source anchor and a
 |---|---|---|---|
 | 23 | **Dropdown lists** — default "Unknown or not recorded"; split Unknown/Not recorded when needed; alphabetical | [p.23](../reference/dhcw-ui-standards-v1.3.md#page-23) | |
 | 24 | Auto-learning users' favourites | [p.24](../reference/dhcw-ui-standards-v1.3.md#page-24) | |
-| 25 | **Dates** format & display (leading 0, `dd-Mmm-yyyy`) | [p.24](../reference/dhcw-ui-standards-v1.3.md#page-24) | |
+| 25 | **Dates** format & display (leading 0, `dd-Mmm-yyyy`) | [p.24](../reference/dhcw-ui-standards-v1.3.md#page-24) | `CARRY` — keep the legacy `dd-Mmm-yyyy` format (e.g. `06-Dec-2021`), incl. in tables. Surface in the Tables guideline. |
 | 26 | **Date/time picker** — launch, manual entry, nudge, today=red / selected=blue / hover=orange; customisation options | [p.25](../reference/dhcw-ui-standards-v1.3.md#page-25)–[26](../reference/dhcw-ui-standards-v1.3.md#page-26) | |
 | 27 | **Copy & paste** patient-safety rules — never across patient records; logging; future "copy link" | [p.27](../reference/dhcw-ui-standards-v1.3.md#page-27)–[28](../reference/dhcw-ui-standards-v1.3.md#page-28) | |
 | 28 | **SNOMED search fields** — always allow free text; warning triangle (not coded) / green tick (coded) icons | [p.29](../reference/dhcw-ui-standards-v1.3.md#page-29) | |

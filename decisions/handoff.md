@@ -115,6 +115,16 @@ Branch `claude/single-record-ds-guidelines-v003fa`. Guidelines programme kicked 
   `packages/website/site.css`. All token-bound, dark-mode toggle. Verified via headless Chromium.
 - **Still open:** gated release publish (build from release tag, DDR-014); more components;
   Welsh-language toggle; translator file-upload + CSV/JSON export; DDR for Website IA is DDR-016.
+- **Tables guideline — seed content (to formalise).** Two content rules captured for a future
+  Tables guideline (component `components/table/`, Figma Tables page):
+  - **Dates: keep the legacy DHCW format `dd-Mmm-yyyy`** with leading zero and hyphens
+    (e.g. `06-Dec-2021`) — UI Standards [p.24](../docs/reference/dhcw-ui-standards-v1.3.md#page-24).
+    (Earlier `10 Jan 2020` idea dropped; legacy standard retained.)
+  - **Table headings: allow `No.` as the abbreviation for "Number"** where column width is
+    tight. This is a deliberate **exception** to the general "avoid abbreviations / no full
+    stops" rule (UI Standards [p.10](../docs/reference/dhcw-ui-standards-v1.3.md#page-10)),
+    justified by table space constraints and limited to headings.
+  Flagged, not yet built — user will return to the Tables guideline.
 
 ---
 

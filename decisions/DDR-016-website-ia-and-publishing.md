@@ -46,16 +46,42 @@ serves both, and a confirmed subpath for Storybook.
   guarded to the org repo (which has Pages) and runs on push to `main`, on a schedule
   (preview refresh), and on manual dispatch — never on pull requests.
 
-### IA (Phase A, grows over time)
+### IA — revised to a two-level structure (2026-07-20)
+
+The flat single-level nav is replaced by a **two-level IA** modelled on the NHS
+England / GDS design-system sites, per the reference designs supplied by the design lead:
 
 ```
-Masthead — brand + dark-mode toggle (Welsh-language toggle to come)
-Primary nav — Overview · Typography · Colour · … · Catalogue (→ /storybook)
-Foundation page — guideline (from the single-source *.guidelines.md) + live token showcase
+Masthead — NHS Wales logo · Report an issue (MS Forms) · Cymraeg toggle · dark-mode toggle
+Top nav  — Get Started · Styles · Components · Patterns · Pages · Figma · Contributions
+Sidebar  — per-section pages (Styles: Typography, Colours, Spacing & Elevation, Icons,
+           Grids, Token Translator; Components: Buttons, Tables, …)
+Page     — breadcrumb + guideline (single-source *.guidelines.md) + live token/component showcase
 ```
+
+Decisions folded in:
+
+- **Storybook leaves the primary nav** but stays reachable at `/storybook` — linked from the
+  Figma and Icons pages and the Get Started catalogue card. The assemble step and subpath are
+  unchanged (below).
+- **Token Translator** moves under **Styles** (it is a styles tool, not a top-level section).
+- **Welsh toggle** ships in the header as a **stub** (flips label + `lang` attribute, English
+  fallback). Genuine Welsh content parity (CDPS) is tracked as separate work; the toggle can be
+  removed if parity is not pursued.
+- **Two intake channels, kept distinct:** *Report an issue* → Microsoft Forms (bugs/issues);
+  *Request a component or change* → Azure DevOps intake. Both URLs are placeholders in
+  `build.mjs` (`REPORT_ISSUE_URL`, `CONTRIBUTION_URL`) until supplied.
+- **Framework tabs** use one order and style everywhere: **HTML · React · Blazor · MAUI**.
+- **Accessibility table** has a locked column structure — *Requirement · WCAG SC · How Single
+  Record meets it · Test method* — reused per component, SR-specific content per row.
+- **Playground vs flat:** components with 3+ variant axes (e.g. Button: variant × size ×
+  framework) get a live playground; simpler components render flat/static (e.g. Table).
+- Pages **must consume the real tokens and reference component CSS** (`packages/web/src/*`),
+  not a visual mock. Sections without authored content (Icons, Grids, Patterns, Pages) render an
+  explicit *planned* status page with upstream links — never an empty placeholder.
 
 Per DDR-014 the **published** website is gated (built from a release tag) once the full
-build lands; Phase A publishes from `main` as the working preview, same as Storybook did.
+build lands; the working site publishes from `main` as the preview, same as Storybook did.
 
 ---
 
