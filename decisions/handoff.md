@@ -133,14 +133,22 @@ Drift that was corrected:
 - **Sidebar** nav column now stretches to the full height of the layout row, with the menu
   inside it doing the sticking, so the background runs the length of the page.
 
-### Blocked
+### Figma file key - record it, do not lose it again
 
-**The Figma colour guidance frame is still not updated** (carried over from open item 1).
-Figma auth is fine, but there is no Figma **file key** anywhere in this repo, and
-`get_metadata` / `get_screenshot` / `get_variable_defs` all require one. Ask the design
-lead for a node-specific Figma URL, then mirror the panel format used by
-`Guidelines/Typography` (`3460:20`). Recording the file key in this doc would unblock
-every future session.
+**File key: `x5fwyefxxgD03csz8ld7SZ`** (SINGLE-RECORD-DESIGN-SYSTEM, NHS Wales
+enterprise, Full seat). Also in the Figma File Reference table below.
+
+Every Figma MCP tool takes a required `fileKey`, including `use_figma`, which is the
+direct-write tool. It was never recorded in this repo, only bare node ids, so a session
+that starts without it in the conversation cannot reach Figma at all. If a session reports
+Figma as unreachable, check the MCP connection first: the symptom also appears when
+continuing a session from a machine whose desktop Claude is not signed in to the Figma
+account.
+
+**Method: author directly in Figma via `use_figma`.** Do not build or run Figma plugins to
+generate design content. The two plugins under `figma/plugins/` predate this and their
+inlined colour data is stale, notably a `focus` `#FFEB3B` swatch and a `border.focus` that
+still aliases the removed `focus-yellow`. Do not run them without reconciling them first.
 
 ### Useful commands
 
@@ -488,6 +496,7 @@ This week's accepted changes (now reflected in Figma, tokens, and docs):
 
 | Thing | Node ID | Notes |
 |---|---|---|
+| **File key** | `x5fwyefxxgD03csz8ld7SZ` | SINGLE-RECORD-DESIGN-SYSTEM. Required by every Figma MCP tool. NHS Wales enterprise, Full seat. |
 | Icons page | 103:760 | All icon components live in "Icon Components (Lucide)" frame |
 | Icon/action/edit | 189:25 | Lucide pen |
 | Icon/action/edit2 | 1541:20 | Lucide square-pen (added 2026-06-04) |
