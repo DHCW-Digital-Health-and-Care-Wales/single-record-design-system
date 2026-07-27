@@ -102,8 +102,8 @@ Drift that was corrected:
    The repo could not be checked against Figma this session because
    `get_variable_defs` needs a live selection in the Figma app.
 3. Remaining Styles pages to bring up to the content standard: Spacing & Elevation
-   (still renders sanitised markdown rather than authored content), Icons and Grids
-   (both still "planned" status pages).
+   (still renders sanitised markdown rather than authored content) and Grids (still
+   a "planned" status page). **Icons is now authored** (see the 2026-07-27 addendum).
 4. DL-008 in the backlog: the CTA placement audit across forms and modals. The
    Button spec and the confirmation-dialog pattern were updated this session; the
    wider sweep is outstanding.
@@ -111,6 +111,36 @@ Drift that was corrected:
    Typography page documents what the system actually does today rather than
    inventing class names. If those utilities are wanted, they need authoring in
    `packages/web/src` and a naming decision first.
+
+### Addendum - Icons page (branch `claude/design-system-record-continuation-2ouctr`)
+
+- **Icons page authored** (`styles/icons.html`), replacing the planned placeholder and
+  following the content standard above. Every icon is rendered at build time from the
+  built icon set, so the gallery cannot drift from what products consume. Name filter,
+  click-to-copy tiles, live size and colour specimens.
+- **Icon documentation was 13 icons behind the built set.** `foundations/iconography/
+  catalogue.md` and `fetch-icons.js` both listed 106 aliases; the SVG source, which is
+  the source of truth, holds 119. The extras arrived with the Figma icon sync and the
+  language-toggle work and were never written back. Both are now reconciled. The stale
+  `status/error` alias is recorded as `status/error-circle`; its circle-x glyph moved to
+  `nav/clear`.
+- **Warning icon colour is a documented accessibility exception.** Every other icon role
+  clears 3:1 on a light surface. The warning role resolves to Yellow/500, a fill colour,
+  and reaches 1.6:1 on white. The token is left unchanged because colour changes need
+  sign-off; the page states the limit and requires a text label alongside the icon.
+  **This needs a decision from the design lead** - either a darker warning role token or
+  a formal DDR recording the exception.
+- **Sidebar** nav column now stretches to the full height of the layout row, with the menu
+  inside it doing the sticking, so the background runs the length of the page.
+
+### Blocked
+
+**The Figma colour guidance frame is still not updated** (carried over from open item 1).
+Figma auth is fine, but there is no Figma **file key** anywhere in this repo, and
+`get_metadata` / `get_screenshot` / `get_variable_defs` all require one. Ask the design
+lead for a node-specific Figma URL, then mirror the panel format used by
+`Guidelines/Typography` (`3460:20`). Recording the file key in this doc would unblock
+every future session.
 
 ### Useful commands
 
