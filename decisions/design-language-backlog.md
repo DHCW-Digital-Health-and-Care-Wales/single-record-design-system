@@ -12,6 +12,8 @@ Add new items to **Pending**. Move to **In Progress** when a batch is being appl
 |---|---|---|---|
 | DL-003 | Decide approach for active/pressed state on Primary button | Button (Primary), any future interactive controls | `Interactive/Primary` = Blue/800. Blue/900 taken by hover. Active/pressed deferred — revisit when needed. Do not change the default Blue/800 without explicit permission. |
 | DL-006 | Add `Border/Error` semantic token (→ `Interactive/Destructive` → Red/600) | All form components using error borders (Input Field, Select, Checkbox, Radio) | Currently `Interactive/Destructive` is used directly for error borders, which reads semantically wrong in code. A dedicated `Border/Error` alias makes the intent explicit. `Interactive/Destructive` stays for destructive action buttons. Apply to all form components when token is created. |
+| DL-007 | Decide persistence scope for the Navigation sidebar's pinned collapse/expand state — session-only vs. per-user profile setting (`localStorage`/account) | Navigation (Sidebar) | See DDR-017. Blocking a full build of the per-screen default + manual-override logic. Needs stakeholder or quick user check before implementation. |
+| DL-008 | Audit + normalise CTA placement per DDR-018 — forms/sections left-aligned (cancel as a link); modals right-grouped (cancel equal-weight button left of primary) | Button, all forms/page sections, all modals/dialogs, confirmation-dialog pattern, batch review-before-send modal | See DDR-018. Includes: expand the Button spec "Button group alignment" line + cite DDR-018; regroup confirmation-dialog + batch-review modal footers to bottom-right. Fold into Button guideline authoring. |
 
 ---
 
