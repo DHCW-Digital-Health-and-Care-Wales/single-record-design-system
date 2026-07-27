@@ -133,14 +133,43 @@ Drift that was corrected:
 - **Sidebar** nav column now stretches to the full height of the layout row, with the menu
   inside it doing the sticking, so the background runs the length of the page.
 
-### Blocked
+### Figma colour guide - now generated from the tokens
 
-**The Figma colour guidance frame is still not updated** (carried over from open item 1).
-Figma auth is fine, but there is no Figma **file key** anywhere in this repo, and
-`get_metadata` / `get_screenshot` / `get_variable_defs` all require one. Ask the design
-lead for a node-specific Figma URL, then mirror the panel format used by
-`Guidelines/Typography` (`3460:20`). Recording the file key in this doc would unblock
-every future session.
+The Figma colour frame does not need the MCP tools at all. `figma/plugins/colour-guide/`
+rebuilds the Colour Guide frame on the Colours page (`12:3270`) from **inside** Figma, so
+it needs no file key. Its colour data was hardcoded and had drifted badly. Running it as
+it stood would have rebuilt the frame **wrong**:
+
+| Stale in the plugin | Correct value |
+|---|---|
+| `focus` `#FFEB3B` swatch and `border.focus` -> `focus-yellow` | primitive removed; focus is `cyan.700` `#12A3C9` (DDR-006) |
+| `status.critical` `red-600` | `red-700` `#B32014` |
+| `status.success` `green-600` | `green-700` `#006630` |
+| `yellow-100` `#FDF6DC` | `#FDF3D7` |
+| `surface.default` -> `grey-100` | `surface.background` -> `blue.50` `#F4F5F8` |
+| 5 greys, no red/green/yellow/info-blue ramps, no `cyan.850` | full ramps, 76 primitives |
+| invented `surface.header`; missing `interactive.disabled`, `text.disabled`, `border.subtle`, `border.disabled`, `brand.accent` | 29 semantic tokens, all real |
+
+Fixed by generating the data instead of maintaining it:
+
+- **`scripts/sync-figma-colour-guide.mjs`** rewrites the block between
+  `// <generated:colour-data>` markers in `code.js` from `foundations/tokens/`. Same
+  pattern and conventions as `sync-token-docs.mjs`. On-swatch label colour and the white
+  swatch border are computed by contrast rather than hand-set.
+- Wired into `build:tokens`, `sync:docs`, and **`check:docs`**, so drift now fails the
+  check the same way the colour docs do.
+- The semantic table rows were a fixed 56px. Generated usage strings come from the token
+  descriptions and wrap, so rows now measure their text and grow.
+
+Verified by executing the plugin against a stub of the Figma plugin API: 700 nodes, a
+1440x4789 frame, no overflow. **Not yet run in Figma** - someone with the file open needs
+to run Plugins > Development > SR Colour Guide Builder and eyeball the result.
+
+Still outstanding: the `Guidelines/Colours` **panel** (`3468:9073`) is a separate artifact
+from this frame and is still hand-maintained. And there is no Figma **file key** recorded
+anywhere in the repo, so the MCP read tools (`get_metadata`, `get_screenshot`,
+`get_variable_defs`) cannot be used in a web session at all. Recording it here would
+unblock future sessions.
 
 ### Useful commands
 
