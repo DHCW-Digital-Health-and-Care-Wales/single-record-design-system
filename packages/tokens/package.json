@@ -9,7 +9,7 @@
     "clean": "rm -rf build"
   },
   "devDependencies": {
-    "style-dictionary": "^4.0.0"
+    "style-dictionary": "^5.5.0"
   },
   "files": [
     "build/"
