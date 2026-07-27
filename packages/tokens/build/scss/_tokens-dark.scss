@@ -66,8 +66,6 @@ $color-info-blue-600: #0d62a3; // Interactive/Primary (dark mode)
 $color-info-blue-700: #005aa8; // Interactive/Link (light), Status/Info
 $color-info-blue-800: #004483; // Interactive/Primary Hover (dark mode)
 $color-info-blue-900: #002e5c;
-$color-info-blue-default: #005aa8; // Alias for 700 — retained for backward compatibility
-$color-focus-yellow-default: #ffeb3b;
 $color-grey-50: #f7fafa; // Lightest neutral wash
 $color-grey-100: #f0f4f5; // Grey background. NHS grey-5.
 $color-grey-200: #d8dde0; // Default borders. NHS grey-4.
@@ -78,7 +76,7 @@ $color-grey-600: #4c6272; // Secondary/hint text (6.4:1 — AA). NHS grey-1. Acc
 $color-grey-700: #3b4e5b; // Headings on grey surfaces (8.7:1)
 $color-grey-800: #2c3a44; // Strong text on tinted surfaces (11.7:1)
 $color-grey-900: #212b32; // Primary text (14.4:1 on white)
-$color-white-default: #ffffff;
+$color-white-default: #ffffff; // Card and panel surfaces in light mode; Text/Inverse on saturated fills
 $color-border-subtle: #f0f4f5; // Ultra-light border for row dividers and internal table separators. Use only on white or near-white backgrounds where Border/Default would be too prominent. Do not use as the only structural indicator on a surface.
 $color-border-default: #d8dde0; // Standard border for inputs, cards, and section dividers.
 $color-border-strong: #4c6272; // High-contrast border for section edges, active table rows, and structural dividers that must be clearly visible.
