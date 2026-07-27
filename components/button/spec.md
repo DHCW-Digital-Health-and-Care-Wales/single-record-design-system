@@ -67,7 +67,9 @@ Minimum touch target: 44×44px (apply padding or invisible hit area for small va
 ## Spacing
 
 - Minimum gap between adjacent buttons: `space.3` (12px)
-- Button group alignment: left-aligned on forms (GDS), right-aligned in modals and toolbars
+- **Button group alignment** (see DDR-018):
+  - **Forms and page-level sections:** left-aligned. Primary action leftmost, secondary/cancel as a text link after it.
+  - **Modals and dialogs:** right-aligned, grouped at bottom-right. Primary rightmost, secondary/cancel as an equal-weight button to its left.
 
 ---
 

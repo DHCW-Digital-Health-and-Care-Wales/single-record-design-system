@@ -42,14 +42,15 @@ A modal confirmation dialog that interrupts the action, clearly states what will
 │  Explanation paragraph — what will happen and why        │
 │  it matters. One or two sentences maximum.               │
 │                                                          │
-│  [ Cancel ]          [ Confirm action label ]            │
+│                   [ Cancel ] [ Confirm action label ]    │
 └──────────────────────────────────────────────────────────┘
 ```
 
 - **Heading**: States the action clearly. "Delete medication record" not "Are you sure?"
 - **Body**: Explains consequence. "This will permanently delete the medication record for Aspirin 75mg. This cannot be undone."
-- **Cancel** (secondary button): Always present. Always on the left.
-- **Confirm** (warning or destructive button): Specific label matching the action. "Delete record" not "Yes" or "OK".
+- **Actions**: Grouped at bottom-right. Cancel and Confirm are both buttons of equal visual weight, Cancel left of the primary action (see DDR-018 for modal CTA placement rule).
+- **Cancel** (secondary button): Always present. Equal-weight button, placed left of the primary.
+- **Confirm** (warning or destructive button): Specific label matching the action. "Delete record" not "Yes" or "OK". Rightmost.
 
 ---
 
