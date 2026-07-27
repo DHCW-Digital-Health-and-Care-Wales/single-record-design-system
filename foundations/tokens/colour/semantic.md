@@ -72,9 +72,9 @@ Used in banners, badges, row highlights, and clinical alert states. Dark mode ke
 
 | Token | Light | Dark | Meaning |
 |---|---|---|---|
-| `sr.color.status.critical`         | `red.600`       | `red.600`       | Failed, invalid, critical |
+| `sr.color.status.critical`         | `red.700`       | `red.700`       | Failed, invalid, critical |
 | `sr.color.status.critical-surface` | `red.100`       | `red.100`       | Critical background |
-| `sr.color.status.success`          | `green.600`     | `green.600`     | Completed, confirmed |
+| `sr.color.status.success`          | `green.700`     | `green.700`     | Completed, confirmed |
 | `sr.color.status.success-surface`  | `green.100`     | `green.100`     | Success background |
 | `sr.color.status.warning`          | `yellow.500`    | `yellow.500`    | Requires attention |
 | `sr.color.status.warning-surface`  | `yellow.100`    | `yellow.100`    | Warning background |
@@ -106,5 +106,5 @@ Used in banners, badges, row highlights, and clinical alert states. Dark mode ke
 ## Notes
 
 - All semantic tokens alias primitives using `{path.to.token}` syntax in the JSON source.
-- The `focus-yellow` primitive is deprecated as of DDR-006 — do not reference it in new work.
+- The `focus-yellow` primitive was removed once DDR-006 made `cyan.700` the focus colour in both modes. There is no separate focus primitive.
 - Component-level tokens (Tier 3) will be added per-component as specs are finalised.

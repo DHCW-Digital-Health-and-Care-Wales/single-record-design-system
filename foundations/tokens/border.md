@@ -81,7 +81,7 @@ This table is a starting point — each component spec is the authoritative sour
   --sr-color-border-subtle:  var(--sr-color-grey-100);
   --sr-color-border-default: var(--sr-color-grey-200);
   --sr-color-border-strong:  var(--sr-color-grey-600);
-  --sr-color-border-focus:   var(--sr-color-focus-yellow);
+  --sr-color-border-focus:   var(--color-cyan-700);
 
   /* Border widths */
   --border-width-default: 1px;

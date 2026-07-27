@@ -29,7 +29,7 @@
       "50":  { "$type": "color", "$value": "#F4FAFC" }
     },
     "navy": {
-      "$description": "DHCW Navy",
+      "$description": "DHCW Navy. Deliberately a short ramp: navy is a narrow utility family used for dark-mode surfaces, disabled borders and disabled text. Steps are added only when a semantic token needs one.",
       "900": { "$type": "color", "$value": "#1B294A" },
       "700": { "$type": "color", "$value": "#464C64" },
       "500": { "$type": "color", "$value": "#707488", "$description": "Text/Disabled in light mode" },
@@ -77,7 +77,6 @@
     },
     "info-blue": {
       "$description": "Status — informational. info-blue.700 is the link/info semantic value in light mode. info-blue.600/800 anchor dark-mode Interactive/Primary and its hover step.",
-      "default": { "$type": "color", "$value": "#005AA8", "$description": "Alias for 700 — retained for backward compatibility" },
       "900": { "$type": "color", "$value": "#002E5C" },
       "800": { "$type": "color", "$value": "#004483", "$description": "Interactive/Primary Hover (dark mode)" },
       "700": { "$type": "color", "$value": "#005AA8", "$description": "Interactive/Link (light), Status/Info" },
@@ -88,10 +87,6 @@
       "200": { "$type": "color", "$value": "#AECCE8" },
       "100": { "$type": "color", "$value": "#D6E8F5" },
       "50":  { "$type": "color", "$value": "#EEF5FC" }
-    },
-    "focus-yellow": {
-      "$description": "DEPRECATED — superseded by cyan.700 for focus rings (DDR-006). Primitive retained for any legacy reference; do not use in new work.",
-      "default": { "$type": "color", "$value": "#FFEB3B" }
     },
     "grey": {
       "$description": "Neutral/UI palette. Full 50–900 ramp anchored to the NHS neutral greys. Existing stops (900/600/200/100) unchanged; 800/700/500/400/300/50 added 2026-07-09 (additive, no rebinding). Contrast on white noted for guidance.",
@@ -107,7 +102,7 @@
       "50":  { "$type": "color", "$value": "#F7FAFA", "$description": "Lightest neutral wash" }
     },
     "white": {
-      "default": { "$type": "color", "$value": "#FFFFFF" }
+      "default": { "$type": "color", "$value": "#FFFFFF", "$description": "Card and panel surfaces in light mode; Text/Inverse on saturated fills" }
     }
   }
 }

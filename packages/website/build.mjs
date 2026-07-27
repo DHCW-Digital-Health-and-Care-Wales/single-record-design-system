@@ -205,7 +205,7 @@ const SECTIONS = [
     id: 'styles', label: 'Styles', href: 'styles/typography.html',
     side: [
       { href: 'styles/typography.html', label: 'Typography' },
-      { href: 'styles/colour.html', label: 'Colours' },
+      { href: 'styles/colour.html', label: 'Colour' },
       { href: 'styles/spacing.html', label: 'Spacing & Elevation' },
       { href: 'styles/icons.html', label: 'Icons' },
       { href: 'styles/grids.html', label: 'Grids' },
@@ -622,6 +622,218 @@ ${accessibilityTable([
   ])}`;
 }
 
+// ─── Styles: Colour ───────────────────────────────────────────────────────────
+/** WCAG relative luminance and contrast, computed at build time so every ratio
+ *  shown on the page is derived from the token that ships, not typed by hand. */
+function luminance(hex) {
+  const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
+    .map((v) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+}
+function contrast(a, b) {
+  const [x, y] = [luminance(a), luminance(b)].sort((m, n) => n - m);
+  return (x + 0.05) / (y + 0.05);
+}
+const hexOf = (name) => flat[name] || null;
+
+function ramp(family) {
+  const steps = Object.entries(flat)
+    .filter(([k, v]) => new RegExp(`^color-${family}-(\\d+|default)$`).test(k) && /^#/.test(v))
+    .sort((a, b) => (Number(b[0].split('-').pop()) || 0) - (Number(a[0].split('-').pop()) || 0));
+  return `<div class="ramp">${steps.map(([k, v]) => {
+    const step = k.split('-').pop();
+    const onWhite = contrast(v, '#ffffff');
+    return `<figure class="ramp__step">
+      <div class="ramp__chip" style="background: var(--${k}, ${v}); color: ${onWhite >= 4.5 ? '#fff' : '#212b32'}">${step}</div>
+      <figcaption><code>--${k}</code><span class="hex">${v}</span></figcaption>
+    </figure>`;
+  }).join('')}</div>`;
+}
+
+function semanticTable(prefix, rows) {
+  const body = rows.map(([token, use]) => {
+    const v = hexOf(token);
+    return `<tr>
+      <td><span class="dot" style="background: var(--${token}, ${v})"></span><code>--${token}</code></td>
+      <td><span class="hex">${v || 'n/a'}</span></td>
+      <td>${use}</td>
+    </tr>`;
+  }).join('');
+  return `<div class="table-wrap"><table><thead><tr><th>Token</th><th>Value</th><th>Use for</th></tr></thead><tbody>${body}</tbody></table></div>`;
+}
+
+function colourBody() {
+  const statusRows = [
+    ['sr-color-status-critical', 'sr-color-status-critical-surface', 'Critical'],
+    ['sr-color-status-success', 'sr-color-status-success-surface', 'Success'],
+    ['sr-color-status-warning', 'sr-color-status-warning-surface', 'Warning'],
+    ['sr-color-status-info', 'sr-color-status-info-surface', 'Information'],
+  ].map(([fg, bg, label]) => {
+    const f = hexOf(fg), b = hexOf(bg);
+    const onWhite = contrast(f, '#ffffff').toFixed(2);
+    const onSurface = contrast(f, b).toFixed(2);
+    return `<tr>
+      <td><strong>${label}</strong></td>
+      <td><span class="dot" style="background:${f}"></span><code>--${fg}</code></td>
+      <td>${onWhite}:1</td>
+      <td><span class="dot" style="background:${b}"></span><code>--${bg}</code></td>
+      <td>${onSurface}:1</td>
+    </tr>`;
+  }).join('');
+
+  const focusHex = hexOf('sr-color-border-focus');
+  const focusOnPrimary = contrast(focusHex, hexOf('sr-color-interactive-primary')).toFixed(2);
+  const focusOnBg = contrast(focusHex, hexOf('sr-color-surface-background')).toFixed(2);
+
+  return `
+<p class="breadcrumbs">Styles</p>
+<h1>Colour</h1>
+<p class="lede">How we use colour so it carries meaning consistently, meets accessibility, and works
+in light and dark across every Single Record product.</p>
+
+<h2>How colour is organised</h2>
+<p>Colour is held in three tiers, and which tier you are allowed to touch depends on what you are
+doing.</p>
+<ul>
+  <li><strong>Primitives</strong> are the raw palette, for example <code>--color-blue-800</code>.
+  They carry no meaning. Never reference a primitive from a component.</li>
+  <li><strong>Semantic tokens</strong> carry the meaning, for example
+  <code>--sr-color-interactive-primary</code>. This is the tier you build with.</li>
+  <li><strong>Component tokens</strong> exist only where one part of a component needs a value that
+  cannot be expressed semantically.</li>
+</ul>
+<p>Picking by role rather than by hue is what makes dark mode and future palette changes possible.
+A component that asks for "the primary interactive colour" keeps working when that colour changes.
+A component that asks for "Blue 800" does not.</p>
+${codePanel('colour-usage', {
+    HTML: `/* Correct: ask for the role. */\n.sr-panel {\n  background: var(--sr-color-surface-section-cards);\n  border: 1px solid var(--sr-color-border-default);\n  color: var(--sr-color-text-primary);\n}\n\n/* Wrong: a primitive, and a raw hex. */\n.sr-panel {\n  background: var(--color-blue-50);\n  border: 1px solid #d8dde0;\n}`,
+    React: `<Panel\n  surface="section-cards"\n  border="default"\n/>\n\n// Token values are never passed as props; the component\n// resolves them from the semantic layer.`,
+    Blazor: `<SrPanel Surface="Surface.SectionCards" Border="Border.Default" />\n\n@* app.css consumes the published token stylesheet: *@\n@* @import "@dhcw/sr-tokens/build/css/tokens.css"; *@`,
+    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<!-- XAML resources map to the same semantic names. -->\n<Setter Property="BackgroundColor" Value="{StaticResource SrColorSurfaceSectionCards}" />`,
+  })}
+
+<h2>Semantic tokens</h2>
+<p>These are the tokens to build with. Every value below is read from the published token artifact,
+so this table cannot drift from what ships.</p>
+
+<h3>Interactive</h3>
+${semanticTable('interactive', [
+    ['sr-color-interactive-primary', 'Primary actions and the main brand fill'],
+    ['sr-color-interactive-primary-hover', 'Hover step for the primary fill'],
+    ['sr-color-interactive-secondary', 'Secondary emphasis and dark chrome such as the masthead'],
+    ['sr-color-interactive-link', 'Text links in body content'],
+    ['sr-color-interactive-destructive', 'Irreversible actions, paired with a confirmation step'],
+    ['sr-color-interactive-disabled', 'Disabled control fills'],
+  ])}
+
+<h3>Surface</h3>
+${semanticTable('surface', [
+    ['sr-color-surface-background', 'The page itself'],
+    ['sr-color-surface-section-cards', 'Large panels and page sections'],
+    ['sr-color-surface-small-cards', 'Cards, menus and popovers'],
+    ['sr-color-surface-accent', 'Selected rows and highlighted regions'],
+    ['sr-color-surface-subtle', 'Hover surfaces and quiet fills'],
+  ])}
+
+<h3>Text</h3>
+${semanticTable('text', [
+    ['sr-color-text-primary', 'Body copy, headings and data values'],
+    ['sr-color-text-secondary', 'Supporting text, hints and metadata'],
+    ['sr-color-text-inverse', 'Text on a saturated or dark fill'],
+    ['sr-color-text-disabled', 'Text in a disabled control'],
+  ])}
+
+<h3>Border</h3>
+${semanticTable('border', [
+    ['sr-color-border-subtle', 'Row dividers and quiet separators'],
+    ['sr-color-border-default', 'Standard component and panel borders'],
+    ['sr-color-border-strong', 'Emphasis borders and table header rules'],
+    ['sr-color-border-focus', 'The focus ring, in both light and dark mode'],
+    ['sr-color-border-disabled', 'Borders on disabled controls'],
+  ])}
+
+<h2>Contrast</h2>
+<p>Body text and essential UI must meet WCAG 2.2 AA: 4.5:1 for text, and 3:1 for large text, icons
+and borders. We target AAA where the pairing allows it. Validate a token against the surface it will
+actually sit on, not against white by default.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Role</th><th>Foreground</th><th>On white</th><th>Paired surface</th><th>On that surface</th></tr></thead>
+<tbody>${statusRows}</tbody>
+</table></div>
+<p class="muted">Ratios are computed at build time from the published token values.</p>
+
+<h3>Accents are not text colours</h3>
+<p>The brand accent <code>--sr-color-brand-accent</code> is an accent only. It does not carry white
+text at body size, so never use it to fill a button or any surface that needs white text on it. Use
+<code>--sr-color-interactive-primary</code> for that.</p>
+
+<h2>Never colour alone</h2>
+<p>Colour is never the only signal. This is a hard requirement, not a preference: it is WCAG 1.4.1,
+and in a clinical context a status that only reads as "red" is a patient-safety problem.</p>
+<ul>
+  <li>Pair a status colour with text, and usually an icon as well.</li>
+  <li>A selected table row carries a non-colour signal too, such as a selection control or a left
+  accent border.</li>
+  <li>Form validation states pair the colour with an error message tied to the field.</li>
+  <li>Review screens in greyscale. If you cannot tell the states apart, it fails.</li>
+</ul>
+
+<h2>Focus</h2>
+<p>The focus ring is <code>--sr-color-border-focus</code> at ${focusHex}, and it is the same colour
+in light and dark mode so that focus behaves predictably wherever a control appears. It scores
+${focusOnBg}:1 against the page background and ${focusOnPrimary}:1 against the primary fill, so it
+stays visible on both.</p>
+<p>There is no separate focus primitive. An earlier yellow focus colour was replaced by this one and
+has been removed from the palette, so if you find a yellow focus ring anywhere it is stale code.</p>
+${codePanel('colour-focus', {
+    HTML: `.sr-button:focus-visible {\n  outline: 3px solid var(--sr-color-border-focus);\n  outline-offset: 2px;\n}`,
+    React: `// Focus styling comes from the component stylesheet.\n// Do not re-implement it per component.`,
+    Blazor: `/* Provided by the shared component stylesheet. */\n.sr-button:focus-visible {\n  outline: 3px solid var(--sr-color-border-focus);\n  outline-offset: 2px;\n}`,
+    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid, -->\n<!-- so it inherits the same focus treatment. -->`,
+  })}
+
+<h2>Dark mode</h2>
+<p>Dark mode is a second set of values behind the same semantic names. A component written against
+semantic tokens needs no dark-mode code of its own. Because the names do not change, the rule stays
+the same: never reach past the semantic layer to a primitive, or the component will not follow the
+theme.</p>
+<div class="callout"><p>The dark theme is built and published, but the theme switch on this site is
+turned off while the colour work is being finalised.</p></div>
+
+<hr>
+<h2>The palette</h2>
+<p>The raw primitives, rendered live from the published tokens. Reference these from semantic tokens
+only, never from a component. The number on each swatch is its step.</p>
+
+<h3>Blue, NHS Wales blue and the primary brand</h3>
+${ramp('blue')}
+<h3>Cyan, DHCW blue, used for the accent and the focus ring</h3>
+${ramp('cyan')}
+<h3>Navy</h3>
+<p>Navy is deliberately a short ramp. It is a narrow utility family used for dark surfaces, disabled
+borders and disabled text, and steps are added only when a semantic token needs one.</p>
+${ramp('navy')}
+<h3>Grey, the neutral UI ramp</h3>
+${ramp('grey')}
+<h3>Red, critical and destructive</h3>
+${ramp('red')}
+<h3>Green, success</h3>
+${ramp('green')}
+<h3>Yellow, warning</h3>
+${ramp('yellow')}
+<h3>Info blue</h3>
+${ramp('info-blue')}
+
+${accessibilityTable([
+    { req: 'Text meets contrast against its surface', sc: '1.4.3', how: 'Every text and surface pairing is checked before a token ships; the ratios are published on this page.', test: 'Automated contrast' },
+    { req: 'Non-text UI meets contrast', sc: '1.4.11', how: 'Borders, icons and control boundaries are checked at 3:1 against adjacent colours.', test: 'Automated contrast' },
+    { req: 'Colour is not the only signal', sc: '1.4.1', how: 'Status colours pair with text and an icon; selected rows carry a non-colour indicator.', test: 'Greyscale review' },
+    { req: 'Focus is visible on every surface', sc: '2.4.7 / 1.4.11', how: 'One focus colour in both modes, checked against page, card and saturated fills.', test: 'Keyboard tab, contrast check' },
+    { req: 'Meaning survives a theme change', sc: '1.4.1', how: 'Light and dark are two value sets behind one set of semantic names, so meaning is carried by the name.', test: 'Theme switch review' },
+    { req: 'Users can override colours', sc: '1.4.12 / 1.4.8', how: 'Colours are CSS custom properties, so forced-colours and user stylesheets apply cleanly.', test: 'Forced colours mode' },
+  ])}`;
+}
+
 // ─── Component: Button (playground: variant, size and framework) ──────────────
 function buttonBody() {
   const variants = [
@@ -844,7 +1056,6 @@ ${links.length ? `<h2>In the meantime</h2><ul>${links.map((l) => `<li><a href="$
 }
 
 // ─── read guideline sources ───────────────────────────────────────────────────
-const colourMd = publicise(readFileSync(resolve(ROOT, 'foundations', 'tokens', 'colour', 'colour.guidelines.md'), 'utf8'));
 const spacingMd = publicise(readFileSync(resolve(ROOT, 'foundations', 'tokens', 'spacing.guidelines.md'), 'utf8'));
 
 // ─── register pages ───────────────────────────────────────────────────────────
@@ -955,11 +1166,8 @@ addPage({
   sectionId: 'styles', activeHref: 'styles/typography.html', prefix: '../', body: typographyBody(),
 });
 addPage({
-  file: 'styles/colour.html', url: 'styles/colour.html', title: 'Colours', section: 'Styles',
-  sectionId: 'styles', activeHref: 'styles/colour.html', prefix: '../',
-  body: `<p class="breadcrumbs">Styles</p>${renderMarkdown(colourMd)}<hr>
-    <h2>Semantic tokens</h2>${swatchGrid((k) => k.startsWith('sr-color-'))}
-    <h2>Grey ramp</h2><p>The full 50 to 900 neutral ramp.</p>${swatchGrid((k) => /^color-grey-/.test(k))}`,
+  file: 'styles/colour.html', url: 'styles/colour.html', title: 'Colour', section: 'Styles',
+  sectionId: 'styles', activeHref: 'styles/colour.html', prefix: '../', body: colourBody(),
 });
 addPage({
   file: 'styles/spacing.html', url: 'styles/spacing.html', title: 'Spacing & Elevation', section: 'Styles',

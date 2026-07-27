@@ -67,8 +67,6 @@
     <Color x:Key="ColorInfoBlue700">#005aa8</Color>
     <Color x:Key="ColorInfoBlue800">#004483</Color>
     <Color x:Key="ColorInfoBlue900">#002e5c</Color>
-    <Color x:Key="ColorInfoBlueDefault">#005aa8</Color>
-    <Color x:Key="ColorFocusYellowDefault">#ffeb3b</Color>
     <Color x:Key="ColorGrey50">#f7fafa</Color>
     <Color x:Key="ColorGrey100">#f0f4f5</Color>
     <Color x:Key="ColorGrey200">#d8dde0</Color>
