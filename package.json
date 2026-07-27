@@ -1,7 +1,7 @@
 {
   "name": "@dhcw/sr-design-system",
   "version": "0.1.0",
-  "description": "DHCW Single Record Design System — monorepo root. Manages the tokens, web, react, blazor, maui, icons, and storybook packages.",
+  "description": "DHCW Single Record Design System \u2014 monorepo root. Manages the tokens, web, react, blazor, maui, icons, and storybook packages.",
   "private": true,
   "type": "module",
   "workspaces": [
@@ -16,9 +16,9 @@
     "build-storybook": "npm run build -w @dhcw/sr-tokens && npm run build-storybook -w @dhcw/sr-storybook",
     "build:pages": "npm run build -w @dhcw/sr-tokens && npm run build -w @dhcw/sr-website && npm run build-storybook -w @dhcw/sr-storybook && node scripts/assemble-pages.mjs",
     "build:site": "npm run build -w @dhcw/sr-tokens && npm run build -w @dhcw/sr-website",
-    "build:tokens": "npm run build -w @dhcw/sr-tokens && node scripts/sync-token-docs.mjs && node scripts/sync-figma-colour-guide.mjs",
-    "check:docs": "node scripts/sync-token-docs.mjs --check && node scripts/sync-figma-colour-guide.mjs --check",
+    "build:tokens": "npm run build -w @dhcw/sr-tokens && node scripts/sync-token-docs.mjs",
+    "check:docs": "node scripts/sync-token-docs.mjs --check",
     "storybook": "npm run storybook -w @dhcw/sr-storybook",
-    "sync:docs": "node scripts/sync-token-docs.mjs && node scripts/sync-figma-colour-guide.mjs"
+    "sync:docs": "node scripts/sync-token-docs.mjs"
   }
 }
