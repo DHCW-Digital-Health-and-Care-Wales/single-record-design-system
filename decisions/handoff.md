@@ -91,16 +91,14 @@ Drift that was corrected:
 
 ### Open, and what to pick up next
 
-1. **Figma colour guideline frame is NOT yet updated.** This was in scope for the
-   session and did not get done. The Colours page is `12:3270`, but
-   `get_metadata` on it returns ~178k characters, over the tool limit, so it needs
-   a **frame-level node id** rather than the page. Ask the design lead for the
-   specific guidelines-panel node, then mirror the panel format already used by
-   `Guidelines/Typography` (`3460:20`).
+1. ~~**Figma colour guideline frame is NOT yet updated.**~~ **Done** - the Colour Tokens
+   frame `125:5188` was reconciled directly in Figma. See the addendum below. The
+   `Guidelines/Colours` panel (`3468:9073`) is a separate artifact and was not touched.
 2. **Confirm the Figma variables match the cleaned tokens**, in particular that
    `yellow.100` is `#FDF3D7` in Figma and that no focus-yellow variable remains.
-   The repo could not be checked against Figma this session because
-   `get_variable_defs` needs a live selection in the Figma app.
+   Still outstanding. `get_variable_defs` needs a live selection, but the variable
+   collections can be read programmatically via `use_figma`, so this no longer needs
+   the design lead to be at the keyboard.
 3. Remaining Styles pages to bring up to the content standard: Spacing & Elevation
    (still renders sanitised markdown rather than authored content) and Grids (still
    a "planned" status page). **Icons is now authored** (see the 2026-07-27 addendum).
@@ -149,6 +147,42 @@ account.
 generate design content. The two plugins under `figma/plugins/` predate this and their
 inlined colour data is stale, notably a `focus` `#FFEB3B` swatch and a `border.focus` that
 still aliases the removed `focus-yellow`. Do not run them without reconciling them first.
+
+### Colour Tokens frame `125:5188` reconciled in Figma
+
+Done directly in Figma. The frame was in better shape than open item 1 implied: the status
+700s, `yellow.100` `#FDF3D7`, the `cyan-700` focus ring, the full grey ramp and the whole
+dark-mode table were already correct.
+
+| Change | Detail |
+|---|---|
+| Corrected `surface.background` | Read `#F0F4F5` / `grey-100`; the token moved to `blue-50` `#F4F5F8` on 2026-06-04 and the frame never caught up. Swatch fill, hex label, alias label and layer names all updated. |
+| 4 semantic rows added, light and dark | `interactive.disabled`, `text.disabled`, `border.subtle`, `border.disabled`. All four ship in the tokens and are bound across components but were undocumented. Cloned from existing rows so styling carries over. |
+| 4 primitive ramps added | Red, Green, Yellow, Info Blue, full 10 stops each, cloned from the Neutral ramp section. Order is now Blue, Cyan, Navy, Red, Green, Yellow, Info Blue, Status, Neutral. |
+
+**Gotchas for anyone editing this frame:**
+
+- The `Table Body` frames have `layoutMode: NONE`. Rows are **absolutely positioned**, so a
+  cloned row lands exactly on top of its template and must have its `y` set explicitly.
+  Child index does not affect visual order; `y` does.
+- `Section` and `Frame 1` (`1235:1719`) are vertical auto-layout and hug, so they grow on
+  their own. `Main Content` (`125:5234`) and the page frame (`125:5188`) are **fixed** and
+  must be grown by hand, which is why the frame is now 9397px tall.
+- The first row of each table is 62px against 61px for the rest, so reordering rows moves
+  that 1px divider. New rows were appended rather than inserted for this reason, which is
+  why `border.subtle` sits after `border.focus` instead of in token order.
+- Ramp cells carry a role label on the swatch. Stops with no assigned role have the label
+  frame set to `visible = false` rather than deleted.
+
+Verified structurally across the whole frame: no clipped frames, no overlapping siblings.
+
+**Not done, deliberately:** `cyan.850` (`#0C7B99`) is still missing from the Cyan ramp,
+which shows 9 of its 10 stops. It is referenced, not unused: dark-mode
+`surface.small-cards` resolves to it. The design lead did not select it this session.
+
+**Pre-existing defect, not introduced here:** in the dark-mode Interactive table, the usage
+text on the `primary` and `primary-hover` rows is taller than the 60px rows and overlaps
+into the row below. Worth a pass when someone is next in that table.
 
 ### Useful commands
 
