@@ -140,19 +140,21 @@ body {
 .search__empty { padding: 12px; font-size: 14px; color: var(--sr-color-text-secondary); }
 
 /* ── layout ───────────────────────────────────────────────────────────────── */
-.layout { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 200px minmax(0, 1fr); align-items: start; }
+.layout { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 200px minmax(0, 1fr); align-items: stretch; }
 .layout--nosidebar { grid-template-columns: minmax(0, 1fr); }
 
-/* Sticky, and sized to its own content so it leaves no empty column below. */
+/* The column fills the full height of the layout row, so its background runs the
+   length of the page. The nav inside it is what sticks while the page scrolls. */
 .sidebar {
   background: var(--sr-color-surface-small-cards);
-  align-self: start;
+  border-radius: 0 0 8px 0;
+}
+.sidebar__inner {
   position: sticky;
   top: 0;
   max-height: 100vh;
   overflow-y: auto;
   padding: 24px 0;
-  border-radius: 0 0 8px 0;
 }
 .sidebar__title {
   margin: 0 0 16px;
@@ -359,6 +361,58 @@ body {
 .swatch figcaption { padding: 8px 10px; font-size: 12px; display: flex; flex-direction: column; gap: 2px; }
 .hex { color: var(--sr-color-text-secondary); font-family: "Roboto Mono", monospace; }
 
+/* ── icons ────────────────────────────────────────────────────────────────── */
+.icon-specs { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 32px; margin: 0 0 24px; }
+.icon-spec { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.icon-spec figcaption { font-size: 12px; color: var(--sr-color-text-secondary); }
+.icon-spec figcaption code { background: none; padding: 0; font-size: 12px; }
+.icon-status-row { display: flex; align-items: center; gap: 8px; margin: 0 0 8px; font-size: 14px; }
+.icon-status-row:last-child { margin-bottom: 0; }
+
+.icon-browser { margin: 0 0 24px; }
+.icon-filter {
+  width: 100%;
+  max-width: 360px;
+  padding: 10px 12px;
+  font: inherit;
+  font-size: 15px;
+  color: var(--sr-color-text-primary);
+  background: var(--sr-color-surface-small-cards);
+  border: 1px solid var(--sr-color-border-default);
+  border-radius: 6px;
+}
+.icon-filter:focus-visible { outline: 3px solid var(--sr-color-border-focus); outline-offset: 1px; }
+.icon-browser__status { margin: 8px 0 0; font-size: 14px; color: var(--sr-color-text-secondary); }
+
+.icon-group h3 { margin: 32px 0 12px; }
+.icon-group__count { font-weight: 400; font-size: 13px; color: var(--sr-color-text-secondary); }
+.icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 8px; }
+.icon-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 8px;
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+  background: var(--sr-color-surface-small-cards);
+  border: 1px solid var(--sr-color-border-default);
+  border-radius: 8px;
+}
+.icon-tile:hover { border-color: var(--sr-color-interactive-link); }
+.icon-tile:focus-visible { outline: 3px solid var(--sr-color-border-focus); outline-offset: 1px; }
+.icon-tile__name {
+  font-family: "Roboto Mono", ui-monospace, monospace;
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--sr-color-text-secondary);
+  word-break: break-all;
+}
+.icon-tile.is-copied { border-color: var(--sr-color-status-success); }
+.icon-tile.is-copied .icon-tile__name { color: var(--sr-color-status-success); }
+.icon-tile.is-copied .icon-tile__name::after { content: " copied"; }
+
 .space-row { display: flex; align-items: center; gap: 16px; padding: 6px 0; }
 .space-row__meta { flex: none; width: 180px; font-size: 13px; color: var(--sr-color-text-secondary); }
 .space-bar { display: inline-block; height: 16px; background: var(--sr-color-interactive-primary); border-radius: 2px; }
@@ -397,6 +451,7 @@ body {
   .search { width: 100%; max-width: 320px; }
   .search__panel { width: 100%; }
   .layout { grid-template-columns: minmax(0, 1fr); }
-  .sidebar { position: static; max-height: none; padding: 16px 0; border-radius: 0; border-bottom: 1px solid var(--sr-color-border-default); }
+  .sidebar { border-radius: 0; border-bottom: 1px solid var(--sr-color-border-default); }
+  .sidebar__inner { position: static; max-height: none; overflow: visible; padding: 16px 0; }
   .content { padding: 24px 20px; }
 }

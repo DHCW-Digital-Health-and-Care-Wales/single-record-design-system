@@ -34,7 +34,7 @@ const BASE_URL = 'https://raw.githubusercontent.com/lucide-icons/lucide/main/ico
 
 // ── Icon catalogue ─────────────────────────────────────────────────────────────
 const ICONS = [
-  // Navigation & UI chrome (14)
+  // Navigation & UI chrome (17)
   { domain: 'nav', name: 'home',           lucide: 'house' },
   { domain: 'nav', name: 'menu',           lucide: 'menu' },
   { domain: 'nav', name: 'back',           lucide: 'arrow-left' },
@@ -49,8 +49,11 @@ const ICONS = [
   { domain: 'nav', name: 'filter',         lucide: 'list-filter',  note: 'filter renamed to list-filter in current Lucide' },
   { domain: 'nav', name: 'sort',           lucide: 'arrow-up-down' },
   { domain: 'nav', name: 'more',           lucide: 'ellipsis' },
+  { domain: 'nav', name: 'clear',          lucide: 'circle-x' },
+  { domain: 'nav', name: 'dashboard',      lucide: 'layout-grid' },
+  { domain: 'nav', name: 'menu2',          lucide: 'ellipsis-vertical' },
 
-  // Actions & editing (14)
+  // Actions & editing (20)
   { domain: 'action', name: 'add',      lucide: 'plus' },
   { domain: 'action', name: 'remove',   lucide: 'minus' },
   { domain: 'action', name: 'edit',     lucide: 'pencil' },
@@ -65,10 +68,17 @@ const ICONS = [
   { domain: 'action', name: 'refresh',  lucide: 'refresh-cw' },
   { domain: 'action', name: 'undo',     lucide: 'undo-2' },
   { domain: 'action', name: 'lock',     lucide: 'lock' },
+  { domain: 'action', name: 'check',    lucide: 'check' },
+  { domain: 'action', name: 'edit2',    lucide: 'square-pen' },
+  { domain: 'action', name: 'eye',      lucide: 'eye' },
+  { domain: 'action', name: 'eye-off',  lucide: 'eye-off' },
+  { domain: 'action', name: 'hold',     lucide: 'pause' },
+  { domain: 'action', name: 'scan',     lucide: 'barcode' },
 
-  // Status & feedback (8)
+  // Status & feedback (9)
   { domain: 'status', name: 'success',  lucide: 'circle-check' },
-  { domain: 'status', name: 'error',    lucide: 'circle-x' },
+  { domain: 'status', name: 'error-circle', lucide: 'circle-alert' },
+  { domain: 'status', name: 'alert',    lucide: 'triangle-alert' },
   { domain: 'status', name: 'warning',  lucide: 'triangle-alert' },
   { domain: 'status', name: 'info',     lucide: 'info' },
   { domain: 'status', name: 'critical', lucide: 'siren' },
@@ -121,7 +131,7 @@ const ICONS = [
   { domain: 'schedule', name: 'overnight',          lucide: 'moon' },
   { domain: 'schedule', name: 'urgent',             lucide: 'calendar-clock' },
 
-  // Location & organisation (10)
+  // Location & organisation (11)
   { domain: 'location', name: 'ward',         lucide: 'building-2' },
   { domain: 'location', name: 'hospital',     lucide: 'hospital' },
   { domain: 'location', name: 'gp-practice',  lucide: 'house-plus' },
@@ -132,6 +142,7 @@ const ICONS = [
   { domain: 'location', name: 'organisation', lucide: 'network' },
   { domain: 'location', name: 'region',       lucide: 'map' },
   { domain: 'location', name: 'ambulance',    lucide: 'ambulance' },
+  { domain: 'location', name: 'language',     lucide: 'globe' },
 
   // Communication & messaging (8)
   { domain: 'comms', name: 'message',      lucide: 'message-square' },
@@ -154,13 +165,15 @@ const ICONS = [
   { domain: 'file', name: 'form',       lucide: 'clipboard' },
   { domain: 'file', name: 'signed',     lucide: 'file-check' },
 
-  // Data & analytics (6)
+  // Data & analytics (8)
   { domain: 'data', name: 'chart',      lucide: 'chart-line' },
   { domain: 'data', name: 'table',      lucide: 'table-2' },
   { domain: 'data', name: 'trend-up',   lucide: 'trending-up' },
   { domain: 'data', name: 'trend-down', lucide: 'trending-down' },
   { domain: 'data', name: 'export',     lucide: 'file-down' },
   { domain: 'data', name: 'audit',      lucide: 'shield-check' },
+  { domain: 'data', name: 'grid-2x2',   lucide: 'grid-2x2' },
+  { domain: 'data', name: 'grid-3x3',   lucide: 'grid-3x3' },
 ];
 
 // ── SVG normalisation ─────────────────────────────────────────────────────────

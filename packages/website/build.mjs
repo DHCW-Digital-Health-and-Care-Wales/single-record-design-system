@@ -16,6 +16,7 @@
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, rmSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
+import { iconMarkup, iconNames } from '../icons/build/icons.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..', '..');
@@ -233,9 +234,11 @@ function shell({ title, prefix, sectionId, activeHref, body, extraHead = '', ext
     `<a href="${prefix + s.href}"${s.id === sectionId ? ' aria-current="page"' : ''}>${s.label}</a>`).join('');
   const sidebar = section && section.side
     ? `<nav class="sidebar" aria-label="${section.label}">
-        <p class="sidebar__title">${section.label}</p>
-        ${section.side.map((n) =>
-          `<a href="${prefix + n.href}"${n.href === activeHref ? ' aria-current="page"' : ''}>${n.label}</a>`).join('')}
+        <div class="sidebar__inner">
+          <p class="sidebar__title">${section.label}</p>
+          ${section.side.map((n) =>
+            `<a href="${prefix + n.href}"${n.href === activeHref ? ' aria-current="page"' : ''}>${n.label}</a>`).join('')}
+        </div>
        </nav>`
     : '';
   return `<!doctype html>
@@ -248,6 +251,7 @@ function shell({ title, prefix, sectionId, activeHref, body, extraHead = '', ext
 <link rel="stylesheet" href="${prefix}assets/typography.css">
 <link rel="stylesheet" href="${prefix}assets/button.css">
 <link rel="stylesheet" href="${prefix}assets/table.css">
+<link rel="stylesheet" href="${prefix}assets/icon.css">
 <link rel="stylesheet" href="${prefix}assets/site.css">
 ${extraHead}
 </head>
@@ -1042,6 +1046,305 @@ const TRANSLATOR_SCRIPT = (colourData, spaceData) => `<script>
 })();
 </script>`;
 
+// ─── Styles: Icons ────────────────────────────────────────────────────────────
+// Every icon on this page is rendered from the built icon set, so the gallery can
+// never fall out of step with what products actually consume.
+const ICON_DOMAINS = {
+  nav: 'Navigation and UI chrome',
+  action: 'Actions and editing',
+  status: 'Status and feedback',
+  people: 'Patients and people',
+  clinical: 'Clinical records and data',
+  schedule: 'Scheduling and appointments',
+  location: 'Location and organisation',
+  comms: 'Communication and messaging',
+  file: 'Documents and files',
+  data: 'Data and analytics',
+};
+
+function iconsBody() {
+  const byDomain = new Map(Object.keys(ICON_DOMAINS).map((d) => [d, []]));
+  for (const name of iconNames) {
+    const domain = name.split('/')[0];
+    if (!byDomain.has(domain)) byDomain.set(domain, []);
+    byDomain.get(domain).push(name);
+  }
+
+  const tile = (name) =>
+    `<button class="icon-tile" type="button" data-name="${name}" title="Copy ${name}">
+       <span class="sr-icon sr-icon--lg sr-icon--default">${iconMarkup(name)}</span>
+       <span class="icon-tile__name">${name}</span>
+     </button>`;
+
+  const gallery = [...byDomain.entries()].map(([domain, names]) =>
+    `<section class="icon-group" data-domain="${domain}">
+       <h3>${ICON_DOMAINS[domain] || domain} <span class="icon-group__count">${names.length}</span></h3>
+       <div class="icon-grid">${names.sort().map(tile).join('')}</div>
+     </section>`).join('');
+
+  const sizeSpecimen = ['xs', 'sm', 'md', 'lg'].map((s) =>
+    `<figure class="icon-spec">
+       <span class="sr-icon sr-icon--${s} sr-icon--default">${iconMarkup('clinical/vitals')}</span>
+       <figcaption><code>sr-icon--${s}</code></figcaption>
+     </figure>`).join('');
+
+  const colourRoles = [
+    ['default', 'Default icon colour, matched to body text'],
+    ['subtle', 'Supporting icons that must not compete with the label'],
+    ['interactive', 'Icons inside links and interactive controls'],
+    ['critical', 'Errors, invalid fields, critical alerts'],
+    ['warning', 'Attention required, unverified data'],
+    ['success', 'Confirmed and completed states'],
+    ['info', 'Informational and in-progress states'],
+  ];
+  const colourSpecimen = colourRoles.map(([role]) =>
+    `<figure class="icon-spec">
+       <span class="sr-icon sr-icon--lg sr-icon--${role}">${iconMarkup('status/info')}</span>
+       <figcaption><code>sr-icon--${role}</code></figcaption>
+     </figure>`).join('');
+  const colourTable = `<div class="table-wrap"><table>
+    <thead><tr><th>Class</th><th>Colour token</th><th>Use for</th></tr></thead>
+    <tbody>${colourRoles.map(([role, use]) => {
+      const token = { default: 'sr.color.text.primary', subtle: 'sr.color.text.secondary',
+        interactive: 'sr.color.interactive.primary', critical: 'sr.color.status.critical',
+        warning: 'sr.color.status.warning', success: 'sr.color.status.success',
+        info: 'sr.color.status.info' }[role];
+      return `<tr><td><code>sr-icon--${role}</code></td><td><code>${token}</code></td><td>${use}</td></tr>`;
+    }).join('')}
+    <tr><td><code>sr-icon--inverse</code></td><td><code>sr.color.text.inverse</code></td><td>Icons on a dark or saturated fill</td></tr>
+    <tr><td><code>sr-icon--inherit</code></td><td>Inherited</td><td>Icons inside a coloured component, such as a button, that must track the component colour</td></tr>
+    </tbody></table></div>`;
+
+  const basicSnippets = {
+    HTML: `<!-- Decorative: the visible text carries the meaning. -->
+<span class="sr-icon sr-icon--md sr-icon--default">
+  <svg aria-hidden="true" focusable="false"><!-- clinical/vitals --></svg>
+</span>
+<span>Observations</span>`,
+    React: `import { Icon } from '@dhcw/sr-react';
+
+<Icon name="clinical/vitals" size="md" color="default" />
+<span>Observations</span>`,
+    Blazor: `<SrIcon Name="clinical/vitals" Size="IconSize.Md" Color="IconColor.Default" />
+<span>Observations</span>`,
+    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->
+<SrIcon Name="clinical/vitals" Size="IconSize.Md" Color="IconColor.Default" />`,
+  };
+
+  const a11ySnippets = {
+    HTML: `<!-- Decorative. Paired with visible text, so the icon is hidden from
+     assistive technology and the text is announced on its own. -->
+<button class="sr-button sr-button--secondary" type="button">
+  <span class="sr-icon sr-icon--sm sr-icon--inherit"><svg aria-hidden="true" focusable="false"></svg></span>
+  Print summary
+</button>
+
+<!-- Meaningful. No visible text, so the control carries the name. -->
+<button class="sr-button sr-button--secondary" type="button" aria-label="Print summary">
+  <span class="sr-icon sr-icon--sm sr-icon--inherit"><svg aria-hidden="true" focusable="false"></svg></span>
+</button>`,
+    React: `{/* Decorative: the button text is the accessible name. */}
+<Button variant="secondary">
+  <Icon name="action/print" size="sm" color="inherit" />
+  Print summary
+</Button>
+
+{/* Meaningful: name the control, not the icon. */}
+<Button variant="secondary" aria-label="Print summary">
+  <Icon name="action/print" size="sm" color="inherit" />
+</Button>`,
+    Blazor: `@* Decorative: the button text is the accessible name. *@
+<SrButton Variant="ButtonVariant.Secondary">
+  <SrIcon Name="action/print" Size="IconSize.Sm" Color="IconColor.Inherit" />
+  Print summary
+</SrButton>
+
+@* Meaningful: name the control, not the icon. *@
+<SrButton Variant="ButtonVariant.Secondary" AriaLabel="Print summary">
+  <SrIcon Name="action/print" Size="IconSize.Sm" Color="IconColor.Inherit" />
+</SrButton>`,
+    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->
+<SrButton Variant="ButtonVariant.Secondary" AriaLabel="Print summary">
+  <SrIcon Name="action/print" Size="IconSize.Sm" Color="IconColor.Inherit" />
+</SrButton>`,
+  };
+
+  const statusSnippets = {
+    HTML: `<!-- Correct: colour and icon reinforce a label that already says it. -->
+<p>
+  <span class="sr-icon sr-icon--sm sr-icon--critical"><svg aria-hidden="true" focusable="false"></svg></span>
+  Allergy: penicillin
+</p>
+
+<!-- Wrong: a bare red icon leaves the meaning to colour and shape alone. -->
+<span class="sr-icon sr-icon--sm sr-icon--critical"><svg aria-hidden="true"></svg></span>`,
+    React: `<Text size="s">
+  <Icon name="status/warning" size="sm" color="critical" />
+  Allergy: penicillin
+</Text>`,
+    Blazor: `<SrText Size="TextSize.S">
+  <SrIcon Name="status/warning" Size="IconSize.Sm" Color="IconColor.Critical" />
+  Allergy: penicillin
+</SrText>`,
+    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->
+<SrText Size="TextSize.S">
+  <SrIcon Name="status/warning" Size="IconSize.Sm" Color="IconColor.Critical" />
+  Allergy: penicillin
+</SrText>`,
+  };
+
+  const buttonRow = `
+<button class="sr-button sr-button--secondary" type="button">
+  <span class="sr-icon sr-icon--sm sr-icon--inherit">${iconMarkup('action/print')}</span>
+  Print summary
+</button>
+<button class="sr-button sr-button--secondary" type="button" aria-label="Print summary">
+  <span class="sr-icon sr-icon--sm sr-icon--inherit">${iconMarkup('action/print')}</span>
+</button>`;
+
+  const statusRow = ['critical', 'warning', 'success', 'info'].map((role) => {
+    const [name, label] = { critical: ['status/warning', 'Allergy: penicillin'],
+      warning: ['status/pending', 'Result not yet verified'],
+      success: ['status/success', 'Discharge summary sent'],
+      info: ['status/info', 'Referral in progress'] }[role];
+    return `<p class="icon-status-row">
+      <span class="sr-icon sr-icon--sm sr-icon--${role}">${iconMarkup(name)}</span>
+      <span>${label}</span>
+    </p>`;
+  }).join('');
+
+  return `
+<p class="breadcrumbs">Styles</p>
+<h1>Icons</h1>
+<p class="lede">The Single Record icon set, and the size and colour rules that keep it legible in
+dense clinical screens.</p>
+
+<h2>The set</h2>
+<p>Single Record uses <a href="https://lucide.dev" target="_blank" rel="noopener">Lucide</a>, an
+open-source icon set published under the ISC licence. Every icon is drawn on a 24 by 24 grid with a
+2px stroke, round caps and round joins, so icons sit together evenly whatever the mix on screen.</p>
+<p>${iconNames.length} icons are published, grouped into ${byDomain.size} domains that follow how
+clinical and administrative staff talk about their work: navigation, actions, status, people,
+clinical records, scheduling, location, communication, files and data.</p>
+<p>Icons are referenced by their Single Record name, such as <code>clinical/medication</code>, not by
+the underlying Lucide file name. The Single Record name is stable: if an upstream drawing is renamed
+or replaced, the name your product uses does not change.</p>
+
+<h2>Using an icon</h2>
+<p>An icon is a <code>sr-icon</code> wrapper around an inline SVG. The wrapper carries the size and
+the colour role; the SVG itself is drawn with <code>currentColor</code> and inherits from it.</p>
+${showcase(`<div class="icon-specs">${sizeSpecimen}</div>`, 'icon-basic', basicSnippets)}
+
+<h2>Sizes</h2>
+<p>Four sizes are published. Stroke weight is reduced slightly at the two smallest sizes so the
+drawing does not fill in at low pixel densities.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Class</th><th>Size</th><th>Use for</th></tr></thead>
+<tbody>
+<tr><td><code>sr-icon--xs</code></td><td>16px</td><td>Inline within dense content, such as a table cell</td></tr>
+<tr><td><code>sr-icon--sm</code></td><td>20px</td><td>Standard inline icons, including icons inside buttons</td></tr>
+<tr><td><code>sr-icon--md</code></td><td>24px</td><td>Default size</td></tr>
+<tr><td><code>sr-icon--lg</code></td><td>32px</td><td>Prominent icons, empty states, feature panels</td></tr>
+</tbody></table></div>
+<p>An icon that is itself a control needs a target of at least 44 by 44px. Keep the icon at its
+published size and add padding to the button around it, rather than scaling the drawing up.</p>
+
+<h2>Colour</h2>
+<p>Icons take their colour from a role, not from a value. Roles map onto the same semantic colour
+tokens the rest of the interface uses, so an icon shifts with the theme without being re-specified.</p>
+<div class="icon-specs">${colourSpecimen}</div>
+${colourTable}
+<p>Inside a component that already sets a colour, such as a button, use
+<code>sr-icon--inherit</code> so the icon tracks the component rather than fighting it.</p>
+<div class="callout"><p><strong>The warning role is an exception.</strong> Every colour role above
+clears 3:1 against a light surface except <code>sr-icon--warning</code>, which is a fill colour
+rather than a stroke colour and reaches only 1.6:1 on white. Never let a warning icon carry the
+message on its own: give it a text label, and where the icon has to read on its own use
+<code>sr-icon--critical</code> or the warning surface behind a labelled banner. A darker warning
+value is under review.</p></div>
+
+<h2>Icons with text</h2>
+<p>Most icons in Single Record sit next to a label. In that pairing the text carries the meaning and
+the icon is decorative, so it is hidden from screen readers. When an icon stands alone, the control
+around it must be named instead.</p>
+${showcase(buttonRow, 'icon-a11y', a11ySnippets)}
+
+<h2>Status icons</h2>
+<p>Clinical status must never be carried by colour or by icon shape alone. Every status icon needs a
+text label next to it. Staff working at speed, on varied screens, in varied light, read the label.</p>
+${showcase(statusRow, 'icon-status', statusSnippets)}
+
+<h2>When not to use an icon</h2>
+<ul>
+<li>In dense data views, where a decorative icon in every row adds noise and no meaning.</li>
+<li>As the only signal for a state, an action, or a piece of clinical information.</li>
+<li>To replace a word that is short and unambiguous. A labelled control is faster to read than an
+icon a member of staff has to learn.</li>
+<li>Alongside icons from another set. Mixing sets breaks the shared stroke and grid, and the result
+reads as two different products.</li>
+</ul>
+<p>Do not redraw or edit the SVG paths, and do not rotate an icon to mean something new. If the set
+does not cover what you need, request the icon rather than improvising one.</p>
+
+<h2>Browse the set</h2>
+<p>Select an icon to copy its name.</p>
+<div class="icon-browser">
+  <label class="sr-only" for="icon-filter">Filter icons by name</label>
+  <input id="icon-filter" class="icon-filter" type="search" autocomplete="off"
+         placeholder="Filter, for example medication or chevron">
+  <p class="icon-browser__status" id="icon-count" role="status"></p>
+</div>
+<div id="icon-gallery">${gallery}</div>
+
+${accessibilityTable([
+    { req: 'Decorative icons are not announced', sc: '1.1.1', how: 'Icons paired with visible text ship with `aria-hidden="true"` and `focusable="false"`, so the label is announced once.', test: 'Screen reader, NVDA and VoiceOver' },
+    { req: 'Standalone icons have an accessible name', sc: '4.1.2', how: 'An icon-only control is named on the button or link with `aria-label`, describing the action rather than the drawing.', test: 'Screen reader, accessibility inspector' },
+    { req: 'Meaning is not carried by colour alone', sc: '1.4.1', how: 'Status icons are always paired with a text label. Colour and shape reinforce the label, they do not replace it.', test: 'Greyscale review' },
+    { req: 'Icons meet non-text contrast', sc: '1.4.11', how: 'Icon colour roles resolve to semantic tokens checked at 3:1 against the surface behind them. The warning role is the one exception and must always be paired with a text label.', test: 'Automated contrast' },
+    { req: 'Icon controls are large enough to hit', sc: '2.5.8', how: 'Icon-only controls use a 44 by 44px target, with the drawing kept at its published size and padding added around it.', test: 'Measure, touch device' },
+    { req: 'Icons scale with text', sc: '1.4.4', how: 'Icons are drawn at 1em and sized from the type scale, so they enlarge with the surrounding text at 200% zoom.', test: 'Browser zoom to 200%' },
+  ])}`;
+}
+
+const ICONS_JS = `<script>
+(function(){
+  var input = document.getElementById('icon-filter');
+  var gallery = document.getElementById('icon-gallery');
+  var count = document.getElementById('icon-count');
+  if(!input || !gallery) return;
+  var tiles = [].slice.call(gallery.querySelectorAll('.icon-tile'));
+  var groups = [].slice.call(gallery.querySelectorAll('.icon-group'));
+
+  function filter(){
+    var q = input.value.trim().toLowerCase();
+    var shown = 0;
+    tiles.forEach(function(t){
+      var match = !q || t.getAttribute('data-name').indexOf(q) !== -1;
+      t.hidden = !match;
+      if(match) shown++;
+    });
+    groups.forEach(function(g){
+      g.hidden = !g.querySelector('.icon-tile:not([hidden])');
+    });
+    count.textContent = q ? shown + ' of ' + tiles.length + ' icons' : '';
+  }
+  input.addEventListener('input', filter);
+
+  gallery.addEventListener('click', function(e){
+    var tile = e.target.closest ? e.target.closest('.icon-tile') : null;
+    if(!tile) return;
+    var name = tile.getAttribute('data-name');
+    var done = function(){
+      tile.classList.add('is-copied');
+      setTimeout(function(){ tile.classList.remove('is-copied'); }, 1200);
+    };
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(name).then(done, function(){});
+    }
+  });
+})();
+</script>`;
+
 // ─── "Planned" page: honest status plus upstream links ────────────────────────
 function plannedBody({ title, crumb, intro, links = [], prefix = '' }) {
   links = links.map((l) => (/^https?:/.test(l.href) ? l : { ...l, href: prefix + l.href }));
@@ -1180,11 +1483,8 @@ addPage({
 addPage({
   file: 'styles/icons.html', url: 'styles/icons.html', title: 'Icons', section: 'Styles',
   sectionId: 'styles', activeHref: 'styles/icons.html', prefix: '../',
-  body: plannedBody({
-    title: 'Icons', crumb: 'Styles', prefix: '../',
-    intro: 'The Single Record icon set and the colour and size tokens that control it.',
-    links: [{ href: STORYBOOK_URL, label: 'Component catalogue', note: 'browse how icons are used inside components' }],
-  }),
+  body: iconsBody(),
+  extraScript: ICONS_JS,
 });
 addPage({
   file: 'styles/grids.html', url: 'styles/grids.html', title: 'Grids', section: 'Styles',
@@ -1393,6 +1693,7 @@ mkdirSync(resolve(DIST, 'components'), { recursive: true });
 for (const f of ['tokens.css', 'typography.css']) copyFileSync(resolve(TOKENS, 'css', f), resolve(DIST, 'assets', f));
 copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'button', 'button.css'), resolve(DIST, 'assets', 'button.css'));
 copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'table', 'table.css'), resolve(DIST, 'assets', 'table.css'));
+copyFileSync(resolve(ROOT, 'packages', 'icons', 'src', 'icon.css'), resolve(DIST, 'assets', 'icon.css'));
 copyFileSync(resolve(ROOT, 'figma', 'assets', 'dhcw-logo-white.png'), resolve(DIST, 'assets', 'dhcw-logo-white.png'));
 writeFileSync(resolve(DIST, 'assets', 'site.css'), readFileSync(resolve(__dirname, 'site.css'), 'utf8'));
 writeFileSync(resolve(DIST, 'assets', 'site.js'), SITE_JS);

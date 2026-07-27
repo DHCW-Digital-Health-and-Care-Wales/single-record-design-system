@@ -16,7 +16,7 @@ See [DDR-003](../decisions/DDR-003-lucide-icon-library.md) for the full decision
 | Licence | ISC (permissive; copyright notice required in source, not in UI) |
 | Grid | 24 × 24 px |
 | Stroke | 2px, round linecap, round linejoin |
-| Coverage | 1,500+ icons; 106 SR aliases defined across 10 clinical/admin domains |
+| Coverage | 1,500+ icons; 119 SR aliases defined across 10 clinical/admin domains |
 | NuGet | `Lucide.Blazor`, `Lucide.Maui` |
 | Source SVGs | `foundations/iconography/svg/{domain}/{sr-name}.svg` |
 | Catalogue | `foundations/iconography/catalogue.md` |
