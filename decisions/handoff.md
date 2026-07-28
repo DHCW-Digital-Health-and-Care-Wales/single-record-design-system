@@ -17,6 +17,78 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-07-27 (later, direct Figma session)
+
+Branch `claude/design-system-record-continuation-2ouctr`. Worked **directly in Figma**
+via `use_figma` this session — no plugin, no generated content. **File key:
+`x5fwyefxxgD03csz8ld7SZ`** (SINGLE-RECORD-DESIGN-SYSTEM, NHS Wales enterprise). See the
+Figma File Reference table below; record it there in every future session, it was
+missing before and cost real time to recover.
+
+### Colour Tokens frame (`125:5188`, Colours page `12:3270`) reconciled against the JSON
+
+Was in better shape than the prior checkpoint's open item implied — status 700s,
+`yellow-100`, the cyan focus ring and the full grey ramp were already correct. What
+was actually wrong or missing, now fixed:
+
+- **`sr.color.surface.background`** still showed `grey-100`/`#F0F4F5` from before the
+  2026-06-04 change to `blue-50`/`#F4F5F8`. Corrected.
+- **4 missing semantic rows** added to both light and dark tables: `interactive.disabled`,
+  `text.disabled`, `border.subtle`, `border.disabled`.
+- **Red/Green/Yellow/Info Blue primitive ramps** had no section at all (only selected
+  stops inside Status); added all four as full 10-stop sections matching the
+  Blue/Cyan/Navy/Neutral pattern.
+- **Cyan-850** (`#0C7B99`) added as a 10th stop between 900 and 800 — this is an
+  intentional addition (lightest cyan that still clears AA at 4.87:1 for white text),
+  not a gap. The Figma **variable** already existed; only the documentation frame was
+  behind.
+- **`border.subtle` reordered** in both tables to match token declaration order
+  (`subtle, default, strong, focus, disabled` — it had been appended last).
+- **Two classes of layout defect, one pre-existing and widespread, one from this
+  session's own edits:**
+  - Row heights were fixed (56/60px) against wrapped usage-column text generated from
+    token `$description`s, which run longer than the original hand-written copy —
+    caused overlap in 6 pre-existing dark-mode rows plus every row this session added.
+    Fixed by measuring text and growing rows to fit, across all 11 tables.
+  - **22 alias badges across nearly every table (light and dark)** had a background pill
+    narrower than its own text — e.g. `yellow-100` rendered as `yellow-10` with the final
+    character unreadable against white. Pre-existing, not something this session
+    introduced; found while chasing what looked like a single isolated case. Fixed
+    generically: every badge resized to fit its text, alias columns widened where
+    needed, usage columns shifted/rewrapped only where that was actually forced.
+  - Verified with a structural sweep (clipping, vertical row overlap, horizontal
+    alias/usage overflow, badge underfit) across the whole frame after every pass:
+    zero problems on the final pass.
+
+### Figma variables vs. the token JSON (open item 2, now closed)
+
+Diffed all 78 primitive and 30 semantic (`Single Record` collection) variables against
+`foundations/tokens/`. Found and fixed, with sign-off:
+
+| Variable | Was | Now |
+|---|---|---|
+| `Status/Critical` (dark) | Red/600 | **Red/700** — matches light mode and the JSON; this is the AA contrast fix from the July reconciliation, which had reached the JSON and light mode but not the dark Figma variable |
+| `Status/Success` (dark) | Green/600 | **Green/700** — same gap, same fix |
+| `Interactive/Link` (light) | standalone duplicate `Info Blue` primitive | **`Info Blue/700`** — same resolved colour, but now points at the canonical stepped primitive instead of the duplicate the JSON already removed (`info-blue.default`) |
+| `Focus Yellow` primitive | existed, unreferenced | **Deleted** — DDR-006 deprecated it and deferred removal until nothing referenced it; confirmed no variable-level references and no fill/stroke bindings on the Colours page. **Not exhaustively swept across all 51 pages in the file** — if anything elsewhere still shows a broken reference, this is why; recoverable via Figma version history. |
+| standalone duplicate `Info Blue` primitive | existed, unreferenced after the repoint above | **Deleted**, same basis |
+
+Everything else matched: all 10-step ramps, Navy's 5 steps, and 26 of 29 semantic
+tokens across both modes.
+
+### Two Figma plugins exist under `figma/plugins/` — do not use them
+
+`colour-guide` and `colour-palette` predate this session's direct-write method and
+generate design content programmatically rather than through `use_figma`. An earlier
+attempt this session to keep `colour-guide`'s inlined data in sync with the token JSON
+was **reverted at the user's explicit instruction** — the standing method is direct
+authoring in Figma, not plugins. The `colour-guide` plugin's inlined colour data is
+still stale (a `focus` `#FFEB3B` swatch, `border.focus` still aliasing the removed
+`focus-yellow`, pre-reconciliation status colours) — do not run it without reconciling
+first, or better, do not use it at all.
+
+---
+
 ## Checkpoint - 2026-07-27
 
 Branch `claude/single-record-ds-guidelines-v003fa`. Website chrome rebuilt to the
