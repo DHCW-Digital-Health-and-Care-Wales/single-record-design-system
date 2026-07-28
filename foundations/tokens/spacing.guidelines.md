@@ -16,14 +16,27 @@
 ## When to use
 
 - Use spacing tokens (`--space-*`) for every padding, margin and gap.
-- Never type a raw pixel value; if a value you need is not on the scale, that is a token decision, not a local override.
 - Pick by role using the semantic spacing tokens where they exist, not by eyeballing pixels.
+- Use proximity to show relationship: put related items closer together than unrelated ones.
 
-## The 4px grid
+## When not to use
 
-- Every step is a multiple of the **4px base unit** (DDR-001), matching the type line-height grid so text and layout share one rhythm.
-- Scale: 0, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96px.
-- Density matters in clinical tables: prefer the smaller steps (`space-1` to `space-4`) for component internals, larger steps for page-level rhythm.
+- Do not type a raw pixel value. If a value you need is not on the scale, that is a token
+  decision (DDR plus sign-off), not a local override.
+- Do not pad clinical tables so loosely that rows need horizontal scrolling to fit the view.
+- Do not use spacing alone to separate content that also needs a visible boundary — use
+  `Border/Subtle` or a divider, not a gap, when the grouping must survive at high zoom.
+
+## How it works
+
+- **4px base unit** — every step is a multiple of 4px (DDR-001), matching the type
+  line-height grid so text and layout share one rhythm.
+- **Scale** — 0, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96px.
+- **Density in clinical tables** — prefer the smaller steps (`space-1` to `space-4`) for
+  component internals; use larger steps for page-level rhythm, not table cells.
+- **Proximity signals grouping** — the gap between a label and its value should be smaller
+  than the gap to the next unrelated item, so related information reads as one group without
+  needing a rule or fill to separate it.
 
 ## Options
 
@@ -53,6 +66,8 @@ Full scale and semantic mappings: [`spacing.md`](./spacing.md).
 
 - Spacing must not defeat WCAG 2.2 text-spacing (1.4.12): layouts tolerate user spacing overrides without clipping.
 - Keep interactive targets at least 24x24px with adequate spacing (2.5.8); 44x44px is preferred for primary touch controls.
+- Reflow (1.4.10): spacing must scale or wrap at 400% zoom and 320px width, never cause
+  content loss or a second scroll axis.
 
 ## Frameworks
 
@@ -64,9 +79,16 @@ Full scale and semantic mappings: [`spacing.md`](./spacing.md).
 | .NET MAUI | Current | XAML `Space*` keys from the token build |
 | Legacy (.NET 4.8 / Delphi) | Tokens only / best-effort | CSS custom properties |
 
+## Clinical / DHCW notes
+
+DHCW UI Standards state that the space between a field's content and its heading must be smaller than the space between that content and the next heading below it, so related information reads as a group without a rule or fill ([p.15](../../docs/reference/dhcw-ui-standards-v1.3.md#page-15)).
+
+We carry that grouping-by-proximity intent forward (`CARRIED` disposition): choose adjacent
+`--space-*` steps for label-to-value and a larger step for the gap to the next group, rather
+than fixed legacy pixel values.
+
 ## Related
 
 - [`spacing.md`](./spacing.md) — token reference
 - [DDR-001](../../decisions/DDR-001-four-px-base-spacing.md) — the 4px base unit
 - [`typography.guidelines.md`](./typography.guidelines.md) · [`colour/colour.guidelines.md`](./colour/colour.guidelines.md)
-</content>

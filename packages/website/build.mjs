@@ -127,7 +127,9 @@ function publicise(md) {
   text = text.replace(/[ \t]*\(UI Standards #\d+\)/g, '');
   text = text.replace(/[ \t]*\bDDR-\d+[ \t]*/g, ' ');
   text = text.replace(/[ \t]*\bUI Standards #\d+[ \t]*/g, ' ');
-  text = text.replace(/[ \t]*·?[ \t]*DHCW UI Standards[^.\n]*/g, '');
+  // A page-anchor citation like "p.63" or "(p.63, p.71)" contains a period that is not
+  // a sentence end, so a lone period followed by a digit must not stop this match.
+  text = text.replace(/[ \t]*·?[ \t]*DHCW UI Standards(?:[^.\n]|\.(?=\d))*/g, '');
 
   // 4. Leftover inline file references.
   text = text.replace(/[ \t]*`[^`\n]*\.(?:md|json)`/g, '');
@@ -137,6 +139,9 @@ function publicise(md) {
 
   // 6. Tidy the punctuation left behind by the removals.
   text = text.replace(/\(\s*\)/g, '');
+  // A whole sentence stripped down to nothing leaves an orphan line with just its
+  // trailing punctuation (e.g. a lone "." paragraph); drop those lines entirely.
+  text = text.replace(/^[ \t]*[.,;:][ \t]*$/gm, '');
   text = text.replace(/[ \t]+([.,;:])/g, '$1');
   text = text.replace(/,[ \t]*,/g, ',');
   text = text.replace(/([.,;:])[ \t]*\1/g, '$1');
