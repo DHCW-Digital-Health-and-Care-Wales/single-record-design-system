@@ -22,7 +22,8 @@
     "./time-select": "./src/time-select/TimeSelect.jsx",
     "./status-indicator": "./src/status-indicator/StatusIndicator.jsx",
     "./checkbox": "./src/checkbox/Checkbox.jsx",
-    "./checkbox-group": "./src/checkbox/CheckboxGroup.jsx"
+    "./checkbox-group": "./src/checkbox/CheckboxGroup.jsx",
+    "./table": "./src/table/Table.jsx"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",

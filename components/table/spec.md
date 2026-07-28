@@ -19,6 +19,9 @@ Reference implementation: `packages/web/src/table/table.css` + `table.stories.js
 |---|---|
 | Default | Standard data table with header row and body rows |
 | Selectable rows | A row can be marked selected (`--selected`) — e.g. the active patient |
+| Selection column | Leading checkbox column for bulk actions (`.sr-table__select`) |
+| Sortable columns | Header carries `aria-sort`; the label becomes a button (`.sr-table__sort`) |
+| Sticky header | Opt-in `.sr-table--sticky-head` for long scrolling lists |
 
 ### Layouts (`.sr-table--{layout}` — Storybook "layout" toggle)
 
@@ -53,6 +56,37 @@ columns describe (e.g. observation type × time).
 - **`.sr-table__row` / `.sr-table__cell`**: Body rows and cells — `Body S` (Roboto Regular 14/20), `Text/Secondary`, 8px padding, 40px tall. Row dividers use `Border/Subtle`.
 - **`.sr-table__rowhead`**: Left row-header cell (`row-headers` layout) — styled like a header (`Info Blue/50`, Label type).
 - **`.sr-table__actions` / `.sr-table__action`**: Leading (or trailing, via `--trailing`) cell holding row-level icon-only buttons / the kebab menu.
+
+---
+
+## Selection and sorting
+
+Both are built from the Figma building blocks (`1122:14469`): `Row - Check` for
+the selection cell and `Sortable header` for the sort affordance.
+
+### Selection column
+
+- 36px wide (`space-2` padding either side of a 20px box), matching `Row - Check`.
+- Uses the [Checkbox](../checkbox/spec.md) component with the `--bare` modifier so
+  the box carries no visible label.
+- **Every selection checkbox must be named** with `aria-label` on the input —
+  "Select General notes vol 2 at Cleddau Ward-GGH", not "Select row 3". Where a
+  column value repeats across rows, include a second value to keep names unique.
+- The header checkbox is a select-all. It shows `indeterminate` when some but not
+  all rows are selected; the browser exposes that as `aria-checked="mixed"`.
+
+### Sortable columns
+
+- The `<th>` carries `aria-sort` (`ascending` / `descending` / `none`); the label
+  becomes a `<button>` so the control is reachable and named without making the
+  whole cell interactive.
+- Indicator icons come from the existing set: `nav/sort` when unsorted,
+  `nav/chevron-up` / `nav/chevron-down` when applied. **The Figma designs only the
+  neutral two-triangle state** — the directional states are an extension, since
+  `aria-sort` announces a direction that must also be visible. Flagged for review.
+- Sorting is **controlled**: the component reports intent and renders state, it
+  never reorders rows itself. This keeps it usable for server-side sorting and
+  paging where the full dataset is not in the component.
 
 ---
 
@@ -119,7 +153,14 @@ Minimum touch target: the 32px compact action target is a documented exception f
 - Consumes `@dhcw/sr-tokens` CSS custom properties and `@dhcw/sr-icons` for glyphs.
 - Icons use `stroke="currentColor"`, so setting the button's `color` colours the icon — this is how row actions become blue.
 - Blazor / React wrappers should mirror this markup and the `sr-table__*` class contract.
-- Sorting, filtering, and pagination are planned and not yet part of this reference (`/components/README.md`).
+- React wrapper: `packages/react/src/table/Table.jsx`. Declarative `columns` / `rows`
+  API; selection and sorting are controlled by the caller. Row actions default to a
+  **leading** column (`rowActionsPosition="leading"`), matching the Figma `kebab-left`
+  default; pass `"trailing"` for a trailing column.
+- A `<caption>` is styled (left-aligned, Label type) rather than left at the browser
+  default. Where the surrounding page already names the table, keep the caption and
+  hide it with `.sr-visually-hidden` rather than omitting it.
+- Filtering and pagination remain planned and are not part of this reference.
 
 ---
 

@@ -133,6 +133,13 @@
   cursor: pointer;
 }
 
+/* Label-less checkbox — the box on its own, for table selection cells.
+   The accessible name must come from aria-label on the input. */
+.sr-checkbox--bare .sr-checkbox__label {
+  padding-left: 20px;
+  min-width: 20px;
+}
+
 /* The box */
 .sr-checkbox__label::before {
   content: "";
