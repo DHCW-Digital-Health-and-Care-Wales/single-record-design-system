@@ -23,7 +23,8 @@
     "./status-indicator": "./src/status-indicator/StatusIndicator.jsx",
     "./checkbox": "./src/checkbox/Checkbox.jsx",
     "./checkbox-group": "./src/checkbox/CheckboxGroup.jsx",
-    "./table": "./src/table/Table.jsx"
+    "./table": "./src/table/Table.jsx",
+    "./modal": "./src/modal/Modal.jsx"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",

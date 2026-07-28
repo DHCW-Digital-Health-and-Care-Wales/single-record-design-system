@@ -18,3 +18,4 @@ export { default as Checkbox } from './checkbox/Checkbox.jsx';
 export { default as CheckboxGroup } from './checkbox/CheckboxGroup.jsx';
 export { default as Autocomplete } from './autocomplete/Autocomplete.jsx';
 export { default as Table } from './table/Table.jsx';
+export { default as Modal } from './modal/Modal.jsx';

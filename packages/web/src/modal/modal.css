@@ -1,0 +1,165 @@
+/**
+ * DHCW Single Record — Modal dialog
+ * Reference HTML/CSS implementation, matched to the Figma Modal set (3807:36855):
+ * Size = Small | Medium | Large, with a Modal Content slot.
+ * Consumes @dhcw/sr-tokens.
+ *
+ * Built on the native <dialog> element opened with showModal(). That gives us,
+ * with no JavaScript and no dependency:
+ *   - top-layer rendering (never clipped by overflow or z-index elsewhere)
+ *   - a real ::backdrop
+ *   - focus containment inside the dialog
+ *   - Escape to dismiss
+ *   - focus returned to the invoking element on close
+ * Because it lives here in the CSS layer rather than in a React library, Blazor
+ * and MAUI get the same behaviour through the shared stylesheet. See DDR-008 for
+ * the base-modal / composed-pattern split.
+ *
+ * Anatomy (column, gap = space-4):
+ *   .sr-modal__header — title + close button
+ *   .sr-modal__body   — the content slot, rules above and below, scrolls if tall
+ *   .sr-modal__footer — actions, right-grouped per DDR-018
+ *
+ * Elevation: `sr.elevation.overlay` (0 4px 16px rgba(27,41,74,0.18)) per
+ * foundations/tokens/elevation.md, which reserves that step for modals, drawers
+ * and dropdowns. The Figma component is bound to Elevation/Raised, the card step —
+ * see DL-019. There is no elevation token in the JSON yet, so the value is inline.
+ */
+
+.sr-modal {
+  /* Reset the user-agent dialog box. */
+  padding: var(--space-6);
+  border: 0;
+  border-radius: var(--radius-lg);
+  background-color: var(--sr-color-surface-section-cards);
+  color: var(--sr-color-text-primary);
+  box-shadow: 0 4px 16px rgba(27, 41, 74, 0.18);
+  font-family: "Roboto", system-ui, -apple-system, sans-serif;
+
+  width: 480px; /* Medium is the default size */
+  max-width: calc(100vw - var(--space-8));
+  max-height: calc(100vh - var(--space-8));
+  box-sizing: border-box;
+  overflow: hidden; /* the body scrolls, not the dialog */
+}
+
+/* The UA hides a closed dialog with `display: none`. Only apply the flex layout
+   while open, or the dialog would render when it should be hidden. */
+.sr-modal[open] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.sr-modal::backdrop {
+  /* Navy-900 at 48%, matching the shadow colour family rather than pure black. */
+  background-color: rgba(27, 41, 74, 0.48);
+}
+
+/* ---------- Sizes ---------- */
+.sr-modal--small { width: 380px; }
+.sr-modal--medium { width: 480px; }
+.sr-modal--large { width: 840px; }
+
+/* ---------- Header ---------- */
+.sr-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex: 0 0 auto;
+}
+
+.sr-modal__title {
+  margin: 0;
+  font-size: var(--font-size-16);
+  line-height: var(--font-line-height-24);
+  font-weight: 500;
+  letter-spacing: var(--font-letter-spacing-default);
+  color: var(--sr-color-text-primary);
+}
+
+.sr-modal__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  /* The glyph is 16px per the Figma; the target is padded out to 24px, the
+     WCAG 2.2 SC 2.5.8 floor, since a close button has no label to extend it. */
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--sr-color-text-primary);
+  cursor: pointer;
+}
+.sr-modal__close svg { width: 16px; height: 16px; }
+.sr-modal__close:hover {
+  background-color: var(--sr-color-surface-subtle);
+}
+.sr-modal__close:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--sr-color-border-focus);
+}
+
+/* ---------- Body ----------
+   Rules above and below the content. With the container's space-4 gap this
+   reproduces the Figma spacing: 16px, rule, 16px, content, 16px, rule, 16px. */
+.sr-modal__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding-block: var(--space-4);
+  border-top: 1px solid var(--sr-color-border-default);
+  border-bottom: 1px solid var(--sr-color-border-default);
+  font-size: var(--font-size-14);
+  line-height: var(--font-line-height-20);
+  letter-spacing: var(--font-letter-spacing-default);
+  color: var(--sr-color-text-secondary);
+}
+.sr-modal__body > :first-child { margin-top: 0; }
+.sr-modal__body > :last-child { margin-bottom: 0; }
+
+/* ---------- Footer ----------
+   Right-grouped, primary action last, per DDR-018. */
+.sr-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+}
+
+/* ---------- Page scroll lock ----------
+   Native <dialog> does not lock background scrolling; the wrapper adds this
+   class to <body> while a modal is open. */
+.sr-modal-open {
+  overflow: hidden;
+}
+
+/* ---------- Narrow viewports ---------- */
+@media (max-width: 480px) {
+  .sr-modal,
+  .sr-modal--small,
+  .sr-modal--medium,
+  .sr-modal--large {
+    width: calc(100vw - var(--space-4));
+  }
+  .sr-modal__footer {
+    /* Stack actions so neither is squeezed below a usable width. Primary stays
+       last in DOM order, so it stacks at the bottom nearest the thumb. */
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sr-modal,
+  .sr-modal::backdrop {
+    animation: none;
+    transition: none;
+  }
+}
