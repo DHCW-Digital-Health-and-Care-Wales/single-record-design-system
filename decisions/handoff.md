@@ -91,19 +91,17 @@ Drift that was corrected:
 
 ### Open, and what to pick up next
 
-1. **Figma colour guideline frame is NOT yet updated.** This was in scope for the
-   session and did not get done. The Colours page is `12:3270`, but
-   `get_metadata` on it returns ~178k characters, over the tool limit, so it needs
-   a **frame-level node id** rather than the page. Ask the design lead for the
-   specific guidelines-panel node, then mirror the panel format already used by
-   `Guidelines/Typography` (`3460:20`).
+1. ~~**Figma colour guideline frame is NOT yet updated.**~~ **Done** - the Colour Tokens
+   frame `125:5188` was reconciled directly in Figma. See the addendum below. The
+   `Guidelines/Colours` panel (`3468:9073`) is a separate artifact and was not touched.
 2. **Confirm the Figma variables match the cleaned tokens**, in particular that
    `yellow.100` is `#FDF3D7` in Figma and that no focus-yellow variable remains.
-   The repo could not be checked against Figma this session because
-   `get_variable_defs` needs a live selection in the Figma app.
+   Still outstanding. `get_variable_defs` needs a live selection, but the variable
+   collections can be read programmatically via `use_figma`, so this no longer needs
+   the design lead to be at the keyboard.
 3. Remaining Styles pages to bring up to the content standard: Spacing & Elevation
-   (still renders sanitised markdown rather than authored content), Icons and Grids
-   (both still "planned" status pages).
+   (still renders sanitised markdown rather than authored content) and Grids (still
+   a "planned" status page). **Icons is now authored** (see the 2026-07-27 addendum).
 4. DL-008 in the backlog: the CTA placement audit across forms and modals. The
    Button spec and the confirmation-dialog pattern were updated this session; the
    wider sweep is outstanding.
@@ -111,6 +109,80 @@ Drift that was corrected:
    Typography page documents what the system actually does today rather than
    inventing class names. If those utilities are wanted, they need authoring in
    `packages/web/src` and a naming decision first.
+
+### Addendum - Icons page (branch `claude/design-system-record-continuation-2ouctr`)
+
+- **Icons page authored** (`styles/icons.html`), replacing the planned placeholder and
+  following the content standard above. Every icon is rendered at build time from the
+  built icon set, so the gallery cannot drift from what products consume. Name filter,
+  click-to-copy tiles, live size and colour specimens.
+- **Icon documentation was 13 icons behind the built set.** `foundations/iconography/
+  catalogue.md` and `fetch-icons.js` both listed 106 aliases; the SVG source, which is
+  the source of truth, holds 119. The extras arrived with the Figma icon sync and the
+  language-toggle work and were never written back. Both are now reconciled. The stale
+  `status/error` alias is recorded as `status/error-circle`; its circle-x glyph moved to
+  `nav/clear`.
+- **Warning icon colour is a documented accessibility exception.** Every other icon role
+  clears 3:1 on a light surface. The warning role resolves to Yellow/500, a fill colour,
+  and reaches 1.6:1 on white. The token is left unchanged because colour changes need
+  sign-off; the page states the limit and requires a text label alongside the icon.
+  **This needs a decision from the design lead** - either a darker warning role token or
+  a formal DDR recording the exception.
+- **Sidebar** nav column now stretches to the full height of the layout row, with the menu
+  inside it doing the sticking, so the background runs the length of the page.
+
+### Figma file key - record it, do not lose it again
+
+**File key: `x5fwyefxxgD03csz8ld7SZ`** (SINGLE-RECORD-DESIGN-SYSTEM, NHS Wales
+enterprise, Full seat). Also in the Figma File Reference table below.
+
+Every Figma MCP tool takes a required `fileKey`, including `use_figma`, which is the
+direct-write tool. It was never recorded in this repo, only bare node ids, so a session
+that starts without it in the conversation cannot reach Figma at all. If a session reports
+Figma as unreachable, check the MCP connection first: the symptom also appears when
+continuing a session from a machine whose desktop Claude is not signed in to the Figma
+account.
+
+**Method: author directly in Figma via `use_figma`.** Do not build or run Figma plugins to
+generate design content. The two plugins under `figma/plugins/` predate this and their
+inlined colour data is stale, notably a `focus` `#FFEB3B` swatch and a `border.focus` that
+still aliases the removed `focus-yellow`. Do not run them without reconciling them first.
+
+### Colour Tokens frame `125:5188` reconciled in Figma
+
+Done directly in Figma. The frame was in better shape than open item 1 implied: the status
+700s, `yellow.100` `#FDF3D7`, the `cyan-700` focus ring, the full grey ramp and the whole
+dark-mode table were already correct.
+
+| Change | Detail |
+|---|---|
+| Corrected `surface.background` | Read `#F0F4F5` / `grey-100`; the token moved to `blue-50` `#F4F5F8` on 2026-06-04 and the frame never caught up. Swatch fill, hex label, alias label and layer names all updated. |
+| 4 semantic rows added, light and dark | `interactive.disabled`, `text.disabled`, `border.subtle`, `border.disabled`. All four ship in the tokens and are bound across components but were undocumented. Cloned from existing rows so styling carries over. |
+| 4 primitive ramps added | Red, Green, Yellow, Info Blue, full 10 stops each, cloned from the Neutral ramp section. Order is now Blue, Cyan, Navy, Red, Green, Yellow, Info Blue, Status, Neutral. |
+
+**Gotchas for anyone editing this frame:**
+
+- The `Table Body` frames have `layoutMode: NONE`. Rows are **absolutely positioned**, so a
+  cloned row lands exactly on top of its template and must have its `y` set explicitly.
+  Child index does not affect visual order; `y` does.
+- `Section` and `Frame 1` (`1235:1719`) are vertical auto-layout and hug, so they grow on
+  their own. `Main Content` (`125:5234`) and the page frame (`125:5188`) are **fixed** and
+  must be grown by hand, which is why the frame is now 9397px tall.
+- The first row of each table is 62px against 61px for the rest, so reordering rows moves
+  that 1px divider. New rows were appended rather than inserted for this reason, which is
+  why `border.subtle` sits after `border.focus` instead of in token order.
+- Ramp cells carry a role label on the swatch. Stops with no assigned role have the label
+  frame set to `visible = false` rather than deleted.
+
+Verified structurally across the whole frame: no clipped frames, no overlapping siblings.
+
+**Not done, deliberately:** `cyan.850` (`#0C7B99`) is still missing from the Cyan ramp,
+which shows 9 of its 10 stops. It is referenced, not unused: dark-mode
+`surface.small-cards` resolves to it. The design lead did not select it this session.
+
+**Pre-existing defect, not introduced here:** in the dark-mode Interactive table, the usage
+text on the `primary` and `primary-hover` rows is taller than the 60px rows and overlaps
+into the row below. Worth a pass when someone is next in that table.
 
 ### Useful commands
 
@@ -458,6 +530,7 @@ This week's accepted changes (now reflected in Figma, tokens, and docs):
 
 | Thing | Node ID | Notes |
 |---|---|---|
+| **File key** | `x5fwyefxxgD03csz8ld7SZ` | SINGLE-RECORD-DESIGN-SYSTEM. Required by every Figma MCP tool. NHS Wales enterprise, Full seat. |
 | Icons page | 103:760 | All icon components live in "Icon Components (Lucide)" frame |
 | Icon/action/edit | 189:25 | Lucide pen |
 | Icon/action/edit2 | 1541:20 | Lucide square-pen (added 2026-06-04) |

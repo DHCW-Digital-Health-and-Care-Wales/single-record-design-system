@@ -10,7 +10,7 @@ Source: [Lucide Icons](https://lucide.dev) — ISC Licence
 **Lucide Icons** — ISC licence (fully permissive, suitable for NHS/public sector internal use)
 Version sourced: `main` branch, March 2026
 Grid: 24 × 24 px, 2px stroke
-Total SR aliases: 106 across 10 domains
+Total SR aliases: 119 across 10 domains
 
 ### Why Lucide and not NHS App icons
 
@@ -67,7 +67,7 @@ Filled variants are only assigned to specific icons when a navigation component 
 
 ## Catalogue
 
-### Navigation & UI chrome (14)
+### Navigation & UI chrome (17)
 
 | SR alias | Lucide filename | Component name | Filled variant | Notes |
 |---|---|---|---|---|
@@ -85,8 +85,11 @@ Filled variants are only assigned to specific icons when a navigation component 
 | nav/filter | list-filter | NavFilter | pending | Original Lucide name `filter` no longer exists; `list-filter` is the current equivalent |
 | nav/sort | arrow-up-down | NavSort | pending | |
 | nav/more | ellipsis | NavMore | pending | |
+| nav/clear | circle-x | NavClear | pending | Added to match the updated Figma icon components. Previously published as `status/error` |
+| nav/dashboard | layout-grid | NavDashboard | pending | Added to match the updated Figma icon components |
+| nav/menu2 | ellipsis-vertical | NavMenu2 | pending | Added to match the updated Figma icon components |
 
-### Actions & editing (14)
+### Actions & editing (20)
 
 | SR alias | Lucide filename | Component name | Filled variant | Notes |
 |---|---|---|---|---|
@@ -104,19 +107,26 @@ Filled variants are only assigned to specific icons when a navigation component 
 | action/refresh | refresh-cw | ActionRefresh | pending | |
 | action/undo | undo-2 | ActionUndo | pending | |
 | action/lock | lock | ActionLock | pending | |
+| action/check | check | ActionCheck | pending | Added to match the updated Figma icon components |
+| action/edit2 | square-pen | ActionEdit2 | pending | Added to match the updated Figma icon components |
+| action/eye | eye | ActionEye | pending | Added to match the updated Figma icon components |
+| action/eye-off | eye-off | ActionEyeOff | pending | Added to match the updated Figma icon components |
+| action/hold | pause | ActionHold | pending | Added to match the updated Figma icon components |
+| action/scan | barcode | ActionScan | pending | Added to match the updated Figma icon components |
 
-### Status & feedback (8)
+### Status & feedback (9)
 
 | SR alias | Lucide filename | Component name | Filled variant | Notes |
 |---|---|---|---|---|
 | status/success | circle-check | StatusSuccess | pending | |
-| status/error | circle-x | StatusError | pending | |
+| status/error-circle | circle-alert | StatusErrorCircle | pending | Replaces the former `status/error` alias, whose circle-x glyph moved to `nav/clear` |
 | status/warning | triangle-alert | StatusWarning | pending | |
 | status/info | info | StatusInfo | pending | |
 | status/critical | siren | StatusCritical | pending | |
 | status/pending | clock | StatusPending | pending | |
 | status/loading | loader-circle | StatusLoading | pending | Animated spin via CSS for loading state |
 | status/flagged | flag | StatusFlagged | pending | |
+| status/alert | triangle-alert | StatusAlert | pending | Added to match the updated Figma icon components |
 
 ### Patient & people (10)
 
@@ -171,7 +181,7 @@ Filled variants are only assigned to specific icons when a navigation component 
 | schedule/overnight | moon | ScheduleOvernight | pending | |
 | schedule/urgent | calendar-clock | ScheduleUrgent | pending | |
 
-### Location & organisation (10)
+### Location & organisation (11)
 
 | SR alias | Lucide filename | Component name | Filled variant | Notes |
 |---|---|---|---|---|
@@ -185,6 +195,7 @@ Filled variants are only assigned to specific icons when a navigation component 
 | location/organisation | network | LocationOrganisation | pending | |
 | location/region | map | LocationRegion | pending | |
 | location/ambulance | ambulance | LocationAmbulance | pending | |
+| location/language | globe | LocationLanguage | pending | Added to match the updated Figma icon components. Used on the Cymraeg language toggle |
 
 ### Communication & messaging (8)
 
@@ -212,7 +223,7 @@ Filled variants are only assigned to specific icons when a navigation component 
 | file/form | clipboard | FileForm | pending | |
 | file/signed | file-check | FileSigned | pending | |
 
-### Data & analytics (6)
+### Data & analytics (8)
 
 | SR alias | Lucide filename | Component name | Filled variant | Notes |
 |---|---|---|---|---|
@@ -222,3 +233,5 @@ Filled variants are only assigned to specific icons when a navigation component 
 | data/trend-down | trending-down | DataTrendDown | pending | |
 | data/export | file-down | DataExport | pending | |
 | data/audit | shield-check | DataAudit | pending | |
+| data/grid-2x2 | grid-2x2 | DataGrid2x2 | pending | Added to match the updated Figma icon components |
+| data/grid-3x3 | grid-3x3 | DataGrid3x3 | pending | Added to match the updated Figma icon components |
