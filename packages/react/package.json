@@ -24,7 +24,8 @@
     "./checkbox": "./src/checkbox/Checkbox.jsx",
     "./checkbox-group": "./src/checkbox/CheckboxGroup.jsx",
     "./table": "./src/table/Table.jsx",
-    "./modal": "./src/modal/Modal.jsx"
+    "./modal": "./src/modal/Modal.jsx",
+    "./patient-banner": "./src/patient-banner/PatientBanner.jsx"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
