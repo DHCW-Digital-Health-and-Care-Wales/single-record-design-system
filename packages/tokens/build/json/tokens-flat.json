@@ -168,14 +168,14 @@
     "fontFamily": "Roboto",
     "fontSize": "16px",
     "lineHeight": "24px",
-    "fontWeight": 700,
+    "fontWeight": 500,
     "letterSpacing": "0px"
   },
   "sr-typography-heading-xs-mobile": {
     "fontFamily": "Roboto",
     "fontSize": "16px",
     "lineHeight": "24px",
-    "fontWeight": 700,
+    "fontWeight": 500,
     "letterSpacing": "0px"
   },
   "sr-typography-body-m-desktop": {

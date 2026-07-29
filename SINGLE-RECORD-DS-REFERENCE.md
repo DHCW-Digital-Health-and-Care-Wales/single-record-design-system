@@ -342,7 +342,7 @@ These are the named styles used in Figma and in all component specs.
 | `sr.typography.heading-l`  | 36px / 42px lh | 27px / 33px lh | Bold | Default | Section headings |
 | `sr.typography.heading-m`  | 26px / 32px lh | 22px / 29px lh | Bold | Default | Sub-section headings, card headers |
 | `sr.typography.heading-s`  | 22px / 30px lh | 19px / 27px lh | Bold | Default | Panel headings, modal titles |
-| `sr.typography.heading-xs` | 16px / 24px lh | 16px / 24px lh | Bold | Default | Inline labels, compact contexts |
+| `sr.typography.heading-xs` | 16px / 24px lh | 16px / 24px lh | Medium | Default | Inline labels, compact contexts |
 | `sr.typography.body-m`     | 16px / 24px lh | 16px / 24px lh | Regular | Default | **Default body text. Minimum for clinical content.** |
 | `sr.typography.body-s`     | 14px / 24px lh | 14px / 24px lh | Regular | Default | Supporting text. Do not use for primary clinical content. |
 | `sr.typography.label`      | 14px / 20px lh | 14px / 20px lh | Medium | Wide (0.7px) | Form labels, column headers, button text |
@@ -1248,7 +1248,7 @@ Adopt Lucide Icons as the SR icon library (ISC licence, 24×24px grid, 2px strok
 | `Typography/Heading L` | `sr.typography.heading-l` | 36px / 42px lh / Bold | 27px / 33px lh / Bold |
 | `Typography/Heading M` | `sr.typography.heading-m` | 26px / 32px lh / Bold | 22px / 29px lh / Bold |
 | `Typography/Heading S` | `sr.typography.heading-s` | 22px / 30px lh / Bold | 19px / 27px lh / Bold |
-| `Typography/Heading XS` | `sr.typography.heading-xs` | 16px / 24px lh / Bold | 16px / 24px lh / Bold |
+| `Typography/Heading XS` | `sr.typography.heading-xs` | 16px / 24px lh / Medium | 16px / 24px lh / Medium |
 | `Typography/Body M` | `sr.typography.body-m` | 16px / 24px lh / Regular | 16px / 24px lh / Regular |
 | `Typography/Body S` | `sr.typography.body-s` | 14px / 24px lh / Regular | 14px / 24px lh / Regular |
 | `Typography/Label` | `sr.typography.label` | 14px / 20px lh / Medium / Wide | 14px / 20px lh / Medium / Wide |

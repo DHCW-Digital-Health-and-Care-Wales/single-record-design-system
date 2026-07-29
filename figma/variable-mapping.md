@@ -236,7 +236,7 @@ Semantic typography tokens are defined in Figma as individual property variables
 | `Typography/Heading L` | `sr.typography.heading-l` | 36px / 42px lh / Bold | 27px / 33px lh / Bold |
 | `Typography/Heading M` | `sr.typography.heading-m` | 26px / 32px lh / Bold | 22px / 29px lh / Bold |
 | `Typography/Heading S` | `sr.typography.heading-s` | 22px / 30px lh / Bold | 19px / 27px lh / Bold |
-| `Typography/Heading XS` | `sr.typography.heading-xs` | 16px / 24px lh / Bold | 16px / 24px lh / Bold |
+| `Typography/Heading XS` | `sr.typography.heading-xs` | 16px / 24px lh / Medium | 16px / 24px lh / Medium |
 | `Typography/Body M` | `sr.typography.body-m` | 16px / 24px lh / Regular | 16px / 24px lh / Regular |
 | `Typography/Body S` | `sr.typography.body-s` | 14px / 24px lh / Regular | 14px / 24px lh / Regular |
 | `Typography/Label` | `sr.typography.label` | 14px / 20px lh / Medium / Wide | 14px / 20px lh / Medium / Wide |

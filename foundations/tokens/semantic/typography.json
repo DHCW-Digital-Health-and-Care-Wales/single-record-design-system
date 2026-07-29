@@ -113,23 +113,23 @@
         "$description": "Extra-small heading. Inline section labels, tight UI contexts.",
         "desktop": {
           "$type": "typography",
-          "$description": "heading-xs desktop (≥1024px): 16/24 bold",
+          "$description": "heading-xs desktop (≥1024px): 16/24 medium",
           "$value": {
             "fontFamily":    "{font.family.primary}",
             "fontSize":      "{font.size.16}",
             "lineHeight":    "{font.line-height.24}",
-            "fontWeight":    "{font.weight.bold}",
+            "fontWeight":    "{font.weight.medium}",
             "letterSpacing": "{font.letter-spacing.default}"
           }
         },
         "mobile": {
           "$type": "typography",
-          "$description": "heading-xs mobile (<768px): 16/24 bold",
+          "$description": "heading-xs mobile (<768px): 16/24 medium",
           "$value": {
             "fontFamily":    "{font.family.primary}",
             "fontSize":      "{font.size.16}",
             "lineHeight":    "{font.line-height.24}",
-            "fontWeight":    "{font.weight.bold}",
+            "fontWeight":    "{font.weight.medium}",
             "letterSpacing": "{font.letter-spacing.default}"
           }
         }
