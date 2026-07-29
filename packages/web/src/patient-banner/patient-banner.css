@@ -29,7 +29,7 @@
   padding: var(--space-3) var(--space-4);
   background-color: var(--sr-color-surface-section-cards);
   border-radius: var(--radius-lg);
-  box-shadow: 0 1px 4px rgba(27, 41, 74, 0.12); /* sr.elevation.raised */
+  box-shadow: var(--elevation-raised);
   font-family: "Roboto", system-ui, -apple-system, sans-serif;
 }
 

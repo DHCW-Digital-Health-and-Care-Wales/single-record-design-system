@@ -92,7 +92,7 @@
   background-color: var(--sr-color-surface-section-cards);
   border: 1px solid var(--sr-color-border-default);
   border-radius: var(--radius-md);
-  box-shadow: 0 4px 16px rgba(27, 41, 74, 0.16);
+  box-shadow: var(--elevation-overlay);
 }
 
 .sr-datepicker__header {

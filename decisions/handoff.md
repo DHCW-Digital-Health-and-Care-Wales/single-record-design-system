@@ -297,9 +297,13 @@ Branch `claude/single-record-ds-guidelines-v003fa`. Guidelines programme kicked 
   Welsh-language toggle; translator file-upload + CSV/JSON export; DDR for Website IA is DDR-016.
 - **Tables guideline — seed content (to formalise).** Two content rules captured for a future
   Tables guideline (component `components/table/`, Figma Tables page):
-  - **Dates: keep the legacy DHCW format `dd-Mmm-yyyy`** with leading zero and hyphens
-    (e.g. `06-Dec-2021`) — UI Standards [p.24](../docs/reference/dhcw-ui-standards-v1.3.md#page-24).
-    (Earlier `10 Jan 2020` idea dropped; legacy standard retained.)
+  - ~~**Dates: keep the legacy DHCW format `dd-Mmm-yyyy`**~~ **SUPERSEDED 2026-07-28.**
+    The design lead set the system-wide rule as **`10 Mar 2026` in tables and other
+    space-constrained UI, and `10 March 2026` in prose** and anywhere without a width
+    constraint. This reinstates roughly the `10 Jan 2020` shape that was dropped here
+    earlier, so the reversal is deliberate — do not revert to hyphens. The clinical-safety
+    intent of UI Standards [p.24](../docs/reference/dhcw-ui-standards-v1.3.md#page-24) is
+    unchanged: a **named month**, never an all-numeric date. See DL-022.
   - **Table headings: allow `No.` as the abbreviation for "Number"** where column width is
     tight. This is a deliberate **exception** to the general "avoid abbreviations / no full
     stops" rule (UI Standards [p.10](../docs/reference/dhcw-ui-standards-v1.3.md#page-10)),

@@ -189,6 +189,9 @@
     <x:Double x:Key="RadiusMd">4</x:Double>
     <x:Double x:Key="RadiusLg">8</x:Double>
     <x:Double x:Key="RadiusFull">9999</x:Double>
+    <x:String x:Key="ElevationButton">0 2px 0 #1B294A</x:String>
+    <x:String x:Key="ElevationRaised">0 1px 4px rgba(27, 41, 74, 0.12)</x:String>
+    <x:String x:Key="ElevationOverlay">0 4px 16px rgba(27, 41, 74, 0.18)</x:String>
     <x:Double x:Key="SizeTouch24">24</x:Double>
     <x:Double x:Key="SizeTouch32">32</x:Double>
     <x:Double x:Key="SizeTouch44">44</x:Double>

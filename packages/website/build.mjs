@@ -379,7 +379,7 @@ function typographyBody() {
 <div class="sr-type-label" style="margin:0 0 4px">NHS number</div>
 <div class="sr-type-body-m" style="margin:0 0 16px">485 777 3456</div>
 <div class="sr-type-label" style="margin:0 0 4px">Date of birth</div>
-<div class="sr-type-caption" style="margin:0">Use the format 06-Dec-1974</div>`;
+<div class="sr-type-caption" style="margin:0">Use the format 06 Dec 1974</div>`;
   const labelSnippets = {
     HTML: `<label class="sr-type-label" for="nhs-number">NHS number</label>
 <span class="sr-type-caption" id="nhs-number-hint">10 digits, spaced in groups of 3, 3 and 4</span>
@@ -411,13 +411,13 @@ views, and for supporting text and form values.</div>
   const bodySnippets = {
     HTML: `<p class="sr-type-body-m">Long-form reading and clinical notes.</p>
 <p class="sr-type-body-s">Primary content in tables and data-dense views.</p>
-<p class="sr-type-caption">Last updated 06-Dec-2024 at 14:22</p>`,
+<p class="sr-type-caption">Last updated 06 Dec 2024 at 14:22</p>`,
     React: `<Text size="m">Long-form reading and clinical notes.</Text>
 <Text size="s">Primary content in tables and data-dense views.</Text>
-<Text size="caption">Last updated 06-Dec-2024 at 14:22</Text>`,
+<Text size="caption">Last updated 06 Dec 2024 at 14:22</Text>`,
     Blazor: `<SrText Size="TextSize.M">Long-form reading and clinical notes.</SrText>
 <SrText Size="TextSize.S">Primary content in tables and data-dense views.</SrText>
-<SrText Size="TextSize.Caption">Last updated 06-Dec-2024 at 14:22</SrText>`,
+<SrText Size="TextSize.Caption">Last updated 06 Dec 2024 at 14:22</SrText>`,
     MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->
 <SrText Size="TextSize.S">Primary content in tables and data-dense views.</SrText>`,
   };
@@ -956,9 +956,9 @@ function tableBody() {
       <th scope="col">No.</th><th scope="col">Patient</th><th scope="col">NHS number</th><th scope="col">DoB</th><th scope="col">Status</th>
     </tr></thead>
     <tbody>
-      <tr class="sr-table__row"><td class="sr-table__cell">1</td><td class="sr-table__cell">JONES, Alis</td><td class="sr-table__cell">123 456 7890</td><td class="sr-table__cell">06-Dec-1974</td><td class="sr-table__cell">Confirmed</td></tr>
-      <tr class="sr-table__row sr-table__row--selected"><td class="sr-table__cell">2</td><td class="sr-table__cell">OWEN, Rhys</td><td class="sr-table__cell">234 567 8901</td><td class="sr-table__cell">14-Mar-1988</td><td class="sr-table__cell">In review</td></tr>
-      <tr class="sr-table__row"><td class="sr-table__cell">3</td><td class="sr-table__cell">PATEL, Nia</td><td class="sr-table__cell">345 678 9012</td><td class="sr-table__cell">02-Jul-1991</td><td class="sr-table__cell">Draft</td></tr>
+      <tr class="sr-table__row"><td class="sr-table__cell">1</td><td class="sr-table__cell">JONES, Alis</td><td class="sr-table__cell">123 456 7890</td><td class="sr-table__cell">06 Dec 1974</td><td class="sr-table__cell">Confirmed</td></tr>
+      <tr class="sr-table__row sr-table__row--selected"><td class="sr-table__cell">2</td><td class="sr-table__cell">OWEN, Rhys</td><td class="sr-table__cell">234 567 8901</td><td class="sr-table__cell">14 Mar 1988</td><td class="sr-table__cell">In review</td></tr>
+      <tr class="sr-table__row"><td class="sr-table__cell">3</td><td class="sr-table__cell">PATEL, Nia</td><td class="sr-table__cell">345 678 9012</td><td class="sr-table__cell">02 Jul 1991</td><td class="sr-table__cell">Draft</td></tr>
     </tbody>
   </table>
 </div>`;
@@ -972,7 +972,7 @@ function tableBody() {
 <p class="breadcrumbs">Components</p>
 ${showcase(demo, 'table', snippets)}
 <p class="muted">Row 2 shows the selected state; hover any row to see the hover surface. Dates use
-the <code>dd-Mmm-yyyy</code> format, and the header uses the <code>No.</code> abbreviation exception.</p>
+the <code>d Mmm yyyy</code> format, and the header uses the <code>No.</code> abbreviation exception.</p>
 <hr>
 ${renderMarkdown(tableMd)}
 ${accessibilityTable([

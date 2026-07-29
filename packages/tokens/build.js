@@ -163,6 +163,7 @@ const sharedSources = [
   `${TOKENS_ROOT}/semantic/spacing.json`,
   `${TOKENS_ROOT}/breakpoints.json`,
   `${TOKENS_ROOT}/border.json`,
+  `${TOKENS_ROOT}/elevation.json`,
   `${TOKENS_ROOT}/touch-targets.json`,
   `${TOKENS_ROOT}/logo-sizing.json`,
 ];

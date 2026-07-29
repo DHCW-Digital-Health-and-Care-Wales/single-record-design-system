@@ -9,8 +9,7 @@ import Icon from '../icon/Icon.jsx';
  * Patient banner (Figma 1711:15585). Safety-critical: the name, NHS number and
  * DOB stay visible in both the expanded and collapsed states.
  *
- * Dates use the DHCW `dd-Mmm-yyyy` format (UI Standards p.24) rather than the
- * mixed formats currently shown in the Figma — see DL-022.
+ * Dates use the short form `10 Mar 2026`, the rule for space-constrained UI.
  */
 const PATIENT = {
   name: 'JOHN, Elvet George (Mr)',
@@ -19,8 +18,8 @@ const PATIENT = {
   crn: 'M8046459',
   address: 'Penrhiw, Gwynfe Llangadog, Dyfed, SA19 9PU',
   postcode: 'SA19 9PU',
-  dob: '15-Dec-1992 (33y)',
-  dod: '23-Jun-2025',
+  dob: '15 Dec 1992 (33y)',
+  dod: '23 Jun 2025',
   sex: 'Male',
 };
 

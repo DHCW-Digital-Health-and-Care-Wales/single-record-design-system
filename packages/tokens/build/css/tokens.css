@@ -190,6 +190,9 @@
   --radius-md: 4px; /** Standard rounding. Use for buttons, cards, panels, notification banners, and tooltips. Default for most interactive components. */
   --radius-lg: 8px; /** Prominent rounding. Use for modals, side drawers, floating menus, and large overlay surfaces. */
   --radius-full: 9999px; /** Pill shape. Use for status chips, avatar rings, toggle switches, and search input end-caps. Not appropriate for rectangular content containers. */
+  --elevation-button: 0 2px 0 #1B294A; /** Primary button press affordance. A directional bottom shadow that gives the button a tactile edge, matching the NHS England / GOV.UK button convention. This is not a depth metaphor. Applies to primary, outline/secondary and destructive buttons; ghost and disabled buttons carry no shadow. */
+  --elevation-raised: 0 1px 4px rgba(27, 41, 74, 0.12); /** Cards and panels: a gentle lift from the page surface. Use only where a border alone is insufficient to separate a surface from its background, for example a white card on a near-white page. Also used by the patient banner and the navigation sidebar. */
+  --elevation-overlay: 0 4px 16px rgba(27, 41, 74, 0.18); /** All floating layers: modals, side drawers, dropdown menus and tooltips. The deeper shadow communicates that the surface sits above the page rather than on it. Never use the raised step for a floating layer — a card-weight shadow reads flat against a modal's own backdrop. */
   --size-touch-24: 24px; /** Global: WCAG 2.2 AA minimum (SC 2.5.8). Requires ≥10px inactive spacing on all sides. */
   --size-touch-32: 32px; /** Global: desktop compact target. Desktop mouse contexts only. */
   --size-touch-44: 44px; /** Global: WCAG 2.2 AAA (SC 2.5.5). Required for all touch interfaces. */

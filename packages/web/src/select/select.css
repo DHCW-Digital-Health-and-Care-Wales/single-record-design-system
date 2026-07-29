@@ -120,7 +120,7 @@
   background-color: var(--sr-color-surface-section-cards);
   border: 1px solid var(--sr-color-border-default);
   border-radius: var(--radius-sm);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--elevation-overlay);
   max-height: 280px;
   overflow-y: auto;
 }

@@ -39,10 +39,10 @@ in addition to standard design sign-off.
 |---|---|---|
 | Full name | `SURNAME, Forename(s) (Title)` | **Yes** |
 | NHS number | `XXX XXX XXXX`, with a copy button | **Yes** |
-| Date of birth | `dd-Mmm-yyyy (NNy)` | **Yes** |
+| Date of birth | `d Mmm yyyy (NNy)` | **Yes** |
 | CRN | As recorded, with a copy button | No |
 | Address / Postcode | As recorded | No |
-| Date of death | `dd-Mmm-yyyy`, in `Status/Critical` | No |
+| Date of death | `d Mmm yyyy`, in `Status/Critical` | No |
 | Sex | As recorded, not abbreviated | No |
 | Adverse reactions | Substance: reaction, reaction in `Status/Critical` | As a count pill |
 | Warnings | "N warnings recorded" | As a count pill |
@@ -122,9 +122,9 @@ is announced acceptably before adding a redundant label.
 
 ## Content Guidelines
 
-- Dates use the DHCW format `dd-Mmm-yyyy` (UI Standards p.24) — `15-Dec-1992`,
-  not `15 Dec 1992` or `23 June 2025`. The Figma currently shows both of the
-  latter; see **DL-022**.
+- Dates use the short form `10 Mar 2026` here, because the banner is space
+  constrained. The long form `10 March 2026` is for prose and anywhere without a
+  width constraint. This supersedes the legacy `dd-Mmm-yyyy` rule — see DL-022.
 - Names are `SURNAME, Forename(s)` with the title in brackets.
 - Say "No known adverse reactions" rather than leaving a blank card — absence of
   data and absence of reactions are clinically different.

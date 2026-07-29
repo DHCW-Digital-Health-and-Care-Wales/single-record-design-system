@@ -10,11 +10,11 @@ import Icon from '../icon/Icon.jsx';
  * node 2:4386) — the screen this wrapper was built for.
  */
 const NOTES = [
-  { id: 1, volume: 'General notes vol 4', status: 'Registered', statusType: 'blue', location: 'Madog Suite-GGH', activity: 'Registered by Gadgil, AA(Mr)', moved: '09/06/2026 15:25', batch: '50381858' },
-  { id: 2, volume: 'General notes vol 3', status: 'Sent', statusType: 'grey', location: 'Teifi Ward-GGH', activity: 'Registered by Gadgil, AA(Mr)', moved: '05/06/2026 17:40', batch: '-' },
-  { id: 3, volume: 'General notes vol 2', status: 'Received', statusType: 'green', location: 'Cleddau Ward-GGH', activity: 'Registered by Gadgil, AA(Mr)', moved: '05/06/2026 17:40', batch: '-' },
-  { id: 4, volume: 'General notes vol 2', status: 'Tagged', statusType: 'yellow', location: 'A&E Dept-GGH', activity: 'Registered by Gadgil, AA(Mr)', moved: '05/06/2026 17:40', batch: '-' },
-  { id: 5, volume: 'General notes vol 1', status: 'Inactive', statusType: 'red', location: 'A&E Dept-GGH', activity: 'Registered by Gadgil, AA(Mr)', moved: '05/06/2026 17:40', batch: '-' },
+  { id: 1, volume: 'General notes vol 4', status: 'Registered', statusType: 'blue', location: 'Madog Suite-GGH', activity: 'Registered by Gadgil, AA(Mr)', moved: '09 Jun 2026 15:25', batch: '50381858' },
+  { id: 2, volume: 'General notes vol 3', status: 'Sent', statusType: 'grey', location: 'Teifi Ward-GGH', activity: 'Registered by Gadgil, AA(Mr)', moved: '05 Jun 2026 17:40', batch: '-' },
+  { id: 3, volume: 'General notes vol 2', status: 'Received', statusType: 'green', location: 'Cleddau Ward-GGH', activity: 'Registered by Gadgil, AA(Mr)', moved: '05 Jun 2026 17:40', batch: '-' },
+  { id: 4, volume: 'General notes vol 2', status: 'Tagged', statusType: 'yellow', location: 'A&E Dept-GGH', activity: 'Registered by Gadgil, AA(Mr)', moved: '05 Jun 2026 17:40', batch: '-' },
+  { id: 5, volume: 'General notes vol 1', status: 'Inactive', statusType: 'red', location: 'A&E Dept-GGH', activity: 'Registered by Gadgil, AA(Mr)', moved: '05 Jun 2026 17:40', batch: '-' },
 ];
 
 const COLUMNS = [

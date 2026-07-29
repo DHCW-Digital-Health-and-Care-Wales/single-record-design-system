@@ -20,10 +20,9 @@
  *   .sr-modal__body   — the content slot, rules above and below, scrolls if tall
  *   .sr-modal__footer — actions, right-grouped per DDR-018
  *
- * Elevation: `sr.elevation.overlay` (0 4px 16px rgba(27,41,74,0.18)) per
- * foundations/tokens/elevation.md, which reserves that step for modals, drawers
- * and dropdowns. The Figma component is bound to Elevation/Raised, the card step —
- * see DL-019. There is no elevation token in the JSON yet, so the value is inline.
+ * Elevation: `--elevation-overlay`, which foundations/tokens/elevation.md
+ * reserves for modals, drawers and dropdowns. A card-weight shadow would read
+ * flat against the modal's own backdrop.
  */
 
 .sr-modal {
@@ -33,7 +32,7 @@
   border-radius: var(--radius-lg);
   background-color: var(--sr-color-surface-section-cards);
   color: var(--sr-color-text-primary);
-  box-shadow: 0 4px 16px rgba(27, 41, 74, 0.18);
+  box-shadow: var(--elevation-overlay);
   font-family: "Roboto", system-ui, -apple-system, sans-serif;
 
   width: 480px; /* Medium is the default size */

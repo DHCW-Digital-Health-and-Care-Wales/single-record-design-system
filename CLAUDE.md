@@ -76,6 +76,12 @@ This is a healthcare system. Decisions affect real clinical staff and patients. 
 - Write for two audiences: designers (Figma users) and engineers (.NET, Blazor, MAUI)
 - Be concise. Use tables and lists. Avoid prose where structure works better.
 - Do not document hypothetical future states — document what exists
+- **Keep `DESIGN-SYSTEM.md` current.** Update it in the same change that ships a
+  component, adds a token, or sets a system-wide rule — not later, and not on a
+  schedule. Update its "Last reviewed" date when you do. It had drifted to listing
+  2 of 23 components before the 2026-07-28 pass.
+- **State known gaps rather than hiding them.** A spec with no code, or code with
+  no spec, is worth naming explicitly in the doc that covers it.
 
 ### When making structural decisions
 - Write a DDR in `/decisions/` before restructuring anything significant
