@@ -29,7 +29,7 @@
   box-sizing: border-box;
   background-color: var(--sr-color-surface-section-cards);
   /* Figma Elevation/Raised — no elevation token exists yet, value matches spec */
-  box-shadow: 0 1px 4px rgba(27, 41, 74, 0.12);
+  box-shadow: var(--elevation-raised);
   font-family: "Roboto", system-ui, -apple-system, sans-serif;
 }
 

@@ -455,3 +455,30 @@ body {
   .sidebar__inner { position: static; max-height: none; overflow: visible; padding: 16px 0; }
   .content { padding: 24px 20px; }
 }
+
+/* ── elevation specimens ──────────────────────────────────────────────────── */
+.elevations {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin: 24px 0 32px;
+}
+.elevation { margin: 0; }
+.elevation__chip {
+  height: 96px;
+  border-radius: 8px;
+  background: var(--sr-color-surface-section-cards);
+}
+.elevation figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 16px;
+  font-size: 14px;
+}
+.elevation__value {
+  font-family: "Roboto Mono", ui-monospace, monospace;
+  font-size: 13px;
+  color: var(--sr-color-text-secondary);
+}
+.elevation__use { color: var(--sr-color-text-secondary); }

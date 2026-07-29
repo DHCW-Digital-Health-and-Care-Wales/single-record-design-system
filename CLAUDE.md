@@ -26,13 +26,14 @@ This is a healthcare system. Decisions affect real clinical staff and patients. 
 
 ```
 /foundations       Design tokens: colour, typography, spacing, elevation, motion, iconography
-/components        Individual UI components — one folder per component
+/components        Individual UI components — one folder per component (spec.md / guidelines.md)
 /patterns          Composed interactions and page-level patterns
 /accessibility     WCAG 2.2 guidance, testing checklists, assistive technology notes
 /decisions         Design Decision Records (DDRs) — permanent log of key choices
 /docs              Guides for designers and engineers contributing to or using this system
 /products          Per-product extensions or overrides (only where products diverge from core)
 /figma             Figma variable exports, token mappings, and handoff conventions
+/packages          Code monorepo (DDR-007): tokens, web, react, blazor, maui, storybook, website
 ```
 
 ---
@@ -57,10 +58,14 @@ This is a healthcare system. Decisions affect real clinical staff and patients. 
 - Do not assume anything about component behaviour — look it up or ask
 
 ### When creating components or patterns
-- Follow the file format defined in `/docs/contributing-components.md`
+- Follow `docs/templates/component-spec-template.md` (→ `components/{name}/spec.md`) for a component's contract, and `docs/templates/guidelines-template.md` (→ a sibling `*.guidelines.md` or `guidelines.md`) for its usage guidance. A guidelines file is the single source for both the Figma "Guidelines / Usage notes" panel and the DS website page — do not fork the content between the two.
 - Every component needs: purpose, anatomy, usage guidance, accessibility notes, and known variants
 - Do not invent new design tokens — use or extend those in `/foundations/tokens/`
 - **Always use existing icon components** from the Icons page (`103:760`, `Icon/{group}/{name}`) when a component needs an icon. Do not draw inline vector/SVG placeholders. If an appropriate icon does not exist, ask the user before importing a new one from the Lucide library.
+
+### When editing the Figma file
+- **Author directly with the Figma MCP `use_figma` tool.** Do not build or run a Figma plugin to generate design content. The legacy plugins under `figma/plugins/` predate this convention and carry stale, hand-inlined colour data — do not run them without reconciling them against the tokens first.
+- The Figma file key is recorded in `/decisions/handoff.md` (Figma File Reference table). Every Figma MCP tool requires it.
 
 ### When creating design tokens
 - Tokens must use a three-tier structure: **global → semantic → component**
@@ -71,6 +76,12 @@ This is a healthcare system. Decisions affect real clinical staff and patients. 
 - Write for two audiences: designers (Figma users) and engineers (.NET, Blazor, MAUI)
 - Be concise. Use tables and lists. Avoid prose where structure works better.
 - Do not document hypothetical future states — document what exists
+- **Keep `DESIGN-SYSTEM.md` current.** Update it in the same change that ships a
+  component, adds a token, or sets a system-wide rule — not later, and not on a
+  schedule. Update its "Last reviewed" date when you do. It had drifted to listing
+  2 of 23 components before the 2026-07-28 pass.
+- **State known gaps rather than hiding them.** A spec with no code, or code with
+  no spec, is worth naming explicitly in the doc that covers it.
 
 ### When making structural decisions
 - Write a DDR in `/decisions/` before restructuring anything significant

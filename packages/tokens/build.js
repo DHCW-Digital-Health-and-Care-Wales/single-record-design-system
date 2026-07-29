@@ -22,6 +22,36 @@ const TOKENS_ROOT = path.resolve(__dirname, '../../foundations/tokens');
 // ---------------------------------------------------------------------------
 // Custom format: XAML ResourceDictionary for .NET MAUI
 // ---------------------------------------------------------------------------
+
+/**
+ * Parse a CSS `box-shadow` value into the parts MAUI's Shadow type needs.
+ * Handles the two forms this system uses: `0 1px 4px rgba(r,g,b,a)` and
+ * `0 2px 0 #RRGGBB`. Returns null for anything else rather than guessing —
+ * an unparsed shadow surfaces as an XML comment in the output, which is
+ * visible in review, instead of silently emitting something wrong.
+ */
+function parseCssShadow(value) {
+  const v = String(value).trim();
+  const rgba = v.match(
+    /^(-?[\d.]+)(?:px)?\s+(-?[\d.]+)(?:px)?\s+(-?[\d.]+)(?:px)?\s+rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([\d.]+)\s*)?\)$/
+  );
+  if (rgba) {
+    const [, x, y, radius, r, g, b, a] = rgba;
+    const hex =
+      '#' +
+      [r, g, b]
+        .map((n) => Number(n).toString(16).padStart(2, '0').toUpperCase())
+        .join('');
+    return { x, y, radius, hex, opacity: a === undefined ? '1' : a };
+  }
+  const hexForm = v.match(/^(-?[\d.]+)(?:px)?\s+(-?[\d.]+)(?:px)?\s+(-?[\d.]+)(?:px)?\s+(#[0-9a-fA-F]{6})$/);
+  if (hexForm) {
+    const [, x, y, radius, hex] = hexForm;
+    return { x, y, radius, hex: hex.toUpperCase(), opacity: '1' };
+  }
+  return null;
+}
+
 const xamlFormat = {
   name: 'xaml/resourceDictionary',
   format: ({ dictionary }) => {
@@ -43,6 +73,19 @@ const xamlFormat = {
       if (type === 'dimension') {
         const numVal = parseFloat(val);
         return `    <x:Double x:Key="${name}">${numVal}</x:Double>`;
+      }
+      if (type === 'shadow') {
+        const s = parseCssShadow(val);
+        if (!s) return `    <!-- ${name}: could not parse "${val}" as a shadow -->`;
+        // MAUI has a first-class Shadow type. Emitting the CSS string here would
+        // give .NET something it cannot consume, so build the real object.
+        return [
+          `    <Shadow x:Key="${name}"`,
+          `            Brush="${s.hex}"`,
+          `            Offset="${s.x},${s.y}"`,
+          `            Radius="${s.radius}"`,
+          `            Opacity="${s.opacity}" />`,
+        ].join('\n');
       }
       return `    <x:String x:Key="${name}">${val}</x:String>`;
     });
@@ -163,6 +206,7 @@ const sharedSources = [
   `${TOKENS_ROOT}/semantic/spacing.json`,
   `${TOKENS_ROOT}/breakpoints.json`,
   `${TOKENS_ROOT}/border.json`,
+  `${TOKENS_ROOT}/elevation.json`,
   `${TOKENS_ROOT}/touch-targets.json`,
   `${TOKENS_ROOT}/logo-sizing.json`,
 ];

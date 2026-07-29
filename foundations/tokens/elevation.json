@@ -1,0 +1,17 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$description": "DHCW Single Record Design System \u2014 Elevation tokens. Two functional tokens, each with exactly one named job; there is deliberately no generic numeric scale. Shadow colour derives from navy-900 (#1B294A) rather than pure black, so shadows read as tinted rather than grey on the clinical displays this system targets. Sync source: Figma Elevation & Shadow page (110:2) and the Figma Elevation/* effect styles. Reference: foundations/tokens/elevation.md.",
+  "elevation": {
+    "$description": "Functional elevation tokens. Emitted as ready-to-use CSS box-shadow values, so a component never composes a shadow by hand. A button press-affordance step was specified until 2026-07-29 and dropped: it was never implemented in code or in the Figma component, and the design lead confirmed it is not wanted.",
+    "raised": {
+      "$type": "shadow",
+      "$value": "0 1px 4px rgba(27, 41, 74, 0.12)",
+      "$description": "Cards and panels: a gentle lift from the page surface. Use only where a border alone is insufficient to separate a surface from its background, for example a white card on a near-white page. Also used by the patient banner and the navigation sidebar."
+    },
+    "overlay": {
+      "$type": "shadow",
+      "$value": "0 4px 16px rgba(27, 41, 74, 0.18)",
+      "$description": "All floating layers: modals, side drawers, dropdown menus and tooltips. The deeper shadow communicates that the surface sits above the page rather than on it. Never use the raised step for a floating layer \u2014 a card-weight shadow reads flat against a modal's own backdrop."
+    }
+  }
+}

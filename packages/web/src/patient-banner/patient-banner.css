@@ -1,0 +1,318 @@
+/**
+ * DHCW Single Record — Patient banner
+ * Reference HTML/CSS implementation, matched to the Figma Patient Banner set
+ * (1711:15585): Type = Fill | Border, State = Expanded | Collapsed.
+ * Consumes @dhcw/sr-tokens.
+ *
+ * Safety-critical. This strip is how clinical staff know which patient they are
+ * looking at, so it must survive zoom and reflow without hiding identity. The
+ * name, NHS number and DOB stay visible in BOTH states — collapsing hides the
+ * secondary detail, never the identifiers.
+ *
+ * Anatomy (expanded):
+ *   .sr-patient-banner__alerts   — adverse reactions + warnings cards
+ *   .sr-patient-banner__identity — name, deceased tag, demographics grid, toggle
+ *   .sr-patient-banner__actions  — Change patient / Open record / Print label
+ *
+ * Type=Fill tints the alert cards (Red/50, Yellow/100); Type=Border keeps them
+ * white with a coloured rule. Fill is the default: the tint carries more
+ * peripheral signal in a dense screen. Both pair colour with a text label, so
+ * neither relies on colour alone (SC 1.4.1).
+ */
+
+.sr-patient-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--sr-color-surface-section-cards);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elevation-raised);
+  font-family: "Roboto", system-ui, -apple-system, sans-serif;
+}
+
+/* ---------- Alert cards ---------- */
+
+.sr-patient-banner__alerts {
+  display: flex;
+  gap: var(--space-2);
+  flex: 0 1 auto;
+}
+
+.sr-patient-banner__alert {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  box-sizing: border-box;
+  min-width: 200px;
+  max-width: 240px;
+  padding: var(--space-2);
+  border-radius: var(--radius-lg);
+  border: 1px solid transparent;
+}
+
+.sr-patient-banner__alert-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  font-size: var(--font-size-14);
+  line-height: var(--font-line-height-20);
+  font-weight: 500;
+  letter-spacing: var(--font-letter-spacing-wide);
+  color: var(--sr-color-text-primary);
+}
+
+.sr-patient-banner__alert-edit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--sr-color-text-primary);
+  cursor: pointer;
+}
+.sr-patient-banner__alert-edit svg { width: 16px; height: 16px; }
+.sr-patient-banner__alert-edit:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--sr-color-border-focus);
+}
+
+.sr-patient-banner__alert-list {
+  margin: 0;
+  padding-left: var(--space-4);
+  font-size: var(--font-size-12);
+  line-height: var(--font-line-height-16);
+  letter-spacing: var(--font-letter-spacing-caption);
+  color: var(--sr-color-text-secondary);
+}
+.sr-patient-banner__alert-text {
+  margin: 0;
+  font-size: var(--font-size-12);
+  line-height: var(--font-line-height-16);
+  letter-spacing: var(--font-letter-spacing-caption);
+}
+/* The reaction itself is the clinically significant part — emphasised. */
+.sr-patient-banner__alert-value {
+  color: var(--sr-color-status-critical);
+}
+
+/* Reactions card */
+.sr-patient-banner__alert--reactions {
+  background-color: var(--color-red-50);
+}
+.sr-patient-banner__alert--reactions .sr-patient-banner__alert-text {
+  color: var(--sr-color-status-critical);
+}
+
+/* Warnings card */
+.sr-patient-banner__alert--warnings {
+  background-color: var(--color-yellow-100);
+}
+.sr-patient-banner__alert--warnings .sr-patient-banner__alert-text {
+  color: var(--color-yellow-700);
+}
+
+/* Type=Border — white card, coloured rule instead of a tint. */
+.sr-patient-banner--border .sr-patient-banner__alert {
+  background-color: var(--sr-color-surface-section-cards);
+  border-color: var(--sr-color-status-critical);
+}
+
+/* ---------- Identity ---------- */
+
+.sr-patient-banner__identity {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.sr-patient-banner__name-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.sr-patient-banner__name {
+  margin: 0;
+  font-size: var(--font-size-14);
+  line-height: var(--font-line-height-20);
+  font-weight: 500;
+  letter-spacing: var(--font-letter-spacing-wide);
+  color: var(--sr-color-text-primary);
+}
+
+.sr-patient-banner__flag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-full);
+  background-color: var(--sr-color-status-critical-surface);
+  color: var(--sr-color-status-critical);
+  font-size: var(--font-size-12);
+  line-height: var(--font-line-height-20);
+  letter-spacing: var(--font-letter-spacing-caption);
+  white-space: nowrap;
+}
+
+.sr-patient-banner__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: var(--font-size-12);
+  line-height: var(--font-line-height-16);
+  color: var(--sr-color-interactive-link);
+  text-decoration: underline;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.sr-patient-banner__toggle svg { width: 16px; height: 16px; }
+.sr-patient-banner__toggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--sr-color-border-focus);
+  border-radius: var(--radius-sm);
+}
+
+/* Demographics: two independent columns when there is room, one when there is
+   not. Columns are explicit rather than row-paired, so a field never jumps
+   column when an optional one (date of death) is absent. */
+.sr-patient-banner__details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0 var(--space-6);
+  align-items: start;
+  margin: 0;
+  font-size: var(--font-size-12);
+  line-height: var(--font-line-height-16);
+  letter-spacing: var(--font-letter-spacing-caption);
+  color: var(--sr-color-text-secondary);
+}
+.sr-patient-banner__col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Inline rather than flex so a long value (an address) wraps back to the left
+   edge instead of hanging indented under the value, as designed. */
+.sr-patient-banner__field {
+  min-width: 0;
+}
+.sr-patient-banner__field dt,
+.sr-patient-banner__field dd {
+  display: inline;
+  margin: 0;
+}
+.sr-patient-banner__field dt::after {
+  content: " ";
+}
+
+/* Deceased date is the one demographic that carries clinical weight. */
+.sr-patient-banner__field--deceased dt,
+.sr-patient-banner__field--deceased dd {
+  color: var(--sr-color-status-critical);
+}
+
+.sr-patient-banner__copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--sr-color-interactive-primary);
+  cursor: pointer;
+  vertical-align: middle;
+}
+.sr-patient-banner__copy svg { width: 14px; height: 14px; }
+.sr-patient-banner__copy:hover { background-color: var(--sr-color-surface-subtle); }
+.sr-patient-banner__copy:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--sr-color-border-focus);
+}
+
+/* ---------- Actions ---------- */
+
+.sr-patient-banner__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex: 0 0 auto;
+}
+.sr-patient-banner__actions .sr-button {
+  justify-content: flex-start;
+  width: 100%;
+}
+
+/* ---------- Collapsed ---------- */
+
+.sr-patient-banner--collapsed {
+  align-items: center;
+  padding: var(--space-2) var(--space-4);
+}
+.sr-patient-banner--collapsed .sr-patient-banner__identity {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+.sr-patient-banner--collapsed .sr-patient-banner__details {
+  display: flex;
+  gap: var(--space-4);
+}
+.sr-patient-banner--collapsed .sr-patient-banner__actions {
+  flex-direction: row;
+}
+
+/* Collapsed alert summary — count pills instead of the full cards. */
+.sr-patient-banner__summary {
+  display: flex;
+  gap: var(--space-2);
+  flex: 0 0 auto;
+}
+.sr-patient-banner__pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-full);
+  border: 1px solid currentColor;
+  font-size: var(--font-size-12);
+  line-height: var(--font-line-height-20);
+  letter-spacing: var(--font-letter-spacing-caption);
+  white-space: nowrap;
+}
+.sr-patient-banner__pill--reactions { color: var(--sr-color-status-critical); }
+.sr-patient-banner__pill--warnings { color: var(--color-yellow-700); }
+
+/* ---------- Narrow viewports ----------
+   Identity must never be pushed off screen, so the banner stacks rather than
+   scrolling horizontally. */
+@media (max-width: 1023px) {
+  .sr-patient-banner,
+  .sr-patient-banner--collapsed {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .sr-patient-banner__alerts { flex-wrap: wrap; }
+  .sr-patient-banner__alert { max-width: none; flex: 1 1 200px; }
+  .sr-patient-banner__actions { flex-direction: row; flex-wrap: wrap; }
+  .sr-patient-banner__actions .sr-button { width: auto; }
+}

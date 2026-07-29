@@ -10,7 +10,8 @@
     "packages/web",
     "packages/react",
     "packages/storybook",
-    "packages/website"
+    "packages/website",
+    "products/case-note-tracking/prototype"
   ],
   "scripts": {
     "build-storybook": "npm run build -w @dhcw/sr-tokens && npm run build-storybook -w @dhcw/sr-storybook",
@@ -19,6 +20,7 @@
     "build:tokens": "npm run build -w @dhcw/sr-tokens && node scripts/sync-token-docs.mjs",
     "check:docs": "node scripts/sync-token-docs.mjs --check",
     "storybook": "npm run storybook -w @dhcw/sr-storybook",
-    "sync:docs": "node scripts/sync-token-docs.mjs"
+    "sync:docs": "node scripts/sync-token-docs.mjs",
+    "dev:prototype": "npm run dev -w @dhcw/case-note-tracking-prototype"
   }
 }

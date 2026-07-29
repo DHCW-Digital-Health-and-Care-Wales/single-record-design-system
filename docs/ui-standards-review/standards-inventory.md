@@ -58,7 +58,7 @@ Every standard in the guide, grouped by theme, with a source anchor and a
 |---|---|---|---|
 | 23 | **Dropdown lists** — default "Unknown or not recorded"; split Unknown/Not recorded when needed; alphabetical | [p.23](../reference/dhcw-ui-standards-v1.3.md#page-23) | |
 | 24 | Auto-learning users' favourites | [p.24](../reference/dhcw-ui-standards-v1.3.md#page-24) | |
-| 25 | **Dates** format & display (leading 0, `dd-Mmm-yyyy`) | [p.24](../reference/dhcw-ui-standards-v1.3.md#page-24) | `CARRY` — keep the legacy `dd-Mmm-yyyy` format (e.g. `06-Dec-2021`), incl. in tables. Surface in the Tables guideline. |
+| 25 | **Dates** format & display (leading 0, `dd-Mmm-yyyy`) | [p.24](../reference/dhcw-ui-standards-v1.3.md#page-24) | `ADAPT` (2026-07, design lead) — the *named month* is carried forward, the hyphens are not. Use `10 Mar 2026` in tables and space-constrained UI, `10 March 2026` in prose. Supersedes the earlier `CARRY` disposition. |
 | 26 | **Date/time picker** — launch, manual entry, nudge, today=red / selected=blue / hover=orange; customisation options | [p.25](../reference/dhcw-ui-standards-v1.3.md#page-25)–[26](../reference/dhcw-ui-standards-v1.3.md#page-26) | |
 | 27 | **Copy & paste** patient-safety rules — never across patient records; logging; future "copy link" | [p.27](../reference/dhcw-ui-standards-v1.3.md#page-27)–[28](../reference/dhcw-ui-standards-v1.3.md#page-28) | |
 | 28 | **SNOMED search fields** — always allow free text; warning triangle (not coded) / green tick (coded) icons | [p.29](../reference/dhcw-ui-standards-v1.3.md#page-29) | |

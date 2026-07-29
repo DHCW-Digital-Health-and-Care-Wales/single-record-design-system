@@ -4,6 +4,11 @@ The Single Record Design System provides the shared design language, component l
 
 This document is the primary reference for everyone working on Single Record — designers, engineers, and delivery leads.
 
+**Last reviewed:** 2026-07-28. Update this file whenever a component ships, a
+token is added, or a system-wide rule changes — not on a schedule. If it
+disagrees with `/foundations/tokens/` or `/components/`, those win and this file
+is out of date.
+
 ---
 
 ## Purpose
@@ -56,7 +61,7 @@ Foundations are the base layer of the system — the raw materials that componen
 | Colour | `/foundations/tokens/colour/` | Global palette and semantic colour system |
 | Typography | `/foundations/tokens/typography.md` | Typeface, scale, line height, letter spacing |
 | Spacing | `/foundations/tokens/spacing.md` | 4px base grid, component and layout spacing |
-| Elevation | `/foundations/tokens/elevation.md` | Shadow and z-axis depth levels |
+| Elevation | `/foundations/tokens/elevation.json` · [`.md`](foundations/tokens/elevation.md) | Three functional shadow steps: `button`, `raised`, `overlay` |
 | Motion | `/foundations/tokens/motion.md` | Duration, easing, animation principles |
 | Border | `/foundations/tokens/border.md` | Border widths and radius scale |
 | Iconography | `/foundations/iconography.md` | Icon library, sizing, usage |
@@ -137,13 +142,44 @@ Components are discrete UI elements defined at the design level. Each component 
 - Accessibility requirements
 - Known limitations
 
-| Component | Spec |
-|---|---|
-| Button | `/components/button/spec.md` |
-| Patient banner | `/components/patient-banner/spec.md` |
-| *(further components added as specs are approved)* | |
+**Status key.** *Spec* is the design contract in `/components/`. *Web* is the
+reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also consume.
+*React* is the wrapper in `packages/react/src/`.
 
-See `/components/README.md` for the full catalogue and contribution guidance.
+| Component | Spec | Web | React |
+|---|---|---|---|
+| Autocomplete | ✅ | ✅ | ✅ |
+| Bottom nav | — | ✅ | ✅ |
+| Breadcrumbs | — | ✅ | ✅ |
+| Button | ✅ | ✅ | ✅ |
+| Checkbox | ✅ | ✅ | ✅ |
+| Date input | — | ✅ | ✅ |
+| Date picker | — | ✅ | ✅ |
+| Footer | — | ✅ | ✅ |
+| Header | — | ✅ | ✅ |
+| Input | — | ✅ | ✅ |
+| Link | ✅ | — | — |
+| Modal dialog | ✅ | ✅ | ✅ |
+| Navigation | — | ✅ | ✅ |
+| Patient banner | ✅ | ✅ | ✅ |
+| Progress indicators | ✅ | — | — |
+| Search | ✅ | — | — |
+| Segmented control | — | ✅ | ✅ |
+| Select | ✅ | ✅ | ✅ |
+| Status indicator | — | ✅ | ✅ |
+| Switch | — | ✅ | ✅ |
+| Table | ✅ | ✅ | ✅ |
+| Tags | ✅ | ✅ | ✅ |
+| Time select | — | ✅ | ✅ |
+
+**Known gaps, stated plainly:** eleven components ship code without a spec, and
+three specs (Link, Progress indicators, Search) have no code. Neither is
+satisfactory — a component without a spec has no agreed contract, and a spec
+without code cannot be consumed. Both lists are worked down as components are
+touched.
+
+See `/components/README.md` for the full catalogue and contribution guidance, and
+the live catalogue in Storybook for every variant.
 
 ---
 
@@ -152,6 +188,21 @@ See `/components/README.md` for the full catalogue and contribution guidance.
 Patterns are composed interactions and page-level solutions built from components. They address common clinical and administrative workflows.
 
 Patterns live in `/patterns/`. Each pattern follows the template in `/docs/templates/pattern-template.md`.
+
+---
+
+## Content rules
+
+System-wide rules that apply to every product, not just one component.
+
+| Rule | Detail |
+|---|---|
+| **Dates** | `10 Mar 2026` in tables and space-constrained UI. `10 March 2026` in prose and anywhere without a width constraint. **Never all-numeric** (`06/12/21`) — a named month is what removes day/month ambiguity, which is a clinical-safety requirement, not a style preference. Adapts UI Standards p.24; set 2026-07-28. |
+| **Casing** | Sentence case everywhere, including headings, labels and buttons. |
+| **Names** | `SURNAME, Forename(s)` with any title in brackets. |
+| **Buttons** | Name the action and its subject — "Confirm patient", never "OK" or "Yes". |
+| **Abbreviations** | Avoid them. `No.` for "Number" in a tight table heading is a documented exception. |
+| **Empty states** | Say what is absent — "No known adverse reactions", not a blank panel. Absence of data and absence of a finding are clinically different. |
 
 ---
 

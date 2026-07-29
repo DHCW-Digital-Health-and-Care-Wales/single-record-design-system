@@ -17,6 +17,78 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-07-27 (later, direct Figma session)
+
+Branch `claude/design-system-record-continuation-2ouctr`. Worked **directly in Figma**
+via `use_figma` this session — no plugin, no generated content. **File key:
+`x5fwyefxxgD03csz8ld7SZ`** (SINGLE-RECORD-DESIGN-SYSTEM, NHS Wales enterprise). See the
+Figma File Reference table below; record it there in every future session, it was
+missing before and cost real time to recover.
+
+### Colour Tokens frame (`125:5188`, Colours page `12:3270`) reconciled against the JSON
+
+Was in better shape than the prior checkpoint's open item implied — status 700s,
+`yellow-100`, the cyan focus ring and the full grey ramp were already correct. What
+was actually wrong or missing, now fixed:
+
+- **`sr.color.surface.background`** still showed `grey-100`/`#F0F4F5` from before the
+  2026-06-04 change to `blue-50`/`#F4F5F8`. Corrected.
+- **4 missing semantic rows** added to both light and dark tables: `interactive.disabled`,
+  `text.disabled`, `border.subtle`, `border.disabled`.
+- **Red/Green/Yellow/Info Blue primitive ramps** had no section at all (only selected
+  stops inside Status); added all four as full 10-stop sections matching the
+  Blue/Cyan/Navy/Neutral pattern.
+- **Cyan-850** (`#0C7B99`) added as a 10th stop between 900 and 800 — this is an
+  intentional addition (lightest cyan that still clears AA at 4.87:1 for white text),
+  not a gap. The Figma **variable** already existed; only the documentation frame was
+  behind.
+- **`border.subtle` reordered** in both tables to match token declaration order
+  (`subtle, default, strong, focus, disabled` — it had been appended last).
+- **Two classes of layout defect, one pre-existing and widespread, one from this
+  session's own edits:**
+  - Row heights were fixed (56/60px) against wrapped usage-column text generated from
+    token `$description`s, which run longer than the original hand-written copy —
+    caused overlap in 6 pre-existing dark-mode rows plus every row this session added.
+    Fixed by measuring text and growing rows to fit, across all 11 tables.
+  - **22 alias badges across nearly every table (light and dark)** had a background pill
+    narrower than its own text — e.g. `yellow-100` rendered as `yellow-10` with the final
+    character unreadable against white. Pre-existing, not something this session
+    introduced; found while chasing what looked like a single isolated case. Fixed
+    generically: every badge resized to fit its text, alias columns widened where
+    needed, usage columns shifted/rewrapped only where that was actually forced.
+  - Verified with a structural sweep (clipping, vertical row overlap, horizontal
+    alias/usage overflow, badge underfit) across the whole frame after every pass:
+    zero problems on the final pass.
+
+### Figma variables vs. the token JSON (open item 2, now closed)
+
+Diffed all 78 primitive and 30 semantic (`Single Record` collection) variables against
+`foundations/tokens/`. Found and fixed, with sign-off:
+
+| Variable | Was | Now |
+|---|---|---|
+| `Status/Critical` (dark) | Red/600 | **Red/700** — matches light mode and the JSON; this is the AA contrast fix from the July reconciliation, which had reached the JSON and light mode but not the dark Figma variable |
+| `Status/Success` (dark) | Green/600 | **Green/700** — same gap, same fix |
+| `Interactive/Link` (light) | standalone duplicate `Info Blue` primitive | **`Info Blue/700`** — same resolved colour, but now points at the canonical stepped primitive instead of the duplicate the JSON already removed (`info-blue.default`) |
+| `Focus Yellow` primitive | existed, unreferenced | **Deleted** — DDR-006 deprecated it and deferred removal until nothing referenced it; confirmed no variable-level references and no fill/stroke bindings on the Colours page. **Not exhaustively swept across all 51 pages in the file** — if anything elsewhere still shows a broken reference, this is why; recoverable via Figma version history. |
+| standalone duplicate `Info Blue` primitive | existed, unreferenced after the repoint above | **Deleted**, same basis |
+
+Everything else matched: all 10-step ramps, Navy's 5 steps, and 26 of 29 semantic
+tokens across both modes.
+
+### Two Figma plugins exist under `figma/plugins/` — do not use them
+
+`colour-guide` and `colour-palette` predate this session's direct-write method and
+generate design content programmatically rather than through `use_figma`. An earlier
+attempt this session to keep `colour-guide`'s inlined data in sync with the token JSON
+was **reverted at the user's explicit instruction** — the standing method is direct
+authoring in Figma, not plugins. The `colour-guide` plugin's inlined colour data is
+still stale (a `focus` `#FFEB3B` swatch, `border.focus` still aliasing the removed
+`focus-yellow`, pre-reconciliation status colours) — do not run it without reconciling
+first, or better, do not use it at all.
+
+---
+
 ## Checkpoint - 2026-07-27
 
 Branch `claude/single-record-ds-guidelines-v003fa`. Website chrome rebuilt to the
@@ -297,9 +369,13 @@ Branch `claude/single-record-ds-guidelines-v003fa`. Guidelines programme kicked 
   Welsh-language toggle; translator file-upload + CSV/JSON export; DDR for Website IA is DDR-016.
 - **Tables guideline — seed content (to formalise).** Two content rules captured for a future
   Tables guideline (component `components/table/`, Figma Tables page):
-  - **Dates: keep the legacy DHCW format `dd-Mmm-yyyy`** with leading zero and hyphens
-    (e.g. `06-Dec-2021`) — UI Standards [p.24](../docs/reference/dhcw-ui-standards-v1.3.md#page-24).
-    (Earlier `10 Jan 2020` idea dropped; legacy standard retained.)
+  - ~~**Dates: keep the legacy DHCW format `dd-Mmm-yyyy`**~~ **SUPERSEDED 2026-07-28.**
+    The design lead set the system-wide rule as **`10 Mar 2026` in tables and other
+    space-constrained UI, and `10 March 2026` in prose** and anywhere without a width
+    constraint. This reinstates roughly the `10 Jan 2020` shape that was dropped here
+    earlier, so the reversal is deliberate — do not revert to hyphens. The clinical-safety
+    intent of UI Standards [p.24](../docs/reference/dhcw-ui-standards-v1.3.md#page-24) is
+    unchanged: a **named month**, never an all-numeric date. See DL-022.
   - **Table headings: allow `No.` as the abbreviation for "Number"** where column width is
     tight. This is a deliberate **exception** to the general "avoid abbreviations / no full
     stops" rule (UI Standards [p.10](../docs/reference/dhcw-ui-standards-v1.3.md#page-10)),
@@ -379,6 +455,49 @@ Landed this session (branch `claude/table-icon-colors-9j96s1`, merged to main):
 - Confirm the `action/hold` glyph vs Figma (egress-blocked).
 - Autocomplete needs a dedicated Figma design to ratify the interim reference.
 - **Table toolbar/filter + pagination pattern** — the natural home for the filter tags + segmented control + autocomplete. Not started (wants a Figma design first).
+
+---
+
+## Checkpoint — 2026-07-01
+
+Code session — coded reference components shipped to Storybook (web `@dhcw/sr-web`
++ React `@dhcw/sr-react`), no Figma writes. All verified with axe (0
+serious/critical) and screenshots against Figma.
+
+- **Repo build fix.** Root `.gitignore` blanket-ignored `package.json`, so
+  `packages/icons/package.json` had never been committed — CI/fresh clones
+  couldn't resolve `@dhcw/sr-icons` and `build-storybook` failed. Removed the
+  blanket rules and committed the manifest. (Closes the "Narrow root .gitignore"
+  open item.)
+- **Components shipped (web + React, in Storybook):** Header (Desktop 1,
+  **Desktop 2** = org selector + Cymraeg, Mobile 1/2), Footer (desktop
+  save/version bar), Breadcrumbs, **Bottom navigation** (mobile tab bar,
+  665:16526), Navigation (expandable submenus with real children; icon-only
+  collapsed rail now has `aria-label` per item — fixed 13 axe button-name
+  violations; logo hidden when collapsed), **Input** (text/password/phone/
+  textarea + calendar→DatePicker, time→TimeSelect), **Toggle switch**,
+  **Segmented control**, **Date input** (3-field GDS/NHS), **Date picker**
+  (custom calendar popover, no dep, full keyboard), **Time select**,
+  **Status indicator** (filled success/error/warning).
+- **Icon set synced with Figma** → 118 icons. Added globe `location/language`
+  (2962:53479) + 12 outline icons (action/check·edit2·eye·eye-off·scan,
+  data/grid-2x2·grid-3x3, nav/clear·dashboard·menu2, status/alert·error-circle),
+  each matched to its Lucide source by sight. `status/error` (circle-x) relocated
+  to `nav/clear` to match Figma. `warnings/determinate` **deferred** (purpose
+  unknown); the other warnings/* ship as the StatusIndicator component.
+- **DDR-012** — date/time entry: 3-field DateInput is the default for *known*
+  dates (not just DOB); calendar picker only for *choosing* (scheduling); time
+  is a text field or select, never a wheel. WCAG 2.2 AA applies to new internal
+  tools; the 3-field pattern is the GDS/NHS design standard.
+- **DDR-013** — the filled warnings/* group ships as `StatusIndicator`, colour
+  driven by status tokens, geometry **derived from Lucide (ISC), not traced** —
+  no licensing exposure.
+- **Logo is a neutral placeholder** (`packages/web/src/assets/logo.js`, symbol +
+  wordmark). The real NHS/GIG lockups are trademarked raster assets and Figma
+  egress is blocked from the coding env — swap the placeholder for the official
+  exported SVG/PNGs (or enable figma.com egress) when available. Header/Nav take
+  the logo as a prop, so it's a one-line change per consumer.
+- **Next:** Tables (queued, not started).
 
 ---
 
@@ -508,7 +627,7 @@ This week's accepted changes (now reflected in Figma, tokens, and docs):
 | ~~Destructive button type~~ **(resolved 2026-06-24)** | The red 4th button type was named `Warning` but styled red. Renamed `Warning` → `Destructive` (Figma `1346:500` + coded `.sr-button--destructive`). No amber button added — GDS/NHS have no amber button; severity nuance lives in the confirmation dialog. Modal patterns instance `Destructive` directly. See DDR-008. |
 | Show/hide pattern for component parts | Decision made: boolean Component Property for optional decoration (icons, badges); variant for layout-shifting show/hide (label, hint). Hidden layers = `visible=false`, never delete. Apply consistently when building new components. |
 | ~~Enable GitHub Pages for Storybook~~ **(resolved 2026-06-24)** | Pages enabled on the DHCW org repo (Source = GitHub Actions). Storybook deploys to `https://dhcw-digital-health-and-care-wales.github.io/single-record-design-system/`. Personal repo doesn't have Pages (free plan); disable the workflow there via Actions → ⋯ → Disable workflow to avoid red-X noise. Mirror pushes via deploy key don't auto-trigger workflows on the org repo — use "Run workflow" manually after each mirror. |
-| Narrow root `.gitignore` | Root `.gitignore` ignores bare `package.json`/`package-lock.json`; workspace manifests are force-added. Tighten the rules so package manifests track normally. |
+| ~~Narrow root `.gitignore`~~ **(resolved 2026-07-01)** | Removed the blanket `package.json`/`package-lock.json` ignore rules and committed the previously-untracked `packages/icons/package.json` (its absence was breaking CI/fresh-clone Storybook builds). Package manifests now track normally. |
 | Grow Storybook coverage | Add stories alongside each new `@dhcw/sr-web` component; enable the `@dhcw/sr-react` stories glob in `.storybook/main.js` once that package has components. Storybook MCP deferred (DDR-009). |
 | Blazor WASM component gallery | Scaffold a Blazor WebAssembly "gallery" app that renders `@dhcw/sr-blazor` components (starting with `SrButton`) in their full variant matrix. Deploy as a second GitHub Pages site via a `dotnet publish` workflow. **Priority: this week.** The existing Blazor product team needs a live-preview URL to evaluate adopting the design system. Pattern: static WASM output → `actions/upload-pages-artifact` → deploy. |
 

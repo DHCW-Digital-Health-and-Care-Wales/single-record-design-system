@@ -63,7 +63,7 @@ Full layout matrix: [`spec.md`](./spec.md#layouts-sr-table-layout--storybook-lay
 | Keep cells compact (`Body S`, 8px padding) | Pad clinical tables so loosely they need scrolling |
 | Give every icon-only action an `aria-label` naming action + subject | Rely on colour alone to mark a selected row |
 | Use `No.` for "Number" in a tight column heading | Introduce other abbreviations with full stops (write `ECG`, not `E.C.G.`) |
-| Show dates as `dd-Mmm-yyyy` (e.g. `06-Dec-2021`) | Use ambiguous all-numeric formats (`06/12/21`) in tables |
+| Show dates as `d Mmm yyyy` (e.g. `10 Mar 2026`) | Use ambiguous all-numeric formats (`06/12/21`) in tables |
 
 ## Accessibility
 
@@ -76,7 +76,7 @@ Full layout matrix: [`spec.md`](./spec.md#layouts-sr-table-layout--storybook-lay
 ## Content
 
 - **Abbreviations (UI Standards #8):** avoid abbreviations and never use full stops (`ECG`, not `E.C.G.`). **Table-heading exception:** `No.` is allowed for "Number" in a column heading where width is genuinely tight. This is the only sanctioned abbreviation-with-full-stop, and only in headings.
-- **Dates (UI Standards #25):** use the legacy DHCW format `dd-Mmm-yyyy` (e.g. `06-Dec-2021`), including inside tables — leading zero on the day, three-letter month, four-digit year. This resolves day/month ambiguity for clinical safety.
+- **Dates (UI Standards #25, adapted):** use the short form `d Mmm yyyy` (e.g. `10 Mar 2026`) in tables and anywhere else width is constrained; use the long form `10 March 2026` in prose and where there is room. An abbreviated or full month name (never a digit) is what resolves day/month ambiguity for clinical safety. This **adapts** the legacy `dd-Mmm-yyyy` format, which used hyphens; the ambiguity protection is unchanged.
 - **Names (UI Standards #6):** `SURNAME, First M` in list/table columns.
 - Sentence case for all cell content and headings (UI Standards #5). Follow the [DHCW terminology table](../../docs/reference/dhcw-ui-standards-v1.3.md#page-67).
 
