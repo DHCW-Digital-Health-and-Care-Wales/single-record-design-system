@@ -182,6 +182,25 @@ const spaceEntries = Object.entries(flat)
   .sort((a, b) => a[1] - b[1]);
 const radiusEntries = Object.entries(flat).filter(([k]) => /^radius-\d+$/.test(k)).map(([k, v]) => [k, toPx(v)]);
 
+// Elevation specimens, rendered from the built tokens so the page cannot drift
+// from what products actually consume.
+const elevationEntries = Object.entries(flat)
+  .filter(([k]) => /^elevation-/.test(k))
+  .map(([k, v]) => [k.replace(/^elevation-/, ''), v]);
+const ELEVATION_USE = {
+  raised: 'Cards and panels. Use only where a border alone will not separate a surface from its background.',
+  overlay: 'Anything that floats above the page: modals, drawers, dropdown menus, tooltips.',
+};
+const elevationSamples = elevationEntries.map(([name, value]) => `
+  <figure class="elevation">
+    <div class="elevation__chip" style="box-shadow: var(--elevation-${name})"></div>
+    <figcaption>
+      <code>--elevation-${name}</code>
+      <span class="elevation__value">${value}</span>
+      <span class="elevation__use">${ELEVATION_USE[name] || ''}</span>
+    </figcaption>
+  </figure>`).join('');
+
 function swatchGrid(filterFn) {
   return `<div class="swatches">${colourEntries.filter(([k]) => filterFn(k)).map(([k, v]) =>
     `<figure class="swatch"><div class="swatch__chip" style="background: var(--${k}, ${v})"></div>
@@ -1483,7 +1502,15 @@ addPage({
   body: `<p class="breadcrumbs">Styles</p>${renderMarkdown(spacingMd)}<hr>
     <h2>The spacing scale</h2>
     <p>Bar widths are set with the built spacing custom properties.</p><div class="space-scale">${spacingScale}</div>
-    <h2>Radius</h2><div class="radii">${radiusSamples}</div>`,
+    <h2>Radius</h2><div class="radii">${radiusSamples}</div>
+    <h2>Elevation</h2>
+    <p>Shadow separates surfaces that sit above the page. Single Record uses two
+    steps and no more, both tinted from Navy 900 rather than black so they stay
+    subdued on clinical displays. Buttons carry no shadow: they show affordance
+    through fill, border and colour.</p>
+    <div class="elevations">${elevationSamples}</div>
+    <p class="muted">Do not stack elevations, and do not use shadow to signal that
+    something is interactive. Focus is handled by the focus ring, not by elevation.</p>`,
 });
 addPage({
   file: 'styles/icons.html', url: 'styles/icons.html', title: 'Icons', section: 'Styles',
