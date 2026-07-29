@@ -203,7 +203,7 @@ They live under `/products/{product}/prototype/` and consume the design-system p
 
 **Prototypes are not shippable.** Mock data only, no API integration, no authentication, no error or loading handling, no tests, no security review.
 
-They are published on the design-system website under **Prototypes**, which embeds each one in StackBlitz — running preview and full source in one view. Because the repository is private, viewing them requires a StackBlitz session signed in to a GitHub account with access. To run one locally, install from the **repository root** (not the prototype folder, whose design-system dependencies are unpublished workspace members) and run `npm run dev:prototype`.
+They are published on the design-system website under **Prototypes**, which embeds each one live via Sandpack (DDR-019) — a plain preview/code toggle, generated from the actual source at every site build. No repository visibility is required to view them; the embed doesn't clone a repo at all, it's handed the files directly. To run one locally instead, install from the **repository root** (not the prototype folder, whose design-system dependencies are unpublished workspace members) and run `npm run dev:prototype`.
 
 ---
 

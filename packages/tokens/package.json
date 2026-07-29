@@ -2,16 +2,26 @@
   "name": "@dhcw/sr-tokens",
   "version": "0.1.0",
   "description": "DHCW Single Record Design System — design tokens. Outputs CSS custom properties, SCSS variables, and XAML ResourceDictionary from the canonical JSON token source.",
-  "private": true,
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "build": "node build.js",
-    "clean": "rm -rf build"
+    "clean": "rm -rf build",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "style-dictionary": "^4.0.0"
   },
   "files": [
     "build/"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Chuk-DCHW/dhcw-single-record-design-system.git",
+    "directory": "packages/tokens"
+  },
+  "bugs": "https://github.com/Chuk-DCHW/dhcw-single-record-design-system/issues"
 }

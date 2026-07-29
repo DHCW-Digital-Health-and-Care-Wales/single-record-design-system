@@ -40,15 +40,16 @@ deployable application.
 ### In the browser
 
 The design-system website publishes this under **Prototypes → Case Note
-Tracking**, embedded in StackBlitz: running preview and full source in one view,
-loaded from the DHCW org mirror repo's `main` — the public repo, not this
-working repo, so StackBlitz can embed it without requiring viewers to sign in
-with access to a private repo. StackBlitz must also be pointed at the
-**repository root**, never at this subdirectory — see below for why.
+Tracking**, embedded via Sandpack (DDR-019): a preview/code toggle running
+directly in the page, with no unrelated IDE chrome. Unlike the earlier
+StackBlitz version, this embed does not clone a repository at all — the
+website's build step reads this prototype's actual source, plus the exact
+`@dhcw/sr-react` / `sr-web` / `sr-tokens` / `sr-icons` files it depends on,
+and hands them to Sandpack as data. Nothing about the embed depends on this
+repository's visibility.
 
-Because it loads from the mirror, the embed always reflects what has actually
-been merged to `main` here and mirrored across, never an unmerged feature
-branch.
+Because it is generated from source at every site build, the embed always
+reflects what is actually in this file, never a stale copy.
 
 ### Locally
 

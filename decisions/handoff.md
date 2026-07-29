@@ -17,6 +17,78 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-07-29 (later, publishing scaffold)
+
+### Repo visibility — resolved, decision made
+
+`Chuk-DCHW/dhcw-single-record-design-system` (this repo) is now **private** again.
+`DHCW-Digital-Health-and-Care-Wales/single-record-design-system` (the org mirror) is
+now **public** — this was a deliberate decision by the repo owner, made after
+confirming no secrets or credentials exist in the tree. The DS website's Prototypes
+page and its StackBlitz embed point at the **org mirror**, not this repo, for exactly
+this reason: whichever repo StackBlitz loads from has to be public, and the org-owned
+one is the right one to expose, not a personal-namespace copy.
+
+### The four DS packages are now publish-ready (not yet published)
+
+`@dhcw/sr-tokens`, `@dhcw/sr-icons`, `@dhcw/sr-web`, `@dhcw/sr-react` all had
+`"private": true` removed and gained `publishConfig.access: "public"`, a
+`repository`/`bugs` field, and (tokens/icons) a `prepublishOnly` build step. Verified
+with `npm pack --dry-run` in each package — story files are correctly excluded,
+`build/` outputs are fresh, nothing extraneous ships. **Nothing has actually been
+published yet** — this is scaffolding only, done ahead of the dev team's production
+app needing these as real installable dependencies (their app lives in their own
+repo, so workspace-symlink resolution won't reach it).
+
+**Decided:** packages will be published to the **public npm registry**, matching the
+precedent of `govuk-frontend` and `nhsuk-frontend` (both public, both MIT-licensed on
+public npm). This was chosen partly because the client org is being mandated to move
+from Azure DevOps to GitHub, which rules out investing in Azure Artifacts as a
+registry, and GitHub Packages was rejected as an unnecessary auth-token complication
+once public npm was already in play.
+
+**Still open, needs sign-off before actually running `npm publish`:**
+- **License.** No `license` field was added to any package.json and no `LICENSE`
+  file exists in the repo. GDS and NHS.UK precedent is MIT, but this is a legal
+  decision for whoever owns that call, not assumed here.
+- **Publish workflow.** No CI step publishes these yet. When the license question is
+  settled, add a GitHub Actions job (npm token stored as an org secret, triggered on
+  a version tag or manual dispatch) — same shape as `mirror-to-dhcw.yml`.
+- **Versioning policy.** All four are at `0.1.0` with caret-range internal
+  dependencies (`^0.1.0`) so they can be bumped independently once published, rather
+  than the previous exact pins that would have forced lockstep upgrades.
+
+### DS website Prototypes section, using CodeSandbox Sandpack instead of StackBlitz — decided, not yet built
+
+StackBlitz was ruled out for the embedded prototype preview: its full IDE chrome is
+unnecessary here, and its underlying WebContainers runtime needs a commercial license
+beyond light use. Replacing it with **Sandpack** (`@codesandbox/sandpack-react`, MIT),
+which:
+- gives a plain preview/code toggle (the actual ask, matching how Figma Make's
+  switcher looks) with no unrelated IDE furniture we don't control
+- takes files directly rather than cloning a GitHub repo, so it has **no dependency
+  on repo visibility at all** — DL-028 goes away entirely once this is built
+- bundles in the visitor's own browser via a **free hosted CodeSandbox compiling
+  service** (no login, no API key) — decided as good enough here since the prototype
+  never carries real patient data, only mock data. Self-hosting that compiling step
+  instead is possible later with no code change if this ever needs to be fully
+  offline.
+
+**Built, same session, later.** DDR-019 records the decision. `build.mjs` gained
+`assembleDesignSystemFiles()` / `buildSandpackFiles()`, which walk the real import
+graph starting from each prototype's declared `components` list (following
+`@dhcw/sr-react`'s actual `src/index.js` barrel, not the `package.json` "exports"
+map — that map predates several components and is missing entries) and inline
+exactly the react/web/icons/tokens files reached. Sandpack itself loads via ESM CDN
+import (`esm.sh`) in the browser only, so `packages/website`'s own Node build gains
+no dependency and keeps its "zero runtime dependencies" description accurate. Site
+build verified end-to-end (`npm run build:site`); the actual Sandpack module load
+could not be verified in this session's sandbox (no egress to `esm.sh`, same
+restriction hit earlier for `stackblitz.com` and `github.io`) — needs a real-browser
+check. DL-028 is retired, not just resolved, by this change.
+
+---
+
 ## Checkpoint — 2026-07-27 (later, direct Figma session)
 
 Branch `claude/design-system-record-continuation-2ouctr`. Worked **directly in Figma**

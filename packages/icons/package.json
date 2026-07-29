@@ -2,14 +2,24 @@
   "name": "@dhcw/sr-icons",
   "version": "0.1.0",
   "description": "SVG icon library for the DHCW Single Record Design System — generated from foundations/iconography/svg (Lucide-derived, DDR-003).",
-  "private": true,
+  "license": "MIT",
   "type": "module",
   "main": "build/icons.js",
   "scripts": {
     "build": "node build.js",
-    "clean": "rm -rf build"
+    "clean": "rm -rf build",
+    "prepublishOnly": "npm run build"
   },
   "files": [
     "build/"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Chuk-DCHW/dhcw-single-record-design-system.git",
+    "directory": "packages/icons"
+  },
+  "bugs": "https://github.com/Chuk-DCHW/dhcw-single-record-design-system/issues"
 }
