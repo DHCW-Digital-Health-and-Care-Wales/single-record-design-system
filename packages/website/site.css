@@ -181,6 +181,9 @@ body {
 }
 
 .content { padding: 40px; max-width: 800px; }
+/* Pages carrying a live embed need the full column: an 800px prototype frame is
+   too narrow to show a 1280px clinical screen without inner scrolling. */
+.content--wide { max-width: 1400px; }
 
 /* ── content typography (bound to the token scale) ────────────────────────── */
 .breadcrumbs { margin: 0 0 8px; font-size: 14px; color: var(--sr-color-text-secondary); }
@@ -247,6 +250,50 @@ body {
 /* Card headings use Heading S (20/28 Bold) from the type scale. */
 .card h3 { margin: 0 0 6px; font-size: 20px; line-height: 28px; font-weight: 700; color: var(--sr-color-interactive-link); }
 .card p { margin: 0; font-size: 14px; line-height: 20px; color: var(--sr-color-text-secondary); }
+
+/* ── embedded prototype ───────────────────────────────────────────────────────
+   StackBlitz owns the toolbar inside the frame and it cannot be extended, so
+   the breadcrumb and the escape route back to the design system live in our own
+   bar directly above it. */
+.embed {
+  margin: 8px 0 32px;
+  border: 1px solid var(--sr-color-border-default);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--sr-color-surface-small-cards);
+}
+.embed__bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--sr-color-border-default);
+  background: var(--sr-color-surface-section-cards);
+}
+.embed__title {
+  margin: 0;
+  flex: 1;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  color: var(--sr-color-text-secondary);
+}
+.embed__back, .embed__open {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--sr-color-interactive-link);
+}
+.embed__back svg { width: 16px; height: 16px; }
+.embed__frame {
+  display: block;
+  width: 100%;
+  height: 78vh;
+  min-height: 600px;
+  border: 0;
+}
 
 /* ── showcase: white preview + dark tabbed code panel ─────────────────────── */
 .showcase {

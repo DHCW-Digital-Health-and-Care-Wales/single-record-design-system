@@ -28,6 +28,41 @@ const REPORT_ISSUE_URL = 'https://forms.office.com/REPLACE-with-report-an-issue-
 const CONTRIBUTION_URL = 'https://dev.azure.com/REPLACE-with-azure-devops-intake';     // component / change requests
 const STORYBOOK_URL = 'storybook/index.html'; // reachable, not in the primary nav
 
+// ── Prototypes ────────────────────────────────────────────────────────────────
+// Prototypes run in StackBlitz straight from the repository, so the code the
+// dev team reads is the same code that renders in the preview pane and the
+// design-system packages resolve as workspace siblings. StackBlitz must be
+// pointed at the REPOSITORY ROOT, not the prototype subdirectory: the DS
+// packages are unpublished, so a subdirectory-only import cannot resolve them.
+const REPO_SLUG = 'Chuk-DCHW/dhcw-single-record-design-system';
+const REPO_BRANCH = 'main';
+
+/** StackBlitz URL for a prototype. `embed` returns the iframe form. */
+function stackblitzUrl({ file, startScript, embed = false }) {
+  const params = new URLSearchParams({
+    file,
+    startScript,
+    view: 'preview',
+    terminalHeight: '25',
+    ...(embed ? { embed: '1' } : {}),
+  });
+  return `https://stackblitz.com/github/${REPO_SLUG}/tree/${REPO_BRANCH}?${params}`;
+}
+
+const PROTOTYPES = [
+  {
+    slug: 'case-note-tracking',
+    title: 'Case Note Tracking',
+    summary: 'Patient casenote view: patient banner, adverse-reaction cards, site and type filters, '
+      + 'bulk selection and the send-batch confirmation modal.',
+    status: 'In progress',
+    statusNote: 'The patient casenote view is built. Search, SendIT batch, My Requests and the side '
+      + 'panels are not yet.',
+    entryFile: 'products/case-note-tracking/prototype/src/App.jsx',
+    startScript: 'dev:prototype',
+  },
+];
+
 // ─── Markdown → HTML (subset used by our guideline docs) ──────────────────────
 function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 function inline(s) {
@@ -245,14 +280,20 @@ const SECTIONS = [
     ],
   },
   { id: 'patterns', label: 'Patterns', href: 'patterns.html' },
-  { id: 'pages', label: 'Pages', href: 'pages.html' },
+  {
+    id: 'prototypes', label: 'Prototypes', href: 'prototypes.html',
+    side: [
+      { href: 'prototypes.html', label: 'Overview' },
+      ...PROTOTYPES.map((p) => ({ href: `prototypes/${p.slug}.html`, label: p.title })),
+    ],
+  },
   { id: 'contributions', label: 'Contributions', href: 'contributions.html' },
 ];
 
 const ICON_GLOBE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"/></svg>';
 const ICON_SEARCH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>';
 
-function shell({ title, prefix, sectionId, activeHref, body, extraHead = '', extraScript = '' }) {
+function shell({ title, prefix, sectionId, activeHref, body, extraHead = '', extraScript = '', wide = false }) {
   const section = SECTIONS.find((s) => s.id === sectionId);
   const topnav = SECTIONS.map((s) =>
     `<a href="${prefix + s.href}"${s.id === sectionId ? ' aria-current="page"' : ''}>${s.label}</a>`).join('');
@@ -305,7 +346,7 @@ ${extraHead}
 </header>
 <div class="layout${sidebar ? '' : ' layout--nosidebar'}">
   ${sidebar}
-  <main id="main" class="content">
+  <main id="main" class="content${wide ? ' content--wide' : ''}">
 ${body}
   </main>
 </div>
@@ -362,8 +403,8 @@ function accessibilityTable(rows) {
 
 // ─── page registry (drives both the output files and the search index) ────────
 const pages = [];
-function addPage({ file, url, title, section, sectionId, activeHref, prefix, body, extraScript = '' }) {
-  pages.push({ file, url, title, section, sectionId, activeHref, prefix, body, extraScript });
+function addPage({ file, url, title, section, sectionId, activeHref, prefix, body, extraScript = '', wide = false }) {
+  pages.push({ file, url, title, section, sectionId, activeHref, prefix, body, extraScript, wide });
 }
 
 // ─── Styles: Typography ───────────────────────────────────────────────────────
@@ -1566,14 +1607,77 @@ addPage({
     links: [{ href: 'https://service-manual.nhs.uk/design-system/patterns', label: 'NHS England patterns', note: 'the reference patterns we adapt' }],
   }),
 });
+// ─── Prototypes ───────────────────────────────────────────────────────────────
 addPage({
-  file: 'pages.html', url: 'pages.html', title: 'Pages', section: 'Pages',
-  sectionId: 'pages', activeHref: 'pages.html', prefix: '',
-  body: plannedBody({
-    title: 'Pages', crumb: 'Pages',
-    intro: 'Whole-page templates assembled from patterns and components.',
-  }),
+  file: 'prototypes.html', url: 'prototypes.html', title: 'Prototypes', section: 'Prototypes',
+  sectionId: 'prototypes', activeHref: 'prototypes.html', prefix: '',
+  body: `
+<p class="breadcrumbs">Prototypes</p>
+<h1>Prototypes</h1>
+<p class="lede">Working product prototypes, built entirely from this design system. Each one runs
+live in your browser with its full source alongside it, so you can click the flow through and read
+the code that produces it.</p>
+<div class="cards">
+${PROTOTYPES.map((p) => `  <a class="card" href="prototypes/${p.slug}.html"><h3>${p.title}</h3>
+    <p>${p.summary}</p></a>`).join('\n')}
+</div>
+<h2>What a prototype is</h2>
+<p>A reference implementation of a product's screens, authored by design. Every control comes from
+the design system — nothing here restyles a component. If something looks wrong in a prototype, the
+design system is wrong, and finding that out is the point.</p>
+<p>Prototypes are useful in three ways: they show the design intent running rather than as a static
+picture, they give engineering a readable starting template for the UI layer, and they test the
+design system against a real product before it reaches production.</p>
+<h2>What a prototype is not</h2>
+<div class="callout"><p><strong>Do not ship a prototype.</strong> They run on mock data held in
+memory, with no API integration, no authentication or authorisation, no error or loading handling,
+no tests, and no performance or security review. A prototype is a starting skeleton for the
+<strong>user interface layer only</strong> — not a foundation for a deployable application.</p></div>`,
 });
+
+for (const p of PROTOTYPES) {
+  addPage({
+    file: `prototypes/${p.slug}.html`, url: `prototypes/${p.slug}.html`, title: p.title,
+    section: 'Prototypes', sectionId: 'prototypes', activeHref: `prototypes/${p.slug}.html`,
+    prefix: '../', wide: true,
+    body: `
+<p class="breadcrumbs"><a href="../prototypes.html">Prototypes</a> <span aria-hidden="true">/</span> ${p.title}</p>
+<h1>${p.title}</h1>
+<p class="lede">${p.summary}</p>
+<p><strong>Status: ${p.status}.</strong> ${p.statusNote}</p>
+<div class="embed">
+  <div class="embed__bar">
+    <a class="embed__back" href="../prototypes.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+      All prototypes
+    </a>
+    <p class="embed__title">${p.title}</p>
+    <a class="embed__open" href="${stackblitzUrl({ file: p.entryFile, startScript: p.startScript })}"
+       target="_blank" rel="noopener">Open in a new tab</a>
+  </div>
+  <iframe class="embed__frame" title="${p.title} prototype, running in StackBlitz"
+          src="${stackblitzUrl({ file: p.entryFile, startScript: p.startScript, embed: true })}"
+          allow="cross-origin-isolated"></iframe>
+</div>
+<h2>Using it</h2>
+<p>The preview pane runs the prototype; the file tree and editor beside it hold the real source.
+Use the toggle in the StackBlitz toolbar to move between them. Edits you make are yours alone —
+they are a scratch copy and change nothing in the design system.</p>
+<p>The prototype installs the design-system packages as workspace siblings, so it always renders
+the current version of every component. There is no copied or vendored code to fall out of date.</p>
+<div class="callout"><p>The prototype loads from the design system's source repository, which is
+private. You will need to be signed in to StackBlitz with a GitHub account that has access to it.
+If the preview reports that the repository cannot be found, that is what has happened — ask the
+design team for access rather than assuming the prototype is broken.</p></div>
+<h2>Running it locally instead</h2>
+<p>Clone the repository and run it from the <strong>repository root</strong>, not the prototype
+folder:</p>
+<div class="codepanel"><pre><code>npm install
+npm run ${p.startScript}</code></pre></div>
+<p>It has to be installed from the root because the design-system packages are unpublished
+workspace members, resolved by symlink. Installing inside the prototype folder alone will fail.</p>`,
+  });
+}
 
 addPage({
   file: 'contributions.html', url: 'contributions.html', title: 'Contributions', section: 'Contributions',
@@ -1721,6 +1825,7 @@ rmSync(DIST, { recursive: true, force: true });
 mkdirSync(resolve(DIST, 'assets'), { recursive: true });
 mkdirSync(resolve(DIST, 'styles'), { recursive: true });
 mkdirSync(resolve(DIST, 'components'), { recursive: true });
+mkdirSync(resolve(DIST, 'prototypes'), { recursive: true });
 
 for (const f of ['tokens.css', 'typography.css']) copyFileSync(resolve(TOKENS, 'css', f), resolve(DIST, 'assets', f));
 copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'button', 'button.css'), resolve(DIST, 'assets', 'button.css'));
@@ -1750,7 +1855,7 @@ writeFileSync(resolve(DIST, "assets", "search-index.js"), `window.__SEARCH__=${j
 for (const p of pages) {
   writeFileSync(resolve(DIST, p.file), shell({
     title: p.title, prefix: p.prefix, sectionId: p.sectionId, activeHref: p.activeHref,
-    body: p.body, extraScript: p.extraScript,
+    body: p.body, extraScript: p.extraScript, wide: p.wide,
   }));
 }
 

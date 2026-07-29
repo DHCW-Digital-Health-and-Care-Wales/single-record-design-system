@@ -4,7 +4,7 @@ The Single Record Design System provides the shared design language, component l
 
 This document is the primary reference for everyone working on Single Record — designers, engineers, and delivery leads.
 
-**Last reviewed:** 2026-07-28. Update this file whenever a component ships, a
+**Last reviewed:** 2026-07-29. Update this file whenever a component ships, a
 token is added, or a system-wide rule changes — not on a schedule. If it
 disagrees with `/foundations/tokens/` or `/components/`, those win and this file
 is out of date.
@@ -61,7 +61,7 @@ Foundations are the base layer of the system — the raw materials that componen
 | Colour | `/foundations/tokens/colour/` | Global palette and semantic colour system |
 | Typography | `/foundations/tokens/typography.md` | Typeface, scale, line height, letter spacing |
 | Spacing | `/foundations/tokens/spacing.md` | 4px base grid, component and layout spacing |
-| Elevation | `/foundations/tokens/elevation.json` · [`.md`](foundations/tokens/elevation.md) | Three functional shadow steps: `button`, `raised`, `overlay` |
+| Elevation | `/foundations/tokens/elevation.json` · [`.md`](foundations/tokens/elevation.md) | Two functional shadow steps: `raised`, `overlay` |
 | Motion | `/foundations/tokens/motion.md` | Duration, easing, animation principles |
 | Border | `/foundations/tokens/border.md` | Border widths and radius scale |
 | Iconography | `/foundations/iconography.md` | Icon library, sizing, usage |
@@ -115,10 +115,10 @@ The semantic type scale provides named styles for use in Figma and component spe
 
 | Style | Desktop | Usage |
 |---|---|---|
-| `heading-xl` | 48px bold | Page-level titles |
-| `heading-l` | 36px bold | Section headings |
-| `heading-m` | 26px bold | Sub-section headings, card headers |
-| `heading-s` | 22px bold | Panel headings, modal titles |
+| `heading-xl` | 36px bold | Page-level titles |
+| `heading-l` | 28px bold | Section headings |
+| `heading-m` | 24px bold | Sub-section headings, card headers |
+| `heading-s` | 20px bold | Panel headings, modal titles |
 | `heading-xs` | 16px bold | Inline labels, compact contexts |
 | `body-m` | 16px regular | **Default body text.** Minimum for clinical content. |
 | `body-s` | 14px regular | Supporting text, secondary content |
@@ -188,6 +188,22 @@ the live catalogue in Storybook for every variant.
 Patterns are composed interactions and page-level solutions built from components. They address common clinical and administrative workflows.
 
 Patterns live in `/patterns/`. Each pattern follows the template in `/docs/templates/pattern-template.md`.
+
+---
+
+## Prototypes
+
+Working product prototypes, authored by design and built entirely from this system. They exist to show the design intent running, to give engineering a readable starting template for the UI layer, and to test the system against a real product before it reaches production. Nothing in a prototype restyles a design-system component — if a prototype looks wrong, the design system is wrong.
+
+They live under `/products/{product}/prototype/` and consume the design-system packages as npm workspace siblings, so they always render the current version of every component with no sync step.
+
+| Prototype | Location | State |
+|---|---|---|
+| Case Note Tracking | `products/case-note-tracking/prototype/` | Patient casenote view built. Search, SendIT batch, My Requests and the side panels are not. |
+
+**Prototypes are not shippable.** Mock data only, no API integration, no authentication, no error or loading handling, no tests, no security review.
+
+They are published on the design-system website under **Prototypes**, which embeds each one in StackBlitz — running preview and full source in one view. Because the repository is private, viewing them requires a StackBlitz session signed in to a GitHub account with access. To run one locally, install from the **repository root** (not the prototype folder, whose design-system dependencies are unpublished workspace members) and run `npm run dev:prototype`.
 
 ---
 
