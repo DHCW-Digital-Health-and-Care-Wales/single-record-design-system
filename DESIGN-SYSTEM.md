@@ -119,7 +119,7 @@ The semantic type scale provides named styles for use in Figma and component spe
 | `heading-l` | 28px bold | Section headings |
 | `heading-m` | 24px bold | Sub-section headings, card headers |
 | `heading-s` | 20px bold | Panel headings, modal titles |
-| `heading-xs` | 16px bold | Inline labels, compact contexts |
+| `heading-xs` | 16px medium | Inline labels, compact contexts |
 | `body-m` | 16px regular | **Default body text.** Minimum for clinical content. |
 | `body-s` | 14px regular | Supporting text, secondary content |
 | `label` | 14px medium, wide tracking | Form labels, column headers, button text |

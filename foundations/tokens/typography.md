@@ -88,7 +88,7 @@ These are the named styles used in Figma and referenced in all component specs. 
 | `sr.typography.heading-l`  | 28 / 36 | 24 / 32 | Bold |
 | `sr.typography.heading-m`  | 24 / 32 | 20 / 28 | Bold |
 | `sr.typography.heading-s`  | 20 / 28 | 18 / 24 | Bold |
-| `sr.typography.heading-xs` | 16 / 24 | 16 / 24 | Bold |
+| `sr.typography.heading-xs` | 16 / 24 | 16 / 24 | Medium |
 
 Line-height ratios decrease monotonically as size grows (desktop: 1.50 → 1.40 → 1.33 → 1.29 → 1.22), following industry practice for type scales (GDS, NHS England, Material).
 

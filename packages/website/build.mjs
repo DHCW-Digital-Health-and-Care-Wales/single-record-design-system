@@ -34,7 +34,12 @@ const STORYBOOK_URL = 'storybook/index.html'; // reachable, not in the primary n
 // design-system packages resolve as workspace siblings. StackBlitz must be
 // pointed at the REPOSITORY ROOT, not the prototype subdirectory: the DS
 // packages are unpublished, so a subdirectory-only import cannot resolve them.
-const REPO_SLUG = 'Chuk-DCHW/dhcw-single-record-design-system';
+// Points at the DHCW org mirror, not the Chuk-DCHW working repo: StackBlitz needs
+// a public repo to embed from, and the org repo is the one intended to be public
+// (see docs/repo-mirroring.md). The mirror workflow (mirror-to-dhcw.yml) pushes
+// `main` here on every push to `main` in the working repo, so this always tracks
+// what's actually merged — never a feature branch.
+const REPO_SLUG = 'DHCW-Digital-Health-and-Care-Wales/single-record-design-system';
 const REPO_BRANCH = 'main';
 
 /** StackBlitz URL for a prototype. `embed` returns the iframe form. */
@@ -1665,10 +1670,9 @@ Use the toggle in the StackBlitz toolbar to move between them. Edits you make ar
 they are a scratch copy and change nothing in the design system.</p>
 <p>The prototype installs the design-system packages as workspace siblings, so it always renders
 the current version of every component. There is no copied or vendored code to fall out of date.</p>
-<div class="callout"><p>The prototype loads from the design system's source repository, which is
-private. You will need to be signed in to StackBlitz with a GitHub account that has access to it.
-If the preview reports that the repository cannot be found, that is what has happened — ask the
-design team for access rather than assuming the prototype is broken.</p></div>
+<div class="callout"><p>The prototype loads from the design system's public repository. If the
+preview reports that the repository cannot be found, the repository has most likely been made
+private again — check with the design team rather than assuming the prototype is broken.</p></div>
 <h2>Running it locally instead</h2>
 <p>Clone the repository and run it from the <strong>repository root</strong>, not the prototype
 folder:</p>

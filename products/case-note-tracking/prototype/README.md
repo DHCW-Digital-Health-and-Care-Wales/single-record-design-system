@@ -41,12 +41,14 @@ deployable application.
 
 The design-system website publishes this under **Prototypes → Case Note
 Tracking**, embedded in StackBlitz: running preview and full source in one view,
-loaded straight from this repository at `main`.
+loaded from the DHCW org mirror repo's `main` — the public repo, not this
+working repo, so StackBlitz can embed it without requiring viewers to sign in
+with access to a private repo. StackBlitz must also be pointed at the
+**repository root**, never at this subdirectory — see below for why.
 
-Because the repository is private, that only resolves for a viewer signed in to
-StackBlitz with a GitHub account that has access to it. StackBlitz must also be
-pointed at the **repository root**, never at this subdirectory — see below for
-why.
+Because it loads from the mirror, the embed always reflects what has actually
+been merged to `main` here and mirrored across, never an unmerged feature
+branch.
 
 ### Locally
 

@@ -46,7 +46,7 @@
 | `heading-l` | 28/36 | 24/32 | Bold | Major section |
 | `heading-m` | 24/32 | 20/28 | Bold | Sub-section |
 | `heading-s` | 20/28 | 18/24 | Bold | Card / group heading |
-| `heading-xs` | 16/24 | 16/24 | Bold | Smallest heading |
+| `heading-xs` | 16/24 | 16/24 | Medium | Smallest heading |
 | `body-m` | 16/24 | 16/24 | Regular | Long-form reading, clinical notes |
 | `body-s` | 14/20 | 14/20 | Regular | **Primary content in tables and data-dense views**, supporting text, form values |
 | `label` | 14/20 | 14/20 | Medium | Form labels, column headers |
