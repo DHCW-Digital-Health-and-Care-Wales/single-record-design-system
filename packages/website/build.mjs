@@ -455,7 +455,7 @@ ${extraHead}
     </div>
   </div>
 </header>
-<div class="layout${sidebar ? '' : ' layout--nosidebar'}">
+<div class="layout${sidebar ? '' : ' layout--nosidebar'}${wide ? ' layout--full' : ''}">
   ${sidebar}
   <main id="main" class="content${wide ? ' content--wide' : ''}">
 ${body}
@@ -1752,8 +1752,7 @@ for (const p of PROTOTYPES) {
     section: 'Prototypes', sectionId: 'prototypes', activeHref: `prototypes/${p.slug}.html`,
     prefix: '../', wide: true,
     body: `
-<p class="breadcrumbs"><a href="../prototypes.html">Prototypes</a> <span aria-hidden="true">/</span> ${p.title}</p>
-<h1>${p.title}</h1>
+<h1 class="sr-only">${p.title}</h1>
 <p class="lede">${p.summary}</p>
 <p><strong>Status: ${p.status}.</strong> ${p.statusNote}</p>
 <div id="sandpack-${p.slug}" class="embed">
@@ -1781,6 +1780,10 @@ const files = ${jsonForScript(buildSandpackFiles(p))};
 
 function PrototypeEmbed() {
   const [view, setView] = React.useState('preview');
+  // Both panels stay mounted the whole time — toggling only their visibility,
+  // never unmounting SandpackPreview — because unmounting it drops Sandpack's
+  // live bundler connection; remounting it later renders blank until a full
+  // page reload re-establishes that connection.
   return React.createElement('div', null,
     React.createElement('div', { className: 'embed__bar' },
       React.createElement('a', { className: 'embed__back', href: '../prototypes.html' },
@@ -1797,11 +1800,11 @@ function PrototypeEmbed() {
         }, 'Code'))),
     React.createElement(SandpackProvider, { template: 'react', files, options: { activeFile: '/App.js' } },
       React.createElement(SandpackLayout, null,
-        view === 'preview'
-          ? React.createElement(SandpackPreview, { showOpenInCodeSandbox: false, showRefreshButton: true, style: { height: '78vh', minHeight: '600px' } })
-          : React.createElement(React.Fragment, null,
-              React.createElement(SandpackFileExplorer, { style: { height: '78vh', minHeight: '600px' } }),
-              React.createElement(SandpackCodeEditor, { showTabs: true, showLineNumbers: true, style: { height: '78vh', minHeight: '600px' } })))));
+        React.createElement('div', { className: 'embed__panel' + (view === 'preview' ? '' : ' is-hidden') },
+          React.createElement(SandpackPreview, { showOpenInCodeSandbox: false, showRefreshButton: true })),
+        React.createElement('div', { className: 'embed__panel embed__panel--code' + (view === 'code' ? '' : ' is-hidden') },
+          React.createElement(SandpackFileExplorer, null),
+          React.createElement(SandpackCodeEditor, { showTabs: true, showLineNumbers: true })))));
 }
 
 createRoot(document.getElementById('sandpack-${p.slug}')).render(React.createElement(PrototypeEmbed));
