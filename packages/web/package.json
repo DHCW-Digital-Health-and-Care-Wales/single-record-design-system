@@ -2,6 +2,7 @@
   "name": "@dhcw/sr-web",
   "version": "0.1.0",
   "description": "Canonical HTML/CSS components for the DHCW Single Record Design System. Framework-agnostic reference implementation following the GOV.UK Frontend model.",
+  "license": "MIT",
   "type": "module",
   "main": "src/index.css",
   "files": [

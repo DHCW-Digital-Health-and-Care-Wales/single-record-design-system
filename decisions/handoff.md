@@ -74,10 +74,18 @@ which:
   instead is possible later with no code change if this ever needs to be fully
   offline.
 
-**Not yet implemented.** Needs a DDR (per this repo's own rule: no new
-tooling/dependency without one) recording Sandpack vs. StackBlitz vs. self-hosted
-bundler, then the actual `packages/website/build.mjs` change to generate the Sandpack
-file set from the real prototype + component source at every site build.
+**Built, same session, later.** DDR-019 records the decision. `build.mjs` gained
+`assembleDesignSystemFiles()` / `buildSandpackFiles()`, which walk the real import
+graph starting from each prototype's declared `components` list (following
+`@dhcw/sr-react`'s actual `src/index.js` barrel, not the `package.json` "exports"
+map — that map predates several components and is missing entries) and inline
+exactly the react/web/icons/tokens files reached. Sandpack itself loads via ESM CDN
+import (`esm.sh`) in the browser only, so `packages/website`'s own Node build gains
+no dependency and keeps its "zero runtime dependencies" description accurate. Site
+build verified end-to-end (`npm run build:site`); the actual Sandpack module load
+could not be verified in this session's sandbox (no egress to `esm.sh`, same
+restriction hit earlier for `stackblitz.com` and `github.io`) — needs a real-browser
+check. DL-028 is retired, not just resolved, by this change.
 
 ---
 

@@ -251,16 +251,22 @@ body {
 .card h3 { margin: 0 0 6px; font-size: 20px; line-height: 28px; font-weight: 700; color: var(--sr-color-interactive-link); }
 .card p { margin: 0; font-size: 14px; line-height: 20px; color: var(--sr-color-text-secondary); }
 
-/* ── embedded prototype ───────────────────────────────────────────────────────
-   StackBlitz owns the toolbar inside the frame and it cannot be extended, so
-   the breadcrumb and the escape route back to the design system live in our own
-   bar directly above it. */
+/* ── embedded prototype (Sandpack, DDR-019) ─────────────────────────────────
+   Sandpack renders its own preview/editor panes inside SandpackLayout, but owns
+   no page-level chrome, so the breadcrumb, title and the Preview/Code toggle are
+   our own bar directly above it, rendered by the same React root. */
 .embed {
   margin: 8px 0 32px;
   border: 1px solid var(--sr-color-border-default);
   border-radius: 8px;
   overflow: hidden;
   background: var(--sr-color-surface-small-cards);
+}
+.embed__loading {
+  margin: 0;
+  padding: 40px;
+  text-align: center;
+  color: var(--sr-color-text-secondary);
 }
 .embed__bar {
   display: flex;
@@ -278,7 +284,7 @@ body {
   font-weight: 500;
   color: var(--sr-color-text-secondary);
 }
-.embed__back, .embed__open {
+.embed__back {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -287,12 +293,26 @@ body {
   color: var(--sr-color-interactive-link);
 }
 .embed__back svg { width: 16px; height: 16px; }
-.embed__frame {
-  display: block;
-  width: 100%;
-  height: 78vh;
-  min-height: 600px;
+.embed__toggle {
+  display: inline-flex;
+  border: 1px solid var(--sr-color-border-default);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.embed__toggle button {
+  padding: 6px 14px;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  color: var(--sr-color-text-secondary);
+  background: var(--sr-color-surface-small-cards);
   border: 0;
+  cursor: pointer;
+}
+.embed__toggle button + button { border-left: 1px solid var(--sr-color-border-default); }
+.embed__toggle button.is-active {
+  background: var(--sr-color-interactive-primary);
+  color: var(--sr-color-text-inverse);
 }
 
 /* ── showcase: white preview + dark tabbed code panel ─────────────────────── */

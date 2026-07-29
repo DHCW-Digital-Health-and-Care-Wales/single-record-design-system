@@ -13,7 +13,7 @@
  * how the system is built or governed: no decision-record references, no source
  * file paths, no internal standards documents.
  */
-import { readFileSync, writeFileSync, mkdirSync, copyFileSync, rmSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, copyFileSync, rmSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 import { iconMarkup, iconNames } from '../icons/build/icons.js';
@@ -29,29 +29,133 @@ const CONTRIBUTION_URL = 'https://dev.azure.com/REPLACE-with-azure-devops-intake
 const STORYBOOK_URL = 'storybook/index.html'; // reachable, not in the primary nav
 
 // ── Prototypes ────────────────────────────────────────────────────────────────
-// Prototypes run in StackBlitz straight from the repository, so the code the
-// dev team reads is the same code that renders in the preview pane and the
-// design-system packages resolve as workspace siblings. StackBlitz must be
-// pointed at the REPOSITORY ROOT, not the prototype subdirectory: the DS
-// packages are unpublished, so a subdirectory-only import cannot resolve them.
-// Points at the DHCW org mirror, not the Chuk-DCHW working repo: StackBlitz needs
-// a public repo to embed from, and the org repo is the one intended to be public
-// (see docs/repo-mirroring.md). The mirror workflow (mirror-to-dhcw.yml) pushes
-// `main` here on every push to `main` in the working repo, so this always tracks
-// what's actually merged — never a feature branch.
-const REPO_SLUG = 'DHCW-Digital-Health-and-Care-Wales/single-record-design-system';
-const REPO_BRANCH = 'main';
+// Prototypes are embedded live via Sandpack (DDR-019), not StackBlitz: Sandpack
+// takes files directly rather than cloning a GitHub repo, so the embed has no
+// dependency on repo visibility at all. The files it runs are assembled below
+// from this repo's REAL source at every site build — never hand-copied — so
+// there is no vendored code to drift out of sync.
+const REACT_SRC = resolve(ROOT, 'packages', 'react', 'src');
+const WEB_SRC = resolve(ROOT, 'packages', 'web', 'src');
+const ICONS_PKG = resolve(ROOT, 'packages', 'icons');
 
-/** StackBlitz URL for a prototype. `embed` returns the iframe form. */
-function stackblitzUrl({ file, startScript, embed = false }) {
-  const params = new URLSearchParams({
-    file,
-    startScript,
-    view: 'preview',
-    terminalHeight: '25',
-    ...(embed ? { embed: '1' } : {}),
-  });
-  return `https://stackblitz.com/github/${REPO_SLUG}/tree/${REPO_BRANCH}?${params}`;
+// packages/react's own package.json "exports" map is the existing source of
+// truth for componentName → file path (the package.json "exports" map predates
+// several components — Tag, Select, Autocomplete — and is missing entries, so
+// it isn't reliable here).
+const REACT_INDEX_SRC = readFileSync(resolve(REACT_SRC, 'index.js'), 'utf8');
+const REACT_FILE_BY_NAME = {};
+for (const m of REACT_INDEX_SRC.matchAll(/export\s*\{\s*default as (\w+)\s*\}\s*from\s*['"](\.\/[\w./-]+\.jsx)['"]/g)) {
+  const [, name, relPath] = m;
+  REACT_FILE_BY_NAME[name] = resolve(REACT_SRC, relPath.replace(/^\.\//, ''));
+}
+
+/**
+ * Walk the real dependency graph starting from a set of top-level component
+ * names, following relative `.jsx` imports and inlining every `@dhcw/sr-web`
+ * CSS import and the `@dhcw/sr-icons` runtime it needs. Returns a flat map of
+ * Sandpack file path → contents, plus the top-level component names actually
+ * reachable (for the generated barrel).
+ */
+function assembleDesignSystemFiles(componentNames) {
+  const files = {};
+  const seenReact = new Set();
+  const queue = [...componentNames];
+  let needsIcons = false;
+
+  while (queue.length) {
+    const name = queue.pop();
+    if (seenReact.has(name)) continue;
+    seenReact.add(name);
+    const abs = REACT_FILE_BY_NAME[name];
+    if (!abs) throw new Error(`Prototype embed: no @dhcw/sr-react export found for "${name}"`);
+    let src = readFileSync(abs, 'utf8');
+
+    // @dhcw/sr-web/src/{x}/{y}.css  ->  ../web/{y}.css   (flattened, one dir up)
+    src = src.replace(/@dhcw\/sr-web\/src\/[\w-]+\/([\w.-]+\.css)/g, (_, css) => {
+      files[`web/${css}`] = readFileSync(findWebCss(css), 'utf8');
+      return `../web/${css}`;
+    });
+
+    // @dhcw/sr-icons runtime (markup lookup + its own CSS)
+    if (/@dhcw\/sr-icons/.test(src)) {
+      needsIcons = true;
+      src = src
+        .replace(/@dhcw\/sr-icons\/src\/icon\.css/g, '../icons/icon.css')
+        .replace(/@dhcw\/sr-icons\/build\/icons\.js/g, '../icons/icons.js');
+    }
+
+    // Sibling react component imports, e.g. '../icon/Icon.jsx', './checkbox/Checkbox.jsx'
+    src = src.replace(/from\s+['"](\.\.?\/[\w./-]+\.jsx)['"]/g, (whole, relImport) => {
+      const importedAbs = resolve(dirname(abs), relImport);
+      const importedName = importedAbs.split('/').pop().replace(/\.jsx$/, '');
+      queue.push(importedName);
+      return `from './${importedName}.jsx'`;
+    });
+
+    files[`react/${name}.jsx`] = src;
+  }
+
+  if (needsIcons) {
+    files['icons/icon.css'] = readFileSync(resolve(ICONS_PKG, 'src', 'icon.css'), 'utf8');
+    files['icons/icons.js'] = readFileSync(resolve(ICONS_PKG, 'build', 'icons.js'), 'utf8');
+  }
+
+  files['tokens/tokens.css'] = readFileSync(resolve(TOKENS, 'css', 'tokens.css'), 'utf8');
+  files['tokens/typography.css'] = readFileSync(resolve(TOKENS, 'css', 'typography.css'), 'utf8');
+
+  // Generated barrel: only the components this prototype actually imports —
+  // never the full library — so the sandbox stays proportional to what's used.
+  files['react/index.js'] = componentNames
+    .map((n) => `export { default as ${n} } from './${n}.jsx';`)
+    .join('\n') + '\n';
+
+  return files;
+}
+
+function findWebCss(filename) {
+  // web CSS lives at packages/web/src/{component}/{component}.css — search
+  // rather than guess the folder name, since it doesn't always match the file
+  // stem exactly (e.g. checkbox.css also used by table.css's own import).
+  const stem = filename.replace(/\.css$/, '');
+  const candidate = resolve(WEB_SRC, stem, filename);
+  try { readFileSync(candidate); return candidate; } catch { /* fall through */ }
+  // Fallback: linear search (cheap — this runs a handful of times per build).
+  for (const dir of readdirSync(WEB_SRC)) {
+    const p = resolve(WEB_SRC, dir, filename);
+    try { readFileSync(p); return p; } catch { /* keep looking */ }
+  }
+  throw new Error(`Prototype embed: could not locate web CSS file "${filename}"`);
+}
+
+/**
+ * Full Sandpack `files` object for one prototype: its own App/data/styles,
+ * the real design-system source it depends on (via assembleDesignSystemFiles),
+ * and a generated mount file. Everything is read from source at build time —
+ * nothing here is a hand-maintained copy.
+ */
+function buildSandpackFiles(p) {
+  const dsFiles = assembleDesignSystemFiles(p.components);
+  let appSrc = readFileSync(resolve(p.entryDir, p.entryFile), 'utf8');
+  appSrc = appSrc.replace(/from\s+['"]@dhcw\/sr-react['"]/, `from './design-system/react/index.js'`);
+
+  const files = {
+    '/App.js': appSrc,
+    '/data.js': readFileSync(resolve(p.entryDir, 'data.js'), 'utf8'),
+    '/styles.css': readFileSync(resolve(p.entryDir, 'app.css'), 'utf8'),
+    '/index.js': `import React from 'react';
+import { createRoot } from 'react-dom/client';
+import './design-system/tokens/tokens.css';
+import './design-system/tokens/typography.css';
+import './styles.css';
+import App from './App.js';
+
+createRoot(document.getElementById('root')).render(<App />);
+`,
+  };
+  for (const [key, contents] of Object.entries(dsFiles)) {
+    files[`/design-system/${key}`] = contents;
+  }
+  return files;
 }
 
 const PROTOTYPES = [
@@ -63,7 +167,9 @@ const PROTOTYPES = [
     status: 'In progress',
     statusNote: 'The patient casenote view is built. Search, SendIT batch, My Requests and the side '
       + 'panels are not yet.',
-    entryFile: 'products/case-note-tracking/prototype/src/App.jsx',
+    entryDir: resolve(ROOT, 'products', 'case-note-tracking', 'prototype', 'src'),
+    entryFile: 'App.jsx',
+    components: ['PatientBanner', 'Table', 'Modal', 'Button', 'Select', 'Input', 'Checkbox', 'Tag', 'Icon'],
     startScript: 'dev:prototype',
   },
 ];
@@ -1650,29 +1756,63 @@ for (const p of PROTOTYPES) {
 <h1>${p.title}</h1>
 <p class="lede">${p.summary}</p>
 <p><strong>Status: ${p.status}.</strong> ${p.statusNote}</p>
-<div class="embed">
-  <div class="embed__bar">
-    <a class="embed__back" href="../prototypes.html">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
-      All prototypes
-    </a>
-    <p class="embed__title">${p.title}</p>
-    <a class="embed__open" href="${stackblitzUrl({ file: p.entryFile, startScript: p.startScript })}"
-       target="_blank" rel="noopener">Open in a new tab</a>
-  </div>
-  <iframe class="embed__frame" title="${p.title} prototype, running in StackBlitz"
-          src="${stackblitzUrl({ file: p.entryFile, startScript: p.startScript, embed: true })}"
-          allow="cross-origin-isolated"></iframe>
+<div id="sandpack-${p.slug}" class="embed">
+  <p class="embed__loading">Loading the prototype…</p>
 </div>
+<script type="importmap">
+${jsonForScript({
+  imports: {
+    'react': 'https://esm.sh/react@18',
+    'react/': 'https://esm.sh/react@18/',
+    'react-dom': 'https://esm.sh/react-dom@18',
+    'react-dom/': 'https://esm.sh/react-dom@18/',
+    '@codesandbox/sandpack-react': 'https://esm.sh/@codesandbox/sandpack-react@2?deps=react@18,react-dom@18',
+  },
+})}
+</script>
+<script type="module">
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import {
+  SandpackProvider, SandpackLayout, SandpackPreview, SandpackCodeEditor, SandpackFileExplorer,
+} from '@codesandbox/sandpack-react';
+
+const files = ${jsonForScript(buildSandpackFiles(p))};
+
+function PrototypeEmbed() {
+  const [view, setView] = React.useState('preview');
+  return React.createElement('div', null,
+    React.createElement('div', { className: 'embed__bar' },
+      React.createElement('a', { className: 'embed__back', href: '../prototypes.html' },
+        React.createElement('svg', { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, 'aria-hidden': 'true' },
+          React.createElement('path', { d: 'M15 18l-6-6 6-6' })),
+        'All prototypes'),
+      React.createElement('p', { className: 'embed__title' }, ${jsonForScript(p.title)}),
+      React.createElement('div', { className: 'embed__toggle', role: 'group', 'aria-label': 'View' },
+        React.createElement('button', {
+          type: 'button', className: view === 'preview' ? 'is-active' : '', onClick: () => setView('preview'),
+        }, 'Preview'),
+        React.createElement('button', {
+          type: 'button', className: view === 'code' ? 'is-active' : '', onClick: () => setView('code'),
+        }, 'Code'))),
+    React.createElement(SandpackProvider, { template: 'react', files, options: { activeFile: '/App.js' } },
+      React.createElement(SandpackLayout, null,
+        view === 'preview'
+          ? React.createElement(SandpackPreview, { showOpenInCodeSandbox: false, showRefreshButton: true, style: { height: '78vh', minHeight: '600px' } })
+          : React.createElement(React.Fragment, null,
+              React.createElement(SandpackFileExplorer, { style: { height: '78vh', minHeight: '600px' } }),
+              React.createElement(SandpackCodeEditor, { showTabs: true, showLineNumbers: true, style: { height: '78vh', minHeight: '600px' } })))));
+}
+
+createRoot(document.getElementById('sandpack-${p.slug}')).render(React.createElement(PrototypeEmbed));
+</script>
 <h2>Using it</h2>
 <p>The preview pane runs the prototype; the file tree and editor beside it hold the real source.
-Use the toggle in the StackBlitz toolbar to move between them. Edits you make are yours alone —
-they are a scratch copy and change nothing in the design system.</p>
-<p>The prototype installs the design-system packages as workspace siblings, so it always renders
-the current version of every component. There is no copied or vendored code to fall out of date.</p>
-<div class="callout"><p>The prototype loads from the design system's public repository. If the
-preview reports that the repository cannot be found, the repository has most likely been made
-private again — check with the design team rather than assuming the prototype is broken.</p></div>
+Use the Preview/Code toggle above to move between them. Edits you make are yours alone — they run
+in your browser only and change nothing in the design system.</p>
+<p>The files behind this embed are generated fresh from the actual design-system source every time
+this website is built, not a hand-maintained copy — so this always shows the current version of
+every component it uses.</p>
 <h2>Running it locally instead</h2>
 <p>Clone the repository and run it from the <strong>repository root</strong>, not the prototype
 folder:</p>

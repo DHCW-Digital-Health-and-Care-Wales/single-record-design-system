@@ -2,6 +2,7 @@
   "name": "@dhcw/sr-react",
   "version": "0.1.0",
   "description": "React component library for the DHCW Single Record Design System.",
+  "license": "MIT",
   "type": "module",
   "main": "src/index.js",
   "exports": {
