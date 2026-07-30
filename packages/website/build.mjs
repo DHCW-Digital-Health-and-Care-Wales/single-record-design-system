@@ -1849,11 +1849,13 @@ function PrototypeEmbed() {
         }, 'Code'))),
     React.createElement(SandpackProvider, { template: 'react', files, options: { activeFile: '/App.js' } },
       React.createElement('div', { className: 'embed__panel' + (view === 'preview' ? '' : ' is-hidden') },
-        React.createElement(SandpackPreview, { showOpenInCodeSandbox: false, showRefreshButton: true })),
+        React.createElement(SandpackPreview, {
+          showOpenInCodeSandbox: false, showRefreshButton: true, style: { height: '100%' },
+        })),
       React.createElement('div', { className: 'embed__panel embed__panel--code' + (view === 'code' ? '' : ' is-hidden') },
-        React.createElement(SandpackLayout, null,
-          React.createElement(SandpackFileExplorer, null),
-          React.createElement(SandpackCodeEditor, { showTabs: true, showLineNumbers: true })))));
+        React.createElement(SandpackLayout, { style: { height: '100%', '--sp-layout-height': '100%' } },
+          React.createElement(SandpackFileExplorer, { style: { height: '100%' } }),
+          React.createElement(SandpackCodeEditor, { showTabs: true, showLineNumbers: true, style: { height: '100%' } })))));
 }
 
 createRoot(document.getElementById('sandpack-${p.slug}')).render(React.createElement(PrototypeEmbed));
