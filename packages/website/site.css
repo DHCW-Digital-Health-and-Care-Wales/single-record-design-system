@@ -341,27 +341,26 @@ body.bare { margin: 0; }
   background: var(--sr-color-text-inverse);
   color: var(--color-navy-900);
 }
-.embed__panel { flex: 1 1 auto; min-height: 0; }
+/* Sandpack's default theme sets `layout: { height: "300px" }`, and its own rule
+   `.sp-layout > .sp-stack { height: var(--sp-layout-height) }` reads it — that
+   300px was the cut-off, with `.sp-preview-container`'s own `overflow: auto`
+   producing the scrollbar inside the cut area. Two things are needed:
+   1. Override --sp-layout-height so it fills the panel instead.
+   2. Give that percentage a DEFINITE basis to resolve against. .embed__panel
+      takes its height from `flex: 1`, which counts as an indefinite height for
+      percentage resolution, so a plain `height: 100%` chain collapses to auto.
+      Absolutely filling the panel removes that ambiguity. */
+.embed__panel { position: relative; flex: 1 1 auto; min-height: 0; }
 .embed__panel.is-hidden { display: none; }
-/* Sandpack sizes its own internals off the --sp-layout-height custom property
-   and its own wrapper classes, not from a parent flex context, so percentage
-   heights don't reach it just by being inside a flex:1 ancestor. Named-class
-   guesses (.sp-wrapper etc.) turned out not to match the actual element that
-   was still constraining Preview's height — kept below as a cheap fallback,
-   but the real fix is :has(): force EVERY div between .embed__panel and the
-   iframe to 100% height, regardless of what Sandpack happens to name it. */
-.embed__panel > *,
-.embed__panel .sp-wrapper,
-.embed__panel .sp-layout,
-.embed__panel .sp-stack,
-.embed__panel .sp-preview-container,
-.embed__panel .sp-preview-iframe,
-.embed__panel .sp-code-editor,
-.embed__panel .sp-file-explorer,
-.embed__panel iframe {
-  height: 100% !important;
+/* !important is load-bearing: Sandpack sets `.sp-layout { position: relative }`
+   at the same specificity as this rule, and injects it at runtime (stitches),
+   so it lands after site.css and would otherwise win on source order. */
+.embed__panel > * { position: absolute !important; inset: 0; }
+.embed__panel .sp-layout {
+  --sp-layout-height: 100%;
+  border: 0;
+  border-radius: 0;
 }
-.embed__panel div:has(iframe) { height: 100% !important; }
 .embed__panel--code { display: flex; }
 .embed__panel--code.is-hidden { display: none; }
 
