@@ -1849,9 +1849,14 @@ function PrototypeEmbed() {
         }, 'Code'))),
     React.createElement(SandpackProvider, { template: 'react', files, options: { activeFile: '/App.js' } },
       React.createElement('div', { className: 'embed__panel' + (view === 'preview' ? '' : ' is-hidden') },
-        React.createElement(SandpackPreview, {
-          showOpenInCodeSandbox: false, showRefreshButton: true, style: { height: '100%' },
-        })),
+        // SandpackPreview only reaches full height inside a SandpackLayout —
+        // that's where --sp-layout-height actually takes effect. It's the
+        // sole child here, so there's no width-split with anything else the
+        // way there was before Preview and Code got their own separate panels.
+        React.createElement(SandpackLayout, { style: { height: '100%', '--sp-layout-height': '100%' } },
+          React.createElement(SandpackPreview, {
+            showOpenInCodeSandbox: false, showRefreshButton: true, style: { height: '100%' },
+          }))),
       React.createElement('div', { className: 'embed__panel embed__panel--code' + (view === 'code' ? '' : ' is-hidden') },
         React.createElement(SandpackLayout, { style: { height: '100%', '--sp-layout-height': '100%' } },
           React.createElement(SandpackFileExplorer, { style: { height: '100%' } }),
