@@ -350,6 +350,18 @@ body.bare { margin: 0; }
       takes its height from `flex: 1`, which counts as an indefinite height for
       percentage resolution, so a plain `height: 100%` chain collapses to auto.
       Absolutely filling the panel removes that ambiguity. */
+/* SandpackProvider's theme provider injects its own <div class="sp-wrapper">
+   between .embed__inner and the panels. It is `all: initial; display: block`
+   with no height, so it silently broke the flex chain: the panels were no
+   longer flex items of .embed__inner, collapsed to zero height, and (once
+   their contents were absolutely positioned) rendered nothing at all.
+   Re-establish the chain through it. */
+.embed__inner > .sp-wrapper {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
 .embed__panel { position: relative; flex: 1 1 auto; min-height: 0; }
 .embed__panel.is-hidden { display: none; }
 /* !important is load-bearing: Sandpack sets `.sp-layout { position: relative }`
