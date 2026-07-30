@@ -344,10 +344,12 @@ body.bare { margin: 0; }
 .embed__panel { flex: 1 1 auto; min-height: 0; }
 .embed__panel.is-hidden { display: none; }
 /* Sandpack sizes its own internals off the --sp-layout-height custom property
-   and fixed-height wrapper classes, not from a parent flex context, so
-   percentage heights don't reach it just by being inside a flex:1 ancestor.
-   Force every level of its own DOM (whatever the nesting turns out to be, not
-   just a direct child) to actually fill this panel. */
+   and its own wrapper classes, not from a parent flex context, so percentage
+   heights don't reach it just by being inside a flex:1 ancestor. Named-class
+   guesses (.sp-wrapper etc.) turned out not to match the actual element that
+   was still constraining Preview's height — kept below as a cheap fallback,
+   but the real fix is :has(): force EVERY div between .embed__panel and the
+   iframe to 100% height, regardless of what Sandpack happens to name it. */
 .embed__panel > *,
 .embed__panel .sp-wrapper,
 .embed__panel .sp-layout,
@@ -359,6 +361,7 @@ body.bare { margin: 0; }
 .embed__panel iframe {
   height: 100% !important;
 }
+.embed__panel div:has(iframe) { height: 100% !important; }
 .embed__panel--code { display: flex; }
 .embed__panel--code.is-hidden { display: none; }
 
