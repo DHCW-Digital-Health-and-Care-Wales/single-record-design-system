@@ -254,19 +254,27 @@ body {
 .card h3 { margin: 0 0 6px; font-size: 20px; line-height: 28px; font-weight: 700; color: var(--sr-color-interactive-link); }
 .card p { margin: 0; font-size: 14px; line-height: 20px; color: var(--sr-color-text-secondary); }
 
+/* ── bare page shell (prototype embeds only) ────────────────────────────────
+   No masthead, primary nav or sidebar — the embed's own bar is the only
+   chrome, so the prototype gets the full browser viewport the way the real
+   product eventually will. */
+body.bare { margin: 0; }
+
 /* ── embedded prototype (Sandpack, DDR-019) ─────────────────────────────────
-   Sandpack renders its own preview/editor panes inside SandpackLayout, but owns
-   no page-level chrome, so the back-link, title and the Preview/Code toggle are
-   our own navy bar directly above it, rendered by the same React root. Both
-   panels stay mounted at all times and are shown/hidden with .is-hidden rather
-   than conditionally rendered — unmounting SandpackPreview drops its live
-   bundler connection, and remounting it renders blank until a full reload. */
-.embed {
-  margin: 8px 0 32px;
-  border: 1px solid var(--sr-color-border-default);
-  border-radius: 8px;
-  overflow: hidden;
-  background: var(--sr-color-surface-small-cards);
+   Sandpack renders its own preview/editor panes, but owns no page-level
+   chrome, so the back-link, title and the Preview/Code toggle are our own
+   navy bar above it, rendered by the same React root. Both panels stay
+   mounted at all times and are shown/hidden with .is-hidden rather than
+   conditionally rendered — unmounting SandpackPreview drops its live bundler
+   connection, and remounting it renders blank until a full page reload. */
+.embed--full {
+  position: fixed;
+  inset: 0;
+}
+.embed__inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .embed__loading {
   margin: 0;
@@ -275,6 +283,7 @@ body {
   color: var(--sr-color-text-secondary);
 }
 .embed__bar {
+  flex: none;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
@@ -301,9 +310,13 @@ body {
   font-size: 14px;
   line-height: 20px;
   color: var(--sr-color-text-inverse);
-  opacity: 0.85;
+  /* Matches the masthead's existing link-on-navy treatment (same opacity
+     convention as .masthead__utility a) for consistency. Both are a known
+     contrast gap — there is no dedicated "link on dark surface" semantic
+     token yet — tracked rather than invented here; see DL-029. */
+  opacity: 0.92;
 }
-.embed__back:hover { opacity: 1; }
+.embed__back:hover { opacity: 1; text-decoration: underline; }
 .embed__back svg { width: 16px; height: 16px; }
 .embed__toggle {
   grid-column: 3;
@@ -328,12 +341,12 @@ body {
   background: var(--sr-color-text-inverse);
   color: var(--color-navy-900);
 }
-.embed__panel { height: calc(100vh - 220px); min-height: 640px; }
+.embed__panel { flex: 1 1 auto; min-height: 0; }
 .embed__panel.is-hidden { display: none; }
+.embed__panel > div,
+.embed__panel iframe { height: 100% !important; }
 .embed__panel--code { display: flex; }
 .embed__panel--code.is-hidden { display: none; }
-.embed__panel--code > div:first-child { flex: 0 0 220px; }
-.embed__panel--code > div:last-child { flex: 1 1 auto; }
 
 /* ── showcase: white preview + dark tabbed code panel ─────────────────────── */
 .showcase {

@@ -473,6 +473,36 @@ ${extraScript}
 </html>`;
 }
 
+/**
+ * Minimal page shell with no masthead, primary nav, sidebar or footer — just
+ * the token/component CSS and the body. Used for prototype embeds: the point
+ * of their own bar (back-link, title, Preview/Code toggle) is to BE the only
+ * navigation chrome, filling the browser viewport the way the real product
+ * eventually will, not to sit inside another layer of site navigation.
+ */
+function bareShell({ title, prefix, body, extraHead = '', extraScript = '' }) {
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${title} | Single Record Design System</title>
+<link rel="stylesheet" href="${prefix}assets/tokens.css">
+<link rel="stylesheet" href="${prefix}assets/typography.css">
+<link rel="stylesheet" href="${prefix}assets/button.css">
+<link rel="stylesheet" href="${prefix}assets/table.css">
+<link rel="stylesheet" href="${prefix}assets/icon.css">
+<link rel="stylesheet" href="${prefix}assets/site.css">
+${extraHead}
+</head>
+<body class="bare">
+${body}
+<script>window.__PREFIX__=${JSON.stringify(prefix)};</script>
+${extraScript}
+</body>
+</html>`;
+}
+
 // ─── shared building blocks ───────────────────────────────────────────────────
 // Framework tabs: one order and one treatment on every page.
 const FRAMEWORKS = ['HTML', 'React', 'Blazor', 'MAUI'];
@@ -514,8 +544,8 @@ function accessibilityTable(rows) {
 
 // ─── page registry (drives both the output files and the search index) ────────
 const pages = [];
-function addPage({ file, url, title, section, sectionId, activeHref, prefix, body, extraScript = '', wide = false }) {
-  pages.push({ file, url, title, section, sectionId, activeHref, prefix, body, extraScript, wide });
+function addPage({ file, url, title, section, sectionId, activeHref, prefix, body, extraScript = '', wide = false, bare = false }) {
+  pages.push({ file, url, title, section, sectionId, activeHref, prefix, body, extraScript, wide, bare });
 }
 
 // ─── Styles: Typography ───────────────────────────────────────────────────────
@@ -1730,7 +1760,8 @@ live in your browser with its full source alongside it, so you can click the flo
 the code that produces it.</p>
 <div class="cards">
 ${PROTOTYPES.map((p) => `  <a class="card" href="prototypes/${p.slug}.html"><h3>${p.title}</h3>
-    <p>${p.summary}</p></a>`).join('\n')}
+    <p>${p.summary}</p>
+    <p><strong>Status: ${p.status}.</strong> ${p.statusNote}</p></a>`).join('\n')}
 </div>
 <h2>What a prototype is</h2>
 <p>A reference implementation of a product's screens, authored by design. Every control comes from
@@ -1743,19 +1774,30 @@ design system against a real product before it reaches production.</p>
 <div class="callout"><p><strong>Do not ship a prototype.</strong> They run on mock data held in
 memory, with no API integration, no authentication or authorisation, no error or loading handling,
 no tests, and no performance or security review. A prototype is a starting skeleton for the
-<strong>user interface layer only</strong> — not a foundation for a deployable application.</p></div>`,
+<strong>user interface layer only</strong> — not a foundation for a deployable application.</p></div>
+<h2>Using a prototype</h2>
+<p>Each one opens full-screen, with no design-system navigation around it — the bar at its top is
+the whole of its chrome: a link back to this page on the left, its name in the middle, and a
+Preview/Code toggle on the right. The preview pane runs the prototype; the file tree and editor
+behind the Code toggle hold the exact same source, generated fresh from the actual design-system
+components every time this website is built. There is no hand-maintained copy to fall out of date.</p>
+<h2>Running one locally instead</h2>
+<p>Clone the repository and run it from the <strong>repository root</strong>, not the prototype's own
+folder — its design-system dependencies are unpublished workspace members, resolved by symlink, so
+installing from inside the folder alone will fail.</p>
+${PROTOTYPES.map((p) => `<p><strong>${p.title}:</strong></p>
+<div class="codepanel"><pre><code>npm install
+npm run ${p.startScript}</code></pre></div>`).join('\n')}`,
 });
 
 for (const p of PROTOTYPES) {
   addPage({
     file: `prototypes/${p.slug}.html`, url: `prototypes/${p.slug}.html`, title: p.title,
     section: 'Prototypes', sectionId: 'prototypes', activeHref: `prototypes/${p.slug}.html`,
-    prefix: '../', wide: true,
+    prefix: '../', bare: true,
     body: `
 <h1 class="sr-only">${p.title}</h1>
-<p class="lede">${p.summary}</p>
-<p><strong>Status: ${p.status}.</strong> ${p.statusNote}</p>
-<div id="sandpack-${p.slug}" class="embed">
+<div id="sandpack-${p.slug}" class="embed embed--full">
   <p class="embed__loading">Loading the prototype…</p>
 </div>
 <script type="importmap">
@@ -1784,7 +1826,14 @@ function PrototypeEmbed() {
   // never unmounting SandpackPreview — because unmounting it drops Sandpack's
   // live bundler connection; remounting it later renders blank until a full
   // page reload re-establishes that connection.
-  return React.createElement('div', null,
+  //
+  // SandpackPreview is rendered on its own, outside SandpackLayout, so it can
+  // take the full width of its own container: SandpackLayout applies a grid
+  // that splits width evenly between however many panels it wraps, which
+  // otherwise left the preview stuck at half-width even when the code panel
+  // was hidden. The file explorer + editor pairing genuinely wants that grid
+  // (to split file tree from code), so only those two stay inside it.
+  return React.createElement('div', { className: 'embed__inner' },
     React.createElement('div', { className: 'embed__bar' },
       React.createElement('a', { className: 'embed__back', href: '../prototypes.html' },
         React.createElement('svg', { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, 'aria-hidden': 'true' },
@@ -1799,30 +1848,16 @@ function PrototypeEmbed() {
           type: 'button', className: view === 'code' ? 'is-active' : '', onClick: () => setView('code'),
         }, 'Code'))),
     React.createElement(SandpackProvider, { template: 'react', files, options: { activeFile: '/App.js' } },
-      React.createElement(SandpackLayout, null,
-        React.createElement('div', { className: 'embed__panel' + (view === 'preview' ? '' : ' is-hidden') },
-          React.createElement(SandpackPreview, { showOpenInCodeSandbox: false, showRefreshButton: true })),
-        React.createElement('div', { className: 'embed__panel embed__panel--code' + (view === 'code' ? '' : ' is-hidden') },
+      React.createElement('div', { className: 'embed__panel' + (view === 'preview' ? '' : ' is-hidden') },
+        React.createElement(SandpackPreview, { showOpenInCodeSandbox: false, showRefreshButton: true })),
+      React.createElement('div', { className: 'embed__panel embed__panel--code' + (view === 'code' ? '' : ' is-hidden') },
+        React.createElement(SandpackLayout, null,
           React.createElement(SandpackFileExplorer, null),
           React.createElement(SandpackCodeEditor, { showTabs: true, showLineNumbers: true })))));
 }
 
 createRoot(document.getElementById('sandpack-${p.slug}')).render(React.createElement(PrototypeEmbed));
-</script>
-<h2>Using it</h2>
-<p>The preview pane runs the prototype; the file tree and editor beside it hold the real source.
-Use the Preview/Code toggle above to move between them. Edits you make are yours alone — they run
-in your browser only and change nothing in the design system.</p>
-<p>The files behind this embed are generated fresh from the actual design-system source every time
-this website is built, not a hand-maintained copy — so this always shows the current version of
-every component it uses.</p>
-<h2>Running it locally instead</h2>
-<p>Clone the repository and run it from the <strong>repository root</strong>, not the prototype
-folder:</p>
-<div class="codepanel"><pre><code>npm install
-npm run ${p.startScript}</code></pre></div>
-<p>It has to be installed from the root because the design-system packages are unpublished
-workspace members, resolved by symlink. Installing inside the prototype folder alone will fail.</p>`,
+</script>`,
   });
 }
 
@@ -2000,10 +2035,13 @@ const searchIndex = pages.map((p) => ({
 writeFileSync(resolve(DIST, "assets", "search-index.js"), `window.__SEARCH__=${jsonForScript(searchIndex)};`);
 
 for (const p of pages) {
-  writeFileSync(resolve(DIST, p.file), shell({
-    title: p.title, prefix: p.prefix, sectionId: p.sectionId, activeHref: p.activeHref,
-    body: p.body, extraScript: p.extraScript, wide: p.wide,
-  }));
+  const html = p.bare
+    ? bareShell({ title: p.title, prefix: p.prefix, body: p.body, extraScript: p.extraScript })
+    : shell({
+        title: p.title, prefix: p.prefix, sectionId: p.sectionId, activeHref: p.activeHref,
+        body: p.body, extraScript: p.extraScript, wide: p.wide,
+      });
+  writeFileSync(resolve(DIST, p.file), html);
 }
 
 console.log('Website built to', DIST);
