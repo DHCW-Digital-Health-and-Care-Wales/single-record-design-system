@@ -1847,31 +1847,35 @@ function PrototypeEmbed() {
         React.createElement('button', {
           type: 'button', className: view === 'code' ? 'is-active' : '', onClick: () => setView('code'),
         }, 'Code'))),
-    React.createElement(SandpackProvider, { template: 'react', files, options: { activeFile: '/App.js' } },
+    // initMode 'immediate' is required, not a preference. Sandpack defaults to
+    // 'lazy', which starts the bundler only when an IntersectionObserver on
+    // sandpack.lazyAnchorRef fires. That single ref is attached to every
+    // SandpackLayout, so with two layouts here it ends up on whichever mounted
+    // last — the hidden Code panel. An observer on a display:none element never
+    // fires, so the bundler never started and Preview stayed blank until you
+    // toggled to Code (making it visible) and back.
+    React.createElement(SandpackProvider, {
+      template: 'react', files, options: { activeFile: '/App.js', initMode: 'immediate' },
+    },
+      // Sizing lives entirely in site.css (.embed__panel and below) rather than
+      // in inline styles here — Sandpack's height comes from its own
+      // --sp-layout-height custom property, which needs a definite parent to
+      // resolve against, so it can't be fixed by inline heights alone.
+      // SandpackPreview stays inside its own SandpackLayout: that is where
+      // --sp-layout-height takes effect. It is the sole child, so there is no
+      // width-split with anything else.
       React.createElement('div', { className: 'embed__panel' + (view === 'preview' ? '' : ' is-hidden') },
-        // SandpackPreview only reaches full height inside a SandpackLayout —
-        // that's where --sp-layout-height actually takes effect. It's the
-        // sole child here, so there's no width-split with anything else the
-        // way there was before Preview and Code got their own separate panels.
-        React.createElement(SandpackLayout, { style: { height: '100%', '--sp-layout-height': '100%' } },
+        React.createElement(SandpackLayout, null,
           React.createElement(SandpackPreview, {
-            showOpenInCodeSandbox: false, showRefreshButton: true, style: { height: '100%' },
+            showOpenInCodeSandbox: false, showRefreshButton: true,
           }))),
       React.createElement('div', { className: 'embed__panel embed__panel--code' + (view === 'code' ? '' : ' is-hidden') },
-        React.createElement(SandpackLayout, { style: { height: '100%', '--sp-layout-height': '100%' } },
-          React.createElement(SandpackFileExplorer, { style: { height: '100%' } }),
-          React.createElement(SandpackCodeEditor, { showTabs: true, showLineNumbers: true, style: { height: '100%' } })))));
+        React.createElement(SandpackLayout, null,
+          React.createElement(SandpackFileExplorer, null),
+          React.createElement(SandpackCodeEditor, { showTabs: true, showLineNumbers: true })))));
 }
 
 createRoot(document.getElementById('sandpack-${p.slug}')).render(React.createElement(PrototypeEmbed));
-
-// Sandpack appears to measure its preview container's size once, early, and
-// not again until something else (a manual view toggle, previously) forces a
-// resize. Firing one extra resize event shortly after mount is the standard
-// workaround for that class of iframe/ResizeObserver race condition — it
-// never unmounts or remounts anything, unlike toggling views, so it doesn't
-// reintroduce the bundler-connection-drop bug that fix addressed.
-setTimeout(() => window.dispatchEvent(new Event('resize')), 400);
 </script>`,
   });
 }
