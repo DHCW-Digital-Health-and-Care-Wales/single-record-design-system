@@ -1864,6 +1864,14 @@ function PrototypeEmbed() {
 }
 
 createRoot(document.getElementById('sandpack-${p.slug}')).render(React.createElement(PrototypeEmbed));
+
+// Sandpack appears to measure its preview container's size once, early, and
+// not again until something else (a manual view toggle, previously) forces a
+// resize. Firing one extra resize event shortly after mount is the standard
+// workaround for that class of iframe/ResizeObserver race condition — it
+// never unmounts or remounts anything, unlike toggling views, so it doesn't
+// reintroduce the bundler-connection-drop bug that fix addressed.
+setTimeout(() => window.dispatchEvent(new Event('resize')), 400);
 </script>`,
   });
 }
