@@ -162,14 +162,14 @@ const PROTOTYPES = [
   {
     slug: 'case-note-tracking',
     title: 'Case Note Tracking',
-    summary: 'Patient casenote view: patient banner, adverse-reaction cards, site and type filters, '
-      + 'bulk selection and the send-batch confirmation modal.',
+    summary: 'Patient casenote view: sidebar navigation, patient banner, adverse-reaction cards, site '
+      + 'and type filters, bulk selection and the send-batch confirmation modal.',
     status: 'In progress',
-    statusNote: 'The patient casenote view is built. Search, SendIT batch, My Requests and the side '
-      + 'panels are not yet.',
+    statusNote: 'The patient casenote view and its sidebar navigation are built. Search, SendIT batch, '
+      + 'My Requests and the side panels are not yet.',
     entryDir: resolve(ROOT, 'products', 'case-note-tracking', 'prototype', 'src'),
     entryFile: 'App.jsx',
-    components: ['PatientBanner', 'Table', 'Modal', 'Button', 'Select', 'Input', 'Checkbox', 'Tag', 'Icon'],
+    components: ['Navigation', 'PatientBanner', 'Table', 'Modal', 'Button', 'Select', 'Input', 'Checkbox', 'Tag', 'Icon'],
     startScript: 'dev:prototype',
   },
 ];

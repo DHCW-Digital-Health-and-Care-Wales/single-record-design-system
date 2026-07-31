@@ -4,13 +4,30 @@ import Icon from '../icon/Icon.jsx';
 
 /**
  * Navigation / Sidebar — DHCW Single Record Design System
- * Figma: Navigation/Sidebar/Desktop (725:8903), Type=Sectioned, State=Expanded
+ * Figma: Navigation/Sidebar/Desktop (725:8903). Two core types, each with an
+ * Expanded state and two collapsed states:
+ *   - Type=Sectioned (1317:24167 is Linear's Expanded; Sectioned's is 665:20955)
+ *     groups items under section labels (PATIENTS, CLINICAL, ...).
+ *   - Type=Linear (1317:24167) is a flat list, no section labels — for simpler,
+ *     single-level navigation.
+ *   - Collapsed "rail" (746:13066 / 1942:7143, 108px) keeps a visible truncated
+ *     label next to the icon.
+ *   - Collapsed "icon" (3569:15850 / 2212:7613, 48px) shows icons only.
  *
  * `sections` shape:
  *   [{ label, items: [{ icon, label, href, badge, children: [{ label, href }] }] }]
  * Items with a non-empty `children` array render an expandable submenu; the
  * chevron and aria-expanded reflect open state. `current` matches an item's
- * (or child's) `label` and renders aria-current="page".
+ * (or child's) `label` and renders aria-current="page". `type="linear"` flattens
+ * `sections` into one list and drops the section labels/dividers.
+ *
+ * Icon-only collapse: the visible label becomes a tooltip revealed on
+ * `:hover` AND `:focus-visible` (CSS only — see navigation.css), not hover
+ * alone. A hover-only reveal fails WCAG 2.2 SC 1.4.13 and 2.1.1 for keyboard
+ * users, who can tab to an item but never trigger a `:hover` state. The
+ * `aria-label` on every item already gives screen readers the name regardless
+ * of what's visible, so this is only about sighted keyboard users seeing the
+ * same label a mouse user would.
  */
 
 function NavItem({ icon, label, href, badge, children, current, onSelect }) {
@@ -74,6 +91,7 @@ export default function Navigation({
   sections,
   footerItems,
   current,
+  type = 'sectioned',
   collapsed = false,
   onCollapseToggle,
   onSelect,
@@ -81,7 +99,34 @@ export default function Navigation({
   className,
   ...rest
 }) {
-  const classes = ['sr-nav', collapsed ? 'sr-nav--collapsed' : '', className].filter(Boolean).join(' ');
+  const isRail = collapsed === 'rail';
+  const isIconOnly = collapsed === true || collapsed === 'icon';
+  const classes = [
+    'sr-nav',
+    isIconOnly ? 'sr-nav--collapsed' : '',
+    isRail ? 'sr-nav--rail' : '',
+    type === 'linear' ? 'sr-nav--linear' : '',
+    className,
+  ].filter(Boolean).join(' ');
+
+  const body = type === 'linear' ? (
+    <div className="sr-nav__list">
+      {sections.flatMap((section) => section.items).map((item) => (
+        <NavItem key={item.label} {...item} current={current} onSelect={onSelect} />
+      ))}
+    </div>
+  ) : (
+    sections.map((section) => (
+      <div className="sr-nav__section" key={section.label}>
+        <span className="sr-nav__section-label">{section.label}</span>
+        <div className="sr-nav__list">
+          {section.items.map((item) => (
+            <NavItem key={item.label} {...item} current={current} onSelect={onSelect} />
+          ))}
+        </div>
+      </div>
+    ))
+  );
 
   return (
     <nav className={classes} aria-label="Primary" {...rest}>
@@ -90,25 +135,14 @@ export default function Navigation({
         <button
           type="button"
           className="sr-nav__collapse"
-          aria-label={collapsed ? 'Expand navigation' : 'Collapse navigation'}
+          aria-label={(isRail || isIconOnly) ? 'Expand navigation' : 'Collapse navigation'}
           onClick={onCollapseToggle}
         >
           <Icon name="nav/chevron-left" size="xs" color="inherit" />
         </button>
       </div>
 
-      <div className="sr-nav__body">
-        {sections.map((section) => (
-          <div className="sr-nav__section" key={section.label}>
-            <span className="sr-nav__section-label">{section.label}</span>
-            <div className="sr-nav__list">
-              {section.items.map((item) => (
-                <NavItem key={item.label} {...item} current={current} onSelect={onSelect} />
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
+      <div className="sr-nav__body">{body}</div>
 
       {footerItems && footerItems.length > 0 && (
         <div className="sr-nav__footer">

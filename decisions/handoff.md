@@ -5,6 +5,95 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-07-31 (case note nav, branch `claude/case-note-nav-prototype-8409gg`)
+
+Picked up the "nav bar missing from the casenote view" item from the previous
+checkpoint, plus the design lead's follow-up: they wanted the two Figma links
+below understood before the nav bar just gets dropped in.
+
+- **`Navigation/Sidebar/Desktop` (`725:8903`, file `x5fwyefxxgD03csz8ld7SZ`) has
+  6 variants, confirmed directly in Figma (`get_metadata`), not assumed:**
+  `Type=Sectioned`/`Type=Linear` × `State=Expanded`/`Collapsed` (108px, rail)/
+  `Collapsed 2` (48px, icon-only). Linear is a flat list — no section labels,
+  no dividers — for simpler single-level navigation; Sectioned groups items
+  under labels (PATIENTS, CLINICAL, ...). Neither collapsed state in Figma has
+  any hover-triggered content; "Collapsed 2" simply never shows a label.
+- **Accessibility call on icon-only hover-reveal — made, not deferred.** The
+  question raised was whether revealing the item's label on hover, for the
+  48px icon-only rail, is safe to keep or needs to be dropped. Verdict: **keep
+  it, but the reveal must fire on `:hover` AND `:focus-visible`, never hover
+  alone.** A hover-only reveal fails WCAG 2.2 SC 1.4.13 (Content on Hover or
+  Focus) and effectively SC 2.1.1 (Keyboard) for anyone tabbing through the
+  rail — they can reach `:focus-visible` but never `:hover`. This was already
+  a non-issue for screen readers (`aria-label` names every item regardless of
+  what's visually shown); the gap was only for sighted keyboard users. Nothing
+  needs "knocking off" — it needs the focus state added, which is a CSS-only
+  fix. Implemented in `navigation.css`.
+- **`Navigation` (`packages/react/src/navigation/Navigation.jsx` +
+  `packages/web/src/navigation/navigation.css`) now covers both types and all
+  three states:**
+  - `type="sectioned" | "linear"` (default sectioned). Linear flattens the
+    `sections` prop into one list and drops labels/dividers — no new prop
+    shape, so existing consumers of `sections` don't need to restructure data.
+  - `collapsed={false | 'rail' | 'icon'}` (also accepts the old boolean `true`
+    as an alias for `'icon'`, so the existing Storybook/consumer usage keeps
+    working). `'rail'` = 108px, icon + visible truncated label, no
+    badge/chevron/submenu. `'icon'` = 48px, icon only, label becomes a tooltip
+    on hover/focus as above.
+  - Storybook (`Navigation.stories.jsx`) gained `CollapsedRail`, `CollapsedIcon`
+    and `Linear` stories so the two types and both collapse states are each
+    independently viewable — this is the seed for the DS website Navigation
+    page, which does **not exist yet** (see below).
+- **Case Note Tracking prototype now has its sidebar** (the actual "next task"
+  from the last checkpoint). `products/case-note-tracking/prototype/src/App.jsx`
+  renders the real `Navigation` component (Sectioned/Expanded, with the
+  collapse toggle wired to `'icon'`), sourced from new `NAV_SECTIONS`/
+  `NAV_FOOTER` in `data.js`. `app.css` gained the flex row layout to hold it.
+  `packages/website/build.mjs`'s `PROTOTYPES[0].components` gained
+  `'Navigation'` so the Sandpack embed picks it up — **verified**: `npm run
+  build:site` succeeds end to end, and the assembled embed file
+  (`packages/website/dist/prototypes/case-note-tracking.html`) contains
+  `/design-system/react/Navigation.jsx` with no bare `@dhcw/sr-web` import
+  left unresolved (see the logo note below). Browser-side Sandpack execution
+  itself still isn't verifiable in this sandbox (no egress to `esm.sh`, same
+  standing restriction as before) — needs a real-browser check next session.
+- **Gotcha hit and fixed: don't import `@dhcw/sr-web/src/assets/logo.js`
+  directly from a prototype.** `assembleDesignSystemFiles()` in
+  `build.mjs` only rewrites the bare `@dhcw/sr-react` import in a prototype's
+  entry file — nothing rewrites arbitrary `@dhcw/sr-web` imports, so the logo
+  path from `Navigation.stories.jsx` would have shipped into the Sandpack
+  bundle unresolved. Used a plain text lockup (`BRAND_LOCKUP` in `App.jsx`)
+  instead — same "placeholder, not the real NHS/GIG asset" reasoning as the
+  logo file itself, just without the fragile import. If a future prototype
+  needs the real logo, `build.mjs` needs a rewrite rule for it first.
+
+### Not done this session — next task
+
+1. **DS website Navigation component page.** No `components/navigation/`
+   folder exists at all — no `spec.md`, no `guidelines.md`. Per CLAUDE.md this
+   is a gap worth stating outright: the component has real code and Storybook
+   coverage but no design-authored spec/guidelines, and no page in
+   `packages/website/build.mjs`'s component list. This is exactly what the
+   design lead asked to be "worked on in the DS website too" — the Storybook
+   stories added this session are the raw material, not the page itself.
+2. **Dashboard-as-home-screen prototype.** The design lead wants
+   `https://www.figma.com/design/U0Ugs6bG1KLzrrWdnxqcZO/...?node-id=2-3875`
+   (file `U0Ugs6bG1KLzrrWdnxqcZO`, instance `2:3875`, "Page Template" wrapping
+   a "DASHBOARD COMPONENT" frame `0:4`) as the product's actual home screen,
+   not the casenote table view. Confirmed via `get_metadata`: it's a different
+   screen from the current prototype — patient search, 4 stat cards, quick
+   actions (radio-card style), and two "Dashboard/Section slot" panels
+   (Upcoming Appointments-shaped), all behind its own `Casenotes/Sidebar
+   Navigation` instance (`0:5`). Not started — this is a new screen to build,
+   not a nav-bar fix, and is the natural next PROTOTYPES-array entry once the
+   nav work above lands. Login page is explicitly out of scope per the design
+   lead.
+3. Still open from the prior checkpoint, untouched this session: npm publish
+   CI job (license sign-off still pending) and DL-029 (no
+   link-on-dark-surface token).
+
+---
+
 ## Hard Constraints — Never Override Without Explicit Permission
 
 | Constraint | Detail |
@@ -741,6 +830,13 @@ This week's accepted changes (now reflected in Figma, tokens, and docs):
 | Grey/400 | VariableID:3455:23 | #AEB7BD |
 | Grey/300 | VariableID:3455:24 | #C6CDD1 |
 | Grey/50 | VariableID:3455:25 | #F7FAFA |
+| Nav Type=Sectioned, State=Expanded | 665:20955 | 220px |
+| Nav Type=Sectioned, State=Collapsed (rail) | 746:13066 | 108px, icon + visible label |
+| Nav Type=Sectioned, State=Collapsed 2 (icon-only) | 3569:15850 | 48px |
+| Nav Type=Linear, State=Expanded | 1317:24167 | 220px, flat list |
+| Nav Type=Linear, State=Collapsed (rail) | 1942:7143 | 108px |
+| Nav Type=Linear, State=Collapsed 2 (icon-only) | 2212:7613 | 48px |
+| Case Note Tracking home-screen dashboard | 2:3875 (file `U0Ugs6bG1KLzrrWdnxqcZO`) | "Page Template" instance; DASHBOARD COMPONENT frame is `0:4` |
 
 ---
 

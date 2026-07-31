@@ -64,7 +64,7 @@ const FOOTER_ITEMS = [
   { icon: 'clinical/discharge', label: 'Log Out' },
 ];
 
-const Demo = ({ initialCollapsed, current }) => {
+const Demo = ({ initialCollapsed, current, type }) => {
   const [collapsed, setCollapsed] = useState(initialCollapsed);
   return (
     <div style={{ height: 832, display: 'flex' }}>
@@ -72,8 +72,9 @@ const Demo = ({ initialCollapsed, current }) => {
         sections={SECTIONS}
         footerItems={FOOTER_ITEMS}
         current={current}
+        type={type}
         collapsed={collapsed}
-        onCollapseToggle={() => setCollapsed((c) => !c)}
+        onCollapseToggle={() => setCollapsed((c) => (c ? false : 'icon'))}
         logo={<img src={LOGO_SRC} alt="DHCW Single Record" style={{ height: 28 }} />}
       />
     </div>
@@ -83,7 +84,7 @@ const Demo = ({ initialCollapsed, current }) => {
 const render = (args) => {
   const container = document.createElement('div');
   const root = createRoot(container);
-  root.render(<Demo initialCollapsed={args.collapsed} current={args.current} />);
+  root.render(<Demo initialCollapsed={args.collapsed} current={args.current} type={args.type} />);
   return container;
 };
 
@@ -92,14 +93,18 @@ export default {
   tags: ['autodocs'],
   render,
   argTypes: {
-    collapsed: { control: 'boolean' },
+    collapsed: { control: 'radio', options: [false, 'rail', 'icon'] },
+    type: { control: 'radio', options: ['sectioned', 'linear'] },
     current: { control: 'text', description: 'Label of the currently active nav item.' },
   },
   args: {
     collapsed: false,
+    type: 'sectioned',
     current: 'Patient Search',
   },
 };
 
 export const Expanded = {};
-export const Collapsed = { args: { collapsed: true } };
+export const CollapsedRail = { name: 'Collapsed — rail (icon + label)', args: { collapsed: 'rail' } };
+export const CollapsedIcon = { name: 'Collapsed — icon only (hover/focus tooltip)', args: { collapsed: 'icon' } };
+export const Linear = { name: 'Type — linear (flat list, no sections)', args: { type: 'linear' } };

@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import {
+  Navigation,
   PatientBanner,
   Table,
   Modal,
@@ -11,7 +12,13 @@ import {
   Icon,
 } from '@dhcw/sr-react';
 
-import { PATIENT, REACTIONS, NOTES, SITES, NOTE_TYPES } from './data.js';
+import { PATIENT, REACTIONS, NOTES, SITES, NOTE_TYPES, NAV_SECTIONS, NAV_FOOTER } from './data.js';
+
+// Text lockup, not the real NHS/GIG asset (trademarked raster, not something
+// this prototype's Sandpack embed can fetch) — same placeholder approach as
+// packages/web/src/assets/logo.js, kept local so the embed doesn't need a
+// bare '@dhcw/sr-web' import the build's Sandpack rewriter doesn't resolve.
+const BRAND_LOCKUP = <span className="app__brand">Single Record</span>;
 
 /**
  * Case Note Tracking — patient casenote view.
@@ -30,6 +37,7 @@ export default function App() {
   const [showInactive, setShowInactive] = useState(false);
   const [search, setSearch] = useState('');
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [navCollapsed, setNavCollapsed] = useState(false);
 
   const rows = useMemo(() => {
     let out = NOTES;
@@ -73,6 +81,14 @@ export default function App() {
 
   return (
     <div className="app">
+      <Navigation
+        sections={NAV_SECTIONS}
+        footerItems={NAV_FOOTER}
+        current="Case Note Tracking"
+        collapsed={navCollapsed}
+        onCollapseToggle={() => setNavCollapsed((c) => (c ? false : 'icon'))}
+        logo={BRAND_LOCKUP}
+      />
       <main className="app__main" id="main">
         <PatientBanner
           patient={PATIENT}

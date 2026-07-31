@@ -7,7 +7,21 @@ body {
   color: var(--sr-color-text-primary);
 }
 
+.app {
+  display: flex;
+  align-items: stretch;
+  min-height: 100vh;
+}
+
+.app__brand {
+  font-size: var(--font-size-16);
+  font-weight: 700;
+  letter-spacing: var(--font-letter-spacing-wide);
+  color: var(--sr-color-interactive-primary);
+}
+
 .app__main {
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   gap: var(--space-4);

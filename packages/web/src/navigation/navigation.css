@@ -1,8 +1,9 @@
 /**
  * DHCW Single Record — Navigation (Sidebar)
  * Reference HTML/CSS implementation, matched to the Figma Navigation set
- * (Navigation/Sidebar/Desktop, 725:8903 — Type=Sectioned, State=Expanded).
- * Consumes @dhcw/sr-tokens CSS custom properties.
+ * (Navigation/Sidebar/Desktop, 725:8903 — Type=Sectioned & Type=Linear, each
+ * with State=Expanded / Collapsed ("rail", 108px) / Collapsed 2 (icon-only,
+ * 48px)). Consumes @dhcw/sr-tokens CSS custom properties.
  *
  * Anatomy:
  *   .sr-nav                 — sidebar container (fixed width, full height column)
@@ -35,6 +36,28 @@
 
 .sr-nav--collapsed {
   width: 72px;
+}
+
+/* "Rail" collapsed state (Figma State=Collapsed, 108px) — icon + a visible,
+   truncated label. Distinct from .sr-nav--collapsed (Figma State=Collapsed 2,
+   48px icon-only), which reveals its label as a hover/focus tooltip instead. */
+.sr-nav--rail {
+  width: 108px;
+}
+.sr-nav--rail .sr-nav__section-label,
+.sr-nav--rail .sr-nav__item-badge,
+.sr-nav--rail .sr-nav__item-chevron,
+.sr-nav--rail .sr-nav__submenu {
+  display: none;
+}
+.sr-nav--rail .sr-nav__collapse {
+  transform: rotate(180deg);
+}
+.sr-nav--rail .sr-nav__logo {
+  display: none;
+}
+.sr-nav--rail .sr-nav__header {
+  justify-content: center;
 }
 
 /* ---------- Header ---------- */
@@ -246,13 +269,44 @@
   display: none;
 }
 
-.sr-nav--collapsed .sr-nav__item-label,
 .sr-nav--collapsed .sr-nav__item-badge,
 .sr-nav--collapsed .sr-nav__item-chevron {
   display: none;
 }
 .sr-nav--collapsed .sr-nav__item {
+  position: relative;
   justify-content: center;
+}
+
+/* Icon-only label becomes a tooltip. Revealed on :hover AND :focus-visible —
+   never hover alone. A keyboard user tabbing through the rail can only ever
+   trigger :focus-visible, so a hover-only reveal would leave them with an
+   icon and no name (fails WCAG 2.2 SC 1.4.13 / 2.1.1). Screen readers are
+   unaffected either way — aria-label already names every item. */
+.sr-nav--collapsed .sr-nav__item-label {
+  position: absolute;
+  left: calc(100% + var(--space-2));
+  top: 50%;
+  transform: translateY(-50%);
+  width: max-content;
+  max-width: 200px;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  background-color: var(--sr-color-text-primary);
+  color: var(--sr-color-text-inverse);
+  font-size: var(--font-size-12);
+  line-height: var(--font-line-height-16);
+  white-space: normal;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.1s ease;
+  z-index: 20;
+}
+.sr-nav--collapsed .sr-nav__item:hover .sr-nav__item-label,
+.sr-nav--collapsed .sr-nav__item:focus-visible .sr-nav__item-label {
+  opacity: 1;
+  visibility: visible;
 }
 
 /* ---------- Footer ---------- */

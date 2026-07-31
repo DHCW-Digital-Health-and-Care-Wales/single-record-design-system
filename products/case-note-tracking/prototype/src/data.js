@@ -31,6 +31,23 @@ export const NOTE_TYPES = [
   { value: 'oncology', label: 'Oncology notes' },
 ];
 
+export const NAV_SECTIONS = [
+  { label: 'Home', items: [{ icon: 'nav/dashboard', label: 'Dashboard' }] },
+  {
+    label: 'Patients',
+    items: [
+      { icon: 'nav/search', label: 'Patient Search' },
+      { icon: 'clinical/record', label: 'Case Note Tracking' },
+      { icon: 'schedule/waiting-list', label: 'Watchlists' },
+    ],
+  },
+];
+
+export const NAV_FOOTER = [
+  { icon: 'nav/settings', label: 'Settings' },
+  { icon: 'clinical/discharge', label: 'Log Out' },
+];
+
 export const NOTES = [
   { id: 1, siteId: 'ggh', volume: 'General notes vol 4', status: 'Registered', statusType: 'blue',  location: 'Madog Suite-GGH',   activity: 'Registered by Gadgil, AA(Mr)', moved: '09 Jun 2026 15:25', batch: '50381858' },
   { id: 2, siteId: 'ggh', volume: 'General notes vol 3', status: 'Sent',       statusType: 'grey',  location: 'Teifi Ward-GGH',    activity: 'Sent by Gadgil, AA(Mr)',       moved: '05 Jun 2026 17:40', batch: '-' },
