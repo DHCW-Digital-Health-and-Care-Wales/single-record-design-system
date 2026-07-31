@@ -5,6 +5,63 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-07-31 (later, dashboard home screen, same branch)
+
+Started the item flagged "not done" at the end of the previous checkpoint:
+the Dashboard-as-home-screen prototype from Figma node `2:3875` (file
+`U0Ugs6bG1KLzrrWdnxqcZO`).
+
+- **Prototype restructured into a shell + two views**, rather than building
+  the dashboard as a second disconnected prototype. `App.jsx` now holds one
+  persistent `Navigation` (Type=Linear, matching the flat sidebar actually
+  shown on `2:3875` — no section labels, unlike the Sectioned nav used
+  elsewhere) and a `view` state (`'dashboard' | 'case-notes'`) that swaps
+  between two extracted components: new `Dashboard.jsx` (the home screen) and
+  `CaseNotes.jsx` (the table view that used to be all of `App.jsx`, unchanged
+  apart from losing its own `Navigation` instance). Clicking "Dashboard" or
+  "Patient Search"/"My Requests" in the nav calls `onSelect` to switch views —
+  verified in a real headless-Chromium render, not just by reading the code.
+- **Dashboard.jsx** composes `Header` (variant `desktop-2`), 4 stat cards, a
+  quick-actions row, and two panels ("Needs attention", "In transit") — all
+  read off the real node tree (`get_metadata`) and the rendered screenshot,
+  matched side by side and confirmed close. No coded "Stat Card" or
+  "Dashboard section" component exists in `@dhcw/sr-react` — this composes
+  `Tag`/`Icon`/`Header` plus local layout in `app.css`, the same pattern
+  `CaseNotes.jsx` already uses for its `.filters`/`.notes` wrappers, not a new
+  DS component invented outside Figma.
+- **Figma MCP gotcha worth recording:** the short instance-local ids
+  `get_metadata` prints for a nested tree (e.g. `0:353` for "Stat Card") are
+  **not independently resolvable** — calling `get_design_context`/
+  `get_metadata` again with just that bare id returns unrelated content
+  elsewhere in the file (in this session, `0:303` resolved to a "SendIT" nav
+  building block, not the "Header bar" it was nested under). Only the
+  fully-qualified instance path (`I2:3875;...;125:4980`, as returned inline
+  inside a `get_design_context` call on an ancestor) is safe to reuse.
+  Re-running `get_metadata` on the known-good top node (`2:3875`) each time
+  was the reliable path; the screenshot (`enableBase64Response: true`, since
+  the Figma asset host is still egress-blocked here, same as prior sessions)
+  supplied the actual card copy/numbers that the metadata tree doesn't carry
+  for leaf instances with no overrides.
+- **Sandpack embed build gained multi-file support.** `buildSandpackFiles()`
+  in `packages/website/build.mjs` previously only ever emitted a single
+  `/App.js` — now it walks the entry file's own local `./*.jsx` sibling
+  imports (the same queue-and-rewrite approach `assembleDesignSystemFiles`
+  already used for `@dhcw/sr-react` internals), so `Dashboard.jsx`/
+  `CaseNotes.jsx` both ship into the embed as their own files. `Header` added
+  to the prototype's `components` list. **Verified**: `npm run build:site`,
+  a real `vite build` of the prototype package, and a headless-Chromium
+  screenshot of `vite preview` all pass — including clicking the collapse
+  toggle (rail ⇄ icon-only) and clicking a nav item to switch views.
+- **Not carried over:** Patient Search and My Requests both currently open
+  the same casenote table as a stand-in (there's no dedicated Patient Search
+  screen yet); SendIT/ReceiveIT/TagIT are nav entries with no screen at all.
+  The dashboard's "Patient Search" H1 heading and "Quick actions" label are
+  copied faithfully off the Figma screen as found, including the apparent
+  mismatch between the page title and the Dashboard nav item being current —
+  not something this session's job was to silently correct.
+
+---
+
 ## Checkpoint — 2026-07-31 (case note nav, branch `claude/case-note-nav-prototype-8409gg`)
 
 Picked up the "nav bar missing from the casenote view" item from the previous
@@ -76,7 +133,8 @@ below understood before the nav bar just gets dropped in.
    `packages/website/build.mjs`'s component list. This is exactly what the
    design lead asked to be "worked on in the DS website too" — the Storybook
    stories added this session are the raw material, not the page itself.
-2. **Dashboard-as-home-screen prototype.** The design lead wants
+2. ~~**Dashboard-as-home-screen prototype.**~~ **Started same day, see the
+   checkpoint above.** The design lead wants
    `https://www.figma.com/design/U0Ugs6bG1KLzrrWdnxqcZO/...?node-id=2-3875`
    (file `U0Ugs6bG1KLzrrWdnxqcZO`, instance `2:3875`, "Page Template" wrapping
    a "DASHBOARD COMPONENT" frame `0:4`) as the product's actual home screen,
