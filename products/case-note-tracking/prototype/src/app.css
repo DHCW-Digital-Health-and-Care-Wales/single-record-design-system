@@ -345,11 +345,6 @@ body {
   font: var(--sr-type-heading-s-font);
   letter-spacing: var(--sr-type-heading-s-letter-spacing);
 }
-.page__lede {
-  margin: var(--space-1) 0 0;
-  color: var(--sr-color-text-secondary);
-}
-
 .info-banner {
   display: flex;
   align-items: flex-start;

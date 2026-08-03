@@ -74,6 +74,12 @@ export default function CaseNotes() {
   return (
     <>
       <main className="app__main" id="main">
+        {/* This screen deliberately leads with the patient banner rather than a
+            visible page title — identity comes first. But a screen with no h1
+            leaves screen-reader users navigating by heading with nothing to
+            land on, so the title exists and is only visually hidden. */}
+        <h1 className="visually-hidden">Case Note Tracking</h1>
+
         <PatientBanner
           patient={PATIENT}
           reactions={REACTIONS}

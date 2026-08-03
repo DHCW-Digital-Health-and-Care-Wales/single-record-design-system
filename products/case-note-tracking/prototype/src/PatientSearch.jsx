@@ -23,11 +23,23 @@ import { SEARCH_RESULTS, MATCH_METHODS } from './data.js';
  * replacing it, so a user who has already typed an identifier does not lose it
  * when they widen the search.
  */
+// The barcode banner teaches a one-time fact, so dismissing it has to stick —
+// a banner that returns on every visit is not really dismissible, it just
+// wastes a click. Persisted rather than held in state for that reason.
+// (Storage is wrapped because a sandboxed iframe can throw on access.)
+const BANNER_KEY = 'sr-cnt-barcode-banner-dismissed';
+const bannerDismissed = () => {
+  try { return localStorage.getItem(BANNER_KEY) === '1'; } catch { return false; }
+};
+const rememberBannerDismissed = () => {
+  try { localStorage.setItem(BANNER_KEY, '1'); } catch { /* non-fatal */ }
+};
+
 export default function PatientSearch({ onOpenPatient }) {
   const [mode, setMode] = useState('quick');
   const [query, setQuery] = useState('');
   const [results, setResults] = useState(null);
-  const [banner, setBanner] = useState(true);
+  const [banner, setBanner] = useState(() => !bannerDismissed());
   const [surnameMethod, setSurnameMethod] = useState('containing');
   const [forenameMethod, setForenameMethod] = useState('containing');
   const [filter, setFilter] = useState('');
@@ -103,10 +115,7 @@ export default function PatientSearch({ onOpenPatient }) {
       />
 
       <main className="app__main" id="main">
-        <div>
-          <h1 className="page__title">Patient Search</h1>
-          <p className="page__lede">Search for a patient to view their casenotes</p>
-        </div>
+        <h1 className="page__title">Patient Search</h1>
 
         {banner && (
           <div className="info-banner" role="region" aria-label="Barcode scanning">
@@ -119,7 +128,10 @@ export default function PatientSearch({ onOpenPatient }) {
               type="button"
               className="info-banner__dismiss"
               aria-label="Dismiss barcode scanning message"
-              onClick={() => setBanner(false)}
+              onClick={() => {
+                setBanner(false);
+                rememberBannerDismissed();
+              }}
             >
               <Icon name="nav/close" size="sm" color="inherit" />
             </button>
