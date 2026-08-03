@@ -293,6 +293,28 @@
 .sr-patient-banner__pill--reactions { color: var(--sr-color-status-critical); }
 .sr-patient-banner__pill--warnings { color: var(--color-yellow-700); }
 
+/* ---------- Mid-width viewports ----------
+   Stacked vertically, the actions column is only as wide as its widest
+   button — but it still sits in the same row as the alerts and identity,
+   competing with the identity column for width. That is what pushes the
+   demographics grid down to one column well before the banner needs to
+   stack outright. Wrapping actions onto their own row, horizontally, removes
+   them from that competition entirely: alerts + identity keep the full row
+   to themselves, so two columns of demographics survive further down. */
+@media (max-width: 1439px) {
+  .sr-patient-banner {
+    flex-wrap: wrap;
+  }
+  .sr-patient-banner__actions {
+    flex: 1 1 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .sr-patient-banner__actions .sr-button {
+    width: auto;
+  }
+}
+
 /* ---------- Narrow viewports ----------
    Identity must never be pushed off screen, so the banner stacks rather than
    scrolling horizontally. */
@@ -304,6 +326,5 @@
   }
   .sr-patient-banner__alerts { flex-wrap: wrap; }
   .sr-patient-banner__alert { max-width: none; flex: 1 1 200px; }
-  .sr-patient-banner__actions { flex-direction: row; flex-wrap: wrap; }
-  .sr-patient-banner__actions .sr-button { width: auto; }
+  /* Actions is already row/wrap/auto-width from the 1439px tier above. */
 }

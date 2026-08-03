@@ -215,6 +215,14 @@ satisfactory — a component without a spec has no agreed contract, and a spec
 without code cannot be consumed. Both lists are worked down as components are
 touched.
 
+**No Menu/Dropdown component.** The Case Note Tracking prototype's row-level
+action menu (Figma `47:4041`) needed a small popover list — send/receive/tag/
+merge/deactivate/delete — with no component in this table to reach for. It is
+built locally in `products/case-note-tracking/prototype/src/CaseNotes.jsx`
+(`RowActionMenu`) from tokens only, scoped to that prototype rather than
+promoted to `packages/web`/`packages/react`. Promote it once a second
+consumer needs the same pattern, with a spec in `/components/menu/`.
+
 See `/components/README.md` for the full catalogue and contribution guidance, and
 the live catalogue in Storybook for every variant.
 

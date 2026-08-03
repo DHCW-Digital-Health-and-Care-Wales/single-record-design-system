@@ -106,9 +106,13 @@ export const IN_TRANSIT = [
  *    second only carries a value on the Deceased row, so it is Date of death.
  *  - Surname/Forenames are transposed in several rows (e.g. Surname "JANE",
  *    Forenames "DOE"), and every row reads Sex "Male" including AVA and JANE.
+ *
+ * Row 1 is deliberately the same person as PATIENT (data.js) — "View" always
+ * opens the one casenote screen this prototype has, so the row it opens from
+ * should read as the same patient rather than a different one.
  */
 export const SEARCH_RESULTS = [
-  { id: 1, caseNo: 'NN40140', nhs: '098 765 4321', surname: 'EVANS',    forenames: 'PETER',         status: 'Active',   statusType: 'green', dob: '15 Nov 1992', dod: '-',           sex: 'Male',   postcode: 'EC1A 1BB' },
+  { id: 1, caseNo: PATIENT.crn, nhs: PATIENT.nhsNumber, surname: 'JOHN', forenames: 'Elvet George', status: 'Deceased', statusType: 'red', dob: '15 Dec 1992', dod: '23 Jun 2025', sex: 'Male', postcode: PATIENT.postcode },
   { id: 2, caseNo: 'NN54242', nhs: '098 765 4321', surname: 'DAVIS',    forenames: 'JONATHAN PAUL', status: 'Active',   statusType: 'green', dob: '14 Jan 2000', dod: '-',           sex: 'Male',   postcode: 'M1 1AE' },
   { id: 3, caseNo: 'NN24312', nhs: '098 765 4321', surname: 'NOAH',     forenames: 'DAVIS',         status: 'Active',   statusType: 'green', dob: '28 Jun 1988', dod: '-',           sex: 'Male',   postcode: 'G1 2FF' },
   { id: 4, caseNo: 'CN032412', nhs: '098 765 4321', surname: 'MARTINEZ', forenames: 'AVA',          status: 'Active',   statusType: 'green', dob: '21 Sep 1969', dod: '-',           sex: 'Female', postcode: 'BT7 1NN' },
