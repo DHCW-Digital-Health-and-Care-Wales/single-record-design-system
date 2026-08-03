@@ -16,6 +16,7 @@
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, rmSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
+import { posix as posixPath } from 'node:path';
 import { iconMarkup, iconNames } from '../icons/build/icons.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -140,10 +141,16 @@ function findWebCss(filename) {
 function buildSandpackFiles(p) {
   const dsFiles = assembleDesignSystemFiles(p.components);
 
-  // Walk the entry file's own local sibling imports (e.g. App.jsx importing
-  // './Dashboard.jsx') so a prototype can be split across more than one
-  // component file — same "read from real source, don't hand-copy" principle
-  // as assembleDesignSystemFiles, just scoped to the prototype's own folder.
+  // Walk the entry file's own local imports — siblings (e.g. App.jsx importing
+  // './Dashboard.jsx') and subdirectories (e.g. './shared/RowActions.jsx') —
+  // so a prototype can be split across more than one folder, same
+  // "read from real source, don't hand-copy" principle as
+  // assembleDesignSystemFiles, just scoped to the prototype's own tree.
+  // `name` is always a posix path relative to entryDir, no extension (e.g.
+  // 'App', 'shared/RowActions'), so it doubles as both the queue de-dupe key
+  // and the flattened Sandpack file path — directory structure is preserved,
+  // not flattened to one level, so relative specifiers never need rewriting
+  // beyond the .jsx -> .js extension swap.
   const files = {};
   const seenLocal = new Set();
   const queue = [p.entryFile.replace(/\.jsx$/, '')];
@@ -152,9 +159,13 @@ function buildSandpackFiles(p) {
     if (seenLocal.has(name)) continue;
     seenLocal.add(name);
     let src = readFileSync(resolve(p.entryDir, `${name}.jsx`), 'utf8');
-    src = src.replace(/from\s+['"]@dhcw\/sr-react['"]/, `from './design-system/react/index.js'`);
-    src = src.replace(/from\s+['"](\.\/[\w-]+)\.jsx['"]/g, (whole, relImport) => {
-      queue.push(relImport.replace(/^\.\//, ''));
+    const curDir = posixPath.dirname(name); // '.' at the top, 'shared' one level in
+    const depth = curDir === '.' ? 0 : curDir.split('/').length;
+    const dsPrefix = '../'.repeat(depth) || './';
+    src = src.replace(/from\s+['"]@dhcw\/sr-react['"]/, `from '${dsPrefix}design-system/react/index.js'`);
+    src = src.replace(/from\s+['"](\.\.?\/[\w./-]+)\.jsx['"]/g, (whole, relImport) => {
+      const resolved = posixPath.normalize(posixPath.join(curDir, relImport));
+      queue.push(resolved);
       return `from '${relImport}.js'`;
     });
     files[`/${name}.js`] = src;
@@ -588,9 +599,30 @@ function accessibilityTable(rows) {
 const HDR_ICON_SEARCH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.34-4.34"/></svg>';
 const HDR_ICON_GLOBE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20a15 15 0 0 1 0-20"/></svg>';
 const HDR_ICON_BELL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>';
+const HDR_ICON_MENU = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>';
+// Text lockup, not the real NHS/GIG asset (trademarked raster) — same
+// placeholder approach as the Case Note Tracking prototype's BRAND_LOCKUP.
+const HDR_LOGO = `<span style="font: var(--sr-type-heading-xs-font); letter-spacing: var(--sr-type-heading-xs-letter-spacing); color: var(--sr-color-interactive-primary);">Single Record</span>`;
 
 function headerBody() {
   const md = publicise(readFileSync(resolve(ROOT, 'components', 'header', 'guidelines.md'), 'utf8'));
+  const desktop1 = `<header class="sr-header">
+  <div class="sr-header__utility">
+    <a class="sr-header__utility-link" href="#">Report an issue</a>
+    <a class="sr-header__utility-link" href="#"><span class="sr-header__utility-icon sr-icon sr-icon--xs">${HDR_ICON_GLOBE}</span><span>Cymraeg</span></a>
+  </div>
+  <div class="sr-header__main">
+    <span class="sr-header__logo">${HDR_LOGO}</span>
+    <div class="sr-header__search">
+      <span class="sr-header__search-icon sr-icon sr-icon--sm">${HDR_ICON_SEARCH}</span>
+      <input class="sr-header__search-input" type="search" placeholder="Type here to begin search">
+    </div>
+    <div class="sr-header__actions">
+      <button type="button" class="sr-header__notification" aria-label="Notifications"><span class="sr-icon sr-icon--md">${HDR_ICON_BELL}</span></button>
+      <div class="sr-header__avatar"><span class="sr-header__avatar-initials">AB</span><span class="sr-header__avatar-status"></span></div>
+    </div>
+  </div>
+</header>`;
   const bar = `<header class="sr-header sr-header--bar">
   <div class="sr-header__main">
     <div class="sr-header__search">
@@ -604,17 +636,50 @@ function headerBody() {
     </div>
   </div>
 </header>`;
-  const snippets = {
+  const mobile = `<header class="sr-header sr-header--mobile sr-header--centered">
+  <div class="sr-header__main">
+    <button type="button" class="sr-header__menu" aria-label="Open menu"><span class="sr-icon sr-icon--md">${HDR_ICON_MENU}</span></button>
+    <span class="sr-header__logo">${HDR_LOGO}</span>
+    <div class="sr-header__actions">
+      <button type="button" class="sr-header__notification" aria-label="Notifications"><span class="sr-icon sr-icon--md">${HDR_ICON_BELL}</span></button>
+      <div class="sr-header__avatar"><span class="sr-header__avatar-initials">AB</span><span class="sr-header__avatar-status"></span></div>
+    </div>
+  </div>
+</header>`;
+  const desktop1Snippets = {
+    HTML: '<header class="sr-header">\n  <div class="sr-header__utility">…</div>\n  <div class="sr-header__main">\n    <span class="sr-header__logo">…</span>\n    <div class="sr-header__search">…</div>\n    <div class="sr-header__actions">…</div>\n  </div>\n</header>',
+    React: '<Header\n  variant="desktop"   // "desktop" | "desktop-2" | "mobile"\n  logo={<LogoLockup />}\n  initials="AB"\n  onSearch={handleSearch}\n  onReportIssue={openIssueForm}\n  onLanguageToggle={toggleWelsh}\n/>',
+    Blazor: '<SrHeader Variant="Desktop" Initials="AB" />',
+    MAUI: '<!-- Desktop 1 pairs with a browser-width layout MAUI does not have —\n     MAUI is mobile only (phone, tablet); see foundations/grid-and-layout.md.\n     Use variant="mobile" below for the MAUI/Blazor Hybrid header instead. -->',
+  };
+  const barSnippets = {
     HTML: '<header class="sr-header sr-header--bar">\n  <div class="sr-header__main">\n    <div class="sr-header__search">…</div>\n    <div class="sr-header__cluster">…</div>\n  </div>\n</header>',
     React: '<Header\n  variant="desktop-2"   // "desktop" | "desktop-2" | "mobile"\n  initials="AB"\n  org="Cardiff and Vale UHB"\n  onSearch={handleSearch}\n  onLanguageToggle={toggleWelsh}\n/>',
     Blazor: '<SrHeader Variant="Desktop2" Initials="AB" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrHeader Variant="Desktop2" Initials="AB" />',
+    MAUI: '<!-- Desktop 2 pairs with the sidebar Navigation, a browser-width pattern —\n     MAUI is mobile only (phone, tablet); see foundations/grid-and-layout.md.\n     Use variant="mobile" below for the MAUI/Blazor Hybrid header instead. -->',
+  };
+  const mobileSnippets = {
+    HTML: '<header class="sr-header sr-header--mobile sr-header--centered">\n  <div class="sr-header__main">\n    <button class="sr-header__menu">…</button>\n    <span class="sr-header__logo">…</span>\n    <div class="sr-header__actions">…</div>\n  </div>\n</header>',
+    React: '<Header\n  variant="mobile"\n  showMenu\n  logo={<LogoMark />}\n  initials="AB"\n  onMenuClick={openDrawer}\n/>',
+    Blazor: '<SrHeader Variant="Mobile" ShowMenu="true" Initials="AB" />',
+    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. This is\n     the only Header variant MAUI uses — it has no desktop target. -->\n<SrHeader Variant="Mobile" ShowMenu="true" Initials="AB" />',
   };
   return `
 <p class="breadcrumbs">Components</p>
-${showcase(bar, 'header', snippets)}
-<p class="muted">The <code>desktop-2</code> bar, which pairs with the sidebar Navigation. It carries no
-logo, because the sidebar does — and it is 64px so its bottom rule continues the sidebar's.</p>
+${showcase(desktop1, 'header-desktop', desktop1Snippets)}
+<p class="muted"><code>desktop</code> (Type=Desktop 1) — the full bar: utility strip ("Report an
+issue", Cymraeg), logo, search, notification and avatar. The default variant, for products with no
+sidebar of their own.</p>
+${showcase(bar, 'header', barSnippets)}
+<p class="muted"><code>desktop-2</code> (Type=Desktop 2) — a single 80px bar, which pairs with the
+sidebar Navigation. It carries no logo, because the sidebar does — and it is 64px so its bottom rule
+continues the sidebar's.</p>
+${showcase(mobile, 'header-mobile', mobileSnippets)}
+<p class="muted"><code>mobile</code> (Type=Mobile 1/2) — a compact 56px bar: hamburger, logo, and a
+reduced action cluster. No utility strip and no search field; <code>showMenu</code> centres the logo
+between the hamburger and the actions, matching Mobile 1. This is the only variant MAUI renders — MAUI
+is mobile only (phone, tablet), so <code>desktop</code> and <code>desktop-2</code> have no MAUI
+equivalent (see foundations/grid-and-layout.md).</p>
 <hr>
 ${renderMarkdown(md)}
 ${accessibilityTable([
@@ -639,12 +704,23 @@ function footerBody() {
     HTML: '<footer class="sr-footer">\n  <span class="sr-footer__version">v 0.1.0.1112</span>\n  <div class="sr-footer__actions">…</div>\n</footer>',
     React: '<Footer\n  version="v 0.1.0.1112"\n  onSave={handleSave}\n  onComplete={handleComplete}\n/>',
     Blazor: '<SrFooter Version="v 0.1.0.1112" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrFooter Version="v 0.1.0.1112" />',
+    // This is the Desktop type (Figma 3015:24776) only — Footer's Mobile type
+    // (665:16526) isn't a scaled-down version of this bar, see the note below.
+    // A version-and-actions strip is a browser-width pattern MAUI has no
+    // equivalent surface for.
+    MAUI: '<!-- Desktop Footer has no MAUI equivalent — MAUI is mobile only\n     (phone, tablet); see foundations/grid-and-layout.md. Its persistent\n     bottom bar is the BottomNav component, not this Footer. -->',
   };
   return `
 <p class="breadcrumbs">Components</p>
 ${showcase(demo, 'footer', snippets)}
 <p class="muted">Version left, actions right. Exactly one primary action — the one that commits.</p>
+<p class="muted">This is Footer's <code>Desktop</code> type (Figma <code>3015:24776</code>) — the only
+one this component implements. The <code>Mobile</code> type in the same Figma frame
+(<code>665:16526</code>) isn't a scaled-down version of this bar: it's the persistent bottom tab bar
+(Home/Diary/Patients/Messages/More), built as its own component — <code>BottomNav</code>
+(<code>packages/react/src/bottom-nav</code>) — because it behaves as primary navigation, not a
+page-level action bar. <code>BottomNav</code> doesn't have a website page of its own yet (tracked in
+the component gaps noted in <code>DESIGN-SYSTEM.md</code>).</p>
 <hr>
 ${renderMarkdown(md)}
 ${accessibilityTable([
