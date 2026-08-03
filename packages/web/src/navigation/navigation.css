@@ -40,7 +40,6 @@
   background-color: var(--sr-color-surface-section-cards);
   /* Figma Elevation/Raised — no elevation token exists yet, value matches spec */
   box-shadow: var(--elevation-raised);
-  font-family: "Roboto", system-ui, -apple-system, sans-serif;
 }
 
 .sr-nav--collapsed {

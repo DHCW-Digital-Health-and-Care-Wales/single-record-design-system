@@ -100,6 +100,10 @@ function assembleDesignSystemFiles(componentNames) {
     files['icons/icons.js'] = readFileSync(resolve(ICONS_PKG, 'build', 'icons.js'), 'utf8');
   }
 
+  // Roboto, embedded as a data URI. The sandbox cannot resolve a relative font
+  // URL and CSP blocks a remote one, so the face has to travel in the bundle —
+  // otherwise the embed silently falls back and stops being a faithful preview.
+  files['tokens/fonts.css'] = readFileSync(resolve(TOKENS, 'css', 'fonts.css'), 'utf8');
   files['tokens/tokens.css'] = readFileSync(resolve(TOKENS, 'css', 'tokens.css'), 'utf8');
   files['tokens/typography.css'] = readFileSync(resolve(TOKENS, 'css', 'typography.css'), 'utf8');
 
@@ -160,6 +164,7 @@ function buildSandpackFiles(p) {
   files['/styles.css'] = readFileSync(resolve(p.entryDir, 'app.css'), 'utf8');
   files['/index.js'] = `import React from 'react';
 import { createRoot } from 'react-dom/client';
+import './design-system/tokens/fonts.css';
 import './design-system/tokens/tokens.css';
 import './design-system/tokens/typography.css';
 import './styles.css';
@@ -447,6 +452,7 @@ function shell({ title, prefix, sectionId, activeHref, body, extraHead = '', ext
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${title} | Single Record Design System</title>
+<link rel="stylesheet" href="${prefix}assets/fonts.css">
 <link rel="stylesheet" href="${prefix}assets/tokens.css">
 <link rel="stylesheet" href="${prefix}assets/typography.css">
 <link rel="stylesheet" href="${prefix}assets/button.css">
@@ -512,6 +518,7 @@ function bareShell({ title, prefix, body, extraHead = '', extraScript = '' }) {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${title} | Single Record Design System</title>
+<link rel="stylesheet" href="${prefix}assets/fonts.css">
 <link rel="stylesheet" href="${prefix}assets/tokens.css">
 <link rel="stylesheet" href="${prefix}assets/typography.css">
 <link rel="stylesheet" href="${prefix}assets/button.css">
@@ -2303,7 +2310,7 @@ mkdirSync(resolve(DIST, 'components'), { recursive: true });
 mkdirSync(resolve(DIST, 'patterns'), { recursive: true });
 mkdirSync(resolve(DIST, 'prototypes'), { recursive: true });
 
-for (const f of ['tokens.css', 'typography.css']) copyFileSync(resolve(TOKENS, 'css', f), resolve(DIST, 'assets', f));
+for (const f of ['fonts.css', 'tokens.css', 'typography.css']) copyFileSync(resolve(TOKENS, 'css', f), resolve(DIST, 'assets', f));
 copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'button', 'button.css'), resolve(DIST, 'assets', 'button.css'));
 copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'table', 'table.css'), resolve(DIST, 'assets', 'table.css'));
 copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'patient-banner', 'patient-banner.css'), resolve(DIST, 'assets', 'patient-banner.css'));

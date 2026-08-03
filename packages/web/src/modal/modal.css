@@ -33,7 +33,6 @@
   background-color: var(--sr-color-surface-section-cards);
   color: var(--sr-color-text-primary);
   box-shadow: var(--elevation-overlay);
-  font-family: "Roboto", system-ui, -apple-system, sans-serif;
 
   width: 480px; /* Medium is the default size */
   max-width: calc(100vw - var(--space-8));
@@ -71,10 +70,8 @@
 
 .sr-modal__title {
   margin: 0;
-  font-size: var(--font-size-16);
-  line-height: var(--font-line-height-24);
-  font-weight: 500;
-  letter-spacing: var(--font-letter-spacing-default);
+  font: var(--sr-type-heading-xs-font);
+  letter-spacing: var(--sr-type-heading-xs-letter-spacing);
   color: var(--sr-color-text-primary);
 }
 
@@ -113,9 +110,8 @@
   padding-block: var(--space-4);
   border-top: 1px solid var(--sr-color-border-default);
   border-bottom: 1px solid var(--sr-color-border-default);
-  font-size: var(--font-size-14);
-  line-height: var(--font-line-height-20);
-  letter-spacing: var(--font-letter-spacing-default);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
   color: var(--sr-color-text-secondary);
 }
 .sr-modal__body > :first-child { margin-top: 0; }

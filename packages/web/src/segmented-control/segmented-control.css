@@ -19,7 +19,6 @@
   background-color: var(--sr-color-surface-subtle);
   border: 1px solid var(--sr-color-border-default);
   border-radius: var(--radius-lg); /* 8px track */
-  font-family: "Roboto", system-ui, -apple-system, sans-serif;
 }
 
 .sr-segmented__option {
@@ -31,10 +30,8 @@
   border-radius: var(--radius-md); /* 4px segment */
   background: transparent;
   color: var(--sr-color-text-secondary);
-  font-size: var(--font-size-14);
-  font-weight: 500; /* Label — medium */
-  line-height: var(--font-line-height-20);
-  letter-spacing: var(--font-letter-spacing-wide);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
   white-space: nowrap;
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;

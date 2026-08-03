@@ -30,7 +30,6 @@
   background-color: var(--sr-color-surface-section-cards);
   border-radius: var(--radius-lg);
   box-shadow: var(--elevation-raised);
-  font-family: "Roboto", system-ui, -apple-system, sans-serif;
 }
 
 /* ---------- Alert cards ---------- */

@@ -22,15 +22,12 @@
   margin: 0;
   padding: 0;
   border: none;
-  font-family: "Roboto", system-ui, -apple-system, sans-serif;
 }
 
 .sr-date-input__legend {
   padding: 0;
-  font-size: var(--font-size-14);
-  line-height: var(--font-line-height-20);
-  font-weight: 500;
-  letter-spacing: var(--font-letter-spacing-wide);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
   color: var(--sr-color-text-primary);
 }
 .sr-date-input__required {
@@ -38,9 +35,8 @@
 }
 
 .sr-date-input__hint {
-  font-size: var(--font-size-12);
-  line-height: var(--font-line-height-16);
-  letter-spacing: var(--font-letter-spacing-caption);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
   color: var(--sr-color-text-secondary);
 }
 
@@ -58,8 +54,8 @@
 }
 
 .sr-date-input__item-label {
-  font-size: var(--font-size-14);
-  line-height: var(--font-line-height-20);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
   color: var(--sr-color-text-primary);
 }
 
@@ -72,8 +68,8 @@
   border-radius: var(--radius-sm);
   color: var(--sr-color-text-primary);
   font: inherit;
-  font-size: var(--font-size-16);
-  line-height: var(--font-line-height-24);
+  font: var(--sr-type-body-m-font);
+  letter-spacing: var(--sr-type-body-m-letter-spacing);
 }
 .sr-date-input__field:focus {
   outline: none;
@@ -95,9 +91,8 @@
   box-shadow: inset 0 0 0 1px var(--sr-color-status-critical);
 }
 .sr-date-input__error {
-  font-size: var(--font-size-12);
-  line-height: var(--font-line-height-16);
-  letter-spacing: var(--font-letter-spacing-caption);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
   color: var(--sr-color-status-critical);
 }
 

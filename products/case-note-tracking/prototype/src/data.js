@@ -40,9 +40,13 @@ export const NAV_SECTIONS = [
       { icon: 'nav/dashboard', label: 'Dashboard' },
       { icon: 'nav/search', label: 'Patient Search' },
       { icon: 'nav/sort', label: 'My Requests' },
+      // ICON GAP: Figma uses Lucide `send` (paper plane) for SendIT and for the
+      // In Transit stat card. There is no `send` in the 119-icon set, so this is
+      // `action/share` (Lucide share-2) as a stand-in. Importing a new Lucide
+      // icon needs sign-off (CLAUDE.md), so it is flagged rather than added.
       { icon: 'action/share', label: 'SendIT' },
       { icon: 'action/download', label: 'ReceiveIT' },
-      { icon: 'action/link', label: 'TagIT' },
+      { icon: 'file/attachment', label: 'TagIT' },
     ],
   },
 ];
@@ -55,6 +59,7 @@ export const NAV_FOOTER = [
 export const STATS = [
   { label: 'Patients on System', value: '24', icon: 'clinical/vitals', accent: 'blue', note: '+10% This month', noteAccent: 'success' },
   { label: 'Total Casenotes', value: '8', icon: 'nav/sort', accent: 'blue', note: 'In all sites', noteAccent: 'neutral' },
+  // ICON GAP — see NAV_SECTIONS: should be Lucide `send`.
   { label: 'In Transit', value: '42', icon: 'action/share', accent: 'warning', note: 'Pending Receipt', noteAccent: 'warning' },
   { label: 'Missing / Escalated', value: '24', icon: 'status/warning', accent: 'critical', note: 'Requires attention', noteAccent: 'critical' },
 ];

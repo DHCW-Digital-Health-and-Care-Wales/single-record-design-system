@@ -1,0 +1,11 @@
+{
+  "total": 16,
+  "counts": {
+    "colour::packages/web/src/assets/logo.js": 5,
+    "colour::packages/web/src/modal/modal.css": 1,
+    "colour::packages/web/src/segmented-control/segmented-control.css": 1,
+    "colour::packages/web/src/tags/tags.css": 1,
+    "colour::packages/react/src/status-indicator/StatusIndicator.jsx": 5,
+    "icon::packages/react/src/status-indicator/StatusIndicator.jsx": 3
+  }
+}

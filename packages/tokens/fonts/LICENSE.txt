@@ -1,0 +1,11 @@
+Roboto — Copyright 2011 The Roboto Project Authors (https://github.com/googlefonts/roboto-3-classic)
+Licensed under the Apache License, Version 2.0.
+    http://www.apache.org/licenses/LICENSE-2.0
+
+File: roboto-latin-variable.woff2
+  Roboto v51, latin subset, variable weight axis 100-900.
+  Retrieved from Google Fonts (fonts.gstatic.com) on 2026-08-03.
+
+Vendored rather than linked so the typeface resolves with no network request:
+prototype embeds run in a sandboxed iframe where remote font loads are blocked
+by CSP, and the design system must render correctly offline.

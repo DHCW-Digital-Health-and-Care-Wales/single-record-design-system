@@ -41,7 +41,13 @@ body {
      already takes 220px of the 1280 frame, and 24px each side squeezed the
      casenote table enough to wrap cell text onto two lines. */
   padding: var(--space-6) var(--space-4);
-  max-width: 1280px;
+  /* Content stops growing at the XLarge grid's frame width (1440,
+     foundations/grid-and-layout.md) rather than 1280. On a widescreen monitor
+     the old cap left a large dead band either side while the casenote table
+     was still wrapping — the space was there and unused. Beyond 1440 the
+     measure genuinely should stop growing: a 2000px-wide table row is harder
+     to track across, not easier. */
+  max-width: 1440px;
   width: 100%;
   box-sizing: border-box;
   margin: 0 auto;

@@ -25,17 +25,14 @@
   gap: var(--space-1);
   width: 100%;
   box-sizing: border-box;
-  font-family: "Roboto", system-ui, -apple-system, sans-serif;
 }
 
 .sr-select__label {
   display: inline-flex;
   align-items: baseline;
   gap: 2px;
-  font-size: var(--font-size-14);
-  line-height: var(--font-line-height-20);
-  font-weight: 500;
-  letter-spacing: var(--font-letter-spacing-wide);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
   color: var(--sr-color-text-primary);
 }
 .sr-select__required {
@@ -43,9 +40,8 @@
 }
 
 .sr-select__hint {
-  font-size: var(--font-size-12);
-  line-height: var(--font-line-height-16);
-  letter-spacing: var(--font-letter-spacing-caption);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
   color: var(--sr-color-text-secondary);
 }
 
@@ -69,9 +65,8 @@
   border: 1px solid var(--sr-color-border-default);
   border-radius: var(--radius-sm);
   font-family: inherit;
-  font-size: var(--font-size-14);
-  line-height: var(--font-line-height-20);
-  letter-spacing: var(--font-letter-spacing-default);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
   color: var(--sr-color-text-primary);
   text-align: left;
   cursor: pointer;
@@ -134,9 +129,8 @@
   min-height: 40px;
   padding: 0 var(--space-2) 0 var(--space-3);
   border-radius: var(--radius-sm);
-  font-size: var(--font-size-14);
-  line-height: var(--font-line-height-20);
-  letter-spacing: var(--font-letter-spacing-default);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
   color: var(--sr-color-text-secondary);
   cursor: pointer;
 }
@@ -179,9 +173,8 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  font-size: var(--font-size-12);
-  line-height: var(--font-line-height-16);
-  letter-spacing: var(--font-letter-spacing-caption);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
   color: var(--sr-color-status-critical);
 }
 .sr-select__error-icon {

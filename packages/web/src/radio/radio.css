@@ -25,7 +25,6 @@
   margin: 0;
   padding: 0;
   border: 0;
-  font-family: "Roboto", system-ui, -apple-system, sans-serif;
 }
 
 .sr-radio-group__legend {
@@ -94,7 +93,6 @@
   display: flex;
   align-items: flex-start;
   min-height: 20px;
-  font-family: "Roboto", system-ui, -apple-system, sans-serif;
 }
 
 .sr-radio__input {

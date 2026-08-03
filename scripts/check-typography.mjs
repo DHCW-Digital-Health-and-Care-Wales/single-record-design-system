@@ -36,6 +36,10 @@ const ROOTS = [
 // Raw typography declarations that should be a composite style instead.
 // `font-size: inherit` and similar keyword resets are not scale violations.
 const RAW = /^\s*(font-size|line-height|font-weight|letter-spacing)\s*:\s*(var\(--font-|[0-9])/;
+// `line-height: 0` / `1` on a wrapper collapses inline-box leading around an
+// icon. That is a layout reset, not a type style, and has no composite
+// equivalent — excluded so the check stays about the scale.
+const LAYOUT_RESET = /^\s*line-height\s*:\s*(0|1)(\s*;|\s*$)/;
 
 function walk(dir, out = []) {
   for (const entry of readdirSync(dir)) {
@@ -56,7 +60,7 @@ for (const root of ROOTS) {
     const rel = relative(ROOT, file);
     const lines = readFileSync(file, 'utf8').split('\n');
     lines.forEach((line, i) => {
-      if (!RAW.test(line)) return;
+      if (!RAW.test(line) || LAYOUT_RESET.test(line)) return;
       counts[rel] = (counts[rel] || 0) + 1;
       detail.push(`${rel}:${i + 1}  ${line.trim()}`);
     });
