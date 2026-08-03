@@ -135,14 +135,30 @@ function findWebCss(filename) {
  */
 function buildSandpackFiles(p) {
   const dsFiles = assembleDesignSystemFiles(p.components);
-  let appSrc = readFileSync(resolve(p.entryDir, p.entryFile), 'utf8');
-  appSrc = appSrc.replace(/from\s+['"]@dhcw\/sr-react['"]/, `from './design-system/react/index.js'`);
 
-  const files = {
-    '/App.js': appSrc,
-    '/data.js': readFileSync(resolve(p.entryDir, 'data.js'), 'utf8'),
-    '/styles.css': readFileSync(resolve(p.entryDir, 'app.css'), 'utf8'),
-    '/index.js': `import React from 'react';
+  // Walk the entry file's own local sibling imports (e.g. App.jsx importing
+  // './Dashboard.jsx') so a prototype can be split across more than one
+  // component file — same "read from real source, don't hand-copy" principle
+  // as assembleDesignSystemFiles, just scoped to the prototype's own folder.
+  const files = {};
+  const seenLocal = new Set();
+  const queue = [p.entryFile.replace(/\.jsx$/, '')];
+  while (queue.length) {
+    const name = queue.pop();
+    if (seenLocal.has(name)) continue;
+    seenLocal.add(name);
+    let src = readFileSync(resolve(p.entryDir, `${name}.jsx`), 'utf8');
+    src = src.replace(/from\s+['"]@dhcw\/sr-react['"]/, `from './design-system/react/index.js'`);
+    src = src.replace(/from\s+['"](\.\/[\w-]+)\.jsx['"]/g, (whole, relImport) => {
+      queue.push(relImport.replace(/^\.\//, ''));
+      return `from '${relImport}.js'`;
+    });
+    files[`/${name}.js`] = src;
+  }
+
+  files['/data.js'] = readFileSync(resolve(p.entryDir, 'data.js'), 'utf8');
+  files['/styles.css'] = readFileSync(resolve(p.entryDir, 'app.css'), 'utf8');
+  files['/index.js'] = `import React from 'react';
 import { createRoot } from 'react-dom/client';
 import './design-system/tokens/tokens.css';
 import './design-system/tokens/typography.css';
@@ -150,8 +166,7 @@ import './styles.css';
 import App from './App.js';
 
 createRoot(document.getElementById('root')).render(<App />);
-`,
-  };
+`;
   for (const [key, contents] of Object.entries(dsFiles)) {
     files[`/design-system/${key}`] = contents;
   }
@@ -162,14 +177,15 @@ const PROTOTYPES = [
   {
     slug: 'case-note-tracking',
     title: 'Case Note Tracking',
-    summary: 'Patient casenote view: patient banner, adverse-reaction cards, site and type filters, '
-      + 'bulk selection and the send-batch confirmation modal.',
+    summary: 'Dashboard home screen (stats, quick actions, needs-attention and in-transit panels) plus '
+      + 'the patient casenote view, both behind one sidebar navigation.',
     status: 'In progress',
-    statusNote: 'The patient casenote view is built. Search, SendIT batch, My Requests and the side '
-      + 'panels are not yet.',
+    statusNote: 'The dashboard home screen and the casenote view are built, reached from the same nav. '
+      + 'Patient Search and My Requests currently both open the casenote view as a stand-in — neither '
+      + 'has its own screen yet. SendIT, ReceiveIT and TagIT are nav entries only.',
     entryDir: resolve(ROOT, 'products', 'case-note-tracking', 'prototype', 'src'),
     entryFile: 'App.jsx',
-    components: ['PatientBanner', 'Table', 'Modal', 'Button', 'Select', 'Input', 'Checkbox', 'Tag', 'Icon'],
+    components: ['Navigation', 'Header', 'PatientBanner', 'Table', 'Modal', 'Button', 'Select', 'Input', 'Checkbox', 'Tag', 'Icon'],
     startScript: 'dev:prototype',
   },
 ];

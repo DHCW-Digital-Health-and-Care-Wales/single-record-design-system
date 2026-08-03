@@ -31,6 +31,71 @@ export const NOTE_TYPES = [
   { value: 'oncology', label: 'Oncology notes' },
 ];
 
+// Flat list, no section groups — matches Figma's sidebar on the dashboard
+// screen (2:3875), which is Type=Linear, not Sectioned.
+export const NAV_SECTIONS = [
+  {
+    label: 'Primary',
+    items: [
+      { icon: 'nav/dashboard', label: 'Dashboard' },
+      { icon: 'nav/search', label: 'Patient Search' },
+      { icon: 'nav/sort', label: 'My Requests' },
+      { icon: 'action/share', label: 'SendIT' },
+      { icon: 'action/download', label: 'ReceiveIT' },
+      { icon: 'action/link', label: 'TagIT' },
+    ],
+  },
+];
+
+export const NAV_FOOTER = [
+  { icon: 'nav/settings', label: 'Settings' },
+  { icon: 'clinical/discharge', label: 'Log Out' },
+];
+
+export const STATS = [
+  { label: 'Patients on System', value: '24', icon: 'clinical/vitals', accent: 'blue', note: '+10% This month', noteAccent: 'success' },
+  { label: 'Total Casenotes', value: '8', icon: 'nav/sort', accent: 'blue', note: 'In all sites', noteAccent: 'neutral' },
+  { label: 'In Transit', value: '42', icon: 'action/share', accent: 'warning', note: 'Pending Receipt', noteAccent: 'warning' },
+  { label: 'Missing / Escalated', value: '24', icon: 'status/warning', accent: 'critical', note: 'Requires attention', noteAccent: 'critical' },
+];
+
+export const QUICK_ACTIONS = [
+  { icon: 'nav/search', label: 'Patient Search', description: 'Find a patient and their casenotes', view: 'case-notes' },
+  { icon: 'action/add', label: 'Create Case Note', description: 'Register a new casenote volume' },
+  { icon: 'action/share', label: 'Batch SendIT', description: 'Send a batch of casenotes' },
+  { icon: 'action/download', label: 'Batch ReceiveIT', description: 'Receive a batch of casenotes' },
+];
+
+export const NEEDS_ATTENTION = [
+  { volume: 'General notes Vol 4', patient: 'GARETH, EVANS JAMES', location: 'Madog Suite-GGH', weeks: '32 weeks', status: 'Missing', statusType: 'red' },
+  { volume: 'General notes Vol 3', patient: 'ADE, LOLADE', location: 'Madog Suite-GGH', weeks: '32 weeks', status: 'Delayed', statusType: 'yellow' },
+  { volume: 'General notes Vol 3', patient: 'ADE, LOLADE', location: 'Madog Suite-GGH', weeks: '32 weeks', status: 'Delayed', statusType: 'yellow' },
+  { volume: 'General notes Vol 4', patient: 'ADAMS, AMY TINA', location: 'Madog Suite-GGH', weeks: '32 weeks', status: 'Missing', statusType: 'red' },
+];
+
+export const IN_TRANSIT = [
+  {
+    group: 'Today',
+    rows: [
+      { volume: 'General notes Vol 4', location: 'Madog Suite-GGH', clinician: 'Dr. Abigail Rufus', time: '12:00pm' },
+      { volume: 'General notes Vol 4', location: 'Madog Suite-GGH', clinician: 'Dr. Abigail Rufus', time: '12:00pm' },
+    ],
+  },
+  {
+    group: 'Yesterday',
+    rows: [
+      { volume: 'General notes Vol 4', location: 'Madog Suite-GGH', clinician: 'Dr. Abigail Rufus', time: '12:00pm' },
+    ],
+  },
+  {
+    group: 'April 16, 2026',
+    rows: [
+      { volume: 'General notes Vol 4', location: 'Madog Suite-GGH', clinician: 'Dr. Abigail Rufus', time: '12:00pm' },
+      { volume: 'General notes Vol 4', location: 'Madog Suite-GGH', clinician: 'Dr. Abigail Rufus', time: '12:00pm' },
+    ],
+  },
+];
+
 export const NOTES = [
   { id: 1, siteId: 'ggh', volume: 'General notes vol 4', status: 'Registered', statusType: 'blue',  location: 'Madog Suite-GGH',   activity: 'Registered by Gadgil, AA(Mr)', moved: '09 Jun 2026 15:25', batch: '50381858' },
   { id: 2, siteId: 'ggh', volume: 'General notes vol 3', status: 'Sent',       statusType: 'grey',  location: 'Teifi Ward-GGH',    activity: 'Sent by Gadgil, AA(Mr)',       moved: '05 Jun 2026 17:40', batch: '-' },
