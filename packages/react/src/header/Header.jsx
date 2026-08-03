@@ -97,10 +97,15 @@ export default function Header({
           <>
             <Search placeholder={searchPlaceholder} onSearch={onSearch} />
             <div className="sr-header__cluster">
-              <button type="button" className="sr-header__org" onClick={onOrgClick}>
-                <span>{org}</span>
-                <Icon name="nav/chevron-down" size="xs" color="inherit" />
-              </button>
+              {/* Omit the org switcher entirely when there is no org to show —
+                  rendering it with an empty label left a stray chevron sitting
+                  next to the language toggle with nothing to open. */}
+              {org && (
+                <button type="button" className="sr-header__org" onClick={onOrgClick}>
+                  <span>{org}</span>
+                  <Icon name="nav/chevron-down" size="xs" color="inherit" />
+                </button>
+              )}
               <button type="button" className="sr-header__lang" onClick={onLanguageToggle}>
                 <Icon name="location/language" size="xs" color="inherit" />
                 <span>Cymraeg</span>

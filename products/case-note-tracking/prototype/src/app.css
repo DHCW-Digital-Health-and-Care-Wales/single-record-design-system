@@ -140,15 +140,30 @@ body {
   text-align: left;
   cursor: pointer;
 }
-.quick-action:hover { background-color: var(--sr-color-surface-subtle); }
-.quick-action:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--sr-color-surface-background), 0 0 0 4px var(--color-cyan-700);
+/* Interaction states mirror the DS Button exactly, so a quick action behaves
+   like every other clickable thing in the system:
+     default  — white, neutral border (Figma's "Create Case Note" state)
+     hover    — cyan tint + primary border, same as .sr-button--secondary:hover
+     active   — solid navy fill (Figma's "Patient Search" state)
+     focus    — SR cyan ring, DDR-006
+   Navy fill is the *pressed* state, not hover: it reads as "committed /
+   selected", and firing it on mouseover makes every pass of the cursor look
+   like a selection. The cyan tint is the lighter-touch hover the DS already
+   uses for secondary and ghost buttons. */
+.quick-action:hover {
+  background-color: var(--color-cyan-100);
+  border-color: var(--sr-color-interactive-primary);
 }
-.quick-action--selected {
-  background: var(--sr-color-interactive-primary);
+.quick-action:active {
+  background-color: var(--sr-color-interactive-primary);
   border-color: var(--sr-color-interactive-primary);
   color: var(--sr-color-text-inverse);
+}
+.quick-action:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--sr-color-surface-background),
+    0 0 0 4px var(--color-cyan-700);
 }
 .quick-action__label {
   display: block;

@@ -406,7 +406,13 @@ const SECTIONS = [
       { href: 'components/table.html', label: 'Tables' },
     ],
   },
-  { id: 'patterns', label: 'Patterns', href: 'patterns.html' },
+  {
+    id: 'patterns', label: 'Patterns', href: 'patterns.html',
+    side: [
+      { href: 'patterns.html', label: 'Overview' },
+      { href: 'patterns/patient-banner.html', label: 'Patient Banner' },
+    ],
+  },
   {
     id: 'prototypes', label: 'Prototypes', href: 'prototypes.html',
     side: [
@@ -443,6 +449,7 @@ function shell({ title, prefix, sectionId, activeHref, body, extraHead = '', ext
 <link rel="stylesheet" href="${prefix}assets/typography.css">
 <link rel="stylesheet" href="${prefix}assets/button.css">
 <link rel="stylesheet" href="${prefix}assets/table.css">
+<link rel="stylesheet" href="${prefix}assets/patient-banner.css">
 <link rel="stylesheet" href="${prefix}assets/icon.css">
 <link rel="stylesheet" href="${prefix}assets/site.css">
 ${extraHead}
@@ -507,6 +514,7 @@ function bareShell({ title, prefix, body, extraHead = '', extraScript = '' }) {
 <link rel="stylesheet" href="${prefix}assets/typography.css">
 <link rel="stylesheet" href="${prefix}assets/button.css">
 <link rel="stylesheet" href="${prefix}assets/table.css">
+<link rel="stylesheet" href="${prefix}assets/patient-banner.css">
 <link rel="stylesheet" href="${prefix}assets/icon.css">
 <link rel="stylesheet" href="${prefix}assets/site.css">
 ${extraHead}
@@ -555,7 +563,126 @@ function accessibilityTable(rows) {
   const head = `<thead><tr><th>Requirement</th><th>WCAG SC</th><th>How Single Record meets it</th><th>Test method</th></tr></thead>`;
   const body = rows.map((r) =>
     `<tr><td>${inline(r.req)}</td><td>${inline(r.sc)}</td><td>${inline(r.how)}</td><td>${inline(r.test)}</td></tr>`).join('');
-  return `<h2>Accessibility</h2><div class="table-wrap"><table class="a11y-table">${head}<tbody>${body}</tbody></table></div>`;
+  // "Accessibility requirements", not "Accessibility": every guidelines.md
+  // already carries a prose "## Accessibility" section, and two identical h2s
+  // on one page is just confusing. This is the testable requirements matrix.
+  return `<h2>Accessibility requirements</h2><div class="table-wrap"><table class="a11y-table">${head}<tbody>${body}</tbody></table></div>`;
+}
+
+// ─── Patterns: Patient Banner ─────────────────────────────────────────────────
+/**
+ * Demo markup mirrors the class contract in
+ * packages/web/src/patient-banner/patient-banner.css, which is the same
+ * contract @dhcw/sr-react's <PatientBanner> renders. The four previews are the
+ * four Figma variants (1711:15585): Fill/Border x Expanded/Collapsed.
+ */
+const PB_ICON_EDIT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>';
+const PB_ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+const PB_ICON_UP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg>';
+const PB_ICON_DOWN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+
+function pbAlerts() {
+  return `<div class="sr-patient-banner__alerts">
+  <div class="sr-patient-banner__alert sr-patient-banner__alert--reactions">
+    <div class="sr-patient-banner__alert-head"><span id="pb-r">Adverse Reactions</span>
+      <button type="button" class="sr-patient-banner__alert-edit" aria-label="Edit adverse reactions">${PB_ICON_EDIT}</button></div>
+    <ul class="sr-patient-banner__alert-list" aria-labelledby="pb-r">
+      <li>Peanut: <span class="sr-patient-banner__alert-value">Anaphylaxis</span></li>
+      <li>Benzylpenicilloyl polylysine: <span class="sr-patient-banner__alert-value">Anaphylaxis</span></li>
+    </ul>
+  </div>
+  <div class="sr-patient-banner__alert sr-patient-banner__alert--warnings">
+    <div class="sr-patient-banner__alert-head"><span>Warnings</span>
+      <button type="button" class="sr-patient-banner__alert-edit" aria-label="Edit warnings">${PB_ICON_EDIT}</button></div>
+    <p class="sr-patient-banner__alert-text">3 warnings recorded</p>
+  </div>
+</div>`;
+}
+
+function pbExpanded(type) {
+  const mod = type === 'border' ? ' sr-patient-banner--border' : '';
+  return `<section class="sr-patient-banner${mod}" aria-label="Patient: JOHN, Elvet George (Mr)">
+${pbAlerts()}
+  <div class="sr-patient-banner__identity">
+    <div class="sr-patient-banner__name-row">
+      <h2 class="sr-patient-banner__name">JOHN, Elvet George (Mr)</h2>
+      <span class="sr-patient-banner__flag">Deceased</span>
+      <button type="button" class="sr-patient-banner__toggle" aria-expanded="true"><span>Hide Details</span>${PB_ICON_UP}</button>
+    </div>
+    <dl class="sr-patient-banner__details">
+      <div class="sr-patient-banner__col">
+        <div class="sr-patient-banner__field"><dt>NHS:</dt><dd>000 111 2222<button type="button" class="sr-patient-banner__copy" aria-label="Copy NHS number">${PB_ICON_COPY}</button></dd></div>
+        <div class="sr-patient-banner__field"><dt>Address:</dt><dd>Penrhiw, Gwynfe Llangadog, Dyfed, SA19 9PU</dd></div>
+        <div class="sr-patient-banner__field"><dt>Postcode:</dt><dd>SA19 9PU</dd></div>
+      </div>
+      <div class="sr-patient-banner__col">
+        <div class="sr-patient-banner__field"><dt>CRN:</dt><dd>M8046459<button type="button" class="sr-patient-banner__copy" aria-label="Copy CRN">${PB_ICON_COPY}</button></dd></div>
+        <div class="sr-patient-banner__field"><dt>DOB:</dt><dd>15 Dec 1992 (33y)</dd></div>
+        <div class="sr-patient-banner__field sr-patient-banner__field--deceased"><dt>DOD:</dt><dd>23 Jun 2025</dd></div>
+        <div class="sr-patient-banner__field"><dt>Sex:</dt><dd>Male</dd></div>
+      </div>
+    </dl>
+  </div>
+  <div class="sr-patient-banner__actions">
+    <button type="button" class="sr-button sr-button--primary sr-button--small">Change Patient</button>
+    <button type="button" class="sr-button sr-button--secondary sr-button--small">Open WCP record</button>
+    <button type="button" class="sr-button sr-button--secondary sr-button--small">Print Patient label</button>
+  </div>
+</section>`;
+}
+
+function pbCollapsed(type) {
+  const mod = type === 'border' ? ' sr-patient-banner--border' : '';
+  return `<section class="sr-patient-banner sr-patient-banner--collapsed${mod}" aria-label="Patient: JOHN, Elvet George (Mr)">
+  <div class="sr-patient-banner__summary">
+    <span class="sr-patient-banner__pill sr-patient-banner__pill--reactions">2 reactions</span>
+    <span class="sr-patient-banner__pill sr-patient-banner__pill--warnings">3 warnings</span>
+  </div>
+  <div class="sr-patient-banner__identity">
+    <div class="sr-patient-banner__name-row"><h2 class="sr-patient-banner__name">JOHN, Elvet George (Mr)</h2></div>
+    <dl class="sr-patient-banner__details">
+      <div class="sr-patient-banner__field"><dt>NHS:</dt><dd>000 111 2222<button type="button" class="sr-patient-banner__copy" aria-label="Copy NHS number">${PB_ICON_COPY}</button></dd></div>
+      <div class="sr-patient-banner__field"><dt>DOB:</dt><dd>15 Dec 1992 (33y)</dd></div>
+    </dl>
+    <button type="button" class="sr-patient-banner__toggle" aria-expanded="false"><span>Show Details</span>${PB_ICON_DOWN}</button>
+  </div>
+</section>`;
+}
+
+function patientBannerBody() {
+  const md = publicise(readFileSync(resolve(ROOT, 'components', 'patient-banner', 'guidelines.md'), 'utf8'));
+  const snippets = {
+    HTML: '<section class="sr-patient-banner" aria-label="Patient: JOHN, Elvet George (Mr)">\n  <div class="sr-patient-banner__alerts">…</div>\n  <div class="sr-patient-banner__identity">…</div>\n  <div class="sr-patient-banner__actions">…</div>\n</section>\n\n<!-- Border type -->\n<section class="sr-patient-banner sr-patient-banner--border">…</section>\n<!-- Collapsed state -->\n<section class="sr-patient-banner sr-patient-banner--collapsed">…</section>',
+    React: '<PatientBanner\n  patient={patient}\n  reactions={reactions}\n  warnings={3}\n  type="fill"          // "fill" | "border"\n  expanded={expanded}  // false renders the collapsed row\n  onToggle={() => setExpanded((v) => !v)}\n  onCopy={(v) => navigator.clipboard?.writeText(v)}\n  actions={<>…</>}\n/>',
+    Blazor: '<SrPatientBanner Patient="@patient" Type="Fill" Expanded="@expanded" />',
+    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrPatientBanner Patient="@patient" Type="Fill" Expanded="@expanded" />',
+  };
+  return `
+<p class="breadcrumbs">Patterns</p>
+<h2>Type: Fill</h2>
+<p class="muted">The alert cards are tinted. This is the default — the tint carries further in
+peripheral vision on a busy screen.</p>
+${showcase(pbExpanded('fill'), 'pb-fill', snippets)}
+<div class="showcase"><div class="showcase__preview">${pbCollapsed('fill')}</div></div>
+<h2>Type: Border</h2>
+<p class="muted">The alert cards stay white with a coloured rule. Use where the screen is already
+colour-heavy, or where the view is likely to be printed.</p>
+<div class="showcase"><div class="showcase__preview">${pbExpanded('border')}</div></div>
+<div class="showcase"><div class="showcase__preview">${pbCollapsed('border')}</div></div>
+<p class="muted"><strong>Both types are live.</strong> Neither has been retired, and this page will say
+so plainly if one ever is. Pick one per product and stay with it — switching between screens makes
+the alert cards look like they mean different things.</p>
+<hr>
+${renderMarkdown(md)}
+${accessibilityTable([
+    { req: 'Patient identity always available', sc: '3.2.3', how: 'Name, NHS number and DOB survive collapse; the banner is persistent and cannot be dismissed.', test: 'Collapse and re-read' },
+    { req: 'Alerts precede demographics in reading order', sc: '1.3.2', how: 'The alerts block is first in the DOM, so it is reached before the identity block regardless of visual layout.', test: 'Screen reader, tab order' },
+    { req: 'Alerts are not live regions', sc: '4.1.3', how: 'Alerts are present on load rather than announced changes; marking them live would interrupt every screen entry.', test: 'Screen reader announce' },
+    { req: 'Collapse control names its action', sc: '4.1.2', how: 'A real button with aria-expanded, labelled "Hide Details" / "Show Details" rather than "toggle".', test: 'Screen reader, keyboard' },
+    { req: 'Icon-only actions name their subject', sc: '4.1.2', how: 'Collapsed actions read "Print label for JOHN, Elvet George", not "Print".', test: 'Screen reader announce' },
+    { req: 'Deceased status not colour alone', sc: '1.4.1', how: 'A Deceased flag beside the name and a date-of-death field, two independent signals.', test: 'Greyscale review' },
+    { req: 'Reaction severity not colour alone', sc: '1.4.1', how: 'Severity is stated in the text; the critical colour reinforces but never carries it.', test: 'Greyscale review' },
+  ])}`;
 }
 
 // ─── page registry (drives both the output files and the search index) ────────
@@ -1758,11 +1885,26 @@ addPage({
 addPage({
   file: 'patterns.html', url: 'patterns.html', title: 'Patterns', section: 'Patterns',
   sectionId: 'patterns', activeHref: 'patterns.html', prefix: '',
-  body: plannedBody({
-    title: 'Patterns', crumb: 'Patterns',
-    intro: 'Composed, multi-component interactions such as the patient banner, forms, search and sign-off flows.',
-    links: [{ href: 'https://service-manual.nhs.uk/design-system/patterns', label: 'NHS England patterns', note: 'the reference patterns we adapt' }],
-  }),
+  body: `
+<p class="breadcrumbs">Patterns</p>
+<h1>Patterns</h1>
+<p class="lede">Composed, multi-component interactions — the pieces that are bigger than a
+component but smaller than a screen.</p>
+<div class="cards">
+  <a class="card" href="patterns/patient-banner.html"><h3>Patient Banner</h3>
+  <p>Who this patient is, and what you must know before acting. Two types, two states.</p></a>
+</div>
+<p class="muted">Forms, search and sign-off flows are not documented yet.</p>`,
+});
+addPage({
+  file: 'patterns/patient-banner.html', url: 'patterns/patient-banner.html',
+  title: 'Patient Banner', section: 'Patterns',
+  sectionId: 'patterns', activeHref: 'patterns/patient-banner.html', prefix: '../',
+  // Wide: the banner is a 1280px full-width strip. In the default reading
+  // column its name row wraps and the action stack collides with the
+  // demographics, which misrepresents the pattern.
+  wide: true,
+  body: patientBannerBody(),
 });
 // ─── Prototypes ───────────────────────────────────────────────────────────────
 addPage({
@@ -2042,11 +2184,13 @@ rmSync(DIST, { recursive: true, force: true });
 mkdirSync(resolve(DIST, 'assets'), { recursive: true });
 mkdirSync(resolve(DIST, 'styles'), { recursive: true });
 mkdirSync(resolve(DIST, 'components'), { recursive: true });
+mkdirSync(resolve(DIST, 'patterns'), { recursive: true });
 mkdirSync(resolve(DIST, 'prototypes'), { recursive: true });
 
 for (const f of ['tokens.css', 'typography.css']) copyFileSync(resolve(TOKENS, 'css', f), resolve(DIST, 'assets', f));
 copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'button', 'button.css'), resolve(DIST, 'assets', 'button.css'));
 copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'table', 'table.css'), resolve(DIST, 'assets', 'table.css'));
+copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'patient-banner', 'patient-banner.css'), resolve(DIST, 'assets', 'patient-banner.css'));
 copyFileSync(resolve(ROOT, 'packages', 'icons', 'src', 'icon.css'), resolve(DIST, 'assets', 'icon.css'));
 copyFileSync(resolve(ROOT, 'figma', 'assets', 'dhcw-logo-white.png'), resolve(DIST, 'assets', 'dhcw-logo-white.png'));
 writeFileSync(resolve(DIST, 'assets', 'site.css'), readFileSync(resolve(__dirname, 'site.css'), 'utf8'));
