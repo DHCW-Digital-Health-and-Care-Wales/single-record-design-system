@@ -197,7 +197,10 @@ const typographyClassesFormat = {
       ` * instead — always BOTH, never one:\n` +
       ` *   font: var(--sr-type-body-s-font);\n` +
       ` *   letter-spacing: var(--sr-type-body-s-letter-spacing);\n` +
-      ` * Never hand-pick --font-size-*/--font-line-height-* to build a style.\n` +
+      // NOTE: never write `*/` inside this emitted comment — including in a
+      // token wildcard like `--font-size-*` followed by a slash. It closes the
+      // CSS comment early and the remainder swallows the next rule.
+      ` * Never hand-pick the raw font-size and line-height tokens to build one.\n` +
       ` */\n\n`;
     out += `:root {\n${baseProps.join('\n')}\n}\n\n`;
     out += base.join('\n\n') + '\n';

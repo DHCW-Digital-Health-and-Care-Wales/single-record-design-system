@@ -20,7 +20,11 @@
   justify-content: center;
   gap: var(--space-2); /* 8px */
   box-sizing: border-box;
-  font-weight: 500;
+  /* Button text is `label` at every size — DESIGN-SYSTEM names it as one of
+     label's three uses. Only the box changes between sizes (height, padding,
+     radius); the text does not, so it is set once here. */
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
   border: 1.5px solid transparent;
   cursor: pointer;
   text-decoration: none;
@@ -44,22 +48,16 @@
   height: 48px;
   padding: 0 var(--space-6); /* 24px */
   border-radius: var(--radius-lg); /* 8px */
-  font-size: var(--font-size-16);
-  line-height: var(--font-line-height-24);
 }
 .sr-button--default {
   height: 40px;
   padding: 0 var(--space-6); /* 24px */
   border-radius: var(--radius-lg); /* 8px */
-  font-size: var(--font-size-16);
-  line-height: var(--font-line-height-24);
 }
 .sr-button--small {
   height: 32px;
   padding: 0 var(--space-3); /* 12px */
   border-radius: var(--radius-md); /* 4px */
-  font: var(--sr-type-caption-font);
-  letter-spacing: var(--sr-type-caption-letter-spacing);
 }
 
 /* ---------- Type: Primary ---------- */
