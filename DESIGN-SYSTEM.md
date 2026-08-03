@@ -235,6 +235,17 @@ type="destructive"`, so it is not a new component, just an undocumented
 pattern. Document it under `/components/modal/` once it has a second
 consumer.
 
+**Header and Footer website coverage was incomplete.** Header (Figma
+`475:19980`) ships three variants — `desktop`, `desktop-2`, `mobile` — but the
+website page showed only `desktop-2`; it now shows all three, each labelled
+with its Figma type and, for `desktop`/`desktop-2`, a note that MAUI has no
+equivalent since it is mobile only. Footer (Figma `665:16525`) is different:
+its `Mobile` type (`665:16526`) is not a scaled-down version of the `Desktop`
+bar — it is the persistent bottom tab bar, already built as its own component,
+`BottomNav`. Footer's website page documents this rather than adding a
+duplicate "mobile Footer". `BottomNav` itself still has no website page —
+adding one is tracked here rather than done silently.
+
 See `/components/README.md` for the full catalogue and contribution guidance, and
 the live catalogue in Storybook for every variant.
 
