@@ -26,7 +26,16 @@
   flex-direction: column;
   justify-content: space-between;
   width: 220px;
-  height: 100%;
+  /* Full-height rail that stays put while the page content scrolls. Figma
+     draws the sidebar at the full 832px frame height in every variant, so
+     this is the component's intended behaviour, not a layout choice left to
+     the consumer. `height: 100%` does NOT work here: inside an auto-height
+     flex row the percentage resolves against an indefinite height and the
+     background collapses to the content. */
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  flex: 0 0 auto;
   box-sizing: border-box;
   background-color: var(--sr-color-surface-section-cards);
   /* Figma Elevation/Raised — no elevation token exists yet, value matches spec */
@@ -38,9 +47,14 @@
   width: 72px;
 }
 
-/* "Rail" collapsed state (Figma State=Collapsed, 108px) — icon + a visible,
-   truncated label. Distinct from .sr-nav--collapsed (Figma State=Collapsed 2,
-   48px icon-only), which reveals its label as a hover/focus tooltip instead. */
+/* "Rail" collapsed state (Figma State=Collapsed, 108px). The icon sits ABOVE
+   the label, both centred, and the label stays permanently visible — it is not
+   a truncated version of the expanded row. Item box is 44px tall on a 60px
+   pitch (Figma 125:5360 / DS 1942:7143). Labels drop to 12px so the longest
+   ("Patient Search") fits the 92px content box without truncating.
+
+   Distinct from .sr-nav--collapsed (Figma State=Collapsed 2, 48px icon-only),
+   which has no persistent label and reveals one on hover/focus instead. */
 .sr-nav--rail {
   width: 108px;
 }
@@ -59,14 +73,36 @@
 .sr-nav--rail .sr-nav__header {
   justify-content: center;
 }
+.sr-nav--rail .sr-nav__list {
+  gap: var(--space-4);
+  padding: 0 var(--space-2);
+}
+.sr-nav--rail .sr-nav__item {
+  justify-content: center;
+  padding: var(--space-1) var(--space-2);
+  min-height: 44px;
+}
+.sr-nav--rail .sr-nav__item-main {
+  flex-direction: column;
+  gap: var(--space-1);
+  text-align: center;
+}
+.sr-nav--rail .sr-nav__item-label {
+  font-size: var(--font-size-12);
+  line-height: var(--font-line-height-16);
+}
 
 /* ---------- Header ---------- */
+/* 64px, matching the product adaptation (Figma 125:5361) rather than the
+   80px on the DS master (665:20955). 64px is also the Header bar's height, so
+   the sidebar's bottom rule lines up with the header's instead of sitting 16px
+   below it. See the handoff note on the 80/64 discrepancy. */
 .sr-nav__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 80px;
-  padding: var(--space-4) var(--space-3);
+  height: 64px;
+  padding: var(--space-3);
   border-bottom: 1px solid var(--sr-color-border-default);
   box-sizing: border-box;
 }
@@ -116,7 +152,9 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  padding: var(--space-4) 0;
+  /* 24px below the header rule before the first item (Figma: header ends at
+     64, list starts at 88). */
+  padding: var(--space-6) 0 var(--space-4);
 }
 
 .sr-nav__section-label {
@@ -135,6 +173,14 @@
   padding: 0 var(--space-3);
   list-style: none;
   margin: 0;
+}
+
+/* Sectioned nav packs items flush inside a group (Figma 665:20955, 36px
+   pitch) because the section labels already separate them. Linear has no
+   labels, so items carry their own separation: 36px item + 16px gap = the
+   52px pitch of the product adaptation (125:5361). */
+.sr-nav--linear .sr-nav__list {
+  gap: var(--space-4);
 }
 
 .sr-nav--collapsed .sr-nav__section-label {

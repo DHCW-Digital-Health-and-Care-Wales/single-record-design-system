@@ -28,7 +28,7 @@ export default function Dashboard({ onNavigate }) {
       />
 
       <main className="app__main dashboard" id="main">
-        <h1 className="dashboard__title">Patient Search</h1>
+        <h1 className="dashboard__title">Dashboard</h1>
 
         <section className="dashboard__stats" aria-label="Summary statistics">
           {STATS.map((s) => (
