@@ -163,6 +163,7 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Navigation | — | ✅ | ✅ |
 | Patient banner | ✅ | ✅ | ✅ |
 | Progress indicators | ✅ | — | — |
+| Radio | — | ✅ | ✅ |
 | Search | ✅ | — | — |
 | Segmented control | — | ✅ | ✅ |
 | Select | ✅ | ✅ | ✅ |
@@ -172,7 +173,7 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Tags | ✅ | ✅ | ✅ |
 | Time select | — | ✅ | ✅ |
 
-**Known gaps, stated plainly:** eleven components ship code without a spec, and
+**Known gaps, stated plainly:** twelve components ship code without a spec, and
 three specs (Link, Progress indicators, Search) have no code. Neither is
 satisfactory — a component without a spec has no agreed contract, and a spec
 without code cannot be consumed. Both lists are worked down as components are

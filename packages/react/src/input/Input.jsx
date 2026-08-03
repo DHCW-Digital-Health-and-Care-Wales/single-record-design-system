@@ -25,6 +25,11 @@ export default function Input({
   disabled = false,
   placeholder,
   leadingIcon,
+  // Renders the label visually-hidden instead of dropping it. Use where the
+  // design shows no label (a search bar whose placeholder carries the meaning)
+  // — a placeholder is not an accessible name, and it disappears on typing,
+  // so the label must still exist for screen readers. Never omit `label`.
+  hideLabel = false,
   id,
   className,
   ...rest
@@ -67,7 +72,10 @@ export default function Input({
   return (
     <div className={classes}>
       {label && (
-        <label className="sr-input__label" htmlFor={inputId}>
+        <label
+          className={`sr-input__label${hideLabel ? ' sr-visually-hidden' : ''}`}
+          htmlFor={inputId}
+        >
           {label}
           {required && (
             <span className="sr-input__required" aria-hidden="true">

@@ -62,7 +62,7 @@ export const STATS = [
 // Descriptions stay to a single short line — Figma draws these cards at 64px
 // with one line of supporting text, and a wrapped second line breaks the row.
 export const QUICK_ACTIONS = [
-  { icon: 'nav/search', label: 'Patient Search', description: 'Find a patient', view: 'case-notes' },
+  { icon: 'nav/search', label: 'Patient Search', description: 'Find a patient', view: 'patient-search' },
   { icon: 'action/add', label: 'Create Case Note', description: 'Register a new volume' },
   { icon: 'action/share', label: 'Batch SendIT', description: 'Send a batch' },
   { icon: 'action/download', label: 'Batch ReceiveIT', description: 'Receive a batch' },
@@ -96,6 +96,35 @@ export const IN_TRANSIT = [
       { volume: 'General notes Vol 4', location: 'Madog Suite-GGH', clinician: 'Dr. Abigail Rufus', time: '12:00pm' },
     ],
   },
+];
+
+/**
+ * Patient search results (Figma 2:4068).
+ *
+ * Two corrections to the Figma mock, both flagged in decisions/handoff.md:
+ *  - The results table there has two columns both headed "Birth date". The
+ *    second only carries a value on the Deceased row, so it is Date of death.
+ *  - Surname/Forenames are transposed in several rows (e.g. Surname "JANE",
+ *    Forenames "DOE"), and every row reads Sex "Male" including AVA and JANE.
+ */
+export const SEARCH_RESULTS = [
+  { id: 1, caseNo: 'NN40140', nhs: '098 765 4321', surname: 'EVANS',    forenames: 'PETER',         status: 'Active',   statusType: 'green', dob: '15 Nov 1992', dod: '-',           sex: 'Male',   postcode: 'EC1A 1BB' },
+  { id: 2, caseNo: 'NN54242', nhs: '098 765 4321', surname: 'DAVIS',    forenames: 'JONATHAN PAUL', status: 'Active',   statusType: 'green', dob: '14 Jan 2000', dod: '-',           sex: 'Male',   postcode: 'M1 1AE' },
+  { id: 3, caseNo: 'NN24312', nhs: '098 765 4321', surname: 'NOAH',     forenames: 'DAVIS',         status: 'Active',   statusType: 'green', dob: '28 Jun 1988', dod: '-',           sex: 'Male',   postcode: 'G1 2FF' },
+  { id: 4, caseNo: 'CN032412', nhs: '098 765 4321', surname: 'MARTINEZ', forenames: 'AVA',          status: 'Active',   statusType: 'green', dob: '21 Sep 1969', dod: '-',           sex: 'Female', postcode: 'BT7 1NN' },
+  { id: 5, caseNo: 'CN723283', nhs: '098 765 4321', surname: 'DOE',      forenames: 'JANE',         status: 'Deceased', statusType: 'red',   dob: '30 Apr 1995', dod: '15 Nov 2025', sex: 'Female', postcode: 'W1A 0AX' },
+];
+
+/**
+ * Surname and forename each get their own matching mode. Figma labels the
+ * second group "Forename Searching Methods" but lists See and treat / Rapid
+ * assessment / Triage — triage categories pasted in from another screen. The
+ * surname options are used for both here; flagged in the handoff.
+ */
+export const MATCH_METHODS = [
+  { value: 'containing', label: 'Containing' },
+  { value: 'exact', label: 'Exact Match' },
+  { value: 'sounds', label: 'Sounds Like' },
 ];
 
 export const NOTES = [

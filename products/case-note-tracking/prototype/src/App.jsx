@@ -4,6 +4,7 @@ import { Navigation } from '@dhcw/sr-react';
 import { NAV_SECTIONS, NAV_FOOTER } from './data.js';
 import Dashboard from './Dashboard.jsx';
 import CaseNotes from './CaseNotes.jsx';
+import PatientSearch from './PatientSearch.jsx';
 
 // Text lockup, not the real NHS/GIG asset (trademarked raster, not something
 // this prototype's Sandpack embed can fetch) — same placeholder approach as
@@ -13,6 +14,7 @@ const BRAND_LOCKUP = <span className="app__brand">Single Record</span>;
 
 const VIEW_LABEL = {
   dashboard: 'Dashboard',
+  'patient-search': 'Patient Search',
   'case-notes': 'My Requests',
 };
 
@@ -35,9 +37,10 @@ export default function App() {
 
   const handleSelect = (label) => {
     if (label === 'Dashboard') setView('dashboard');
-    else if (label === 'My Requests' || label === 'Patient Search') setView('case-notes');
-    // Other nav items (SendIT, ReceiveIT, TagIT, Settings, Log Out) have no
-    // screen in this prototype yet — selecting them is a no-op.
+    else if (label === 'Patient Search') setView('patient-search');
+    else if (label === 'My Requests') setView('case-notes');
+    // SendIT, ReceiveIT, TagIT, Settings and Log Out have no screen in this
+    // prototype yet — selecting them is a no-op.
   };
 
   return (
@@ -53,11 +56,11 @@ export default function App() {
         logo={BRAND_LOCKUP}
       />
       <div className="app__content">
-        {view === 'dashboard' ? (
-          <Dashboard onNavigate={setView} />
-        ) : (
-          <CaseNotes />
+        {view === 'dashboard' && <Dashboard onNavigate={setView} />}
+        {view === 'patient-search' && (
+          <PatientSearch onOpenPatient={() => setView('case-notes')} />
         )}
+        {view === 'case-notes' && <CaseNotes />}
       </div>
     </div>
   );

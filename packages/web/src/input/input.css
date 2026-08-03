@@ -155,3 +155,23 @@ textarea.sr-input__control {
 .sr-input--disabled .sr-input__icon {
   color: var(--sr-color-text-disabled);
 }
+
+/* Accessible label with no visual footprint — used by Input's `hideLabel`,
+   for search bars whose placeholder carries the visible meaning.
+
+   NOTE: this is duplicated from table.css. Each component CSS file in this
+   package is independently importable, so a shared utility has to live in
+   every file that uses it until there is a foundations stylesheet to hold it.
+   Worth extracting when a third component needs it. */
+.sr-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

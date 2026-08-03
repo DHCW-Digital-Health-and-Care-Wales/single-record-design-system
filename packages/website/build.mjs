@@ -177,15 +177,15 @@ const PROTOTYPES = [
   {
     slug: 'case-note-tracking',
     title: 'Case Note Tracking',
-    summary: 'Dashboard home screen (stats, quick actions, needs-attention and in-transit panels) plus '
-      + 'the patient casenote view, both behind one sidebar navigation.',
+    summary: 'Dashboard home screen, patient search with quick and advanced modes, and the patient '
+      + 'casenote view — all behind one sidebar navigation.',
     status: 'In progress',
-    statusNote: 'The dashboard home screen and the casenote view are built, reached from the same nav. '
-      + 'Patient Search and My Requests currently both open the casenote view as a stand-in — neither '
-      + 'has its own screen yet. SendIT, ReceiveIT and TagIT are nav entries only.',
+    statusNote: 'The dashboard, patient search (quick, advanced and results) and the casenote view are '
+      + 'built and reachable from the nav. My Requests opens the casenote view as a stand-in. SendIT, '
+      + 'ReceiveIT and TagIT are nav entries only.',
     entryDir: resolve(ROOT, 'products', 'case-note-tracking', 'prototype', 'src'),
     entryFile: 'App.jsx',
-    components: ['Navigation', 'Header', 'PatientBanner', 'Table', 'Modal', 'Button', 'Select', 'Input', 'Checkbox', 'Tag', 'Icon'],
+    components: ['Navigation', 'Header', 'PatientBanner', 'Table', 'Modal', 'Button', 'Select', 'Input', 'Checkbox', 'SegmentedControl', 'RadioGroup', 'Tag', 'Icon'],
     startScript: 'dev:prototype',
   },
 ];
