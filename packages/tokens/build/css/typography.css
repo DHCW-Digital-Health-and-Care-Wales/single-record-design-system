@@ -3,7 +3,34 @@
  * Responsive typography utility classes (mobile-first): the base rule is the
  * mobile scale; the desktop scale is applied at min-width: 1024px.
  * Apply directly, e.g. <h1 class="sr-type-heading-xl">…</h1>
+ *
+ * Component CSS that cannot add a class uses the composite properties
+ * instead — always BOTH, never one:
+ *   font: var(--sr-type-body-s-font);
+ *   letter-spacing: var(--sr-type-body-s-letter-spacing);
+ * Never hand-pick --font-size-*/--font-line-height-* to build a style.
  */
+
+:root {
+  --sr-type-heading-xl-font: 700 28px/36px Roboto, Arial, sans-serif;
+  --sr-type-heading-xl-letter-spacing: 0px;
+  --sr-type-heading-l-font: 700 24px/32px Roboto, Arial, sans-serif;
+  --sr-type-heading-l-letter-spacing: 0px;
+  --sr-type-heading-m-font: 700 20px/28px Roboto, Arial, sans-serif;
+  --sr-type-heading-m-letter-spacing: 0px;
+  --sr-type-heading-s-font: 700 18px/24px Roboto, Arial, sans-serif;
+  --sr-type-heading-s-letter-spacing: 0px;
+  --sr-type-heading-xs-font: 500 16px/24px Roboto, Arial, sans-serif;
+  --sr-type-heading-xs-letter-spacing: 0px;
+  --sr-type-body-m-font: 400 16px/24px Roboto, Arial, sans-serif;
+  --sr-type-body-m-letter-spacing: 0px;
+  --sr-type-body-s-font: 400 14px/20px Roboto, Arial, sans-serif;
+  --sr-type-body-s-letter-spacing: 0px;
+  --sr-type-label-font: 500 14px/20px Roboto, Arial, sans-serif;
+  --sr-type-label-letter-spacing: 0.3px;
+  --sr-type-caption-font: 400 12px/16px Roboto, Arial, sans-serif;
+  --sr-type-caption-letter-spacing: 0.2px;
+}
 
 .sr-type-heading-xl {
   font-family: Roboto, Arial, sans-serif;
@@ -78,6 +105,17 @@
 }
 
 @media (min-width: 1024px) {
+  :root {
+    --sr-type-heading-xl-font: 700 36px/44px Roboto, Arial, sans-serif;
+    --sr-type-heading-xl-letter-spacing: 0px;
+    --sr-type-heading-l-font: 700 28px/36px Roboto, Arial, sans-serif;
+    --sr-type-heading-l-letter-spacing: 0px;
+    --sr-type-heading-m-font: 700 24px/32px Roboto, Arial, sans-serif;
+    --sr-type-heading-m-letter-spacing: 0px;
+    --sr-type-heading-s-font: 700 20px/28px Roboto, Arial, sans-serif;
+    --sr-type-heading-s-letter-spacing: 0px;
+  }
+
   .sr-type-heading-xl {
     font-family: Roboto, Arial, sans-serif;
     font-size: 36px;

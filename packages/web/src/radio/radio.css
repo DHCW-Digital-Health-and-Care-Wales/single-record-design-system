@@ -34,10 +34,8 @@
   gap: var(--space-1);
   padding: 0;
   margin-bottom: var(--space-2);
-  font-size: var(--font-size-14);
-  font-weight: 500;
-  line-height: var(--font-line-height-20);
-  letter-spacing: var(--font-letter-spacing-wide);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
   color: var(--sr-color-text-primary);
 }
 
@@ -49,8 +47,8 @@
 
 .sr-radio-group__hint {
   margin: 0 0 var(--space-2);
-  font-size: var(--font-size-14);
-  line-height: var(--font-line-height-20);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
   color: var(--sr-color-text-secondary);
 }
 
@@ -59,8 +57,8 @@
   align-items: center;
   gap: var(--space-1);
   margin-bottom: var(--space-2);
-  font-size: var(--font-size-14);
-  line-height: var(--font-line-height-20);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
   color: var(--sr-color-interactive-destructive);
 }
 
@@ -115,9 +113,8 @@
   display: inline-block;
   padding-left: 28px; /* 20px control + space-2 gap */
   min-height: 20px;
-  font-size: var(--font-size-14);
-  line-height: var(--font-line-height-20);
-  letter-spacing: var(--font-letter-spacing-default);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
   color: var(--sr-color-text-primary);
   cursor: pointer;
 }

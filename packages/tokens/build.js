@@ -107,13 +107,32 @@ const flatJsonFormat = {
 };
 
 // ---------------------------------------------------------------------------
-// Custom format: responsive typography utility classes
+// Custom format: responsive typography utility classes + composite properties
 //
-// CSS has no single property for the DTCG `typography` composite, so dumping
-// these as custom properties produces `[object Object]`. Instead we emit
-// mobile-first utility classes (`.sr-type-{name}`) whose base values are the
-// mobile scale, overridden at the desktop breakpoint. See DDR-005 (scale) and
-// DDR-011 (desktop/mobile form-factor model).
+// Two surfaces are emitted from the same source, so they can never disagree:
+//
+//   1. `.sr-type-{name}` utility classes, for markup that can add a class.
+//   2. `--sr-type-{name}-font` / `--sr-type-{name}-letter-spacing` custom
+//      properties, for component CSS that cannot.
+//
+// (2) exists because component stylesheets can't apply a utility class they
+// don't own, so they were each hand-picking raw --font-size-*/--font-line-
+// height-*/--font-letter-spacing-* tokens — and routinely picked three of the
+// four, or paired a size with the wrong line height. That is how 16px/700 and
+// 12px/20px crept in, neither of which is on the scale.
+//
+// The CSS `font` shorthand carries weight, size, line-height and family in one
+// value, so a component applies a complete named style in exactly two
+// declarations that cannot be partially applied:
+//
+//   .sr-nav__item {
+//     font: var(--sr-type-body-s-font);
+//     letter-spacing: var(--sr-type-body-s-letter-spacing);
+//   }
+//
+// Note `font` resets font-style/variant/stretch to normal, which is what we
+// want. Both surfaces are mobile-first, overridden at the desktop breakpoint.
+// See DDR-005 (scale) and DDR-011 (desktop/mobile form-factor model).
 // ---------------------------------------------------------------------------
 const typographyClassesFormat = {
   name: 'css/typography-utilities',
@@ -141,14 +160,27 @@ const typographyClassesFormat = {
       ].map(l => indent + l).join('\n');
     };
 
+    // `font` shorthand: weight size/line-height family. Complete by construction.
+    const props = (name, v, indent) => {
+      const fam = Array.isArray(v.fontFamily) ? v.fontFamily.join(', ') : v.fontFamily;
+      return [
+        `--sr-type-${name}-font: ${v.fontWeight} ${v.fontSize}/${v.lineHeight} ${fam}, Arial, sans-serif;`,
+        `--sr-type-${name}-letter-spacing: ${v.letterSpacing};`,
+      ].map(l => indent + l).join('\n');
+    };
+
     const base = [];
     const overrides = [];
+    const baseProps = [];
+    const overrideProps = [];
     for (const [name, vals] of Object.entries(groups)) {
       const mobile = vals.mobile || vals.desktop;
       const desktop = vals.desktop || vals.mobile;
       base.push(`.sr-type-${name} {\n${decls(mobile, '  ')}\n}`);
+      baseProps.push(props(name, mobile, '  '));
       if (JSON.stringify(mobile) !== JSON.stringify(desktop)) {
         overrides.push(`  .sr-type-${name} {\n${decls(desktop, '    ')}\n  }`);
+        overrideProps.push(props(name, desktop, '    '));
       }
     }
 
@@ -157,10 +189,17 @@ const typographyClassesFormat = {
       ` * Responsive typography utility classes (mobile-first): the base rule is the\n` +
       ` * mobile scale; the desktop scale is applied at min-width: ${desktopMin}.\n` +
       ` * Apply directly, e.g. <h1 class="sr-type-heading-xl">…</h1>\n` +
+      ` *\n` +
+      ` * Component CSS that cannot add a class uses the composite properties\n` +
+      ` * instead — always BOTH, never one:\n` +
+      ` *   font: var(--sr-type-body-s-font);\n` +
+      ` *   letter-spacing: var(--sr-type-body-s-letter-spacing);\n` +
+      ` * Never hand-pick --font-size-*/--font-line-height-* to build a style.\n` +
       ` */\n\n`;
+    out += `:root {\n${baseProps.join('\n')}\n}\n\n`;
     out += base.join('\n\n') + '\n';
     if (overrides.length) {
-      out += `\n@media (min-width: ${desktopMin}) {\n${overrides.join('\n\n')}\n}\n`;
+      out += `\n@media (min-width: ${desktopMin}) {\n  :root {\n${overrideProps.join('\n')}\n  }\n\n${overrides.join('\n\n')}\n}\n`;
     }
     return out;
   }

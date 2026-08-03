@@ -21,6 +21,7 @@
     "check:docs": "node scripts/sync-token-docs.mjs --check",
     "storybook": "npm run storybook -w @dhcw/sr-storybook",
     "sync:docs": "node scripts/sync-token-docs.mjs",
-    "dev:prototype": "npm run dev -w @dhcw/case-note-tracking-prototype"
+    "dev:prototype": "npm run dev -w @dhcw/case-note-tracking-prototype",
+    "check:type": "node scripts/check-typography.mjs --baseline"
   }
 }

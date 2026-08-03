@@ -41,9 +41,8 @@
   border: none;
   background: transparent;
   color: var(--sr-color-interactive-primary);
-  font-size: var(--font-size-12);
-  line-height: var(--font-line-height-16);
-  letter-spacing: var(--font-letter-spacing-caption);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
   text-decoration: none;
   cursor: pointer;
   border-radius: var(--radius-sm);
@@ -112,8 +111,8 @@
   min-width: 0;
   border: none;
   background: transparent;
-  font-size: var(--font-size-14);
-  line-height: var(--font-line-height-20);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
   color: var(--sr-color-text-primary);
 }
 .sr-header__search-input::placeholder {
@@ -175,10 +174,8 @@
 }
 .sr-header__avatar-initials {
   color: var(--sr-color-text-inverse);
-  font-size: var(--font-size-14);
-  line-height: var(--font-line-height-20);
-  font-weight: 500;
-  letter-spacing: var(--font-letter-spacing-wide);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
 }
 .sr-header__avatar-status {
   position: absolute;
@@ -206,6 +203,11 @@
   justify-content: flex-end;
   gap: var(--space-4);
 }
+/* The bar variant has no logo competing for width, so the search can hold its
+   full placeholder rather than truncating it. */
+.sr-header--bar .sr-header__search {
+  width: 280px;
+}
 .sr-header__cluster {
   display: flex;
   align-items: center;
@@ -221,9 +223,8 @@
   border: none;
   border-right: 1px solid var(--sr-color-border-subtle);
   background: transparent;
-  font-size: var(--font-size-14);
-  font-weight: 500;
-  letter-spacing: var(--font-letter-spacing-wide);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
   white-space: nowrap;
   cursor: pointer;
 }

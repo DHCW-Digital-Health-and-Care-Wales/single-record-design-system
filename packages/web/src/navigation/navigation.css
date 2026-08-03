@@ -88,8 +88,8 @@
   text-align: center;
 }
 .sr-nav--rail .sr-nav__item-label {
-  font-size: var(--font-size-12);
-  line-height: var(--font-line-height-16);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
 }
 
 /* ---------- Header ---------- */
@@ -160,9 +160,8 @@
 .sr-nav__section-label {
   display: block;
   padding: var(--space-1) var(--space-5);
-  font-size: var(--font-size-12);
-  line-height: var(--font-line-height-16);
-  letter-spacing: var(--font-letter-spacing-caption);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
   color: var(--sr-color-text-secondary);
   text-transform: uppercase;
 }
@@ -200,8 +199,8 @@
   border: none;
   background: transparent;
   color: var(--sr-color-text-primary);
-  font-size: var(--font-size-14);
-  line-height: var(--font-line-height-20);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
   text-align: left;
   text-decoration: none;
   cursor: pointer;
@@ -216,7 +215,8 @@
 .sr-nav__item[aria-current="page"] {
   background-color: var(--sr-color-surface-accent);
   color: var(--sr-color-interactive-primary);
-  font-weight: 500;
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
 }
 
 .sr-nav__item-main {
@@ -255,9 +255,8 @@
   border-radius: var(--radius-full);
   background-color: var(--sr-color-interactive-primary);
   color: var(--sr-color-text-inverse);
-  font-size: var(--font-size-12);
-  line-height: var(--font-line-height-16);
-  letter-spacing: var(--font-letter-spacing-caption);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
   text-align: center;
 }
 
@@ -293,8 +292,8 @@
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-md);
   color: var(--sr-color-text-secondary);
-  font-size: var(--font-size-14);
-  line-height: var(--font-line-height-20);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
   text-decoration: none;
 }
 .sr-nav__subitem:hover {
@@ -307,7 +306,8 @@
 }
 .sr-nav__subitem[aria-current="page"] {
   color: var(--sr-color-interactive-primary);
-  font-weight: 500;
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
 }
 
 /* Collapsed rail never shows submenus. */
@@ -340,8 +340,8 @@
   border-radius: var(--radius-sm);
   background-color: var(--sr-color-text-primary);
   color: var(--sr-color-text-inverse);
-  font-size: var(--font-size-12);
-  line-height: var(--font-line-height-16);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
   white-space: normal;
   opacity: 0;
   visibility: hidden;

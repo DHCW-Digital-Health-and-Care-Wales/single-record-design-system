@@ -3,14 +3,13 @@
 body {
   margin: 0;
   background: var(--sr-color-surface-background);
-  font-family: "Roboto", system-ui, -apple-system, sans-serif;
   color: var(--sr-color-text-primary);
   /* Body S is the primary-content size for this table- and data-dense system
      (DDR-015). Without this the browser default of 16px leaks into every
      element that doesn't set a size of its own, which is what made the row
      text, quick-action labels and panel copy read a step too large. */
-  font-size: var(--font-size-14);
-  line-height: var(--font-line-height-20);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
 }
 
 .app {
@@ -21,9 +20,8 @@ body {
 }
 
 .app__brand {
-  font-size: var(--font-size-16);
-  font-weight: 700;
-  letter-spacing: var(--font-letter-spacing-wide);
+  font: var(--sr-type-heading-xs-font);
+  letter-spacing: var(--sr-type-heading-xs-letter-spacing);
   color: var(--sr-color-interactive-primary);
 }
 
@@ -50,21 +48,18 @@ body {
 }
 
 /* ---------- Dashboard (home screen, Figma 2:3875) ---------- */
-/* Heading S (20/28), not Heading L. A data-dense screen whose body text is
-   14px does not need a 28px page title — Figma draws this at 28px tall
-   overall, i.e. one 20/28 line. */
+/* Heading S (20/28 on desktop). A data-dense screen whose body text is 14px
+   does not need a 28px page title — Figma draws this as one 20/28 line. */
 .dashboard__title {
   margin: 0;
-  font-size: var(--font-size-20);
-  line-height: var(--font-line-height-28);
-  font-weight: 700;
+  font: var(--sr-type-heading-s-font);
+  letter-spacing: var(--sr-type-heading-s-letter-spacing);
 }
 
 .dashboard__section-label {
   margin: 0 0 var(--space-3);
-  font-size: var(--font-size-12);
-  line-height: var(--font-line-height-16);
-  letter-spacing: var(--font-letter-spacing-caption);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
   text-transform: uppercase;
   color: var(--sr-color-text-secondary);
 }
@@ -96,22 +91,22 @@ body {
 }
 .stat-card__label {
   margin: 0;
-  font-size: var(--font-size-14);
-  font-weight: 500;
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
 }
 .stat-card__icon { color: var(--sr-color-text-secondary); flex: 0 0 auto; }
 .stat-card__value {
   margin: 0;
-  font-size: var(--font-size-24);
-  line-height: var(--font-line-height-32);
-  font-weight: 700;
+  font: var(--sr-type-heading-m-font);
+  letter-spacing: var(--sr-type-heading-m-letter-spacing);
   color: var(--sr-color-interactive-primary);
 }
 .stat-card--warning .stat-card__value { color: var(--color-yellow-700); }
 .stat-card--critical .stat-card__value { color: var(--sr-color-status-critical); }
 .stat-card__note {
   margin: 0;
-  font-size: var(--font-size-12);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
   color: var(--sr-color-text-secondary);
 }
 .stat-card__note--success { color: var(--sr-color-status-success); }
@@ -135,8 +130,8 @@ body {
   border: 1px solid var(--sr-color-border-default);
   border-radius: var(--radius-md);
   color: var(--sr-color-text-primary);
-  font-family: inherit;
-  font-size: var(--font-size-14);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
   text-align: left;
   cursor: pointer;
 }
@@ -167,13 +162,13 @@ body {
 }
 .quick-action__label {
   display: block;
-  font-weight: 500;
-  line-height: var(--font-line-height-20);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
 }
 .quick-action__description {
   display: block;
-  font-size: var(--font-size-12);
-  line-height: var(--font-line-height-16);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
   opacity: 0.8;
 }
 
@@ -202,14 +197,15 @@ body {
   align-items: center;
   gap: var(--space-2);
   margin: 0;
-  font-size: var(--font-size-16);
-  font-weight: 700;
+  font: var(--sr-type-heading-xs-font);
+  letter-spacing: var(--sr-type-heading-xs-letter-spacing);
 }
 .panel__view-all {
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  font-size: var(--font-size-14);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
   color: var(--sr-color-interactive-primary);
   text-decoration: none;
 }
@@ -238,20 +234,31 @@ body {
   border-left-color: var(--color-yellow-500);
   background: var(--color-yellow-50);
 }
-.attention-row__volume { margin: 0 0 var(--space-1); font-weight: 500; }
-.attention-row__patient { margin: 0; font-size: var(--font-size-12); line-height: var(--font-line-height-16); color: var(--sr-color-text-secondary); }
+.attention-row__main { min-width: 0; }
+.attention-row__volume { margin: 0 0 var(--space-1); font: var(--sr-type-label-font); letter-spacing: var(--sr-type-label-letter-spacing); }
+.attention-row__patient {
+  margin: 0;
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  color: var(--sr-color-text-secondary);
+  /* One line per row: these are scan-and-compare lists, and a row that grows
+     to two lines breaks the rhythm the eye is following down the column. */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .attention-row__meta {
   display: flex;
   align-items: center;
   gap: var(--space-3);
   flex: 0 0 auto;
 }
-.attention-row__weeks { font-size: var(--font-size-12); color: var(--sr-color-text-secondary); white-space: nowrap; }
+.attention-row__weeks { font: var(--sr-type-caption-font); letter-spacing: var(--sr-type-caption-letter-spacing); color: var(--sr-color-text-secondary); white-space: nowrap; }
 
 .transit-group__label {
   margin: var(--space-4) 0 var(--space-2);
-  font-size: var(--font-size-12);
-  line-height: var(--font-line-height-16);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
   color: var(--sr-color-text-secondary);
 }
 .transit-group:first-child .transit-group__label { margin-top: 0; }
@@ -270,9 +277,19 @@ body {
   padding: var(--space-2) 0 var(--space-2) var(--space-3);
   border-left: 3px solid var(--sr-color-interactive-primary);
 }
-.transit-row__volume { margin: 0; flex: 0 0 auto; font-weight: 500; }
-.transit-row__meta { margin: 0; flex: 1 1 auto; font-size: var(--font-size-12); color: var(--sr-color-text-secondary); }
-.transit-row__time { margin: 0; flex: 0 0 auto; font-size: var(--font-size-12); color: var(--sr-color-text-secondary); }
+.transit-row__volume { margin: 0; flex: 0 0 auto; font: var(--sr-type-label-font); letter-spacing: var(--sr-type-label-letter-spacing); }
+.transit-row__meta {
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  color: var(--sr-color-text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.transit-row__time { margin: 0; flex: 0 0 auto; font: var(--sr-type-caption-font); letter-spacing: var(--sr-type-caption-letter-spacing); color: var(--sr-color-text-secondary); }
 
 .filters {
   display: flex;
@@ -306,15 +323,14 @@ body {
 }
 .notes__count {
   margin: 0;
-  font-size: var(--font-size-14);
-  line-height: var(--font-line-height-20);
-  font-weight: 500;
-  letter-spacing: var(--font-letter-spacing-wide);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
 }
 .notes__bar-actions { display: flex; gap: var(--space-2); }
 .notes__empty {
   margin: var(--space-4) 0 0;
-  font-size: var(--font-size-14);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
   color: var(--sr-color-text-secondary);
 }
 
@@ -326,9 +342,8 @@ body {
 /* ---------- Patient Search (Figma 2:4437 / 2:3927 / 2:4068) ---------- */
 .page__title {
   margin: 0;
-  font-size: var(--font-size-20);
-  line-height: var(--font-line-height-28);
-  font-weight: 700;
+  font: var(--sr-type-heading-s-font);
+  letter-spacing: var(--sr-type-heading-s-letter-spacing);
 }
 .page__lede {
   margin: var(--space-1) 0 0;
@@ -389,8 +404,8 @@ body {
   border: 0;
   border-radius: var(--radius-md);
   background: transparent;
-  font-family: inherit;
-  font-size: var(--font-size-14);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
   color: var(--sr-color-interactive-primary);
   cursor: pointer;
 }
@@ -443,8 +458,8 @@ body {
   padding: 0;
   border: 0;
   background: transparent;
-  font-family: inherit;
-  font-size: var(--font-size-14);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
   color: var(--sr-color-interactive-primary);
   cursor: pointer;
 }

@@ -1,0 +1,22 @@
+{
+  "total": 128,
+  "counts": {
+    "packages/web/src/autocomplete/autocomplete.css": 2,
+    "packages/web/src/bottom-nav/bottom-nav.css": 3,
+    "packages/web/src/breadcrumbs/breadcrumbs.css": 8,
+    "packages/web/src/button/button.css": 7,
+    "packages/web/src/checkbox/checkbox.css": 13,
+    "packages/web/src/date-input/date-input.css": 14,
+    "packages/web/src/date-picker/date-picker.css": 11,
+    "packages/web/src/footer/footer.css": 3,
+    "packages/web/src/input/input.css": 13,
+    "packages/web/src/modal/modal.css": 7,
+    "packages/web/src/segmented-control/segmented-control.css": 4,
+    "packages/web/src/select/select.css": 16,
+    "packages/web/src/status-indicator/status-indicator.css": 1,
+    "packages/web/src/switch/switch.css": 4,
+    "packages/web/src/table/table.css": 12,
+    "packages/web/src/tags/tags.css": 4,
+    "packages/web/src/time-select/time-select.css": 6
+  }
+}
