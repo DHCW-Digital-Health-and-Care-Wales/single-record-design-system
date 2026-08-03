@@ -102,8 +102,16 @@
 
 /* ---------- Body ----------
    Rules above and below the content. With the container's space-4 gap this
-   reproduces the Figma spacing: 16px, rule, 16px, content, 16px, rule, 16px. */
+   reproduces the Figma spacing: 16px, rule, 16px, content, 16px, rule, 16px.
+   The body is itself a flex column with the same space-4 gap between its own
+   children: plain text content (p, ul) gets that spacing "for free" from
+   default margins, but a custom form built from unmargined component
+   wrappers (Select, Input, Checkbox) has nothing supplying it and rendered
+   with its fields touching until this was added. */
 .sr-modal__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;

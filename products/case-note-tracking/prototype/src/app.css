@@ -344,11 +344,6 @@ body {
   color: var(--sr-color-text-secondary);
 }
 
-.modal-list {
-  margin: var(--space-2) 0 0;
-  padding-left: var(--space-4);
-}
-
 /* ---------- Patient Search (Figma 2:4437 / 2:3927 / 2:4068) ---------- */
 .page__title {
   margin: 0;
@@ -485,11 +480,16 @@ body {
   position: relative;
   display: inline-block;
 }
+/* Portaled to document.body (see RowActionMenu) and positioned from the
+   trigger's own bounding rect via inline `top`/`right` — `.sr-table-wrap`
+   sets `overflow-x: auto`, which per the CSS overflow spec forces
+   `overflow-y` to `auto` too, so anything positioned relative to a
+   still-inside-the-table ancestor was clipped at the table's bottom edge
+   instead of resting on top of the page. Fixed rather than absolute so it
+   stays put regardless of table scroll position. */
 .row-menu__list {
-  position: absolute;
-  top: calc(100% + var(--space-1));
-  right: 0;
-  z-index: 20;
+  position: fixed;
+  z-index: 1000;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -570,6 +570,101 @@ body {
 }
 .modal-form-row > * { flex: 1 1 200px; }
 .modal-add-field { align-self: flex-start; }
+
+/* "+ Add additional information", expanded (Figma 399:9108). */
+.modal-additional-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+}
+.modal-additional-info__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.modal-additional-info__label {
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+  color: var(--sr-color-text-primary);
+}
+.modal-additional-info__delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-1);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--sr-color-status-critical);
+  cursor: pointer;
+}
+.modal-additional-info__delete:hover { background-color: var(--sr-color-surface-subtle); }
+.modal-additional-info__delete:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--sr-color-border-focus);
+}
+
+/* Destructive confirmation dialog (design system 2612:3325). */
+.confirm-modal__title {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.confirm-modal__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background: var(--sr-color-status-critical-surface);
+  color: var(--sr-color-status-critical);
+}
+
+/* ---------- My Requests (Figma 127:4813) ---------- */
+.page__heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.page__subtitle {
+  margin: 0;
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+  color: var(--sr-color-text-secondary);
+}
+.my-requests__tabs {
+  display: flex;
+  gap: var(--space-4);
+  border-bottom: 1px solid var(--sr-color-border-default);
+}
+.my-requests__tab {
+  padding: var(--space-3) var(--space-2);
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+  color: var(--sr-color-text-primary);
+  cursor: pointer;
+}
+.my-requests__tab.is-selected {
+  border-bottom-color: var(--sr-color-interactive-primary);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+  color: var(--sr-color-interactive-primary);
+}
+.my-requests__tab:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--sr-color-border-focus);
+  border-radius: var(--radius-sm);
+}
+.my-requests__patient {
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  color: var(--sr-color-text-secondary);
+}
 
 .visually-hidden {
   position: absolute;

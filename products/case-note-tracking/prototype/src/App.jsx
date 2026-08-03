@@ -5,6 +5,7 @@ import { NAV_SECTIONS, NAV_FOOTER } from './data.js';
 import Dashboard from './Dashboard.jsx';
 import CaseNotes from './CaseNotes.jsx';
 import PatientSearch from './PatientSearch.jsx';
+import MyRequests from './MyRequests.jsx';
 
 // Text lockup, not the real NHS/GIG asset (trademarked raster, not something
 // this prototype's Sandpack embed can fetch) — same placeholder approach as
@@ -12,10 +13,14 @@ import PatientSearch from './PatientSearch.jsx';
 // bare '@dhcw/sr-web' import the build's Sandpack rewriter doesn't resolve.
 const BRAND_LOCKUP = <span className="app__brand">Single Record</span>;
 
+// 'case-notes' (the single-patient view) has no nav item of its own — it is
+// only reachable from Patient Search's "View" action, so the nav highlights
+// Patient Search while it's open rather than claiming a destination it isn't.
 const VIEW_LABEL = {
   dashboard: 'Dashboard',
   'patient-search': 'Patient Search',
-  'case-notes': 'My Requests',
+  'case-notes': 'Patient Search',
+  'my-requests': 'My Requests',
 };
 
 /**
@@ -38,7 +43,7 @@ export default function App() {
   const handleSelect = (label) => {
     if (label === 'Dashboard') setView('dashboard');
     else if (label === 'Patient Search') setView('patient-search');
-    else if (label === 'My Requests') setView('case-notes');
+    else if (label === 'My Requests') setView('my-requests');
     // SendIT, ReceiveIT, TagIT, Settings and Log Out have no screen in this
     // prototype yet — selecting them is a no-op.
   };
@@ -61,6 +66,7 @@ export default function App() {
           <PatientSearch onOpenPatient={() => setView('case-notes')} />
         )}
         {view === 'case-notes' && <CaseNotes />}
+        {view === 'my-requests' && <MyRequests />}
       </div>
     </div>
   );

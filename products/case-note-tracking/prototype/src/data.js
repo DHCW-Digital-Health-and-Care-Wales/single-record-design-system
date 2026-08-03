@@ -2,15 +2,17 @@
  * Mock data only. There is no API, no auth and no persistence in this prototype.
  * Dates use the short form `10 Mar 2026` (space-constrained UI) per DESIGN-SYSTEM.md.
  */
+// Alive. `flag` and `dod` are omitted rather than set to falsy values —
+// PatientBanner only renders either when present, and the deceased flag/date
+// pairing is the one status this prototype currently models. Other non-alive
+// statuses (e.g. discharged) are potential future work, not implemented here.
 export const PATIENT = {
   name: 'JOHN, Elvet George (Mr)',
-  flag: 'Deceased',
   nhsNumber: '000 111 2222',
   crn: 'M8046459',
   address: 'Penrhiw, Gwynfe Llangadog, Dyfed, SA19 9PU',
   postcode: 'SA19 9PU',
   dob: '15 Dec 1992 (33y)',
-  dod: '23 Jun 2025',
   sex: 'Male',
 };
 
@@ -112,7 +114,7 @@ export const IN_TRANSIT = [
  * should read as the same patient rather than a different one.
  */
 export const SEARCH_RESULTS = [
-  { id: 1, caseNo: PATIENT.crn, nhs: PATIENT.nhsNumber, surname: 'JOHN', forenames: 'Elvet George', status: 'Deceased', statusType: 'red', dob: '15 Dec 1992', dod: '23 Jun 2025', sex: 'Male', postcode: PATIENT.postcode },
+  { id: 1, caseNo: PATIENT.crn, nhs: PATIENT.nhsNumber, surname: 'JOHN', forenames: 'Elvet George', status: 'Active', statusType: 'green', dob: '15 Dec 1992', dod: '-', sex: 'Male', postcode: PATIENT.postcode },
   { id: 2, caseNo: 'NN54242', nhs: '098 765 4321', surname: 'DAVIS',    forenames: 'JONATHAN PAUL', status: 'Active',   statusType: 'green', dob: '14 Jan 2000', dod: '-',           sex: 'Male',   postcode: 'M1 1AE' },
   { id: 3, caseNo: 'NN24312', nhs: '098 765 4321', surname: 'NOAH',     forenames: 'DAVIS',         status: 'Active',   statusType: 'green', dob: '28 Jun 1988', dod: '-',           sex: 'Male',   postcode: 'G1 2FF' },
   { id: 4, caseNo: 'CN032412', nhs: '098 765 4321', surname: 'MARTINEZ', forenames: 'AVA',          status: 'Active',   statusType: 'green', dob: '21 Sep 1969', dod: '-',           sex: 'Female', postcode: 'BT7 1NN' },
@@ -137,4 +139,20 @@ export const NOTES = [
   { id: 3, siteId: 'ggh', volume: 'General notes vol 2', status: 'Received',   statusType: 'green', location: 'Cleddau Ward-GGH',  activity: 'Received by Gadgil, AA(Mr)',   moved: '05 Jun 2026 17:40', batch: '-' },
   { id: 4, siteId: 'wgh', volume: 'General notes vol 2', status: 'Tagged',     statusType: 'yellow',location: 'A&E Dept-GGH',      activity: 'Tagged by Gadgil, AA(Mr)',     moved: '05 Jun 2026 17:40', batch: '-' },
   { id: 5, siteId: 'wgh', volume: 'General notes vol 1', status: 'Inactive',   statusType: 'red',   location: 'A&E Dept-GGH',      activity: 'Archived by Gadgil, AA(Mr)',   moved: '02 Jun 2026 09:10', batch: '-' },
+];
+
+/**
+ * My Requests (Figma 127:4813) — cross-patient, unlike NOTES which is scoped
+ * to one patient's casenote view. `tab` groups rows under the All/Sent/
+ * Received filter on that screen. Patient names reuse the ones already on
+ * the dashboard's Needs Attention list where they overlap (Gareth Evans James,
+ * Ade Lolade, Adams Amy) rather than inventing a second spelling of the same
+ * person.
+ */
+export const MY_REQUESTS = [
+  { id: 1, volume: 'General notes vol 4', patient: 'GARETH, Evans James', status: 'Sent', statusType: 'grey', tab: 'sent', location: 'Madog Suite-GGH', activity: 'Sent to Tarnia Warlow at Madog Suite-GGH (Carmarthen Locality)', moved: '09 Jun 2026 15:25', clinicDate: '03 Jul 2026', batch: '50381858' },
+  { id: 2, volume: 'General notes vol 4', patient: 'ADE, Lolade', status: 'Sent', statusType: 'grey', tab: 'sent', location: 'Teifi Ward-GGH', activity: 'Sent to Tarnia Warlow at Teifi Ward-GGH (Carmarthen Locality)', moved: '05 Jun 2026 17:40', clinicDate: '03 Jul 2026', batch: '-' },
+  { id: 3, volume: 'General notes vol 4', patient: 'PRICE, Carys', status: 'Received', statusType: 'green', tab: 'received', location: 'Cleddau Ward-GGH', activity: 'Received by Gadgil, AA(Mr) at Cleddau Ward-GGH', moved: '05 Jun 2026 17:40', clinicDate: '03 Jul 2026', batch: '-' },
+  { id: 4, volume: 'General notes vol 4', patient: 'ADAMS, Amy Tina', status: 'Received', statusType: 'green', tab: 'received', location: 'A&E Dept-GGH', activity: 'Registered by Gadgil, AA(Mr) at A&E Dept-GGH', moved: '05 Jun 2026 17:40', clinicDate: '03 Jul 2026', batch: '-' },
+  { id: 5, volume: 'General notes vol 4', patient: 'OWEN, Rhys', status: 'Sent', statusType: 'grey', tab: 'sent', location: 'A&E Dept-GGH', activity: 'Registered by Gadgil, AA(Mr) at A&E Dept-GGH', moved: '05 Jun 2026 17:40', clinicDate: '03 Jul 2026', batch: '-' },
 ];
