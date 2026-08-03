@@ -1,5 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import '@dhcw/sr-tokens/build/css/fonts.css';
 import '@dhcw/sr-tokens/build/css/tokens.css';
 import '@dhcw/sr-tokens/build/css/typography.css';
 import './app.css';

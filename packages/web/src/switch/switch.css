@@ -16,7 +16,6 @@
   border: none;
   background: transparent;
   cursor: pointer;
-  font-family: "Roboto", system-ui, -apple-system, sans-serif;
 }
 
 .sr-switch__track {
@@ -40,10 +39,8 @@
 }
 
 .sr-switch__label {
-  font-size: var(--font-size-14);
-  line-height: var(--font-line-height-20);
-  font-weight: 500;
-  letter-spacing: var(--font-letter-spacing-wide);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
   color: var(--sr-color-text-primary);
 }
 

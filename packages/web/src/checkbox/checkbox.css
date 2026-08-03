@@ -36,7 +36,6 @@
   margin: 0;
   padding: 0;
   min-inline-size: 0; /* fieldset defaults to min-content; let it shrink */
-  font-family: "Roboto", system-ui, -apple-system, sans-serif;
 }
 
 .sr-checkbox-group__legend {
@@ -44,10 +43,8 @@
   align-items: baseline;
   gap: 2px;
   padding: 0;
-  font-size: var(--font-size-14);
-  line-height: var(--font-line-height-20);
-  font-weight: 500;
-  letter-spacing: var(--font-letter-spacing-wide);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
   color: var(--sr-color-text-primary);
 }
 .sr-checkbox-group__required {
@@ -55,9 +52,8 @@
 }
 
 .sr-checkbox-group__hint {
-  font-size: var(--font-size-12);
-  line-height: var(--font-line-height-16);
-  letter-spacing: var(--font-letter-spacing-caption);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
   color: var(--sr-color-text-secondary);
 }
 
@@ -65,9 +61,8 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  font-size: var(--font-size-12);
-  line-height: var(--font-line-height-16);
-  letter-spacing: var(--font-letter-spacing-caption);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
   color: var(--sr-color-status-critical);
 }
 .sr-checkbox-group__error-icon {
@@ -107,7 +102,6 @@
   min-height: 20px;
   /* Set here as well as on the group: a single checkbox is valid on its own
      (for example a table's select-all) and must not inherit the page default. */
-  font-family: "Roboto", system-ui, -apple-system, sans-serif;
 }
 
 .sr-checkbox__input {
@@ -126,9 +120,8 @@
   display: inline-block;
   padding-left: 28px; /* 20px box + space-2 gap */
   min-height: 20px;
-  font-size: var(--font-size-14);
-  line-height: var(--font-line-height-20);
-  letter-spacing: var(--font-letter-spacing-default);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
   color: var(--sr-color-text-primary);
   cursor: pointer;
 }

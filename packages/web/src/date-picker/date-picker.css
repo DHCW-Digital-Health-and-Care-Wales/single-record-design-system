@@ -15,7 +15,6 @@
 .sr-datepicker {
   position: relative;
   display: inline-block;
-  font-family: "Roboto", system-ui, -apple-system, sans-serif;
 }
 
 .sr-datepicker__field {
@@ -44,8 +43,8 @@
   border: none;
   background: transparent;
   font: inherit;
-  font-size: var(--font-size-14);
-  line-height: var(--font-line-height-20);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
   color: var(--sr-color-text-primary);
 }
 .sr-datepicker__input::placeholder {
@@ -102,10 +101,8 @@
   margin-bottom: var(--space-2);
 }
 .sr-datepicker__title {
-  font-size: var(--font-size-14);
-  line-height: var(--font-line-height-20);
-  font-weight: 500;
-  letter-spacing: var(--font-letter-spacing-wide);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
   color: var(--sr-color-text-primary);
 }
 .sr-datepicker__nav {
@@ -142,9 +139,8 @@
 .sr-datepicker__weekday {
   padding: var(--space-1) 0;
   text-align: center;
-  font-size: var(--font-size-12);
-  line-height: var(--font-line-height-16);
-  letter-spacing: var(--font-letter-spacing-caption);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
   color: var(--sr-color-text-secondary);
 }
 
@@ -161,8 +157,8 @@
   background: transparent;
   color: var(--sr-color-text-primary);
   font: inherit;
-  font-size: var(--font-size-14);
-  line-height: var(--font-line-height-20);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
   cursor: pointer;
 }
 .sr-datepicker__day:hover {

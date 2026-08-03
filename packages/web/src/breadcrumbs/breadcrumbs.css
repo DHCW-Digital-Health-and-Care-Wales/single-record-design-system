@@ -16,7 +16,6 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  font-family: "Roboto", system-ui, -apple-system, sans-serif;
 }
 
 .sr-breadcrumbs__item {
@@ -27,9 +26,8 @@
 
 .sr-breadcrumbs__link {
   color: var(--sr-color-interactive-link);
-  font-size: var(--font-size-12);
-  line-height: var(--font-line-height-16);
-  letter-spacing: var(--font-letter-spacing-caption);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
   text-decoration: underline;
 }
 .sr-breadcrumbs__link:hover {
@@ -42,13 +40,12 @@
 
 .sr-breadcrumbs__separator {
   color: var(--sr-color-text-secondary);
-  font-size: var(--font-size-16);
-  line-height: var(--font-line-height-24);
+  font: var(--sr-type-body-m-font);
+  letter-spacing: var(--sr-type-body-m-letter-spacing);
 }
 
 .sr-breadcrumbs__current {
   color: var(--sr-color-text-secondary);
-  font-size: var(--font-size-12);
-  line-height: var(--font-line-height-16);
-  letter-spacing: var(--font-letter-spacing-caption);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
 }

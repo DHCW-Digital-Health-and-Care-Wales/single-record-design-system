@@ -18,7 +18,6 @@
   width: 100%;
   box-sizing: border-box;
   background-color: var(--sr-color-surface-section-cards);
-  font-family: "Roboto", system-ui, -apple-system, sans-serif;
 }
 
 /* ---------- Utility bar ---------- */

@@ -109,7 +109,12 @@ See `/foundations/tokens/colour/global.md` for the full primitive palette and `/
 
 ### Typography System
 
-The system uses **Roboto** as its primary typeface across all platforms.
+The system uses **Roboto** as its only typeface across all platforms. It is
+vendored at `packages/tokens/fonts/` (Apache 2.0) and emitted by the token build
+as `build/css/fonts.css`, with the face embedded as a data URI so it resolves
+with no network request — including inside sandboxed prototype embeds. **Import
+`fonts.css` alongside `tokens.css`;** without it every surface falls back
+silently, which is the failure this replaced.
 
 The semantic type scale provides named styles for use in Figma and component specs:
 
@@ -144,10 +149,19 @@ letter-spacing: var(--sr-type-label-letter-spacing);
 
 Never hand-pick `--font-size-*` / `--font-line-height-*` to assemble a style:
 that is how off-scale pairs such as 16px/700 and 12px/20px entered the system.
-`npm run check:type` fails on new occurrences and reports the remaining debt
-(128 declarations across 17 component stylesheets at the 2026-08-03 baseline —
-these predate the composite properties and are being converted as components
-are touched).
+`npm run check` (`check:type` + `check:ds`) fails on new occurrences. As of
+2026-08-03 the typography debt is **5 declarations in one file** (`button.css`,
+where button text is 16/24 rather than the `label` style — see the open
+question below); it was 128 across 17 files before the composite properties
+existed.
+
+`check:ds` additionally fails on any new hardcoded colour, any `font-family`
+outside the token build, and any inline `<svg>` where an `<Icon>` belongs.
+
+**Open question — button text size.** `DESIGN-SYSTEM.md` lists `label` as the
+style for button text (14/20/500), but `button.css` renders default and large
+buttons at 16/24 and small at 12/16. Changing it would alter every button in
+the system, so it is left as-is and flagged rather than decided unilaterally.
 
 See `/foundations/tokens/typography.md` for the full specification.
 
@@ -177,12 +191,12 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Checkbox | ✅ | ✅ | ✅ |
 | Date input | — | ✅ | ✅ |
 | Date picker | — | ✅ | ✅ |
-| Footer | — | ✅ | ✅ |
-| Header | — | ✅ | ✅ |
+| Footer | — (guidelines ✅) | ✅ | ✅ |
+| Header | — (guidelines ✅) | ✅ | ✅ |
 | Input | — | ✅ | ✅ |
 | Link | ✅ | — | — |
 | Modal dialog | ✅ | ✅ | ✅ |
-| Navigation | — | ✅ | ✅ |
+| Navigation | — (guidelines ✅) | ✅ | ✅ |
 | Patient banner | ✅ | ✅ | ✅ |
 | Progress indicators | ✅ | — | — |
 | Radio | — | ✅ | ✅ |
