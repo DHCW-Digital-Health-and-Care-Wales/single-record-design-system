@@ -477,6 +477,100 @@ body {
   border-radius: var(--radius-sm);
 }
 
+/* ---------- Row action menu (Figma 47:4041) ----------
+   No Menu/Dropdown component exists in the design system yet (flagged in
+   DESIGN-SYSTEM.md); this is a local, token-only stand-in scoped to this
+   prototype's table rows. */
+.row-menu {
+  position: relative;
+  display: inline-block;
+}
+.row-menu__list {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  right: 0;
+  z-index: 20;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-width: 200px;
+  background: var(--sr-color-surface-section-cards);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elevation-overlay);
+}
+.row-menu__item {
+  display: block;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-bottom: 1px solid var(--sr-color-border-default);
+  background: transparent;
+  text-align: left;
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+  color: var(--sr-color-text-primary);
+  cursor: pointer;
+}
+.row-menu__list li:last-child .row-menu__item { border-bottom: none; }
+.row-menu__item:hover { background-color: var(--sr-color-surface-subtle); }
+.row-menu__item:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 3px var(--sr-color-border-focus);
+}
+.row-menu__item--destructive { color: var(--sr-color-status-critical); }
+
+/* ---------- Modal form fields (Create / Send / Receive / Tag) ---------- */
+.modal-banner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border-left: 4px solid var(--sr-color-interactive-primary);
+  border-radius: var(--radius-sm);
+  background: var(--sr-color-surface-accent);
+}
+.modal-banner__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  color: var(--sr-color-interactive-primary);
+}
+.modal-banner__grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-6);
+}
+.modal-banner__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 160px;
+}
+.modal-banner__field dt {
+  margin: 0;
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  color: var(--sr-color-text-secondary);
+}
+.modal-banner__field dd {
+  margin: 0;
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+  color: var(--sr-color-text-primary);
+}
+.modal-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  width: 100%;
+}
+.modal-form-row > * { flex: 1 1 200px; }
+.modal-add-field { align-self: flex-start; }
+
 .visually-hidden {
   position: absolute;
   width: 1px;
