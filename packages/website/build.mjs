@@ -409,6 +409,8 @@ const SECTIONS = [
     side: [
       { href: 'components/button.html', label: 'Buttons' },
       { href: 'components/table.html', label: 'Tables' },
+      { href: 'components/header.html', label: 'Header' },
+      { href: 'components/footer.html', label: 'Footer' },
     ],
   },
   {
@@ -458,6 +460,8 @@ function shell({ title, prefix, sectionId, activeHref, body, extraHead = '', ext
 <link rel="stylesheet" href="${prefix}assets/button.css">
 <link rel="stylesheet" href="${prefix}assets/table.css">
 <link rel="stylesheet" href="${prefix}assets/patient-banner.css">
+<link rel="stylesheet" href="${prefix}assets/header.css">
+<link rel="stylesheet" href="${prefix}assets/footer.css">
 <link rel="stylesheet" href="${prefix}assets/icon.css">
 <link rel="stylesheet" href="${prefix}assets/site.css">
 ${extraHead}
@@ -524,6 +528,8 @@ function bareShell({ title, prefix, body, extraHead = '', extraScript = '' }) {
 <link rel="stylesheet" href="${prefix}assets/button.css">
 <link rel="stylesheet" href="${prefix}assets/table.css">
 <link rel="stylesheet" href="${prefix}assets/patient-banner.css">
+<link rel="stylesheet" href="${prefix}assets/header.css">
+<link rel="stylesheet" href="${prefix}assets/footer.css">
 <link rel="stylesheet" href="${prefix}assets/icon.css">
 <link rel="stylesheet" href="${prefix}assets/site.css">
 ${extraHead}
@@ -576,6 +582,78 @@ function accessibilityTable(rows) {
   // already carries a prose "## Accessibility" section, and two identical h2s
   // on one page is just confusing. This is the testable requirements matrix.
   return `<h2>Accessibility requirements</h2><div class="table-wrap"><table class="a11y-table">${head}<tbody>${body}</tbody></table></div>`;
+}
+
+// ─── Components: Header and Footer ───────────────────────────────────────────
+const HDR_ICON_SEARCH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.34-4.34"/></svg>';
+const HDR_ICON_GLOBE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20a15 15 0 0 1 0-20"/></svg>';
+const HDR_ICON_BELL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>';
+
+function headerBody() {
+  const md = publicise(readFileSync(resolve(ROOT, 'components', 'header', 'guidelines.md'), 'utf8'));
+  const bar = `<header class="sr-header sr-header--bar">
+  <div class="sr-header__main">
+    <div class="sr-header__search">
+      <span class="sr-header__search-icon sr-icon sr-icon--sm">${HDR_ICON_SEARCH}</span>
+      <input class="sr-header__search-input" type="search" placeholder="Type here to begin search">
+    </div>
+    <div class="sr-header__cluster">
+      <button type="button" class="sr-header__lang"><span class="sr-icon sr-icon--xs">${HDR_ICON_GLOBE}</span><span>Cymraeg</span></button>
+      <button type="button" class="sr-header__notification" aria-label="Notifications"><span class="sr-icon sr-icon--md">${HDR_ICON_BELL}</span></button>
+      <div class="sr-header__avatar"><span class="sr-header__avatar-initials">AB</span><span class="sr-header__avatar-status"></span></div>
+    </div>
+  </div>
+</header>`;
+  const snippets = {
+    HTML: '<header class="sr-header sr-header--bar">\n  <div class="sr-header__main">\n    <div class="sr-header__search">…</div>\n    <div class="sr-header__cluster">…</div>\n  </div>\n</header>',
+    React: '<Header\n  variant="desktop-2"   // "desktop" | "desktop-2" | "mobile"\n  initials="AB"\n  org="Cardiff and Vale UHB"\n  onSearch={handleSearch}\n  onLanguageToggle={toggleWelsh}\n/>',
+    Blazor: '<SrHeader Variant="Desktop2" Initials="AB" />',
+    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrHeader Variant="Desktop2" Initials="AB" />',
+  };
+  return `
+<p class="breadcrumbs">Components</p>
+${showcase(bar, 'header', snippets)}
+<p class="muted">The <code>desktop-2</code> bar, which pairs with the sidebar Navigation. It carries no
+logo, because the sidebar does — and it is 64px so its bottom rule continues the sidebar's.</p>
+<hr>
+${renderMarkdown(md)}
+${accessibilityTable([
+    { req: 'One header landmark per page', sc: '1.3.1', how: 'Renders a real <header> element; products must not nest a second.', test: 'Landmark review' },
+    { req: 'Icon-only controls are named', sc: '4.1.2', how: 'Notification and avatar controls carry an accessible name describing the action, not the glyph.', test: 'Screen reader announce' },
+    { req: 'Search field has a label', sc: '3.3.2', how: 'A real label, visually hidden via hideLabel where the design shows none — a placeholder is not an accessible name and disappears on typing.', test: 'Screen reader, type into field' },
+    { req: 'Language toggle survives narrow viewports', sc: '1.4.10', how: 'Below 768px the word is dropped but the globe icon remains, so the control stays recognisable rather than becoming an empty button.', test: 'Resize to 390px' },
+    { req: 'Focus visible', sc: '2.4.7', how: 'SR cyan ring on every control, offset from the bar edge so it is not clipped.', test: 'Keyboard tab' },
+  ])}`;
+}
+
+function footerBody() {
+  const md = publicise(readFileSync(resolve(ROOT, 'components', 'footer', 'guidelines.md'), 'utf8'));
+  const demo = `<footer class="sr-footer">
+  <span class="sr-footer__version">v 0.1.0.1112</span>
+  <div class="sr-footer__actions">
+    <button type="button" class="sr-button sr-button--secondary sr-button--small">Save changes</button>
+    <button type="button" class="sr-button sr-button--primary sr-button--small">Mark as complete</button>
+  </div>
+</footer>`;
+  const snippets = {
+    HTML: '<footer class="sr-footer">\n  <span class="sr-footer__version">v 0.1.0.1112</span>\n  <div class="sr-footer__actions">…</div>\n</footer>',
+    React: '<Footer\n  version="v 0.1.0.1112"\n  onSave={handleSave}\n  onComplete={handleComplete}\n/>',
+    Blazor: '<SrFooter Version="v 0.1.0.1112" />',
+    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrFooter Version="v 0.1.0.1112" />',
+  };
+  return `
+<p class="breadcrumbs">Components</p>
+${showcase(demo, 'footer', snippets)}
+<p class="muted">Version left, actions right. Exactly one primary action — the one that commits.</p>
+<hr>
+${renderMarkdown(md)}
+${accessibilityTable([
+    { req: 'One footer landmark per page', sc: '1.3.1', how: 'Renders a real <footer> element.', test: 'Landmark review' },
+    { req: 'Version is selectable text', sc: '1.3.1', how: 'Plain text, not an image or pseudo-element, so staff can copy it into a fault report.', test: 'Select and copy' },
+    { req: 'Action order matches visual order', sc: '2.4.3', how: 'DOM order is the visual order, so keyboard order is not surprising.', test: 'Keyboard tab' },
+    { req: 'Single primary action', sc: '3.2.4', how: 'One primary button identifies the committing action; siblings are secondary.', test: 'Visual review' },
+    { req: 'Focus visible', sc: '2.4.7', how: 'SR cyan ring, DDR-006.', test: 'Keyboard tab' },
+  ])}`;
 }
 
 // ─── Styles: Grids ────────────────────────────────────────────────────────────
@@ -2020,6 +2098,16 @@ addPage({
 });
 
 addPage({
+  file: 'components/header.html', url: 'components/header.html', title: 'Header', section: 'Components',
+  sectionId: 'components', activeHref: 'components/header.html', prefix: '../', wide: true,
+  body: headerBody(),
+});
+addPage({
+  file: 'components/footer.html', url: 'components/footer.html', title: 'Footer', section: 'Components',
+  sectionId: 'components', activeHref: 'components/footer.html', prefix: '../', wide: true,
+  body: footerBody(),
+});
+addPage({
   file: 'patterns/patient-banner.html', url: 'patterns/patient-banner.html',
   title: 'Patient Banner', section: 'Patterns',
   sectionId: 'patterns', activeHref: 'patterns/patient-banner.html', prefix: '../',
@@ -2314,6 +2402,8 @@ for (const f of ['fonts.css', 'tokens.css', 'typography.css']) copyFileSync(reso
 copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'button', 'button.css'), resolve(DIST, 'assets', 'button.css'));
 copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'table', 'table.css'), resolve(DIST, 'assets', 'table.css'));
 copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'patient-banner', 'patient-banner.css'), resolve(DIST, 'assets', 'patient-banner.css'));
+copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'header', 'header.css'), resolve(DIST, 'assets', 'header.css'));
+copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'footer', 'footer.css'), resolve(DIST, 'assets', 'footer.css'));
 copyFileSync(resolve(ROOT, 'packages', 'icons', 'src', 'icon.css'), resolve(DIST, 'assets', 'icon.css'));
 copyFileSync(resolve(ROOT, 'figma', 'assets', 'dhcw-logo-white.png'), resolve(DIST, 'assets', 'dhcw-logo-white.png'));
 writeFileSync(resolve(DIST, 'assets', 'site.css'), readFileSync(resolve(__dirname, 'site.css'), 'utf8'));

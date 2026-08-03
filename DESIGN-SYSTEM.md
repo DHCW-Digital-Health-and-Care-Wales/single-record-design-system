@@ -177,12 +177,12 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Checkbox | ✅ | ✅ | ✅ |
 | Date input | — | ✅ | ✅ |
 | Date picker | — | ✅ | ✅ |
-| Footer | — | ✅ | ✅ |
-| Header | — | ✅ | ✅ |
+| Footer | — (guidelines ✅) | ✅ | ✅ |
+| Header | — (guidelines ✅) | ✅ | ✅ |
 | Input | — | ✅ | ✅ |
 | Link | ✅ | — | — |
 | Modal dialog | ✅ | ✅ | ✅ |
-| Navigation | — | ✅ | ✅ |
+| Navigation | — (guidelines ✅) | ✅ | ✅ |
 | Patient banner | ✅ | ✅ | ✅ |
 | Progress indicators | ✅ | — | — |
 | Radio | — | ✅ | ✅ |
