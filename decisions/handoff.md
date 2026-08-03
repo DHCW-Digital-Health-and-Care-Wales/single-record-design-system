@@ -67,12 +67,13 @@ Sectioned nav keeps its items flush (36px pitch, `665:20955`) since its
 section labels already do the separating — the 16px gap is scoped to
 `.sr-nav--linear`.
 
-### Still not resolved
+### Resolved on review
 
-The dashboard's page title reads "Patient Search" while the current nav item
-is Dashboard. That is what Figma shows, so it has been carried over verbatim
-rather than quietly corrected — but it looks like a slip in the design and
-probably wants confirming.
+The dashboard's page title read "Patient Search" while the current nav item
+was Dashboard. Carried over verbatim from Figma at first rather than quietly
+corrected; design lead confirmed it was a slip in the design, so the
+prototype now titles the screen **"Dashboard"**. Figma node `2:3875` still
+has the old text and needs the same correction.
 
 ---
 
