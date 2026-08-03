@@ -4,7 +4,7 @@ The Single Record Design System provides the shared design language, component l
 
 This document is the primary reference for everyone working on Single Record — designers, engineers, and delivery leads.
 
-**Last reviewed:** 2026-07-29. Update this file whenever a component ships, a
+**Last reviewed:** 2026-08-03. Update this file whenever a component ships, a
 token is added, or a system-wide rule changes — not on a schedule. If it
 disagrees with `/foundations/tokens/` or `/components/`, those win and this file
 is out of date.
@@ -163,6 +163,7 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Navigation | — | ✅ | ✅ |
 | Patient banner | ✅ | ✅ | ✅ |
 | Progress indicators | ✅ | — | — |
+| Radio | — | ✅ | ✅ |
 | Search | ✅ | — | — |
 | Segmented control | — | ✅ | ✅ |
 | Select | ✅ | ✅ | ✅ |
@@ -172,7 +173,7 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Tags | ✅ | ✅ | ✅ |
 | Time select | — | ✅ | ✅ |
 
-**Known gaps, stated plainly:** eleven components ship code without a spec, and
+**Known gaps, stated plainly:** twelve components ship code without a spec, and
 three specs (Link, Progress indicators, Search) have no code. Neither is
 satisfactory — a component without a spec has no agreed contract, and a spec
 without code cannot be consumed. Both lists are worked down as components are
@@ -188,6 +189,14 @@ the live catalogue in Storybook for every variant.
 Patterns are composed interactions and page-level solutions built from components. They address common clinical and administrative workflows.
 
 Patterns live in `/patterns/`. Each pattern follows the template in `/docs/templates/pattern-template.md`.
+
+| Pattern | Guidelines | DS website page | Notes |
+|---|---|---|---|
+| Patient banner | ✅ `components/patient-banner/guidelines.md` | ✅ `patterns/patient-banner.html` | Two types (`Fill`, `Border`) and two states (`Expanded`, `Collapsed`) — **all four are live**. Fill vs Border has not been user-tested; keeping both is provisional. |
+
+**Known gap:** forms, search and sign-off flows are named in the pattern
+intro but have no guidelines file and no website page. Only the patient
+banner is documented.
 
 ---
 

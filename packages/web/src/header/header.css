@@ -191,13 +191,20 @@
   border: 1.5px solid var(--sr-color-surface-section-cards);
 }
 
-/* ---------- Desktop 2 (single 80px bar: search + org + language) ---------- */
+/* ---------- Desktop 2 (single bar: search + org + language) ---------- */
 /* No logo — this variant pairs with the sidebar Navigation, which carries the
- * brand lockup. Figma Header bar Type=Desktop 2 (815:20262). */
+ * brand lockup. Figma Header bar Type=Desktop 2 (815:20262).
+ *
+ * 64px, matching the sidebar's own header/logo block, so the two bottom rules
+ * form one continuous line across the top of the app. */
 .sr-header--bar .sr-header__main {
-  height: 80px;
+  height: 64px;
   border-bottom: none;
   border: 1px solid var(--sr-color-border-default);
+  /* Search sits with the utility cluster on the right rather than being
+     pushed to the far left by space-between — they read as one group. */
+  justify-content: flex-end;
+  gap: var(--space-4);
 }
 .sr-header__cluster {
   display: flex;

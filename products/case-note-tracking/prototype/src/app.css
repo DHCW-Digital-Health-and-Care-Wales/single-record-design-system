@@ -140,15 +140,30 @@ body {
   text-align: left;
   cursor: pointer;
 }
-.quick-action:hover { background-color: var(--sr-color-surface-subtle); }
-.quick-action:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--sr-color-surface-background), 0 0 0 4px var(--color-cyan-700);
+/* Interaction states mirror the DS Button exactly, so a quick action behaves
+   like every other clickable thing in the system:
+     default  — white, neutral border (Figma's "Create Case Note" state)
+     hover    — cyan tint + primary border, same as .sr-button--secondary:hover
+     active   — solid navy fill (Figma's "Patient Search" state)
+     focus    — SR cyan ring, DDR-006
+   Navy fill is the *pressed* state, not hover: it reads as "committed /
+   selected", and firing it on mouseover makes every pass of the cursor look
+   like a selection. The cyan tint is the lighter-touch hover the DS already
+   uses for secondary and ghost buttons. */
+.quick-action:hover {
+  background-color: var(--color-cyan-100);
+  border-color: var(--sr-color-interactive-primary);
 }
-.quick-action--selected {
-  background: var(--sr-color-interactive-primary);
+.quick-action:active {
+  background-color: var(--sr-color-interactive-primary);
   border-color: var(--sr-color-interactive-primary);
   color: var(--sr-color-text-inverse);
+}
+.quick-action:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--sr-color-surface-background),
+    0 0 0 4px var(--color-cyan-700);
 }
 .quick-action__label {
   display: block;
@@ -307,3 +322,152 @@ body {
   margin: var(--space-2) 0 0;
   padding-left: var(--space-4);
 }
+
+/* ---------- Patient Search (Figma 2:4437 / 2:3927 / 2:4068) ---------- */
+.page__title {
+  margin: 0;
+  font-size: var(--font-size-20);
+  line-height: var(--font-line-height-28);
+  font-weight: 700;
+}
+.page__lede {
+  margin: var(--space-1) 0 0;
+  color: var(--sr-color-text-secondary);
+}
+
+.info-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-left: 4px solid var(--sr-color-interactive-primary);
+  border-radius: var(--radius-sm);
+  background: var(--sr-color-surface-accent);
+}
+.info-banner__icon { flex: 0 0 auto; color: var(--sr-color-interactive-primary); }
+.info-banner__text { margin: 0; flex: 1 1 auto; }
+.info-banner__text strong { color: var(--sr-color-interactive-primary); }
+.info-banner__dismiss {
+  flex: 0 0 auto;
+  display: inline-flex;
+  padding: var(--space-1);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--sr-color-text-secondary);
+  cursor: pointer;
+}
+.info-banner__dismiss:hover { color: var(--sr-color-text-primary); }
+.info-banner__dismiss:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--sr-color-border-focus);
+}
+
+.search-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  background: var(--sr-color-surface-section-cards);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elevation-raised);
+}
+
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.search-row__field { flex: 1 1 auto; min-width: 0; }
+
+.scan-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 0 0 auto;
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  font-family: inherit;
+  font-size: var(--font-size-14);
+  color: var(--sr-color-interactive-primary);
+  cursor: pointer;
+}
+.scan-link:hover { background-color: var(--color-cyan-100); }
+.scan-link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--sr-color-border-focus);
+}
+
+.search-fields {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+
+.search-methods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+
+.search-actions { display: flex; gap: var(--space-3); }
+
+.results {
+  padding: var(--space-4);
+  background: var(--sr-color-surface-section-cards);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elevation-raised);
+  overflow-x: auto;
+}
+.results__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+.results__count { margin: 0; }
+.results__count strong { color: var(--sr-color-interactive-primary); }
+.results__filter { width: 200px; }
+.results__empty {
+  margin: var(--space-4) 0 0;
+  color: var(--sr-color-text-secondary);
+}
+
+.link-action {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: var(--font-size-14);
+  color: var(--sr-color-interactive-primary);
+  cursor: pointer;
+}
+.link-action:hover { text-decoration: underline; }
+.link-action:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--sr-color-border-focus);
+  border-radius: var(--radius-sm);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* The toggle hugs its two options rather than stretching the panel width —
+   a full-bleed segmented control reads as a tab bar for the whole page. */
+.search-panel .sr-segmented { align-self: flex-start; }

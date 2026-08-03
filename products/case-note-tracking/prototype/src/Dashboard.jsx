@@ -46,11 +46,11 @@ export default function Dashboard({ onNavigate }) {
         <section className="dashboard__quick-actions" aria-label="Quick actions">
           <p className="dashboard__section-label">Quick actions</p>
           <div className="quick-actions">
-            {QUICK_ACTIONS.map((a, i) => (
+            {QUICK_ACTIONS.map((a) => (
               <button
                 type="button"
                 key={a.label}
-                className={`quick-action${i === 0 ? ' quick-action--selected' : ''}`}
+                className="quick-action"
                 onClick={() => a.view && onNavigate && onNavigate(a.view)}
               >
                 <Icon name={a.icon} size="sm" color="inherit" />

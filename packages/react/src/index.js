@@ -16,6 +16,8 @@ export { default as Tag } from './tags/Tag.jsx';
 export { default as Select } from './select/Select.jsx';
 export { default as Checkbox } from './checkbox/Checkbox.jsx';
 export { default as CheckboxGroup } from './checkbox/CheckboxGroup.jsx';
+export { default as Radio } from './radio/Radio.jsx';
+export { default as RadioGroup } from './radio/RadioGroup.jsx';
 export { default as Autocomplete } from './autocomplete/Autocomplete.jsx';
 export { default as Table } from './table/Table.jsx';
 export { default as Modal } from './modal/Modal.jsx';

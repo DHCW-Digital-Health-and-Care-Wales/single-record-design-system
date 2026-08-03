@@ -1,9 +1,16 @@
 import React, { forwardRef } from 'react';
 import '@dhcw/sr-web/src/button/button.css';
 
+/**
+ * `type` is the visual variant (primary / secondary / ghost / destructive),
+ * which leaves no way to set the native button type — so a Button inside a
+ * form could never submit it. `htmlType` carries the native attribute and
+ * defaults to "button", preserving the previous behaviour.
+ */
 const Button = forwardRef(function Button(
   {
     type = 'primary',
+    htmlType = 'button',
     size = 'default',
     disabled = false,
     leadingIcon,
@@ -26,7 +33,7 @@ const Button = forwardRef(function Button(
   return (
     <button
       ref={ref}
-      type="button"
+      type={htmlType}
       className={classes}
       disabled={disabled}
       {...rest}

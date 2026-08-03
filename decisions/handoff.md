@@ -5,6 +5,97 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-08-03 (patient search, patient banner pattern, header fixes)
+
+### Patient Search screen — built (Figma `2:4437` quick · `2:3927` advanced · `2:4068` results)
+
+`products/case-note-tracking/prototype/src/PatientSearch.jsx`, reachable from
+the nav and from the dashboard's Patient Search quick action.
+
+- **Quick vs Advanced is a `SegmentedControl`**, not a link or a disclosure.
+  It switches between two ways of doing one task, both of which stay on the
+  page. Advanced **adds** fields below the shared search bar rather than
+  replacing it, so a user who has already typed an identifier does not lose it
+  when they widen the search.
+- All three states verified in a real browser: quick (empty), advanced
+  (expanded fields + both radio groups), and results.
+
+### Four Figma slips found on those screens — implemented corrected, not copied
+
+Each of these would have shipped a defect if transcribed literally. Flagging
+rather than silently absorbing, because the Figma file still needs fixing:
+
+| Screen | Slip | What the prototype does |
+|---|---|---|
+| `2:3927` advanced | Surname field's placeholder reads "Enter forename"; Forename's reads "Enter surname" — transposed | Placeholders match their labels |
+| `2:3927` advanced | "Forename Searching Methods" lists **See and treat / Rapid assessment / Triage** — triage categories pasted from another screen | Mirrors the surname methods (Containing / Exact Match / Sounds Like) |
+| `2:4068` results | **Two columns both headed "Birth date"**. The second is populated only on the Deceased row | Second column is headed "Date of death" |
+| `2:4068` results | Surname/Forenames transposed on several rows (Surname "JANE", Forenames "DOE"); every row reads Sex "Male", including AVA and JANE | Names un-transposed, sexes corrected |
+
+### Three DS gaps this screen exposed — all filled
+
+- **Radio had no code.** The Figma component set exists and
+  `components/form-fields.md` already documents its `Required` marker, but
+  there was no `packages/web/src/radio/` or React wrapper — so a single-select
+  group was unbuildable. Added `radio.css` + `Radio.jsx` + `RadioGroup.jsx`,
+  deliberately kept structurally identical to the Checkbox trio (same 20px
+  control, 28px label offset, focus ring, error treatment; round instead of
+  square, dot instead of tick). Native `<input type="radio">`, so arrow-key
+  roving focus is the browser's, not reimplemented. **Still no `spec.md`.**
+- **`Button` could not submit a form.** Its `type` prop is the visual variant,
+  and the native attribute was hardcoded to `"button"`, so a Button inside a
+  `<form>` did nothing. Added `htmlType` (defaults to `"button"`, so nothing
+  changes for existing callers).
+- **`Input` had no way to hide a label.** The search bars here show no visible
+  label, and a placeholder is not an accessible name — it also vanishes on
+  typing. Added `hideLabel`, which renders the label visually-hidden rather
+  than dropping it. `label` remains required.
+  - Side effect worth knowing: `.sr-visually-hidden` is now defined in **both**
+    `table.css` and `input.css`. Each component stylesheet is independently
+    importable, so a shared utility has to be duplicated until there is a
+    foundations stylesheet to hold it. Extract when a third component needs it.
+
+### Patient Banner pattern — now on the DS website
+
+- `components/patient-banner/guidelines.md` (new) + a page at
+  `patterns/patient-banner.html` rendering **all four Figma variants**
+  (`1711:15585`): Fill/Border × Expanded/Collapsed, from the real CSS contract.
+  Patterns gained a sidebar and an overview card; it was a placeholder before.
+- Both types documented as **live**, with a "choosing between Fill and Border"
+  table. Recorded plainly that this choice has never been user-tested and that
+  keeping both is provisional.
+- The page renders `wide`, because the banner is a 1280px strip — in the
+  default reading column its name row wraps and the action stack collides with
+  the demographics, which misrepresents the pattern.
+- **Pre-existing wart fixed in passing:** `accessibilityTable()` emitted
+  `<h2>Accessibility</h2>`, colliding with the prose `## Accessibility` section
+  every `guidelines.md` carries — two identical h2s on one page. Retitled to
+  "Accessibility requirements", which also de-duplicates the Tables page.
+
+### Header fixes
+
+- `desktop-2` bar was 80px against the sidebar's 64px logo block; now 64px, so
+  the two bottom rules form one continuous line.
+- The "strange dropdown chevron" beside the language switcher was the **org
+  switcher rendering with an empty label** (the prototype passes `org=""`).
+  It is now omitted entirely when there is no org, rather than showing a
+  control that opens nothing.
+- Search moved from the far left to sit with the utility cluster —
+  `justify-content` was `space-between`, which pushed them apart.
+
+### Quick-action interaction states
+
+Now mirror the DS Button: cyan-tint hover with primary border, solid navy on
+`:active`, SR cyan focus ring. The permanent "selected" state on Patient
+Search is gone — these are actions, not a choice set.
+
+**Design-lead question answered:** navy is the **pressed** state, not hover.
+It reads as "committed/selected", and firing it on mouseover makes every pass
+of the cursor across a row of four look like a selection. The cyan tint is
+what the DS already uses for secondary and ghost button hover.
+
+---
+
 ## Checkpoint — 2026-07-31 (later still, design review pass on the dashboard)
 
 Design lead reviewed the first dashboard pass. Three pieces of feedback, all
