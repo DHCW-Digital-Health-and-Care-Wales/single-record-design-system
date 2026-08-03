@@ -40,6 +40,7 @@ export default function PatientSearch({ onOpenPatient }) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState(null);
   const [banner, setBanner] = useState(() => !bannerDismissed());
+  const [scanned, setScanned] = useState(false);
   const [surnameMethod, setSurnameMethod] = useState('containing');
   const [forenameMethod, setForenameMethod] = useState('containing');
   const [filter, setFilter] = useState('');
@@ -47,6 +48,29 @@ export default function PatientSearch({ onOpenPatient }) {
   const runSearch = (e) => {
     e?.preventDefault();
     setResults(SEARCH_RESULTS);
+    setScanned(false);
+  };
+
+  /**
+   * Real barcode scanners are HID devices: they type the number into whatever
+   * field has focus and send Enter. There is no button to press — the clinician
+   * scans the wristband and the search runs. So the scan path is:
+   *   populate the field -> run the search -> land on results.
+   *
+   * It never opens a patient, even when exactly one row comes back. The
+   * original system has known duplicate records, so "one result" is not proof
+   * of one patient, and auto-opening would make a scan capable of putting the
+   * wrong record on screen with no human step in between. Landing on the list —
+   * one row or six — keeps the choice with the clinician and costs one click.
+   *
+   * The visible control exists because this prototype has no scanner attached;
+   * it stands in for the hardware and is not the primary path.
+   */
+  const simulateScan = () => {
+    const scan = '098 765 4321';
+    setQuery(scan);
+    setResults(SEARCH_RESULTS);
+    setScanned(true);
   };
 
   const clear = () => {
@@ -159,12 +183,14 @@ export default function PatientSearch({ onOpenPatient }) {
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search by NHS number, case number, or patient ID"
                 leadingIcon={<Icon name="nav/search" size="sm" />}
+                trailingAction={
+                  <button type="button" className="scan-trigger" onClick={simulateScan}>
+                    <Icon name="action/scan" size="sm" color="inherit" />
+                    <span className="scan-trigger__label">Scan</span>
+                  </button>
+                }
               />
             </div>
-            <button type="button" className="scan-link">
-              <Icon name="action/scan" size="sm" color="inherit" />
-              <span>Scan Barcode</span>
-            </button>
             <Button type="primary" htmlType="submit">Search</Button>
           </div>
 
@@ -206,10 +232,23 @@ export default function PatientSearch({ onOpenPatient }) {
 
         {results && (
           <section className="results" aria-label="Search results">
+            {/* A scan can return several rows because of known duplicate records
+                in the source system. Saying so at the point of choosing is the
+                difference between "the system is broken" and "pick carefully". */}
+            {rows.length > 1 && (
+              <p className="results__warning">
+                <Icon name="status/warning" size="sm" className="results__warning-icon" />
+                <span>
+                  More than one record matched. Duplicates exist in the source system —
+                  check date of birth and postcode before opening a record.
+                </span>
+              </p>
+            )}
             <div className="results__bar">
               <p className="results__count" role="status">
                 <strong>{rows.length}</strong>{' '}
                 {rows.length === 1 ? 'patient' : 'patients'} found
+                {scanned && ' from scan'}
               </p>
               <div className="results__filter">
                 <Input

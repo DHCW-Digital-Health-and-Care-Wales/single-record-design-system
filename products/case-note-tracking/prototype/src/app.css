@@ -174,11 +174,15 @@ body {
 
 .dashboard__panels {
   display: grid;
+  min-width: 0;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-4);
 }
 
 .panel {
+  /* Grid items default to min-width:auto, so wide content pushes the track
+     past its 1fr share and out of the viewport. */
+  min-width: 0;
   padding: var(--space-4) var(--space-4) var(--space-5);
   background: var(--sr-color-surface-section-cards);
   border-radius: var(--radius-md);
@@ -390,22 +394,24 @@ body {
 }
 .search-row__field { flex: 1 1 auto; min-width: 0; }
 
-.scan-link {
+/* Scan trigger, inside the field at its trailing edge. The real input is the
+   scanner itself — this is the manual stand-in, so it stays visually quiet. */
+.scan-trigger {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
-  flex: 0 0 auto;
-  padding: var(--space-2) var(--space-3);
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-1);
   border: 0;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   background: transparent;
   font: var(--sr-type-body-s-font);
   letter-spacing: var(--sr-type-body-s-letter-spacing);
   color: var(--sr-color-interactive-primary);
   cursor: pointer;
+  white-space: nowrap;
 }
-.scan-link:hover { background-color: var(--color-cyan-100); }
-.scan-link:focus-visible {
+.scan-trigger:hover { background-color: var(--color-cyan-100); }
+.scan-trigger:focus-visible {
   outline: none;
   box-shadow: 0 0 0 3px var(--sr-color-border-focus);
 }
@@ -481,3 +487,63 @@ body {
 /* The toggle hugs its two options rather than stretching the panel width —
    a full-bleed segmented control reads as a tab bar for the whole page. */
 .search-panel .sr-segmented { align-self: flex-start; }
+
+.results__warning {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-left: 4px solid var(--color-yellow-500);
+  border-radius: var(--radius-sm);
+  background: var(--color-yellow-50);
+}
+.results__warning-icon { flex: 0 0 auto; color: var(--color-yellow-700); }
+
+/* ---------- Responsive ----------
+   Breakpoints are the design system's, not invented here: Tablet 768,
+   Desktop 1024, Large 1280 (foundations/grid-and-layout.md). Media queries
+   cannot use var(), so the values are written literally — that is the one
+   place in this file where a raw number is unavoidable. */
+
+/* Below Large (1280px): the 12-column desktop layout still holds, but the
+   four-across rows get tight once the sidebar takes its 220px. */
+@media (max-width: 1279px) {
+  .dashboard__stats,
+  .quick-actions { grid-template-columns: repeat(2, 1fr); }
+  .search-fields { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Below Desktop (1024px) — tablet, 8-column fluid. The side-by-side dashboard
+   panels stack, and the sidebar drops to its rail so content keeps its width. */
+@media (max-width: 1023px) {
+  .dashboard__panels { grid-template-columns: 1fr; }
+  .search-methods { gap: var(--space-4); flex-direction: column; }
+  .app__main { padding: var(--space-4) var(--space-3); gap: var(--space-4); }
+}
+
+/* Below Tablet (768px) — mobile, 4-column fluid. Everything is one column.
+   The nav stops being a sticky full-height rail: on a short viewport it would
+   eat the screen, so it becomes a normal-flow strip above the content. */
+@media (max-width: 767px) {
+  .app { flex-direction: column; align-items: stretch; }
+  .app .sr-nav {
+    position: static;
+    height: auto;
+    width: 100%;
+  }
+  .app .sr-nav__body { padding: var(--space-2) 0; }
+  .app .sr-nav__list { flex-direction: row; flex-wrap: wrap; gap: var(--space-2); }
+  .app .sr-nav__footer { flex-direction: row; gap: var(--space-2); }
+
+  .dashboard__stats,
+  .quick-actions,
+  .search-fields { grid-template-columns: 1fr; }
+
+  .search-row { flex-wrap: wrap; }
+  .search-row__field { flex: 1 0 100%; }
+
+  .attention-row { flex-wrap: wrap; min-height: 0; }
+  .results__bar { flex-direction: column; align-items: stretch; }
+  .results__filter { width: 100%; }
+}

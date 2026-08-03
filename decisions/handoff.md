@@ -5,6 +5,83 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-08-03 (later — grids, barcode scan, responsive)
+
+### Grids synced from Figma — the repo doc was wrong, the tokens were right
+
+`foundations/grid-and-layout.md` described a six-step `xs / sm / md / lg / xl /
+2xl` scale with its own gutter and margin values. That scale **never existed**
+in `foundations/tokens/breakpoints.json`, which has always carried the five
+named breakpoints in Figma's *SR Grid & Layout System* (`289:301`). So the doc
+was the stale artefact, not the tokens — nothing in code had to change.
+
+Rewritten from Figma, and the DS website Grids page (a placeholder until now)
+is real: `packages/website/build.mjs` `gridsBody()` renders the breakpoint
+table, the three grid types as live CSS-grid ribbons, the EPR grid, the
+spacing-token map and platform guidance. Breakpoint values are read from
+`tokens-flat.json` at build time and printed beside each token name, so that
+table cannot drift from what ships.
+
+**Two things carried over as drawn, both needing a decision:**
+
+1. **EPR sidebar is 248px in the grid spec; `Navigation` is 220px** in the DS
+   master (`725:8903`), in the product adaptation (`125:5362`) and in
+   `navigation.css`. The three content-zone widths (1192px / 1032px) are
+   derived from 248px and are therefore 28px out against the component as
+   built. Either the grid page moves to 220px or the component grows — do not
+   change one side alone.
+2. **MAUI desktop margin is 48px** on Figma's platform card, matching none of
+   the web margins (40 / 64 / 80). Possibly deliberate for MAUI, possibly
+   stale.
+
+### Barcode scan moved into the search field, and made to behave like a scanner
+
+The scan control now sits inside the search input at its trailing edge (new
+`trailingAction` prop on `Input` — its anatomy comment already promised a
+trailing slot). Scanning populates the field **and runs the search**, because
+real scanners are HID devices: they type into the focused field and send
+Enter. There is no button in the real flow; the visible trigger is a stand-in
+for hardware this prototype does not have.
+
+**It never auto-opens a patient, including when exactly one row returns.**
+Given the known duplicate records in the source system, "one result" is not
+proof of one patient, and auto-opening would let a scan put a record on screen
+with no human step in between. Landing on the list costs one click and keeps
+the choice with the clinician. When more than one row matches, the results
+panel says so explicitly and names duplicates as the reason — at the point of
+choosing, which is where it changes behaviour.
+
+### Responsive
+
+The prototype and the Header now work at every DS breakpoint. Verified with no
+horizontal overflow at 1440 / 1280 / 1024 / 900 / 420 / 390.
+
+- Below Large: stat cards and quick actions go 4-across → 2-across.
+- Below Desktop: dashboard panels stack; header search flexes instead of its
+  fixed 280px.
+- Below Tablet: single column throughout; the sidebar stops being a sticky
+  full-height rail and becomes a normal-flow strip (100vh of nav on a phone is
+  the whole screen); header hides the org/Cymraeg **words**.
+- Media queries use literal pixel values because CSS media queries cannot read
+  `var()`. That is the one place raw numbers are unavoidable, and they are
+  commented with the token they correspond to.
+
+**Two bugs this surfaced, both fixed:**
+- Hiding the header labels with a bare `span` selector also hid the globe
+  icon, because `<Icon>` renders a `<span>` — an empty button remained. Now
+  `> span:not(.sr-icon)`.
+- `.panel` overflowed the viewport at 420px: grid items default to
+  `min-width: auto`, so wide content pushes the track past its `1fr` share.
+  Needs an explicit `min-width: 0`.
+
+### Website navigation
+
+Patterns now behaves like Components: the top-nav entry opens the first
+pattern directly and the overview page is gone. With one pattern it was a card
+pointing at the only sibling already in the sidebar.
+
+---
+
 ## Checkpoint — 2026-08-03 (patient search, patient banner pattern, header fixes)
 
 ### Patient Search screen — built (Figma `2:4437` quick · `2:3927` advanced · `2:4068` results)

@@ -65,7 +65,7 @@ Foundations are the base layer of the system — the raw materials that componen
 | Motion | `/foundations/tokens/motion.md` | Duration, easing, animation principles |
 | Border | `/foundations/tokens/border.md` | Border widths and radius scale |
 | Iconography | `/foundations/iconography.md` | Icon library, sizing, usage |
-| Grid and layout | `/foundations/grid-and-layout.md` | Breakpoints, columns, gutters |
+| Grid and layout | `/foundations/grid-and-layout.md` | 5 breakpoints (Mobile → XLarge), columns, gutters, EPR content zones. Synced from Figma `289:301` on 2026-08-03 |
 
 ### Token Structure
 

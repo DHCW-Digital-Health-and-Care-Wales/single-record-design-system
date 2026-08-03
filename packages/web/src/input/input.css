@@ -175,3 +175,16 @@ textarea.sr-input__control {
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+/* Trailing action inside the field (scan trigger, unit toggle, clear).
+   Inside the border so it reads as part of the field, with a divider so it is
+   still legible as a separate control rather than decoration. */
+.sr-input__trailing {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  align-self: stretch;
+  margin-left: var(--space-2);
+  padding-left: var(--space-2);
+  border-left: 1px solid var(--sr-color-border-subtle);
+}
