@@ -5,6 +5,77 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-07-31 (later still, design review pass on the dashboard)
+
+Design lead reviewed the first dashboard pass. Three pieces of feedback, all
+actioned, plus a new Figma reference: the **Case Note Tracking adaptation of
+the sidebar nav, `125:5362`** in `U0Ugs6bG1KLzrrWdnxqcZO`.
+
+- **The product nav has only TWO states**, confirmed from `125:5362`:
+  `State=Expanded` (220px) and `State=Collapsed` (108px rail). There is **no
+  48px icon-only variant** in the product adaptation. The prototype's collapse
+  toggle now goes Expanded ⇄ rail. The DS component still carries the
+  icon-only state (it exists on the DS master, `3569:15850` / `2212:7613`,
+  with the hover+focus tooltip from the earlier checkpoint) — products opt in,
+  and this one hasn't. Worth knowing if the earlier "might need to knock the
+  icon-only state off" question comes back: for this product it is already
+  moot.
+- **The rail stacks icon ABOVE label, centred — it is not a truncated row.**
+  The earlier implementation had it as a horizontal icon+label row with an
+  ellipsis, which was simply wrong; both the product adaptation and the DS
+  master (item heights of 44 on a 60px pitch, and hugging widths of 47-94px,
+  which only make sense for a centred stack) show the vertical form. Rail
+  labels drop to 12px so the longest ("Patient Search") fits the 92px content
+  box without truncating. Fixed in `navigation.css`.
+- **Typography was a step too large throughout.** Root cause was a missing
+  base `font-size` on `body` in the prototype, so every element without an
+  explicit size inherited the browser's 16px default — row text, quick-action
+  labels and panel copy all rendered at 16px instead of Body S. Base is now
+  14/20 per DDR-015, which is the right default for this table- and data-dense
+  system. Separately the page title dropped from 28/36 to **20/28** and the
+  stat values from 28/36 to **24/32**.
+- **Spacing loosened** in the sidebar (52px item pitch: 36px item + 16px gap,
+  per `125:5361`), quick-action cards (64px min height, single-line
+  descriptions — the copy was shortened because a wrapped second line breaks
+  the row), stat cards, panels and the attention/transit rows.
+  **Watch out:** bumping `.app__main`'s *horizontal* padding to 24px squeezed
+  the casenote table enough to wrap cell text onto two lines. It is back at
+  16px horizontally (24px vertically), and `.notes` gained `overflow-x: auto`
+  so a wide data table scrolls rather than reflows.
+- **The sidebar now fills the full viewport height and sticks.** It was
+  collapsing to content height, leaving grey page background below "Log Out".
+  Cause: `.sr-nav` had `height: 100%`, which inside an auto-height flex row
+  resolves against an indefinite height and gives up. Now
+  `position: sticky; top: 0; height: 100vh` on the component itself (Figma
+  draws the sidebar full-frame-height in every variant, so this is component
+  behaviour, not a consumer layout choice), and `.app` uses
+  `align-items: flex-start` so stretch doesn't defeat the sticky.
+
+### Two DS-vs-product spec discrepancies — flagged, not silently resolved
+
+Both were resolved in favour of the **product adaptation**, because that is
+the reference the design lead handed over and it is the one the prototype
+renders. Neither is obviously "the" right answer and both are worth a
+decision:
+
+| Thing | DS master (`x5fwyefxxgD03csz8ld7SZ`) | Product (`U0Ugs6bG1KLzrrWdnxqcZO`) | Taken |
+|---|---|---|---|
+| Sidebar header height | 80px (`665:20955`) | 64px (`125:5361`) | **64px** — it also aligns the sidebar's bottom rule with the 64px Header bar's, which 80px visibly did not |
+| Linear nav item gap | 8px, 44px pitch (`1317:24167`) | 16px, 52px pitch (`125:5361`) | **16px** |
+
+Sectioned nav keeps its items flush (36px pitch, `665:20955`) since its
+section labels already do the separating — the 16px gap is scoped to
+`.sr-nav--linear`.
+
+### Still not resolved
+
+The dashboard's page title reads "Patient Search" while the current nav item
+is Dashboard. That is what Figma shows, so it has been carried over verbatim
+rather than quietly corrected — but it looks like a slip in the design and
+probably wants confirming.
+
+---
+
 ## Checkpoint — 2026-07-31 (later, dashboard home screen, same branch)
 
 Started the item flagged "not done" at the end of the previous checkpoint:

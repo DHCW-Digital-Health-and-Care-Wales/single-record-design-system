@@ -10,8 +10,9 @@ import Icon from '../icon/Icon.jsx';
  *     groups items under section labels (PATIENTS, CLINICAL, ...).
  *   - Type=Linear (1317:24167) is a flat list, no section labels — for simpler,
  *     single-level navigation.
- *   - Collapsed "rail" (746:13066 / 1942:7143, 108px) keeps a visible truncated
- *     label next to the icon.
+ *   - Collapsed "rail" (746:13066 / 1942:7143, 108px) stacks the icon ABOVE a
+ *     permanently visible label, both centred. It is not a truncated version
+ *     of the expanded row.
  *   - Collapsed "icon" (3569:15850 / 2212:7613, 48px) shows icons only.
  *
  * `sections` shape:
@@ -28,6 +29,10 @@ import Icon from '../icon/Icon.jsx';
  * `aria-label` on every item already gives screen readers the name regardless
  * of what's visible, so this is only about sighted keyboard users seeing the
  * same label a mouse user would.
+ *
+ * Note that products need not adopt every state: the Case Note Tracking
+ * adaptation (U0Ugs6bG1KLzrrWdnxqcZO, 125:5362) ships Expanded and the 108px
+ * rail only, and deliberately has no icon-only variant.
  */
 
 function NavItem({ icon, label, href, badge, children, current, onSelect }) {

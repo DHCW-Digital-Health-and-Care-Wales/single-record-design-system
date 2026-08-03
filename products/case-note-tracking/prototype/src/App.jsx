@@ -28,6 +28,11 @@ export default function App() {
   const [view, setView] = useState('dashboard');
   const [navCollapsed, setNavCollapsed] = useState(false);
 
+  // Rail, not icon-only: the Case Note Tracking adaptation of the nav (Figma
+  // 125:5362) ships exactly two states, Expanded and Collapsed (108px rail).
+  // It has no 48px icon-only variant, so the prototype must not offer one.
+  const toggleNav = () => setNavCollapsed((c) => (c ? false : 'rail'));
+
   const handleSelect = (label) => {
     if (label === 'Dashboard') setView('dashboard');
     else if (label === 'My Requests' || label === 'Patient Search') setView('case-notes');
@@ -43,7 +48,7 @@ export default function App() {
         type="linear"
         current={VIEW_LABEL[view]}
         collapsed={navCollapsed}
-        onCollapseToggle={() => setNavCollapsed((c) => (c ? false : 'icon'))}
+        onCollapseToggle={toggleNav}
         onSelect={handleSelect}
         logo={BRAND_LOCKUP}
       />

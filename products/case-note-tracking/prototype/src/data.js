@@ -59,11 +59,13 @@ export const STATS = [
   { label: 'Missing / Escalated', value: '24', icon: 'status/warning', accent: 'critical', note: 'Requires attention', noteAccent: 'critical' },
 ];
 
+// Descriptions stay to a single short line — Figma draws these cards at 64px
+// with one line of supporting text, and a wrapped second line breaks the row.
 export const QUICK_ACTIONS = [
-  { icon: 'nav/search', label: 'Patient Search', description: 'Find a patient and their casenotes', view: 'case-notes' },
-  { icon: 'action/add', label: 'Create Case Note', description: 'Register a new casenote volume' },
-  { icon: 'action/share', label: 'Batch SendIT', description: 'Send a batch of casenotes' },
-  { icon: 'action/download', label: 'Batch ReceiveIT', description: 'Receive a batch of casenotes' },
+  { icon: 'nav/search', label: 'Patient Search', description: 'Find a patient', view: 'case-notes' },
+  { icon: 'action/add', label: 'Create Case Note', description: 'Register a new volume' },
+  { icon: 'action/share', label: 'Batch SendIT', description: 'Send a batch' },
+  { icon: 'action/download', label: 'Batch ReceiveIT', description: 'Receive a batch' },
 ];
 
 export const NEEDS_ATTENTION = [
