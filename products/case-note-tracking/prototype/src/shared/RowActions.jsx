@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Modal, Button, Select, Input, Checkbox, Icon } from '@dhcw/sr-react';
 import { SITES } from '../data.js';
 
@@ -8,24 +9,47 @@ import { SITES } from '../data.js';
  * DESIGN-SYSTEM.md names this gap explicitly rather than inventing one
  * silently. This is a local, minimal stand-in built from tokens only, scoped
  * to this prototype until a real component exists.
+ *
+ * The table wrapper (`.sr-table-wrap`) sets `overflow-x: auto` for small
+ * viewports, which per the CSS overflow spec forces `overflow-y` to `auto`
+ * too (a "visible" axis can't survive next to a non-visible one) — so an
+ * absolutely-positioned menu inside it got clipped at the table's bottom
+ * edge instead of resting on top of the page. Portaling the menu to
+ * `document.body` and positioning it from the trigger's own bounding rect
+ * sidesteps that entirely.
  */
 export function RowActionMenu({ row, onAction }) {
   const [open, setOpen] = useState(false);
-  const wrapRef = useRef(null);
+  const [coords, setCoords] = useState(null);
+  const btnRef = useRef(null);
+  const menuRef = useRef(null);
 
   useEffect(() => {
     if (!open) return undefined;
     const onOutside = (e) => {
-      if (wrapRef.current && !wrapRef.current.contains(e.target)) setOpen(false);
+      if (
+        btnRef.current && !btnRef.current.contains(e.target) &&
+        menuRef.current && !menuRef.current.contains(e.target)
+      ) {
+        setOpen(false);
+      }
     };
     const onKey = (e) => {
       if (e.key === 'Escape') setOpen(false);
     };
+    // A popover pinned by viewport coordinates goes stale the moment the
+    // page scrolls or resizes — closing it is simpler and safer than
+    // re-tracking position on every scroll tick.
+    const onReflow = () => setOpen(false);
     document.addEventListener('click', onOutside, true);
     document.addEventListener('keydown', onKey);
+    window.addEventListener('scroll', onReflow, true);
+    window.addEventListener('resize', onReflow);
     return () => {
       document.removeEventListener('click', onOutside, true);
       document.removeEventListener('keydown', onKey);
+      window.removeEventListener('scroll', onReflow, true);
+      window.removeEventListener('resize', onReflow);
     };
   }, [open]);
 
@@ -37,38 +61,69 @@ export function RowActionMenu({ row, onAction }) {
     { key: 'deactivate', label: 'Deactivate case note', destructive: true },
     { key: 'delete', label: 'Delete case note', destructive: true },
   ];
+  // ~40px per row (line-height-20 + space-2 padding + border) — a real
+  // measurement would need a render before we know it fits, which flickers.
+  const estimatedHeight = items.length * 40;
+
+  const toggle = () => {
+    if (open) {
+      setOpen(false);
+      return;
+    }
+    const rect = btnRef.current.getBoundingClientRect();
+    const right = window.innerWidth - rect.right;
+    const spaceBelow = window.innerHeight - rect.bottom;
+    // Flip above the trigger when there isn't room below — a fixed-position
+    // menu computed once at open time can otherwise land past the bottom of
+    // the viewport with no way to scroll back to it.
+    const openUpward = spaceBelow < estimatedHeight + 8 && rect.top > estimatedHeight;
+    setCoords(
+      openUpward
+        ? { bottom: window.innerHeight - rect.top + 4, right }
+        : { top: rect.bottom + 4, right }
+    );
+    setOpen(true);
+  };
 
   return (
-    <div className="row-menu" ref={wrapRef}>
+    <div className="row-menu">
       <button
+        ref={btnRef}
         type="button"
         className="sr-table__action"
         aria-label={`Actions for ${row.volume} at ${row.location}`}
         aria-haspopup="menu"
         aria-expanded={open}
-        onClick={() => setOpen((v) => !v)}
+        onClick={toggle}
       >
         <Icon name="nav/menu2" size="sm" color="inherit" />
       </button>
-      {open && (
-        <ul className="row-menu__list" role="menu">
-          {items.map((item) => (
-            <li key={item.key} role="none">
-              <button
-                type="button"
-                role="menuitem"
-                className={`row-menu__item${item.destructive ? ' row-menu__item--destructive' : ''}`}
-                onClick={() => {
-                  setOpen(false);
-                  onAction(item.key, row);
-                }}
-              >
-                {item.label}
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
+      {open && coords &&
+        createPortal(
+          <ul
+            ref={menuRef}
+            className="row-menu__list"
+            role="menu"
+            style={{ top: coords.top, bottom: coords.bottom, right: coords.right }}
+          >
+            {items.map((item) => (
+              <li key={item.key} role="none">
+                <button
+                  type="button"
+                  role="menuitem"
+                  className={`row-menu__item${item.destructive ? ' row-menu__item--destructive' : ''}`}
+                  onClick={() => {
+                    setOpen(false);
+                    onAction(item.key, row);
+                  }}
+                >
+                  {item.label}
+                </button>
+              </li>
+            ))}
+          </ul>,
+          document.body
+        )}
     </div>
   );
 }

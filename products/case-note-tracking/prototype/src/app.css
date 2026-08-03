@@ -480,15 +480,16 @@ body {
   position: relative;
   display: inline-block;
 }
+/* Portaled to document.body (see RowActionMenu) and positioned from the
+   trigger's own bounding rect via inline `top`/`right` — `.sr-table-wrap`
+   sets `overflow-x: auto`, which per the CSS overflow spec forces
+   `overflow-y` to `auto` too, so anything positioned relative to a
+   still-inside-the-table ancestor was clipped at the table's bottom edge
+   instead of resting on top of the page. Fixed rather than absolute so it
+   stays put regardless of table scroll position. */
 .row-menu__list {
-  position: absolute;
-  top: calc(100% + var(--space-1));
-  /* Left-anchored, not right: the kebab sits in the table's leading column,
-     close to the sidebar. Right-anchoring a 200px-wide menu off a ~32px
-     trigger there pushed its left edge back under the sidebar nav, which
-     then intercepted clicks meant for the menu. */
-  left: 0;
-  z-index: 20;
+  position: fixed;
+  z-index: 1000;
   margin: 0;
   padding: 0;
   list-style: none;
