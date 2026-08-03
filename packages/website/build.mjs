@@ -407,9 +407,11 @@ const SECTIONS = [
     ],
   },
   {
-    id: 'patterns', label: 'Patterns', href: 'patterns.html',
+    // Patterns behaves like Components: the nav entry opens the first pattern
+    // directly. No overview page — with one pattern it was a card pointing at
+    // the only sibling in the sidebar.
+    id: 'patterns', label: 'Patterns', href: 'patterns/patient-banner.html',
     side: [
-      { href: 'patterns.html', label: 'Overview' },
       { href: 'patterns/patient-banner.html', label: 'Patient Banner' },
     ],
   },
@@ -567,6 +569,138 @@ function accessibilityTable(rows) {
   // already carries a prose "## Accessibility" section, and two identical h2s
   // on one page is just confusing. This is the testable requirements matrix.
   return `<h2>Accessibility requirements</h2><div class="table-wrap"><table class="a11y-table">${head}<tbody>${body}</tbody></table></div>`;
+}
+
+// ─── Styles: Grids ────────────────────────────────────────────────────────────
+/**
+ * Synced from Figma "SR Grid & Layout System" (289:301). The breakpoint values
+ * are read from the built tokens rather than retyped, so the page cannot drift
+ * from --breakpoint-*; columns/gutter/margin come from the Figma table and are
+ * mirrored in foundations/grid-and-layout.md.
+ */
+const GRID_ROWS = [
+  { name: 'Mobile',  range: '0 – 767px',      cols: 4,  gutter: '16px', margin: '16px', token: '--breakpoint-mobile-max',  platform: 'MAUI mobile · web mobile' },
+  { name: 'Tablet',  range: '768 – 1023px',   cols: 8,  gutter: '24px', margin: '32px', token: '--breakpoint-tablet-min',  platform: 'MAUI tablet · web tablet' },
+  { name: 'Desktop', range: '1024 – 1279px',  cols: 12, gutter: '24px', margin: '40px', token: '--breakpoint-desktop-min', platform: 'Blazor web · MAUI desktop' },
+  { name: 'Large',   range: '1280 – 1439px',  cols: 12, gutter: '24px', margin: '64px', token: '--breakpoint-large-min',   platform: 'Blazor web (standard)' },
+  { name: 'XLarge',  range: '1440px +',       cols: 12, gutter: '32px', margin: '80px', token: '--breakpoint-xlarge-min',  platform: 'Blazor web (wide)' },
+];
+
+const EPR_ROWS = [
+  ['Full width (no sidebar)', '1440px', '—', '1440px', '12', '32px', '80px'],
+  ['EPR with sidebar', '1440px', '248px', '1192px', '12', '24px', '32px'],
+  ['EPR with sidebar', '1280px', '248px', '1032px', '12', '20px', '24px'],
+];
+
+const SPACING_ROWS = [
+  ['Mobile — gutter & margin', '16px', 'Space/4', 'Spacing/Layout/XS'],
+  ['Tablet — gutter', '24px', 'Space/6', 'Spacing/Layout/SM'],
+  ['Tablet — margin', '32px', 'Space/8', 'Spacing/Layout/MD'],
+  ['Desktop — gutter', '24px', 'Space/6', 'Spacing/Layout/SM'],
+  ['Desktop — margin (1024px)', '40px', 'Space/10', '—'],
+  ['Desktop — margin (1280px)', '64px', 'Space/16', 'Spacing/Layout/Page'],
+  ['Desktop — margin (1440px)', '80px', 'Space/20', '—'],
+];
+
+function gridsBody(breakpointValues) {
+  const demo = (cols) =>
+    `<div class="grid-demo" style="--cols:${cols}">${
+      Array.from({ length: cols }, () => '<span></span>').join('')}</div>`;
+
+  const cards = [
+    { name: 'Mobile', title: '4-Column Fluid', cols: 4, gutter: '16px', margin: '16px', range: '0 – 767px' },
+    { name: 'Tablet', title: '8-Column Fluid', cols: 8, gutter: '24px', margin: '32px', range: '768 – 1023px' },
+    { name: 'Desktop', title: '12-Column Fixed', cols: 12, gutter: '24–32px', margin: '40–80px', range: '1024px +' },
+  ].map((c) => `
+<div class="grid-card">
+  ${demo(c.cols)}
+  <h3>${c.name}</h3>
+  <p class="muted">${c.title}</p>
+  <dl class="grid-card__meta">
+    <div><dt>Columns</dt><dd>${c.cols}</dd></div>
+    <div><dt>Gutter</dt><dd>${c.gutter}</dd></div>
+    <div><dt>Margin</dt><dd>${c.margin}</dd></div>
+  </dl>
+  <p class="grid-card__range">${c.range}</p>
+</div>`).join('');
+
+  const bpRows = GRID_ROWS.map((r) => {
+    const live = breakpointValues[r.token.replace(/^--/, '')];
+    return `<tr><td><strong>${r.name}</strong></td><td>${r.range}</td><td>${r.cols}</td><td>${r.gutter}</td><td>${r.margin}</td><td><code>${r.token}</code>${live ? ` = ${live}` : ''}</td><td>${r.platform}</td></tr>`;
+  }).join('');
+
+  const eprRows = EPR_ROWS.map((r) =>
+    `<tr>${r.map((c) => `<td>${c}</td>`).join('')}</tr>`).join('');
+
+  const spacingRows = SPACING_ROWS.map((r) =>
+    `<tr><td>${r[0]}</td><td>${r[1]}</td><td><code>${r[2]}</code></td><td>${r[3] === '—' ? '—' : `<code>${r[3]}</code>`}</td></tr>`).join('');
+
+  return `
+<p class="breadcrumbs">Styles</p>
+<h1>Grid and layout</h1>
+<p class="lede">Column grids, breakpoints, gutter and margin tokens for Blazor web, .NET MAUI
+and EPR application layouts.</p>
+
+<h2>Breakpoint system</h2>
+<p>Five breakpoints define how layouts adapt. All five exist as tokens — the value shown beside
+each token name is read from the built tokens at build time, so this table cannot drift from
+what ships.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Breakpoint</th><th>Width range</th><th>Columns</th><th>Gutter</th><th>Margin</th><th>Token</th><th>Platform</th></tr></thead>
+<tbody>${bpRows}</tbody></table></div>
+<p class="muted"><code>--breakpoint-desktop-min</code> also switches the typography scale from the
+mobile to the desktop values. Changing it moves both.</p>
+
+<h2>Grid types</h2>
+<p>Mobile and tablet grids are fluid — columns scale to fill. Desktop is 12-column with fixed
+margins.</p>
+<div class="grid-cards">${cards}</div>
+
+<h2>EPR application grid</h2>
+<p>When the EPR navigation sidebar is visible the content zone is reduced. <strong>Design against
+the content zone, not the full frame width.</strong></p>
+<div class="table-wrap"><table>
+<thead><tr><th>Context</th><th>Frame</th><th>Sidebar</th><th>Content zone</th><th>Columns</th><th>Gutter</th><th>Margin</th></tr></thead>
+<tbody>${eprRows}</tbody></table></div>
+<blockquote><p><strong>Open discrepancy.</strong> This table specifies a 248px sidebar, but the
+<code>Navigation</code> component is 220px in Figma and in
+<code>packages/web/src/navigation/navigation.css</code>. The content-zone widths above are derived
+from 248px and are therefore 28px out against the component as built. It needs a decision — do not
+change either side in isolation.</p></blockquote>
+
+<h2>Spacing token reference</h2>
+<p>Gutter and margin values map directly to the Space scale in Primitives.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Usage</th><th>Value</th><th>Primitive</th><th>Semantic</th></tr></thead>
+<tbody>${spacingRows}</tbody></table></div>
+<p class="muted">The 40px and 80px desktop margins have no semantic layout token. Use the
+primitive until one exists.</p>
+
+<h2>Platform guidance</h2>
+<div class="grid-cards grid-cards--two">
+  <div class="grid-card">
+    <h3>Web — Blazor</h3>
+    <p class="muted">Targets Desktop and Tablet. The sidebar reduces content width — design in the content zone.</p>
+    <ul>
+      <li>Desktop XLarge (1440px) — 12 col, 32px gutter, 80px margin</li>
+      <li>Desktop Large (1280px) — 12 col, 24px gutter, 64px margin</li>
+      <li>Desktop (1024px) — 12 col, 24px gutter, 40px margin</li>
+      <li>Tablet (768px) — 8 col, 24px gutter, 32px margin</li>
+    </ul>
+  </div>
+  <div class="grid-card">
+    <h3>.NET MAUI</h3>
+    <p class="muted">Adaptive layout across phone, tablet and desktop. Drive layout switches with breakpoint token values, not hardcoded numbers.</p>
+    <ul>
+      <li>Phone (&lt; 768px) — 4 col, 16px gutter, 16px margin</li>
+      <li>Tablet (768–1023px) — 8 col, 24px gutter, 32px margin</li>
+      <li>Desktop (≥ 1024px) — 12 col, 24px gutter, 48px margin</li>
+      <li>Use <code>OnIdiom</code> / <code>AdaptiveTrigger</code> with <code>Breakpoint/*</code> tokens</li>
+    </ul>
+  </div>
+</div>
+<p class="muted">The MAUI desktop margin is 48px, which matches none of the web margins
+(40 / 64 / 80). Carried over from Figma as drawn; worth confirming it is deliberate.</p>`;
 }
 
 // ─── Patterns: Patient Banner ─────────────────────────────────────────────────
@@ -1846,11 +1980,7 @@ addPage({
 addPage({
   file: 'styles/grids.html', url: 'styles/grids.html', title: 'Grids', section: 'Styles',
   sectionId: 'styles', activeHref: 'styles/grids.html', prefix: '../',
-  body: plannedBody({
-    title: 'Grids', crumb: 'Styles',
-    intro: 'Layout grid and breakpoints for Single Record products.',
-    links: [{ href: 'https://service-manual.nhs.uk/design-system/styles/layout', label: 'NHS England layout', note: 'the upstream grid guidance we build on' }],
-  }),
+  body: gridsBody(flat),
 });
 addPage({
   file: 'styles/token-translator.html', url: 'styles/token-translator.html', title: 'Token Translator', section: 'Styles',
@@ -1882,20 +2012,6 @@ addPage({
   sectionId: 'components', activeHref: 'components/table.html', prefix: '../', body: tableBody(),
 });
 
-addPage({
-  file: 'patterns.html', url: 'patterns.html', title: 'Patterns', section: 'Patterns',
-  sectionId: 'patterns', activeHref: 'patterns.html', prefix: '',
-  body: `
-<p class="breadcrumbs">Patterns</p>
-<h1>Patterns</h1>
-<p class="lede">Composed, multi-component interactions — the pieces that are bigger than a
-component but smaller than a screen.</p>
-<div class="cards">
-  <a class="card" href="patterns/patient-banner.html"><h3>Patient Banner</h3>
-  <p>Who this patient is, and what you must know before acting. Two types, two states.</p></a>
-</div>
-<p class="muted">Forms, search and sign-off flows are not documented yet.</p>`,
-});
 addPage({
   file: 'patterns/patient-banner.html', url: 'patterns/patient-banner.html',
   title: 'Patient Banner', section: 'Patterns',

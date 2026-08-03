@@ -41,9 +41,8 @@
   border: none;
   background: transparent;
   color: var(--sr-color-interactive-primary);
-  font-size: var(--font-size-12);
-  line-height: var(--font-line-height-16);
-  letter-spacing: var(--font-letter-spacing-caption);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
   text-decoration: none;
   cursor: pointer;
   border-radius: var(--radius-sm);
@@ -112,8 +111,8 @@
   min-width: 0;
   border: none;
   background: transparent;
-  font-size: var(--font-size-14);
-  line-height: var(--font-line-height-20);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
   color: var(--sr-color-text-primary);
 }
 .sr-header__search-input::placeholder {
@@ -175,10 +174,8 @@
 }
 .sr-header__avatar-initials {
   color: var(--sr-color-text-inverse);
-  font-size: var(--font-size-14);
-  line-height: var(--font-line-height-20);
-  font-weight: 500;
-  letter-spacing: var(--font-letter-spacing-wide);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
 }
 .sr-header__avatar-status {
   position: absolute;
@@ -206,6 +203,11 @@
   justify-content: flex-end;
   gap: var(--space-4);
 }
+/* The bar variant has no logo competing for width, so the search can hold its
+   full placeholder rather than truncating it. */
+.sr-header--bar .sr-header__search {
+  width: 280px;
+}
 .sr-header__cluster {
   display: flex;
   align-items: center;
@@ -221,9 +223,8 @@
   border: none;
   border-right: 1px solid var(--sr-color-border-subtle);
   background: transparent;
-  font-size: var(--font-size-14);
-  font-weight: 500;
-  letter-spacing: var(--font-letter-spacing-wide);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
   white-space: nowrap;
   cursor: pointer;
 }
@@ -300,4 +301,45 @@
 .sr-header--mobile.sr-header--centered .sr-header__logo {
   display: flex;
   justify-content: center;
+}
+
+/* ---------- Responsive ----------
+   Breakpoints are the design system's (foundations/grid-and-layout.md):
+   Tablet 768, Desktop 1024. Media queries cannot read var(), so the values
+   are literal here. */
+
+/* Below Desktop: the desktop-2 bar's 40px side padding and 280px fixed search
+   are sized for a 1280px frame. Let the search flex instead so the bar fits. */
+@media (max-width: 1023px) {
+  .sr-header__main {
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+  }
+  .sr-header--bar .sr-header__search {
+    width: auto;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}
+
+/* Below Tablet: the org name and "Cymraeg" label are the first things to go —
+   the language toggle keeps its globe icon, which is the recognisable part,
+   and the org switcher is not present on this variant anyway. A fixed-width
+   search would otherwise push the avatar off-screen. */
+@media (max-width: 767px) {
+  .sr-header__main {
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
+    gap: var(--space-2);
+  }
+  /* :not(.sr-icon) matters — <Icon> renders a <span>, so a bare `span`
+     selector hides the globe as well as the word, leaving an empty button. */
+  .sr-header--bar .sr-header__org > span:not(.sr-icon),
+  .sr-header--bar .sr-header__lang > span:not(.sr-icon) {
+    display: none;
+  }
+  .sr-header--bar .sr-header__org,
+  .sr-header--bar .sr-header__lang {
+    padding: 0 var(--space-2);
+  }
 }

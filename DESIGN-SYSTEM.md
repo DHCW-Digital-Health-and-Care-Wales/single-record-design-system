@@ -65,7 +65,7 @@ Foundations are the base layer of the system — the raw materials that componen
 | Motion | `/foundations/tokens/motion.md` | Duration, easing, animation principles |
 | Border | `/foundations/tokens/border.md` | Border widths and radius scale |
 | Iconography | `/foundations/iconography.md` | Icon library, sizing, usage |
-| Grid and layout | `/foundations/grid-and-layout.md` | Breakpoints, columns, gutters |
+| Grid and layout | `/foundations/grid-and-layout.md` | 5 breakpoints (Mobile → XLarge), columns, gutters, EPR content zones. Synced from Figma `289:301` on 2026-08-03 |
 
 ### Token Structure
 
@@ -120,12 +120,34 @@ The semantic type scale provides named styles for use in Figma and component spe
 | `heading-m` | 24px bold | Sub-section headings, card headers |
 | `heading-s` | 20px bold | Panel headings, modal titles |
 | `heading-xs` | 16px medium | Inline labels, compact contexts |
-| `body-m` | 16px regular | **Default body text.** Minimum for clinical content. |
+| `body-m` | 16px regular | Preferred for long-form reading and clinical notes |
 | `body-s` | 14px regular | Supporting text, secondary content |
 | `label` | 14px medium, wide tracking | Form labels, column headers, button text |
 | `caption` | 12px regular, caption tracking | Timestamps, metadata, annotations |
 
-16px (`body-m`) is the minimum for any primary clinical content — consistent with WCAG 2.2 and NHS guidance.
+**`body-s` (14px) is the minimum for primary content**, including tables and
+data-dense views (DDR-015, which supersedes the earlier 16px rule inherited
+from public-facing NHS/GDS practice). `body-m` (16px) remains *preferred* for
+long-form reading and clinical notes. `caption` (12px) is for non-essential
+text only and must never be the sole carrier of meaning — patient identifiers,
+allergy detail and alert counts are therefore never `caption`.
+
+**Applying a style.** A style is only correct when all four of its properties
+are applied together. In markup, use the `.sr-type-{name}` class. In component
+CSS, which cannot add a class it does not own, use the composite pair — always
+both, never one:
+
+```css
+font: var(--sr-type-label-font);
+letter-spacing: var(--sr-type-label-letter-spacing);
+```
+
+Never hand-pick `--font-size-*` / `--font-line-height-*` to assemble a style:
+that is how off-scale pairs such as 16px/700 and 12px/20px entered the system.
+`npm run check:type` fails on new occurrences and reports the remaining debt
+(128 declarations across 17 component stylesheets at the 2026-08-03 baseline —
+these predate the composite properties and are being converted as components
+are touched).
 
 See `/foundations/tokens/typography.md` for the full specification.
 

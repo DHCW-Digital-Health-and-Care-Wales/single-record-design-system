@@ -25,6 +25,11 @@ export default function Input({
   disabled = false,
   placeholder,
   leadingIcon,
+  // A control rendered inside the field at the trailing edge — a scan trigger,
+  // a unit toggle, a clear button. Sits inside the border so it reads as part
+  // of the field rather than a separate adjacent button. Ignored by the
+  // calendar/time variants, which own their own trailing control.
+  trailingAction,
   // Renders the label visually-hidden instead of dropping it. Use where the
   // design shows no label (a search bar whose placeholder carries the meaning)
   // — a placeholder is not an accessible name, and it disappears on typing,
@@ -114,6 +119,10 @@ export default function Input({
             >
               <Icon name={reveal ? 'action/eye-off' : 'action/eye'} size="sm" color="inherit" />
             </button>
+          )}
+
+          {trailingAction && !isPassword && (
+            <span className="sr-input__trailing">{trailingAction}</span>
           )}
         </div>
       )}
