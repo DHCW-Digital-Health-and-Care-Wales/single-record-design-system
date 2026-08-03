@@ -8,7 +8,7 @@
  * instead — always BOTH, never one:
  *   font: var(--sr-type-body-s-font);
  *   letter-spacing: var(--sr-type-body-s-letter-spacing);
- * Never hand-pick --font-size-*/--font-line-height-* to build a style.
+ * Never hand-pick the raw font-size and line-height tokens to build one.
  */
 
 :root {

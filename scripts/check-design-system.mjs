@@ -105,8 +105,62 @@ for (const root of SCAN) {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Structural check on the emitted stylesheets.
+//
+// A single stray `*/` inside a CSS comment silently truncates it, and the
+// remainder leaks out as garbage that swallows the next rule. That is exactly
+// what happened: a comment reading "never hand-pick --font-size-*/..." closed
+// itself at the `-*/`, ate the base :root block, and left five of the nine type
+// styles undefined — so every element using them fell back to Times New Roman.
+// It built cleanly and passed every other check. Nothing catches this except
+// looking, so: look.
+// ---------------------------------------------------------------------------
+const structural = [];
+for (const css of [
+  'packages/tokens/build/css/tokens.css',
+  'packages/tokens/build/css/typography.css',
+  'packages/tokens/build/css/fonts.css',
+]) {
+  let text;
+  try { text = readFileSync(resolve(ROOT, css), 'utf8'); }
+  catch { structural.push(`${css}: missing — run \`npm run build -w @dhcw/sr-tokens\``); continue; }
+
+  const stripped = text.replace(/\/\*[\s\S]*?\*\//g, '');
+  if (stripped.includes('*/')) {
+    structural.push(`${css}: unbalanced comment terminator — a "*/" inside a comment truncates it and the remainder leaks into the stylesheet`);
+  }
+  let depth = 0;
+  for (const ch of stripped) {
+    if (ch === '{') depth++;
+    else if (ch === '}') depth--;
+    if (depth < 0) break;
+  }
+  if (depth !== 0) structural.push(`${css}: unbalanced braces (depth ${depth})`);
+}
+
+// The nine named type styles must each emit both halves of the composite pair.
+try {
+  const typo = readFileSync(resolve(ROOT, 'packages/tokens/build/css/typography.css'), 'utf8');
+  const base = typo.slice(typo.indexOf(':root'), typo.indexOf('}', typo.indexOf(':root')));
+  for (const style of ['heading-xl', 'heading-l', 'heading-m', 'heading-s', 'heading-xs',
+                       'body-m', 'body-s', 'label', 'caption']) {
+    for (const half of ['font', 'letter-spacing']) {
+      if (!base.includes(`--sr-type-${style}-${half}:`)) {
+        structural.push(`typography.css: --sr-type-${style}-${half} missing from the base :root block`);
+      }
+    }
+  }
+} catch { /* reported above */ }
+
 const total = Object.values(counts).reduce((a, b) => a + b, 0);
 const mode = process.argv[2];
+
+if (structural.length) {
+  console.error('Emitted stylesheet is malformed — this breaks the page silently:\n');
+  console.error(structural.map((l) => '  ' + l).join('\n'));
+  process.exit(1);
+}
 
 if (mode === '--write-baseline') {
   writeFileSync(BASELINE, JSON.stringify({ total, counts }, null, 2) + '\n');
