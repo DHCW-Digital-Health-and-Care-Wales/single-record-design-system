@@ -666,15 +666,15 @@ ${accessibilityTable([
 const GRID_ROWS = [
   { name: 'Mobile',  range: '0 – 767px',      cols: 4,  gutter: '16px', margin: '16px', token: '--breakpoint-mobile-max',  platform: 'MAUI mobile · web mobile' },
   { name: 'Tablet',  range: '768 – 1023px',   cols: 8,  gutter: '24px', margin: '32px', token: '--breakpoint-tablet-min',  platform: 'MAUI tablet · web tablet' },
-  { name: 'Desktop', range: '1024 – 1279px',  cols: 12, gutter: '24px', margin: '40px', token: '--breakpoint-desktop-min', platform: 'Blazor web · MAUI desktop' },
+  { name: 'Desktop', range: '1024 – 1279px',  cols: 12, gutter: '24px', margin: '40px', token: '--breakpoint-desktop-min', platform: 'Blazor web' },
   { name: 'Large',   range: '1280 – 1439px',  cols: 12, gutter: '24px', margin: '64px', token: '--breakpoint-large-min',   platform: 'Blazor web (standard)' },
   { name: 'XLarge',  range: '1440px +',       cols: 12, gutter: '32px', margin: '80px', token: '--breakpoint-xlarge-min',  platform: 'Blazor web (wide)' },
 ];
 
 const EPR_ROWS = [
   ['Full width (no sidebar)', '1440px', '—', '1440px', '12', '32px', '80px'],
-  ['EPR with sidebar', '1440px', '248px', '1192px', '12', '24px', '32px'],
-  ['EPR with sidebar', '1280px', '248px', '1032px', '12', '20px', '24px'],
+  ['EPR with sidebar', '1440px', '220px', '1220px', '12', '24px', '32px'],
+  ['EPR with sidebar', '1280px', '220px', '1060px', '12', '20px', '24px'],
 ];
 
 const SPACING_ROWS = [
@@ -747,11 +747,9 @@ the content zone, not the full frame width.</strong></p>
 <div class="table-wrap"><table>
 <thead><tr><th>Context</th><th>Frame</th><th>Sidebar</th><th>Content zone</th><th>Columns</th><th>Gutter</th><th>Margin</th></tr></thead>
 <tbody>${eprRows}</tbody></table></div>
-<blockquote><p><strong>Open discrepancy.</strong> This table specifies a 248px sidebar, but the
-<code>Navigation</code> component is 220px in Figma and in
-<code>packages/web/src/navigation/navigation.css</code>. The content-zone widths above are derived
-from 248px and are therefore 28px out against the component as built. It needs a decision — do not
-change either side in isolation.</p></blockquote>
+<p class="muted">Sidebar is 220px, matching the <code>Navigation</code> component as built
+(<code>packages/web/src/navigation/navigation.css</code>) — resolved 2026-08 in favour of the
+shipped component, which already reads well in the Case Note Tracking prototype.</p>
 
 <h2>Spacing token reference</h2>
 <p>Gutter and margin values map directly to the Space scale in Primitives.</p>
@@ -775,17 +773,14 @@ primitive until one exists.</p>
   </div>
   <div class="grid-card">
     <h3>.NET MAUI</h3>
-    <p class="muted">Adaptive layout across phone, tablet and desktop. Drive layout switches with breakpoint token values, not hardcoded numbers.</p>
+    <p class="muted">Mobile only — phone and tablet. MAUI has no desktop target in this system; Blazor web covers Desktop/Large/XLarge. Drive layout switches with breakpoint token values, not hardcoded numbers.</p>
     <ul>
       <li>Phone (&lt; 768px) — 4 col, 16px gutter, 16px margin</li>
       <li>Tablet (768–1023px) — 8 col, 24px gutter, 32px margin</li>
-      <li>Desktop (≥ 1024px) — 12 col, 24px gutter, 48px margin</li>
       <li>Use <code>OnIdiom</code> / <code>AdaptiveTrigger</code> with <code>Breakpoint/*</code> tokens</li>
     </ul>
   </div>
-</div>
-<p class="muted">The MAUI desktop margin is 48px, which matches none of the web margins
-(40 / 64 / 80). Carried over from Figma as drawn; worth confirming it is deliberate.</p>`;
+</div>`;
 }
 
 // ─── Patterns: Patient Banner ─────────────────────────────────────────────────

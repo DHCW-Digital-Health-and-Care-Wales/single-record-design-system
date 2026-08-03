@@ -21,7 +21,7 @@ Five breakpoints. All values are pixel-width thresholds and all exist as tokens.
 |---|---|---|---|---|---|---|
 | Mobile | 0 – 767px | 4 | 16px | 16px | `--breakpoint-mobile-max` | MAUI mobile · web mobile |
 | Tablet | 768 – 1023px | 8 | 24px | 32px | `--breakpoint-tablet-min` | MAUI tablet · web tablet |
-| Desktop | 1024 – 1279px | 12 | 24px | 40px | `--breakpoint-desktop-min` | Blazor web · MAUI desktop |
+| Desktop | 1024 – 1279px | 12 | 24px | 40px | `--breakpoint-desktop-min` | Blazor web |
 | Large | 1280 – 1439px | 12 | 24px | 64px | `--breakpoint-large-min` | Blazor web (standard) |
 | XLarge | 1440px + | 12 | 32px | 80px | `--breakpoint-xlarge-min` | Blazor web (wide) |
 
@@ -47,20 +47,18 @@ Three configurations. Mobile and tablet grids are **fluid** — columns scale to
 
 When the EPR navigation sidebar is visible, the content zone is reduced. **Design against the content zone, not the full frame width.**
 
+**Sidebar is 220px**, matching the `Navigation` component as built (DS master
+`725:8903`, Case Note Tracking adaptation `125:5362`,
+`packages/web/src/navigation/navigation.css`) — not the 248px originally drawn
+on the Figma grid frame. Resolved 2026-08 in favour of the shipped component,
+which already reads well in the Case Note Tracking prototype; revisit only if
+220px genuinely proves too tight for a real EPR layout.
+
 | Context | Frame | Sidebar | Content zone | Columns | Gutter | Margin |
 |---|---|---|---|---|---|---|
 | Full width (no sidebar) | 1440px | — | 1440px | 12 | 32px | 80px |
-| EPR with sidebar | 1440px | 248px | 1192px | 12 | 24px | 32px |
-| EPR with sidebar | 1280px | 248px | 1032px | 12 | 20px | 24px |
-
-> **Open discrepancy.** This table specifies a **248px** sidebar, but the
-> `Navigation` component is **220px** in both the DS master
-> (`725:8903`) and the Case Note Tracking adaptation (`125:5362`), and 220px
-> is what ships in `packages/web/src/navigation/navigation.css`. The three
-> content-zone widths above are derived from 248px and are therefore 28px out
-> against the component as built. Needs a decision: either the grid page
-> updates to 220px, or the Navigation component grows. Do not "fix" either
-> side in isolation.
+| EPR with sidebar | 1440px | 220px | 1220px | 12 | 24px | 32px |
+| EPR with sidebar | 1280px | 220px | 1060px | 12 | 20px | 24px |
 
 ---
 
@@ -93,16 +91,13 @@ Targets Desktop and Tablet. The sidebar reduces content width — design in the 
 - Tablet (768px) — 8 col, 24px gutter, 32px margin
 
 ### .NET MAUI
-Adaptive layout across phone, tablet and desktop. Drive layout switches with the breakpoint token values, not hardcoded numbers.
+**Mobile only** — phone and tablet. MAUI has no desktop target in this system;
+Blazor web covers Desktop/Large/XLarge. Drive layout switches with the
+breakpoint token values, not hardcoded numbers.
 
 - Phone (< 768px) — 4 col, 16px gutter, 16px margin
 - Tablet (768 – 1023px) — 8 col, 24px gutter, 32px margin
-- Desktop (≥ 1024px) — 12 col, 24px gutter, 48px margin
 - Use `OnIdiom` / `AdaptiveTrigger` bound to `Breakpoint/*` tokens
-
-> MAUI desktop margin is listed as **48px** in Figma's platform card, which
-> matches none of the web margins (40 / 64 / 80). Carried over as drawn; worth
-> confirming it is deliberate rather than a stale value.
 
 ---
 
@@ -118,8 +113,8 @@ Pre-configured Figma frames with live column grids, for use as prototype artboar
 | `SR/Tablet/1024` | 1024 × 900 | 12 col · 24px gutter · 40px margin |
 | `SR/Desktop/1280` | 1280 × 900 | 12 col · 24px gutter · 64px margin |
 | `SR/Desktop/1440` | 1440 × 900 | 12 col · 32px gutter · 80px margin |
-| `SR/EPR/1440` | 1440 × 900 | 248px sidebar · 1192px content · 12 col · 24px gutter · 32px margin |
-| `SR/EPR/1280` | 1280 × 900 | 248px sidebar · 1032px content · 12 col · 20px gutter · 24px margin |
+| `SR/EPR/1440` | 1440 × 900 | 220px sidebar · 1220px content · 12 col · 24px gutter · 32px margin |
+| `SR/EPR/1280` | 1280 × 900 | 220px sidebar · 1060px content · 12 col · 20px gutter · 24px margin |
 
 ---
 
