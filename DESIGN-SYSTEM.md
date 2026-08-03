@@ -215,13 +215,25 @@ satisfactory — a component without a spec has no agreed contract, and a spec
 without code cannot be consumed. Both lists are worked down as components are
 touched.
 
-**No Menu/Dropdown component.** The Case Note Tracking prototype's row-level
-action menu (Figma `47:4041`) needed a small popover list — send/receive/tag/
-merge/deactivate/delete — with no component in this table to reach for. It is
-built locally in `products/case-note-tracking/prototype/src/CaseNotes.jsx`
-(`RowActionMenu`) from tokens only, scoped to that prototype rather than
-promoted to `packages/web`/`packages/react`. Promote it once a second
-consumer needs the same pattern, with a spec in `/components/menu/`.
+**No Menu/Dropdown component, and no Tabs component.** The Case Note Tracking
+prototype's row-level action menu (Figma `47:4041`) needed a small popover
+list — send/receive/tag/merge/deactivate/delete — and its My Requests screen
+(`127:4813`) needed an All/Sent/Received tab switcher, with neither component
+in this table to reach for. Both are built locally, from tokens only, in
+`products/case-note-tracking/prototype/src/shared/RowActions.jsx`
+(`RowActionMenu`) and `MyRequests.jsx` (the tab buttons) — scoped to that
+prototype rather than promoted to `packages/web`/`packages/react`. Promote
+either once a second consumer needs the same pattern, with a spec in
+`/components/menu/` or `/components/tabs/`.
+
+**No destructive-confirmation dialog component yet.** Deactivate/Delete row
+actions use a confirmation dialog matched to the design system's own Figma
+frame (`x5fwyefxxgD03csz8ld7SZ`, node `2612:3325`), which is not yet added to
+this website or given a spec — `ConfirmModal` in the same `shared/
+RowActions.jsx` composes it from the existing base `Modal` and `Button
+type="destructive"`, so it is not a new component, just an undocumented
+pattern. Document it under `/components/modal/` once it has a second
+consumer.
 
 See `/components/README.md` for the full catalogue and contribution guidance, and
 the live catalogue in Storybook for every variant.

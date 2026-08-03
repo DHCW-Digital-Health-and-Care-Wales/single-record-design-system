@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   PatientBanner,
   Table,
@@ -13,172 +13,7 @@ import {
 } from '@dhcw/sr-react';
 
 import { PATIENT, REACTIONS, NOTES, SITES, NOTE_TYPES } from './data.js';
-
-/**
- * Row-level action menu (Figma 47:4041). There is no Menu/Dropdown component
- * in the design system yet — DESIGN-SYSTEM.md names this gap explicitly
- * rather than inventing one silently. This is a local, minimal stand-in built
- * from tokens only (no hardcoded colour or type), scoped to this prototype
- * until a real component exists.
- */
-function RowActionMenu({ row, onAction }) {
-  const [open, setOpen] = useState(false);
-  const wrapRef = useRef(null);
-
-  useEffect(() => {
-    if (!open) return undefined;
-    const onOutside = (e) => {
-      if (wrapRef.current && !wrapRef.current.contains(e.target)) setOpen(false);
-    };
-    const onKey = (e) => {
-      if (e.key === 'Escape') setOpen(false);
-    };
-    document.addEventListener('click', onOutside, true);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('click', onOutside, true);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, [open]);
-
-  const items = [
-    { key: 'send', label: 'Send case note' },
-    { key: 'receive', label: 'Receive case note' },
-    { key: 'tag', label: 'Tag case note' },
-    { key: 'merge', label: 'Merge case note' },
-    { key: 'deactivate', label: 'Deactivate case note', destructive: true },
-    { key: 'delete', label: 'Delete case note', destructive: true },
-  ];
-
-  return (
-    <div className="row-menu" ref={wrapRef}>
-      <button
-        type="button"
-        className="sr-table__action"
-        aria-label={`Actions for ${row.volume} at ${row.location}`}
-        aria-haspopup="menu"
-        aria-expanded={open}
-        onClick={() => setOpen((v) => !v)}
-      >
-        <Icon name="nav/menu2" size="sm" color="inherit" />
-      </button>
-      {open && (
-        <ul className="row-menu__list" role="menu">
-          {items.map((item) => (
-            <li key={item.key} role="none">
-              <button
-                type="button"
-                role="menuitem"
-                className={`row-menu__item${item.destructive ? ' row-menu__item--destructive' : ''}`}
-                onClick={() => {
-                  setOpen(false);
-                  onAction(item.key, row);
-                }}
-              >
-                {item.label}
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
-}
-
-/**
- * Shared body for the three row-level workflow modals (Send/Receive/Tag —
- * Figma 26:3509, 160:7684, 308:26049). All three share the same Record
- * Details banner plus a date/time-and-sites form; only the title, primary
- * button label and the middle field (Sent date/time for Receive, a
- * required-by checkbox and date/time for Tag) differ.
- */
-function NoteActionModal({ kind, row, onClose }) {
-  const open = Boolean(row);
-  const [requiredBy, setRequiredBy] = useState(true);
-
-  const config = {
-    send: { title: 'Send Notes', primary: 'Send note' },
-    receive: { title: 'Receive Notes', primary: 'Receive note' },
-    tag: { title: 'Tag Notes', primary: 'Tag note' },
-  }[kind];
-
-  return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      title={config?.title}
-      size="small"
-      footer={
-        <>
-          <Button type="secondary" onClick={onClose}>Cancel</Button>
-          <Button type="primary" onClick={onClose}>{config?.primary}</Button>
-        </>
-      }
-    >
-      {row && (
-        <>
-          <div className="modal-banner">
-            <p className="modal-banner__title">
-              <Icon name="status/info" size="sm" color="inherit" />
-              Record Details
-            </p>
-            <div className="modal-banner__grid">
-              <div className="modal-banner__field">
-                <dt>Location</dt>
-                <dd>{row.location}</dd>
-              </div>
-              <div className="modal-banner__field">
-                <dt>Type/Volume</dt>
-                <dd>{row.volume}</dd>
-              </div>
-              {kind === 'receive' && (
-                <>
-                  <div className="modal-banner__field">
-                    <dt>Sent Date</dt>
-                    <dd>{row.moved.split(' ').slice(0, 3).join(' ')}</dd>
-                  </div>
-                  <div className="modal-banner__field">
-                    <dt>Sent Time</dt>
-                    <dd>{row.moved.split(' ').slice(-1)[0]}</dd>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-
-          {kind === 'tag' && (
-            <Checkbox
-              label="Notes required by"
-              checked={requiredBy}
-              onChange={() => setRequiredBy((v) => !v)}
-            />
-          )}
-
-          <div className="modal-form-row">
-            <Input
-              type="calendar"
-              label={kind === 'tag' ? 'Required by date' : `${config.title.split(' ')[0]} date`}
-              required
-            />
-            <Input
-              type="time"
-              label={kind === 'tag' ? 'Required by time' : `${config.title.split(' ')[0]} time`}
-              required
-            />
-          </div>
-          <Select label="I am working with" options={SITES} defaultValue="all" required />
-          <Select label="Location" options={SITES} defaultValue="all" required />
-          <Select label="Holder" options={SITES} defaultValue="all" required />
-          <Input type="calendar" label="Clinic/TCI date" required />
-
-          <button type="button" className="link-action modal-add-field">
-            + Add additional information
-          </button>
-        </>
-      )}
-    </Modal>
-  );
-}
+import { RowActionMenu, NoteActionModal, ConfirmModal, AdditionalInfoField } from './shared/RowActions.jsx';
 
 /**
  * Create modal (Figma 2:4438 New / 2:4458 Temporary), reached from the
@@ -232,9 +67,7 @@ function CreateNoteModal({ open, onClose }) {
       <Select label="Holder" options={SITES} defaultValue="all" required />
       <Input type="calendar" label="Clinic/TCI date" required />
 
-      <button type="button" className="link-action modal-add-field">
-        + Add additional information
-      </button>
+      <AdditionalInfoField />
     </Modal>
   );
 }
@@ -243,31 +76,65 @@ function CreateNoteModal({ open, onClose }) {
  * Case Note Tracking — patient casenote view.
  * Figma: U0Ugs6bG1KLzrrWdnxqcZO, node 2:4386.
  *
+ * Reachable only from Patient Search's "View" action — this is one patient's
+ * casenotes, not the cross-patient My Requests screen (127:4813), which is a
+ * separate component.
+ *
  * Every component here comes from @dhcw/sr-react. Nothing is restyled locally —
  * if something looks wrong, the design system is wrong, and that is the point of
  * this prototype.
  */
 export default function CaseNotes() {
   const [bannerExpanded, setBannerExpanded] = useState(true);
-  const [selected, setSelected] = useState(() => new Set([1, 2, 3]));
+  const [notes, setNotes] = useState(NOTES);
   const [sort, setSort] = useState({ key: 'volume', direction: 'ascending' });
   const [site, setSite] = useState('all');
   const [noteType, setNoteType] = useState('general');
   const [showInactive, setShowInactive] = useState(false);
   const [search, setSearch] = useState('');
-  const [confirmOpen, setConfirmOpen] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
   const [noteAction, setNoteAction] = useState({ kind: null, row: null });
+  const [confirmAction, setConfirmAction] = useState({ kind: null, row: null });
 
   const handleRowAction = (kind, row) => {
     if (kind === 'send' || kind === 'receive' || kind === 'tag') {
       setNoteAction({ kind, row });
+    } else if (kind === 'deactivate' || kind === 'delete') {
+      setConfirmAction({ kind, row });
     }
-    // Merge, Deactivate and Delete have no Figma-designed flow yet — no-op.
+    // Merge has no Figma-designed flow yet — no-op.
+  };
+
+  const confirmCopy = {
+    deactivate: {
+      title: 'Deactivate this case note?',
+      body: 'This marks the volume as inactive. It can be reactivated later from the same menu.',
+      confirmLabel: 'Deactivate note',
+    },
+    delete: {
+      title: 'Delete this case note?',
+      body: 'This permanently deletes the case note record and cannot be undone.',
+      confirmLabel: 'Delete note',
+    },
+  }[confirmAction.kind];
+
+  const runConfirm = () => {
+    if (confirmAction.kind === 'deactivate') {
+      setNotes((prev) =>
+        prev.map((n) =>
+          n.id === confirmAction.row.id
+            ? { ...n, status: 'Inactive', statusType: 'red' }
+            : n
+        )
+      );
+    } else if (confirmAction.kind === 'delete') {
+      setNotes((prev) => prev.filter((n) => n.id !== confirmAction.row.id));
+    }
+    setConfirmAction({ kind: null, row: null });
   };
 
   const rows = useMemo(() => {
-    let out = NOTES;
+    let out = notes;
     if (!showInactive) out = out.filter((n) => n.status !== 'Inactive');
     if (site !== 'all') out = out.filter((n) => n.siteId === site);
     if (search.trim()) {
@@ -285,7 +152,7 @@ export default function CaseNotes() {
       );
     }
     return out;
-  }, [showInactive, site, search, sort]);
+  }, [notes, showInactive, site, search, sort]);
 
   const columns = [
     { key: 'volume', header: 'Volume', sortable: true },
@@ -303,8 +170,6 @@ export default function CaseNotes() {
     { key: 'moved', header: 'Movement Date', sortable: true },
     { key: 'batch', header: 'Batch no.' },
   ];
-
-  const selectedNotes = NOTES.filter((n) => selected.has(n.id));
 
   return (
     <>
@@ -402,17 +267,9 @@ export default function CaseNotes() {
         <section className="notes" aria-label="Case notes">
           <div className="notes__bar">
             <p className="notes__count">
-              {selected.size} {selected.size === 1 ? 'note' : 'notes'} selected
+              {rows.length} {rows.length === 1 ? 'note' : 'notes'}
             </p>
             <div className="notes__bar-actions">
-              <Button
-                type="secondary"
-                size="small"
-                disabled={selected.size === 0}
-                onClick={() => setConfirmOpen(true)}
-              >
-                Send batch
-              </Button>
               <Button
                 type="primary"
                 size="small"
@@ -428,11 +285,6 @@ export default function CaseNotes() {
             caption={`Case notes for ${PATIENT.name}`}
             columns={columns}
             rows={rows}
-            selectable
-            selectedIds={selected}
-            onSelectionChange={setSelected}
-            getRowLabel={(row) => `Select ${row.volume} at ${row.location}`}
-            selectAllLabel="Select all case notes"
             sort={sort}
             onSortChange={setSort}
             stickyHead
@@ -450,47 +302,19 @@ export default function CaseNotes() {
         </section>
       </main>
 
-      <Modal
-        open={confirmOpen}
-        onClose={() => setConfirmOpen(false)}
-        title={`Send ${selectedNotes.length} case ${
-          selectedNotes.length === 1 ? 'note' : 'notes'
-        }?`}
-        size="small"
-        footer={
-          <>
-            <Button type="secondary" onClick={() => setConfirmOpen(false)}>
-              Cancel
-            </Button>
-            <Button
-              type="primary"
-              onClick={() => {
-                setSelected(new Set());
-                setConfirmOpen(false);
-              }}
-            >
-              Send notes
-            </Button>
-          </>
-        }
-      >
-        <p>
-          These case notes will be added to a new batch for {PATIENT.name}. You can
-          track them from My Requests.
-        </p>
-        <ul className="modal-list">
-          {selectedNotes.map((n) => (
-            <li key={n.id}>
-              {n.volume} — {n.location}
-            </li>
-          ))}
-        </ul>
-      </Modal>
-
       <NoteActionModal
         kind={noteAction.kind}
         row={noteAction.row}
         onClose={() => setNoteAction({ kind: null, row: null })}
+      />
+
+      <ConfirmModal
+        open={Boolean(confirmAction.kind)}
+        title={confirmCopy?.title}
+        body={confirmCopy?.body}
+        confirmLabel={confirmCopy?.confirmLabel}
+        onConfirm={runConfirm}
+        onClose={() => setConfirmAction({ kind: null, row: null })}
       />
 
       <CreateNoteModal open={createOpen} onClose={() => setCreateOpen(false)} />
