@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import {
   Header,
+  Footer,
   PatientBanner,
   Table,
   Modal,
@@ -310,6 +311,8 @@ export default function CaseNotes() {
           )}
         </section>
       </main>
+
+      <Footer version="v 0.1.0.1112" />
 
       <NoteActionModal
         kind={noteAction.kind}

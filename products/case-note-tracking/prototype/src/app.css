@@ -43,6 +43,10 @@ body {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  /* At least viewport height so the sticky Footer is pushed to the bottom on
+     a short screen instead of floating up under the content. The sidebar
+     already sets its own 100vh, so the two columns agree. */
+  min-height: 100vh;
 }
 
 .app__main {
@@ -798,7 +802,10 @@ body {
      the finder is a search box and a list. */
   grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
   gap: var(--space-4);
-  align-items: start;
+  /* Stretch, not start: the two cards are one task split in half, and a short
+     finder next to a tall summary reads as two unrelated panels. Whichever
+     side has more in it sets the height and the other matches. */
+  align-items: stretch;
 }
 
 .send-find,
@@ -806,6 +813,32 @@ body {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+  min-width: 0;
+}
+
+/* The results list is the part that gives when the card is stretched, so the
+   two cards can match height without the search row or the footer actions
+   moving away from the edges they belong to. */
+.send-find__results {
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+.send-summary .sr-table-wrap {
+  flex: 1 1 auto;
+}
+
+.send-open-batch {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  /* The settings card is a flex column with items aligned to the start, so
+     this row would otherwise shrink to its content and wrap the button under
+     the field. */
+  width: 100%;
+}
+.send-open-batch > :first-child {
+  flex: 0 1 320px;
   min-width: 0;
 }
 

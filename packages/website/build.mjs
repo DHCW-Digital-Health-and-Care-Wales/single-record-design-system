@@ -228,7 +228,7 @@ const PROTOTYPES = [
       + 'built and reachable from the nav. ReceiveIT and TagIT are nav entries only.',
     entryDir: resolve(ROOT, 'products', 'case-note-tracking', 'prototype', 'src'),
     entryFile: 'App.jsx',
-    components: ['Navigation', 'Header', 'Footer', 'PatientBanner', 'Table', 'Modal', 'Button', 'Select', 'Input', 'Checkbox', 'SegmentedControl', 'RadioGroup', 'Tag', 'Icon'],
+    components: ['Navigation', 'Header', 'Footer', 'PatientBanner', 'Autocomplete', 'Table', 'Modal', 'Button', 'Select', 'Input', 'Checkbox', 'SegmentedControl', 'RadioGroup', 'Tag', 'Icon'],
     startScript: 'dev:prototype',
   },
 ];
