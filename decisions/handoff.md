@@ -13,25 +13,28 @@ Find case notes on the left, build the batch on the right, approve and send
 from the footer. Volumes sit at `Pending` until the approval modal's Send is
 confirmed — before that the batch is an editable list, not a dispatch.
 
-**Design questions raised by the build — for the design lead:**
+**All four design questions from the first pass are now resolved** (design
+lead, 2026-08-04) and the Figma updated to match:
 
-1. **The approval banner contradicts itself.** `279:22906` draws it green with
-   a success tick while the text reads *"9 warnings across 3 volumes.
-   Acknowledge warnings to continue"* and the primary action is disabled. A
-   success mark on a message saying you cannot proceed is a mixed signal.
-   Implemented as amber while it blocks, flipping to green once warnings are
-   acknowledged and the batch really can be sent — which lands on the Figma
-   green state, just later. Worth confirming.
-2. **The modal has no title.** `279:22906` says "Modal Title". Implemented as
-   *"Approve and send batch"*.
-3. **The checkbox above "Create new batch" changes label between screens** —
-   "Print label" on `192:4901`, `341:9165` and `341:9673`, but "Show inactive
-   volumes" on `287:23848`. Implemented as "Print label" (three screens to
-   one, and it pairs with "Print Labels" in the footer). Needs a decision.
-4. **The Batch Summary lists a different patient per row while the search
-   panel above it shows one patient's four volumes.** A batch is cross-patient
-   in reality, so the rows carry their own patient rather than inheriting the
-   search group's — but the two panels as drawn cannot both be right.
+1. **Approval banner** — two variants, `445:8419`. Amber and leading with the
+   instruction (*"Acknowledge warnings to continue - 0 errors, N warnings
+   across all volumes."*) while unacknowledged warnings block the send; green
+   and leading with the state (*"Ready to send … All warnings acknowledged"*)
+   once they are cleared. Implemented to that wording.
+2. **Modal title** — *"Approve and send batch"*, now also in Figma.
+3. **Checkbox** — "Print label", corrected in Figma.
+4. **Patients and volumes** — the Figma rows were placeholder. Aligned
+   logically: the case-note number belongs to the *patient* (one case record,
+   volumes numbered within it), so a patient's volumes all carry their number
+   and stay with them. Two patients in the search data, because a batch is
+   genuinely cross-patient — that is what puts more than one name in the
+   summary table, rather than one patient's volumes wearing four names.
+
+**Warning detail panel** (`445:8402`) — both states built. Every row's
+warnings cell is clickable, not only the ones carrying warnings, so selecting
+a clean row answers "this one is fine" instead of being a dead click that
+leaves the previous row's warnings on screen. The panel holds its height
+across both states so the footer does not jump under the cursor.
 
 ### Two defects found and fixed in the design system, not the prototype
 

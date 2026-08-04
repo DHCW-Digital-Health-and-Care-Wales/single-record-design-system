@@ -198,52 +198,74 @@ export const BATCH_REFERENCE = {
  * (Figma 341:9165). One group per patient; `volumes` are that patient's
  * casenote volumes, each addable to the batch.
  *
+ * The case-note number belongs to the **patient**, not the volume: a patient
+ * has one case record and its volumes are numbered within it. Figma's Batch
+ * Summary gives every row a different case number and a different patient
+ * while the search panel above it shows one patient's four volumes, which
+ * cannot both be true — confirmed as placeholder data, so volumes here take
+ * their patient's number and each patient's volumes stay with that patient.
+ *
+ * Two patients, because a batch is genuinely cross-patient: you search for
+ * each in turn and add volumes from each, which is what fills the summary
+ * table with more than one name.
+ *
  * `warnings` drive the approval modal (279:22906): a volume with warnings
- * cannot be sent until they are acknowledged. Only Vol 4 carries any, which
- * is what makes the modal's "0 errors, N warnings" state reachable.
+ * cannot be sent until they are acknowledged. Only the two Vol 4s carry any,
+ * which is what makes the modal's "0 errors, N warnings" state reachable and
+ * still leaves warning-free rows to contrast against.
  */
 export const SEND_SEARCH_GROUPS = [
   {
     id: 'p1',
-    patient: 'JOHN, Elvet George (Mr)',
-    nhs: '000 111 2222',
-    dob: '15 Dec 1992 (33y)',
-    crn: 'NN40140',
+    patient: PATIENT.name,
+    nhs: PATIENT.nhsNumber,
+    dob: PATIENT.dob,
+    crn: PATIENT.crn,
     volumes: [
       {
-        id: 'v4', caseNo: 'NN40140', volume: 'General notes vol 4',
+        id: 'p1-v4', volume: 'General notes vol 4',
         location: 'A&E Department-GGH', moved: '26 Jun 2026 12:02',
         status: 'Registered', statusType: 'blue',
-        warnings: ['Temporary notes exist for this patient', 'Case note volume is held at a different location'],
+        warnings: [
+          'Temporary notes exist for this patient',
+          'Case note volume is held at a different location',
+        ],
       },
       {
-        id: 'v3', caseNo: 'NN90212', volume: 'General notes vol 3',
+        id: 'p1-v3', volume: 'General notes vol 3',
         location: 'Madog Suite-GGH', moved: '06 Apr 2026 12:02',
         status: 'Sent', statusType: 'grey', warnings: [],
       },
       {
-        id: 'v2', caseNo: 'CN032412', volume: 'General notes vol 2',
+        id: 'p1-v2', volume: 'General notes vol 2',
         location: 'Madog Suite-GGH', moved: '11 Mar 2026 12:02',
         status: 'Sent', statusType: 'grey', warnings: [],
       },
       {
-        id: 'v1', caseNo: 'CN723283', volume: 'General notes vol 1',
+        id: 'p1-v1', volume: 'General notes vol 1',
         location: 'Teifi Ward-GGH', moved: '02 Jan 2026 12:02',
         status: 'Sent', statusType: 'grey', warnings: [],
       },
     ],
   },
+  {
+    id: 'p2',
+    patient: 'EVANS, Paul (Mr)',
+    nhs: '098 765 4321',
+    dob: '14 Jan 2000 (26y)',
+    crn: 'NN90212',
+    volumes: [
+      {
+        id: 'p2-v2', volume: 'General notes vol 2',
+        location: 'Cleddau Ward-GGH', moved: '18 May 2026 09:40',
+        status: 'Registered', statusType: 'blue',
+        warnings: ['Case note volume is held at a different location'],
+      },
+      {
+        id: 'p2-v1', volume: 'General notes vol 1',
+        location: 'Cleddau Ward-GGH', moved: '03 Feb 2026 14:15',
+        status: 'Sent', statusType: 'grey', warnings: [],
+      },
+    ],
+  },
 ];
-
-/**
- * Patient shown against each volume in the Batch Summary. The Figma mock
- * lists a different patient per row while the search panel above it shows one
- * patient's four volumes — a batch is cross-patient in reality, so the rows
- * carry their own patient rather than inheriting the search group's.
- */
-export const SEND_VOLUME_PATIENTS = {
-  v4: 'JOHN, Elvet George',
-  v3: 'EVANS, Paul',
-  v2: 'CHAPMAN, Gary',
-  v1: 'CLARENCE, Peters',
-};

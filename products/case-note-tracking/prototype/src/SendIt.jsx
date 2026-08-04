@@ -22,7 +22,6 @@ import {
   SEND_CASE_NOTE_TYPES,
   BATCH_REFERENCE,
   SEND_SEARCH_GROUPS,
-  SEND_VOLUME_PATIENTS,
 } from './data.js';
 
 /**
@@ -45,7 +44,7 @@ function ApproveBatchModal({ open, rows, onClose, onSend }) {
     if (open) {
       setAcknowledged(false);
       setRemoved(new Set());
-      setOpenWarningsFor(rows.find((r) => r.warnings.length > 0)?.id ?? null);
+      setOpenWarningsFor(rows[0]?.id ?? null);
     }
   }, [open, rows]);
 
@@ -77,20 +76,28 @@ function ApproveBatchModal({ open, rows, onClose, onSend }) {
     {
       key: 'warnings',
       header: 'Warnings',
-      render: (row) =>
-        row.warnings.length > 0 ? (
+      // Every row is clickable, not just the ones carrying warnings: the
+      // panel below has a "no warnings" state (Figma 445:8402), so clicking a
+      // clean row is a real answer — "this one is fine" — rather than a dead
+      // click that leaves the previous row's warnings on screen.
+      render: (row) => {
+        const has = row.warnings.length > 0;
+        return (
           <button
             type="button"
-            className="link-action send-warning-count"
+            className={`link-action send-warning-count${has ? '' : ' send-warning-count--none'}`}
             aria-expanded={openWarningsFor === row.id}
             onClick={() => setOpenWarningsFor(row.id)}
           >
-            <Icon name="status/warning" size="xs" color="inherit" />
+            {has && <Icon name="status/warning" size="xs" color="inherit" />}
             <span>{row.warnings.length}</span>
+            <span className="sr-visually-hidden">
+              {` ${row.warnings.length === 1 ? 'warning' : 'warnings'} for ${row.volume}`}
+              {has ? ', show them' : ''}
+            </span>
           </button>
-        ) : (
-          <span>0</span>
-        ),
+        );
+      },
     },
   ];
 
@@ -129,11 +136,9 @@ function ApproveBatchModal({ open, rows, onClose, onSend }) {
         </>
       }
     >
-      {/* Warning-styled only while it is actually blocking. Figma draws this
-          green with a tick even when it says "acknowledge warnings to
-          continue" — a success mark on a message that says you cannot yet
-          proceed contradicts itself, so it is amber until acknowledged and
-          green once the batch really can be sent. */}
+      {/* Two variants, per Figma 445:8419: amber and leading with the
+          instruction while unacknowledged warnings block the send, green and
+          leading with the state once they are all acknowledged. */}
       <div
         className={`send-banner${blocked ? ' send-banner--warning' : ' send-banner--success'}`}
         role="status"
@@ -147,11 +152,15 @@ function ApproveBatchModal({ open, rows, onClose, onSend }) {
         <p className="send-banner__text">
           {live.length === 0
             ? 'No volumes left in this batch.'
-            : `Ready to send — 0 errors, ${warningCount} ${
-                warningCount === 1 ? 'warning' : 'warnings'
-              } across ${live.length} ${live.length === 1 ? 'volume' : 'volumes'}.${
-                blocked ? ' Acknowledge warnings to continue.' : ''
-              }`}
+            : blocked
+              ? `Acknowledge warnings to continue - 0 errors, ${warningCount} ${
+                  warningCount === 1 ? 'warning' : 'warnings'
+                } across all volumes.`
+              : `Ready to send - 0 errors, ${warningCount} ${
+                  warningCount === 1 ? 'warning' : 'warnings'
+                } across all volumes.${
+                  warningCount > 0 ? ' All warnings acknowledged' : ''
+                }`}
         </p>
       </div>
 
@@ -173,19 +182,25 @@ function ApproveBatchModal({ open, rows, onClose, onSend }) {
         )}
       />
 
-      {detail && detail.warnings.length > 0 && (
-        <div className="send-warnings">
+      {/* Both states, per Figma 445:8402. The panel keeps its place whichever
+          row is selected, so choosing a clean row answers the question
+          instead of collapsing the panel and shifting everything under it. */}
+      {detail && (
+        <div className="send-warnings" aria-live="polite">
           <p className="send-warnings__title">
-            Warnings for {detail.caseNo} · {detail.volume}
+            {detail.warnings.length > 0 ? 'Warnings for' : 'No warnings for'}{' '}
+            {detail.caseNo} · {detail.volume}
           </p>
-          <ul className="send-warnings__list">
-            {detail.warnings.map((w) => (
-              <li key={w}>
-                <Icon name="status/warning" size="xs" color="inherit" />
-                <span>{w}</span>
-              </li>
-            ))}
-          </ul>
+          {detail.warnings.length > 0 && (
+            <ul className="send-warnings__list">
+              {detail.warnings.map((w) => (
+                <li key={w}>
+                  <Icon name="status/warning" size="xs" color="inherit" />
+                  <span>{w}</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       )}
     </Modal>
@@ -248,10 +263,10 @@ export default function SendIt() {
         if (batch.some((b) => b.id === v.id)) continue;
         additions.push({
           id: v.id,
-          caseNo: v.caseNo,
+          caseNo: group.crn,
           volume: v.volume,
           location: 'All sites',
-          patient: SEND_VOLUME_PATIENTS[v.id] || group.patient,
+          patient: group.patient,
           warnings: v.warnings,
           status: 'Pending',
           statusType: 'yellow',
