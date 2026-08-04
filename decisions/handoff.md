@@ -5,6 +5,62 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-08-04d (one page width; navigation previews; rail overflow)
+
+### One page shape, and it is wider
+
+Pages came in two shapes: an 800px column, or a "wide" one that *also* dropped
+`.layout`'s 1280px cap. On a widescreen monitor that meant some pages ran past
+the masthead while their neighbours sat still — which is what the reader
+noticed. The `wide` flag is gone; every documentation page now uses the same
+column.
+
+The cap moved 1280 → **1440px** (XLarge, from the grid foundation) on the
+layout, masthead and site footer together, so they still line up and a
+widescreen gets the extra column instead of more margin. Two supporting rules:
+
+- **Prose keeps a measure.** `.content > p/ul/ol/blockquote/dl` cap at 72ch —
+  filling a 1160px column with text would give a 110-character line.
+- **Showcases are full-bleed** to the page gutter (a variable, so it still
+  works at the 20px mobile padding). This is not decoration: the Patient
+  Banner's demographics grid drops to one column below roughly 1230px of banner
+  width, so the 80px of reading gutter was the difference between documenting
+  the two-column pattern and documenting its reflow. Every showcase does it, so
+  previews are the same width on every page.
+
+### Navigation
+
+- **Previews take their height from the menu.** A fixed frame height had put a
+  scrollbar inside the example, so the reader scrolled a sidebar inside a page
+  to see the destinations being described.
+- **The icon-only rail no longer scrolls sideways.** Its labels are tooltips
+  positioned outside the 48px width, and `.sr-nav__body` sets `overflow-y:
+  auto` — which per the overflow spec forces `overflow-x` to `auto` too. The
+  hidden tooltips counted toward scroll width (144px of content in a 48px
+  rail), so the rail grew a horizontal scrollbar, and a *shown* tooltip would
+  have been clipped by the same container. Fixed by not making the collapsed
+  body a scroll container. **The width is not the problem** — 48px is the Figma
+  width and a tooltip is deliberately wider than the rail it belongs to. Where
+  a product has more destinations than fit the rail's height, the 108px state
+  is the one that scrolls cleanly with its labels in flow.
+- **Tooltips no longer inherit the row's ellipsis.** `.sr-nav__item-label` sets
+  `overflow: hidden; text-overflow: ellipsis` for the expanded row; the tooltip
+  exists to show the name in full, so it overrides both.
+
+### Still open
+
+- **"Appointments" truncates by 4px** in the expanded 220px sidebar when it
+  carries a badge and a chevron. That is the visible symptom of the open
+  question already recorded in `components/navigation/guidelines.md`: the
+  sidebar is 220px but `foundations/grid-and-layout.md` specifies 248px for the
+  EPR content zones, and the Figma item building block (`665:21099`) is 248px
+  wide. Not fixed here because the note says, correctly, that the two must be
+  reconciled together — nudging padding to hide the ellipsis would bury the
+  question rather than answer it.
+- Grids page still overflows 15px at 390px. Pre-existing.
+
+---
+
 ## Checkpoint — 2026-08-04c (Navigation + Toggles pages; send-from-tag; MAUI clarified)
 
 ### The code packages are the source of truth for what gets published

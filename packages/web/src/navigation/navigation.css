@@ -332,6 +332,22 @@
   justify-content: center;
 }
 
+/* The icon-only rail does not scroll its own body.
+   Its labels are tooltips positioned outside the 48px width, and `.sr-nav__body`
+   sets `overflow-y: auto` — which per the overflow spec forces `overflow-x` to
+   `auto` as well, because a visible axis cannot sit beside a clipped one. The
+   hidden tooltips therefore contributed to the rail's scroll width (measured:
+   144px of content in a 48px rail) and it grew a horizontal scrollbar, while a
+   shown tooltip would have been clipped by the same container.
+   Widening the rail is not the fix — 48px is the Figma width (`3569:15850`),
+   and a tooltip is deliberately wider than the rail it belongs to. Where a
+   product has more destinations than fit the rail's height, the 108px
+   collapsed state is the one that scrolls cleanly and keeps its labels
+   in-flow. */
+.sr-nav--collapsed .sr-nav__body {
+  overflow: visible;
+}
+
 /* Icon-only label becomes a tooltip. Revealed on :hover AND :focus-visible —
    never hover alone. A keyboard user tabbing through the rail can only ever
    trigger :focus-visible, so a hover-only reveal would leave them with an
@@ -351,6 +367,12 @@
   font: var(--sr-type-caption-font);
   letter-spacing: var(--sr-type-caption-letter-spacing);
   white-space: normal;
+  /* The expanded row truncates its label with an ellipsis; a tooltip must not.
+     It exists precisely to show the name in full, so it overrides the
+     `overflow: hidden` / `text-overflow: ellipsis` it would otherwise inherit
+     from the base rule and wraps inside its 200px instead. */
+  overflow: visible;
+  text-overflow: clip;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;

@@ -6,7 +6,7 @@
  *
  * Structure mirrors the approved Figma page template:
  *   Masthead  utility row (40px) + main row (64px), Navy/900
- *   Layout    200px sidebar + content column, max 1280px
+ *   Layout    200px sidebar + content column, max 1440px (XLarge)
  */
 
 /* ── base ─────────────────────────────────────────────────────────────────── */
@@ -50,7 +50,7 @@ body {
 
 /* ── masthead ─────────────────────────────────────────────────────────────── */
 .masthead { background: var(--color-navy-900); color: var(--sr-color-text-inverse); }
-.masthead__row { max-width: 1280px; margin: 0 auto; padding: 0 40px; display: flex; align-items: center; }
+.masthead__row { max-width: 1440px; margin: 0 auto; padding: 0 40px; display: flex; align-items: center; }
 
 .masthead__utility { height: 40px; justify-content: flex-end; gap: 24px; }
 .masthead__utility a,
@@ -144,11 +144,8 @@ body {
 .search__empty { padding: 12px; font-size: 14px; color: var(--sr-color-text-secondary); }
 
 /* ── layout ───────────────────────────────────────────────────────────────── */
-.layout { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 200px minmax(0, 1fr); align-items: stretch; }
+.layout { max-width: 1440px; margin: 0 auto; display: grid; grid-template-columns: 200px minmax(0, 1fr); align-items: stretch; }
 .layout--nosidebar { grid-template-columns: minmax(0, 1fr); }
-/* Prototype embeds want as much width as the viewport allows, not the
-   1280px reading-measure cap every other page uses. */
-.layout--full { max-width: none; padding: 0 24px; }
 
 /* The column fills the full height of the layout row, so its background runs the
    length of the page. The nav inside it is what sticks while the page scrolls. */
@@ -187,10 +184,23 @@ body {
   border-left-color: var(--sr-color-interactive-link);
 }
 
-.content { padding: 40px; max-width: 800px; }
-/* Pages carrying a live embed need the full column: an 800px prototype frame is
-   too narrow to show a 1280px clinical screen without inner scrolling. */
-.content--wide { max-width: none; }
+/* One page width, everywhere.
+   Pages used to come in two shapes: an 800px column, or a "wide" one that also
+   dropped `.layout`'s 1280px cap — so on a widescreen monitor some pages grew
+   past the masthead while their neighbours sat still. That was the difference
+   the reader saw, and it read as a bug rather than a distinction.
+   Now every documentation page fills the same column, capped with the masthead
+   and the site footer at 1440px, the XLarge breakpoint from the grid
+   foundation — a widescreen monitor gets the extra column rather than 640px of
+   margin. Only the prototype embeds go edge to edge, and
+   they use a shell of their own with no masthead to line up against. */
+.content { --content-gutter: 40px; padding: var(--content-gutter); max-width: none; }
+
+/* Filling the column does not mean setting prose 1000px wide: a 110-character
+   line is hard to track back from. Text blocks keep a readable measure while
+   component previews, tables and code panels use the whole width. */
+.content > :is(p, ul, ol, blockquote, dl) { max-width: 72ch; }
+
 
 /* ── content typography (bound to the token scale) ────────────────────────── */
 /* Category eyebrow. It is the caption type variant, not a size of its own, and
@@ -429,9 +439,16 @@ body.bare { margin: 0; }
 
 /* ── showcase: white preview + dark tabbed code panel ─────────────────────── */
 .showcase {
-  margin: 24px 0 32px;
+  /* Full-bleed to the page padding. A patient banner is drawn at 1280px and
+     needs every pixel it can get before its demographics grid drops to one
+     column; 40px of reading gutter either side is 40px it cannot spare. Every
+     showcase does it, so a preview is the same width on every page — and the
+     band reads as "this is the component", distinct from the prose around it. */
+  margin: 24px calc(var(--content-gutter) * -1) 32px;
   border: 1px solid var(--sr-color-border-default);
-  border-radius: 8px;
+  border-left: 0;
+  border-right: 0;
+  border-radius: 0;
   overflow: hidden;
   background: var(--sr-color-surface-small-cards);
 }
@@ -620,7 +637,7 @@ body.bare { margin: 0; }
 
 /* ── footer ───────────────────────────────────────────────────────────────── */
 .site-footer { border-top: 1px solid var(--sr-color-border-default); background: var(--sr-color-surface-small-cards); margin-top: 48px; }
-.site-footer p { max-width: 1280px; margin: 0 auto; padding: 24px 40px; font-size: 14px; color: var(--sr-color-text-secondary); }
+.site-footer p { max-width: 1440px; margin: 0 auto; padding: 24px 40px; font-size: 14px; color: var(--sr-color-text-secondary); }
 .site-footer a { color: var(--sr-color-interactive-link); }
 
 /* ── responsive ───────────────────────────────────────────────────────────── */
@@ -632,7 +649,7 @@ body.bare { margin: 0; }
   .layout { grid-template-columns: minmax(0, 1fr); }
   .sidebar { border-radius: 0; border-bottom: 1px solid var(--sr-color-border-default); }
   .sidebar__inner { position: static; max-height: none; overflow: visible; padding: 16px 0; }
-  .content { padding: 24px 20px; }
+  .content { --content-gutter: 20px; padding: 24px var(--content-gutter); }
 }
 
 /* ── elevation specimens ──────────────────────────────────────────────────── */
@@ -732,12 +749,12 @@ body.bare { margin: 0; }
    Navigation page says so in a callout rather than leaving it implicit. */
 .nav-frame {
   display: flex;
-  height: 560px;
-  overflow: hidden;
-  border-radius: 8px;
 }
+/* Height comes from the menu, not from the frame. A fixed frame height put a
+   scrollbar inside a documentation example, so the reader had to scroll a
+   sidebar to see the destinations the page is describing. */
 .nav-frame .sr-nav {
   position: static;
-  height: 100%;
+  height: auto;
 }
-.nav-frame .sr-nav__body { overflow-y: auto; }
+.nav-frame .sr-nav__body { overflow: visible; }
