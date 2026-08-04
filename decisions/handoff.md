@@ -5,122 +5,108 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
-## Checkpoint — 2026-08-04 (later — footer rule, SendIT batch gating)
+## Checkpoint — 2026-08-04 (SendIT batch flow; footer rule; four DS fixes)
 
-### The Footer is now a system-wide rule, not a per-screen choice
+### Where the Case Note Tracking prototype stands
 
-Every screen carries it, pinned to the bottom: version left, that screen's
-committing actions right, and the bar with the version alone where a screen
-has none. `Footer` no longer falls back to a generic Save / Mark-as-complete
-pair when given no actions — two buttons that do nothing on every read-only
-screen is worse than an honest empty bar. The Footer guidelines said the
-opposite ("Not on read-only or list screens. A footer with no actions is a bar
-of empty chrome") and have been corrected.
+| Screen | State |
+|---|---|
+| Dashboard | Built |
+| Patient Search | Built (quick, advanced, results) |
+| Case notes (single patient) | Built — reached only from Patient Search's "View" |
+| My Requests | Built — cross-patient, All/Sent/Received tabs |
+| SendIT | Built — new batch, existing batch, find, approve, send |
+| ReceiveIT · TagIT · Settings | Nav entries only, no screen |
 
-Pinning is `position: sticky`, not `fixed`. Fixed positions against the
-viewport, so it would have to be told the sidebar's width; sticky keeps the
-bar inside its own column, spanning the content area and stopping at the
-sidebar, with no z-index handling. The page owes it a full-height column —
-recorded in the guidelines, since a page that does not give it one still gets
-a correct footer, just not a pinned one.
-
-### SendIT: creation is now a gate
-
-Nothing below the settings card exists until "Create new batch" is pressed —
-that press is what assigns the batch number, so there was nothing for a batch
-reference to refer to before it. Pressing it again over a batch that still has
-unsent notes asks first, reusing the existing `ConfirmModal`, rather than
-silently discarding them.
-
-**Existing Batch** (Figma `448:8420`, `448:8806`) asks one question — which
-batch — and shows nothing else until it is answered. The field is an
-Autocomplete, not a Select: the screen has to take a number read off a printed
-label as readily as one picked from the list.
-
-**One patient at a time in the finder.** A new search replaces the patient
-showing rather than stacking a second, so the checkbox list can never span two
-people and "Select all" always means one patient's volumes. Volumes already
-added to the batch stay there — the batch is still cross-patient, it is only
-the finder that shows one at a time.
-
-**Panels match height.** The two cards are one task split in half; a short
-finder beside a tall summary read as two unrelated panels. Whichever side has
-more in it now sets the height and the other matches, with the results list
-and the summary table taking up the slack so the search row and the footer
-actions stay at the edges they belong to. Below Desktop the panels stack and
-the rule stops applying, which is correct.
-
-**For the design lead:** `448:8806` (an opened existing batch) still shows the
-"Create new batch" button, carried over from the New Batch frame it was copied
-from. It is omitted in Existing Batch mode here — in that mode the batch
-already exists, and a button that would create a *second* one, discarding the
-one just opened, is not what that screen is for. Worth confirming.
-
-### Also
-
-- `Autocomplete` can now be marked `required`. It was the one form field in the
-  system that could not, and `448:8420` marks this field required.
-- The website build's component guard earned its keep immediately: it failed
-  the build on `Autocomplete` missing from the prototype's embed list, which
-  would otherwise have shipped a SendIT screen that breaks in the browser.
-
----
-
-## Checkpoint — 2026-08-04 (SendIT batch; two prototype fixes)
-
-### SendIT built (Figma 192:4901 / 341:9165 / 341:9673 / 279:22906 / 287:23848)
+### SendIT (Figma 192:4901 · 341:9165 · 341:9673 · 279:22906 · 287:23848 · 448:8420 · 448:8806)
 
 Find case notes on the left, build the batch on the right, approve and send
 from the footer. Volumes sit at `Pending` until the approval modal's Send is
 confirmed — before that the batch is an editable list, not a dispatch.
 
-**All four design questions from the first pass are now resolved** (design
-lead, 2026-08-04) and the Figma updated to match:
+- **Creation is a gate.** Nothing below the settings card exists until "Create
+  new batch" is pressed: that press assigns the batch number, so there was
+  nothing for a batch reference to refer to before it. Pressing it again over
+  a batch with unsent notes asks first (reuses `ConfirmModal`).
+- **Existing Batch** asks one question — which batch — and shows nothing else
+  until answered. The field is an `Autocomplete` with a chevron, so it takes a
+  number read off a printed label as readily as one picked from the list.
+  "Create new batch" is not shown in this mode: the batch already exists.
+- **One patient at a time** in the finder. A new search replaces the patient
+  showing, so the checkbox list never spans two people and "Select all" always
+  means one patient's volumes. Volumes already added stay in the batch, which
+  is still cross-patient.
+- **The two panels match height** — one task split in half; a short finder
+  beside a tall summary read as two unrelated cards. Below Desktop they stack
+  and the rule stops applying.
+- **Approval modal** — banner has the two variants from `445:8419` (amber and
+  leading with the instruction while blocked; green and leading with the state
+  once acknowledged). Warning detail panel has both states from `445:8402`;
+  every row's warnings cell is clickable, not only the ones with warnings, so
+  selecting a clean row answers "this one is fine" rather than leaving the
+  previous row's warnings on screen.
+- **Data is logical, not the Figma's placeholder rows**: the case-note number
+  belongs to the *patient* (one case record, volumes numbered within it), so a
+  patient's volumes carry their number and stay with them. Two patients in the
+  fixture, because a batch is genuinely cross-patient.
 
-1. **Approval banner** — two variants, `445:8419`. Amber and leading with the
-   instruction (*"Acknowledge warnings to continue - 0 errors, N warnings
-   across all volumes."*) while unacknowledged warnings block the send; green
-   and leading with the state (*"Ready to send … All warnings acknowledged"*)
-   once they are cleared. Implemented to that wording.
-2. **Modal title** — *"Approve and send batch"*, now also in Figma.
-3. **Checkbox** — "Print label", corrected in Figma.
-4. **Patients and volumes** — the Figma rows were placeholder. Aligned
-   logically: the case-note number belongs to the *patient* (one case record,
-   volumes numbered within it), so a patient's volumes all carry their number
-   and stay with them. Two patients in the search data, because a batch is
-   genuinely cross-patient — that is what puts more than one name in the
-   summary table, rather than one patient's volumes wearing four names.
+### Design-system fixes this session — all found via the prototype
 
-**Warning detail panel** (`445:8402`) — both states built. Every row's
-warnings cell is clickable, not only the ones carrying warnings, so selecting
-a clean row answers "this one is fine" instead of being a dead click that
-leaves the previous row's warnings on screen. The panel holds its height
-across both states so the footer does not jump under the cursor.
-
-### Two defects found and fixed in the design system, not the prototype
-
-- **`Footer` could not express any action pair but Save / Mark as complete.**
-  Its own guidelines require labels to name the screen's specific action, so
-  the fixed labels contradicted the guidance. It now takes an `actions` slot,
-  with the old pair as the default.
+- **The Footer is on every screen, pinned.** Persistent chrome, not page
+  content: the version has to be reachable everywhere, and a bar that comes
+  and goes reads as a layout bug. A screen with no committing action gets the
+  bar with the version alone — `Footer` no longer falls back to a generic
+  Save / Mark-as-complete pair, which would put two dead buttons on every
+  read-only screen. Pinning is `position: sticky`, not `fixed`, so the bar
+  stays in its own column and stops at the sidebar without the component
+  needing to know the sidebar's width. **The guidelines said the opposite**
+  ("Not on read-only or list screens…") and are corrected.
+- **`Footer` takes an `actions` slot** — its guidelines require labels to name
+  the screen's specific action, which fixed labels could not honour.
 - **`.sr-table-wrap` did not contain a wide table.** `overflow-x: auto`
   scrolled the table but did not stop it extending the *page's* horizontal
   scroll. Every consumer had been working around it by nesting the table in a
   second `overflow-x: auto` ancestor; SendIT's batch summary, which does not,
-  scrolled the page 72px at 390px. Fixed with `contain: paint` on the wrapper.
-- Also: `DatePicker` and `TimeSelect` had hard `width` values (220px / 140px)
-  that could not shrink, overflowing any narrower container — this is what put
-  a horizontal scrollbar in the Send / Receive / Tag modals. Now capped with
-  `max-width` instead.
+  scrolled the page 72px at 390px. Fixed with `contain: paint`.
+- **`DatePicker` / `TimeSelect` had hard widths** (220px / 140px) that could
+  not shrink, overflowing any narrower container — this is what put a
+  horizontal scrollbar in the Send / Receive / Tag modals. Now `max-width`.
+- **`Autocomplete` can be marked `required`, and has a chevron.** It was the
+  one form field that could not say it was required, and without the chevron
+  its options could only be discovered by typing.
 
-### The website build now fails on a prototype's missing component
+### The website build fails on a prototype's missing component
 
-Each `PROTOTYPES` entry carries a hand-maintained `components` list, and the
-embed only ships what is listed. Using a component nobody added built cleanly
-and broke at runtime on the published site — which is how SendIT's `Footer`
-was nearly shipped missing. The build now collects what each prototype
-actually imports from `@dhcw/sr-react` and throws if the list does not cover
-it.
+Each `PROTOTYPES` entry carries a hand-maintained `components` list and the
+embed ships only what is listed, so using a component nobody added built
+cleanly and broke at runtime *on the published site*. The build now collects
+what each prototype imports from `@dhcw/sr-react` and throws if the list does
+not cover it. It caught `Footer` and then `Autocomplete` in the same session.
+
+### Open — for the design lead
+
+1. **`448:8806` (opened existing batch) still shows "Create new batch"**,
+   carried over from the New Batch frame it was copied from. Omitted here: in
+   that mode the batch already exists, and a button that would create a second
+   one — discarding the one just opened — is not what the screen is for.
+2. **`BottomNav` has no website page.** Footer's Figma `Mobile` type
+   (`665:16526`) is the bottom tab bar, already built as `BottomNav`, not a
+   scaled-down Footer. Footer's page says so; `BottomNav` still needs its own.
+3. **No Menu/Dropdown, Tabs, or destructive-confirmation component.** The row
+   action menu, My Requests' tabs and `ConfirmModal` are local to the
+   prototype (`products/case-note-tracking/prototype/src/shared/`). Promote
+   each once a second consumer needs it.
+4. **Tables** still need alignment work against `1354:18055` — deferred.
+5. **Button text size** — `DESIGN-SYSTEM.md` says `label` (14/20/500) but
+   `button.css` renders 16/24. Flagged, not changed unilaterally.
+
+### Next session, start here
+
+- `npm run check` (typography + conformance), `npm run build:site`, and
+  `npm run build -w @dhcw/case-note-tracking-prototype` must all pass. Baselines
+  are typography 0 and conformance 16 — both are ceilings, not targets.
+- ReceiveIT and TagIT are the obvious next screens; both are nav entries with
+  no Figma flow linked yet.
 
 ---
 

@@ -54,6 +54,25 @@
   box-shadow: 0 0 0 2px var(--sr-color-border-focus);
 }
 
+/* Chevron — the affordance saying this field has a list behind it, and the
+   same glyph Select uses so the two read as one kind of control. */
+.sr-autocomplete__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--sr-color-text-secondary);
+  cursor: pointer;
+}
+.sr-autocomplete__toggle svg { width: 20px; height: 20px; }
+.sr-autocomplete__toggle:hover { color: var(--sr-color-text-primary); }
+
 /* "No results" row inside the reused Select menu. */
 .sr-autocomplete__empty {
   display: flex;
