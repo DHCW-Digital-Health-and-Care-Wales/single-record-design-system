@@ -94,7 +94,11 @@ body {
 }
 
 /* ── header search ────────────────────────────────────────────────────────── */
-.search { position: relative; flex: none; width: 240px; }
+/* `flex: none` at a fixed 240px could not shrink, so between 1001px (where the
+   masthead stops wrapping) and roughly 1150px the search field was pushed past
+   the right edge and scrolled every page on the site sideways by ~84px.
+   `0 1 240px` keeps 240px as the preferred width and lets it give way. */
+.search { position: relative; flex: 0 1 240px; min-width: 120px; }
 .search__field { display: flex; align-items: center; gap: 8px; background: var(--sr-color-surface-small-cards); border-radius: 8px; padding: 0 12px; height: 40px; }
 .search__icon { display: flex; flex: none; color: var(--sr-color-text-secondary); }
 .search__field svg { width: 16px; height: 16px; display: block; }
@@ -189,15 +193,32 @@ body {
 .content--wide { max-width: none; }
 
 /* ── content typography (bound to the token scale) ────────────────────────── */
-.breadcrumbs { margin: 0 0 8px; font-size: 14px; color: var(--sr-color-text-secondary); }
-.content h1 { font-size: 28px; line-height: 36px; font-weight: 700; margin: 0 0 12px; }
-.content h2 { font-size: 20px; line-height: 28px; font-weight: 700; margin: 40px 0 12px; }
-.content h3 { font-size: 16px; line-height: 24px; font-weight: 700; margin: 28px 0 8px; }
-.content h4 { font-size: 16px; line-height: 24px; font-weight: 500; margin: 20px 0 8px; }
-.content p, .content li { font-size: 16px; line-height: 24px; }
-.content p { margin: 0 0 16px; }
-.content ul { margin: 0 0 16px; padding-left: 20px; }
-.content li { margin-bottom: 8px; }
+/* Category eyebrow. It is the caption type variant, not a size of its own, and
+   it sits tight to the h1 below it — the two read as one titling set rather
+   than as two separate lines of page furniture. */
+.breadcrumbs {
+  margin: 0 0 4px;
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  color: var(--sr-color-text-secondary);
+}
+/* `:not(.showcase__preview *)` on every page-copy rule below is load-bearing.
+   A showcase preview holds the real component's markup, and these rules were
+   reaching into it: `.content h2` (0,1,1) outranks the component's own
+   `.sr-patient-banner__name { margin: 0 }` (0,1,0), so its 40px top margin
+   pushed the patient's name well below the alert cards it is meant to align
+   with — in every variant on the page. Excluding preview descendants is the
+   fix that keeps page copy styled without the site restyling what it
+   documents. */
+.content h1:not(.showcase__preview *) { font-size: 28px; line-height: 36px; font-weight: 700; margin: 0 0 12px; }
+.content h2:not(.showcase__preview *) { font-size: 20px; line-height: 28px; font-weight: 700; margin: 40px 0 12px; }
+.content h3:not(.showcase__preview *) { font-size: 16px; line-height: 24px; font-weight: 700; margin: 28px 0 8px; }
+.content h4:not(.showcase__preview *) { font-size: 16px; line-height: 24px; font-weight: 500; margin: 20px 0 8px; }
+.content p:not(.showcase__preview *),
+.content li:not(.showcase__preview *) { font-size: 16px; line-height: 24px; }
+.content p:not(.showcase__preview *) { margin: 0 0 16px; }
+.content ul:not(.showcase__preview *) { margin: 0 0 16px; padding-left: 20px; }
+.content li:not(.showcase__preview *) { margin-bottom: 8px; }
 .content .lede { color: var(--sr-color-text-secondary); margin-bottom: 32px; }
 .content a { color: var(--sr-color-interactive-link); }
 .content hr { border: 0; border-top: 1px solid var(--sr-color-border-default); margin: 40px 0; }
@@ -227,16 +248,43 @@ body {
 }
 .content blockquote p:last-child { margin-bottom: 0; }
 
-/* ── tables ───────────────────────────────────────────────────────────────── */
-.table-wrap { overflow-x: auto; margin: 0 0 24px; }
-.content table { border-collapse: collapse; width: 100%; font-size: 14px; background: var(--sr-color-surface-small-cards); }
-.content th, .content td {
+/* ── tables ───────────────────────────────────────────────────────────────────
+   The documentation tables on this site are styled to match the Table
+   component, not to a look of their own: tinted header row, no rule under it,
+   and a subtle divider between body rows (Figma 1363:22598). A 2px strong rule
+   under the header was the site's own invention and made every table on the
+   site — including the Table component's own example — read as a different
+   component from the one we publish.
+
+   `:not(.sr-table)` matters: the Table component's demo renders real
+   `.sr-table` markup, and these page-level rules were overriding its padding,
+   alignment and header border, so the component page showed something the
+   component does not actually produce. */
+/* `contain: paint` for the same reason `.sr-table-wrap` has it: `overflow-x`
+   alone scrolls the table but does not stop it extending the page's own
+   horizontal scroll (15px on the Grids page at 390px). No visual change. */
+.table-wrap { overflow-x: auto; margin: 0 0 24px; contain: paint; }
+.content table:not(.sr-table) {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
+  background: var(--sr-color-surface-section-cards);
+}
+.content table:not(.sr-table) th,
+.content table:not(.sr-table) td {
   text-align: left;
   vertical-align: top;
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--sr-color-border-default);
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--sr-color-border-subtle);
 }
-.content th { font-weight: 500; border-bottom: 2px solid var(--sr-color-border-strong); }
+.content table:not(.sr-table) th {
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+  color: var(--sr-color-text-primary);
+  background-color: var(--color-info-blue-50);
+  border-bottom: 0;
+}
+.content table:not(.sr-table) td { color: var(--sr-color-text-secondary); }
 
 /* ── cards ────────────────────────────────────────────────────────────────── */
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin: 0 0 32px; }

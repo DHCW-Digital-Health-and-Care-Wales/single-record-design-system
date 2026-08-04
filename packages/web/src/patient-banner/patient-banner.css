@@ -293,6 +293,18 @@
 .sr-patient-banner__pill--reactions { color: var(--sr-color-status-critical); }
 .sr-patient-banner__pill--warnings { color: var(--color-yellow-700); }
 
+/* Collapsing changes how much detail is shown, not which type the banner is.
+   Type=Fill therefore keeps its tint on the pills (Figma 1711:15585) — the
+   same Red/50 and Yellow/100 as the expanded alert cards — so a product does
+   not appear to switch type when the user collapses the banner. Type=Border
+   keeps the pills white with a coloured rule, matching its cards, and so
+   inherits the base rule above unchanged. */
+.sr-patient-banner__pill--reactions { background-color: var(--color-red-50); }
+.sr-patient-banner__pill--warnings { background-color: var(--color-yellow-100); }
+.sr-patient-banner--border .sr-patient-banner__pill {
+  background-color: var(--sr-color-surface-section-cards);
+}
+
 /* ---------- Mid-width viewports ----------
    Stacked vertically, the actions column is only as wide as its widest
    button — but it still sits in the same row as the alerts and identity,

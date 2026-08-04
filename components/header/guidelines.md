@@ -54,5 +54,5 @@
 
 ## Content
 
-- "Cymraeg" is never translated — it is the label for switching *to* Welsh.
+- "Cymraeg" is never translated — it is the label for switching to Welsh, and it stays in Welsh whichever language the interface is in.
 - Keep the search placeholder to what can be searched, not an instruction ("Type here to begin search", not "Search").
