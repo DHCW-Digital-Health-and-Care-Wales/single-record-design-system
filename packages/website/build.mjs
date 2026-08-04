@@ -220,12 +220,12 @@ const PROTOTYPES = [
   {
     slug: 'case-note-tracking',
     title: 'Case Note Tracking',
-    summary: 'Dashboard home screen, patient search with quick and advanced modes, the patient '
-      + 'casenote view, My Requests and the SendIT batch flow — all behind one sidebar navigation.',
+    // One sentence: what the product is, not what has been built of it. The
+    // build state is the Status line beneath it, and the detail of which
+    // screens exist belongs in the handoff, not on a card.
+    summary: 'The Welsh Patient Administration System module that tracks the storage, request and '
+      + 'transfer of patient case notes between NHS Wales health boards.',
     status: 'In progress',
-    statusNote: 'The dashboard, patient search (quick, advanced and results), the single-patient '
-      + 'casenote view, My Requests and SendIT — find case notes, build a batch, approve and send — are '
-      + 'built and reachable from the nav. ReceiveIT and TagIT are nav entries only.',
     entryDir: resolve(ROOT, 'products', 'case-note-tracking', 'prototype', 'src'),
     entryFile: 'App.jsx',
     components: ['Navigation', 'Header', 'Footer', 'PatientBanner', 'Autocomplete', 'Table', 'Modal', 'Button', 'Select', 'Input', 'Checkbox', 'SegmentedControl', 'RadioGroup', 'Tag', 'Icon'],
@@ -283,6 +283,19 @@ function renderMarkdown(md) {
     html.push(`<p>${inline(buf.join(' '))}</p>`);
   }
   return html.join('\n');
+}
+
+/**
+ * Drop a guidelines document's leading `# Title`.
+ *
+ * Every guidelines.md opens with the component's name. On a page that already
+ * carries that name as its own h1 — which is now every component and pattern
+ * page — rendering it again puts two h1s on the document and repeats the title
+ * halfway down. The rest of the document's headings start at h2, so they nest
+ * correctly under the page title once this one is removed.
+ */
+function stripLeadingH1(md) {
+  return md.replace(/^\s*#\s+.*(\r?\n)+/, '');
 }
 
 /**
@@ -443,12 +456,16 @@ const SECTIONS = [
     ],
   },
   {
-    id: 'components', label: 'Components', href: 'components/button.html',
+    // Alphabetical. With six entries and more coming, "the order they were
+    // built in" stops being findable; the section link opens the first one.
+    id: 'components', label: 'Components', href: 'components/breadcrumbs.html',
     side: [
+      { href: 'components/breadcrumbs.html', label: 'Breadcrumbs' },
       { href: 'components/button.html', label: 'Buttons' },
-      { href: 'components/table.html', label: 'Tables' },
-      { href: 'components/header.html', label: 'Header' },
       { href: 'components/footer.html', label: 'Footer' },
+      { href: 'components/header.html', label: 'Header' },
+      { href: 'components/table.html', label: 'Tables' },
+      { href: 'components/switch.html', label: 'Toggle switch' },
     ],
   },
   {
@@ -500,6 +517,9 @@ function shell({ title, prefix, sectionId, activeHref, body, extraHead = '', ext
 <link rel="stylesheet" href="${prefix}assets/patient-banner.css">
 <link rel="stylesheet" href="${prefix}assets/header.css">
 <link rel="stylesheet" href="${prefix}assets/footer.css">
+<link rel="stylesheet" href="${prefix}assets/bottom-nav.css">
+<link rel="stylesheet" href="${prefix}assets/breadcrumbs.css">
+<link rel="stylesheet" href="${prefix}assets/switch.css">
 <link rel="stylesheet" href="${prefix}assets/icon.css">
 <link rel="stylesheet" href="${prefix}assets/site.css">
 ${extraHead}
@@ -568,6 +588,9 @@ function bareShell({ title, prefix, body, extraHead = '', extraScript = '' }) {
 <link rel="stylesheet" href="${prefix}assets/patient-banner.css">
 <link rel="stylesheet" href="${prefix}assets/header.css">
 <link rel="stylesheet" href="${prefix}assets/footer.css">
+<link rel="stylesheet" href="${prefix}assets/bottom-nav.css">
+<link rel="stylesheet" href="${prefix}assets/breadcrumbs.css">
+<link rel="stylesheet" href="${prefix}assets/switch.css">
 <link rel="stylesheet" href="${prefix}assets/icon.css">
 <link rel="stylesheet" href="${prefix}assets/site.css">
 ${extraHead}
@@ -632,7 +655,7 @@ const HDR_ICON_MENU = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor
 const HDR_LOGO = `<span style="font: var(--sr-type-heading-xs-font); letter-spacing: var(--sr-type-heading-xs-letter-spacing); color: var(--sr-color-interactive-primary);">Single Record</span>`;
 
 function headerBody() {
-  const md = publicise(readFileSync(resolve(ROOT, 'components', 'header', 'guidelines.md'), 'utf8'));
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'header', 'guidelines.md'), 'utf8')));
   const desktop1 = `<header class="sr-header">
   <div class="sr-header__utility">
     <a class="sr-header__utility-link" href="#">Report an issue</a>
@@ -691,22 +714,35 @@ function headerBody() {
     Blazor: '<SrHeader Variant="Mobile" ShowMenu="true" Initials="AB" />',
     MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. This is\n     the only Header variant MAUI uses — it has no desktop target. -->\n<SrHeader Variant="Mobile" ShowMenu="true" Initials="AB" />',
   };
+  // Each variant is introduced before it is shown — heading, then what it is
+  // and when to reach for it, then the example. The previous order (example
+  // first, explanation after) left the reader looking at three near-identical
+  // bars with no way to tell which one they were being shown.
   return `
 <p class="breadcrumbs">Components</p>
+<h1>Header</h1>
+<p class="lede">The top bar of every product: identity, search, language and the user's own
+controls. Three variants — two desktop, one mobile — and a product uses exactly one of them.</p>
+
+<h2>Type: Desktop 1</h2>
+<p class="muted">The full bar — utility strip ("Report an issue", Cymraeg), logo, search,
+notification and avatar. The default variant, for products with no sidebar of their own. Code
+value <code>desktop</code>.</p>
 ${showcase(desktop1, 'header-desktop', desktop1Snippets)}
-<p class="muted"><code>desktop</code> (Type=Desktop 1) — the full bar: utility strip ("Report an
-issue", Cymraeg), logo, search, notification and avatar. The default variant, for products with no
-sidebar of their own.</p>
+
+<h2>Type: Desktop 2</h2>
+<p class="muted">A single 80px bar, which pairs with the sidebar Navigation. It carries no logo,
+because the sidebar does — and it is 64px so its bottom rule continues the sidebar's. Code value
+<code>desktop-2</code>.</p>
 ${showcase(bar, 'header', barSnippets)}
-<p class="muted"><code>desktop-2</code> (Type=Desktop 2) — a single 80px bar, which pairs with the
-sidebar Navigation. It carries no logo, because the sidebar does — and it is 64px so its bottom rule
-continues the sidebar's.</p>
+
+<h2>Type: Mobile</h2>
+<p class="muted">A compact 56px bar: hamburger, logo, and a reduced action cluster. No utility strip
+and no search field; <code>showMenu</code> centres the logo between the hamburger and the actions,
+matching Mobile 1. This is the only variant MAUI renders — MAUI is mobile only (phone, tablet), so
+Desktop 1 and Desktop 2 have no MAUI equivalent (see foundations/grid-and-layout.md). Code value
+<code>mobile</code>.</p>
 ${showcase(mobile, 'header-mobile', mobileSnippets)}
-<p class="muted"><code>mobile</code> (Type=Mobile 1/2) — a compact 56px bar: hamburger, logo, and a
-reduced action cluster. No utility strip and no search field; <code>showMenu</code> centres the logo
-between the hamburger and the actions, matching Mobile 1. This is the only variant MAUI renders — MAUI
-is mobile only (phone, tablet), so <code>desktop</code> and <code>desktop-2</code> have no MAUI
-equivalent (see foundations/grid-and-layout.md).</p>
 <hr>
 ${renderMarkdown(md)}
 ${accessibilityTable([
@@ -719,7 +755,7 @@ ${accessibilityTable([
 }
 
 function footerBody() {
-  const md = publicise(readFileSync(resolve(ROOT, 'components', 'footer', 'guidelines.md'), 'utf8'));
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'footer', 'guidelines.md'), 'utf8')));
   const demo = `<footer class="sr-footer">
   <span class="sr-footer__version">v 0.1.0.1112</span>
   <div class="sr-footer__actions">
@@ -737,17 +773,49 @@ function footerBody() {
     // equivalent surface for.
     MAUI: '<!-- Desktop Footer has no MAUI equivalent — MAUI is mobile only\n     (phone, tablet); see foundations/grid-and-layout.md. Its persistent\n     bottom bar is the BottomNav component, not this Footer. -->',
   };
+  // Footer's Mobile type (Figma 665:16526, on the same Footer page as the
+  // desktop bar). Shown at 390px because that is the width it is designed for
+  // — stretched to the full content column it reads as a desktop toolbar.
+  const navItems = [
+    { icon: 'nav/home', label: 'Home', current: true },
+    { icon: 'schedule/appointment', label: 'Diary' },
+    { icon: 'people/patient', label: 'Patients' },
+    { icon: 'comms/message', label: 'Messages' },
+    { icon: 'nav/more', label: 'More' },
+  ];
+  const bottomNav = `<nav class="sr-bottom-nav" aria-label="Primary" style="max-width:390px;margin:0 auto">
+${navItems.map((n) => `  <a class="sr-bottom-nav__item" href="#"${n.current ? ' aria-current="page"' : ''}>
+    <span class="sr-bottom-nav__icon">${iconMarkup(n.icon)}</span>
+    <span class="sr-bottom-nav__label">${n.label}</span>
+  </a>`).join('\n')}
+</nav>`;
+  const bottomNavSnippets = {
+    HTML: '<nav class="sr-bottom-nav" aria-label="Primary">\n  <a class="sr-bottom-nav__item" href="/home" aria-current="page">\n    <span class="sr-bottom-nav__icon">…</span>\n    <span class="sr-bottom-nav__label">Home</span>\n  </a>\n  …\n</nav>',
+    React: '<BottomNav\n  items={[\n    { icon: "nav/home", label: "Home", href: "/home" },\n    { icon: "schedule/appointment", label: "Diary", href: "/diary" },\n    …\n  ]}\n  current="Home"\n/>',
+    Blazor: '<SrBottomNav Items="@navItems" Current="Home" />',
+    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. This is\n     the Footer type MAUI uses — MAUI is mobile only (phone, tablet). -->\n<SrBottomNav Items="@navItems" Current="Home" />',
+  };
   return `
 <p class="breadcrumbs">Components</p>
-${showcase(demo, 'footer', snippets)}
+<h1>Footer</h1>
+<p class="lede">The pinned bottom bar. It carries the build version on every screen, and the
+screen's committing action where there is one.</p>
+
+<h2>Type: Desktop</h2>
 <p class="muted">Version left, actions right. Exactly one primary action — the one that commits.</p>
-<p class="muted">This is Footer's <code>Desktop</code> type (Figma <code>3015:24776</code>) — the only
-one this component implements. The <code>Mobile</code> type in the same Figma frame
-(<code>665:16526</code>) isn't a scaled-down version of this bar: it's the persistent bottom tab bar
-(Home/Diary/Patients/Messages/More), built as its own component — <code>BottomNav</code>
-(<code>packages/react/src/bottom-nav</code>) — because it behaves as primary navigation, not a
-page-level action bar. <code>BottomNav</code> doesn't have a website page of its own yet (tracked in
-the component gaps noted in <code>DESIGN-SYSTEM.md</code>).</p>
+${showcase(demo, 'footer', snippets)}
+
+<h2>Type: Mobile</h2>
+<p class="muted">The mobile type in the same Figma frame (<code>665:16526</code>) is not a scaled-down
+version of the desktop bar: it is the persistent bottom tab bar. It is shown here because that is
+where the design file puts it — Footer is the surface, and a product picks the type that suits its
+platform — but it is implemented as its own component, <code>BottomNav</code>, because it behaves as
+primary navigation rather than a page-level action bar. Take the labels from the product's own top
+five destinations; five is the maximum that stays legible at 390px.</p>
+${showcase(bottomNav, 'footer-mobile', bottomNavSnippets)}
+<div class="callout"><p><strong>A screen has one or the other, never both.</strong> Desktop carries
+the committing action; mobile carries navigation, and its committing action belongs in the screen
+itself.</p></div>
 <hr>
 ${renderMarkdown(md)}
 ${accessibilityTable([
@@ -967,7 +1035,7 @@ function pbCollapsed(type) {
 }
 
 function patientBannerBody() {
-  const md = publicise(readFileSync(resolve(ROOT, 'components', 'patient-banner', 'guidelines.md'), 'utf8'));
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'patient-banner', 'guidelines.md'), 'utf8')));
   const snippets = {
     HTML: '<section class="sr-patient-banner" aria-label="Patient: JOHN, Elvet George (Mr)">\n  <div class="sr-patient-banner__alerts">…</div>\n  <div class="sr-patient-banner__identity">…</div>\n  <div class="sr-patient-banner__actions">…</div>\n</section>\n\n<!-- Border type -->\n<section class="sr-patient-banner sr-patient-banner--border">…</section>\n<!-- Collapsed state -->\n<section class="sr-patient-banner sr-patient-banner--collapsed">…</section>',
     React: '<PatientBanner\n  patient={patient}\n  reactions={reactions}\n  warnings={3}\n  type="fill"          // "fill" | "border"\n  expanded={expanded}  // false renders the collapsed row\n  onToggle={() => setExpanded((v) => !v)}\n  onCopy={(v) => navigator.clipboard?.writeText(v)}\n  actions={<>…</>}\n/>',
@@ -976,6 +1044,10 @@ function patientBannerBody() {
   };
   return `
 <p class="breadcrumbs">Patterns</p>
+<h1>Patient Banner</h1>
+<p class="lede">The persistent identity strip at the top of every patient-context screen: alerts
+first, then who the patient is, then the actions that can be taken on them. Two types, each with an
+expanded and a collapsed state.</p>
 <h2>Type: Fill</h2>
 <p class="muted">The alert cards are tinted. This is the default — the tint carries further in
 peripheral vision on a busy screen.</p>
@@ -1609,7 +1681,7 @@ const BUTTON_SCRIPT = `<script>
 
 // ─── Component: Table ─────────────────────────────────────────────────────────
 function tableBody() {
-  const tableMd = publicise(readFileSync(resolve(ROOT, 'components', 'table', 'guidelines.md'), 'utf8'));
+  const tableMd = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'table', 'guidelines.md'), 'utf8')));
   const demo = `
 <div class="sr-table-wrap">
   <table class="sr-table">
@@ -1631,6 +1703,9 @@ function tableBody() {
   };
   return `
 <p class="breadcrumbs">Components</p>
+<h1>Tables</h1>
+<p class="lede">Tabular clinical and administrative data. A tinted header row, a subtle divider
+between rows, and no rule under the header — the tint is what separates it.</p>
 ${showcase(demo, 'table', snippets)}
 <p class="muted">Row 2 shows the selected state; hover any row to see the hover surface. Dates use
 the <code>d Mmm yyyy</code> format, and the header uses the <code>No.</code> abbreviation exception.</p>
@@ -1642,6 +1717,122 @@ ${accessibilityTable([
     { req: 'Selected row not colour alone', sc: '1.4.1', how: 'Selected rows carry a non-colour signal such as a selection control or a left accent.', test: 'Greyscale review' },
     { req: 'Target size for dense actions', sc: '2.5.8', how: '32×32px is a documented dense-desktop exception, promoted to full size on touch and mobile.', test: 'Measure, touch device' },
     { req: 'Focus visible', sc: '2.4.7', how: 'A focus ring sits outside the action buttons so it is never clipped by the row.', test: 'Keyboard tab' },
+  ])}`;
+}
+
+// ─── Components: Breadcrumbs and Toggle switch ───────────────────────────────
+// The published icon, not a hand-drawn chevron — same source as the React
+// component's <Icon name="nav/chevron-left">.
+const BC_CHEVRON = iconMarkup('nav/chevron-left');
+
+function breadcrumbsBody() {
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'breadcrumbs', 'guidelines.md'), 'utf8')));
+  const trail = [
+    { label: 'Home', href: '#' },
+    { label: 'Patient search', href: '#' },
+    { label: 'JOHN, Elvet George', href: '#' },
+    { label: 'Case note volume 3' },
+  ];
+  const multilevel = `<nav aria-label="Breadcrumb">
+  <ol class="sr-breadcrumbs">
+${trail.map((c, i) => (i === trail.length - 1
+    ? `    <li class="sr-breadcrumbs__item"><span class="sr-breadcrumbs__current" aria-current="page">${c.label}</span></li>`
+    : `    <li class="sr-breadcrumbs__item"><a class="sr-breadcrumbs__link" href="${c.href}">${c.label}</a><span class="sr-breadcrumbs__separator" aria-hidden="true">/</span></li>`)).join('\n')}
+  </ol>
+</nav>`;
+  const back = `<nav aria-label="Breadcrumb">
+  <ol class="sr-breadcrumbs sr-breadcrumbs--back">
+    <li class="sr-breadcrumbs__item">
+      <span class="sr-icon sr-icon--sm sr-breadcrumbs__back-icon">${BC_CHEVRON}</span>
+      <a class="sr-breadcrumbs__link" href="#">Back to JOHN, Elvet George</a>
+    </li>
+  </ol>
+</nav>`;
+  const multiSnippets = {
+    HTML: '<nav aria-label="Breadcrumb">\n  <ol class="sr-breadcrumbs">\n    <li class="sr-breadcrumbs__item">\n      <a class="sr-breadcrumbs__link" href="/">Home</a>\n      <span class="sr-breadcrumbs__separator" aria-hidden="true">/</span>\n    </li>\n    …\n    <li class="sr-breadcrumbs__item">\n      <span class="sr-breadcrumbs__current" aria-current="page">Case note volume 3</span>\n    </li>\n  </ol>\n</nav>',
+    React: '<Breadcrumbs\n  items={[\n    { label: "Home", href: "/" },\n    { label: "Patient search", href: "/search" },\n    { label: "JOHN, Elvet George", href: "/patients/1" },\n    { label: "Case note volume 3" },\n  ]}\n/>',
+    Blazor: '<SrBreadcrumbs Items="@trail" />',
+    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid.\n     On phone widths use Type=Back — a four-level trail wraps. -->\n<SrBreadcrumbs Items="@trail" Type="Back" />',
+  };
+  const backSnippets = {
+    HTML: '<nav aria-label="Breadcrumb">\n  <ol class="sr-breadcrumbs sr-breadcrumbs--back">\n    <li class="sr-breadcrumbs__item">\n      <span class="sr-breadcrumbs__back-icon">…</span>\n      <a class="sr-breadcrumbs__link" href="/patients/1">Back to JOHN, Elvet George</a>\n    </li>\n  </ol>\n</nav>',
+    React: '<Breadcrumbs type="back" items={trail} />\n\n// Same items array as the multilevel type — the component takes\n// the item before the current page and names it.',
+    Blazor: '<SrBreadcrumbs Items="@trail" Type="Back" />',
+    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrBreadcrumbs Items="@trail" Type="Back" />',
+  };
+  return `
+<p class="breadcrumbs">Components</p>
+<h1>Breadcrumbs</h1>
+<p class="lede">Where the current screen sits in the product's hierarchy, and the way back up it.
+Two types from one set of items — the full trail, or a single step back.</p>
+
+<h2>Type: Multilevel</h2>
+<p class="muted">The full trail, separated by <code>/</code>. The current page is the last item and
+is never a link. Four levels is the practical maximum.</p>
+${showcase(multilevel, 'breadcrumbs', multiSnippets)}
+
+<h2>Type: Back</h2>
+<p class="muted">One chevron-left link to the level immediately above. For narrow screens and deep
+hierarchies, where the full trail would wrap onto a second line. It names its destination rather
+than saying "Back", because the component does not control browser history and cannot promise
+where "back" goes.</p>
+${showcase(back, 'breadcrumbs-back', backSnippets)}
+<hr>
+${renderMarkdown(md)}
+${accessibilityTable([
+    { req: 'Trail is a navigation landmark', sc: '1.3.1', how: 'A nav element labelled "Breadcrumb" wrapping an ordered list, so position and order are both conveyed.', test: 'Landmark review, screen reader' },
+    { req: 'Current page is identified', sc: '4.1.2', how: 'The last item carries aria-current="page" and is plain text, not a link to the page already open.', test: 'Screen reader announce' },
+    { req: 'Separators are not announced', sc: '1.3.1', how: 'The "/" and the back chevron are aria-hidden — visual punctuation only.', test: 'Screen reader read-through' },
+    { req: 'Link purpose is clear from the text', sc: '2.4.4', how: 'Each crumb uses its destination’s own page heading; the back link names the destination rather than saying "Back".', test: 'Links-list review' },
+    { req: 'Focus visible', sc: '2.4.7', how: 'SR cyan ring on every link, DDR-006.', test: 'Keyboard tab' },
+  ])}`;
+}
+
+function switchBody() {
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'switch', 'guidelines.md'), 'utf8')));
+  const sw = (label, on, disabled) =>
+    `<button type="button" role="switch" aria-checked="${on}" class="sr-switch"${disabled ? ' disabled' : ''}>
+  <span class="sr-switch__track"><span class="sr-switch__thumb"></span></span>
+  <span class="sr-switch__label">${label}</span>
+</button>`;
+  const demo = `<div style="display:flex;flex-direction:column;gap:16px;align-items:flex-start">
+${sw('Show archived requests', true, false)}
+${sw('Include discharged patients', false, false)}
+</div>`;
+  const states = `<div style="display:flex;flex-direction:column;gap:16px;align-items:flex-start">
+${sw('On', true, false)}
+${sw('Off', false, false)}
+${sw('On, unavailable', true, true)}
+${sw('Off, unavailable', false, true)}
+</div>`;
+  const snippets = {
+    HTML: '<button type="button" role="switch" aria-checked="true" class="sr-switch">\n  <span class="sr-switch__track"><span class="sr-switch__thumb"></span></span>\n  <span class="sr-switch__label">Show archived requests</span>\n</button>',
+    React: '<Switch\n  label="Show archived requests"\n  checked={showArchived}\n  onChange={setShowArchived}\n/>',
+    Blazor: '<SrSwitch Label="Show archived requests" @bind-Checked="showArchived" />',
+    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid.\n     Give the label-and-track row a 44px height on touch. -->\n<SrSwitch Label="Show archived requests" @bind-Checked="showArchived" />',
+  };
+  return `
+<p class="breadcrumbs">Components</p>
+<h1>Toggle switch</h1>
+<p class="lede">Turns one setting on or off, taking effect the moment it is changed. If the screen
+has a Save button, the control you want is a Checkbox, not this.</p>
+${showcase(demo, 'switch', snippets)}
+<p class="muted">The thumb's position, not only the track colour, carries the state — so it survives
+greyscale and low-vision viewing.</p>
+
+<h2>States</h2>
+<p class="muted">Default, and disabled in both positions. A disabled switch still announces whether
+it is on: "off and unavailable" is different information from "off".</p>
+<div class="showcase"><div class="showcase__preview">${states}</div></div>
+<hr>
+${renderMarkdown(md)}
+${accessibilityTable([
+    { req: 'Role and state are exposed', sc: '4.1.2', how: 'A real button with role="switch" and aria-checked, updated in place so a change is re-announced.', test: 'Screen reader announce, toggle' },
+    { req: 'Accessible name', sc: '2.4.6', how: 'The visible label names the setting; where no label is shown, aria-label is required.', test: 'Screen reader announce' },
+    { req: 'Operable from the keyboard', sc: '2.1.1', how: 'Tab to reach, Space or Enter to toggle — the native button behaviour, not re-implemented.', test: 'Keyboard only' },
+    { req: 'State not signalled by colour alone', sc: '1.4.1', how: 'Thumb position differs between on and off, and the label states what "on" means.', test: 'Greyscale review' },
+    { req: 'Target size', sc: '2.5.8', how: 'The 24px track is below the touch minimum on its own; touch layouts give the label-and-track control a 44px row.', test: 'Measure, touch device' },
+    { req: 'Focus visible', sc: '2.4.7', how: 'SR cyan ring around the track, outside it so it is not clipped. DDR-006.', test: 'Keyboard tab' },
   ])}`;
 }
 
@@ -2206,6 +2397,16 @@ addPage({
   body: footerBody(),
 });
 addPage({
+  file: 'components/breadcrumbs.html', url: 'components/breadcrumbs.html', title: 'Breadcrumbs',
+  section: 'Components', sectionId: 'components', activeHref: 'components/breadcrumbs.html',
+  prefix: '../', body: breadcrumbsBody(),
+});
+addPage({
+  file: 'components/switch.html', url: 'components/switch.html', title: 'Toggle switch',
+  section: 'Components', sectionId: 'components', activeHref: 'components/switch.html',
+  prefix: '../', body: switchBody(),
+});
+addPage({
   file: 'patterns/patient-banner.html', url: 'patterns/patient-banner.html',
   title: 'Patient Banner', section: 'Patterns',
   sectionId: 'patterns', activeHref: 'patterns/patient-banner.html', prefix: '../',
@@ -2228,7 +2429,7 @@ the code that produces it.</p>
 <div class="cards">
 ${PROTOTYPES.map((p) => `  <a class="card" href="prototypes/${p.slug}.html"><h3>${p.title}</h3>
     <p>${p.summary}</p>
-    <p><strong>Status: ${p.status}.</strong> ${p.statusNote}</p></a>`).join('\n')}
+    <p><strong>Status: ${p.status}</strong></p></a>`).join('\n')}
 </div>
 <h2>What a prototype is</h2>
 <p>A reference implementation of a product's screens, authored by design. Every control comes from
@@ -2305,7 +2506,7 @@ function PrototypeEmbed() {
       React.createElement('a', { className: 'embed__back', href: '../prototypes.html' },
         React.createElement('svg', { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, 'aria-hidden': 'true' },
           React.createElement('path', { d: 'M15 18l-6-6 6-6' })),
-        'All prototypes'),
+        'Back to design system'),
       React.createElement('p', { className: 'embed__title' }, ${jsonForScript(p.title)}),
       React.createElement('div', { className: 'embed__toggle', role: 'group', 'aria-label': 'View' },
         React.createElement('button', {
@@ -2502,6 +2703,9 @@ copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'table', 'table.css'), reso
 copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'patient-banner', 'patient-banner.css'), resolve(DIST, 'assets', 'patient-banner.css'));
 copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'header', 'header.css'), resolve(DIST, 'assets', 'header.css'));
 copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'footer', 'footer.css'), resolve(DIST, 'assets', 'footer.css'));
+for (const c of ['bottom-nav', 'breadcrumbs', 'switch']) {
+  copyFileSync(resolve(ROOT, 'packages', 'web', 'src', c, `${c}.css`), resolve(DIST, 'assets', `${c}.css`));
+}
 copyFileSync(resolve(ROOT, 'packages', 'icons', 'src', 'icon.css'), resolve(DIST, 'assets', 'icon.css'));
 copyFileSync(resolve(ROOT, 'figma', 'assets', 'dhcw-logo-white.png'), resolve(DIST, 'assets', 'dhcw-logo-white.png'));
 writeFileSync(resolve(DIST, 'assets', 'site.css'), readFileSync(resolve(__dirname, 'site.css'), 'utf8'));

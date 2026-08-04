@@ -4,7 +4,7 @@ The Single Record Design System provides the shared design language, component l
 
 This document is the primary reference for everyone working on Single Record — designers, engineers, and delivery leads.
 
-**Last reviewed:** 2026-08-03. Update this file whenever a component ships, a
+**Last reviewed:** 2026-08-04. Update this file whenever a component ships, a
 token is added, or a system-wide rule changes — not on a schedule. If it
 disagrees with `/foundations/tokens/` or `/components/`, those win and this file
 is out of date.
@@ -186,7 +186,7 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 |---|---|---|---|
 | Autocomplete | ✅ | ✅ | ✅ |
 | Bottom nav | — | ✅ | ✅ |
-| Breadcrumbs | — | ✅ | ✅ |
+| Breadcrumbs | — (guidelines ✅) | ✅ | ✅ |
 | Button | ✅ | ✅ | ✅ |
 | Checkbox | ✅ | ✅ | ✅ |
 | Date input | — | ✅ | ✅ |
@@ -204,7 +204,7 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Segmented control | — | ✅ | ✅ |
 | Select | ✅ | ✅ | ✅ |
 | Status indicator | — | ✅ | ✅ |
-| Switch | — | ✅ | ✅ |
+| Switch | — (guidelines ✅) | ✅ | ✅ |
 | Table | ✅ | ✅ | ✅ |
 | Tags | ✅ | ✅ | ✅ |
 | Time select | — | ✅ | ✅ |
@@ -226,6 +226,14 @@ prototype rather than promoted to `packages/web`/`packages/react`. Promote
 either once a second consumer needs the same pattern, with a spec in
 `/components/menu/` or `/components/tabs/`.
 
+**Breadcrumbs and Toggle switch are now documented.** Both had shipped code in
+`packages/web` and `packages/react` with no guidelines and no website page —
+code nobody could find. Both now have `components/{breadcrumbs,switch}/
+guidelines.md` and a page under Components. Breadcrumbs also gained the `Back`
+type from Figma `1307:19303`, which the implementation had omitted: a
+four-level trail wraps on a phone, and the set has always carried a
+single-step alternative for exactly that case. Neither has a `spec.md` yet.
+
 **No destructive-confirmation dialog component yet.** Deactivate/Delete row
 actions use a confirmation dialog matched to the design system's own Figma
 frame (`x5fwyefxxgD03csz8ld7SZ`, node `2612:3325`), which is not yet added to
@@ -242,9 +250,11 @@ with its Figma type and, for `desktop`/`desktop-2`, a note that MAUI has no
 equivalent since it is mobile only. Footer (Figma `665:16525`) is different:
 its `Mobile` type (`665:16526`) is not a scaled-down version of the `Desktop`
 bar — it is the persistent bottom tab bar, already built as its own component,
-`BottomNav`. Footer's website page documents this rather than adding a
-duplicate "mobile Footer". `BottomNav` itself still has no website page —
-adding one is tracked here rather than done silently.
+`BottomNav`. Footer's website page now **shows** that type, rendered from
+`BottomNav`, under a `Type: Mobile` heading — the Figma Footer page
+(`1322:15480`) carries both bars, so a reader looking up Footer should find
+both. `BottomNav` still has no page of its own under its own name; it is
+reached through Footer, which is where the design file puts it.
 
 **The Footer is on every screen, pinned.** It is persistent chrome, not page
 content: the version has to be reachable everywhere because it is what staff
@@ -280,6 +290,30 @@ been unknowingly working around it by nesting the table inside a second
 it (72px of page scroll at 390px). The wrapper now adds `contain: paint`,
 which is what actually holds the table inside it. No visual change — a scroll
 container already clips — and the table still scrolls internally.
+
+**The website was restyling the components it documents.** Three defects, one
+cause — page-level CSS in `packages/website/site.css` reaching into the
+component previews and the component markup:
+
+- `.content h2 { margin: 40px 0 12px }` (0,1,1) outranked the Patient Banner's
+  own `.sr-patient-banner__name { margin: 0 }` (0,1,0), so the patient's name
+  sat ~40px below the alert cards it is meant to align with — in every variant
+  on the page. Page-copy rules are now excluded from `.showcase__preview`
+  descendants.
+- `.content th { border-bottom: 2px solid … }` gave every table on the site,
+  including the Table component's own example, a heavy rule under the header
+  row that the Table component does not have (Figma `1363:22598`: tinted
+  header, no rule). The site's documentation tables now match the component,
+  and `.sr-table` is excluded from them outright.
+
+A design system website that restyles its own components documents something
+that does not exist. Both fixes are containment, not new styling.
+
+**Type=Fill keeps its tint when collapsed.** The collapsed Patient Banner's
+count pills were outlined in both types, so a Fill banner appeared to become a
+Border banner when the user collapsed it. Collapsing changes how much detail is
+shown, not which type the banner is — Fill's pills now carry the same Red/50
+and Yellow/100 as its expanded alert cards (Figma `1711:15585`).
 
 See `/components/README.md` for the full catalogue and contribution guidance, and
 the live catalogue in Storybook for every variant.

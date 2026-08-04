@@ -5,6 +5,83 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-08-04b (website page structure; two new components; banner alignment)
+
+### The website was restyling the components it documents
+
+One root cause behind three separate complaints. `packages/website/site.css`
+styles page copy with `.content h2`, `.content th`, `.content p` and so on —
+selectors that also match component markup rendered inside a showcase preview,
+at a higher specificity than the component's own class rules.
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| Patient Banner's name sat ~40px below the alert cards, in every variant | `.content h2 { margin: 40px 0 12px }` (0,1,1) beat `.sr-patient-banner__name { margin: 0 }` (0,1,0) | page-copy rules now carry `:not(.showcase__preview *)` |
+| Tables on the site did not look like the Table component — heavy rule under the header row | `.content th { border-bottom: 2px solid Border/Strong }`, the site's own invention | doc tables restyled to match Figma `1363:22598` (tinted header, no rule, 8px padding); `.sr-table` excluded outright |
+
+If a site rule needs to reach a heading or a paragraph, it must exclude
+`.showcase__preview` descendants. That preview area is the component, not
+page copy.
+
+### Everything else this session
+
+- **Page titling set.** The category eyebrow is now the 12px caption variant
+  with a 4px gap to the `h1` — one titling set, not two lines of furniture.
+  Header, Footer, Tables and Patient Banner had **no `h1` at all**; they now
+  have one, plus a lede. Their guidelines' own leading `# Title` is stripped
+  (`stripLeadingH1`) so the title is not printed twice.
+- **Header page reorganised** to the same shape as Patient Banner: `Type:
+  Desktop 1` / `Desktop 2` / `Mobile`, each a heading and a description
+  *before* its example. Previously three near-identical bars appeared with
+  their explanations underneath.
+- **Footer page now shows the Mobile type.** Figma `1322:15480` puts both bars
+  on the Footer page, so the site does too — rendered from the existing
+  `BottomNav` component, under `Type: Mobile`, with the reason it is a separate
+  component stated rather than hidden.
+- **Two components documented and published:** Breadcrumbs
+  (`components/breadcrumbs.html`) and Toggle switch (`components/switch.html`).
+  Both already had code in `packages/web` and `packages/react` with no
+  guidelines and no page — code nobody could find. Breadcrumbs also gained the
+  `Back` type from Figma `1307:19303`, which the implementation had omitted.
+- **Collapsed Fill banner keeps its tint.** Its count pills were outlined in
+  both types, so a Fill banner appeared to become a Border banner on collapse
+  (Figma `1711:15585`).
+- **Components sidebar is alphabetical**, and the section link opens the first
+  entry. Six entries is past the point where build order is findable.
+- **Prototype card** carries one sentence about what the product is, then the
+  status. The per-screen build detail lives here, in this handoff, not on a
+  card. The prototype's own control bar now reads "Back to design system".
+- **Masthead search could not shrink** (`flex: none; width: 240px`), so between
+  1001px — where the masthead stops wrapping — and roughly 1150px it was pushed
+  past the right edge and scrolled *every page on the site* sideways by 84px.
+  Now `flex: 0 1 240px`.
+
+### Open for you
+
+1. **Grids page still overflows 15px at 390px.** Pre-existing, verified against
+   a clean tree; not introduced here. `.table-wrap` already has `contain: paint`
+   and the wrapper measures inside the column, so the source is elsewhere on
+   that page — it is the only page that does it.
+2. **Neither new component has a `spec.md`** — guidelines only, matching
+   Header/Footer. The twelve-components-without-a-spec gap in
+   `DESIGN-SYSTEM.md` is unchanged.
+3. `BottomNav` is reachable only through the Footer page. That matches the
+   Figma file's own structure; revisit if products start treating it as a
+   component in its own right.
+4. The Toggle switch page's disabled examples are static markup. Storybook has
+   the interactive states.
+5. Still outstanding from the previous checkpoint: Figma `448:8806` shows
+   "Create new batch"; three prototype-local components await a second consumer.
+
+### Commands that must pass
+
+`npm run check` (typography 0/0, design-system 16/16 baseline), `npm run
+build:site` (19 pages), and `npm run build -w @dhcw/case-note-tracking-prototype`.
+No horizontal overflow at 390 / 768 / 1024 / 1440 on any page except the Grids
+page at 390 noted above.
+
+---
+
 ## Checkpoint — 2026-08-04 (SendIT batch flow; footer rule; four DS fixes)
 
 ### Where the Case Note Tracking prototype stands
