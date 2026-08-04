@@ -225,7 +225,7 @@ const PROTOTYPES = [
     // build state is the Status line beneath it, and the detail of which
     // screens exist belongs in the handoff, not on a card.
     summary: 'The Welsh Patient Administration System module that tracks the storage, request and '
-      + 'transfer of patient case notes between NHS Wales health boards.',
+      + 'transfer of patient case notes across NHS Wales health boards.',
     status: 'In progress',
     entryDir: resolve(ROOT, 'products', 'case-note-tracking', 'prototype', 'src'),
     entryFile: 'App.jsx',
@@ -500,7 +500,7 @@ const SECTIONS = [
 const ICON_GLOBE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"/></svg>';
 const ICON_SEARCH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>';
 
-function shell({ title, prefix, sectionId, activeHref, body, extraHead = '', extraScript = '', wide = false }) {
+function shell({ title, prefix, sectionId, activeHref, body, extraHead = '', extraScript = '' }) {
   const section = SECTIONS.find((s) => s.id === sectionId);
   const topnav = SECTIONS.map((s) =>
     `<a href="${prefix + s.href}"${s.id === sectionId ? ' aria-current="page"' : ''}>${s.label}</a>`).join('');
@@ -560,9 +560,9 @@ ${extraHead}
     </div>
   </div>
 </header>
-<div class="layout${sidebar ? '' : ' layout--nosidebar'}${wide ? ' layout--full' : ''}">
+<div class="layout${sidebar ? '' : ' layout--nosidebar'}">
   ${sidebar}
-  <main id="main" class="content${wide ? ' content--wide' : ''}">
+  <main id="main" class="content">
 ${body}
   </main>
 </div>
@@ -1090,8 +1090,8 @@ ${accessibilityTable([
 
 // ─── page registry (drives both the output files and the search index) ────────
 const pages = [];
-function addPage({ file, url, title, section, sectionId, activeHref, prefix, body, extraScript = '', wide = false, bare = false }) {
-  pages.push({ file, url, title, section, sectionId, activeHref, prefix, body, extraScript, wide, bare });
+function addPage({ file, url, title, section, sectionId, activeHref, prefix, body, extraScript = '', bare = false }) {
+  pages.push({ file, url, title, section, sectionId, activeHref, prefix, body, extraScript, bare });
 }
 
 // ─── Styles: Typography ───────────────────────────────────────────────────────
@@ -1887,9 +1887,10 @@ ${accessibilityTable([
 /**
  * Sidebar navigation (Figma 1307:16983). The component is `height: 100vh` and
  * `position: sticky` by design — Figma draws it full-frame in every variant.
- * Neither survives a documentation frame, so each preview is wrapped in
- * `.nav-frame`, which gives it a bounded height to fill. That override is the
- * only thing the site does to this component, and it is declared on the page.
+ * Neither survives a documentation page, so each preview is wrapped in
+ * `.nav-frame`, which lets the nav take its height from its own menu. That
+ * override is the only thing the site does to this component, and the page
+ * says so in a callout.
  */
 function navigationBody() {
   const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'navigation', 'guidelines.md'), 'utf8')));
@@ -1951,8 +1952,9 @@ ${SECTIONS_NAV.map((s) => `    <div class="sr-nav__section">
 <p class="lede">The persistent list down the left of an application: where staff are, and everywhere
 else they can go. Two types — Sectioned and Linear — and three widths.</p>
 <div class="callout"><p>The component is full height and sticky, because Figma draws it that way in
-every variant. The previews below are boxed to a fixed height so they fit this page; that framing is
-the only thing this site changes about it.</p></div>
+every variant. The previews below take their height from the menu instead, so every destination is
+visible without scrolling a sidebar inside a page; that framing is the only thing this site changes
+about it.</p></div>
 
 <h2>Type: Sectioned — expanded</h2>
 <p class="muted">220px. Icon and label, with named groups a user would recognise (Patients, Clinical,
@@ -2539,12 +2541,12 @@ addPage({
 
 addPage({
   file: 'components/header.html', url: 'components/header.html', title: 'Header', section: 'Components',
-  sectionId: 'components', activeHref: 'components/header.html', prefix: '../', wide: true,
+  sectionId: 'components', activeHref: 'components/header.html', prefix: '../',
   body: headerBody(),
 });
 addPage({
   file: 'components/footer.html', url: 'components/footer.html', title: 'Footer', section: 'Components',
-  sectionId: 'components', activeHref: 'components/footer.html', prefix: '../', wide: true,
+  sectionId: 'components', activeHref: 'components/footer.html', prefix: '../',
   body: footerBody(),
 });
 addPage({
@@ -2560,16 +2562,12 @@ addPage({
 addPage({
   file: 'components/navigation.html', url: 'components/navigation.html', title: 'Navigation',
   section: 'Components', sectionId: 'components', activeHref: 'components/navigation.html',
-  prefix: '../', wide: true, body: navigationBody(),
+  prefix: '../', body: navigationBody(),
 });
 addPage({
   file: 'patterns/patient-banner.html', url: 'patterns/patient-banner.html',
   title: 'Patient Banner', section: 'Patterns',
   sectionId: 'patterns', activeHref: 'patterns/patient-banner.html', prefix: '../',
-  // Wide: the banner is a 1280px full-width strip. In the default reading
-  // column its name row wraps and the action stack collides with the
-  // demographics, which misrepresents the pattern.
-  wide: true,
   body: patientBannerBody(),
 });
 // ─── Prototypes ───────────────────────────────────────────────────────────────
@@ -2889,7 +2887,7 @@ for (const p of pages) {
     ? bareShell({ title: p.title, prefix: p.prefix, body: p.body, extraScript: p.extraScript })
     : shell({
         title: p.title, prefix: p.prefix, sectionId: p.sectionId, activeHref: p.activeHref,
-        body: p.body, extraScript: p.extraScript, wide: p.wide,
+        body: p.body, extraScript: p.extraScript,
       });
   writeFileSync(resolve(DIST, p.file), html);
 }
