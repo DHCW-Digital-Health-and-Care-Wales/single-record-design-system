@@ -42,8 +42,17 @@
   box-shadow: var(--elevation-raised);
 }
 
+/* Icon-only (Figma State=Collapsed 2, `3569:15850` / `2212:7613`): **48px**.
+   This was 72px, which matched neither the Figma frame nor the component's own
+   guidelines — the doc has always said 48. 48px holds a 24px icon with 12px
+   either side; the label is a tooltip, so nothing else needs room. */
 .sr-nav--collapsed {
-  width: 72px;
+  width: 48px;
+}
+.sr-nav--collapsed .sr-nav__list,
+.sr-nav--collapsed .sr-nav__footer {
+  padding-left: var(--space-2);
+  padding-right: var(--space-2);
 }
 
 /* "Rail" collapsed state (Figma State=Collapsed, 108px). The icon sits ABOVE

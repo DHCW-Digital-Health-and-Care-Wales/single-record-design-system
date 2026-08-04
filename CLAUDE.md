@@ -115,9 +115,17 @@ Current products under the Single Record programme: **EPR**, **patient administr
 | Web (reference baseline) | Standard HTML / CSS | Current |
 | Web applications | Blazor / .NET | Current |
 | Web applications | React | Current |
-| Desktop / Mobile | .NET MAUI | Current |
+| Mobile (phone, tablet) | .NET MAUI, rendering the Blazor components in a `BlazorWebView` | Current |
 | Legacy web | .NET Framework 4.8 | Limited — tokens (CSS custom properties) only |
 | Legacy desktop | Delphi | Maintained, not extended |
+
+**MAUI is the mobile target, and "Blazor Hybrid" is how it draws these
+components** — a `BlazorWebView` inside the MAUI app hosting the same Blazor
+RCL the web uses. The two are not alternatives, and MAUI has no native-XAML
+versions of these components by design (DDR-011). Desktop-only variants
+therefore have no MAUI equivalent — not because the mechanism fails, but
+because a browser-width bar has nowhere to go on a phone. Full explanation in
+`/docs/for-engineers.md` ("What runs where").
 
 Components and patterns must be implementation-agnostic at the design level. Per-framework consumption guidance lives in `/docs/for-engineers.md`.
 

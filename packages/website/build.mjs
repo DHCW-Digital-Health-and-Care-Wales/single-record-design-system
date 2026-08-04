@@ -18,6 +18,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 import { posix as posixPath } from 'node:path';
 import { iconMarkup, iconNames } from '../icons/build/icons.js';
+import { logoFullSrc } from '../web/src/assets/logo.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..', '..');
@@ -228,7 +229,7 @@ const PROTOTYPES = [
     status: 'In progress',
     entryDir: resolve(ROOT, 'products', 'case-note-tracking', 'prototype', 'src'),
     entryFile: 'App.jsx',
-    components: ['Navigation', 'Header', 'Footer', 'PatientBanner', 'Autocomplete', 'Table', 'Modal', 'Button', 'Select', 'Input', 'Checkbox', 'SegmentedControl', 'RadioGroup', 'Tag', 'Icon'],
+    components: ['Navigation', 'Header', 'Footer', 'PatientBanner', 'Autocomplete', 'Table', 'Modal', 'Button', 'Select', 'Input', 'Checkbox', 'SegmentedControl', 'RadioGroup', 'Radio', 'Tag', 'Icon'],
     startScript: 'dev:prototype',
   },
 ];
@@ -240,6 +241,9 @@ function inline(s) {
   out = out.replace(/`([^`]+)`/g, (_, c) => `<code>${c}</code>`);
   out = out.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, t, h) => `<a href="${h}">${t}</a>`);
   out = out.replace(/\*\*([^*]+)\*\*/g, (_, b) => `<strong>${b}</strong>`);
+  // Emphasis. Must run after bold so `**x**` is already consumed. Without it the
+  // asterisks printed literally on the page — "To *submit* a choice".
+  out = out.replace(/(^|[^*\w])\*([^*\n]+)\*(?!\*)/g, (_, pre, e) => `${pre}<em>${e}</em>`);
   return out;
 }
 function renderMarkdown(md) {
@@ -372,11 +376,16 @@ function publicise(md) {
   const kept = [];
   const src = text.split('\n');
   for (let j = 0; j < src.length; j++) {
-    const isHeading = /^#{1,6}\s/.test(src[j]);
-    if (isHeading) {
+    const h = src[j].match(/^(#{1,6})\s/);
+    if (h) {
       let k = j + 1;
       while (k < src.length && (!src[k].trim() || /^---+\s*$/.test(src[k]))) k++;
-      if (k >= src.length || /^#{1,6}\s/.test(src[k])) continue; // nothing under it
+      // Nothing under it at all, or the next thing is a heading at the same or
+      // higher level. A heading followed by a *deeper* one still has content —
+      // it is a parent section, and dropping it silently removed "Type: Switch"
+      // and "Type: Segmented control" from the Toggles page.
+      const next = k < src.length ? src[k].match(/^(#{1,6})\s/) : null;
+      if (k >= src.length || (next && next[1].length <= h[1].length)) continue;
     }
     kept.push(src[j]);
   }
@@ -464,8 +473,9 @@ const SECTIONS = [
       { href: 'components/button.html', label: 'Buttons' },
       { href: 'components/footer.html', label: 'Footer' },
       { href: 'components/header.html', label: 'Header' },
+      { href: 'components/navigation.html', label: 'Navigation' },
       { href: 'components/table.html', label: 'Tables' },
-      { href: 'components/switch.html', label: 'Toggle switch' },
+      { href: 'components/toggles.html', label: 'Toggles' },
     ],
   },
   {
@@ -520,6 +530,8 @@ function shell({ title, prefix, sectionId, activeHref, body, extraHead = '', ext
 <link rel="stylesheet" href="${prefix}assets/bottom-nav.css">
 <link rel="stylesheet" href="${prefix}assets/breadcrumbs.css">
 <link rel="stylesheet" href="${prefix}assets/switch.css">
+<link rel="stylesheet" href="${prefix}assets/segmented-control.css">
+<link rel="stylesheet" href="${prefix}assets/navigation.css">
 <link rel="stylesheet" href="${prefix}assets/icon.css">
 <link rel="stylesheet" href="${prefix}assets/site.css">
 ${extraHead}
@@ -591,6 +603,8 @@ function bareShell({ title, prefix, body, extraHead = '', extraScript = '' }) {
 <link rel="stylesheet" href="${prefix}assets/bottom-nav.css">
 <link rel="stylesheet" href="${prefix}assets/breadcrumbs.css">
 <link rel="stylesheet" href="${prefix}assets/switch.css">
+<link rel="stylesheet" href="${prefix}assets/segmented-control.css">
+<link rel="stylesheet" href="${prefix}assets/navigation.css">
 <link rel="stylesheet" href="${prefix}assets/icon.css">
 <link rel="stylesheet" href="${prefix}assets/site.css">
 ${extraHead}
@@ -1788,8 +1802,8 @@ ${accessibilityTable([
   ])}`;
 }
 
-function switchBody() {
-  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'switch', 'guidelines.md'), 'utf8')));
+function togglesBody() {
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'toggles', 'guidelines.md'), 'utf8')));
   const sw = (label, on, disabled) =>
     `<button type="button" role="switch" aria-checked="${on}" class="sr-switch"${disabled ? ' disabled' : ''}>
   <span class="sr-switch__track"><span class="sr-switch__thumb"></span></span>
@@ -1811,28 +1825,165 @@ ${sw('Off, unavailable', false, true)}
     Blazor: '<SrSwitch Label="Show archived requests" @bind-Checked="showArchived" />',
     MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid.\n     Give the label-and-track row a 44px height on touch. -->\n<SrSwitch Label="Show archived requests" @bind-Checked="showArchived" />',
   };
+  // Type: Segmented control (Figma 2752:40 segment block, 2770:55996 two-option
+  // example). Grouped with the switch because the Figma "Toggles" page
+  // (1414:16858) groups them: both change state immediately, and the choice
+  // between them is the first decision a designer makes.
+  const seg = (options, selectedIdx, disabled) =>
+    `<div class="sr-segmented" role="group" aria-label="Search mode">
+${options.map((o, i) => `  <button type="button" class="sr-segmented__option" aria-pressed="${i === selectedIdx}"${disabled ? ' disabled' : ''}>${o}</button>`).join('\n')}
+</div>`;
+  const segDemo = seg(['Quick search', 'Advanced'], 0, false);
+  const segStates = `<div style="display:flex;flex-direction:column;gap:16px;align-items:flex-start">
+${seg(['Quick search', 'Advanced'], 0, false)}
+${seg(['All', 'Sent', 'Received'], 1, false)}
+${seg(['Quick search', 'Advanced'], 0, true)}
+</div>`;
+  const segSnippets = {
+    HTML: '<div class="sr-segmented" role="group" aria-label="Search mode">\n  <button type="button" class="sr-segmented__option" aria-pressed="true">Quick search</button>\n  <button type="button" class="sr-segmented__option" aria-pressed="false">Advanced</button>\n</div>',
+    React: '<SegmentedControl\n  label="Search mode"\n  options={["Quick search", "Advanced"]}\n  value={mode}\n  onChange={setMode}\n/>',
+    Blazor: '<SrSegmentedControl Options="@modes" @bind-Value="mode" />',
+    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid.\n     Give the track a 44px row on touch. -->\n<SrSegmentedControl Options="@modes" @bind-Value="mode" />',
+  };
   return `
 <p class="breadcrumbs">Components</p>
-<h1>Toggle switch</h1>
-<p class="lede">Turns one setting on or off, taking effect the moment it is changed. If the screen
-has a Save button, the control you want is a Checkbox, not this.</p>
+<h1>Toggles</h1>
+<p class="lede">Two controls, one decision between them. A <strong>switch</strong> answers "is this
+on?"; a <strong>segmented control</strong> answers "which of these?". Both take effect immediately,
+so neither belongs in a form with a Save button.</p>
+
+<h2>Type: Switch</h2>
+<p class="muted">One setting, on or off. The off state has no label of its own — if you need to name
+it, you need the segmented control below.</p>
 ${showcase(demo, 'switch', snippets)}
 <p class="muted">The thumb's position, not only the track colour, carries the state — so it survives
 greyscale and low-vision viewing.</p>
-
-<h2>States</h2>
-<p class="muted">Default, and disabled in both positions. A disabled switch still announces whether
-it is on: "off and unavailable" is different information from "off".</p>
+<p class="muted"><strong>States.</strong> Default, and disabled in both positions. A disabled switch
+still announces whether it is on: "off and unavailable" is different information from "off".</p>
 <div class="showcase"><div class="showcase__preview">${states}</div></div>
+
+<h2>Type: Segmented control</h2>
+<p class="muted">Two to four mutually exclusive views of the same screen, all labelled and all
+visible at once. Exactly one is selected at all times — there is no empty state.</p>
+${showcase(segDemo, 'segmented', segSnippets)}
+<p class="muted"><strong>States.</strong> Two options, three options, and the disabled control.
+Disabled-and-selected is a muted outline rather than a faded blue fill, because a greyed blue still
+reads as "on and available".</p>
+<div class="showcase"><div class="showcase__preview">${segStates}</div></div>
 <hr>
 ${renderMarkdown(md)}
 ${accessibilityTable([
-    { req: 'Role and state are exposed', sc: '4.1.2', how: 'A real button with role="switch" and aria-checked, updated in place so a change is re-announced.', test: 'Screen reader announce, toggle' },
+    { req: 'Role and state are exposed', sc: '4.1.2', how: 'Switch is a real button with role="switch" and aria-checked; each segment is a button with aria-pressed inside a role="group". Both update in place so a change is re-announced.', test: 'Screen reader announce, toggle' },
+    { req: 'Exactly one segment is selected', sc: '4.1.2', how: 'The segmented control has no empty state; one option always carries aria-pressed="true", so the group never announces as "none selected".', test: 'Screen reader, cycle options' },
     { req: 'Accessible name', sc: '2.4.6', how: 'The visible label names the setting; where no label is shown, aria-label is required.', test: 'Screen reader announce' },
     { req: 'Operable from the keyboard', sc: '2.1.1', how: 'Tab to reach, Space or Enter to toggle — the native button behaviour, not re-implemented.', test: 'Keyboard only' },
     { req: 'State not signalled by colour alone', sc: '1.4.1', how: 'Thumb position differs between on and off, and the label states what "on" means.', test: 'Greyscale review' },
     { req: 'Target size', sc: '2.5.8', how: 'The 24px track is below the touch minimum on its own; touch layouts give the label-and-track control a 44px row.', test: 'Measure, touch device' },
-    { req: 'Focus visible', sc: '2.4.7', how: 'SR cyan ring around the track, outside it so it is not clipped. DDR-006.', test: 'Keyboard tab' },
+    { req: 'Focus visible', sc: '2.4.7', how: 'SR cyan ring around the track and around each segment, outside them so it is not clipped. DDR-006.', test: 'Keyboard tab' },
+  ])}`;
+}
+
+// ─── Components: Navigation ──────────────────────────────────────────────────
+/**
+ * Sidebar navigation (Figma 1307:16983). The component is `height: 100vh` and
+ * `position: sticky` by design — Figma draws it full-frame in every variant.
+ * Neither survives a documentation frame, so each preview is wrapped in
+ * `.nav-frame`, which gives it a bounded height to fill. That override is the
+ * only thing the site does to this component, and it is declared on the page.
+ */
+function navigationBody() {
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'navigation', 'guidelines.md'), 'utf8')));
+  const SECTIONS_NAV = [
+    { label: 'Home', items: [{ icon: 'nav/dashboard', label: 'Dashboard', current: true }] },
+    { label: 'Patients', items: [
+      { icon: 'nav/search', label: 'Patient Search' },
+      { icon: 'nav/sort', label: 'Referrals', badge: '20', children: true },
+      { icon: 'schedule/appointment', label: 'Appointments', badge: '20', children: true },
+      { icon: 'schedule/waiting-list', label: 'Watchlists' },
+    ] },
+    { label: 'Clinical', items: [
+      { icon: 'people/specialist', label: 'Specialists' },
+      { icon: 'clinical/lab-result', label: 'Tests' },
+    ] },
+    { label: 'Nursing', items: [
+      { icon: 'people/patient', label: 'Adults' },
+      { icon: 'people/contact', label: 'Paediatrics' },
+    ] },
+  ];
+  const FOOTER_NAV = [
+    { icon: 'nav/settings', label: 'Settings' },
+    { icon: 'clinical/discharge', label: 'Log Out' },
+  ];
+  const navItem = (it) => `<button type="button" class="sr-nav__item" aria-label="${it.label}"${
+    it.current ? ' aria-current="page"' : ''}${it.children ? ' aria-expanded="false"' : ''}>
+  <span class="sr-nav__item-main">
+    <span class="sr-nav__item-icon">${iconMarkup(it.icon)}</span>
+    <span class="sr-nav__item-label">${it.label}</span>
+    ${it.badge ? `<span class="sr-nav__item-badge">${it.badge}</span>` : ''}
+  </span>
+  ${it.children ? `<span class="sr-nav__item-chevron">${iconMarkup('nav/chevron-down')}</span>` : ''}
+</button>`;
+  const nav = (mod) => `<nav class="sr-nav${mod}" aria-label="Primary">
+  <div class="sr-nav__header">
+    <span class="sr-nav__logo"><img src="${logoFullSrc}" alt="DHCW Single Record" height="40"></span>
+    <button type="button" class="sr-nav__collapse" aria-label="Collapse navigation">
+      <span class="sr-nav__item-icon">${iconMarkup('nav/chevron-left')}</span>
+    </button>
+  </div>
+  <div class="sr-nav__body">
+${SECTIONS_NAV.map((s) => `    <div class="sr-nav__section">
+      <span class="sr-nav__section-label">${s.label}</span>
+      <div class="sr-nav__list">${s.items.map(navItem).join('')}</div>
+    </div>`).join('\n')}
+  </div>
+  <div class="sr-nav__footer">${FOOTER_NAV.map(navItem).join('')}</div>
+</nav>`;
+  const frame = (mod) => `<div class="nav-frame">${nav(mod)}</div>`;
+  const snippets = {
+    HTML: '<nav class="sr-nav" aria-label="Primary">\n  <div class="sr-nav__header">…</div>\n  <div class="sr-nav__body">\n    <div class="sr-nav__section">\n      <span class="sr-nav__section-label">Patients</span>\n      <div class="sr-nav__list">\n        <button class="sr-nav__item" aria-label="Patient Search">…</button>\n      </div>\n    </div>\n  </div>\n  <div class="sr-nav__footer">…</div>\n</nav>\n\n<!-- Collapsed states -->\n<nav class="sr-nav sr-nav--rail">…</nav>       <!-- 108px, labels kept -->\n<nav class="sr-nav sr-nav--collapsed">…</nav>  <!-- 48px, icon only -->',
+    React: '<Navigation\n  type="sectioned"        // "sectioned" | "linear"\n  state={navState}        // "expanded" | "rail" | "collapsed"\n  sections={sections}\n  footerItems={footerItems}\n  current="Dashboard"\n  onToggle={cycleNavState}\n/>',
+    Blazor: '<SrNavigation Sections="@sections" State="Expanded" Current="Dashboard" />',
+    MAUI: '<!-- No MAUI equivalent. A 220px persistent rail is a browser-width\n     pattern; MAUI is mobile only (phone, tablet). Mobile primary\n     navigation is BottomNav — see the Footer page, Type: Mobile. -->',
+  };
+  return `
+<p class="breadcrumbs">Components</p>
+<h1>Navigation</h1>
+<p class="lede">The persistent list down the left of an application: where staff are, and everywhere
+else they can go. Two types — Sectioned and Linear — and three widths.</p>
+<div class="callout"><p>The component is full height and sticky, because Figma draws it that way in
+every variant. The previews below are boxed to a fixed height so they fit this page; that framing is
+the only thing this site changes about it.</p></div>
+
+<h2>Type: Sectioned — expanded</h2>
+<p class="muted">220px. Icon and label, with named groups a user would recognise (Patients, Clinical,
+Nursing). Use Sectioned only when those labels do real work — do not invent groups to justify it.
+A parent with children is a button with <code>aria-expanded</code>; a leaf is a link. Badges count
+things to act on, and nothing else.</p>
+${showcase(frame(''), 'navigation', snippets)}
+
+<h2>Collapsed — rail</h2>
+<p class="muted">108px. <strong>Not a truncated expanded row</strong>: the icon moves above the
+label, both centre, and the label drops to caption (12px) so "Patient Search" fits without
+truncating. Section labels, badges and chevrons are dropped — the rail is for recognition, not
+detail.</p>
+<div class="showcase"><div class="showcase__preview">${frame(' sr-nav--rail')}</div></div>
+
+<h2>Collapsed — icon only</h2>
+<p class="muted">48px. No persistent label; the label is revealed on hover <em>and</em> on
+focus-visible. Both, not just hover — a keyboard user can reach an item but can never trigger hover,
+so hover alone fails SC 1.4.13. Products need not adopt every width: Case Note Tracking ships
+expanded and rail only.</p>
+<div class="showcase"><div class="showcase__preview">${frame(' sr-nav--collapsed')}</div></div>
+<hr>
+${renderMarkdown(md)}
+${accessibilityTable([
+    { req: 'Navigation landmark with a name', sc: '1.3.1', how: 'A real nav element labelled "Primary", once per page — the sidebar, not the header, is the primary navigation when both are present.', test: 'Landmark review' },
+    { req: 'Current destination is marked', sc: '4.1.2', how: 'aria-current="page" on the active item, not a bespoke active class, so it is announced and not only coloured.', test: 'Screen reader announce' },
+    { req: 'Collapsed items keep their name', sc: '4.1.2', how: 'Every item carries aria-label whatever the width, so the icon-only rail is never a set of unlabelled buttons.', test: 'Screen reader, collapse first' },
+    { req: 'Hidden labels reveal on focus, not only hover', sc: '1.4.13 / 2.1.1', how: 'The icon-only label appears on :hover AND :focus-visible. Hover alone is unreachable from the keyboard.', test: 'Keyboard tab through collapsed nav' },
+    { req: 'Expandable parents announce their state', sc: '4.1.2', how: 'Parents are buttons with aria-expanded; the submenu is hidden, not merely off-screen.', test: 'Screen reader, expand and collapse' },
+    { req: 'Collapse control says what it will do', sc: '2.4.6', how: '"Expand navigation" / "Collapse navigation" — the outcome, not the glyph.', test: 'Screen reader announce' },
+    { req: 'Focus visible', sc: '2.4.7', how: 'SR cyan ring, inset so the rail edge cannot clip it. DDR-006.', test: 'Keyboard tab at every width' },
   ])}`;
 }
 
@@ -2402,9 +2553,14 @@ addPage({
   prefix: '../', body: breadcrumbsBody(),
 });
 addPage({
-  file: 'components/switch.html', url: 'components/switch.html', title: 'Toggle switch',
-  section: 'Components', sectionId: 'components', activeHref: 'components/switch.html',
-  prefix: '../', body: switchBody(),
+  file: 'components/toggles.html', url: 'components/toggles.html', title: 'Toggles',
+  section: 'Components', sectionId: 'components', activeHref: 'components/toggles.html',
+  prefix: '../', body: togglesBody(),
+});
+addPage({
+  file: 'components/navigation.html', url: 'components/navigation.html', title: 'Navigation',
+  section: 'Components', sectionId: 'components', activeHref: 'components/navigation.html',
+  prefix: '../', wide: true, body: navigationBody(),
 });
 addPage({
   file: 'patterns/patient-banner.html', url: 'patterns/patient-banner.html',
@@ -2703,7 +2859,7 @@ copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'table', 'table.css'), reso
 copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'patient-banner', 'patient-banner.css'), resolve(DIST, 'assets', 'patient-banner.css'));
 copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'header', 'header.css'), resolve(DIST, 'assets', 'header.css'));
 copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'footer', 'footer.css'), resolve(DIST, 'assets', 'footer.css'));
-for (const c of ['bottom-nav', 'breadcrumbs', 'switch']) {
+for (const c of ['bottom-nav', 'breadcrumbs', 'switch', 'segmented-control', 'navigation']) {
   copyFileSync(resolve(ROOT, 'packages', 'web', 'src', c, `${c}.css`), resolve(DIST, 'assets', `${c}.css`));
 }
 copyFileSync(resolve(ROOT, 'packages', 'icons', 'src', 'icon.css'), resolve(DIST, 'assets', 'icon.css'));

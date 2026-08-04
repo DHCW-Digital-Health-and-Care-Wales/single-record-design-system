@@ -188,3 +188,21 @@
   background-color: var(--sr-color-interactive-disabled);
   border-color: var(--sr-color-interactive-disabled);
 }
+
+/* Accessible name with no visual footprint — used by RadioGroup's `hideLegend`
+   where the surrounding copy already names the choice on screen. Same
+   declaration as input.css and table.css; there is no shared utilities
+   stylesheet yet, and a component's CSS must stand alone when imported by
+   itself. Consolidating the three is worth doing once one exists. */
+.sr-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

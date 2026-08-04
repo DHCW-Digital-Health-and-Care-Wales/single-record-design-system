@@ -22,7 +22,7 @@
 
 ## When not to use
 
-- Not for navigation *within* a record — use tabs or a section nav inside the page.
+- Not for navigation inside a single record — use tabs or a section nav inside the page.
 - Not on mobile at full height. Below 768px it must stop being a sticky 100vh rail; a full-height sidebar on a phone is the whole screen.
 
 ## How it works
