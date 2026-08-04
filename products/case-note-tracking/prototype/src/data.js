@@ -194,9 +194,9 @@ export const SEND_CASE_NOTE_TYPES = [
  * as one picked from the list.
  */
 export const OPEN_BATCHES = [
-  { value: '210-792749', label: '210-792749 — A&E Department GGH, 5 case notes' },
-  { value: '210-792812', label: '210-792812 — Madog Suite GGH, 2 case notes' },
-  { value: '210-793004', label: '210-793004 — Teifi Ward GGH, 8 case notes' },
+  { value: '210-792749', label: '210-792749 (5 case notes)' },
+  { value: '210-792812', label: '210-792812 (2 case notes)' },
+  { value: '210-793004', label: '210-793004 (8 case notes)' },
 ];
 
 export const BATCH_REFERENCE = {

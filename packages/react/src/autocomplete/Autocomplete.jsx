@@ -137,7 +137,7 @@ export default function Autocomplete({
               setActiveIndex(-1);
               setOpen(true);
             }}
-            onFocus={() => query && setOpen(true)}
+            onFocus={() => setOpen(true)}
             onBlur={() => setOpen(false)}
             onKeyDown={onKeyDown}
           />
@@ -156,6 +156,33 @@ export default function Autocomplete({
               <Icon name="nav/close" size="xs" color="inherit" />
             </button>
           )}
+          {/* Without this the field looks like a plain search box and the
+              options can only be discovered by typing — no use to someone who
+              does not already know what is in the list. Same glyph Select
+              uses, so the two read as the same kind of control.
+              `tabIndex={-1}`: the input is the combobox and already opens the
+              list with ArrowDown, so a second tab stop here would be a
+              keyboard detour to somewhere the user has just been. */}
+          <button
+            type="button"
+            className="sr-autocomplete__toggle"
+            tabIndex={-1}
+            aria-label={open ? 'Hide options' : 'Show options'}
+            // mousedown would blur the input and close the menu before the
+            // click landed, so the chevron would look broken on the way open.
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => {
+              setOpen((o) => !o);
+              setActiveIndex(-1);
+              inputRef.current?.focus();
+            }}
+          >
+            <Icon
+              name={open ? 'nav/chevron-up' : 'nav/chevron-down'}
+              size="sm"
+              color="inherit"
+            />
+          </button>
         </div>
 
         {open && (
