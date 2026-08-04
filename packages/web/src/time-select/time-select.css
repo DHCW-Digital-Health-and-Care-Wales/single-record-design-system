@@ -18,7 +18,9 @@
 }
 
 .sr-time-select__control {
-  width: 140px;
+  /* Cap, not a fixed size — see the same note on .sr-datepicker__field. */
+  width: 100%;
+  max-width: 140px;
   height: 40px;
   box-sizing: border-box;
   padding: 0 var(--space-3);

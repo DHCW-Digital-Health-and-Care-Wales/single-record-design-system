@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import {
+  Header,
   PatientBanner,
   Table,
   Modal,
@@ -173,6 +174,14 @@ export default function CaseNotes() {
 
   return (
     <>
+      <Header
+        variant="desktop-2"
+        org=""
+        initials="AB"
+        onLanguageToggle={() => {}}
+        onNotificationClick={() => {}}
+      />
+
       <main className="app__main" id="main">
         {/* This screen deliberately leads with the patient banner rather than a
             visible page title — identity comes first. But a screen with no h1

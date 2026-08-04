@@ -5,6 +5,64 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-08-04 (SendIT batch; two prototype fixes)
+
+### SendIT built (Figma 192:4901 / 341:9165 / 341:9673 / 279:22906 / 287:23848)
+
+Find case notes on the left, build the batch on the right, approve and send
+from the footer. Volumes sit at `Pending` until the approval modal's Send is
+confirmed — before that the batch is an editable list, not a dispatch.
+
+**All four design questions from the first pass are now resolved** (design
+lead, 2026-08-04) and the Figma updated to match:
+
+1. **Approval banner** — two variants, `445:8419`. Amber and leading with the
+   instruction (*"Acknowledge warnings to continue - 0 errors, N warnings
+   across all volumes."*) while unacknowledged warnings block the send; green
+   and leading with the state (*"Ready to send … All warnings acknowledged"*)
+   once they are cleared. Implemented to that wording.
+2. **Modal title** — *"Approve and send batch"*, now also in Figma.
+3. **Checkbox** — "Print label", corrected in Figma.
+4. **Patients and volumes** — the Figma rows were placeholder. Aligned
+   logically: the case-note number belongs to the *patient* (one case record,
+   volumes numbered within it), so a patient's volumes all carry their number
+   and stay with them. Two patients in the search data, because a batch is
+   genuinely cross-patient — that is what puts more than one name in the
+   summary table, rather than one patient's volumes wearing four names.
+
+**Warning detail panel** (`445:8402`) — both states built. Every row's
+warnings cell is clickable, not only the ones carrying warnings, so selecting
+a clean row answers "this one is fine" instead of being a dead click that
+leaves the previous row's warnings on screen. The panel holds its height
+across both states so the footer does not jump under the cursor.
+
+### Two defects found and fixed in the design system, not the prototype
+
+- **`Footer` could not express any action pair but Save / Mark as complete.**
+  Its own guidelines require labels to name the screen's specific action, so
+  the fixed labels contradicted the guidance. It now takes an `actions` slot,
+  with the old pair as the default.
+- **`.sr-table-wrap` did not contain a wide table.** `overflow-x: auto`
+  scrolled the table but did not stop it extending the *page's* horizontal
+  scroll. Every consumer had been working around it by nesting the table in a
+  second `overflow-x: auto` ancestor; SendIT's batch summary, which does not,
+  scrolled the page 72px at 390px. Fixed with `contain: paint` on the wrapper.
+- Also: `DatePicker` and `TimeSelect` had hard `width` values (220px / 140px)
+  that could not shrink, overflowing any narrower container — this is what put
+  a horizontal scrollbar in the Send / Receive / Tag modals. Now capped with
+  `max-width` instead.
+
+### The website build now fails on a prototype's missing component
+
+Each `PROTOTYPES` entry carries a hand-maintained `components` list, and the
+embed only ships what is listed. Using a component nobody added built cleanly
+and broke at runtime on the published site — which is how SendIT's `Footer`
+was nearly shipped missing. The build now collects what each prototype
+actually imports from `@dhcw/sr-react` and throws if the list does not cover
+it.
+
+---
+
 ## Checkpoint — 2026-08-03 (later — grids, barcode scan, responsive)
 
 ### Grids synced from Figma — the repo doc was wrong, the tokens were right
