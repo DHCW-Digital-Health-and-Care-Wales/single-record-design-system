@@ -21,6 +21,46 @@ The design system is **implementation-agnostic at the design level** — compone
 
 ---
 
+## What runs where — MAUI, Blazor, and Blazor Hybrid
+
+These three names get used as if they were alternatives. They are not, and the
+confusion is worth clearing up once.
+
+**There is one component source.** The reference HTML/CSS in `packages/web`.
+Everything else wraps it: React (`packages/react`) and a Blazor Razor Class
+Library (`packages/blazor`). No framework re-draws a component from scratch.
+
+| Target | What it is | How it renders our components |
+|---|---|---|
+| Web (React or Blazor) | A browser application | Directly — the React wrapper or the Blazor RCL, over `packages/web` CSS |
+| **.NET MAUI** | The **mobile** app (phone, tablet) | Through a `BlazorWebView` hosting the same Blazor RCL |
+| Legacy .NET Framework 4.8 | Existing web app | Tokens only (CSS custom properties) |
+| Legacy Delphi | Existing desktop app | Maintained, not extended |
+
+**"Blazor Hybrid" is not a platform.** It is the name for the arrangement in
+the middle row: a native MAUI app with a `BlazorWebView` inside it, rendering
+Blazor components. So:
+
+- **MAUI is the mobile target.** That is correct and unchanged.
+- **Blazor Hybrid is how the MAUI mobile app draws these components.** Not a
+  different target, and not a step on the way to one — it is the mechanism.
+- MAUI has **no native-XAML versions** of these components, by design
+  (DDR-011). One source, rendered in a web view, is what keeps a button on a
+  phone identical to a button in the browser.
+- This is why component pages say "no MAUI equivalent" for desktop-only
+  variants (the desktop Header, the desktop Footer bar): the mechanism is
+  fine, but a 1280px bar has nowhere to go on a phone. The mobile counterpart
+  is a different component — `BottomNav` rather than the desktop Footer.
+
+**The Blazor web host in Azure is a separate thing.** It is a browser-hosted
+Blazor app used to preview components outside Visual Studio. MAUI does not
+depend on it: MAUI hosts the RCL itself. If the Azure preview is retired after
+publication, nothing about the MAUI path changes — the only loss is a
+convenient URL for looking at components. Keep it until publication, then
+decide; it is removable without touching a component.
+
+---
+
 ## Getting Started
 
 > **Adopting the system in an existing product?** See

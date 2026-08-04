@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Modal, Button, Select, Input, Checkbox, Icon } from '@dhcw/sr-react';
-import { SITES } from '../data.js';
+import { Modal, Button, Select, Input, Checkbox, Icon, RadioGroup, Radio, Tag } from '@dhcw/sr-react';
+import { SITES, SEND_RECIPIENTS, NOTE_TAGS } from '../data.js';
 
 /**
  * Row-level action menu (Figma 47:4041), shared by the casenote table and My
@@ -189,11 +189,116 @@ export function NoteActionModal({ kind, row, onClose }) {
   const open = Boolean(row);
   const [requiredBy, setRequiredBy] = useState(true);
 
+  // Prior tags on this volume, and which one (if any) the user chose to reuse.
+  // `choice` also drives which step is showing: null means the chooser is still
+  // up, so the form below has not been reached yet.
+  const tags = (kind === 'send' && row && NOTE_TAGS[row.id]) || [];
+  const [choice, setChoice] = useState(null);
+  const [selectedTagId, setSelectedTagId] = useState(tags[0]?.id || 'blank');
+
+  // Reset when the modal is opened on a different row — the component stays
+  // mounted between openings, so without this the previous row's choice (and
+  // its prefill) would carry over onto someone else's casenote.
+  useEffect(() => {
+    setChoice(null);
+    setSelectedTagId(tags[0]?.id || 'blank');
+    setRequiredBy(true);
+  }, [row?.id, kind]);
+
   const config = {
     send: { title: 'Send Notes', primary: 'Send note' },
     receive: { title: 'Receive Notes', primary: 'Receive note' },
     tag: { title: 'Tag Notes', primary: 'Tag note' },
   }[kind];
+
+  // Step 1 of Send, and only where the volume has been tagged before. A volume
+  // with no tags has nothing to offer, so it opens straight on the form rather
+  // than on a chooser with one option.
+  if (open && tags.length > 0 && choice === null) {
+    return (
+      <Modal
+        open={open}
+        onClose={onClose}
+        title={config.title}
+        size="medium"
+        footer={
+          <>
+            <Button
+              type="primary"
+              onClick={() => setChoice(
+                selectedTagId === 'blank'
+                  ? { prefill: null }
+                  : tags.find((t) => t.id === selectedTagId)
+              )}
+            >
+              Continue
+            </Button>
+            <Button type="secondary" onClick={onClose}>Cancel</Button>
+          </>
+        }
+      >
+        <p className="tag-choice__intro">
+          The following tags have been made for this casenote volume. Select one to
+          reuse, or start blank.
+        </p>
+        <RadioGroup
+          legend="Reuse a previous tag"
+          hideLegend
+          name="tag-choice"
+          value={selectedTagId}
+          onChange={setSelectedTagId}
+        >
+          {tags.map((t) => (
+            <div
+              key={t.id}
+              className={`tag-choice${selectedTagId === t.id ? ' tag-choice--selected' : ''}`}
+            >
+              <Radio
+                name="tag-choice"
+                value={t.id}
+                checked={selectedTagId === t.id}
+                onChange={() => setSelectedTagId(t.id)}
+                label={
+                  <span className="tag-choice__body">
+                    <span className="tag-choice__head">
+                      <span className="tag-choice__title">
+                        {t.department ? `(${t.department}) — ` : ''}{t.location}
+                      </span>
+                      {t.mostRecent && <Tag type="blue" size="small">Most recent</Tag>}
+                    </span>
+                    <span className="tag-choice__meta">
+                      Tagged {t.taggedOn} by {t.taggedBy}
+                    </span>
+                  </span>
+                }
+              />
+            </div>
+          ))}
+          <p className="tag-choice__or"><span>OR</span></p>
+          <div className={`tag-choice${selectedTagId === 'blank' ? ' tag-choice--selected' : ''}`}>
+            <Radio
+              name="tag-choice"
+              value="blank"
+              checked={selectedTagId === 'blank'}
+              onChange={() => setSelectedTagId('blank')}
+              label={
+                <span className="tag-choice__body">
+                  <span className="tag-choice__title tag-choice__title--strong">
+                    Start a new send with blank fields
+                  </span>
+                  <span className="tag-choice__meta">
+                    Enter tracking details manually — nothing is pre-filled
+                  </span>
+                </span>
+              }
+            />
+          </div>
+        </RadioGroup>
+      </Modal>
+    );
+  }
+
+  const prefill = choice?.prefill || null;
 
   return (
     <Modal
@@ -203,6 +308,9 @@ export function NoteActionModal({ kind, row, onClose }) {
       size="medium"
       footer={
         <>
+          {tags.length > 0 && (
+            <Button type="ghost" onClick={() => setChoice(null)}>Back to tags</Button>
+          )}
           <Button type="secondary" onClick={onClose}>Cancel</Button>
           <Button type="primary" onClick={onClose}>{config?.primary}</Button>
         </>
@@ -239,6 +347,14 @@ export function NoteActionModal({ kind, row, onClose }) {
             </div>
           </div>
 
+          {prefill && (
+            <p className="modal-prefill-note">
+              <Icon name="status/info" size="sm" color="inherit" />
+              Pre-filled from the tag made on {choice.taggedOn} by {choice.taggedBy}. Change anything
+              that no longer applies before sending.
+            </p>
+          )}
+
           {kind === 'tag' && (
             <Checkbox
               label="Notes required by"
@@ -259,10 +375,30 @@ export function NoteActionModal({ kind, row, onClose }) {
               required
             />
           </div>
-          <Select label="I am working with" options={SITES} defaultValue="all" required />
-          <Select label="Location" options={SITES} defaultValue="all" required />
-          <Select label="Holder" options={SITES} defaultValue="all" required />
-          <Input type="calendar" label="Clinic/TCI date" required />
+          {/* `key` remounts the fields when a different tag is chosen: these are
+              uncontrolled inputs, so a changed defaultValue alone would not
+              move them, and the form would silently show the previous tag's
+              values under the new tag's heading. */}
+          <Select
+            key={`with-${choice?.id || 'blank'}`}
+            label="I am working with" options={SITES}
+            defaultValue={prefill?.workingWith || 'all'} required
+          />
+          <Select
+            key={`loc-${choice?.id || 'blank'}`}
+            label="Location" options={SITES}
+            defaultValue={prefill?.location || 'all'} required
+          />
+          <Select
+            key={`hold-${choice?.id || 'blank'}`}
+            label="Holder" options={SEND_RECIPIENTS}
+            defaultValue={prefill?.holder || SEND_RECIPIENTS[0].value} required
+          />
+          <Input
+            key={`clinic-${choice?.id || 'blank'}`}
+            type="calendar" label="Clinic/TCI date"
+            defaultValue={prefill ? new Date(prefill.clinicDate) : null} required
+          />
 
           <AdditionalInfoField />
         </>

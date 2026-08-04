@@ -220,7 +220,10 @@ body {
 .content ul:not(.showcase__preview *) { margin: 0 0 16px; padding-left: 20px; }
 .content li:not(.showcase__preview *) { margin-bottom: 8px; }
 .content .lede { color: var(--sr-color-text-secondary); margin-bottom: 32px; }
-.content a { color: var(--sr-color-interactive-link); }
+/* Excluded from previews for the same reason as the headings above: a
+   component's own links carry its colours. Unscoped, this painted every
+   BottomNav tab blue, hiding the fact that only the current tab is blue. */
+.content a:not(.showcase__preview *) { color: var(--sr-color-interactive-link); }
 .content hr { border: 0; border-top: 1px solid var(--sr-color-border-default); margin: 40px 0; }
 .content code {
   font-family: "Roboto Mono", ui-monospace, monospace;
@@ -720,3 +723,21 @@ body.bare { margin: 0; }
   letter-spacing: var(--sr-type-caption-letter-spacing);
   color: var(--sr-color-text-secondary);
 }
+
+/* ── navigation previews ──────────────────────────────────────────────────────
+   The Navigation component is `height: 100vh; position: sticky` by design —
+   Figma draws the sidebar at full frame height in every variant. Neither
+   behaviour survives a documentation page, so its previews are boxed here.
+   This is the only override the site applies to a component, and the
+   Navigation page says so in a callout rather than leaving it implicit. */
+.nav-frame {
+  display: flex;
+  height: 560px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+.nav-frame .sr-nav {
+  position: static;
+  height: 100%;
+}
+.nav-frame .sr-nav__body { overflow-y: auto; }

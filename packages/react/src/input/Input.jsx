@@ -95,10 +95,14 @@ export default function Input({
         </span>
       )}
 
+      {/* `...rest` is forwarded to the calendar and time variants too. Without
+          it these two were the only Input types that could not carry a value:
+          `value` / `defaultValue` / `onChange` were dropped on the floor, so a
+          pre-filled date silently rendered as an empty placeholder. */}
       {isCalendar ? (
-        <DatePicker id={inputId} label={label || 'Choose date'} placeholder={placeholder} disabled={disabled} invalid={hasError} />
+        <DatePicker id={inputId} label={label || 'Choose date'} placeholder={placeholder} disabled={disabled} invalid={hasError} {...rest} />
       ) : isTime ? (
-        <TimeSelect id={inputId} placeholder={placeholder} disabled={disabled} invalid={hasError} />
+        <TimeSelect id={inputId} placeholder={placeholder} disabled={disabled} invalid={hasError} {...rest} />
       ) : (
         <div className={`sr-input__field${isTextarea ? ' sr-input__field--textarea' : ''}`}>
           {leadingIcon && <span className="sr-input__icon">{leadingIcon}</span>}

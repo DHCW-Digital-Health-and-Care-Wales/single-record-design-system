@@ -5,6 +5,84 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-08-04c (Navigation + Toggles pages; send-from-tag; MAUI clarified)
+
+### The code packages are the source of truth for what gets published
+
+Stated plainly because it now governs how work is done here: the versions in
+`packages/web`, `packages/react` and `packages/blazor` are what will be
+published, and the DS website renders those same files. So **a fix found on the
+website is a fix to the package**, never a patch on the site. Three this
+session went that way — BottomNav's hover colour, Navigation's icon-only width,
+and `Input`'s calendar/time value handling — and none of them are website code.
+
+The corollary: where the site has to change a component to document it (the
+Navigation previews are boxed, because the component is `100vh` by design),
+that override is scoped to a named class and declared on the page in a callout.
+It is the only one.
+
+### This session
+
+- **Navigation has a page** (Figma `1307:16983`): Sectioned expanded, rail, and
+  icon-only, each with what it is for. It had full code and guidelines and no
+  page at all.
+- **Toggles replaces the Toggle switch page.** Switch and Segmented control are
+  published together because Figma's `1414:16858` groups them and the first
+  decision is which one you need — "is this on?" versus "which of these?". Two
+  components in code, one guidelines document (`components/toggles/`).
+- **Navigation icon-only was 72px in code, 48px in Figma and in its own
+  guidelines.** Now 48px.
+- **BottomNav**: rest is Text/Secondary, hover *and* current are
+  Interactive/Link. Hover had been Text/Primary — darker than rest, which reads
+  as the control switching off under the cursor.
+- **Case Note Tracking: Send now offers the volume's earlier tags.** A tag is a
+  standing request carrying the same facts a Send collects, so starting a Send
+  on a tagged volume opens on a chooser (Figma `450:19231`, Case Notes Tracking
+  file): the tags most-recent-first, an OR, and "start blank". Continue carries
+  the chosen tag's values into the form, with a note saying where they came
+  from, and "Back to tags" returns. A volume with no tags opens straight on the
+  form — a chooser with one option is a click for nothing.
+- **MAUI / Blazor Hybrid is written down** in `docs/for-engineers.md` ("What
+  runs where") and summarised in `CLAUDE.md`. Short version: MAUI is the mobile
+  target; Blazor Hybrid is *how* the MAUI app draws these components (a
+  `BlazorWebView` hosting the same Blazor RCL the web uses). They are not
+  alternatives. The Azure Blazor web host is a separate preview convenience and
+  can be retired after publication without touching MAUI.
+- **Dark mode is provisional, on purpose** — recorded in `DESIGN-SYSTEM.md`
+  under Colour. The dark tokens build but have not been reconciled against the
+  light-mode semantic assignments, which are still moving. One deliberate pass
+  once they hold still; not piecemeal.
+
+### Component fixes found through the above
+
+- `Input` type=calendar and type=time were the only Input types that dropped
+  `...rest`, so `value` / `defaultValue` / `onChange` never reached DatePicker
+  or TimeSelect. A pre-filled date rendered as an empty placeholder.
+- `RadioGroup` gained `hideLegend`, matching `hideLabel` on Input and Checkbox.
+- `publicise()`'s empty-section pruner deleted any heading immediately followed
+  by another heading, which silently removed "Type: Switch" and "Type:
+  Segmented control" from the Toggles page. It now prunes only where the next
+  heading is at the same or a higher level.
+- `inline()` had no emphasis rule, so `*submit*` printed its asterisks.
+- `.content a` painted every BottomNav tab blue in the preview, hiding the fact
+  that only the current tab is blue.
+
+### Open for you
+
+1. Grids page still overflows 15px at 390px. Pre-existing, verified against a
+   clean tree.
+2. `components/toggles/` and `components/breadcrumbs/` have guidelines but no
+   `spec.md`.
+3. The tag→send prefill covers "I am working with", Location, Holder and
+   Clinic/TCI date. Send date and time are deliberately left blank: a tag says
+   when the notes are *wanted*, not when they are being sent.
+4. `NOTE_TAGS` is mock data on two of the five volumes. There is no tagging
+   action that writes to it — Tag Notes still just closes.
+5. Still outstanding: Figma `448:8806` shows "Create new batch"; three
+   prototype-local components await a second consumer.
+
+---
+
 ## Checkpoint — 2026-08-04b (website page structure; two new components; banner alignment)
 
 ### The website was restyling the components it documents

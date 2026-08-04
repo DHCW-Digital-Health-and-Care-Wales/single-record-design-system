@@ -1034,3 +1034,101 @@ body {
   .send-find__search > :first-child { flex: 1 1 100%; }
   .send-find__search .sr-button { width: 100%; }
 }
+
+/* ── Send Notes: choose a previous tag (Figma 450:19231) ───────────────────────
+   Step one of Send, shown only where the volume already carries tags. Each
+   option is a card so the tag's own detail (where, who, when) sits inside the
+   choice rather than beside it — the user is picking a past request, not a
+   label. Built from tokens; there is no card-radio component in the design
+   system yet, and inventing one for a single consumer is what DESIGN-SYSTEM.md
+   warns against. */
+.tag-choice__intro {
+  margin: 0 0 var(--space-4);
+  font: var(--sr-type-body-m-font);
+  letter-spacing: var(--sr-type-body-m-letter-spacing);
+  color: var(--sr-color-text-secondary);
+}
+
+.tag-choice {
+  padding: var(--space-3);
+  border: 1px solid var(--sr-color-border-default);
+  border-radius: var(--radius-lg);
+  background-color: var(--sr-color-surface-section-cards);
+}
+/* Selection is a border weight and colour change, never colour alone: the
+   radio itself is the non-colour signal and stays visible at every state. */
+.tag-choice--selected {
+  border-color: var(--sr-color-interactive-primary);
+  box-shadow: inset 0 0 0 1px var(--sr-color-interactive-primary);
+}
+.tag-choice .sr-radio {
+  align-items: flex-start;
+}
+.tag-choice .sr-radio__label {
+  display: block;
+  width: 100%;
+}
+
+.tag-choice__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.tag-choice__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+.tag-choice__title {
+  font: var(--sr-type-body-m-font);
+  letter-spacing: var(--sr-type-body-m-letter-spacing);
+  color: var(--sr-color-text-primary);
+}
+.tag-choice__title--strong {
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+}
+.tag-choice__meta {
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+  color: var(--sr-color-text-secondary);
+}
+
+/* "OR" with a rule running off to the right. aria-hidden is not needed: the
+   word is real content — it tells a screen-reader user the list of tags has
+   ended and the blank option is an alternative, not a fourth tag. */
+.tag-choice__or {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-2) 0;
+  font: var(--sr-type-body-m-font);
+  color: var(--sr-color-text-secondary);
+}
+.tag-choice__or::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  background-color: var(--sr-color-border-default);
+}
+
+/* Says where the values came from, so pre-filled fields are never mistaken for
+   fields the user filled in themselves. */
+.modal-prefill-note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-4);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background-color: var(--sr-color-surface-accent);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+  color: var(--sr-color-text-primary);
+}
+.modal-prefill-note .sr-icon {
+  flex: 0 0 auto;
+  color: var(--sr-color-interactive-primary);
+}

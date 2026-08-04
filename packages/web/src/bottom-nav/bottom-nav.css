@@ -35,8 +35,13 @@
   text-decoration: none;
   cursor: pointer;
 }
+/* Rest is Text/Secondary — icon and label together, so an inactive tab reads
+   as one quiet unit. Hover and the current tab both go to Interactive/Link:
+   the tab bar is navigation, and blue is what "you can go here / you are here"
+   means everywhere else in the product. Hover must not go darker than rest —
+   that reads as the control switching off under the cursor. */
 .sr-bottom-nav__item:hover {
-  color: var(--sr-color-text-primary);
+  color: var(--sr-color-interactive-link);
 }
 .sr-bottom-nav__item:focus-visible {
   outline: none;

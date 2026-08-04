@@ -20,6 +20,7 @@ import Radio from './Radio.jsx';
  */
 export default function RadioGroup({
   legend,
+  hideLegend = false,
   hint,
   error,
   required = false,
@@ -77,7 +78,11 @@ export default function RadioGroup({
       {...rest}
     >
       {legend && (
-        <legend className="sr-radio-group__legend">
+        // `hideLegend` matches Input/Checkbox's `hideLabel`: the group still
+        // needs a name for screen readers even where the surrounding copy
+        // already provides one visually. Dropping the legend instead would
+        // leave a fieldset that announces as an unnamed group.
+        <legend className={`sr-radio-group__legend${hideLegend ? ' sr-visually-hidden' : ''}`}>
           <span>{legend}</span>
           {required && (
             <span className="sr-radio-group__required" aria-hidden="true">

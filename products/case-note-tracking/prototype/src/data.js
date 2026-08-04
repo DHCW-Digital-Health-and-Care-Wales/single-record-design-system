@@ -157,6 +157,67 @@ export const MY_REQUESTS = [
   { id: 5, volume: 'General notes vol 4', patient: 'OWEN, Rhys', status: 'Sent', statusType: 'grey', tab: 'sent', location: 'A&E Dept-GGH', activity: 'Registered by Gadgil, AA(Mr) at A&E Dept-GGH', moved: '05 Jun 2026 17:40', clinicDate: '03 Jul 2026', batch: '-' },
 ];
 
+/**
+ * Tags already recorded against a casenote volume, keyed by note id
+ * (Figma Case Notes Tracking `450:19231`).
+ *
+ * A tag is a standing request: "when this volume becomes free, it is wanted
+ * here, by this person, for this clinic". That is the same set of facts a Send
+ * collects, which is the whole point — starting a Send on a volume that has
+ * been tagged should offer to reuse the tag rather than make the user retype
+ * what someone already recorded. `prefill` is exactly the Send form's fields,
+ * so reuse is a copy, not a translation. `clinicDate` is ISO because it is
+ * fed to DatePicker as a Date, not displayed as a string.
+ *
+ * Dates are `d Mmm yyyy` per DESIGN-SYSTEM.md, not the all-numeric form in the
+ * Figma mock: `25-07-2026` is read as 25 July in Wales and 7 December in half
+ * the world, and a casenote request that arrives on the wrong day is a real
+ * clinical cost.
+ *
+ * Ordered most recent first — the first entry carries `mostRecent`, because
+ * "the one someone asked for last" is the answer most of the time.
+ */
+export const NOTE_TAGS = {
+  2: [
+    {
+      id: 't1',
+      department: 'Dietetics',
+      location: 'Llangennech Storage Unit',
+      taggedOn: '25 Jul 2026',
+      taggedBy: 'Thomas Phillips',
+      mostRecent: true,
+      prefill: { workingWith: 'ggh', location: 'ggh', holder: 'warlow', clinicDate: '2026-08-03' },
+    },
+    {
+      id: 't2',
+      department: null,
+      location: 'A&E Department, GGH',
+      taggedOn: '25 Jul 2026',
+      taggedBy: 'Thomas Phillips',
+      prefill: { workingWith: 'ggh', location: 'ggh', holder: 'gadgil', clinicDate: '2026-07-31' },
+    },
+    {
+      id: 't3',
+      department: null,
+      location: 'A&E Department, GGH',
+      taggedOn: '23 Jul 2026',
+      taggedBy: 'Thomas Phillips',
+      prefill: { workingWith: 'wgh', location: 'wgh', holder: 'howarth', clinicDate: '2026-07-29' },
+    },
+  ],
+  4: [
+    {
+      id: 't4',
+      department: 'Physiotherapy',
+      location: 'Withybush General Hospital',
+      taggedOn: '21 Jul 2026',
+      taggedBy: 'Aled Morgan',
+      mostRecent: true,
+      prefill: { workingWith: 'wgh', location: 'wgh', holder: 'howarth', clinicDate: '2026-08-05' },
+    },
+  ],
+};
+
 /* ─── SendIT batch (Figma 192:4901, 341:9165, 341:9673, 279:22906, 287:23848) ─── */
 
 export const SEND_RECIPIENTS = [

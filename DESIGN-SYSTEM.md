@@ -107,6 +107,16 @@ The colour system is built from four brand palettes (Blue, Cyan, Navy, Grey) and
 
 See `/foundations/tokens/colour/global.md` for the full primitive palette and `/foundations/tokens/colour/semantic.md` for semantic token definitions and contrast ratios.
 
+**Dark mode is behind the light-mode work, and deliberately so.** Light-mode
+semantic assignments — which colour means which state, which surface, which
+interaction — have moved a long way and are still moving. Re-deriving the dark
+values after every one of those changes would cost more than it is worth and
+would still be wrong at the end. The dark tokens build and are structurally
+complete; they are not yet reviewed against the current light-mode meanings, so
+treat them as provisional. The pass to reconcile them is a deliberate later
+step, taken once the light-mode assignments hold still — not an oversight, and
+not something to do piecemeal alongside other work.
+
 ### Typography System
 
 The system uses **Roboto** as its only typeface across all platforms. It is
@@ -201,10 +211,10 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Progress indicators | ✅ | — | — |
 | Radio | — | ✅ | ✅ |
 | Search | ✅ | — | — |
-| Segmented control | — | ✅ | ✅ |
+| Segmented control | — (guidelines ✅, with Switch) | ✅ | ✅ |
 | Select | ✅ | ✅ | ✅ |
 | Status indicator | — | ✅ | ✅ |
-| Switch | — (guidelines ✅) | ✅ | ✅ |
+| Switch | — (guidelines ✅, with Segmented control) | ✅ | ✅ |
 | Table | ✅ | ✅ | ✅ |
 | Tags | ✅ | ✅ | ✅ |
 | Time select | — | ✅ | ✅ |
@@ -225,6 +235,19 @@ in this table to reach for. Both are built locally, from tokens only, in
 prototype rather than promoted to `packages/web`/`packages/react`. Promote
 either once a second consumer needs the same pattern, with a spec in
 `/components/menu/` or `/components/tabs/`.
+
+**Navigation, Breadcrumbs and the two Toggles now have website pages.**
+Navigation had guidelines and full code and no page at all. Switch and
+Segmented control are published together as **Toggles**, because the Figma set
+(`1414:16858`) groups them and the first real decision is which of the two you
+need: a switch answers "is this on?", a segmented control answers "which of
+these?". They stay two components in code — different APIs, different ARIA —
+under one guidelines document, `components/toggles/`.
+
+**Navigation's icon-only width was wrong in code.** `.sr-nav--collapsed` was
+72px; Figma (`3569:15850`, `2212:7613`) and the component's own guidelines both
+say **48px**. Corrected to 48px, with the list padding reduced so a 24px icon
+still centres.
 
 **Breadcrumbs and Toggle switch are now documented.** Both had shipped code in
 `packages/web` and `packages/react` with no guidelines and no website page —
@@ -314,6 +337,31 @@ count pills were outlined in both types, so a Fill banner appeared to become a
 Border banner when the user collapsed it. Collapsing changes how much detail is
 shown, not which type the banner is — Fill's pills now carry the same Red/50
 and Yellow/100 as its expanded alert cards (Figma `1711:15585`).
+
+**Three more leaks from the website's page CSS, same cause as the two above.**
+`.content a` painted every BottomNav tab blue, which hid the fact that only the
+current tab is blue. `publicise()`'s empty-section pruner dropped any heading
+immediately followed by another heading, which silently deleted "Type: Switch"
+and "Type: Segmented control" from the Toggles page — it now only prunes a
+heading followed by one at the same or higher level. And `inline()` had no
+emphasis rule, so `*submit*` printed its asterisks.
+
+**BottomNav rest state is Text/Secondary; hover and current are
+Interactive/Link.** Hover previously went to Text/Primary — darker than rest,
+which reads as the control switching off under the cursor. A tab bar is
+navigation, and blue is what "you can go here / you are here" means everywhere
+else in the product.
+
+**`Input` type=calendar and type=time could not carry a value.** They were the
+only Input types that dropped `...rest`, so `value` / `defaultValue` /
+`onChange` never reached `DatePicker` or `TimeSelect` and a pre-filled date
+rendered as an empty placeholder. Found by the Case Note Tracking send-from-tag
+flow, which exists to pre-fill exactly that field.
+
+**`RadioGroup` takes `hideLegend`**, matching `hideLabel` on Input and
+Checkbox. A group whose name is already given by the surrounding copy still
+needs a legend for screen readers; the alternative in use was dropping the
+legend, which leaves an unnamed fieldset.
 
 See `/components/README.md` for the full catalogue and contribution guidance, and
 the live catalogue in Storybook for every variant.
