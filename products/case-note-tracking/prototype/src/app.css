@@ -1,5 +1,18 @@
 /* Prototype-only layout. Component styling comes entirely from the design
    system — nothing here restyles a DS component. */
+
+/* Border-box everywhere. Every design-system component already sets this on
+   itself and nothing in the system uses content-box, but this stylesheet was
+   patching it box by box — and the one place it was missed, the Record
+   Details banner in the Send/Receive/Tag modals, added its 4px border and
+   32px padding on top of a 100% width and put a horizontal scrollbar inside
+   the modal. Setting it once removes the whole class of bug. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   background: var(--sr-color-surface-background);
@@ -741,4 +754,241 @@ body {
   .attention-row { flex-wrap: wrap; min-height: 0; }
   .results__bar { flex-direction: column; align-items: stretch; }
   .results__filter { width: 100%; }
+}
+
+/* ---------- SendIT (Figma 192:4901 / 341:9165 / 341:9673 / 279:22906) ---------- */
+
+.page__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.send-setup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  background: var(--sr-color-surface-section-cards);
+  border-radius: var(--radius-md);
+  box-shadow: var(--elevation-raised);
+}
+/* Seven fields on one row at full width, wrapping to as many as fit rather
+   than to a fixed column count — a 7-column grid leaves one orphan on the
+   second row at most widths. */
+.send-setup__fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-4);
+  width: 100%;
+}
+
+.send-batch-ref {
+  margin: 0;
+  font: var(--sr-type-heading-xs-font);
+  letter-spacing: var(--sr-type-heading-xs-letter-spacing);
+}
+
+.send-panels {
+  display: grid;
+  /* The summary is the wider of the two: it carries a six-column table while
+     the finder is a search box and a list. */
+  grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.send-find,
+.send-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.send-find__search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.send-find__search > :first-child { flex: 1 1 auto; min-width: 0; }
+
+.send-find__results {
+  min-height: 96px;
+  padding: var(--space-3);
+  border: 1px solid var(--sr-color-border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--sr-color-surface-subtle);
+}
+
+.send-find__foot {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+.send-find__count {
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+  color: var(--sr-color-text-secondary);
+}
+
+.send-empty {
+  margin: 0;
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+  color: var(--sr-color-text-secondary);
+}
+
+.send-group {
+  padding: var(--space-3);
+  background: var(--sr-color-surface-section-cards);
+  border: 1px solid var(--sr-color-border-default);
+  border-radius: var(--radius-md);
+}
+.send-group__patient {
+  margin: 0 0 var(--space-1);
+  font: var(--sr-type-heading-xs-font);
+  letter-spacing: var(--sr-type-heading-xs-letter-spacing);
+}
+/* Identifiers, not decoration — body-s, never caption (DDR-015). */
+.send-group__meta {
+  margin: 0 0 var(--space-2);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+  color: var(--sr-color-text-secondary);
+}
+.send-group__links {
+  display: flex;
+  gap: var(--space-4);
+  margin: 0 0 var(--space-2);
+}
+.send-group__links .link-action { text-decoration: underline; }
+
+.send-volumes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.send-volume {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--sr-color-border-subtle);
+}
+.send-volume:last-child { border-bottom: none; }
+.send-volume__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.send-volume__name {
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+  color: var(--sr-color-text-primary);
+}
+.send-volume__meta {
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  color: var(--sr-color-text-secondary);
+}
+
+.send-summary__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+.send-summary__controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.send-remove { color: var(--sr-color-status-critical); }
+
+/* ---------- Approve-and-send modal (Figma 279:22906) ---------- */
+.send-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-left: 4px solid;
+  border-radius: var(--radius-sm);
+}
+.send-banner__icon { flex: 0 0 auto; }
+.send-banner__text { margin: 0; }
+.send-banner--success {
+  background: var(--sr-color-status-success-surface);
+  border-left-color: var(--sr-color-status-success);
+  color: var(--sr-color-status-success);
+}
+.send-banner--warning {
+  background: var(--color-yellow-100);
+  border-left-color: var(--color-yellow-700);
+  color: var(--color-yellow-700);
+}
+
+.send-warning-count {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-yellow-700);
+}
+
+.send-warnings {
+  padding: var(--space-3);
+  border: 1px solid var(--sr-color-border-default);
+  border-radius: var(--radius-md);
+  background: var(--sr-color-surface-subtle);
+}
+.send-warnings__title {
+  margin: 0 0 var(--space-2);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+  color: var(--sr-color-text-primary);
+}
+.send-warnings__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.send-warnings__list li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  color: var(--color-yellow-700);
+}
+
+/* Sits with the actions it explains, and takes the leading edge so the
+   button group stays right-grouped (DDR-018). */
+.send-modal__blocked {
+  margin-right: auto;
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+  color: var(--sr-color-status-critical);
+}
+
+/* Below Desktop the two panels stop being side by side: the summary table
+   needs the full measure well before the finder does. */
+@media (max-width: 1023px) {
+  .send-panels { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Below Tablet the Search button drops under the field. Kept on one row it
+   squeezes the input to about four characters, next to a "Scan Barcode"
+   trailing action that is wider than the field it sits in. */
+@media (max-width: 767px) {
+  .send-find__search { flex-wrap: wrap; }
+  .send-find__search > :first-child { flex: 1 1 100%; }
+  .send-find__search .sr-button { width: 100%; }
 }

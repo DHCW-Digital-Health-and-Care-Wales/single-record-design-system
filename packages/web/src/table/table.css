@@ -24,6 +24,15 @@
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  /* `overflow-x: auto` scrolls the table but does not, on its own, stop a
+     table wider than the wrapper from extending the page's own horizontal
+     scroll — the wrapper scrolls AND the whole page scrolls behind it.
+     Paint containment is what actually holds the table inside this box. It
+     changes nothing visually (a scroll container already clips its content),
+     and without it every consumer has to wrap the table in a second
+     `overflow-x: auto` ancestor to get the containment this element exists
+     to provide. Verified at 390px: without it the page scrolls 72px. */
+  contain: paint;
 }
 
 .sr-table {

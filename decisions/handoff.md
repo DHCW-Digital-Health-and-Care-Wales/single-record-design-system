@@ -5,6 +5,61 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-08-04 (SendIT batch; two prototype fixes)
+
+### SendIT built (Figma 192:4901 / 341:9165 / 341:9673 / 279:22906 / 287:23848)
+
+Find case notes on the left, build the batch on the right, approve and send
+from the footer. Volumes sit at `Pending` until the approval modal's Send is
+confirmed — before that the batch is an editable list, not a dispatch.
+
+**Design questions raised by the build — for the design lead:**
+
+1. **The approval banner contradicts itself.** `279:22906` draws it green with
+   a success tick while the text reads *"9 warnings across 3 volumes.
+   Acknowledge warnings to continue"* and the primary action is disabled. A
+   success mark on a message saying you cannot proceed is a mixed signal.
+   Implemented as amber while it blocks, flipping to green once warnings are
+   acknowledged and the batch really can be sent — which lands on the Figma
+   green state, just later. Worth confirming.
+2. **The modal has no title.** `279:22906` says "Modal Title". Implemented as
+   *"Approve and send batch"*.
+3. **The checkbox above "Create new batch" changes label between screens** —
+   "Print label" on `192:4901`, `341:9165` and `341:9673`, but "Show inactive
+   volumes" on `287:23848`. Implemented as "Print label" (three screens to
+   one, and it pairs with "Print Labels" in the footer). Needs a decision.
+4. **The Batch Summary lists a different patient per row while the search
+   panel above it shows one patient's four volumes.** A batch is cross-patient
+   in reality, so the rows carry their own patient rather than inheriting the
+   search group's — but the two panels as drawn cannot both be right.
+
+### Two defects found and fixed in the design system, not the prototype
+
+- **`Footer` could not express any action pair but Save / Mark as complete.**
+  Its own guidelines require labels to name the screen's specific action, so
+  the fixed labels contradicted the guidance. It now takes an `actions` slot,
+  with the old pair as the default.
+- **`.sr-table-wrap` did not contain a wide table.** `overflow-x: auto`
+  scrolled the table but did not stop it extending the *page's* horizontal
+  scroll. Every consumer had been working around it by nesting the table in a
+  second `overflow-x: auto` ancestor; SendIT's batch summary, which does not,
+  scrolled the page 72px at 390px. Fixed with `contain: paint` on the wrapper.
+- Also: `DatePicker` and `TimeSelect` had hard `width` values (220px / 140px)
+  that could not shrink, overflowing any narrower container — this is what put
+  a horizontal scrollbar in the Send / Receive / Tag modals. Now capped with
+  `max-width` instead.
+
+### The website build now fails on a prototype's missing component
+
+Each `PROTOTYPES` entry carries a hand-maintained `components` list, and the
+embed only ships what is listed. Using a component nobody added built cleanly
+and broke at runtime on the published site — which is how SendIT's `Footer`
+was nearly shipped missing. The build now collects what each prototype
+actually imports from `@dhcw/sr-react` and throws if the list does not cover
+it.
+
+---
+
 ## Checkpoint — 2026-08-03 (later — grids, barcode scan, responsive)
 
 ### Grids synced from Figma — the repo doc was wrong, the tokens were right

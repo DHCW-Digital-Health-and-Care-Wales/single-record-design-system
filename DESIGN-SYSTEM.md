@@ -246,6 +246,24 @@ bar — it is the persistent bottom tab bar, already built as its own component,
 duplicate "mobile Footer". `BottomNav` itself still has no website page —
 adding one is tracked here rather than done silently.
 
+**`Footer` takes an `actions` slot.** Its own guidelines require the action
+labels to name the screen's specific action ("Mark as complete", not
+"Submit"), which the component could not honour while the labels were fixed
+in its markup — SendIT needs *Print Labels* and *Approve Summary list*. The
+Save/Mark-as-complete pair remains the default, so nothing existing changed.
+Whatever a screen passes must still keep to the pattern: exactly one primary,
+and no destructive action in persistent chrome.
+
+**A wide table no longer drags the page sideways.** `.sr-table-wrap` sets
+`overflow-x: auto` so a table wider than its container scrolls, but that
+alone does not stop the table extending the *page's* horizontal scroll — the
+wrapper scrolled and the whole page scrolled behind it. Every consumer had
+been unknowingly working around it by nesting the table inside a second
+`overflow-x: auto` ancestor; SendIT's batch summary, which does not, exposed
+it (72px of page scroll at 390px). The wrapper now adds `contain: paint`,
+which is what actually holds the table inside it. No visual change — a scroll
+container already clips — and the table still scrolls internally.
+
 See `/components/README.md` for the full catalogue and contribution guidance, and
 the live catalogue in Storybook for every variant.
 
@@ -275,7 +293,7 @@ They live under `/products/{product}/prototype/` and consume the design-system p
 
 | Prototype | Location | State |
 |---|---|---|
-| Case Note Tracking | `products/case-note-tracking/prototype/` | Patient casenote view built. Search, SendIT batch, My Requests and the side panels are not. |
+| Case Note Tracking | `products/case-note-tracking/prototype/` | Dashboard, Patient Search, the single-patient casenote view, My Requests and the SendIT batch flow are built. ReceiveIT, TagIT and Settings are nav entries only. |
 
 **Prototypes are not shippable.** Mock data only, no API integration, no authentication, no error or loading handling, no tests, no security review.
 

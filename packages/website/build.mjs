@@ -154,6 +154,9 @@ function buildSandpackFiles(p) {
   const files = {};
   const seenLocal = new Set();
   const queue = [p.entryFile.replace(/\.jsx$/, '')];
+  // Every design-system component the prototype actually imports, collected
+  // as we walk. Checked against the generated barrel below.
+  const usedComponents = new Set();
   while (queue.length) {
     const name = queue.pop();
     if (seenLocal.has(name)) continue;
@@ -162,13 +165,37 @@ function buildSandpackFiles(p) {
     const curDir = posixPath.dirname(name); // '.' at the top, 'shared' one level in
     const depth = curDir === '.' ? 0 : curDir.split('/').length;
     const dsPrefix = '../'.repeat(depth) || './';
-    src = src.replace(/from\s+['"]@dhcw\/sr-react['"]/, `from '${dsPrefix}design-system/react/index.js'`);
+    src = src.replace(
+      /import\s*\{([^}]*)\}\s*from\s*['"]@dhcw\/sr-react['"]/g,
+      (whole, named) => {
+        named
+          .split(',')
+          .map((s) => s.trim().split(/\s+as\s+/)[0].trim())
+          .filter(Boolean)
+          .forEach((n) => usedComponents.add(n));
+        return `import {${named}} from '${dsPrefix}design-system/react/index.js'`;
+      }
+    );
     src = src.replace(/from\s+['"](\.\.?\/[\w./-]+)\.jsx['"]/g, (whole, relImport) => {
       const resolved = posixPath.normalize(posixPath.join(curDir, relImport));
       queue.push(resolved);
       return `from '${relImport}.js'`;
     });
     files[`/${name}.js`] = src;
+  }
+
+  // The component list on each PROTOTYPES entry is hand-maintained, so it
+  // drifts the moment a prototype starts using a component nobody added to
+  // it. The embed then builds cleanly and fails at runtime in the browser,
+  // on the published site, with an undefined component — which is how a
+  // missing Footer shipped. Fail the build here instead.
+  const missing = [...usedComponents].filter((n) => !dsFiles[`react/${n}.jsx`]);
+  if (missing.length > 0) {
+    throw new Error(
+      `Prototype "${p.slug}" imports ${missing.join(', ')} from @dhcw/sr-react, but `
+      + `${missing.length === 1 ? 'it is' : 'they are'} not in its \`components\` list in `
+      + `PROTOTYPES. Add ${missing.length === 1 ? 'it' : 'them'} so the embed ships the source.`
+    );
   }
 
   files['/data.js'] = readFileSync(resolve(p.entryDir, 'data.js'), 'utf8');
@@ -193,15 +220,15 @@ const PROTOTYPES = [
   {
     slug: 'case-note-tracking',
     title: 'Case Note Tracking',
-    summary: 'Dashboard home screen, patient search with quick and advanced modes, and the patient '
-      + 'casenote view — all behind one sidebar navigation.',
+    summary: 'Dashboard home screen, patient search with quick and advanced modes, the patient '
+      + 'casenote view, My Requests and the SendIT batch flow — all behind one sidebar navigation.',
     status: 'In progress',
-    statusNote: 'The dashboard, patient search (quick, advanced and results) and the casenote view are '
-      + 'built and reachable from the nav. My Requests opens the casenote view as a stand-in. SendIT, '
-      + 'ReceiveIT and TagIT are nav entries only.',
+    statusNote: 'The dashboard, patient search (quick, advanced and results), the single-patient '
+      + 'casenote view, My Requests and SendIT — find case notes, build a batch, approve and send — are '
+      + 'built and reachable from the nav. ReceiveIT and TagIT are nav entries only.',
     entryDir: resolve(ROOT, 'products', 'case-note-tracking', 'prototype', 'src'),
     entryFile: 'App.jsx',
-    components: ['Navigation', 'Header', 'PatientBanner', 'Table', 'Modal', 'Button', 'Select', 'Input', 'Checkbox', 'SegmentedControl', 'RadioGroup', 'Tag', 'Icon'],
+    components: ['Navigation', 'Header', 'Footer', 'PatientBanner', 'Table', 'Modal', 'Button', 'Select', 'Input', 'Checkbox', 'SegmentedControl', 'RadioGroup', 'Tag', 'Icon'],
     startScript: 'dev:prototype',
   },
 ];

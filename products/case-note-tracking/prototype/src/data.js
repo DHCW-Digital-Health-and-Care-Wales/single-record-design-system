@@ -156,3 +156,94 @@ export const MY_REQUESTS = [
   { id: 4, volume: 'General notes vol 4', patient: 'ADAMS, Amy Tina', status: 'Received', statusType: 'green', tab: 'received', location: 'A&E Dept-GGH', activity: 'Registered by Gadgil, AA(Mr) at A&E Dept-GGH', moved: '05 Jun 2026 17:40', clinicDate: '03 Jul 2026', batch: '-' },
   { id: 5, volume: 'General notes vol 4', patient: 'OWEN, Rhys', status: 'Sent', statusType: 'grey', tab: 'sent', location: 'A&E Dept-GGH', activity: 'Registered by Gadgil, AA(Mr) at A&E Dept-GGH', moved: '05 Jun 2026 17:40', clinicDate: '03 Jul 2026', batch: '-' },
 ];
+
+/* ─── SendIT batch (Figma 192:4901, 341:9165, 341:9673, 279:22906, 287:23848) ─── */
+
+export const SEND_RECIPIENTS = [
+  { value: 'howarth', label: 'Howarth, AJ' },
+  { value: 'warlow', label: 'Warlow, Tarnia' },
+  { value: 'gadgil', label: 'Gadgil, AA (Mr)' },
+];
+
+export const SELECTION_METHODS = [
+  { value: 'last', label: 'Last' },
+  { value: 'all', label: 'All' },
+  { value: 'earliest', label: 'Earliest' },
+];
+
+export const ADD_INFO_METHODS = [
+  { value: 'batch', label: 'Batch' },
+  { value: 'individual', label: 'Individual' },
+];
+
+export const CASENO_SORTS = [
+  { value: 'caseno', label: 'Caseno (sort)' },
+  { value: 'volume', label: 'Volume' },
+  { value: 'location', label: 'Location' },
+];
+
+export const SEND_CASE_NOTE_TYPES = [
+  { value: 'all', label: 'All' },
+  ...NOTE_TYPES,
+];
+
+export const BATCH_REFERENCE = {
+  number: '210-792749',
+  user: 'CH252832',
+  location: 'AE Department GGH',
+};
+
+/**
+ * Search results in SendIT's "Find case notes" panel, grouped by patient
+ * (Figma 341:9165). One group per patient; `volumes` are that patient's
+ * casenote volumes, each addable to the batch.
+ *
+ * `warnings` drive the approval modal (279:22906): a volume with warnings
+ * cannot be sent until they are acknowledged. Only Vol 4 carries any, which
+ * is what makes the modal's "0 errors, N warnings" state reachable.
+ */
+export const SEND_SEARCH_GROUPS = [
+  {
+    id: 'p1',
+    patient: 'JOHN, Elvet George (Mr)',
+    nhs: '000 111 2222',
+    dob: '15 Dec 1992 (33y)',
+    crn: 'NN40140',
+    volumes: [
+      {
+        id: 'v4', caseNo: 'NN40140', volume: 'General notes vol 4',
+        location: 'A&E Department-GGH', moved: '26 Jun 2026 12:02',
+        status: 'Registered', statusType: 'blue',
+        warnings: ['Temporary notes exist for this patient', 'Case note volume is held at a different location'],
+      },
+      {
+        id: 'v3', caseNo: 'NN90212', volume: 'General notes vol 3',
+        location: 'Madog Suite-GGH', moved: '06 Apr 2026 12:02',
+        status: 'Sent', statusType: 'grey', warnings: [],
+      },
+      {
+        id: 'v2', caseNo: 'CN032412', volume: 'General notes vol 2',
+        location: 'Madog Suite-GGH', moved: '11 Mar 2026 12:02',
+        status: 'Sent', statusType: 'grey', warnings: [],
+      },
+      {
+        id: 'v1', caseNo: 'CN723283', volume: 'General notes vol 1',
+        location: 'Teifi Ward-GGH', moved: '02 Jan 2026 12:02',
+        status: 'Sent', statusType: 'grey', warnings: [],
+      },
+    ],
+  },
+];
+
+/**
+ * Patient shown against each volume in the Batch Summary. The Figma mock
+ * lists a different patient per row while the search panel above it shows one
+ * patient's four volumes — a batch is cross-patient in reality, so the rows
+ * carry their own patient rather than inheriting the search group's.
+ */
+export const SEND_VOLUME_PATIENTS = {
+  v4: 'JOHN, Elvet George',
+  v3: 'EVANS, Paul',
+  v2: 'CHAPMAN, Gary',
+  v1: 'CLARENCE, Peters',
+};
