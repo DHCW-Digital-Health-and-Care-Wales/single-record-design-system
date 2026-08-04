@@ -5,6 +5,67 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-08-04 (later — footer rule, SendIT batch gating)
+
+### The Footer is now a system-wide rule, not a per-screen choice
+
+Every screen carries it, pinned to the bottom: version left, that screen's
+committing actions right, and the bar with the version alone where a screen
+has none. `Footer` no longer falls back to a generic Save / Mark-as-complete
+pair when given no actions — two buttons that do nothing on every read-only
+screen is worse than an honest empty bar. The Footer guidelines said the
+opposite ("Not on read-only or list screens. A footer with no actions is a bar
+of empty chrome") and have been corrected.
+
+Pinning is `position: sticky`, not `fixed`. Fixed positions against the
+viewport, so it would have to be told the sidebar's width; sticky keeps the
+bar inside its own column, spanning the content area and stopping at the
+sidebar, with no z-index handling. The page owes it a full-height column —
+recorded in the guidelines, since a page that does not give it one still gets
+a correct footer, just not a pinned one.
+
+### SendIT: creation is now a gate
+
+Nothing below the settings card exists until "Create new batch" is pressed —
+that press is what assigns the batch number, so there was nothing for a batch
+reference to refer to before it. Pressing it again over a batch that still has
+unsent notes asks first, reusing the existing `ConfirmModal`, rather than
+silently discarding them.
+
+**Existing Batch** (Figma `448:8420`, `448:8806`) asks one question — which
+batch — and shows nothing else until it is answered. The field is an
+Autocomplete, not a Select: the screen has to take a number read off a printed
+label as readily as one picked from the list.
+
+**One patient at a time in the finder.** A new search replaces the patient
+showing rather than stacking a second, so the checkbox list can never span two
+people and "Select all" always means one patient's volumes. Volumes already
+added to the batch stay there — the batch is still cross-patient, it is only
+the finder that shows one at a time.
+
+**Panels match height.** The two cards are one task split in half; a short
+finder beside a tall summary read as two unrelated panels. Whichever side has
+more in it now sets the height and the other matches, with the results list
+and the summary table taking up the slack so the search row and the footer
+actions stay at the edges they belong to. Below Desktop the panels stack and
+the rule stops applying, which is correct.
+
+**For the design lead:** `448:8806` (an opened existing batch) still shows the
+"Create new batch" button, carried over from the New Batch frame it was copied
+from. It is omitted in Existing Batch mode here — in that mode the batch
+already exists, and a button that would create a *second* one, discarding the
+one just opened, is not what that screen is for. Worth confirming.
+
+### Also
+
+- `Autocomplete` can now be marked `required`. It was the one form field in the
+  system that could not, and `448:8420` marks this field required.
+- The website build's component guard earned its keep immediately: it failed
+  the build on `Autocomplete` missing from the prototype's embed list, which
+  would otherwise have shipped a SendIT screen that breaks in the browser.
+
+---
+
 ## Checkpoint — 2026-08-04 (SendIT batch; two prototype fixes)
 
 ### SendIT built (Figma 192:4901 / 341:9165 / 341:9673 / 279:22906 / 287:23848)

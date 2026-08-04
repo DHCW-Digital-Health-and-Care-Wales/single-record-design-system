@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Header, Table, Input, Tag, Icon } from '@dhcw/sr-react';
+import { Header, Footer, Table, Input, Tag, Icon } from '@dhcw/sr-react';
 
 import { MY_REQUESTS } from './data.js';
 import { RowActionMenu, NoteActionModal, ConfirmModal } from './shared/RowActions.jsx';
@@ -171,6 +171,8 @@ export default function MyRequests() {
           )}
         </section>
       </main>
+
+      <Footer version="v 0.1.0.1112" />
 
       <NoteActionModal
         kind={noteAction.kind}

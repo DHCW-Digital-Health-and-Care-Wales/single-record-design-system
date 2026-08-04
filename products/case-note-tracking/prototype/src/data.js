@@ -187,6 +187,18 @@ export const SEND_CASE_NOTE_TYPES = [
   ...NOTE_TYPES,
 ];
 
+/**
+ * Batches already open for this user, offered in the Existing Batch
+ * combobox (Figma 448:8420). The field is an Autocomplete, not a Select,
+ * because the screen has to accept a number read off a printed label as well
+ * as one picked from the list.
+ */
+export const OPEN_BATCHES = [
+  { value: '210-792749', label: '210-792749 — A&E Department GGH, 5 case notes' },
+  { value: '210-792812', label: '210-792812 — Madog Suite GGH, 2 case notes' },
+  { value: '210-793004', label: '210-793004 — Teifi Ward GGH, 8 case notes' },
+];
+
 export const BATCH_REFERENCE = {
   number: '210-792749',
   user: 'CH252832',

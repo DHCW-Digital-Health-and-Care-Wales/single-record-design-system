@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {
   Header,
+  Footer,
   SegmentedControl,
   Input,
   RadioGroup,
@@ -275,6 +276,8 @@ export default function PatientSearch({ onOpenPatient }) {
           </section>
         )}
       </main>
+
+      <Footer version="v 0.1.0.1112" />
     </>
   );
 }

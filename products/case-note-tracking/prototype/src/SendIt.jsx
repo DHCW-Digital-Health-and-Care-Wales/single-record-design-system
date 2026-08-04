@@ -10,8 +10,11 @@ import {
   Table,
   Tag,
   Modal,
+  Autocomplete,
   Icon,
 } from '@dhcw/sr-react';
+
+import { ConfirmModal } from './shared/RowActions.jsx';
 
 import {
   SITES,
@@ -22,6 +25,7 @@ import {
   SEND_CASE_NOTE_TYPES,
   BATCH_REFERENCE,
   SEND_SEARCH_GROUPS,
+  OPEN_BATCHES,
 } from './data.js';
 
 /**
@@ -226,25 +230,81 @@ export default function SendIt() {
   const [sortBy, setSortBy] = useState('caseno');
   const [printLabel, setPrintLabel] = useState(false);
 
-  const [searched, setSearched] = useState(false);
+  // The batch reference, and the gate for everything below the settings card.
+  // Null until "Create new batch" or "Open batch" is pressed: the number is
+  // assigned by that press, so there is nothing to show a batch reference for
+  // before it, and no batch to add case notes to.
+  const [batchRef, setBatchRef] = useState(null);
+  const [existingBatch, setExistingBatch] = useState('');
+
+  // Which patient the finder is showing. One at a time: a new search replaces
+  // the previous patient rather than stacking, so the checkbox list can never
+  // span two people and "Select all" always means one patient's volumes.
+  const [groupIndex, setGroupIndex] = useState(null);
   const [query, setQuery] = useState('');
   const [picked, setPicked] = useState(() => new Set());
   const [batch, setBatch] = useState([]);
   const [hideSent, setHideSent] = useState(false);
   const [approveOpen, setApproveOpen] = useState(false);
+  const [confirmNewOpen, setConfirmNewOpen] = useState(false);
 
-  const groups = searched ? SEND_SEARCH_GROUPS : [];
+  const group = groupIndex === null ? null : SEND_SEARCH_GROUPS[groupIndex];
+  const searched = groupIndex !== null;
+
+  // Mock lookup: any search lands on the next patient in the fixture, so the
+  // "one patient at a time, replaced by the next search" rule is visible
+  // without needing real matching.
+  const findNextGroup = () =>
+    setGroupIndex((prev) =>
+      prev === null ? 0 : (prev + 1) % SEND_SEARCH_GROUPS.length
+    );
 
   const runSearch = (e) => {
     e?.preventDefault();
-    setSearched(true);
+    setPicked(new Set());
+    findNextGroup();
   };
 
   // A scan is the same search a clinician would type, minus the typing — it
   // populates the field and runs, rather than jumping straight into a batch.
   const simulateScan = () => {
     setQuery('000 111 2222');
-    setSearched(true);
+    setPicked(new Set());
+    findNextGroup();
+  };
+
+  const nextBatchNumber = () =>
+    `210-${Math.floor(100000 + Math.random() * 900000)}`;
+
+  const createBatch = () => {
+    setBatchRef({ ...BATCH_REFERENCE, number: nextBatchNumber() });
+    setBatch([]);
+    setGroupIndex(null);
+    setPicked(new Set());
+    setQuery('');
+  };
+
+  const openBatch = (e) => {
+    e?.preventDefault();
+    if (!existingBatch.trim()) return;
+    setBatchRef({ ...BATCH_REFERENCE, number: existingBatch.trim() });
+    // An existing batch opens with the work already in it. The fixture stands
+    // in for what the service would return.
+    setBatch(
+      SEND_SEARCH_GROUPS[0].volumes.slice(0, 2).map((v) => ({
+        id: v.id,
+        caseNo: SEND_SEARCH_GROUPS[0].crn,
+        volume: v.volume,
+        location: 'All sites',
+        patient: SEND_SEARCH_GROUPS[0].patient,
+        warnings: v.warnings,
+        status: 'Pending',
+        statusType: 'yellow',
+      }))
+    );
+    setGroupIndex(null);
+    setPicked(new Set());
+    setQuery('');
   };
 
   const togglePick = (id) =>
@@ -256,23 +316,19 @@ export default function SendIt() {
     });
 
   const addSelectedToBatch = () => {
-    const additions = [];
-    for (const group of groups) {
-      for (const v of group.volumes) {
-        if (!picked.has(v.id)) continue;
-        if (batch.some((b) => b.id === v.id)) continue;
-        additions.push({
-          id: v.id,
-          caseNo: group.crn,
-          volume: v.volume,
-          location: 'All sites',
-          patient: group.patient,
-          warnings: v.warnings,
-          status: 'Pending',
-          statusType: 'yellow',
-        });
-      }
-    }
+    if (!group) return;
+    const additions = group.volumes
+      .filter((v) => picked.has(v.id) && !batch.some((b) => b.id === v.id))
+      .map((v) => ({
+        id: v.id,
+        caseNo: group.crn,
+        volume: v.volume,
+        location: 'All sites',
+        patient: group.patient,
+        warnings: v.warnings,
+        status: 'Pending',
+        statusType: 'yellow',
+      }));
     setBatch((prev) => [...prev, ...additions]);
     setPicked(new Set());
   };
@@ -338,35 +394,84 @@ export default function SendIt() {
               { label: 'Existing Batch', value: 'existing' },
             ]}
             value={mode}
-            onChange={setMode}
+            onChange={(next) => {
+              setMode(next);
+              // Switching mode abandons whatever was open: the two modes
+              // reach different batches, so carrying one's state into the
+              // other would show a batch reference the mode cannot explain.
+              setBatchRef(null);
+              setBatch([]);
+              setGroupIndex(null);
+              setPicked(new Set());
+            }}
           />
 
-          <div className="send-setup__fields">
-            <Select label="Sending to" required options={SEND_RECIPIENTS} value={recipient} onChange={setRecipient} />
-            <Select label="Location" required options={SITES} value={location} onChange={setLocation} />
-            <Input type="calendar" label="Clinic date" placeholder="Add Date" />
-            <Select label="Case note type" required options={SEND_CASE_NOTE_TYPES} value={noteType} onChange={setNoteType} />
-            <Select label="Selection method" required options={SELECTION_METHODS} value={selectionMethod} onChange={setSelectionMethod} />
-            <Select label="Add info method" required options={ADD_INFO_METHODS} value={addInfoMethod} onChange={setAddInfoMethod} />
-            <Select label="Caseno (sort)" options={CASENO_SORTS} value={sortBy} onChange={setSortBy} />
-          </div>
+          {/* Existing Batch asks one question — which batch — and nothing
+              else, per Figma 448:8420. The settings below govern what gets
+              added to a batch, so they only appear once there is one. */}
+          {mode === 'existing' && !batchRef && (
+            <form className="send-open-batch" onSubmit={openBatch}>
+              <Autocomplete
+                label="Open existing batch"
+                required
+                options={OPEN_BATCHES}
+                value={existingBatch}
+                onChange={setExistingBatch}
+                onQueryChange={setExistingBatch}
+                placeholder="Enter or select a batch number"
+              />
+              <Button type="secondary" htmlType="submit" disabled={!existingBatch.trim()}>
+                Open batch
+              </Button>
+            </form>
+          )}
 
-          <Checkbox
-            label="Print label"
-            checked={printLabel}
-            onChange={() => setPrintLabel((v) => !v)}
-          />
+          {(mode === 'new' || batchRef) && (
+            <>
+              <div className="send-setup__fields">
+                <Select label="Sending to" required options={SEND_RECIPIENTS} value={recipient} onChange={setRecipient} />
+                <Select label="Location" required options={SITES} value={location} onChange={setLocation} />
+                <Input type="calendar" label="Clinic date" placeholder="Add Date" />
+                <Select label="Case note type" required options={SEND_CASE_NOTE_TYPES} value={noteType} onChange={setNoteType} />
+                <Select label="Selection method" required options={SELECTION_METHODS} value={selectionMethod} onChange={setSelectionMethod} />
+                <Select label="Add info method" required options={ADD_INFO_METHODS} value={addInfoMethod} onChange={setAddInfoMethod} />
+                <Select label="Caseno (sort)" options={CASENO_SORTS} value={sortBy} onChange={setSortBy} />
+              </div>
 
-          <Button type="secondary" size="small">
-            {mode === 'new' ? 'Create new batch' : 'Open batch'}
-          </Button>
+              <Checkbox
+                label="Print label"
+                checked={printLabel}
+                onChange={() => setPrintLabel((v) => !v)}
+              />
+            </>
+          )}
+
+          {/* Creating is what assigns the batch number, so this is the gate:
+              nothing below the settings card exists until it is pressed. It
+              stays available afterwards (Figma 192:4901 keeps it) so a second
+              batch can be started — but starting one over a batch that still
+              has unsent notes discards them, so that case asks first. */}
+          {mode === 'new' && (
+            <Button
+              type="secondary"
+              size="small"
+              onClick={() =>
+                pendingRows.length > 0 ? setConfirmNewOpen(true) : createBatch()
+              }
+            >
+              Create new batch
+            </Button>
+          )}
         </section>
 
-        <p className="send-batch-ref">
-          <strong>Batch Details:</strong> {BATCH_REFERENCE.number} | User{' '}
-          {BATCH_REFERENCE.user} at {BATCH_REFERENCE.location}
-        </p>
+        {batchRef && (
+          <p className="send-batch-ref">
+            <strong>Batch Details:</strong> {batchRef.number} | User{' '}
+            {batchRef.user} at {batchRef.location}
+          </p>
+        )}
 
+        {batchRef && (
         <div className="send-panels">
           <section className="panel send-find" aria-label="Find case notes">
             <h2 className="panel__title">Find case notes</h2>
@@ -391,14 +496,12 @@ export default function SendIt() {
             </form>
 
             <div className="send-find__results">
-              {groups.length === 0 ? (
+              {!group ? (
                 <p className="send-empty">
-                  {searched
-                    ? 'No case notes match that search.'
-                    : 'Search or scan a barcode to find case notes to add to this batch.'}
+                  Search or scan a barcode to find case notes to add to this batch.
                 </p>
               ) : (
-                groups.map((group) => {
+                (() => {
                   const ids = group.volumes.map((v) => v.id);
                   const allPicked = ids.every((id) => picked.has(id));
                   return (
@@ -425,7 +528,7 @@ export default function SendIt() {
                           type="button"
                           className="link-action"
                           onClick={() => {
-                            setSearched(false);
+                            setGroupIndex(null);
                             setQuery('');
                             setPicked(new Set());
                           }}
@@ -461,7 +564,7 @@ export default function SendIt() {
                       </ul>
                     </div>
                   );
-                })
+                })()
               )}
             </div>
 
@@ -527,6 +630,7 @@ export default function SendIt() {
             )}
           </section>
         </div>
+        )}
       </main>
 
       <Footer
@@ -558,6 +662,20 @@ export default function SendIt() {
         rows={pendingRows}
         onClose={() => setApproveOpen(false)}
         onSend={sendBatch}
+      />
+
+      <ConfirmModal
+        open={confirmNewOpen}
+        title="Start a new batch?"
+        body={`Batch ${batchRef?.number ?? ''} still has ${pendingRows.length} case ${
+          pendingRows.length === 1 ? 'note' : 'notes'
+        } that have not been sent. Starting a new batch discards them.`}
+        confirmLabel="Discard and start new"
+        onConfirm={() => {
+          setConfirmNewOpen(false);
+          createBatch();
+        }}
+        onClose={() => setConfirmNewOpen(false)}
       />
     </>
   );

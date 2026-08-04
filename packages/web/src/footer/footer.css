@@ -19,6 +19,29 @@
   border-top: 1px solid var(--sr-color-border-subtle);
 }
 
+/* ---------- Pinned to the bottom (the default) ----------
+   The bar sits at the bottom of every screen: the version has to be readable
+   without scrolling, because it is what staff read out when reporting a
+   fault, and a committing action should not be somewhere you have to hunt
+   for. `sticky`, not `fixed`: fixed would be positioned against the viewport
+   and would have to be told the width of any sidebar beside it, which the
+   component cannot know. Sticky keeps it inside its own column, so it spans
+   the content area and no further, and it needs no z-index games.
+
+   Two conditions make this behave as "pinned" in both directions, and both
+   belong to the page, not to this component:
+     - the column holding the footer is at least viewport height, so on a
+       short page the bar is pushed to the bottom rather than floating up
+       under the content;
+     - the content above it grows to fill that height.
+   A page that does neither still gets a correct footer, just not a pinned
+   one. */
+.sr-footer--sticky {
+  position: sticky;
+  bottom: 0;
+  margin-top: auto;
+}
+
 .sr-footer__version {
   flex: 1 1 0;
   min-width: 0;
@@ -31,4 +54,9 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
+}
+/* An action bar with no actions is still a footer: the version stays. The
+   empty group is dropped entirely rather than left to contribute its gap. */
+.sr-footer__actions:empty {
+  display: none;
 }

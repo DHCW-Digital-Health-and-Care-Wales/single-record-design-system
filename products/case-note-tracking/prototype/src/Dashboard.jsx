@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, Tag, Icon } from '@dhcw/sr-react';
+import { Header, Footer, Tag, Icon } from '@dhcw/sr-react';
 
 import { STATS, QUICK_ACTIONS, NEEDS_ATTENTION, IN_TRANSIT } from './data.js';
 
@@ -121,6 +121,8 @@ export default function Dashboard({ onNavigate }) {
           </div>
         </section>
       </main>
+
+      <Footer version="v 0.1.0.1112" />
     </>
   );
 }

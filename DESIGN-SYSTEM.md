@@ -246,6 +246,17 @@ bar — it is the persistent bottom tab bar, already built as its own component,
 duplicate "mobile Footer". `BottomNav` itself still has no website page —
 adding one is tracked here rather than done silently.
 
+**The Footer is on every screen, pinned.** It is persistent chrome, not page
+content: the version has to be reachable everywhere because it is what staff
+read out when reporting a fault, and a bar that appears on some screens and
+not others reads as a layout bug. A screen with no committing action gets the
+bar with the version alone — `Footer` renders no buttons unless given some,
+rather than falling back to a generic pair that would do nothing. Pinning is
+`position: sticky`, not `fixed`, so the bar stays inside its own column and
+stops at the sidebar without the component having to know the sidebar's
+width; the page owes it a full-height column, noted in the component's
+guidelines.
+
 **`Footer` takes an `actions` slot.** Its own guidelines require the action
 labels to name the screen's specific action ("Mark as complete", not
 "Submit"), which the component could not honour while the labels were fixed
@@ -253,6 +264,12 @@ in its markup — SendIT needs *Print Labels* and *Approve Summary list*. The
 Save/Mark-as-complete pair remains the default, so nothing existing changed.
 Whatever a screen passes must still keep to the pattern: exactly one primary,
 and no destructive action in persistent chrome.
+
+**`Autocomplete` can be marked required.** Every other form field in the
+system could express `required`, so a required combobox — SendIT's "Open
+existing batch" — had no way to say so, visually or to a screen reader. It now
+takes `required`, rendering the same marker as `Input` and `Select` and
+setting `aria-required`.
 
 **A wide table no longer drags the page sideways.** `.sr-table-wrap` sets
 `overflow-x: auto` so a table wider than its container scrolls, but that

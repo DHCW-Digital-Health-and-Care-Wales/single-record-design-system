@@ -37,6 +37,10 @@ export default function Autocomplete({
   onQueryChange,
   label,
   hint,
+  // Every other form field in the system can be marked required; this one
+  // could not, so a required combobox had no way to say so — visually or to
+  // a screen reader.
+  required = false,
   placeholder = 'Search…',
   className,
   ...rest
@@ -95,6 +99,11 @@ export default function Autocomplete({
       {label && (
         <label className="sr-input__label" htmlFor={`${rid}-input`}>
           {label}
+          {required && (
+            <span className="sr-input__required" aria-hidden="true">
+              *
+            </span>
+          )}
         </label>
       )}
       {hint && (
@@ -120,6 +129,7 @@ export default function Autocomplete({
             aria-controls={`${rid}-menu`}
             aria-activedescendant={open && activeIndex >= 0 ? `${rid}-opt-${activeIndex}` : undefined}
             aria-describedby={hint ? `${rid}-hint` : undefined}
+            aria-required={required || undefined}
             placeholder={placeholder}
             value={query}
             onChange={(e) => {
