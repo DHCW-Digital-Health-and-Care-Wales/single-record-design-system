@@ -15,8 +15,8 @@
   ],
   "scripts": {
     "build-storybook": "npm run build -w @dhcw/sr-tokens && npm run build-storybook -w @dhcw/sr-storybook",
-    "build:pages": "npm run build -w @dhcw/sr-tokens && npm run build -w @dhcw/sr-website && npm run build-storybook -w @dhcw/sr-storybook && node scripts/assemble-pages.mjs",
-    "build:site": "npm run build -w @dhcw/sr-tokens && npm run build -w @dhcw/sr-website",
+    "build:pages": "npm run build -w @dhcw/sr-tokens && npm run build -w @dhcw/sr-web && npm run build -w @dhcw/sr-website && npm run build-storybook -w @dhcw/sr-storybook && node scripts/assemble-pages.mjs",
+    "build:site": "npm run build -w @dhcw/sr-tokens && npm run build -w @dhcw/sr-web && npm run build -w @dhcw/sr-website",
     "build:tokens": "npm run build -w @dhcw/sr-tokens && node scripts/sync-token-docs.mjs",
     "check:docs": "node scripts/sync-token-docs.mjs --check",
     "storybook": "npm run storybook -w @dhcw/sr-storybook",
@@ -24,6 +24,7 @@
     "dev:prototype": "npm run dev -w @dhcw/case-note-tracking-prototype",
     "check:type": "node scripts/check-typography.mjs --baseline",
     "check:ds": "node scripts/check-design-system.mjs --baseline",
-    "check": "npm run check:type && npm run check:ds"
+    "check": "npm run check:type && npm run check:ds",
+    "build:web": "npm run build -w @dhcw/sr-tokens && npm run build -w @dhcw/sr-web"
   }
 }

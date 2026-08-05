@@ -1,0 +1,70 @@
+/**
+ * DHCW Single Record — Breadcrumbs
+ * Reference HTML/CSS implementation, matched to the Figma Breadcrumbs set
+ * (1307:19303, Device=Desktop, Levels=Four). Consumes @dhcw/sr-tokens
+ * CSS custom properties.
+ *
+ * Two types, both in that set:
+ *   Multilevel (default) — ordered list of links separated by "/", the last
+ *     (current page) item rendered as plain text with aria-current="page".
+ *   Back (.sr-breadcrumbs--back) — a single chevron-left link back to the
+ *     immediate parent, for narrow screens and deep hierarchies where the full
+ *     trail would wrap. It names the destination ("Back to level three"), never
+ *     just "Back", so it does not depend on browser history.
+ */
+
+.sr-breadcrumbs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sr-breadcrumbs__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.sr-breadcrumbs__link {
+  color: var(--sr-color-interactive-link);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  text-decoration: underline;
+}
+.sr-breadcrumbs__link:hover {
+  color: var(--sr-color-interactive-primary);
+}
+.sr-breadcrumbs__link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--color-cyan-700);
+}
+
+.sr-breadcrumbs__separator {
+  color: var(--sr-color-text-secondary);
+  font: var(--sr-type-body-m-font);
+  letter-spacing: var(--sr-type-body-m-letter-spacing);
+}
+
+.sr-breadcrumbs__current {
+  color: var(--sr-color-text-secondary);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+}
+
+/* ---------- Type=Back ----------
+   One link, a chevron and a destination. The chevron is decorative — the link
+   text carries the meaning — so it is hidden from assistive technology. */
+.sr-breadcrumbs--back .sr-breadcrumbs__item {
+  gap: var(--space-1);
+}
+
+/* Pairs with `sr-icon sr-icon--sm` from the icons package, which sets the box;
+   this only adds the colour and stops it shrinking beside a long label. */
+.sr-breadcrumbs__back-icon {
+  flex: 0 0 auto;
+  color: var(--sr-color-text-secondary);
+}

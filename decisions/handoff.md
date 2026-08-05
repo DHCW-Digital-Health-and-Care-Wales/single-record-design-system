@@ -5,6 +5,92 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-08-04e (sidebar 248px; the web package now ships files)
+
+### Sidebar reconciled to 248px
+
+Closed the open question that had been sitting in
+`components/navigation/guidelines.md`. The component shipped at 220px while
+`foundations/grid-and-layout.md` derived its EPR content zones from 248px — the
+width the Figma grid frame and the Figma nav item block (`665:21099`) are both
+drawn at. Both moved together, in one change:
+
+| | Was | Now |
+|---|---|---|
+| `.sr-nav` width | 220px | **248px** |
+| EPR content zone @ 1440 | 1220px | **1192px** |
+| EPR content zone @ 1280 | 1060px | **1032px** |
+
+"Appointments" no longer truncates when a row carries both a badge and a
+chevron — that 4px was the symptom that surfaced the discrepancy. Prototype
+re-checked at 1280 and 1440: no overflow, layout unaffected.
+
+### "CSS/JS files needed for the web assets" — Morgan Rowe
+
+The feedback was correct and the diagnosis is worth recording, because the gap
+was invisible from inside the repo.
+
+**What was wrong.** A developer could read a component's source in the
+prototype's Code panel, but there was nothing to *install*. `packages/web`
+shipped 21 separate component stylesheets and a `package.json` whose `main`
+pointed at `src/index.css` — **a file that did not exist**. Nothing is published
+to npm. So the honest answer to "where are the CSS and JS files?" was "there
+aren't any".
+
+(The React `src/` is not empty — 48 files are committed. Anyone seeing it empty
+was looking at a different branch or at the DHCW mirror before a sync.)
+
+**What now exists.** `npm run build:web` writes `packages/web/dist/`:
+
+| File | For |
+|---|---|
+| `single-record.css` | Everything, flattened: font, tokens, typography utilities, all 21 components. One `<link>`, no tooling. |
+| `single-record-dark.css` | Dark-mode token overrides, opt-in, loaded second. |
+| `icons.js` | Icon set as an ES module. |
+| `sprite.svg` | Icon set as an SVG sprite, for consumers with no JS build step. |
+| `components/*.css` | One component at a time. |
+
+Concatenation and file copies only — no bundler, so no new dependency and no
+DDR. The component list is read from the directory rather than hand-maintained,
+so a new component cannot be added and left out of the bundle. `dist/` is
+committed, like the token and icon builds, so the files can be taken straight
+from GitHub.
+
+The site serves the same files from a new **Get the files** page under Get
+Started, and the website build now *fails* if `packages/web/dist` is missing
+rather than publishing dead links. `build:site` and `build:pages` run
+`build:web` first.
+
+**Two real bugs found by actually consuming the output:**
+
+- `packages/web/package.json` `main` pointed at a non-existent file. Fixed, and
+  `src/index.css` now exists as an `@import` manifest for bundler consumers.
+- Sprite `<symbol>`s carried only a `viewBox`. These icons are stroke-drawn
+  outlines, so a `<use>` reference inherited the SVG defaults (fill black, no
+  stroke) and rendered *nothing*. The presentation attributes now live on the
+  symbol. Verified by building a page from the dist files alone and serving it
+  over HTTP.
+
+**Verify it the same way next time:** copy `dist/single-record.css` and
+`dist/sprite.svg` into an empty folder, write a plain HTML page against them,
+and serve it over HTTP (not `file://` — a cross-file `<use>` is blocked there
+and fails silently). If it renders, a consumer can use it.
+
+### Open for you
+
+1. **npm publishing is still not done**, and it is a decision, not a task: it
+   fixes the package names, the registry (public npm vs an Azure Artifacts
+   feed) and the update path for everyone downstream. Worth a DDR. Until then
+   the download page and `npm install github:...` are the supported routes.
+2. **React has no pre-built browser file.** It is JSX source, so consumers need
+   a bundler that compiles JSX. Fine for the React products; worth revisiting
+   only if a consumer without a build step needs it. Blazor is the path for
+   Single Record products anyway.
+3. `dist/` is committed, so it will show up in diffs on any CSS change. That is
+   the cost of letting people download without building.
+
+---
+
 ## Checkpoint — 2026-08-04d (one page width; navigation previews; rail overflow)
 
 ### One page shape, and it is wider

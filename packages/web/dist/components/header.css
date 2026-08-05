@@ -1,0 +1,344 @@
+/**
+ * DHCW Single Record — Header
+ * Reference HTML/CSS implementation, matched to the Figma Header bar set
+ * (475:19980, Type=Desktop 1). Consumes @dhcw/sr-tokens CSS custom properties.
+ *
+ * Anatomy:
+ *   .sr-header              — wrapper (utility bar + main bar)
+ *     .sr-header__utility     — top strip: "Report an issue" + language toggle
+ *     .sr-header__main        — logo + search + notification + avatar
+ *
+ * Note: the "Cymraeg" utility link carries a leading globe icon
+ * (location/language, from the Figma icon set 2962:53479).
+ */
+
+.sr-header {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: var(--sr-color-surface-section-cards);
+}
+
+/* ---------- Utility bar ---------- */
+.sr-header__utility {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-1);
+  height: 40px;
+  padding: var(--space-4) var(--space-10);
+  box-sizing: border-box;
+}
+
+.sr-header__utility-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  height: 32px;
+  padding: var(--space-1) var(--space-4);
+  border: none;
+  background: transparent;
+  color: var(--sr-color-interactive-primary);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+.sr-header__utility-link:hover {
+  text-decoration: underline;
+}
+.sr-header__utility-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+}
+.sr-header__utility-icon svg {
+  width: 100%;
+  height: 100%;
+}
+.sr-header__utility-link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--color-cyan-700);
+}
+
+/* ---------- Main bar ---------- */
+.sr-header__main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  padding: var(--space-4) var(--space-10);
+  box-sizing: border-box;
+  border-bottom: 1px solid var(--sr-color-border-default);
+}
+
+.sr-header__logo img {
+  display: block;
+  height: 48px;
+  width: auto;
+}
+
+/* ---------- Search (compact header instance) ---------- */
+.sr-header__search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 240px;
+  height: 40px;
+  box-sizing: border-box;
+  padding: 0 var(--space-3);
+  background-color: var(--sr-color-surface-section-cards);
+  border: 1px solid var(--sr-color-border-default);
+  border-radius: var(--radius-md);
+}
+.sr-header__search-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  color: var(--sr-color-text-secondary);
+}
+.sr-header__search-icon svg {
+  width: 100%;
+  height: 100%;
+}
+.sr-header__search-input {
+  flex: 1 1 0;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+  color: var(--sr-color-text-primary);
+}
+.sr-header__search-input::placeholder {
+  color: var(--sr-color-text-secondary);
+}
+.sr-header__search-input:focus {
+  outline: none;
+}
+.sr-header__search:focus-within {
+  border-color: var(--sr-color-interactive-primary);
+}
+
+/* ---------- Actions (notification + avatar) ---------- */
+.sr-header__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-1);
+}
+
+.sr-header__notification {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--sr-color-text-secondary);
+  cursor: pointer;
+}
+.sr-header__notification:hover {
+  background-color: var(--sr-color-surface-subtle);
+  color: var(--sr-color-text-primary);
+}
+.sr-header__notification:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--color-cyan-700);
+}
+.sr-header__notification svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ---------- Avatar (Initials, SM) ---------- */
+.sr-header__avatar {
+  position: relative;
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background-color: var(--sr-color-interactive-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.sr-header__avatar-initials {
+  color: var(--sr-color-text-inverse);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+}
+.sr-header__avatar-status {
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background-color: var(--sr-color-status-success);
+  border: 1.5px solid var(--sr-color-surface-section-cards);
+}
+
+/* ---------- Desktop 2 (single bar: search + org + language) ---------- */
+/* No logo — this variant pairs with the sidebar Navigation, which carries the
+ * brand lockup. Figma Header bar Type=Desktop 2 (815:20262).
+ *
+ * 64px, matching the sidebar's own header/logo block, so the two bottom rules
+ * form one continuous line across the top of the app. */
+.sr-header--bar .sr-header__main {
+  height: 64px;
+  border-bottom: none;
+  border: 1px solid var(--sr-color-border-default);
+  /* Search sits with the utility cluster on the right rather than being
+     pushed to the far left by space-between — they read as one group. */
+  justify-content: flex-end;
+  gap: var(--space-4);
+}
+/* The bar variant has no logo competing for width, so the search can hold its
+   full placeholder rather than truncating it. */
+.sr-header--bar .sr-header__search {
+  width: 280px;
+}
+.sr-header__cluster {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.sr-header__org,
+.sr-header__lang {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  height: 36px;
+  padding: 0 var(--space-3);
+  border: none;
+  border-right: 1px solid var(--sr-color-border-subtle);
+  background: transparent;
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.sr-header__org {
+  color: var(--sr-color-text-secondary);
+}
+.sr-header__lang {
+  color: var(--sr-color-interactive-primary);
+}
+.sr-header__org svg,
+.sr-header__lang svg {
+  width: 16px;
+  height: 16px;
+}
+.sr-header__org:hover,
+.sr-header__lang:hover {
+  text-decoration: none;
+  color: var(--sr-color-text-primary);
+}
+.sr-header__org:focus-visible,
+.sr-header__lang:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sr-color-border-focus);
+}
+
+/* ---------- Hamburger (mobile) ---------- */
+.sr-header__menu {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--sr-color-text-primary);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+.sr-header__menu:hover {
+  background-color: var(--sr-color-surface-subtle);
+}
+.sr-header__menu:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--color-cyan-700);
+}
+.sr-header__menu svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ---------- Mobile variants (Figma Type=Mobile 1 / Mobile 2) ---------- */
+/* Single compact bar: no utility strip, no inline search. The logo uses the
+ * symbol mark. Mobile 1 centres the logo with a leading hamburger; Mobile 2
+ * left-aligns the logo with no hamburger. */
+.sr-header--mobile .sr-header__utility,
+.sr-header--mobile .sr-header__search {
+  display: none;
+}
+.sr-header--mobile .sr-header__main {
+  height: 56px;
+  padding: var(--space-3) var(--space-4);
+  gap: var(--space-3);
+}
+.sr-header--mobile .sr-header__logo {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.sr-header--mobile .sr-header__logo img {
+  height: 32px;
+}
+/* Mobile 1 — centred logo between the hamburger and the actions. */
+.sr-header--mobile.sr-header--centered .sr-header__logo {
+  display: flex;
+  justify-content: center;
+}
+
+/* ---------- Responsive ----------
+   Breakpoints are the design system's (foundations/grid-and-layout.md):
+   Tablet 768, Desktop 1024. Media queries cannot read var(), so the values
+   are literal here. */
+
+/* Below Desktop: the desktop-2 bar's 40px side padding and 280px fixed search
+   are sized for a 1280px frame. Let the search flex instead so the bar fits. */
+@media (max-width: 1023px) {
+  .sr-header__main {
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+  }
+  .sr-header--bar .sr-header__search {
+    width: auto;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}
+
+/* Below Tablet: the org name and "Cymraeg" label are the first things to go —
+   the language toggle keeps its globe icon, which is the recognisable part,
+   and the org switcher is not present on this variant anyway. A fixed-width
+   search would otherwise push the avatar off-screen. */
+@media (max-width: 767px) {
+  .sr-header__main {
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
+    gap: var(--space-2);
+  }
+  /* :not(.sr-icon) matters — <Icon> renders a <span>, so a bare `span`
+     selector hides the globe as well as the word, leaving an empty button. */
+  .sr-header--bar .sr-header__org > span:not(.sr-icon),
+  .sr-header--bar .sr-header__lang > span:not(.sr-icon) {
+    display: none;
+  }
+  .sr-header--bar .sr-header__org,
+  .sr-header--bar .sr-header__lang {
+    padding: 0 var(--space-2);
+  }
+}

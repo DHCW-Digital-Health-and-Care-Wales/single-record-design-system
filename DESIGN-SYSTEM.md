@@ -363,6 +363,37 @@ Checkbox. A group whose name is already given by the surrounding copy still
 needs a legend for screen readers; the alternative in use was dropping the
 legend, which leaves an unnamed fieldset.
 
+**The web package now ships files, not just source.** A developer adopting the
+system needs something to put in an application, and until now this package
+offered 21 separate component stylesheets and a `main` field pointing at an
+`index.css` that did not exist — so the honest answer to "where are the CSS and
+JS files?" was "there aren't any". `npm run build:web` now writes
+`packages/web/dist/`: one flattened `single-record.css` (font + tokens +
+typography + every component), an opt-in `single-record-dark.css`, `icons.js`,
+`sprite.svg`, and the individual component stylesheets. Concatenation and file
+copies only — no bundler, so no new dependency and no DDR needed. The website
+serves the same files from its **Get the files** page, and its build fails if
+`dist/` is missing rather than publishing a page of dead links.
+
+The component list is read from the directory, not hand-maintained, so a new
+component cannot be added to the repo and left out of the bundle — the failure
+that produces "it works on the website but not in my app".
+
+**Sprite symbols carry their own presentation attributes.** The generated
+`<symbol>`s had only a `viewBox`, so a `<use>` reference inherited the SVG
+defaults (fill black, no stroke) and these stroke-drawn outlines rendered as
+nothing. The attributes now live on the symbol, which is what makes a bare
+`<svg><use href="sprite.svg#icon-nav-search"></use></svg>` work for a consumer
+with no JavaScript build step.
+
+**Navigation is 248px, and so is the grid.** The component had shipped at 220px
+while `foundations/grid-and-layout.md` derived its EPR content zones from
+248px — the width the Figma grid frame and the Figma nav item block
+(`665:21099`) are both drawn at. Reconciled on both sides together: the
+component is 248px and the EPR content zones are 1192px at 1440 and 1032px at
+1280. 220px was also 4px too narrow for a row carrying both a badge and a
+chevron, which is what surfaced it.
+
 See `/components/README.md` for the full catalogue and contribution guidance, and
 the live catalogue in Storybook for every variant.
 

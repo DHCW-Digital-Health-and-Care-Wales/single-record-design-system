@@ -1,0 +1,49 @@
+/**
+ * DHCW Single Record — Time select
+ * Constrained time entry as a native <select> of slots (DDR-012 — no wheel /
+ * spinner picker). For free time entry use Input type="time" instead.
+ * Consumes @dhcw/sr-tokens.
+ */
+
+.sr-time-select {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.sr-time-select__label {
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+  color: var(--sr-color-text-primary);
+}
+
+.sr-time-select__control {
+  /* Cap, not a fixed size — see the same note on .sr-datepicker__field. */
+  width: 100%;
+  max-width: 140px;
+  height: 40px;
+  box-sizing: border-box;
+  padding: 0 var(--space-3);
+  background-color: var(--sr-color-surface-section-cards);
+  border: 1px solid var(--sr-color-border-default);
+  border-radius: var(--radius-sm);
+  color: var(--sr-color-text-primary);
+  font: inherit;
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+}
+.sr-time-select__control:focus {
+  outline: none;
+  border-color: var(--sr-color-border-focus);
+  box-shadow: inset 0 0 0 1px var(--sr-color-border-focus);
+}
+.sr-time-select--error .sr-time-select__control {
+  border-color: var(--sr-color-status-critical);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-critical);
+}
+.sr-time-select__control:disabled {
+  background-color: var(--sr-color-surface-subtle);
+  border-color: var(--sr-color-border-disabled);
+  color: var(--sr-color-text-disabled);
+  cursor: not-allowed;
+}

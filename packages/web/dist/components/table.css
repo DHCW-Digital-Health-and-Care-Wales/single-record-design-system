@@ -1,0 +1,257 @@
+/**
+ * DHCW Single Record — Data table
+ * Reference HTML/CSS implementation for tabular clinical/administrative data.
+ * Matched to the Figma Table set (1363:22598). Consumes @dhcw/sr-tokens.
+ *
+ * Styling (from Figma):
+ *   Header row — Info Blue/50 fill, 36px, Label type (Roboto Medium 14/20,
+ *                letter-spacing wide), Text/Primary.
+ *   Body cell  — 40px, Body S (Roboto Regular 14/20), Text/Secondary,
+ *                Border/Subtle bottom divider.
+ *
+ * Layouts (`.sr-table--{layout}` — the Storybook "layout" toggle):
+ *   plain        — column headers only.
+ *   kebab-left   — leading column of kebab (nav/menu2) row-menu buttons.
+ *   icons-left   — leading column of direct row-action icon buttons.
+ *   row-headers  — column headers on top AND a row-header cell down the left.
+ *
+ * Row action / menu icons render in Interactive/Primary (brand blue), NOT the
+ * default black icon colour — a row action is an interactive affordance.
+ * Destructive actions (delete/remove) opt into red. See spec.md.
+ */
+
+.sr-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  /* `overflow-x: auto` scrolls the table but does not, on its own, stop a
+     table wider than the wrapper from extending the page's own horizontal
+     scroll — the wrapper scrolls AND the whole page scrolls behind it.
+     Paint containment is what actually holds the table inside this box. It
+     changes nothing visually (a scroll container already clips its content),
+     and without it every consumer has to wrap the table in a second
+     `overflow-x: auto` ancestor to get the containment this element exists
+     to provide. Verified at 390px: without it the page scrolls 72px. */
+  contain: paint;
+}
+
+.sr-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: var(--radius-none, 0); /* data grids are full-bleed */
+  background-color: var(--sr-color-surface-section-cards);
+}
+
+/* ---------- Caption ----------
+   A caption names the table for screen-reader users. Styled rather than left at
+   the browser default (centred, inherited serif). Where the surrounding page
+   already names the table — a patient banner above a notes list, say — keep the
+   caption and hide it visually with .sr-visually-hidden rather than dropping it. */
+.sr-table caption {
+  caption-side: top;
+  text-align: left;
+  padding: 0 var(--space-2) var(--space-2);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+  color: var(--sr-color-text-primary);
+}
+
+/* ---------- Header ---------- */
+.sr-table__head th,
+.sr-table th.sr-table__rowhead {
+  height: 36px;
+  text-align: left;
+  vertical-align: middle;
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+  color: var(--sr-color-text-primary);
+  background-color: var(--color-info-blue-50);
+  padding: var(--space-2); /* 8px */
+  white-space: nowrap;
+}
+.sr-table__head th.sr-table__head--numeric {
+  text-align: right;
+}
+.sr-table__head th.sr-table__head--actions {
+  width: 57px;
+  text-align: center;
+}
+
+/* Row-header cell (left column of the row-headers layout) — 40px like a body row. */
+.sr-table th.sr-table__rowhead {
+  height: 40px;
+  border-bottom: 1px solid var(--sr-color-border-subtle);
+}
+
+/* Accessible label with no visual footprint (e.g. the actions column header). */
+.sr-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- Body ---------- */
+.sr-table__cell {
+  height: 40px;
+  padding: var(--space-2); /* 8px */
+  border-bottom: 1px solid var(--sr-color-border-subtle);
+  vertical-align: middle;
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+  color: var(--sr-color-text-secondary);
+}
+.sr-table__cell--numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.sr-table__row:hover .sr-table__cell,
+.sr-table__row:hover .sr-table__actions {
+  background-color: var(--sr-color-surface-subtle);
+}
+.sr-table__row--selected .sr-table__cell,
+.sr-table__row--selected .sr-table__actions {
+  background-color: var(--sr-color-surface-accent);
+}
+.sr-table__row:last-child .sr-table__cell,
+.sr-table__row:last-child .sr-table__actions,
+.sr-table__row:last-child .sr-table__rowhead {
+  border-bottom: none;
+}
+
+/* ---------- Selection column ----------
+   Figma building block "Row - Check" (1122:14467): a 36px column holding a
+   20px checkbox — 8px padding either side. The checkbox itself comes from
+   packages/web/src/checkbox; use the `--bare` modifier so the box carries no
+   label, and name it with aria-label on the input. */
+.sr-table__select {
+  width: 36px;
+  padding: 0 var(--space-2);
+  text-align: center;
+  vertical-align: middle;
+}
+td.sr-table__select {
+  border-bottom: 1px solid var(--sr-color-border-subtle);
+}
+.sr-table__head th.sr-table__select {
+  height: 36px;
+  background-color: var(--color-info-blue-50);
+}
+.sr-table__select .sr-checkbox {
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+/* ---------- Sortable column header ----------
+   Figma building block "Sortable header" (1122:14466). The header cell keeps
+   aria-sort; the button inside it is what the user activates, so the sort
+   control is reachable and named without making the whole cell interactive. */
+.sr-table__sort {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+.sr-table__sort:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--sr-color-border-focus);
+}
+.sr-table__sort-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  /* Unsorted is a quieter affordance than an applied sort. */
+  color: var(--sr-color-text-secondary);
+}
+.sr-table__sort-icon svg { width: 100%; height: 100%; }
+
+.sr-table__head th[aria-sort="ascending"] .sr-table__sort-icon,
+.sr-table__head th[aria-sort="descending"] .sr-table__sort-icon {
+  color: var(--sr-color-interactive-primary);
+}
+
+/* ---------- Sticky header (opt-in) ----------
+   For long scrolling lists, so column headers stay visible. Opt-in because it
+   only behaves correctly when the table scrolls inside a bounded container. */
+.sr-table--sticky-head .sr-table__head th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* ---------- Row actions (leading or trailing icon cell) ---------- */
+.sr-table__actions {
+  padding: var(--space-3) var(--space-2); /* 12px 8px */
+  border-bottom: 1px solid var(--sr-color-border-subtle);
+  white-space: nowrap;
+  text-align: center;
+}
+.sr-table__actions--trailing {
+  text-align: right;
+}
+
+.sr-table__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;   /* sr.touch.compact — dense in-table secondary action */
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-md); /* 4px */
+  background-color: transparent;
+  /* Interactive blue — the icon (stroke=currentColor) inherits this, so row
+     action / menu icons are brand blue, never black. */
+  color: var(--sr-color-interactive-primary);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.sr-table__action svg,
+.sr-table__action .sr-button__icon {
+  width: 20px;
+  height: 20px;
+}
+.sr-table__action .sr-button__icon svg {
+  width: 100%;
+  height: 100%;
+}
+.sr-table__action:hover {
+  background-color: var(--sr-color-surface-accent);
+  color: var(--sr-color-interactive-primary-hover);
+}
+.sr-table__action:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--sr-color-surface-section-cards),
+    0 0 0 4px var(--color-cyan-700);
+}
+.sr-table__action:disabled,
+.sr-table__action[aria-disabled="true"] {
+  color: var(--sr-color-text-disabled);
+  cursor: not-allowed;
+}
+
+/* Destructive row action (delete/remove) — red, not blue. */
+.sr-table__action--destructive {
+  color: var(--sr-color-interactive-destructive);
+}
+.sr-table__action--destructive:hover {
+  background-color: var(--sr-color-status-critical-surface, var(--sr-color-surface-subtle));
+  color: var(--color-red-700);
+}
