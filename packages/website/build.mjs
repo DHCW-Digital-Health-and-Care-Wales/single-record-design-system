@@ -2740,15 +2740,35 @@ loose script you have to wire up:</p>
   MAUI renders too.</li>
 </ul>
 
-<h2>If you use npm</h2>
-<p>The packages are not published to a registry yet, so <code>npm install @dhcw/sr-web</code> will
-not resolve. Until they are, take the file above, or install straight from the repository:</p>
-<div class="codepanel"><pre><code>npm install github:Chuk-DCHW/dhcw-single-record-design-system#main --workspace-root
-# or, in a checkout of the repo:
-npm install
+<h2>Two ways to get the files</h2>
+<p>The packages are not published to npm yet — that is a naming and governance decision with its
+own record (DDR-020), not something to slip in. Until it lands, there are two supported routes, and
+both stay supported afterwards: publishing adds a route, it does not remove one.</p>
+
+<h3>Route 1: Download (no build step)</h3>
+<p>Take <a href="downloads/single-record.css" download>single-record.css</a> and
+<a href="downloads/sprite.svg" download>sprite.svg</a> from the table above and link them directly.
+This is the route for plain HTML, Razor, or anywhere with no npm install at all.</p>
+
+<h3>Route 2: npm, installed straight from GitHub</h3>
+<p>For a React, Node or bundler-based project. This installs from the
+<strong>DHCW org repository</strong> — the public source of truth — not a personal fork:</p>
+<div class="codepanel"><pre><code>npm install github:DHCW-Digital-Health-and-Care-Wales/single-record-design-system#main</code></pre></div>
+<p>Then import what you need, same as any npm package:</p>
+${codePanel('get-files-npm-import', {
+  HTML: '<!-- Route 1 (download) is the equivalent for plain HTML — see above. -->',
+  React: 'import { Button } from "@dhcw/sr-react";\nimport "@dhcw/sr-web/dist/single-record.css";',
+  Blazor: '<!-- The Blazor Razor Class Library is distributed via NuGet, not npm. See DDR-020. -->',
+  MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. See DDR-020. -->',
+})}
+<p>Working in a checkout of the repository itself (rather than as a dependency)? Clone
+<a href="https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system" target="_blank" rel="noopener">the org repo</a>, then:</p>
+<div class="codepanel"><pre><code>npm install
 npm run build:web    # writes packages/web/dist/</code></pre></div>
-<p>Publishing to a registry is a decision with a decision record attached, not something to slip in
-— it fixes the package names and the update path for everyone downstream.</p>`,
+
+<div class="callout"><p>The package name and its contents are the same either way — installing from
+GitHub today and from npm once it is published are the same package at the same version. Only the
+install command changes.</p></div>`,
 });
 
 const FIGMA_LIBRARY_URL = 'https://www.figma.com/design/x5fwyefxxgD03csz8ld7SZ/SINGLE-RECORD-DESIGN-SYSTEM?node-id=1307-16983&t=eafR64jJMZD5ez6T-1';
