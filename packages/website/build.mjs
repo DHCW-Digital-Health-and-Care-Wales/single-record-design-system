@@ -479,6 +479,7 @@ const SECTIONS = [
       { href: 'components/button.html', label: 'Buttons' },
       { href: 'components/footer.html', label: 'Footer' },
       { href: 'components/header.html', label: 'Header' },
+      { href: 'components/input.html', label: 'Input' },
       { href: 'components/navigation.html', label: 'Navigation' },
       { href: 'components/table.html', label: 'Tables' },
       { href: 'components/toggles.html', label: 'Toggles' },
@@ -1970,6 +1971,137 @@ ${accessibilityTable([
   ])}`;
 }
 
+// ─── Components: Input ────────────────────────────────────────────────────────
+/**
+ * Input (Figma 1363:22921 / component set 840:14593). Six types share one
+ * label/hint/field/error anatomy: Text, Password, Phone number, Date, Time,
+ * Textarea. States are real — :focus-within, the disabled attribute, an
+ * aria-invalid error — not classes standing in for interaction, so the
+ * markup here is the same shape Input.jsx renders.
+ */
+function inputBody() {
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'input', 'guidelines.md'), 'utf8')));
+
+  const field = ({ type = 'text', label, hint, value, placeholder, error, disabled, trailing, textarea }) => {
+    const id = `input-demo-${Math.random().toString(36).slice(2, 8)}`;
+    const classes = ['sr-input', error ? 'sr-input--error' : '', disabled ? 'sr-input--disabled' : ''].filter(Boolean).join(' ');
+    const describedBy = hint ? ` aria-describedby="${id}-hint"` : error ? ` aria-describedby="${id}-error"` : '';
+    const control = textarea
+      ? `<textarea id="${id}" class="sr-input__control"${placeholder ? ` placeholder="${placeholder}"` : ''}${disabled ? ' disabled' : ''}${describedBy}>${value || ''}</textarea>`
+      : `<input id="${id}" type="${type}" class="sr-input__control"${value ? ` value="${value}"` : ''}${placeholder ? ` placeholder="${placeholder}"` : ''}${disabled ? ' disabled' : ''}${error ? ' aria-invalid="true"' : ''}${describedBy}>`;
+    return `<div class="${classes}">
+  <label class="sr-input__label" for="${id}">${label}</label>
+  ${hint ? `<span class="sr-input__hint" id="${id}-hint">${hint}</span>` : ''}
+  <div class="sr-input__field${textarea ? ' sr-input__field--textarea' : ''}">
+    ${control}
+    ${trailing || ''}
+  </div>
+  ${error ? `<span class="sr-input__error" id="${id}-error">${error}</span>` : ''}
+</div>`;
+  };
+
+  const passwordToggle = `<button type="button" class="sr-input__toggle" aria-label="Show password"><span class="sr-icon sr-icon--sm sr-icon--inherit">${iconMarkup('action/eye')}</span></button>`;
+
+  const textDemo = field({ label: 'Field label', placeholder: 'Enter value' });
+  const textSnippets = {
+    HTML: '<label class="sr-input__label" for="patient-name">Field label</label>\n<div class="sr-input__field">\n  <input id="patient-name" type="text" class="sr-input__control" placeholder="Enter value">\n</div>',
+    React: '<Input label="Field label" placeholder="Enter value" />\n// value, onChange, maxLength, name — any native <input> prop — pass\n// straight through: Input forwards what it does not recognise.',
+    Blazor: '<SrInput Label="Field label" Placeholder="Enter value" @bind-Value="value" />',
+    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrInput Label="Field label" Placeholder="Enter value" @bind-Value="value" />',
+  };
+
+  const states = `<div style="display:flex;flex-direction:column;gap:16px;max-width:320px">
+${field({ label: 'Field label', placeholder: 'Enter value' })}
+${field({ label: 'Field label', value: 'Patient name' })}
+${field({ label: 'Field label', value: 'Invalid entry', error: 'Enter a valid value' })}
+${field({ label: 'Field label', placeholder: 'Enter value', disabled: true })}
+</div>`;
+
+  const passwordDemo = field({ type: 'password', label: 'Password', value: '••••••••', hint: 'Must be 8 or more characters', trailing: passwordToggle });
+  const passwordSnippets = {
+    HTML: '<label class="sr-input__label" for="password">Password</label>\n<span class="sr-input__hint" id="password-hint">Must be 8 or more characters</span>\n<div class="sr-input__field">\n  <input id="password" type="password" class="sr-input__control" aria-describedby="password-hint">\n  <button type="button" class="sr-input__toggle" aria-label="Show password">…</button>\n</div>',
+    React: '<Input type="password" label="Password" hint="Must be 8 or more characters" />',
+    Blazor: '<SrInput Type="InputType.Password" Label="Password" Hint="Must be 8 or more characters" @bind-Value="value" />',
+    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrInput Type="InputType.Password" Label="Password" @bind-Value="value" />',
+  };
+
+  const phoneDemo = field({ type: 'tel', label: 'Phone number', placeholder: 'e.g. 07700 900000' });
+  const phoneSnippets = {
+    HTML: '<label class="sr-input__label" for="phone">Phone number</label>\n<div class="sr-input__field">\n  <input id="phone" type="tel" class="sr-input__control" placeholder="e.g. 07700 900000">\n</div>',
+    React: '<Input type="phone" label="Phone number" placeholder="e.g. 07700 900000" />',
+    Blazor: '<SrInput Type="InputType.Phone" Label="Phone number" Placeholder="e.g. 07700 900000" @bind-Value="value" />',
+    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrInput Type="InputType.Phone" Label="Phone number" @bind-Value="value" />',
+  };
+
+  const dateTimeDemo = `<div style="display:flex;gap:16px;flex-wrap:wrap">
+  ${field({ label: 'Date', placeholder: 'Add Date', trailing: `<span class="sr-input__icon">${iconMarkup('schedule/appointment')}</span>` })}
+  ${field({ label: 'Time', placeholder: 'Add Time', trailing: `<span class="sr-input__trailing"><a href="#" class="link-action">Set now</a></span>` })}
+</div>`;
+  const dateTimeSnippets = {
+    HTML: '<!-- Date and Time delegate to DatePicker / TimeSelect behind the same label/hint/error scaffold. -->',
+    React: '<Input type="calendar" label="Date" />\n<Input type="time" label="Time" />',
+    Blazor: '<SrInput Type="InputType.Calendar" Label="Date" @bind-Value="date" />\n<SrInput Type="InputType.Time" Label="Time" @bind-Value="time" />',
+    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrInput Type="InputType.Calendar" Label="Date" @bind-Value="date" />',
+  };
+
+  const textareaDemo = field({ label: 'Field label', placeholder: 'Enter value', textarea: true, hint: undefined });
+  const textareaSnippets = {
+    HTML: '<label class="sr-input__label" for="notes">Field label</label>\n<div class="sr-input__field sr-input__field--textarea">\n  <textarea id="notes" class="sr-input__control" placeholder="Enter value"></textarea>\n</div>',
+    React: '<Input type="textarea" label="Field label" placeholder="Enter value" />',
+    Blazor: '<SrInput Type="InputType.Textarea" Label="Field label" @bind-Value="value" />',
+    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrInput Type="InputType.Textarea" Label="Field label" @bind-Value="value" />',
+  };
+
+  return `
+<p class="breadcrumbs">Components</p>
+<h1>Input</h1>
+<p class="lede">A single-line or multi-line text field: label, optional hint, the field
+itself, and an optional error message. Six types share one anatomy and one state machine.</p>
+
+<h2>Type: Text</h2>
+<p class="muted">The default single-line field.</p>
+${showcase(textDemo, 'input-text', textSnippets)}
+<p class="muted"><strong>States.</strong> Default, filled, error and disabled. Focus is real
+browser focus (<code>:focus-within</code>) and does not have a static preview here — tab into
+the field above to see it.</p>
+<div class="showcase"><div class="showcase__preview">${states}</div></div>
+
+<h2>Type: Password</h2>
+<p class="muted">Masked by default, with a trailing show/hide toggle that carries its own
+accessible name — never an icon alone.</p>
+${showcase(passwordDemo, 'input-password', passwordSnippets)}
+
+<h2>Type: Phone number</h2>
+<p class="muted">The placeholder shows the expected format. It is a guide, not an input mask —
+validation still runs on submit.</p>
+${showcase(phoneDemo, 'input-phone', phoneSnippets)}
+
+<h2>Type: Date and Time</h2>
+<p class="muted">Input in name only: these delegate to <code>DatePicker</code> and
+<code>TimeSelect</code> behind the same label/hint/error scaffold, so a consumer writes one
+component and gets the picker without composing it by hand. See DDR-012 for when the 3-field
+Date Input is the better fit.</p>
+${showcase(dateTimeDemo, 'input-datetime', dateTimeSnippets)}
+
+<h2>Type: Textarea</h2>
+<p class="muted">Multi-line, vertical resize only, 72px minimum height. Not for long-form
+clinical content — that belongs in a dedicated note-taking pattern.</p>
+${showcase(textareaDemo, 'input-textarea', textareaSnippets)}
+<div class="callout"><p><strong>Known gap.</strong> The Figma Textarea variant shows a character
+counter ("240 characters left"). The code does not implement one yet — there is no
+<code>maxLength</code> counter in <code>Input.jsx</code>. Flagged here rather than worked around.</p></div>
+<hr>
+${renderMarkdown(md)}
+${accessibilityTable([
+    { req: 'Label is programmatically associated', sc: '1.3.1, 4.1.2', how: 'A real <label for>, always present even when visually hidden via hideLabel. Never a placeholder standing in for a label.', test: 'Screen reader announce' },
+    { req: 'Hint and error are announced with the field', sc: '1.3.1', how: 'aria-describedby links the control to its hint and/or error text.', test: 'Screen reader announce' },
+    { req: 'Error state is exposed programmatically', sc: '4.1.2', how: 'aria-invalid="true" on the error state, not colour alone.', test: 'Screen reader announce, greyscale review' },
+    { req: 'Disabled fields are excluded from the tab order and submission', sc: '4.1.2', how: 'Native disabled attribute, not a visual-only style.', test: 'Keyboard tab, form submit' },
+    { req: 'Password reveal has an accessible name', sc: '4.1.2', how: 'aria-label states the action ("Show password" / "Hide password"), not just an eye icon.', test: 'Screen reader announce' },
+    { req: 'Focus visible', sc: '2.4.7', how: 'Inset SR cyan ring on the field border via :focus-within, with no layout shift.', test: 'Keyboard tab' },
+  ])}`;
+}
+
 // ─── Components: Navigation ──────────────────────────────────────────────────
 /**
  * Sidebar navigation (Figma 1307:16983). The component is `height: 100vh` and
@@ -2619,6 +2751,8 @@ npm run build:web    # writes packages/web/dist/</code></pre></div>
 — it fixes the package names and the update path for everyone downstream.</p>`,
 });
 
+const FIGMA_LIBRARY_URL = 'https://www.figma.com/design/x5fwyefxxgD03csz8ld7SZ/SINGLE-RECORD-DESIGN-SYSTEM?node-id=1307-16983&t=eafR64jJMZD5ez6T-1';
+
 addPage({
   file: 'figma.html', url: 'figma.html', title: 'Using figma', section: 'Get Started',
   sectionId: 'get-started', activeHref: 'figma.html', prefix: '',
@@ -2628,18 +2762,9 @@ addPage({
 <p class="lede">The Single Record Figma library is the canonical source for variables, components and
 usage notes. Its variables build to the same tokens this website consumes.</p>
 <div class="cards">
-  <a class="card" href="${STORYBOOK_URL}"><h3>Component catalogue</h3><p>Every reference component, rendered with all of its variants and controls.</p></a>
+  <a class="card" href="${FIGMA_LIBRARY_URL}" target="_blank" rel="noopener"><h3>Figma Design System file</h3><p>The canonical library: components, variables and usage notes, authored directly in Figma.</p></a>
+  <a class="card" href="${STORYBOOK_URL}"><h3>Using Storybook</h3><p>The interactive playground &mdash; every reference component, rendered with all of its variants and controls.</p></a>
 </div>
-<h2>Working with the library</h2>
-<ul>
-  <li>Design in Figma first, and document the component before it is built.</li>
-  <li>Use the existing icon components rather than pasting in vector shapes, so icons stay
-  consistent and can be restyled from tokens.</li>
-  <li>Bind colour, spacing and type to variables. A value typed in by hand will not survive a token
-  change.</li>
-  <li>Token names follow <code>{tier}.{category}.{variant}</code>, for example
-  <code>color.interactive.primary</code>.</li>
-</ul>
 <h2>Keeping design and code in step</h2>
 <p>Changes to variables in Figma flow into the published token artifact, and this site rebuilds from
 that artifact. If a value here does not match what you see in Figma, the token has not been
@@ -2730,6 +2855,11 @@ addPage({
   file: 'components/toggles.html', url: 'components/toggles.html', title: 'Toggles',
   section: 'Components', sectionId: 'components', activeHref: 'components/toggles.html',
   prefix: '../', body: togglesBody(),
+});
+addPage({
+  file: 'components/input.html', url: 'components/input.html', title: 'Input',
+  section: 'Components', sectionId: 'components', activeHref: 'components/input.html',
+  prefix: '../', body: inputBody(),
 });
 addPage({
   file: 'components/navigation.html', url: 'components/navigation.html', title: 'Navigation',

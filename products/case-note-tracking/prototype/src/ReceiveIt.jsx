@@ -29,15 +29,14 @@ import {
 } from './data.js';
 
 /**
- * Approve-and-send modal (Figma 279:22906).
- *
- * The gate between "I have assembled a batch" and "the notes have moved".
- * Every volume is listed with its own status and warning count; the primary
- * action is disabled until warnings are acknowledged, and its label carries
- * the count that will actually be sent — a batch of five where two are
- * unverified sends three, and the button says so rather than saying "Send".
+ * Approve-and-receive modal — the ReceiveIT counterpart of SendIT's
+ * ApproveBatchModal (Figma 279:22906). Same mechanism, receive-facing
+ * wording: the gate between "I have assembled a batch" and "the notes have
+ * been receipted in". Every volume is listed with its own status and warning
+ * count; the primary action is disabled until warnings are acknowledged, and
+ * its label carries the count that will actually be received.
  */
-function ApproveBatchModal({ open, rows, onClose, onSend }) {
+function ApproveReceiveModal({ open, rows, onClose, onReceive }) {
   const [acknowledged, setAcknowledged] = useState(false);
   const [openWarningsFor, setOpenWarningsFor] = useState(null);
   const [removed, setRemoved] = useState(() => new Set());
@@ -57,8 +56,8 @@ function ApproveBatchModal({ open, rows, onClose, onSend }) {
   const warningCount = withWarnings.reduce((n, r) => n + r.warnings.length, 0);
   const blocked = warningCount > 0 && !acknowledged;
   // A volume is verified when it has no warnings, or its warnings have been
-  // acknowledged. Only verified volumes are sent.
-  const sendable = live.filter((r) => r.warnings.length === 0 || acknowledged);
+  // acknowledged. Only verified volumes are received.
+  const receivable = live.filter((r) => r.warnings.length === 0 || acknowledged);
   const detail = live.find((r) => r.id === openWarningsFor);
 
   const columns = [
@@ -81,9 +80,9 @@ function ApproveBatchModal({ open, rows, onClose, onSend }) {
       key: 'warnings',
       header: 'Warnings',
       // Every row is clickable, not just the ones carrying warnings: the
-      // panel below has a "no warnings" state (Figma 445:8402), so clicking a
-      // clean row is a real answer — "this one is fine" — rather than a dead
-      // click that leaves the previous row's warnings on screen.
+      // panel below has a "no warnings" state, so clicking a clean row is a
+      // real answer — "this one is fine" — rather than a dead click that
+      // leaves the previous row's warnings on screen.
       render: (row) => {
         const has = row.warnings.length > 0;
         return (
@@ -109,7 +108,7 @@ function ApproveBatchModal({ open, rows, onClose, onSend }) {
     <Modal
       open={open}
       onClose={onClose}
-      title="Approve and send batch"
+      title="Approve and receive batch"
       size="large"
       footer={
         <>
@@ -132,17 +131,17 @@ function ApproveBatchModal({ open, rows, onClose, onSend }) {
           <Button type="secondary" onClick={onClose}>Cancel</Button>
           <Button
             type="primary"
-            disabled={blocked || sendable.length === 0}
-            onClick={() => onSend(sendable.map((r) => r.id))}
+            disabled={blocked || receivable.length === 0}
+            onClick={() => onReceive(receivable.map((r) => r.id))}
           >
-            Send verified ({sendable.length})
+            Receive verified ({receivable.length})
           </Button>
         </>
       }
     >
-      {/* Two variants, per Figma 445:8419: amber and leading with the
-          instruction while unacknowledged warnings block the send, green and
-          leading with the state once they are all acknowledged. */}
+      {/* Two variants: amber and leading with the instruction while
+          unacknowledged warnings block the receive, green and leading with
+          the state once they are all acknowledged. */}
       <div
         className={`send-banner${blocked ? ' send-banner--warning' : ' send-banner--success'}`}
         role="status"
@@ -160,7 +159,7 @@ function ApproveBatchModal({ open, rows, onClose, onSend }) {
               ? `Acknowledge warnings to continue - 0 errors, ${warningCount} ${
                   warningCount === 1 ? 'warning' : 'warnings'
                 } across all volumes.`
-              : `Ready to send - 0 errors, ${warningCount} ${
+              : `Ready to receive - 0 errors, ${warningCount} ${
                   warningCount === 1 ? 'warning' : 'warnings'
                 } across all volumes.${
                   warningCount > 0 ? ' All warnings acknowledged' : ''
@@ -186,9 +185,9 @@ function ApproveBatchModal({ open, rows, onClose, onSend }) {
         )}
       />
 
-      {/* Both states, per Figma 445:8402. The panel keeps its place whichever
-          row is selected, so choosing a clean row answers the question
-          instead of collapsing the panel and shifting everything under it. */}
+      {/* Both states. The panel keeps its place whichever row is selected,
+          so choosing a clean row answers the question instead of collapsing
+          the panel and shifting everything under it. */}
       {detail && (
         <div className="send-warnings" aria-live="polite">
           {detail.warnings.length > 0 ? (
@@ -218,15 +217,13 @@ function ApproveBatchModal({ open, rows, onClose, onSend }) {
 }
 
 /**
- * SendIT — batch send (Figma 192:4901 empty, 341:9165 search results,
- * 341:9673 volumes added, 279:22906 approval modal, 287:23848 sent).
- *
- * Two panels working as one task: find volumes on the left, build the batch on
- * the right, approve and send from the footer. The batch is only real once the
- * modal's Send is confirmed — everything before that is an editable list, which
- * is why rows sit at `Pending` until then.
+ * ReceiveIT — batch receive. A near-replica of SendIT (SendIt.jsx): same
+ * mechanism (find volumes on the left, build the batch on the right, approve
+ * from the footer), receive-facing wording throughout. SendIT is left
+ * untouched; this is the "ReceiveIT" nav entry's own screen, not a
+ * replacement.
  */
-export default function SendIt() {
+export default function ReceiveIt() {
   const [mode, setMode] = useState('new');
   const [recipient, setRecipient] = useState('howarth');
   const [location, setLocation] = useState('all');
@@ -250,7 +247,7 @@ export default function SendIt() {
   const [query, setQuery] = useState('');
   const [picked, setPicked] = useState(() => new Set());
   const [batch, setBatch] = useState([]);
-  const [hideSent, setHideSent] = useState(false);
+  const [hideReceived, setHideReceived] = useState(false);
   const [approveOpen, setApproveOpen] = useState(false);
   const [confirmNewOpen, setConfirmNewOpen] = useState(false);
 
@@ -339,22 +336,22 @@ export default function SendIt() {
     setPicked(new Set());
   };
 
-  const sendBatch = (ids) => {
-    const sent = new Set(ids);
+  const receiveBatch = (ids) => {
+    const received = new Set(ids);
     setBatch((prev) =>
       prev.map((row) =>
-        sent.has(row.id) ? { ...row, status: 'Sent', statusType: 'green' } : row
+        received.has(row.id) ? { ...row, status: 'Received', statusType: 'green' } : row
       )
     );
     setApproveOpen(false);
   };
 
   const visibleBatch = useMemo(
-    () => (hideSent ? batch.filter((r) => r.status !== 'Sent') : batch),
-    [batch, hideSent]
+    () => (hideReceived ? batch.filter((r) => r.status !== 'Received') : batch),
+    [batch, hideReceived]
   );
 
-  const pendingRows = batch.filter((r) => r.status !== 'Sent');
+  const pendingRows = batch.filter((r) => r.status !== 'Received');
 
   const batchColumns = [
     { key: 'caseNo', header: 'Case note' },
@@ -382,7 +379,7 @@ export default function SendIt() {
 
       <main className="app__main" id="main">
         <div className="page__bar">
-          <h1 className="page__title">SendIT</h1>
+          <h1 className="page__title">ReceiveIT</h1>
           <Button
             type="secondary"
             size="small"
@@ -413,8 +410,8 @@ export default function SendIt() {
           />
 
           {/* Existing Batch asks one question — which batch — and nothing
-              else, per Figma 448:8420. The settings below govern what gets
-              added to a batch, so they only appear once there is one. */}
+              else. The settings below govern what gets added to a batch, so
+              they only appear once there is one. */}
           {mode === 'existing' && !batchRef && (
             <form className="send-open-batch" onSubmit={openBatch}>
               <Autocomplete
@@ -435,7 +432,7 @@ export default function SendIt() {
           {(mode === 'new' || batchRef) && (
             <>
               <div className="send-setup__fields">
-                <Select label="Sending to" required options={SEND_RECIPIENTS} value={recipient} onChange={setRecipient} />
+                <Select label="Receiving from" required options={SEND_RECIPIENTS} value={recipient} onChange={setRecipient} />
                 <Select label="Location" required options={SITES} value={location} onChange={setLocation} />
                 <Input type="calendar" label="Clinic date" placeholder="Add Date" />
                 <Select label="Case note type" required options={SEND_CASE_NOTE_TYPES} value={noteType} onChange={setNoteType} />
@@ -454,9 +451,9 @@ export default function SendIt() {
 
           {/* Creating is what assigns the batch number, so this is the gate:
               nothing below the settings card exists until it is pressed. It
-              stays available afterwards (Figma 192:4901 keeps it) so a second
-              batch can be started — but starting one over a batch that still
-              has unsent notes discards them, so that case asks first. */}
+              stays available afterwards so a second batch can be started —
+              but starting one over a batch that still has unreceived notes
+              discards them, so that case asks first. */}
           {mode === 'new' && (
             <Button
               type="secondary"
@@ -594,9 +591,9 @@ export default function SendIt() {
               <h2 className="panel__title">Batch Summary</h2>
               <div className="send-summary__controls">
                 <Checkbox
-                  label="Hide sent case notes"
-                  checked={hideSent}
-                  onChange={() => setHideSent((v) => !v)}
+                  label="Hide received case notes"
+                  checked={hideReceived}
+                  onChange={() => setHideReceived((v) => !v)}
                 />
                 <Button
                   type="secondary"
@@ -613,7 +610,7 @@ export default function SendIt() {
               <p className="send-empty">
                 {batch.length === 0
                   ? 'Nothing in this batch yet. Add volumes from the search on the left.'
-                  : 'Every case note in this batch has been sent.'}
+                  : 'Every case note in this batch has been received.'}
               </p>
             ) : (
               <Table
@@ -663,11 +660,11 @@ export default function SendIt() {
         }
       />
 
-      <ApproveBatchModal
+      <ApproveReceiveModal
         open={approveOpen}
         rows={pendingRows}
         onClose={() => setApproveOpen(false)}
-        onSend={sendBatch}
+        onReceive={receiveBatch}
       />
 
       <ConfirmModal
@@ -675,7 +672,7 @@ export default function SendIt() {
         title="Start a new batch?"
         body={`Batch ${batchRef?.number ?? ''} still has ${pendingRows.length} case ${
           pendingRows.length === 1 ? 'note' : 'notes'
-        } that have not been sent. Starting a new batch discards them.`}
+        } that have not been received. Starting a new batch discards them.`}
         confirmLabel="Discard and start new"
         onConfirm={() => {
           setConfirmNewOpen(false);
