@@ -407,9 +407,12 @@ reason to doubt it.
 **Distribution has a decision record: DDR-020.** Registries (public npm for the
 web packages, NuGet for the Blazor RCL that Blazor *and* MAUI consume), one
 version across all packages, 0.x until the token semantics settle, and release
-by git tag through CI. Status is **Proposed** — it needs governance sign-off
-before anything is published, and the `@dhcw` npm scope should be reserved
-regardless.
+by git tag through CI. Status is **Proposed**: it needs governance sign-off,
+and — the blocking item — the npm scope has to be agreed with DHCW. `@dhcw` is
+not this programme's to take: DHCW is building its own design system and Single
+Record is a programme within it, while an npm scope is one global name owned by
+one account. The packages are named `@dhcw/sr-*` today and that changes with
+the scope decision, before anything is published.
 
 See `/components/README.md` for the full catalogue and contribution guidance, and
 the live catalogue in Storybook for every variant.

@@ -14,14 +14,30 @@ names, the registry and the update path for everyone downstream. **Status is
 Proposed**, not Accepted: it needs governance sign-off before anything is
 published.
 
-The decision in one line: **public npm under the `@dhcw` scope for the web
-packages, NuGet for the Blazor RCL, one version number across all of them,
-released by git tag through CI.**
+The decision in one line: **public npm for the web packages, NuGet for the
+Blazor RCL, one version number across all of them, released by git tag through
+CI.**
+
+**Amended 2026-08-05 — the `@dhcw` scope is not ours to take.** DHCW is
+building its own design system and Single Record is a programme within DHCW.
+An npm scope is one global name owned by one account and scopes cannot nest, so
+registering `@dhcw` from here would claim the organisation's name on a public
+registry on their behalf. The naming decision now comes *before* the publishing
+decision and cannot be made unilaterally. Preferred outcome: DHCW registers
+`@dhcw` as an npm Organization and adds Single Record as a team with publish
+rights to `single-record-*` names, so both design systems live in one DHCW
+namespace. Fallback: a scope this programme owns outright, accepting that
+moving later is a breaking rename. Third option, often the right one while the
+name is unresolved: do not publish yet — the download page and
+`npm install github:…` already work, and a wrong name published publicly is
+much harder to undo than a delay.
 
 The point most likely to be missed, and the reason the DDR is not just about
-npm: **the primary consumers are .NET, not JavaScript.** Single Record products
-are Blazor and MAUI renders those same Blazor components, so npm alone would
-serve React and leave the main audience where they started.
+npm: **there are two first-class web targets.** React is approved and is what
+Case Note Tracking will be built in, with further products likely; Blazor is
+equally current and MAUI renders those same Blazor components. npm serves
+React, the tokens, the icons and the CSS; NuGet serves the Blazor library.
+Answering only the npm half leaves the Blazor estate where it started.
 
 Public over a private Azure Artifacts feed, because every alternative puts a
 credential between a developer and their first install — an `.npmrc` token on
@@ -33,13 +49,17 @@ colours, spacing, markup and accessibility guidance, no patient data and no
 internal anything. GDS and NHS England both publish publicly.
 
 **Do this next, in order** (none of it is code):
-1. Governance sign-off that the system may be published publicly.
-2. **Reserve the `@dhcw` scope on npmjs.com** under a DHCW-owned account —
-   free, and it stops someone else taking the name. Do it whatever is decided.
+1. **Agree the scope with DHCW's design-system owner.** Blocking: it decides
+   the package names, and renaming after publishing breaks every consumer.
+2. Governance sign-off that the system may be published publicly.
 3. An npm automation token as a repo secret, publish-scoped.
 4. Decide NuGet for the Blazor RCL — it can differ from the npm answer, since
    .NET teams already have Azure DevOps credentials and the friction argument
    does not apply the same way.
+
+DDR-020 carries a step-by-step runbook for the publish itself. Step 2 of it —
+rename everything in one commit before anything is published — is the one that
+is free today and expensive later.
 
 `decisions/README.md`'s index had drifted to listing 3 of 19 DDRs; it is
 regenerated from each file's own front matter and now lists all 20.
@@ -150,10 +170,11 @@ and fails silently). If it renders, a consumer can use it.
    fixes the package names, the registry (public npm vs an Azure Artifacts
    feed) and the update path for everyone downstream. Worth a DDR. Until then
    the download page and `npm install github:...` are the supported routes.
-2. **React has no pre-built browser file.** It is JSX source, so consumers need
-   a bundler that compiles JSX. Fine for the React products; worth revisiting
-   only if a consumer without a build step needs it. Blazor is the path for
-   Single Record products anyway.
+2. **React ships as JSX source, and that is normal.** Any React setup compiles
+   JSX as part of its own build. A pre-built browser file is only needed by a
+   project with no build step at all, which is served by the CSS plus plain
+   markup instead. React is a first-class target — Case Note Tracking is being
+   built in it.
 3. `dist/` is committed, so it will show up in diffs on any CSS change. That is
    the cost of letting people download without building.
 

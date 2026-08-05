@@ -2601,10 +2601,11 @@ your icons do not appear, check that first before checking the markup.</p></div>
 code, such as opening a modal or a date picker, lives in the framework wrappers rather than in a
 loose script you have to wire up:</p>
 <ul>
-  <li><strong>Blazor / .NET</strong> — the Razor Class Library in <code>packages/blazor</code>. This
-  is the path for Single Record products, and the one MAUI uses too.</li>
-  <li><strong>React</strong> — the components in <code>packages/react</code>. These are JSX source,
-  so they need a bundler that compiles JSX; there is no pre-built browser file yet.</li>
+  <li><strong>React</strong> — the components in <code>packages/react</code>. JSX source, which any
+  React setup compiles as part of its own build; there is no pre-built browser file, and one is only
+  needed by a project with no build step at all.</li>
+  <li><strong>Blazor / .NET</strong> — the Razor Class Library in <code>packages/blazor</code>, which
+  MAUI renders too.</li>
 </ul>
 
 <h2>If you use npm</h2>
