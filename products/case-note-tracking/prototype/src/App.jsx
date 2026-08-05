@@ -7,6 +7,7 @@ import CaseNotes from './CaseNotes.jsx';
 import PatientSearch from './PatientSearch.jsx';
 import MyRequests from './MyRequests.jsx';
 import SendIt from './SendIt.jsx';
+import ReceiveIt from './ReceiveIt.jsx';
 
 // Text lockup, not the real NHS/GIG asset (trademarked raster, not something
 // this prototype's Sandpack embed can fetch) — same placeholder approach as
@@ -23,6 +24,7 @@ const VIEW_LABEL = {
   'case-notes': 'Patient Search',
   'my-requests': 'My Requests',
   'send-it': 'SendIT',
+  'receive-it': 'ReceiveIT',
 };
 
 /**
@@ -47,8 +49,9 @@ export default function App() {
     else if (label === 'Patient Search') setView('patient-search');
     else if (label === 'My Requests') setView('my-requests');
     else if (label === 'SendIT') setView('send-it');
-    // ReceiveIT, TagIT, Settings and Log Out have no screen in this
-    // prototype yet — selecting them is a no-op.
+    else if (label === 'ReceiveIT') setView('receive-it');
+    // TagIT, Settings and Log Out have no screen in this prototype yet —
+    // selecting them is a no-op.
   };
 
   return (
@@ -71,6 +74,7 @@ export default function App() {
         {view === 'case-notes' && <CaseNotes />}
         {view === 'my-requests' && <MyRequests />}
         {view === 'send-it' && <SendIt />}
+        {view === 'receive-it' && <ReceiveIt />}
       </div>
     </div>
   );
