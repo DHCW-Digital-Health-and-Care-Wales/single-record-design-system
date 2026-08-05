@@ -191,19 +191,25 @@ function ApproveBatchModal({ open, rows, onClose, onSend }) {
           instead of collapsing the panel and shifting everything under it. */}
       {detail && (
         <div className="send-warnings" aria-live="polite">
-          <p className="send-warnings__title">
-            {detail.warnings.length > 0 ? 'Warnings for' : 'No warnings for'}{' '}
-            {detail.caseNo} · {detail.volume}
-          </p>
-          {detail.warnings.length > 0 && (
-            <ul className="send-warnings__list">
-              {detail.warnings.map((w) => (
-                <li key={w}>
-                  <Icon name="status/warning" size="xs" color="inherit" />
-                  <span>{w}</span>
-                </li>
-              ))}
-            </ul>
+          {detail.warnings.length > 0 ? (
+            <>
+              <p className="send-warnings__title">
+                Warnings for {detail.caseNo} · {detail.volume}
+              </p>
+              <ul className="send-warnings__list">
+                {detail.warnings.map((w) => (
+                  <li key={w}>
+                    <Icon name="status/warning" size="xs" color="inherit" />
+                    <span>{w}</span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : (
+            <p className="send-warnings__none">
+              <Icon name="status/success" size="sm" color="inherit" />
+              <span>No warnings for {detail.caseNo} · {detail.volume}</span>
+            </p>
           )}
         </div>
       )}
