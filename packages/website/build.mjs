@@ -631,8 +631,83 @@ const FRAMEWORKS = ['HTML', 'React', 'Blazor', 'MAUI'];
  *  containing `</script>` can never terminate the tag early. */
 const jsonForScript = (v) => JSON.stringify(v).replace(/</g, '\\u003c');
 
+/**
+ * Build-time check: every React snippet on this site must use props the React
+ * component actually has.
+ *
+ * These snippets are written by hand next to the preview, and a component's
+ * props move. The Button page said `<Button variant="primary">` while the
+ * component's prop is `type` — copying that snippet gave you a button that
+ * silently ignored the variant. A doc snippet that does not work is worse than
+ * no snippet, because the reader has no reason to doubt it.
+ *
+ * The check is deliberately shallow: it reads the destructured parameter names
+ * out of the component's own source and compares them with the attribute names
+ * in the snippet. It cannot tell you a value is wrong, only that a prop does
+ * not exist. That is the failure that actually happens.
+ */
+const REACT_PROPS_CACHE = {};
+function reactPropsOf(name) {
+  if (name in REACT_PROPS_CACHE) return REACT_PROPS_CACHE[name];
+  const file = REACT_FILE_BY_NAME[name];
+  if (!file || !existsSync(file)) return (REACT_PROPS_CACHE[name] = null);
+  const src = readFileSync(file, 'utf8');
+  const sig = new RegExp(`function\\s+${name}\\s*\\(`).exec(src);
+  if (!sig) return (REACT_PROPS_CACHE[name] = null);
+  // Walk from the first "{" after the signature to its matching "}".
+  const open = src.indexOf('{', sig.index + sig[0].length);
+  if (open === -1) return (REACT_PROPS_CACHE[name] = null);
+  let depth = 0, end = -1;
+  for (let i = open; i < src.length; i++) {
+    if (src[i] === '{') depth++;
+    else if (src[i] === '}') { depth--; if (depth === 0) { end = i; break; } }
+  }
+  if (end === -1) return (REACT_PROPS_CACHE[name] = null);
+  const block = src.slice(open + 1, end);
+  // Top-level keys only: skip anything nested inside a default value.
+  const props = new Set();
+  let d = 0, token = '';
+  for (const ch of block) {
+    if ('{[('.includes(ch)) d++;
+    else if ('}])'.includes(ch)) d--;
+    if (d === 0) {
+      if (ch === ',' || ch === '=' || ch === '\n') {
+        const t = token.trim();
+        if (/^\w+$/.test(t)) props.add(t);
+        if (ch !== '=') token = '';
+        else token = '';
+        continue;
+      }
+      token += ch;
+    }
+  }
+  const t = token.trim();
+  if (/^\w+$/.test(t)) props.add(t);
+  return (REACT_PROPS_CACHE[name] = props);
+}
+
+const snippetProblems = [];
+function checkReactSnippet(panelId, code) {
+  const open = /^\s*<([A-Z]\w*)([\s>])/.exec(code.replace(/^(\s*\/\/[^\n]*\n)+/, ''));
+  if (!open) return;
+  const name = open[1];
+  const known = reactPropsOf(name);
+  if (!known) return; // not one of ours, or an unparseable signature
+  // Attributes on the opening tag only, so children and nested JSX are ignored.
+  const tagEnd = code.indexOf('>', open.index);
+  const attrs = code.slice(open.index, tagEnd === -1 ? code.length : tagEnd);
+  for (const m of attrs.matchAll(/(?:^|\s)([a-z]\w*)\s*(?:=|\s*\/?>|$)/g)) {
+    const prop = m[1];
+    if (!known.has(prop) && !prop.startsWith('aria') && !prop.startsWith('data')) {
+      snippetProblems.push(`${panelId}: <${name} ${prop}=…> — ${name} has no prop "${prop}". `
+        + `It takes: ${[...known].sort().join(', ')}`);
+    }
+  }
+}
+
 /** Dark code panel with framework tabs and a copy button. */
 function codePanel(id, snippets) {
+  if (snippets.React) checkReactSnippet(id, snippets.React);
   const tabs = FRAMEWORKS.map((f, idx) =>
     `<button class="codepanel__tab${idx === 0 ? ' is-active' : ''}" type="button" role="tab"
        aria-selected="${idx === 0}" data-fw="${f}" data-target="${id}">${f}</button>`).join('');
@@ -1656,6 +1731,12 @@ ${accessibilityTable([
   ])}`;
 }
 
+// The Button page builds its snippet in the browser from the variant/size
+// switches, so it never passes through codePanel() and the check above cannot
+// see it. Assert the shape it generates here instead — this is the only
+// snippet on the site that is assembled client-side.
+checkReactSnippet('btn (generated in BUTTON_SCRIPT)', '<Button type="primary" size="small">Confirm patient</Button>');
+
 const BUTTON_SCRIPT = `<script>
 (function(){
   var preview=document.getElementById('preview-btn');
@@ -1669,7 +1750,7 @@ const BUTTON_SCRIPT = `<script>
     var S=size!=='default'?size.charAt(0).toUpperCase()+size.slice(1):'';
     return {
       HTML:'<button class="'+cls+'">Confirm patient</button>',
-      React:'<Button variant="'+v+'"'+(size!=='default'?' size="'+size+'"':'')+'>Confirm patient</Button>',
+      React:'<Button type="'+v+'"'+(size!=='default'?' size="'+size+'"':'')+'>Confirm patient</Button>',
       Blazor:'<SrButton Type="ButtonType.'+T+'"'+(S?' Size="ButtonSize.'+S+'"':'')+'>Confirm patient</SrButton>',
       MAUI:'<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\\n<SrButton Type="ButtonType.'+T+'">Confirm patient</SrButton>'
     };
@@ -1717,7 +1798,7 @@ function tableBody() {
 </div>`;
   const snippets = {
     HTML: '<div class="sr-table-wrap">\n  <table class="sr-table">\n    <thead class="sr-table__head">…</thead>\n    <tbody>\n      <tr class="sr-table__row sr-table__row--selected">…</tr>\n    </tbody>\n  </table>\n</div>',
-    React: '<SrTable\n  columns={columns}\n  rows={rows}\n  selectedId={activePatientId}\n/>',
+    React: '<Table\n  columns={columns}\n  rows={rows}\n  selectable\n  selectedIds={selectedIds}\n  onSelectionChange={setSelectedIds}\n/>',
     Blazor: '<SrTable Items="@patients" SelectedId="@activePatientId" />',
     MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrTable Items="@patients" SelectedId="@activePatientId" />',
   };
@@ -1847,7 +1928,7 @@ ${seg(['Quick search', 'Advanced'], 0, true)}
 </div>`;
   const segSnippets = {
     HTML: '<div class="sr-segmented" role="group" aria-label="Search mode">\n  <button type="button" class="sr-segmented__option" aria-pressed="true">Quick search</button>\n  <button type="button" class="sr-segmented__option" aria-pressed="false">Advanced</button>\n</div>',
-    React: '<SegmentedControl\n  label="Search mode"\n  options={["Quick search", "Advanced"]}\n  value={mode}\n  onChange={setMode}\n/>',
+    React: '<SegmentedControl\n  ariaLabel="Search mode"\n  options={["Quick search", "Advanced"]}\n  value={mode}\n  onChange={setMode}\n/>',
     Blazor: '<SrSegmentedControl Options="@modes" @bind-Value="mode" />',
     MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid.\n     Give the track a 44px row on touch. -->\n<SrSegmentedControl Options="@modes" @bind-Value="mode" />',
   };
@@ -1948,7 +2029,7 @@ ${SECTIONS_NAV.map((s) => `    <div class="sr-nav__section">
   const frame = (mod) => `<div class="nav-frame">${nav(mod)}</div>`;
   const snippets = {
     HTML: '<nav class="sr-nav" aria-label="Primary">\n  <div class="sr-nav__header">…</div>\n  <div class="sr-nav__body">\n    <div class="sr-nav__section">\n      <span class="sr-nav__section-label">Patients</span>\n      <div class="sr-nav__list">\n        <button class="sr-nav__item" aria-label="Patient Search">…</button>\n      </div>\n    </div>\n  </div>\n  <div class="sr-nav__footer">…</div>\n</nav>\n\n<!-- Collapsed states -->\n<nav class="sr-nav sr-nav--rail">…</nav>       <!-- 108px, labels kept -->\n<nav class="sr-nav sr-nav--collapsed">…</nav>  <!-- 48px, icon only -->',
-    React: '<Navigation\n  type="sectioned"        // "sectioned" | "linear"\n  state={navState}        // "expanded" | "rail" | "collapsed"\n  sections={sections}\n  footerItems={footerItems}\n  current="Dashboard"\n  onToggle={cycleNavState}\n/>',
+    React: '<Navigation\n  type="sectioned"          // "sectioned" | "linear"\n  collapsed={navState}      // false (220px) | "rail" (108px) | "icon" (48px)\n  sections={sections}\n  footerItems={footerItems}\n  current="Dashboard"\n  onCollapseToggle={cycleNavState}\n/>',
     Blazor: '<SrNavigation Sections="@sections" State="Expanded" Current="Dashboard" />',
     MAUI: '<!-- No MAUI equivalent. A 248px persistent rail is a browser-width\n     pattern; MAUI is mobile only (phone, tablet). Mobile primary\n     navigation is BottomNav — see the Footer page, Type: Mobile. -->',
   };
@@ -2989,6 +3070,13 @@ const searchIndex = pages.map((p) => ({
   h: (p.body.match(/<h[23][^>]*>([\s\S]*?)<\/h[23]>/g) || []).map((h) => stripTags(h)),
   x: stripTags(p.body).slice(0, 1200),
 }));
+if (snippetProblems.length) {
+  console.error(`\n${snippetProblems.length} React snippet(s) reference props that do not exist:\n`);
+  for (const p of snippetProblems) console.error(`  ${p}`);
+  console.error('\nFix the snippet, or the component if the snippet is what we meant to ship.\n');
+  process.exit(1);
+}
+
 writeFileSync(resolve(DIST, "assets", "search-index.js"), `window.__SEARCH__=${jsonForScript(searchIndex)};`);
 
 for (const p of pages) {

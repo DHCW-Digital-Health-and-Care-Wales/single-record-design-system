@@ -394,6 +394,23 @@ component is 248px and the EPR content zones are 1192px at 1440 and 1032px at
 1280. 220px was also 4px too narrow for a row carrying both a badge and a
 chevron, which is what surfaced it.
 
+**React snippets on the website are now checked against the components.**
+The Button page said `<Button variant="primary">` while the component's prop is
+`type` — copying it gave a button that silently ignored the variant. Two more
+were wrong (`SegmentedControl label`, `Navigation state`/`onToggle`) and the
+Table page showed the Blazor component name with a prop React does not have.
+The website build now reads each component's destructured props out of its own
+source and fails if a snippet uses one that does not exist. A documentation
+snippet that does not work is worse than no snippet, because the reader has no
+reason to doubt it.
+
+**Distribution has a decision record: DDR-020.** Registries (public npm for the
+web packages, NuGet for the Blazor RCL that Blazor *and* MAUI consume), one
+version across all packages, 0.x until the token semantics settle, and release
+by git tag through CI. Status is **Proposed** — it needs governance sign-off
+before anything is published, and the `@dhcw` npm scope should be reserved
+regardless.
+
 See `/components/README.md` for the full catalogue and contribution guidance, and
 the live catalogue in Storybook for every variant.
 

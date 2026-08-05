@@ -5,6 +5,74 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-08-04f (DDR-020 distribution; React snippets checked)
+
+### DDR-020: how the design system is distributed
+
+Written because publishing is a decision, not a task — it fixes the package
+names, the registry and the update path for everyone downstream. **Status is
+Proposed**, not Accepted: it needs governance sign-off before anything is
+published.
+
+The decision in one line: **public npm under the `@dhcw` scope for the web
+packages, NuGet for the Blazor RCL, one version number across all of them,
+released by git tag through CI.**
+
+The point most likely to be missed, and the reason the DDR is not just about
+npm: **the primary consumers are .NET, not JavaScript.** Single Record products
+are Blazor and MAUI renders those same Blazor components, so npm alone would
+serve React and leave the main audience where they started.
+
+Public over a private Azure Artifacts feed, because every alternative puts a
+credential between a developer and their first install — an `.npmrc` token on
+every machine and a service connection in every pipeline. For teams with no
+design-system capacity that is where adoption stops, and the fallback is
+pasting CSS into their own repo, which is the outcome the system exists to
+prevent. The privacy a private feed buys is worth little: the package contains
+colours, spacing, markup and accessibility guidance, no patient data and no
+internal anything. GDS and NHS England both publish publicly.
+
+**Do this next, in order** (none of it is code):
+1. Governance sign-off that the system may be published publicly.
+2. **Reserve the `@dhcw` scope on npmjs.com** under a DHCW-owned account —
+   free, and it stops someone else taking the name. Do it whatever is decided.
+3. An npm automation token as a repo secret, publish-scoped.
+4. Decide NuGet for the Blazor RCL — it can differ from the npm answer, since
+   .NET teams already have Azure DevOps credentials and the friction argument
+   does not apply the same way.
+
+`decisions/README.md`'s index had drifted to listing 3 of 19 DDRs; it is
+regenerated from each file's own front matter and now lists all 20.
+
+### The React snippets on the website were wrong
+
+Found while answering "how do I locate the Button React snippet". The Button
+page said `<Button variant="primary">`. **The component's prop is `type`** —
+copying that snippet gave a button that silently ignored the variant. Three
+more: `SegmentedControl label` (it is `ariaLabel`), `Navigation state` /
+`onToggle` (they are `collapsed` / `onCollapseToggle`), and the Table page
+showed the *Blazor* component name in the React tab with a `selectedId` prop
+React does not have.
+
+All fixed, and the build now prevents recurrence: it reads each component's
+destructured props out of its own source and fails if a snippet uses one that
+does not exist. The Button snippet is assembled in the browser from the
+variant/size switches, so it never passes through `codePanel()` — there is an
+explicit assertion beside `BUTTON_SCRIPT` covering it, and that is the only
+snippet on the site built client-side.
+
+The check is deliberately shallow: it cannot tell you a *value* is wrong, only
+that a prop does not exist. That is the failure that actually happens.
+
+### Where to find a component's React code
+
+Three places, most useful first: the **React tab** on the component's page
+(Buttons' updates live as you change variant and size), the source at
+`packages/react/src/<component>/<Component>.jsx`, and Storybook, which has the
+interactive controls.
+
+---
+
 ## Checkpoint — 2026-08-04e (sidebar 248px; the web package now ships files)
 
 ### Sidebar reconciled to 248px
