@@ -42,8 +42,19 @@ for (const file of files) {
 
   // Sprite <symbol> — reuse the same viewBox/inner markup, id = icon name with
   // "/" replaced (DOM ids can't contain "/").
+  //
+  // The presentation attributes go on the <symbol>, not just on icons.js's
+  // <svg> wrapper. These are stroke-drawn outlines: a <use> reference into a
+  // symbol without them inherits the SVG defaults (fill black, no stroke) and
+  // renders nothing at all. Carrying them here is what lets a consumer write
+  // a bare `<svg><use href="sprite.svg#icon-nav-search"></use></svg>` and get
+  // an icon, which is the whole point of shipping a sprite for people with no
+  // JavaScript build step.
   const id = `icon-${name.replace(/\//g, '-')}`;
-  symbols.push(`<symbol id="${id}" viewBox="0 0 24 24">${inner}</symbol>`);
+  symbols.push(
+    `<symbol id="${id}" viewBox="0 0 24 24" fill="none" stroke="currentColor" `
+    + `stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${inner}</symbol>`
+  );
 }
 
 mkdirSync(outDir, { recursive: true });

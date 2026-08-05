@@ -1,0 +1,40 @@
+/**
+ * DHCW Single Record Design System — every stylesheet, in one import.
+ *
+ * For consumers with a bundler that resolves `@import` (Vite, webpack, esbuild,
+ * Blazor's CSS pipeline). If you just want a file to drop into a page, use the
+ * pre-built `dist/single-record.css` instead — it is this, already flattened,
+ * with no resolution step.
+ *
+ * Order is deliberate: fonts and tokens first, because everything below refers
+ * to the custom properties they define. Dark mode is NOT imported here; it is
+ * an opt-in override that has to load after this file. See
+ * `dist/single-record-dark.css`.
+ */
+
+@import "@dhcw/sr-tokens/build/css/fonts.css";
+@import "@dhcw/sr-tokens/build/css/tokens.css";
+@import "@dhcw/sr-tokens/build/css/typography.css";
+@import "@dhcw/sr-icons/src/icon.css";
+
+@import "./autocomplete/autocomplete.css";
+@import "./bottom-nav/bottom-nav.css";
+@import "./breadcrumbs/breadcrumbs.css";
+@import "./button/button.css";
+@import "./checkbox/checkbox.css";
+@import "./date-input/date-input.css";
+@import "./date-picker/date-picker.css";
+@import "./footer/footer.css";
+@import "./header/header.css";
+@import "./input/input.css";
+@import "./modal/modal.css";
+@import "./navigation/navigation.css";
+@import "./patient-banner/patient-banner.css";
+@import "./radio/radio.css";
+@import "./segmented-control/segmented-control.css";
+@import "./select/select.css";
+@import "./status-indicator/status-indicator.css";
+@import "./switch/switch.css";
+@import "./table/table.css";
+@import "./tags/tags.css";
+@import "./time-select/time-select.css";

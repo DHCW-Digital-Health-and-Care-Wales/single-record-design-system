@@ -47,18 +47,20 @@ Three configurations. Mobile and tablet grids are **fluid** — columns scale to
 
 When the EPR navigation sidebar is visible, the content zone is reduced. **Design against the content zone, not the full frame width.**
 
-**Sidebar is 220px**, matching the `Navigation` component as built (DS master
-`725:8903`, Case Note Tracking adaptation `125:5362`,
-`packages/web/src/navigation/navigation.css`) — not the 248px originally drawn
-on the Figma grid frame. Resolved 2026-08 in favour of the shipped component,
-which already reads well in the Case Note Tracking prototype; revisit only if
-220px genuinely proves too tight for a real EPR layout.
+**Sidebar is 248px.** This is the width the Figma grid frame was drawn
+against and the width of the Figma nav item building block (`665:21099`); the
+`Navigation` component had shipped at 220px, leaving these content-zone
+figures 28px out against the component as built. Reconciled to 248px on both
+sides together, 2026-08 — the grid numbers below and
+`packages/web/src/navigation/navigation.css` now agree. 220px was also 4px too
+narrow for a nav row carrying both a badge and a chevron ("Appointments"
+truncated), which is what surfaced the discrepancy.
 
 | Context | Frame | Sidebar | Content zone | Columns | Gutter | Margin |
 |---|---|---|---|---|---|---|
 | Full width (no sidebar) | 1440px | — | 1440px | 12 | 32px | 80px |
-| EPR with sidebar | 1440px | 220px | 1220px | 12 | 24px | 32px |
-| EPR with sidebar | 1280px | 220px | 1060px | 12 | 20px | 24px |
+| EPR with sidebar | 1440px | 248px | 1192px | 12 | 24px | 32px |
+| EPR with sidebar | 1280px | 248px | 1032px | 12 | 20px | 24px |
 
 ---
 
@@ -113,8 +115,8 @@ Pre-configured Figma frames with live column grids, for use as prototype artboar
 | `SR/Tablet/1024` | 1024 × 900 | 12 col · 24px gutter · 40px margin |
 | `SR/Desktop/1280` | 1280 × 900 | 12 col · 24px gutter · 64px margin |
 | `SR/Desktop/1440` | 1440 × 900 | 12 col · 32px gutter · 80px margin |
-| `SR/EPR/1440` | 1440 × 900 | 220px sidebar · 1220px content · 12 col · 24px gutter · 32px margin |
-| `SR/EPR/1280` | 1280 × 900 | 220px sidebar · 1060px content · 12 col · 20px gutter · 24px margin |
+| `SR/EPR/1440` | 1440 × 900 | 248px sidebar · 1192px content · 12 col · 24px gutter · 32px margin |
+| `SR/EPR/1280` | 1280 × 900 | 248px sidebar · 1032px content · 12 col · 20px gutter · 24px margin |
 
 ---
 

@@ -1,0 +1,208 @@
+/**
+ * DHCW Single Record — Radio
+ * Reference HTML/CSS implementation, matched to the Figma Radio set
+ * (Radio, Radio/Templates, Radio/Building blocks) and deliberately kept
+ * structurally identical to checkbox.css — same 20px control, same 28px label
+ * offset, same focus ring, same error treatment. The only visual differences
+ * are the round shape and the dot instead of a tick.
+ *
+ * Anatomy:
+ *   .sr-radio-group          — <fieldset> wrapping one set of options
+ *     .sr-radio-group__legend
+ *     .sr-radio-group__hint
+ *     .sr-radio-group__error
+ *     .sr-radio-group__options[--horizontal]
+ *       .sr-radio            — one option: input + label
+ *
+ * Use a radio group when the choice is single-select and all options should be
+ * visible at once. For many options, use Select (UI Standards #18).
+ */
+
+/* ---------- Group ---------- */
+
+.sr-radio-group {
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.sr-radio-group__legend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0;
+  margin-bottom: var(--space-2);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+  color: var(--sr-color-text-primary);
+}
+
+/* Decorative — the accessible requirement is carried by aria-required on the
+   group, per components/form-fields.md. */
+.sr-radio-group__required {
+  color: var(--sr-color-interactive-destructive);
+}
+
+.sr-radio-group__hint {
+  margin: 0 0 var(--space-2);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+  color: var(--sr-color-text-secondary);
+}
+
+.sr-radio-group__error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-bottom: var(--space-2);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+  color: var(--sr-color-interactive-destructive);
+}
+
+.sr-radio-group__error-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+}
+.sr-radio-group__error-icon svg { width: 100%; height: 100%; }
+
+.sr-radio-group--error {
+  padding-left: var(--space-3);
+  border-left: var(--border-width-2) solid var(--sr-color-interactive-destructive);
+}
+
+.sr-radio-group__options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.sr-radio-group__options--horizontal {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+/* ---------- Single option ---------- */
+
+.sr-radio {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  min-height: 20px;
+}
+
+.sr-radio__input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.sr-radio__label {
+  display: inline-block;
+  padding-left: 28px; /* 20px control + space-2 gap */
+  min-height: 20px;
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+  color: var(--sr-color-text-primary);
+  cursor: pointer;
+}
+
+/* The ring */
+.sr-radio__label::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  background-color: var(--sr-color-surface-small-cards);
+  border: var(--border-width-2) solid var(--sr-color-border-default);
+  border-radius: var(--radius-full);
+}
+
+/* The dot, hidden until checked */
+.sr-radio__label::after {
+  content: "";
+  position: absolute;
+  opacity: 0;
+  box-sizing: border-box;
+  top: 5px;
+  left: 5px;
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-full);
+  background-color: var(--sr-color-text-inverse);
+}
+
+.sr-radio__input:checked + .sr-radio__label::after {
+  opacity: 1;
+}
+
+/* ---------- States ---------- */
+
+.sr-radio__input:hover:not(:disabled) + .sr-radio__label::before {
+  border-color: var(--sr-color-border-strong);
+}
+
+.sr-radio__input:checked + .sr-radio__label::before {
+  background-color: var(--sr-color-interactive-primary);
+  border-color: var(--sr-color-interactive-primary);
+}
+.sr-radio__input:checked:hover:not(:disabled) + .sr-radio__label::before {
+  background-color: var(--sr-color-interactive-primary-hover);
+  border-color: var(--sr-color-interactive-primary-hover);
+}
+
+/* Focus ring: 3px Cyan/700 outside stroke on the control only (DDR-006). */
+.sr-radio__input:focus-visible + .sr-radio__label::before {
+  box-shadow: 0 0 0 3px var(--sr-color-border-focus);
+}
+
+/* Error: red ring in every checked state. */
+.sr-radio--error .sr-radio__label::before {
+  border-color: var(--sr-color-interactive-destructive);
+}
+
+/* ---------- Disabled ---------- */
+
+.sr-radio__input:disabled + .sr-radio__label {
+  color: var(--sr-color-text-disabled);
+  cursor: not-allowed;
+}
+.sr-radio__input:disabled + .sr-radio__label::before {
+  background-color: var(--sr-color-surface-subtle);
+  border-color: var(--sr-color-border-subtle);
+}
+.sr-radio__input:disabled:checked + .sr-radio__label::before {
+  background-color: var(--sr-color-interactive-disabled);
+  border-color: var(--sr-color-interactive-disabled);
+}
+
+/* Accessible name with no visual footprint — used by RadioGroup's `hideLegend`
+   where the surrounding copy already names the choice on screen. Same
+   declaration as input.css and table.css; there is no shared utilities
+   stylesheet yet, and a component's CSS must stand alone when imported by
+   itself. Consolidating the three is worth doing once one exists. */
+.sr-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

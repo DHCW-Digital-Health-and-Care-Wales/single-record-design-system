@@ -4,8 +4,9 @@
   "description": "Canonical HTML/CSS components for the DHCW Single Record Design System. Framework-agnostic reference implementation following the GOV.UK Frontend model.",
   "license": "MIT",
   "type": "module",
-  "main": "src/index.css",
+  "main": "dist/single-record.css",
   "files": [
+    "dist/",
     "src/",
     "!src/**/*.stories.js"
   ],
@@ -21,5 +22,18 @@
   "dependencies": {
     "@dhcw/sr-tokens": "0.1.0",
     "@dhcw/sr-icons": "0.1.0"
+  },
+  "style": "dist/single-record.css",
+  "exports": {
+    ".": "./dist/single-record.css",
+    "./dark": "./dist/single-record-dark.css",
+    "./source": "./src/index.css",
+    "./icons.js": "./dist/icons.js",
+    "./sprite.svg": "./dist/sprite.svg",
+    "./components/*": "./dist/components/*",
+    "./src/*": "./src/*"
+  },
+  "scripts": {
+    "build": "node build.mjs"
   }
 }

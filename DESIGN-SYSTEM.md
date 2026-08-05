@@ -4,7 +4,7 @@ The Single Record Design System provides the shared design language, component l
 
 This document is the primary reference for everyone working on Single Record — designers, engineers, and delivery leads.
 
-**Last reviewed:** 2026-08-04. Update this file whenever a component ships, a
+**Last reviewed:** 2026-08-05. Update this file whenever a component ships, a
 token is added, or a system-wide rule changes — not on a schedule. If it
 disagrees with `/foundations/tokens/` or `/components/`, those win and this file
 is out of date.
@@ -362,6 +362,57 @@ flow, which exists to pre-fill exactly that field.
 Checkbox. A group whose name is already given by the surrounding copy still
 needs a legend for screen readers; the alternative in use was dropping the
 legend, which leaves an unnamed fieldset.
+
+**The web package now ships files, not just source.** A developer adopting the
+system needs something to put in an application, and until now this package
+offered 21 separate component stylesheets and a `main` field pointing at an
+`index.css` that did not exist — so the honest answer to "where are the CSS and
+JS files?" was "there aren't any". `npm run build:web` now writes
+`packages/web/dist/`: one flattened `single-record.css` (font + tokens +
+typography + every component), an opt-in `single-record-dark.css`, `icons.js`,
+`sprite.svg`, and the individual component stylesheets. Concatenation and file
+copies only — no bundler, so no new dependency and no DDR needed. The website
+serves the same files from its **Get the files** page, and its build fails if
+`dist/` is missing rather than publishing a page of dead links.
+
+The component list is read from the directory, not hand-maintained, so a new
+component cannot be added to the repo and left out of the bundle — the failure
+that produces "it works on the website but not in my app".
+
+**Sprite symbols carry their own presentation attributes.** The generated
+`<symbol>`s had only a `viewBox`, so a `<use>` reference inherited the SVG
+defaults (fill black, no stroke) and these stroke-drawn outlines rendered as
+nothing. The attributes now live on the symbol, which is what makes a bare
+`<svg><use href="sprite.svg#icon-nav-search"></use></svg>` work for a consumer
+with no JavaScript build step.
+
+**Navigation is 248px, and so is the grid.** The component had shipped at 220px
+while `foundations/grid-and-layout.md` derived its EPR content zones from
+248px — the width the Figma grid frame and the Figma nav item block
+(`665:21099`) are both drawn at. Reconciled on both sides together: the
+component is 248px and the EPR content zones are 1192px at 1440 and 1032px at
+1280. 220px was also 4px too narrow for a row carrying both a badge and a
+chevron, which is what surfaced it.
+
+**React snippets on the website are now checked against the components.**
+The Button page said `<Button variant="primary">` while the component's prop is
+`type` — copying it gave a button that silently ignored the variant. Two more
+were wrong (`SegmentedControl label`, `Navigation state`/`onToggle`) and the
+Table page showed the Blazor component name with a prop React does not have.
+The website build now reads each component's destructured props out of its own
+source and fails if a snippet uses one that does not exist. A documentation
+snippet that does not work is worse than no snippet, because the reader has no
+reason to doubt it.
+
+**Distribution has a decision record: DDR-020.** Registries (public npm for the
+web packages, NuGet for the Blazor RCL that Blazor *and* MAUI consume), one
+version across all packages, 0.x until the token semantics settle, and release
+by git tag through CI. Status is **Proposed**: it needs governance sign-off,
+and — the blocking item — the npm scope has to be agreed with DHCW. `@dhcw` is
+not this programme's to take: DHCW is building its own design system and Single
+Record is a programme within it, while an npm scope is one global name owned by
+one account. The packages are named `@dhcw/sr-*` today and that changes with
+the scope decision, before anything is published.
 
 See `/components/README.md` for the full catalogue and contribution guidance, and
 the live catalogue in Storybook for every variant.

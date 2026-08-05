@@ -29,7 +29,7 @@
 
 | State | Width | Behaviour |
 |---|---|---|
-| Expanded | 220px | Icon + label, section labels shown (Sectioned only) |
+| Expanded | 248px | Icon + label, section labels shown (Sectioned only) |
 | Collapsed — rail | 108px | Icon **above** a permanently visible centred label, 12px |
 | Collapsed — icon only | 48px | Icon alone; label revealed on hover **and** focus |
 
@@ -56,4 +56,4 @@
 
 ## Open questions
 
-- The sidebar is 220px, but `foundations/grid-and-layout.md` specifies a 248px sidebar for the EPR content-zone calculations. The two must be reconciled; do not change one alone.
+- **Resolved 2026-08: the sidebar is 248px.** It had shipped at 220px while `foundations/grid-and-layout.md` derived its EPR content zones from 248px. Both moved together; 248px is also what the Figma item building block (`665:21099`) is drawn at, and it is the width at which a row carrying both a badge and a chevron stops truncating.

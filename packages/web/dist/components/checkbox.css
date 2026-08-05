@@ -1,0 +1,239 @@
+/**
+ * DHCW Single Record — Checkbox
+ * Reference HTML/CSS implementation, matched to the Figma Checkbox sets:
+ *   Checkbox                  (1517:13764) — Orientation × Legend × Hint × Error × Required
+ *   Checkbox/Building blocks  (843:14568)  — State × Checked × Indeterminate (11 variants)
+ * Consumes @dhcw/sr-tokens.
+ *
+ * Anatomy (group, vertical stack, gap = space-1):
+ *   .sr-checkbox-group__legend   — group legend (+ required asterisk)
+ *   .sr-checkbox-group__hint     — helper text (Caption)
+ *   .sr-checkbox-group__error    — validation message (Caption + status/error-circle)
+ *   .sr-checkbox-group__options  — the options, gap space-3 (vertical) / space-6 (horizontal)
+ *
+ * Anatomy (single option):
+ *   .sr-checkbox__input — the real <input type="checkbox">, transparent and
+ *                         laid over the box so it keeps native semantics,
+ *                         keyboard behaviour and the :checked / :indeterminate
+ *                         / :disabled pseudo-classes.
+ *   .sr-checkbox__label — draws the box (::before) and the tick or dash (::after).
+ *
+ * The input is never display:none or visibility:hidden — that would remove it
+ * from the accessibility tree and the tab order. Following the NHS.UK / GDS
+ * approach, it stays a real focusable control sized over the visible box.
+ *
+ * Required marker: per components/form-fields.md the asterisk sits on the group
+ * legend, not on individual options, and is decorative — pair with aria-required.
+ */
+
+/* ---------- Group ---------- */
+
+.sr-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-inline-size: 0; /* fieldset defaults to min-content; let it shrink */
+}
+
+.sr-checkbox-group__legend {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  padding: 0;
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+  color: var(--sr-color-text-primary);
+}
+.sr-checkbox-group__required {
+  color: var(--sr-color-status-critical);
+}
+
+.sr-checkbox-group__hint {
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  color: var(--sr-color-text-secondary);
+}
+
+.sr-checkbox-group__error {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  color: var(--sr-color-status-critical);
+}
+.sr-checkbox-group__error-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+}
+.sr-checkbox-group__error-icon svg { width: 100%; height: 100%; }
+
+/* Error group gains the inset rule, matching the Figma error variants. */
+.sr-checkbox-group--error {
+  border-left: var(--border-width-2) solid var(--sr-color-status-critical);
+  padding-left: var(--space-3);
+}
+
+/* ---------- Options list ---------- */
+
+.sr-checkbox-group__options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-1);
+}
+.sr-checkbox-group__options--horizontal {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+}
+
+/* ---------- Single option ---------- */
+
+.sr-checkbox {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  min-height: 20px;
+  /* Set here as well as on the group: a single checkbox is valid on its own
+     (for example a table's select-all) and must not inherit the page default. */
+}
+
+.sr-checkbox__input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.sr-checkbox__label {
+  display: inline-block;
+  padding-left: 28px; /* 20px box + space-2 gap */
+  min-height: 20px;
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+  color: var(--sr-color-text-primary);
+  cursor: pointer;
+}
+
+/* Label-less checkbox — the box on its own, for table selection cells.
+   The accessible name must come from aria-label on the input. */
+.sr-checkbox--bare .sr-checkbox__label {
+  padding-left: 20px;
+  min-width: 20px;
+}
+
+/* The box */
+.sr-checkbox__label::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  background-color: var(--sr-color-surface-small-cards);
+  border: var(--border-width-2) solid var(--sr-color-border-default);
+  border-radius: var(--radius-sm);
+}
+
+/* The tick / dash, hidden until checked or indeterminate */
+.sr-checkbox__label::after {
+  content: "";
+  position: absolute;
+  opacity: 0;
+  box-sizing: border-box;
+}
+
+/* Tick: two borders on a rotated box, so it scales with tokens and needs no asset. */
+.sr-checkbox__input:checked + .sr-checkbox__label::after {
+  opacity: 1;
+  top: 5px;
+  left: 4px;
+  width: 11px;
+  height: 5px;
+  border: solid var(--sr-color-text-inverse);
+  border-width: 0 0 var(--border-width-2) var(--border-width-2);
+  background: transparent;
+  transform: rotate(-45deg);
+}
+
+/* Indeterminate wins over checked, matching native behaviour. */
+.sr-checkbox__input:indeterminate + .sr-checkbox__label::after {
+  opacity: 1;
+  top: 9px;
+  left: 4px;
+  width: 11px;
+  height: 2px;
+  border: 0;
+  background-color: var(--sr-color-text-inverse);
+  transform: none;
+}
+
+/* ---------- States ---------- */
+
+.sr-checkbox__input:hover:not(:disabled) + .sr-checkbox__label::before {
+  border-color: var(--sr-color-border-strong);
+}
+
+.sr-checkbox__input:checked + .sr-checkbox__label::before,
+.sr-checkbox__input:indeterminate + .sr-checkbox__label::before {
+  background-color: var(--sr-color-interactive-primary);
+  border-color: var(--sr-color-interactive-primary);
+}
+.sr-checkbox__input:checked:hover:not(:disabled) + .sr-checkbox__label::before,
+.sr-checkbox__input:indeterminate:hover:not(:disabled) + .sr-checkbox__label::before {
+  background-color: var(--sr-color-interactive-primary-hover);
+  border-color: var(--sr-color-interactive-primary-hover);
+}
+
+/* Focus ring: 3px Cyan/700 outside stroke on the box only (DDR-006). */
+.sr-checkbox__input:focus-visible + .sr-checkbox__label::before {
+  box-shadow: 0 0 0 3px var(--sr-color-border-focus);
+}
+
+/* Error: red box in every checked state. */
+.sr-checkbox--error .sr-checkbox__label::before {
+  border-color: var(--sr-color-interactive-destructive);
+}
+.sr-checkbox--error .sr-checkbox__input:checked + .sr-checkbox__label::before,
+.sr-checkbox--error .sr-checkbox__input:indeterminate + .sr-checkbox__label::before {
+  background-color: var(--sr-color-interactive-destructive);
+  border-color: var(--sr-color-interactive-destructive);
+}
+
+/* Disabled */
+.sr-checkbox__input:disabled,
+.sr-checkbox__input:disabled + .sr-checkbox__label {
+  cursor: not-allowed;
+}
+.sr-checkbox__input:disabled + .sr-checkbox__label {
+  color: var(--sr-color-text-disabled);
+}
+.sr-checkbox__input:disabled + .sr-checkbox__label::before {
+  background-color: var(--sr-color-surface-small-cards);
+  border-color: var(--sr-color-border-disabled);
+}
+.sr-checkbox__input:disabled:checked + .sr-checkbox__label::before,
+.sr-checkbox__input:disabled:indeterminate + .sr-checkbox__label::before {
+  background-color: var(--sr-color-border-disabled);
+  border-color: var(--sr-color-border-disabled);
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .sr-checkbox__label::before,
+  .sr-checkbox__label::after {
+    transition: none;
+  }
+}

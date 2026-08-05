@@ -1,0 +1,96 @@
+/**
+ * DHCW Single Record — Tag
+ * Pill-shaped label. Figma Tags sets: Tags/status (399:7984) and
+ * Tags/filter (3229:71674). Consumes @dhcw/sr-tokens.
+ *
+ * Two variants:
+ *   .sr-tag--status  (default) — soft surface FILL + matching border + text.
+ *                    Types: Blue | Green | Red | Yellow | Grey | Outline.
+ *                    Non-interactive label (status, category).
+ *   .sr-tag--filter  — OUTLINE only (transparent fill) + a close button, for
+ *                    dismissible filters. Types: Blue | Green | Red | Yellow |
+ *                    Black. Always carries an .sr-tag__close button.
+ *
+ * Colour is a secondary signal only — the text always carries the meaning.
+ * Size: Default (24px) | Small (16px).
+ */
+
+.sr-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  gap: var(--space-2); /* 8px */
+  border: 0.5px solid transparent;
+  border-radius: var(--radius-full); /* pill */
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing); /* 0.2px */
+  white-space: nowrap;
+}
+
+/* ---------- Sizes (status: symmetric padding) ---------- */
+.sr-tag--default {
+  height: 24px;
+  padding: 0 var(--space-4); /* 16px */
+}
+.sr-tag--small {
+  height: 16px;
+  padding: 0 var(--space-2); /* 8px */
+}
+
+/* Filter tags trim the trailing padding so the close button sits neatly. */
+.sr-tag--filter.sr-tag--default {
+  gap: var(--space-2);
+  padding: 0 var(--space-2) 0 var(--space-3); /* pl 12, pr 8 */
+}
+.sr-tag--filter.sr-tag--small {
+  gap: var(--space-1);
+  padding: 0 var(--space-1) 0 var(--space-2); /* pl 8, pr 4 */
+}
+
+/* ---------- Type colours (border + text — shared by both variants) ---------- */
+.sr-tag--blue   { border-color: var(--sr-color-status-info);     color: var(--sr-color-status-info); }
+.sr-tag--green  { border-color: var(--sr-color-status-success);  color: var(--sr-color-status-success); }
+.sr-tag--red    { border-color: var(--sr-color-status-critical); color: var(--sr-color-status-critical); }
+.sr-tag--yellow { border-color: var(--color-yellow-700);         color: var(--color-yellow-700); }
+.sr-tag--grey   { border-color: var(--sr-color-text-secondary);  color: var(--sr-color-text-secondary); }
+.sr-tag--outline,
+.sr-tag--black  { border-color: var(--sr-color-border-strong);   color: var(--sr-color-text-primary); }
+
+/* ---------- Status variant: soft surface fill ---------- */
+.sr-tag--status.sr-tag--blue   { background-color: var(--sr-color-status-info-surface); }
+.sr-tag--status.sr-tag--green  { background-color: var(--sr-color-status-success-surface); }
+.sr-tag--status.sr-tag--red    { background-color: var(--sr-color-status-critical-surface); }
+.sr-tag--status.sr-tag--yellow { background-color: var(--sr-color-status-warning-surface); }
+.sr-tag--status.sr-tag--grey   { background-color: var(--sr-color-surface-background); }
+.sr-tag--status.sr-tag--outline { background-color: transparent; }
+
+/* ---------- Filter variant: outline only (transparent fill) ---------- */
+.sr-tag--filter { background-color: transparent; }
+
+/* ---------- Close button (filter tags) ---------- */
+.sr-tag__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: inherit; /* inherits the tag's text colour */
+  cursor: pointer;
+}
+.sr-tag__close svg {
+  width: 14px;
+  height: 14px;
+}
+.sr-tag__close:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+.sr-tag__close:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-cyan-700);
+}

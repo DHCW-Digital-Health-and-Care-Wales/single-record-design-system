@@ -1,0 +1,74 @@
+/**
+ * DHCW Single Record — Segmented control
+ * Reference HTML/CSS implementation, matched to the Figma Toggle/Segmented
+ * Control set (segment building block 2752:40, two-option example 2770:55996):
+ * State=Default|Hover|Focus|Disabled × Selected. Consumes @dhcw/sr-tokens.
+ *
+ * A single-select control: choose ONE of a small set of mutually-exclusive
+ * options/views (e.g. Quick search | Advanced). NOT the Toggle Switch (boolean
+ * on/off). Options are buttons with aria-pressed inside a role="group" (or
+ * implement as a radiogroup/tablist with arrow-key navigation); exactly one is
+ * selected at a time.
+ */
+
+.sr-segmented {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1); /* 4px */
+  padding: var(--space-1); /* 4px */
+  background-color: var(--sr-color-surface-subtle);
+  border: 1px solid var(--sr-color-border-default);
+  border-radius: var(--radius-lg); /* 8px track */
+}
+
+.sr-segmented__option {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2) 18px; /* 8px vertical, 18px horizontal (Figma) */
+  border: none;
+  border-radius: var(--radius-md); /* 4px segment */
+  background: transparent;
+  color: var(--sr-color-text-secondary);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* Hover (unselected) — soft blue wash + brand-blue text. */
+.sr-segmented__option:hover:not([aria-pressed="true"]):not(:disabled) {
+  background-color: var(--color-info-blue-50);
+  color: var(--sr-color-interactive-primary);
+}
+
+/* Selected — brand blue fill, inverse text, subtle lift. */
+.sr-segmented__option[aria-pressed="true"] {
+  background-color: var(--sr-color-interactive-primary);
+  color: var(--sr-color-text-inverse);
+}
+
+/* Focus — Cyan/700 ring outside the segment (DDR-006). */
+.sr-segmented__option:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sr-color-surface-subtle), 0 0 0 4px var(--color-cyan-700);
+}
+.sr-segmented__option[aria-pressed="true"]:focus-visible {
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.06),
+    0 0 0 2px var(--sr-color-surface-subtle),
+    0 0 0 4px var(--color-cyan-700);
+}
+
+/* Disabled — unselected: muted text; selected: muted outline (not a filled blue). */
+.sr-segmented__option:disabled {
+  color: var(--sr-color-text-disabled);
+  cursor: not-allowed;
+}
+.sr-segmented__option[aria-pressed="true"]:disabled {
+  background-color: var(--sr-color-surface-subtle);
+  border: 1px solid var(--sr-color-border-default);
+  color: var(--sr-color-text-disabled);
+  box-shadow: none;
+}

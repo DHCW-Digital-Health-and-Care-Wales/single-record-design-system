@@ -55,7 +55,7 @@ body {
   flex-direction: column;
   gap: var(--space-6);
   /* Roomier vertically, but horizontal padding stays at 16px: the sidebar
-     already takes 220px of the 1280 frame, and 24px each side squeezed the
+     already takes 248px of the 1280 frame, and 24px each side squeezed the
      casenote table enough to wrap cell text onto two lines. */
   padding: var(--space-6) var(--space-4);
   /* Content stops growing at the XLarge grid's frame width (1440,
@@ -719,7 +719,7 @@ body {
    place in this file where a raw number is unavoidable. */
 
 /* Below Large (1280px): the 12-column desktop layout still holds, but the
-   four-across rows get tight once the sidebar takes its 220px. */
+   four-across rows get tight once the sidebar takes its 248px. */
 @media (max-width: 1279px) {
   .dashboard__stats,
   .quick-actions { grid-template-columns: repeat(2, 1fr); }

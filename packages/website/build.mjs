@@ -13,7 +13,7 @@
  * how the system is built or governed: no decision-record references, no source
  * file paths, no internal standards documents.
  */
-import { readFileSync, writeFileSync, mkdirSync, copyFileSync, rmSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, copyFileSync, rmSync, readdirSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 import { posix as posixPath } from 'node:path';
@@ -44,6 +44,11 @@ const ICONS_PKG = resolve(ROOT, 'packages', 'icons');
 // truth for componentName → file path (the package.json "exports" map predates
 // several components — Tag, Select, Autocomplete — and is missing entries, so
 // it isn't reliable here).
+/* Counted from the source, not typed in, so the "get the files" page cannot
+   claim a component count the bundle does not have. */
+const WEB_COMPONENT_COUNT = readdirSync(WEB_SRC, { withFileTypes: true })
+  .filter((d) => d.isDirectory() && existsSync(resolve(WEB_SRC, d.name, `${d.name}.css`))).length;
+
 const REACT_INDEX_SRC = readFileSync(resolve(REACT_SRC, 'index.js'), 'utf8');
 const REACT_FILE_BY_NAME = {};
 for (const m of REACT_INDEX_SRC.matchAll(/export\s*\{\s*default as (\w+)\s*\}\s*from\s*['"](\.\/[\w./-]+\.jsx)['"]/g)) {
@@ -450,6 +455,7 @@ const SECTIONS = [
     side: [
       { href: 'index.html', label: 'SR Design System' },
       { href: 'how-to-use.html', label: 'How to use' },
+      { href: 'get-the-files.html', label: 'Get the files' },
       { href: 'figma.html', label: 'Using figma' },
     ],
   },
@@ -625,8 +631,83 @@ const FRAMEWORKS = ['HTML', 'React', 'Blazor', 'MAUI'];
  *  containing `</script>` can never terminate the tag early. */
 const jsonForScript = (v) => JSON.stringify(v).replace(/</g, '\\u003c');
 
+/**
+ * Build-time check: every React snippet on this site must use props the React
+ * component actually has.
+ *
+ * These snippets are written by hand next to the preview, and a component's
+ * props move. The Button page said `<Button variant="primary">` while the
+ * component's prop is `type` — copying that snippet gave you a button that
+ * silently ignored the variant. A doc snippet that does not work is worse than
+ * no snippet, because the reader has no reason to doubt it.
+ *
+ * The check is deliberately shallow: it reads the destructured parameter names
+ * out of the component's own source and compares them with the attribute names
+ * in the snippet. It cannot tell you a value is wrong, only that a prop does
+ * not exist. That is the failure that actually happens.
+ */
+const REACT_PROPS_CACHE = {};
+function reactPropsOf(name) {
+  if (name in REACT_PROPS_CACHE) return REACT_PROPS_CACHE[name];
+  const file = REACT_FILE_BY_NAME[name];
+  if (!file || !existsSync(file)) return (REACT_PROPS_CACHE[name] = null);
+  const src = readFileSync(file, 'utf8');
+  const sig = new RegExp(`function\\s+${name}\\s*\\(`).exec(src);
+  if (!sig) return (REACT_PROPS_CACHE[name] = null);
+  // Walk from the first "{" after the signature to its matching "}".
+  const open = src.indexOf('{', sig.index + sig[0].length);
+  if (open === -1) return (REACT_PROPS_CACHE[name] = null);
+  let depth = 0, end = -1;
+  for (let i = open; i < src.length; i++) {
+    if (src[i] === '{') depth++;
+    else if (src[i] === '}') { depth--; if (depth === 0) { end = i; break; } }
+  }
+  if (end === -1) return (REACT_PROPS_CACHE[name] = null);
+  const block = src.slice(open + 1, end);
+  // Top-level keys only: skip anything nested inside a default value.
+  const props = new Set();
+  let d = 0, token = '';
+  for (const ch of block) {
+    if ('{[('.includes(ch)) d++;
+    else if ('}])'.includes(ch)) d--;
+    if (d === 0) {
+      if (ch === ',' || ch === '=' || ch === '\n') {
+        const t = token.trim();
+        if (/^\w+$/.test(t)) props.add(t);
+        if (ch !== '=') token = '';
+        else token = '';
+        continue;
+      }
+      token += ch;
+    }
+  }
+  const t = token.trim();
+  if (/^\w+$/.test(t)) props.add(t);
+  return (REACT_PROPS_CACHE[name] = props);
+}
+
+const snippetProblems = [];
+function checkReactSnippet(panelId, code) {
+  const open = /^\s*<([A-Z]\w*)([\s>])/.exec(code.replace(/^(\s*\/\/[^\n]*\n)+/, ''));
+  if (!open) return;
+  const name = open[1];
+  const known = reactPropsOf(name);
+  if (!known) return; // not one of ours, or an unparseable signature
+  // Attributes on the opening tag only, so children and nested JSX are ignored.
+  const tagEnd = code.indexOf('>', open.index);
+  const attrs = code.slice(open.index, tagEnd === -1 ? code.length : tagEnd);
+  for (const m of attrs.matchAll(/(?:^|\s)([a-z]\w*)\s*(?:=|\s*\/?>|$)/g)) {
+    const prop = m[1];
+    if (!known.has(prop) && !prop.startsWith('aria') && !prop.startsWith('data')) {
+      snippetProblems.push(`${panelId}: <${name} ${prop}=…> — ${name} has no prop "${prop}". `
+        + `It takes: ${[...known].sort().join(', ')}`);
+    }
+  }
+}
+
 /** Dark code panel with framework tabs and a copy button. */
 function codePanel(id, snippets) {
+  if (snippets.React) checkReactSnippet(id, snippets.React);
   const tabs = FRAMEWORKS.map((f, idx) =>
     `<button class="codepanel__tab${idx === 0 ? ' is-active' : ''}" type="button" role="tab"
        aria-selected="${idx === 0}" data-fw="${f}" data-target="${id}">${f}</button>`).join('');
@@ -858,8 +939,8 @@ const GRID_ROWS = [
 
 const EPR_ROWS = [
   ['Full width (no sidebar)', '1440px', '—', '1440px', '12', '32px', '80px'],
-  ['EPR with sidebar', '1440px', '220px', '1220px', '12', '24px', '32px'],
-  ['EPR with sidebar', '1280px', '220px', '1060px', '12', '20px', '24px'],
+  ['EPR with sidebar', '1440px', '248px', '1192px', '12', '24px', '32px'],
+  ['EPR with sidebar', '1280px', '248px', '1032px', '12', '20px', '24px'],
 ];
 
 const SPACING_ROWS = [
@@ -932,9 +1013,9 @@ the content zone, not the full frame width.</strong></p>
 <div class="table-wrap"><table>
 <thead><tr><th>Context</th><th>Frame</th><th>Sidebar</th><th>Content zone</th><th>Columns</th><th>Gutter</th><th>Margin</th></tr></thead>
 <tbody>${eprRows}</tbody></table></div>
-<p class="muted">Sidebar is 220px, matching the <code>Navigation</code> component as built
-(<code>packages/web/src/navigation/navigation.css</code>) — resolved 2026-08 in favour of the
-shipped component, which already reads well in the Case Note Tracking prototype.</p>
+<p class="muted">Sidebar is 248px, matching the <code>Navigation</code> component and the Figma
+grid frame. The component had shipped at 220px, leaving these content zones 28px out against it;
+both were reconciled to 248px together in 2026-08.</p>
 
 <h2>Spacing token reference</h2>
 <p>Gutter and margin values map directly to the Space scale in Primitives.</p>
@@ -1650,6 +1731,12 @@ ${accessibilityTable([
   ])}`;
 }
 
+// The Button page builds its snippet in the browser from the variant/size
+// switches, so it never passes through codePanel() and the check above cannot
+// see it. Assert the shape it generates here instead — this is the only
+// snippet on the site that is assembled client-side.
+checkReactSnippet('btn (generated in BUTTON_SCRIPT)', '<Button type="primary" size="small">Confirm patient</Button>');
+
 const BUTTON_SCRIPT = `<script>
 (function(){
   var preview=document.getElementById('preview-btn');
@@ -1663,7 +1750,7 @@ const BUTTON_SCRIPT = `<script>
     var S=size!=='default'?size.charAt(0).toUpperCase()+size.slice(1):'';
     return {
       HTML:'<button class="'+cls+'">Confirm patient</button>',
-      React:'<Button variant="'+v+'"'+(size!=='default'?' size="'+size+'"':'')+'>Confirm patient</Button>',
+      React:'<Button type="'+v+'"'+(size!=='default'?' size="'+size+'"':'')+'>Confirm patient</Button>',
       Blazor:'<SrButton Type="ButtonType.'+T+'"'+(S?' Size="ButtonSize.'+S+'"':'')+'>Confirm patient</SrButton>',
       MAUI:'<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\\n<SrButton Type="ButtonType.'+T+'">Confirm patient</SrButton>'
     };
@@ -1711,7 +1798,7 @@ function tableBody() {
 </div>`;
   const snippets = {
     HTML: '<div class="sr-table-wrap">\n  <table class="sr-table">\n    <thead class="sr-table__head">…</thead>\n    <tbody>\n      <tr class="sr-table__row sr-table__row--selected">…</tr>\n    </tbody>\n  </table>\n</div>',
-    React: '<SrTable\n  columns={columns}\n  rows={rows}\n  selectedId={activePatientId}\n/>',
+    React: '<Table\n  columns={columns}\n  rows={rows}\n  selectable\n  selectedIds={selectedIds}\n  onSelectionChange={setSelectedIds}\n/>',
     Blazor: '<SrTable Items="@patients" SelectedId="@activePatientId" />',
     MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrTable Items="@patients" SelectedId="@activePatientId" />',
   };
@@ -1841,7 +1928,7 @@ ${seg(['Quick search', 'Advanced'], 0, true)}
 </div>`;
   const segSnippets = {
     HTML: '<div class="sr-segmented" role="group" aria-label="Search mode">\n  <button type="button" class="sr-segmented__option" aria-pressed="true">Quick search</button>\n  <button type="button" class="sr-segmented__option" aria-pressed="false">Advanced</button>\n</div>',
-    React: '<SegmentedControl\n  label="Search mode"\n  options={["Quick search", "Advanced"]}\n  value={mode}\n  onChange={setMode}\n/>',
+    React: '<SegmentedControl\n  ariaLabel="Search mode"\n  options={["Quick search", "Advanced"]}\n  value={mode}\n  onChange={setMode}\n/>',
     Blazor: '<SrSegmentedControl Options="@modes" @bind-Value="mode" />',
     MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid.\n     Give the track a 44px row on touch. -->\n<SrSegmentedControl Options="@modes" @bind-Value="mode" />',
   };
@@ -1942,9 +2029,9 @@ ${SECTIONS_NAV.map((s) => `    <div class="sr-nav__section">
   const frame = (mod) => `<div class="nav-frame">${nav(mod)}</div>`;
   const snippets = {
     HTML: '<nav class="sr-nav" aria-label="Primary">\n  <div class="sr-nav__header">…</div>\n  <div class="sr-nav__body">\n    <div class="sr-nav__section">\n      <span class="sr-nav__section-label">Patients</span>\n      <div class="sr-nav__list">\n        <button class="sr-nav__item" aria-label="Patient Search">…</button>\n      </div>\n    </div>\n  </div>\n  <div class="sr-nav__footer">…</div>\n</nav>\n\n<!-- Collapsed states -->\n<nav class="sr-nav sr-nav--rail">…</nav>       <!-- 108px, labels kept -->\n<nav class="sr-nav sr-nav--collapsed">…</nav>  <!-- 48px, icon only -->',
-    React: '<Navigation\n  type="sectioned"        // "sectioned" | "linear"\n  state={navState}        // "expanded" | "rail" | "collapsed"\n  sections={sections}\n  footerItems={footerItems}\n  current="Dashboard"\n  onToggle={cycleNavState}\n/>',
+    React: '<Navigation\n  type="sectioned"          // "sectioned" | "linear"\n  collapsed={navState}      // false (220px) | "rail" (108px) | "icon" (48px)\n  sections={sections}\n  footerItems={footerItems}\n  current="Dashboard"\n  onCollapseToggle={cycleNavState}\n/>',
     Blazor: '<SrNavigation Sections="@sections" State="Expanded" Current="Dashboard" />',
-    MAUI: '<!-- No MAUI equivalent. A 220px persistent rail is a browser-width\n     pattern; MAUI is mobile only (phone, tablet). Mobile primary\n     navigation is BottomNav — see the Footer page, Type: Mobile. -->',
+    MAUI: '<!-- No MAUI equivalent. A 248px persistent rail is a browser-width\n     pattern; MAUI is mobile only (phone, tablet). Mobile primary\n     navigation is BottomNav — see the Footer page, Type: Mobile. -->',
   };
   return `
 <p class="breadcrumbs">Components</p>
@@ -1957,7 +2044,7 @@ visible without scrolling a sidebar inside a page; that framing is the only thin
 about it.</p></div>
 
 <h2>Type: Sectioned — expanded</h2>
-<p class="muted">220px. Icon and label, with named groups a user would recognise (Patients, Clinical,
+<p class="muted">248px. Icon and label, with named groups a user would recognise (Patients, Clinical,
 Nursing). Use Sectioned only when those labels do real work — do not invent groups to justify it.
 A parent with children is a button with <code>aria-expanded</code>; a leaf is a link. Badges count
 things to act on, and nothing else.</p>
@@ -2428,6 +2515,11 @@ addPage({
   where the components are not.</li>
 </ul>
 
+<h2>Getting the actual files</h2>
+<p>Every code sample on this site assumes the design system's stylesheet is already loaded. See
+<a href="get-the-files.html">Get the files</a> for the one CSS file to download and link, the icon
+sprite, and what does and does not need JavaScript.</p>
+
 <h2>Check your work against the tokens</h2>
 <p>If you are bringing an existing screen into the system, paste its CSS into the
 <a href="styles/token-translator.html">token translator</a>. It matches the colours and spacing you
@@ -2445,6 +2537,86 @@ mobile as it does on the web.</p>
 broken, incorrect or inaccessible. Use
 <a href="contributions.html">Contributions</a> if you need a component, variant or token that does
 not exist yet.</p>`,
+});
+
+addPage({
+  file: 'get-the-files.html', url: 'get-the-files.html', title: 'Get the files',
+  section: 'Get Started', sectionId: 'get-started', activeHref: 'get-the-files.html', prefix: '',
+  body: `
+<p class="breadcrumbs">Get Started</p>
+<h1>Get the files</h1>
+<p class="lede">The actual stylesheet and script to put in an application. Reading a component's
+source on this site shows you what it is; these are the files that make it work.</p>
+
+<h2>The short version</h2>
+<p>Download <a href="downloads/single-record.css" download>single-record.css</a>, put it in your
+project, and link it. That is the whole of the minimum.</p>
+<div class="codepanel"><pre><code>&lt;link rel="stylesheet" href="/css/single-record.css"&gt;</code></pre></div>
+<p>It contains the font, every design token, the typography utilities and all
+${WEB_COMPONENT_COUNT} component stylesheets, so nothing else has to be fetched or configured. Now any
+markup you copy from a component page on this site will look right.</p>
+
+<h2>The files</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>File</th><th>What it is</th><th>Do you need it?</th></tr></thead>
+<tbody>
+<tr><td><a href="downloads/single-record.css" download><code>single-record.css</code></a></td>
+    <td>Font, tokens, typography utilities and every component, in one file.</td>
+    <td><strong>Yes.</strong> Start here.</td></tr>
+<tr><td><a href="downloads/single-record-dark.css" download><code>single-record-dark.css</code></a></td>
+    <td>Dark-mode token overrides. Load it <em>after</em> the file above.</td>
+    <td>Only if your product supports dark mode. These values are still provisional.</td></tr>
+<tr><td><a href="downloads/icons.js" download><code>icons.js</code></a></td>
+    <td>The icon set as an ES module: <code>iconMarkup(name)</code> returns the SVG.</td>
+    <td>If you are building markup in JavaScript.</td></tr>
+<tr><td><a href="downloads/sprite.svg" download><code>sprite.svg</code></a></td>
+    <td>The same icons as one SVG sprite, referenced with <code>&lt;use&gt;</code>.</td>
+    <td>If you are writing plain HTML or Razor, with no JavaScript.</td></tr>
+<tr><td><code>downloads/components/&lt;name&gt;.css</code></td>
+    <td>One component's stylesheet on its own.</td>
+    <td>Only if you are adopting a single component and cannot take the whole file.</td></tr>
+</tbody></table></div>
+<div class="callout"><p>These files are generated from the same source this website renders, every
+time the site is built. There is no hand-maintained copy to fall out of date — but equally, they are
+a snapshot: re-download after a release rather than assuming what you have is current.</p></div>
+
+<h2>Using an icon</h2>
+<p>Icons are the only part of the HTML layer that is not plain markup, because the set is generated.
+Two ways to place one, and neither needs a build step:</p>
+${codePanel('get-files-icon', {
+  HTML: '<!-- With the sprite: no JavaScript at all. -->\n<span class="sr-icon sr-icon--sm">\n  <svg><use href="/assets/sprite.svg#icon-nav-search"></use></svg>\n</span>',
+  React: 'import Icon from "@dhcw/sr-react/icon";\n\n<Icon name="nav/search" size="sm" />',
+  Blazor: '<SrIcon Name="nav/search" Size="IconSize.Sm" />',
+  MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrIcon Name="nav/search" Size="IconSize.Sm" />',
+})}
+
+<div class="callout"><p><strong>The sprite has to be served over HTTP from your own origin.</strong>
+Browsers refuse a cross-file <code>&lt;use&gt;</code> reference on a page opened straight from disk
+(<code>file://</code>) or from another domain, and it fails silently — the icon is simply absent. If
+your icons do not appear, check that first before checking the markup.</p></div>
+
+<h2>Where the JavaScript is</h2>
+<p>Mostly, there isn't any, and that is deliberate. The HTML layer is markup and CSS: a button is a
+<code>&lt;button&gt;</code>, a table is a <code>&lt;table&gt;</code>. Behaviour that genuinely needs
+code, such as opening a modal or a date picker, lives in the framework wrappers rather than in a
+loose script you have to wire up:</p>
+<ul>
+  <li><strong>React</strong> — the components in <code>packages/react</code>. JSX source, which any
+  React setup compiles as part of its own build; there is no pre-built browser file, and one is only
+  needed by a project with no build step at all.</li>
+  <li><strong>Blazor / .NET</strong> — the Razor Class Library in <code>packages/blazor</code>, which
+  MAUI renders too.</li>
+</ul>
+
+<h2>If you use npm</h2>
+<p>The packages are not published to a registry yet, so <code>npm install @dhcw/sr-web</code> will
+not resolve. Until they are, take the file above, or install straight from the repository:</p>
+<div class="codepanel"><pre><code>npm install github:Chuk-DCHW/dhcw-single-record-design-system#main --workspace-root
+# or, in a checkout of the repo:
+npm install
+npm run build:web    # writes packages/web/dist/</code></pre></div>
+<p>Publishing to a registry is a decision with a decision record attached, not something to slip in
+— it fixes the package names and the update path for everyone downstream.</p>`,
 });
 
 addPage({
@@ -2862,6 +3034,25 @@ for (const c of ['bottom-nav', 'breadcrumbs', 'switch', 'segmented-control', 'na
 }
 copyFileSync(resolve(ROOT, 'packages', 'icons', 'src', 'icon.css'), resolve(DIST, 'assets', 'icon.css'));
 copyFileSync(resolve(ROOT, 'figma', 'assets', 'dhcw-logo-white.png'), resolve(DIST, 'assets', 'dhcw-logo-white.png'));
+
+/* The distributable web assets, served from the site so a developer can take
+   the files without cloning the repository or waiting on an npm registry.
+   Built by packages/web/build.mjs; `npm run build:site` runs it first. */
+const WEB_DIST = resolve(ROOT, 'packages', 'web', 'dist');
+if (!existsSync(resolve(WEB_DIST, 'single-record.css'))) {
+  throw new Error(
+    'packages/web/dist is missing. Run `npm run build:web` (or `npm run build:site`, '
+    + 'which runs it) before building the website.'
+  );
+}
+mkdirSync(resolve(DIST, 'downloads', 'components'), { recursive: true });
+for (const f of readdirSync(WEB_DIST)) {
+  if (f === 'components') continue;
+  copyFileSync(resolve(WEB_DIST, f), resolve(DIST, 'downloads', f));
+}
+for (const f of readdirSync(resolve(WEB_DIST, 'components'))) {
+  copyFileSync(resolve(WEB_DIST, 'components', f), resolve(DIST, 'downloads', 'components', f));
+}
 writeFileSync(resolve(DIST, 'assets', 'site.css'), readFileSync(resolve(__dirname, 'site.css'), 'utf8'));
 writeFileSync(resolve(DIST, 'assets', 'site.js'), SITE_JS);
 
@@ -2880,6 +3071,13 @@ const searchIndex = pages.map((p) => ({
   h: (p.body.match(/<h[23][^>]*>([\s\S]*?)<\/h[23]>/g) || []).map((h) => stripTags(h)),
   x: stripTags(p.body).slice(0, 1200),
 }));
+if (snippetProblems.length) {
+  console.error(`\n${snippetProblems.length} React snippet(s) reference props that do not exist:\n`);
+  for (const p of snippetProblems) console.error(`  ${p}`);
+  console.error('\nFix the snippet, or the component if the snippet is what we meant to ship.\n');
+  process.exit(1);
+}
+
 writeFileSync(resolve(DIST, "assets", "search-index.js"), `window.__SEARCH__=${jsonForScript(searchIndex)};`);
 
 for (const p of pages) {
