@@ -41,14 +41,20 @@ function ApproveReceiveModal({ open, rows, onClose, onReceive }) {
   const [openWarningsFor, setOpenWarningsFor] = useState(null);
   const [removed, setRemoved] = useState(() => new Set());
 
-  // Reset per-opening, so a previous acknowledgement can't carry over into a
-  // later batch that has warnings of its own.
+  // Reset only on the false->true transition, not on every render the modal
+  // is open for. `rows` (the caller's pendingRows) is a new array reference
+  // on every parent render, so depending on it here re-fired this effect on
+  // every re-render while open — including the one caused by clicking a
+  // different row — snapping the selection straight back to row 0 and making
+  // row selection look broken.
+  const wasOpen = React.useRef(false);
   React.useEffect(() => {
-    if (open) {
+    if (open && !wasOpen.current) {
       setAcknowledged(false);
       setRemoved(new Set());
       setOpenWarningsFor(rows[0]?.id ?? null);
     }
+    wasOpen.current = open;
   }, [open, rows]);
 
   const live = rows.filter((r) => !removed.has(r.id));
@@ -206,8 +212,7 @@ function ApproveReceiveModal({ open, rows, onClose, onReceive }) {
             </>
           ) : (
             <p className="send-warnings__none">
-              <Icon name="status/success" size="sm" color="inherit" />
-              <span>No warnings for {detail.caseNo} · {detail.volume}</span>
+              <span>No errors or warnings for {detail.caseNo} · {detail.volume}</span>
             </p>
           )}
         </div>

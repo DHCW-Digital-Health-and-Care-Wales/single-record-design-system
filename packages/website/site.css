@@ -10,7 +10,18 @@
  */
 
 /* ── base ─────────────────────────────────────────────────────────────────── */
+/* Sticky footer: body is a full-height flex column so `.layout` can grow to
+   fill whatever the masthead and footer don't use. On a short page (e.g.
+   "Using figma") this is what keeps the footer pinned to the bottom of the
+   viewport instead of floating right under the content, and — because
+   `.layout` is the grid `.sidebar` stretches inside — it's also what makes
+   the sidebar's white background reach all the way down to the footer
+   instead of stopping at the content's own (shorter) height. */
+html { height: 100%; }
 body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   margin: 0;
   font-family: Roboto, Arial, sans-serif;
   font-size: 16px;
@@ -144,7 +155,15 @@ body {
 .search__empty { padding: 12px; font-size: 14px; color: var(--sr-color-text-secondary); }
 
 /* ── layout ───────────────────────────────────────────────────────────────── */
-.layout { max-width: 1440px; margin: 0 auto; display: grid; grid-template-columns: 200px minmax(0, 1fr); align-items: stretch; }
+.layout {
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  align-items: stretch;
+}
 .layout--nosidebar { grid-template-columns: minmax(0, 1fr); }
 
 /* The column fills the full height of the layout row, so its background runs the
