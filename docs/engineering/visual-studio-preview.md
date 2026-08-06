@@ -1,5 +1,22 @@
 # Previewing SR Components in Visual Studio — Blazor + MAUI
 
+> ## ⚠️ Partly superseded — read this first (2026-08-06, DDR-021)
+>
+> **The Blazor web host half of this document is still correct and useful.**
+>
+> **The MAUI half is not.** It describes previewing SR components in a *MAUI
+> Blazor Hybrid host*, on the assumption that MAUI renders the Blazor components
+> through a `BlazorWebView`. **That assumption was wrong** — the Single Record
+> mobile app is native MAUI XAML, and Blazor Hybrid is not used anywhere.
+>
+> A Blazor Hybrid host will still *run*, so these steps work as written. But what
+> it previews is the **Blazor** component in a web view, which is **not** what
+> ships on mobile. Do not treat it as a preview of the mobile app.
+>
+> Native MAUI previewing will be documented once `packages/maui`'s `Styles.xaml`
+> exists. Until then, use the Blazor web host for component review and Figma for
+> mobile design review.
+
 How to preview the design system's Blazor components in a **web** host *and* in a
 **native MAUI** shell, from **one shared component source**, in Visual Studio.
 

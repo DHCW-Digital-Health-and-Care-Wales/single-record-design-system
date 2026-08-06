@@ -5,6 +5,110 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-08-06 (MAUI is native XAML — DDR-021 corrects a wrong assumption)
+
+### Correction: MAUI does not use Blazor Hybrid, and never did
+
+**The 2026-08-04c checkpoint below is wrong on this point.** It recorded, as a
+settled finding, that "MAUI is the mobile target; Blazor Hybrid is *how* the MAUI
+app draws these components (a `BlazorWebView` hosting the same Blazor RCL the web
+uses)." That was never verified against the real app, and it is not true.
+
+The mobile app (`WCPMobile.Maui`) is **native MAUI XAML**: `Grid`, `Border`,
+`StackLayout`, `FlexLayout`, TinyMvvm for MVVM, Syncfusion for `SfExpander` /
+`SfBadgeView`, and an existing native component set (`DemographicsHeader`,
+`AdmissionControl`, `CustomLoadingSpinner`, `TemplateHeaderFooterStandard`). No
+`BlazorWebView` anywhere. Evidence: a sample screen plus the app's `Colors.xaml`
+and `Styles.xaml`, all supplied by the design lead.
+
+**How far it spread, and what is now fixed:** 29 MAUI code tabs on the website
+printed "MAUI renders the Blazor component through Blazor Hybrid" and then showed
+*Blazor* markup — worse than nothing, because copying it into a MAUI page gets
+you a component that does not exist in XAML. All 29 replaced. Also corrected:
+`CLAUDE.md`, `docs/for-engineers.md` ("What runs where", rewritten), DDR-020 §1
+(the Blazor RCL had been routed to NuGet for "Blazor web **and** MAUI"),
+`components/table/guidelines.md`, and `packages/maui/README.md`.
+`docs/engineering/visual-studio-preview.md` is flagged at the top: its Blazor web
+host half is still correct, its MAUI Blazor Hybrid half is not.
+
+**Two MAUI tabs turned out to be genuinely correct** and were kept and extended
+rather than blanked — the colour-usage and focus-ring examples on the Colour
+page, which show real XAML `{StaticResource Sr…}` bindings and a
+`VisualStateManager` focus state.
+
+### What limited the damage
+
+`packages/maui` never contained code, so there was nothing to unwind. And
+`@dhcw/sr-tokens` already emits `build/xaml/Tokens.xaml` and `Tokens.Dark.xaml` —
+**209 keys including 29 SR semantic ones**, PascalCased for XAML, light and dark
+genuinely differing (`SrColorTextPrimary` is `#212b32` light, `#ffffff` dark).
+That package's README said it was blocked on XAML token output; it is not.
+
+### DDR-021 — what the design system ships for MAUI
+
+Decided with the design lead over this session:
+
+- **Replace, don't reconcile.** SR tokens are the source of truth; the app's
+  `Colors.xaml` is replaced outright. Aliasing would carry a real accessibility
+  defect forward under a new name.
+- **Take their idiom, not their palette.** Their `Styles.xaml` already uses every
+  correct MAUI mechanism — implicit styles, `AppThemeBinding`,
+  `VisualStateManager`, `StyleClass`, keyed intent styles. SR adopts all of them
+  so the file reads like MAUI, and changes only what the values point at.
+- **`blue.800` `#325083` stays `interactive.primary`.** The DHCW organisational
+  navy `#2C3E72` is **not** added to SR's palette (design lead's call). Chrome
+  that used it maps to `navy.900` `#1B294A`, which the SR Header already uses.
+- **Type base moves to 14/20; caption 12/16 is the floor.** The app's implicit
+  `Label` was 12px — SR's *caption* size — which is why a 10px `Micro` class
+  existed. `Micro` is deleted and its work goes to caption, making that text
+  larger. 12px is already below GDS and NHS England (both 14px smallest), so
+  there is no latitude left below it.
+- **Syncfusion stays, wrapped narrowly.** Wrap what SR would never design
+  (`SfPdfViewer` → `SrDocumentViewer`); build natively what SR already specifies
+  (`SfTextInputLayout`, `SfCheckBox`, `SfExpander`, `SfBadgeView`, `SfTabItem`).
+  Only 3 of ~50 styles and 0 of ~50 colours in the app touch Syncfusion, so
+  ~94% of this work needs no licence. DevExpress was checked and is trial-only,
+  not free.
+
+### The finding that outranks everything else here
+
+**`Secondary` / `DHCWBackgroundClickable` is `#12A3C9` — byte-identical to SR's
+`cyan.700`** — and is used as a filled button surface with white text throughout
+the app. That is **2.95:1**, failing WCAG 2.2 AA for normal text (4.5:1) *and*
+large text (3:1). SR's own `brand.accent` token description already forbids
+exactly this: *"Never use as a filled surface with text on top."* And because SR
+uses `cyan.700` as `border.focus` (DDR-006), adopting SR focus rings over a cyan
+fill would make focus invisible on the controls that most need it.
+
+**Verify this independently before acting on it**, but if it holds it is an
+accessibility fix that should not wait for the rest of the MAUI work.
+
+### Open for you
+
+1. **Confirm the `#12A3C9` contrast finding.** Highest priority.
+2. `PatientHomePage.xaml` references `NWISBlack`, `NWISBlackDark`, `NWISGrey` —
+   none of which exist in the `Colors.xaml` supplied. Either there is a second
+   dictionary or that screen throws at parse time.
+3. The `ExpanderView.Header` / `.Content` / `.Arrow` styles use class selectors
+   that are not Syncfusion syntax, while the screen uses `syncfusion:SfExpander`.
+   There may already be a non-Syncfusion expander, which would shrink the
+   Syncfusion surface further.
+4. **Token-source duplication, needs sign-off:** the four semantic border colours
+   are declared twice — `color.border.*` in `foundations/tokens/border.json` and
+   `sr.color.border.*` in `semantic/color.json` — so every build emits both
+   `ColorBorderSubtle` and `SrColorBorderSubtle` (and both CSS forms). Only
+   `packages/web/src/button/button.css` consumes the unprefixed one. Left alone
+   deliberately: it is a token-structure change. The MAUI layer will use the
+   `Sr`-prefixed keys only.
+5. **Next artefact: `packages/maui/Styles.xaml`**, modelled on the app's file
+   structure. The 29 interim MAUI tabs get real XAML once it exists.
+6. **Test at 200% font scale early.** `FontAutoScalingEnabled` defaults to `true`
+   on `Label`, and the app has fixed heights that will clip
+   (`RowDefinitions="30"`, `HeightRequest="60"`, the icon size styles). SR styles
+   should use `MinimumHeightRequest` wherever text is involved.
+
+---
+
 ## Checkpoint — 2026-08-04f (DDR-020 distribution; React snippets checked)
 
 ### DDR-020: how the design system is distributed

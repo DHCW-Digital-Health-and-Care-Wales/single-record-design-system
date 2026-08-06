@@ -796,19 +796,19 @@ function headerBody() {
     HTML: '<header class="sr-header">\n  <div class="sr-header__utility">…</div>\n  <div class="sr-header__main">\n    <span class="sr-header__logo">…</span>\n    <div class="sr-header__search">…</div>\n    <div class="sr-header__actions">…</div>\n  </div>\n</header>',
     React: '<Header\n  variant="desktop"   // "desktop" | "desktop-2" | "mobile"\n  logo={<LogoLockup />}\n  initials="AB"\n  onSearch={handleSearch}\n  onReportIssue={openIssueForm}\n  onLanguageToggle={toggleWelsh}\n/>',
     Blazor: '<SrHeader Variant="Desktop" Initials="AB" />',
-    MAUI: '<!-- Desktop 1 pairs with a browser-width layout MAUI does not have —\n     MAUI is mobile only (phone, tablet); see foundations/grid-and-layout.md.\n     Use variant="mobile" below for the MAUI/Blazor Hybrid header instead. -->',
+    MAUI: '<!-- Desktop 1 pairs with a browser-width layout MAUI does not have —\n     MAUI is mobile only (phone, tablet); see foundations/grid-and-layout.md.\n     Use the mobile type below for the MAUI header instead. -->',
   };
   const barSnippets = {
     HTML: '<header class="sr-header sr-header--bar">\n  <div class="sr-header__main">\n    <div class="sr-header__search">…</div>\n    <div class="sr-header__cluster">…</div>\n  </div>\n</header>',
     React: '<Header\n  variant="desktop-2"   // "desktop" | "desktop-2" | "mobile"\n  initials="AB"\n  org="Cardiff and Vale UHB"\n  onSearch={handleSearch}\n  onLanguageToggle={toggleWelsh}\n/>',
     Blazor: '<SrHeader Variant="Desktop2" Initials="AB" />',
-    MAUI: '<!-- Desktop 2 pairs with the sidebar Navigation, a browser-width pattern —\n     MAUI is mobile only (phone, tablet); see foundations/grid-and-layout.md.\n     Use variant="mobile" below for the MAUI/Blazor Hybrid header instead. -->',
+    MAUI: '<!-- Desktop 2 pairs with the sidebar Navigation, a browser-width pattern —\n     MAUI is mobile only (phone, tablet); see foundations/grid-and-layout.md.\n     Use the mobile type below for the MAUI header instead. -->',
   };
   const mobileSnippets = {
     HTML: '<header class="sr-header sr-header--mobile sr-header--centered">\n  <div class="sr-header__main">\n    <button class="sr-header__menu">…</button>\n    <span class="sr-header__logo">…</span>\n    <div class="sr-header__actions">…</div>\n  </div>\n</header>',
     React: '<Header\n  variant="mobile"\n  showMenu\n  logo={<LogoMark />}\n  initials="AB"\n  onMenuClick={openDrawer}\n/>',
     Blazor: '<SrHeader Variant="Mobile" ShowMenu="true" Initials="AB" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. This is\n     the only Header variant MAUI uses — it has no desktop target. -->\n<SrHeader Variant="Mobile" ShowMenu="true" Initials="AB" />',
+    MAUI: '<!-- Native MAUI XAML for this component is in progress (DDR-021).\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
   };
   // Each variant is introduced before it is shown — heading, then what it is
   // and when to reach for it, then the example. The previous order (example
@@ -889,7 +889,7 @@ ${navItems.map((n) => `  <a class="sr-bottom-nav__item" href="#"${n.current ? ' 
     HTML: '<nav class="sr-bottom-nav" aria-label="Primary">\n  <a class="sr-bottom-nav__item" href="/home" aria-current="page">\n    <span class="sr-bottom-nav__icon">…</span>\n    <span class="sr-bottom-nav__label">Home</span>\n  </a>\n  …\n</nav>',
     React: '<BottomNav\n  items={[\n    { icon: "nav/home", label: "Home", href: "/home" },\n    { icon: "schedule/appointment", label: "Diary", href: "/diary" },\n    …\n  ]}\n  current="Home"\n/>',
     Blazor: '<SrBottomNav Items="@navItems" Current="Home" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. This is\n     the Footer type MAUI uses — MAUI is mobile only (phone, tablet). -->\n<SrBottomNav Items="@navItems" Current="Home" />',
+    MAUI: '<!-- Native MAUI XAML for this component is in progress (DDR-021).\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
   };
   return `
 <p class="breadcrumbs">Components</p>
@@ -1136,7 +1136,7 @@ function patientBannerBody() {
     HTML: '<section class="sr-patient-banner" aria-label="Patient: JOHN, Elvet George (Mr)">\n  <div class="sr-patient-banner__alerts">…</div>\n  <div class="sr-patient-banner__identity">…</div>\n  <div class="sr-patient-banner__actions">…</div>\n</section>\n\n<!-- Border type -->\n<section class="sr-patient-banner sr-patient-banner--border">…</section>\n<!-- Collapsed state -->\n<section class="sr-patient-banner sr-patient-banner--collapsed">…</section>',
     React: '<PatientBanner\n  patient={patient}\n  reactions={reactions}\n  warnings={3}\n  type="fill"          // "fill" | "border"\n  expanded={expanded}  // false renders the collapsed row\n  onToggle={() => setExpanded((v) => !v)}\n  onCopy={(v) => navigator.clipboard?.writeText(v)}\n  actions={<>…</>}\n/>',
     Blazor: '<SrPatientBanner Patient="@patient" Type="Fill" Expanded="@expanded" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrPatientBanner Patient="@patient" Type="Fill" Expanded="@expanded" />',
+    MAUI: '<!-- Native MAUI XAML for this component is in progress (DDR-021).\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
   };
   return `
 <p class="breadcrumbs">Patterns</p>
@@ -1200,8 +1200,10 @@ function typographyBody() {
 <SrHeading Size="HeadingSize.M"  Level="3">Repeat prescriptions</SrHeading>
 <SrHeading Size="HeadingSize.S"  Level="4">Issued in the last 6 months</SrHeading>
 <SrHeading Size="HeadingSize.Xs" Level="5">Dosage changes</SrHeading>`,
-    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->
-<SrHeading Size="HeadingSize.Xl" Level="1">Patient summary</SrHeading>`,
+    MAUI: `<!-- Native MAUI XAML for this component is in progress (DDR-021).
+     MAUI is native XAML and does not render the Blazor components, so the
+     Blazor snippet on the previous tab is not a substitute.
+     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
   };
 
   const labelSpecimen = `
@@ -1227,8 +1229,10 @@ function typographyBody() {
 <SrInput Id="nhs-number" DescribedBy="nhs-number-hint" />
 
 <SrFieldset Legend="Contact preferences" LegendSize="HeadingSize.S" />`,
-    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->
-<SrLabel For="nhs-number">NHS number</SrLabel>`,
+    MAUI: `<!-- Native MAUI XAML for this component is in progress (DDR-021).
+     MAUI is native XAML and does not render the Blazor components, so the
+     Blazor snippet on the previous tab is not a substitute.
+     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
   };
 
   const bodySpecimen = `
@@ -1247,8 +1251,10 @@ views, and for supporting text and form values.</div>
     Blazor: `<SrText Size="TextSize.M">Long-form reading and clinical notes.</SrText>
 <SrText Size="TextSize.S">Primary content in tables and data-dense views.</SrText>
 <SrText Size="TextSize.Caption">Last updated 06 Dec 2024 at 14:22</SrText>`,
-    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->
-<SrText Size="TextSize.S">Primary content in tables and data-dense views.</SrText>`,
+    MAUI: `<!-- Native MAUI XAML for this component is in progress (DDR-021).
+     MAUI is native XAML and does not render the Blazor components, so the
+     Blazor snippet on the previous tab is not a substitute.
+     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
   };
 
   const overrideSnippets = {
@@ -1262,8 +1268,10 @@ views, and for supporting text and form values.</div>
 <Heading as="h2" size="s">Allergies and adverse reactions</Heading>`,
     Blazor: `@* The heading level and the visual size are separate parameters. *@
 <SrHeading Level="2" Size="HeadingSize.S">Allergies and adverse reactions</SrHeading>`,
-    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->
-<SrHeading Level="2" Size="HeadingSize.S">Allergies and adverse reactions</SrHeading>`,
+    MAUI: `<!-- Native MAUI XAML for this component is in progress (DDR-021).
+     MAUI is native XAML and does not render the Blazor components, so the
+     Blazor snippet on the previous tab is not a substitute.
+     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
   };
 
   const linkSnippets = {
@@ -1281,8 +1289,10 @@ views, and for supporting text and form values.</div>
     Blazor: `<SrText Size="TextSize.M">
   Review the <SrLink Href="/medication">current medication list</SrLink> before prescribing.
 </SrText>`,
-    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->
-<SrLink Href="/medication">current medication list</SrLink>`,
+    MAUI: `<!-- Native MAUI XAML for this component is in progress (DDR-021).
+     MAUI is native XAML and does not render the Blazor components, so the
+     Blazor snippet on the previous tab is not a substitute.
+     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
   };
 
   const listSnippets = {
@@ -1299,8 +1309,10 @@ views, and for supporting text and form values.</div>
 <List as="ol" size="m" items={steps} />`,
     Blazor: `<SrList Size="TextSize.M" Items="@medications" />
 <SrList Ordered Size="TextSize.M" Items="@steps" />`,
-    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->
-<SrList Size="TextSize.M" Items="@medications" />`,
+    MAUI: `<!-- Native MAUI XAML for this component is in progress (DDR-021).
+     MAUI is native XAML and does not render the Blazor components, so the
+     Blazor snippet on the previous tab is not a substitute.
+     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
   };
 
   return `
@@ -1414,7 +1426,10 @@ ${codePanel('type-section-break', {
     HTML: `<hr>\n\n<!-- Where the break is structural but should not be seen,\n     use spacing instead of a visible rule. -->\n<div style="margin-block: var(--space-6)"></div>`,
     React: `<Divider />\n<Divider visible={false} />`,
     Blazor: `<SrDivider />\n<SrDivider Visible="false" />`,
-    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrDivider />`,
+    MAUI: `<!-- Native MAUI XAML for this component is in progress (DDR-021).
+     MAUI is native XAML and does not render the Blazor components, so the
+     Blazor snippet on the previous tab is not a substitute.
+     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
   })}
 
 <h2>Text alignment</h2>
@@ -1429,7 +1444,10 @@ ${codePanel('type-alignment', {
     HTML: `<!-- Text columns: left aligned, which is the default. -->\n<td class="sr-table__cell">Atorvastatin 20mg</td>\n\n<!-- Numeric columns: right aligned, heading matches the values. -->\n<th scope="col" class="sr-table__cell--numeric">Dose (mg)</th>\n<td class="sr-table__cell sr-table__cell--numeric">20</td>`,
     React: `<Table.Column field="medication" />\n<Table.Column field="dose" align="right" />`,
     Blazor: `<SrTableColumn Field="medication" />\n<SrTableColumn Field="dose" Align="Align.Right" />`,
-    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrTableColumn Field="dose" Align="Align.Right" />`,
+    MAUI: `<!-- Native MAUI XAML for this component is in progress (DDR-021).
+     MAUI is native XAML and does not render the Blazor components, so the
+     Blazor snippet on the previous tab is not a substitute.
+     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
   })}
 
 <hr>
@@ -1547,7 +1565,7 @@ ${codePanel('colour-usage', {
     HTML: `/* Correct: ask for the role. */\n.sr-panel {\n  background: var(--sr-color-surface-section-cards);\n  border: 1px solid var(--sr-color-border-default);\n  color: var(--sr-color-text-primary);\n}\n\n/* Wrong: a primitive, and a raw hex. */\n.sr-panel {\n  background: var(--color-blue-50);\n  border: 1px solid #d8dde0;\n}`,
     React: `<Panel\n  surface="section-cards"\n  border="default"\n/>\n\n// Token values are never passed as props; the component\n// resolves them from the semantic layer.`,
     Blazor: `<SrPanel Surface="Surface.SectionCards" Border="Border.Default" />\n\n@* app.css consumes the published token stylesheet: *@\n@* @import "@dhcw/sr-tokens/build/css/tokens.css"; *@`,
-    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<!-- XAML resources map to the same semantic names. -->\n<Setter Property="BackgroundColor" Value="{StaticResource SrColorSurfaceSectionCards}" />`,
+    MAUI: `<!-- Native MAUI XAML. The same semantic names, as XAML resources -->\n<!-- from Tokens.xaml. Never a literal colour, and never a primitive. -->\n<Setter Property="BackgroundColor" Value="{StaticResource SrColorSurfaceSectionCards}" />\n<Setter Property="Stroke" Value="{StaticResource SrColorBorderDefault}" />\n<Setter Property="TextColor" Value="{StaticResource SrColorTextPrimary}" />`,
   })}
 
 <h2>Semantic tokens</h2>
@@ -1627,7 +1645,7 @@ ${codePanel('colour-focus', {
     HTML: `.sr-button:focus-visible {\n  outline: 3px solid var(--sr-color-border-focus);\n  outline-offset: 2px;\n}`,
     React: `// Focus styling comes from the component stylesheet.\n// Do not re-implement it per component.`,
     Blazor: `/* Provided by the shared component stylesheet. */\n.sr-button:focus-visible {\n  outline: 3px solid var(--sr-color-border-focus);\n  outline-offset: 2px;\n}`,
-    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid, -->\n<!-- so it inherits the same focus treatment. -->`,
+    MAUI: `<!-- Native MAUI XAML: focus is a visual state, not a CSS pseudo-class, -->\n<!-- but it reads the same focus token. -->\n<VisualState x:Name="Focused">\n  <VisualState.Setters>\n    <Setter Property="Stroke" Value="{StaticResource SrColorBorderFocus}" />\n    <Setter Property="StrokeThickness" Value="3" />\n  </VisualState.Setters>\n</VisualState>`,
   })}
 
 <h2>Dark mode</h2>
@@ -1753,7 +1771,7 @@ const BUTTON_SCRIPT = `<script>
       HTML:'<button class="'+cls+'">Confirm patient</button>',
       React:'<Button type="'+v+'"'+(size!=='default'?' size="'+size+'"':'')+'>Confirm patient</Button>',
       Blazor:'<SrButton Type="ButtonType.'+T+'"'+(S?' Size="ButtonSize.'+S+'"':'')+'>Confirm patient</SrButton>',
-      MAUI:'<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\\n<SrButton Type="ButtonType.'+T+'">Confirm patient</SrButton>'
+      MAUI:'<!-- Native MAUI XAML for this component is in progress (DDR-021).\\n     MAUI is native XAML and does not render the Blazor components, so the\\n     Blazor snippet on the previous tab is not a substitute.\\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->'+T+'">Confirm patient</SrButton>'
     };
   }
   var FW=['HTML','React','Blazor','MAUI'];
@@ -1801,7 +1819,7 @@ function tableBody() {
     HTML: '<div class="sr-table-wrap">\n  <table class="sr-table">\n    <thead class="sr-table__head">…</thead>\n    <tbody>\n      <tr class="sr-table__row sr-table__row--selected">…</tr>\n    </tbody>\n  </table>\n</div>',
     React: '<Table\n  columns={columns}\n  rows={rows}\n  selectable\n  selectedIds={selectedIds}\n  onSelectionChange={setSelectedIds}\n/>',
     Blazor: '<SrTable Items="@patients" SelectedId="@activePatientId" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrTable Items="@patients" SelectedId="@activePatientId" />',
+    MAUI: '<!-- Native MAUI XAML for this component is in progress (DDR-021).\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
   };
   return `
 <p class="breadcrumbs">Components</p>
@@ -1854,13 +1872,13 @@ ${trail.map((c, i) => (i === trail.length - 1
     HTML: '<nav aria-label="Breadcrumb">\n  <ol class="sr-breadcrumbs">\n    <li class="sr-breadcrumbs__item">\n      <a class="sr-breadcrumbs__link" href="/">Home</a>\n      <span class="sr-breadcrumbs__separator" aria-hidden="true">/</span>\n    </li>\n    …\n    <li class="sr-breadcrumbs__item">\n      <span class="sr-breadcrumbs__current" aria-current="page">Case note volume 3</span>\n    </li>\n  </ol>\n</nav>',
     React: '<Breadcrumbs\n  items={[\n    { label: "Home", href: "/" },\n    { label: "Patient search", href: "/search" },\n    { label: "JOHN, Elvet George", href: "/patients/1" },\n    { label: "Case note volume 3" },\n  ]}\n/>',
     Blazor: '<SrBreadcrumbs Items="@trail" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid.\n     On phone widths use Type=Back — a four-level trail wraps. -->\n<SrBreadcrumbs Items="@trail" Type="Back" />',
+    MAUI: '<!-- Native MAUI XAML for this component is in progress (DDR-021).\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
   };
   const backSnippets = {
     HTML: '<nav aria-label="Breadcrumb">\n  <ol class="sr-breadcrumbs sr-breadcrumbs--back">\n    <li class="sr-breadcrumbs__item">\n      <span class="sr-breadcrumbs__back-icon">…</span>\n      <a class="sr-breadcrumbs__link" href="/patients/1">Back to JOHN, Elvet George</a>\n    </li>\n  </ol>\n</nav>',
     React: '<Breadcrumbs type="back" items={trail} />\n\n// Same items array as the multilevel type — the component takes\n// the item before the current page and names it.',
     Blazor: '<SrBreadcrumbs Items="@trail" Type="Back" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrBreadcrumbs Items="@trail" Type="Back" />',
+    MAUI: '<!-- Native MAUI XAML for this component is in progress (DDR-021).\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
   };
   return `
 <p class="breadcrumbs">Components</p>
@@ -1911,7 +1929,7 @@ ${sw('Off, unavailable', false, true)}
     HTML: '<button type="button" role="switch" aria-checked="true" class="sr-switch">\n  <span class="sr-switch__track"><span class="sr-switch__thumb"></span></span>\n  <span class="sr-switch__label">Show archived requests</span>\n</button>',
     React: '<Switch\n  label="Show archived requests"\n  checked={showArchived}\n  onChange={setShowArchived}\n/>',
     Blazor: '<SrSwitch Label="Show archived requests" @bind-Checked="showArchived" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid.\n     Give the label-and-track row a 44px height on touch. -->\n<SrSwitch Label="Show archived requests" @bind-Checked="showArchived" />',
+    MAUI: '<!-- Native MAUI XAML for this component is in progress (DDR-021).\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
   };
   // Type: Segmented control (Figma 2752:40 segment block, 2770:55996 two-option
   // example). Grouped with the switch because the Figma "Toggles" page
@@ -1931,7 +1949,7 @@ ${seg(['Quick search', 'Advanced'], 0, true)}
     HTML: '<div class="sr-segmented" role="group" aria-label="Search mode">\n  <button type="button" class="sr-segmented__option" aria-pressed="true">Quick search</button>\n  <button type="button" class="sr-segmented__option" aria-pressed="false">Advanced</button>\n</div>',
     React: '<SegmentedControl\n  ariaLabel="Search mode"\n  options={["Quick search", "Advanced"]}\n  value={mode}\n  onChange={setMode}\n/>',
     Blazor: '<SrSegmentedControl Options="@modes" @bind-Value="mode" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid.\n     Give the track a 44px row on touch. -->\n<SrSegmentedControl Options="@modes" @bind-Value="mode" />',
+    MAUI: '<!-- Native MAUI XAML for this component is in progress (DDR-021).\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
   };
   return `
 <p class="breadcrumbs">Components</p>
@@ -2007,7 +2025,7 @@ function inputBody() {
     HTML: '<label class="sr-input__label" for="patient-name">Field label</label>\n<div class="sr-input__field">\n  <input id="patient-name" type="text" class="sr-input__control" placeholder="Enter value">\n</div>',
     React: '<Input label="Field label" placeholder="Enter value" />\n// value, onChange, maxLength, name — any native <input> prop — pass\n// straight through: Input forwards what it does not recognise.',
     Blazor: '<SrInput Label="Field label" Placeholder="Enter value" @bind-Value="value" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrInput Label="Field label" Placeholder="Enter value" @bind-Value="value" />',
+    MAUI: '<!-- Native MAUI XAML for this component is in progress (DDR-021).\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
   };
 
   const states = `<div style="display:flex;flex-direction:column;gap:16px;max-width:320px">
@@ -2022,7 +2040,7 @@ ${field({ label: 'Field label', placeholder: 'Enter value', disabled: true })}
     HTML: '<label class="sr-input__label" for="password">Password</label>\n<span class="sr-input__hint" id="password-hint">Must be 8 or more characters</span>\n<div class="sr-input__field">\n  <input id="password" type="password" class="sr-input__control" aria-describedby="password-hint">\n  <button type="button" class="sr-input__toggle" aria-label="Show password">…</button>\n</div>',
     React: '<Input type="password" label="Password" hint="Must be 8 or more characters" />',
     Blazor: '<SrInput Type="InputType.Password" Label="Password" Hint="Must be 8 or more characters" @bind-Value="value" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrInput Type="InputType.Password" Label="Password" @bind-Value="value" />',
+    MAUI: '<!-- Native MAUI XAML for this component is in progress (DDR-021).\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
   };
 
   const phoneDemo = field({ type: 'tel', label: 'Phone number', placeholder: 'e.g. 07700 900000' });
@@ -2030,7 +2048,7 @@ ${field({ label: 'Field label', placeholder: 'Enter value', disabled: true })}
     HTML: '<label class="sr-input__label" for="phone">Phone number</label>\n<div class="sr-input__field">\n  <input id="phone" type="tel" class="sr-input__control" placeholder="e.g. 07700 900000">\n</div>',
     React: '<Input type="phone" label="Phone number" placeholder="e.g. 07700 900000" />',
     Blazor: '<SrInput Type="InputType.Phone" Label="Phone number" Placeholder="e.g. 07700 900000" @bind-Value="value" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrInput Type="InputType.Phone" Label="Phone number" @bind-Value="value" />',
+    MAUI: '<!-- Native MAUI XAML for this component is in progress (DDR-021).\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
   };
 
   const dateTimeDemo = `<div style="display:flex;gap:16px;flex-wrap:wrap">
@@ -2041,7 +2059,7 @@ ${field({ label: 'Field label', placeholder: 'Enter value', disabled: true })}
     HTML: '<!-- Date and Time delegate to DatePicker / TimeSelect behind the same label/hint/error scaffold. -->',
     React: '<Input type="calendar" label="Date" />\n<Input type="time" label="Time" />',
     Blazor: '<SrInput Type="InputType.Calendar" Label="Date" @bind-Value="date" />\n<SrInput Type="InputType.Time" Label="Time" @bind-Value="time" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrInput Type="InputType.Calendar" Label="Date" @bind-Value="date" />',
+    MAUI: '<!-- Native MAUI XAML for this component is in progress (DDR-021).\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
   };
 
   const textareaDemo = field({ label: 'Field label', placeholder: 'Enter value', textarea: true, hint: undefined });
@@ -2049,7 +2067,7 @@ ${field({ label: 'Field label', placeholder: 'Enter value', disabled: true })}
     HTML: '<label class="sr-input__label" for="notes">Field label</label>\n<div class="sr-input__field sr-input__field--textarea">\n  <textarea id="notes" class="sr-input__control" placeholder="Enter value"></textarea>\n</div>',
     React: '<Input type="textarea" label="Field label" placeholder="Enter value" />',
     Blazor: '<SrInput Type="InputType.Textarea" Label="Field label" @bind-Value="value" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrInput Type="InputType.Textarea" Label="Field label" @bind-Value="value" />',
+    MAUI: '<!-- Native MAUI XAML for this component is in progress (DDR-021).\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
   };
 
   return `
@@ -2356,8 +2374,10 @@ function iconsBody() {
 <span>Observations</span>`,
     Blazor: `<SrIcon Name="clinical/vitals" Size="IconSize.Md" Color="IconColor.Default" />
 <span>Observations</span>`,
-    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->
-<SrIcon Name="clinical/vitals" Size="IconSize.Md" Color="IconColor.Default" />`,
+    MAUI: `<!-- Native MAUI XAML for this component is in progress (DDR-021).
+     MAUI is native XAML and does not render the Blazor components, so the
+     Blazor snippet on the previous tab is not a substitute.
+     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
   };
 
   const a11ySnippets = {
@@ -2392,10 +2412,10 @@ function iconsBody() {
 <SrButton Variant="ButtonVariant.Secondary" AriaLabel="Print summary">
   <SrIcon Name="action/print" Size="IconSize.Sm" Color="IconColor.Inherit" />
 </SrButton>`,
-    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->
-<SrButton Variant="ButtonVariant.Secondary" AriaLabel="Print summary">
-  <SrIcon Name="action/print" Size="IconSize.Sm" Color="IconColor.Inherit" />
-</SrButton>`,
+    MAUI: `<!-- Native MAUI XAML for this component is in progress (DDR-021).
+     MAUI is native XAML and does not render the Blazor components, so the
+     Blazor snippet on the previous tab is not a substitute.
+     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
   };
 
   const statusSnippets = {
@@ -2415,11 +2435,10 @@ function iconsBody() {
   <SrIcon Name="status/warning" Size="IconSize.Sm" Color="IconColor.Critical" />
   Allergy: penicillin
 </SrText>`,
-    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->
-<SrText Size="TextSize.S">
-  <SrIcon Name="status/warning" Size="IconSize.Sm" Color="IconColor.Critical" />
-  Allergy: penicillin
-</SrText>`,
+    MAUI: `<!-- Native MAUI XAML for this component is in progress (DDR-021).
+     MAUI is native XAML and does not render the Blazor components, so the
+     Blazor snippet on the previous tab is not a substitute.
+     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
   };
 
   const buttonRow = `
@@ -2660,9 +2679,13 @@ to review, and what has no equivalent yet.</p>
 
 <h2>Frameworks</h2>
 <p>Every code sample is shown for the four supported targets, in the same order: HTML, React, Blazor
-and MAUI. HTML is the reference implementation; the others wrap the same markup and tokens. MAUI
-renders the Blazor components through Blazor Hybrid, so a component behaves the same on desktop and
-mobile as it does on the web.</p>
+and MAUI. HTML is the reference implementation; React and Blazor wrap the same markup and tokens.</p>
+<p><strong>MAUI is different, and deliberately so.</strong> It is a native platform with its own
+layout engine, so it does not share markup with the web: there is no web view and no shared HTML.
+What it does share is the layer that keeps things consistent, the design tokens, delivered as XAML
+resource dictionaries generated from the same source as the web stylesheet. Native MAUI styles are
+in progress, so a MAUI tab currently either shows real XAML or says plainly that it does not exist
+yet.</p>
 
 <h2>If something is missing or wrong</h2>
 <p>Use <a href="${REPORT_ISSUE_URL}" target="_blank" rel="noopener">Report an issue</a> for anything
@@ -2719,7 +2742,7 @@ ${codePanel('get-files-icon', {
   HTML: '<!-- With the sprite: no JavaScript at all. -->\n<span class="sr-icon sr-icon--sm">\n  <svg><use href="/assets/sprite.svg#icon-nav-search"></use></svg>\n</span>',
   React: 'import Icon from "@dhcw/sr-react/icon";\n\n<Icon name="nav/search" size="sm" />',
   Blazor: '<SrIcon Name="nav/search" Size="IconSize.Sm" />',
-  MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrIcon Name="nav/search" Size="IconSize.Sm" />',
+  MAUI: '<!-- Native MAUI XAML for this component is in progress (DDR-021).\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
 })}
 
 <div class="callout"><p><strong>The sprite has to be served over HTTP from your own origin.</strong>
@@ -2759,7 +2782,7 @@ ${codePanel('get-files-npm-import', {
   HTML: '<!-- Route 1 (download) is the equivalent for plain HTML — see above. -->',
   React: 'import { Button } from "@dhcw/sr-react";\nimport "@dhcw/sr-web/dist/single-record.css";',
   Blazor: '<!-- The Blazor Razor Class Library is distributed via NuGet, not npm. See DDR-020. -->',
-  MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. See DDR-020. -->',
+  MAUI: '<!-- Native MAUI XAML for this component is in progress (DDR-021).\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
 })}
 <p>Working in a checkout of the repository itself (rather than as a dependency)? Clone
 <a href="https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system" target="_blank" rel="noopener">the org repo</a>, then:</p>

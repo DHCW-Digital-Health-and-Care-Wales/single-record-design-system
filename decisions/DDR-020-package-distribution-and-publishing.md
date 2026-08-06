@@ -1,8 +1,18 @@
 # DDR-020: Package Distribution — Registries, Versioning and Release
 
-**Date:** 2026-08-04 (amended 2026-08-05)
+**Date:** 2026-08-04 (amended 2026-08-05, 2026-08-06)
 **Author:** Design lead
 **Status:** Proposed — needs engineering lead and DHCW governance sign-off before the first publish
+
+**Amendment, 2026-08-06 — §1 is superseded by DDR-021 for MAUI.** This record
+routed the Blazor Razor Class Library to NuGet "for Blazor web **and** MAUI,
+which renders the same components". That was based on the mistaken belief that
+MAUI used Blazor Hybrid. **MAUI is native XAML.** The Blazor RCL therefore has
+one audience (Blazor web), and MAUI needs its own NuGet package —
+`DHCW.SingleRecord.Maui`, carrying the XAML resource dictionaries and native
+styles, versioned in lockstep with everything else. The two-registry decision
+(npm for web, NuGet for .NET) is unaffected; the count of NuGet packages
+changes from one to two. See DDR-021.
 
 **Amendment, 2026-08-05.** Two corrections from the design lead, both material:
 React is an approved, first-class target for Single Record (Case Note Tracking
@@ -70,7 +80,8 @@ publish.
 | `…/single-record-icons` | npm, public | Web and React |
 | `…/single-record-web` | npm, public | Any web application; the canonical CSS |
 | `…/single-record-react` | npm, public | **React products — Case Note Tracking and new products** |
-| `DHCW.SingleRecord.Components` (Blazor RCL) | **NuGet** | Blazor web **and** MAUI, which renders the same components |
+| `DHCW.SingleRecord.Components` (Blazor RCL) | **NuGet** | Blazor web only (corrected 2026-08-06 — see the amendment above) |
+| `DHCW.SingleRecord.Maui` (XAML tokens + native styles) | **NuGet** | .NET MAUI, natively (DDR-021) |
 | Website, Storybook, prototypes | **Never published** | — |
 
 ### 2. Naming and scope ownership — public npm, but the scope is not ours to take
