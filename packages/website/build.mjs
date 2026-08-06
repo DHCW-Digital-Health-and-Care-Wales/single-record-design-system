@@ -684,6 +684,46 @@ function reactPropsOf(name) {
   return (REACT_PROPS_CACHE[name] = props);
 }
 
+/**
+ * The MAUI counterpart of the React prop check below.
+ *
+ * A MAUI snippet is XAML, and the thing that silently rots in XAML is a
+ * `{StaticResource ...}` naming a key that no longer exists — it throws at page
+ * parse time in the consuming app, long after anyone copied it from here. So
+ * every resource a MAUI snippet references must resolve against what
+ * @dhcw/sr-maui actually ships (DDR-021).
+ *
+ * Deliberately shallow, same as the React check: it cannot tell you a value is
+ * wrong, only that a name does not exist. That is the failure that happens.
+ */
+const MAUI_RESOURCES = (() => {
+  const known = new Set();
+  for (const f of ['Colors.xaml', 'Styles.xaml']) {
+    const p = resolve(ROOT, 'packages', 'maui', f);
+    if (!existsSync(p)) return null; // package not built yet — skip rather than fail
+    for (const m of readFileSync(p, 'utf8').matchAll(/x:Key="([^"]+)"/g)) known.add(m[1]);
+  }
+  return known;
+})();
+
+function checkMauiSnippet(panelId, code) {
+  if (!MAUI_RESOURCES) return;
+  const seen = new Set();
+  for (const m of code.matchAll(/\{StaticResource\s+([^}]+?)\s*\}/g)) {
+    const name = m[1].trim();
+    if (seen.has(name) || MAUI_RESOURCES.has(name)) continue;
+    seen.add(name);
+    snippetProblems.push(
+      `${panelId}: {StaticResource ${name}} — no such resource in @dhcw/sr-maui. `
+      + `Add the token or style, or fix the snippet.`
+    );
+  }
+  // Same rule the MAUI package enforces on itself: no literal colours.
+  for (const m of code.matchAll(/(?:Value|Color|BackgroundColor|TextColor|Stroke|Fill|BorderColor)\s*=\s*"(#[0-9A-Fa-f]{3,8}|Red|Blue|Green|Maroon|Black|White|Gray|Grey)"/g)) {
+    snippetProblems.push(`${panelId}: literal colour "${m[1]}" in a MAUI snippet — use a token.`);
+  }
+}
+
 const snippetProblems = [];
 function checkReactSnippet(panelId, code) {
   const open = /^\s*<([A-Z]\w*)([\s>])/.exec(code.replace(/^(\s*\/\/[^\n]*\n)+/, ''));
@@ -706,6 +746,7 @@ function checkReactSnippet(panelId, code) {
 /** Dark code panel with framework tabs and a copy button. */
 function codePanel(id, snippets) {
   if (snippets.React) checkReactSnippet(id, snippets.React);
+  if (snippets.MAUI) checkMauiSnippet(id, snippets.MAUI);
   const tabs = FRAMEWORKS.map((f, idx) =>
     `<button class="codepanel__tab${idx === 0 ? ' is-active' : ''}" type="button" role="tab"
        aria-selected="${idx === 0}" data-fw="${f}" data-target="${id}">${f}</button>`).join('');
@@ -1197,10 +1238,12 @@ function typographyBody() {
 <SrHeading Size="HeadingSize.M"  Level="3">Repeat prescriptions</SrHeading>
 <SrHeading Size="HeadingSize.S"  Level="4">Issued in the last 6 months</SrHeading>
 <SrHeading Size="HeadingSize.Xs" Level="5">Dosage changes</SrHeading>`,
-    MAUI: `<!-- Native MAUI XAML for this component is in progress.
-     MAUI is native XAML and does not render the Blazor components, so the
-     Blazor snippet on the previous tab is not a substitute.
-     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
+    MAUI: `<!-- The type scale is StyleClass, so a Label carries its role, not its size. -->
+<Label StyleClass="HeadingXl" Text="Patient summary" />
+<Label StyleClass="HeadingL"  Text="Current medication" />
+<Label StyleClass="HeadingM"  Text="Repeat prescriptions" />
+<Label StyleClass="HeadingS"  Text="Issued in the last 6 months" />
+<Label StyleClass="HeadingXs" Text="Dosage changes" />`,
   };
 
   const labelSpecimen = `
@@ -1226,10 +1269,9 @@ function typographyBody() {
 <SrInput Id="nhs-number" DescribedBy="nhs-number-hint" />
 
 <SrFieldset Legend="Contact preferences" LegendSize="HeadingSize.S" />`,
-    MAUI: `<!-- Native MAUI XAML for this component is in progress.
-     MAUI is native XAML and does not render the Blazor components, so the
-     Blazor snippet on the previous tab is not a substitute.
-     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
+    MAUI: `<Label StyleClass="FieldLabel" Text="NHS number" />
+<Label Text="485 777 3456" />
+<Label StyleClass="Caption" Text="Use the format 06 Dec 1974" />`,
   };
 
   const bodySpecimen = `
@@ -1752,6 +1794,11 @@ ${accessibilityTable([
 // see it. Assert the shape it generates here instead — this is the only
 // snippet on the site that is assembled client-side.
 checkReactSnippet('btn (generated in BUTTON_SCRIPT)', '<Button type="primary" size="small">Confirm patient</Button>');
+// Assert the generated MAUI XAML too: the switcher builds it in the browser, so
+// it never reaches codePanel()'s check. Every keyed style it can emit is listed.
+checkMauiSnippet('btn (generated in BUTTON_SCRIPT)',
+  '<Button Style="{StaticResource ButtonSecondary}" /><Button Style="{StaticResource ButtonGhost}" />'
+  + '<Button Style="{StaticResource ButtonDestructive}" />');
 
 const BUTTON_SCRIPT = `<script>
 (function(){
@@ -1768,7 +1815,15 @@ const BUTTON_SCRIPT = `<script>
       HTML:'<button class="'+cls+'">Confirm patient</button>',
       React:'<Button type="'+v+'"'+(size!=='default'?' size="'+size+'"':'')+'>Confirm patient</Button>',
       Blazor:'<SrButton Type="ButtonType.'+T+'"'+(S?' Size="ButtonSize.'+S+'"':'')+'>Confirm patient</SrButton>',
-      MAUI:'<!-- Native MAUI XAML for this component is in progress.\\n     MAUI is native XAML and does not render the Blazor components, so the\\n     Blazor snippet on the previous tab is not a substitute.\\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->'
+      MAUI:(function(){
+        var style={primary:'',secondary:'ButtonSecondary',ghost:'ButtonGhost',destructive:'ButtonDestructive'}[v];
+        var note=v==='primary'
+          ? '<!-- Primary is the implicit Button style: no Style attribute needed. -->'
+          : (v==='destructive'
+             ? '<!-- Destructive is permanent deletion, and always behind a confirmation. -->'
+             : '<!-- Intent is a keyed style; size comes from the type scale and padding. -->');
+        return note+'\\n<Button Text="Confirm patient"'+(style?' Style="{StaticResource '+style+'}"':'')+' />';
+      })()
     };
   }
   var FW=['HTML','React','Blazor','MAUI'];
@@ -1926,7 +1981,7 @@ ${sw('Off, unavailable', false, true)}
     HTML: '<button type="button" role="switch" aria-checked="true" class="sr-switch">\n  <span class="sr-switch__track"><span class="sr-switch__thumb"></span></span>\n  <span class="sr-switch__label">Show archived requests</span>\n</button>',
     React: '<Switch\n  label="Show archived requests"\n  checked={showArchived}\n  onChange={setShowArchived}\n/>',
     Blazor: '<SrSwitch Label="Show archived requests" @bind-Checked="showArchived" />',
-    MAUI: '<!-- Native MAUI XAML for this component is in progress.\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
+    MAUI: '<!-- The thumb position carries the state as well as the colour, so it\n     survives greyscale and low-vision viewing. -->\n<HorizontalStackLayout Spacing="8">\n  <Switch IsToggled="{Binding ShowArchived}" />\n  <Label Text="Show archived requests" VerticalOptions="Center" />\n</HorizontalStackLayout>',
   };
   // Type: Segmented control (Figma 2752:40 segment block, 2770:55996 two-option
   // example). Grouped with the switch because the Figma "Toggles" page
@@ -2016,6 +2071,9 @@ const INPUT_ICONS = {
 // The switcher builds its React snippet in the browser, so it never passes
 // through codePanel()'s prop check. Assert the shape here instead — same guard
 // the Buttons page uses.
+checkMauiSnippet('input (generated in INPUT_SCRIPT)',
+  '<Label StyleClass="FieldLabel" /><Label StyleClass="Caption" /><Label StyleClass="Error" />'
+  + '<Border Style="{StaticResource FieldBox}" /><Border Style="{StaticResource FieldBoxError}" />');
 checkReactSnippet('input (generated in INPUT_SCRIPT)',
   '<Input type="password" label="Password" hint="Must be 8 or more characters" required disabled hideLabel placeholder="Enter value" error="Enter a valid value" />');
 
@@ -2148,7 +2206,23 @@ const INPUT_SCRIPT = `<script>
       HTML: h.join('\\n'),
       React: react,
       Blazor: blazor,
-      MAUI: '<!-- Native MAUI XAML for this component is in progress.\\n     MAUI is native XAML and does not render the Blazor components, so the\\n     Blazor snippet on the previous tab is not a substitute.\\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->'
+      MAUI:(function(){
+        var box=err?'FieldBoxError':'FieldBox';
+        var L=[];
+        L.push('<!-- A field is a composition: label, optional hint, the bordered box,');
+        L.push('     and an error message. Styles.xaml ships the pieces. -->');
+        L.push('<VerticalStackLayout Spacing="4">');
+        L.push('  <Label StyleClass="FieldLabel" Text="'+c.field+(state.required?' *':'')+'" />');
+        if(state.hint) L.push('  <Label StyleClass="Caption" Text="'+c.hint+'" />');
+        L.push('  <Border Style="{StaticResource '+box+'}">');
+        L.push(isArea
+          ? '    <Editor Placeholder="'+c.ph+'"'+(dis?' IsEnabled="False"':'')+' />'
+          : '    <Entry Placeholder="'+c.ph+'"'+(isPw?' IsPassword="True"':'')+(dis?' IsEnabled="False"':'')+' />');
+        L.push('  </Border>');
+        if(err) L.push('  <Label StyleClass="Error" Text="'+c.err+'" />');
+        L.push('</VerticalStackLayout>');
+        return L.join('\\n');
+      })()
     };
   }
 
@@ -3304,9 +3378,13 @@ const searchIndex = pages.map((p) => ({
   x: stripTags(p.body).slice(0, 1200),
 }));
 if (snippetProblems.length) {
-  console.error(`\n${snippetProblems.length} React snippet(s) reference props that do not exist:\n`);
+  console.error(`\n${snippetProblems.length} code snippet problem(s):\n`);
   for (const p of snippetProblems) console.error(`  ${p}`);
-  console.error('\nFix the snippet, or the component if the snippet is what we meant to ship.\n');
+  console.error(
+    '\nReact snippets are checked against each component\'s own props; MAUI snippets\n'
+    + 'against the resources @dhcw/sr-maui ships. Fix the snippet, or the component if\n'
+    + 'the snippet is what we meant to ship.\n'
+  );
   process.exit(1);
 }
 

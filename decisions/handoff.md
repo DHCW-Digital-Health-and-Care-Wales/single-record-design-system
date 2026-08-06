@@ -100,12 +100,49 @@ accessibility fix that should not wait for the rest of the MAUI work.
    `packages/web/src/button/button.css` consumes the unprefixed one. Left alone
    deliberately: it is a token-structure change. The MAUI layer will use the
    `Sr`-prefixed keys only.
-5. **Next artefact: `packages/maui/Styles.xaml`**, modelled on the app's file
-   structure. The 29 interim MAUI tabs get real XAML once it exists.
-6. **Test at 200% font scale early.** `FontAutoScalingEnabled` defaults to `true`
-   on `Label`, and the app has fixed heights that will clip
-   (`RowDefinitions="30"`, `HeightRequest="60"`, the icon size styles). SR styles
-   should use `MinimumHeightRequest` wherever text is involved.
+5. ~~**Next artefact: `packages/maui/Styles.xaml`.**~~ **Built — see below.**
+6. **Test at 200% font scale.** `FontAutoScalingEnabled` defaults to `true` on
+   `Label`. Every text-bearing SR style now uses `MinimumHeightRequest` rather
+   than `HeightRequest`, but that is an assertion until someone runs it.
+
+### `packages/maui` now ships (same session)
+
+**`Colors.xaml`, generated** by `packages/maui/build.mjs` from the tokens. It
+exists as its own file for a reason worth knowing: `Tokens.xaml` and
+`Tokens.Dark.xaml` carry the **same key names** with different values. That
+suits swapping dictionaries at runtime, but the app themes with
+`AppThemeBinding`, which needs both values reachable at once — merging both
+files is a key collision. `Colors.xaml` carries every key once plus a `Dark`
+twin for the **16** semantics that actually differ; primitives are identical in
+both modes and are not duplicated.
+
+**`Styles.xaml`, hand-authored.** Typography, surfaces, buttons, form fields,
+status treatments. Implicit styles for stock controls, keyed styles for intent
+(`ButtonSecondary` / `ButtonGhost` / `ButtonDestructive`), `StyleClass` for the
+type scale, `VisualStateManager` for states. Type base is Body S 14/20 with
+Caption 12/16 as the floor.
+
+**The build is a conformance gate**, wired into `npm run check`: it fails if
+`Styles.xaml` references a resource that does not exist, or hard-codes a colour
+(hex or named). `Transparent` stays allowed — it is the absence of a colour, not
+a choice of one. Both checks were verified against deliberate failures; the
+first version of the literal-colour check silently passed a planted `#FF0000`,
+because XAML puts the value in `Value="…"` rather than on a named colour
+attribute.
+
+**The website's MAUI tabs are checked the same way** (the DDR-021 promise):
+every `{StaticResource …}` in a MAUI snippet must resolve against what
+`@dhcw/sr-maui` ships, or `build:site` fails. Verified against a planted typo.
+Real XAML now on Buttons, Input (both track the switcher live), the typography
+headings and labels, and the Switch. The rest stay on an honest interim note.
+
+**Not compiled.** All of it is validated as well-formed XAML with every
+reference resolving, which catches typos and drift but says nothing about
+layout. The design lead has **BrowserStack** access — App Live is the cheapest
+way to close that gap, and it removes the need for local emulators or a Mac.
+BrowserStack is weaker as a *public preview link* (sessions are per-user and it
+is not built to embed); Appetize remains the option if the DS website ever wants
+a live mobile embed.
 
 ---
 
