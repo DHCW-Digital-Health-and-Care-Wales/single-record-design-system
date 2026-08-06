@@ -104,19 +104,33 @@ them unchanged:
 `packages/maui` ships `Colors.xaml` and `Styles.xaml` as drop-in replacements at
 the same paths, adopted with one `MergedDictionaries` entry.
 
-### 4. Colour: `blue.800` stays primary. The DHCW navy does not enter the palette.
+### 4. Colour: `blue.800` stays primary. The DHCW navy joins the primitives as `blue.850`.
 
 `interactive.primary` remains `blue.800` `#325083` (a Hard Constraint, and
-re-affirmed here). The organisational navy `#2C3E72` is **not** added to SR's
-primitives. Where the app currently uses it for chrome (`DHCWNavBar`,
-`DHCWBackgroundNonClickable`), the SR equivalent is **`navy.900` `#1B294A`** —
-what the SR Header already uses for its masthead. If brand compliance requires
-`#2C3E72` somewhere specific, it lives in the app beside the logo, outside SR's
-semantic layer.
+re-affirmed here).
 
-`DHCWBackgroundClickable` is **deleted**, not remapped. Its usages become
-`interactive.primary`. This is the one change that will be visible on every
-screen, and it is the reason for the exercise.
+The DHCW organisational navy `#2C3E72` **is** added to SR's primitives, as
+**`color.blue.850`**. It already exists as a primitive in the DHCW Figma
+variables, and the token JSON is meant to mirror Figma — so its absence here was
+a gap in this system, not a stray value in the app. It sits between `blue.800`
+and `blue.900` in lightness, taking the same `850` slot that `cyan.850` already
+uses, and white on it is 10.3:1 (AAA).
+
+It is a **primitive, not a semantic**. Nothing aliases to it yet. It exists so
+application chrome that must carry DHCW corporate branding has a governed token
+to reach for instead of a literal hex, in the same way a logo is a brand asset
+rather than a design-system decision. Single Record's own brand primary is
+unchanged.
+
+> **Reconcile the name with Figma.** `blue.850` follows this repository's
+> convention; if the DHCW Figma variable is called something else, the JSON
+> should take Figma's name.
+
+`DHCWBackgroundClickable` (cyan `#12A3C9` as a filled surface) is **deleted**,
+not remapped. It fails contrast at 2.95:1 and is not carried into the redesign in
+any form, so there is nothing further to verify about it — the design does not
+use it. Where the app used it as a click affordance, the redesign uses
+`interactive.primary`.
 
 ### 5. Type: base moves to 14px, 12px is the floor, `Micro` is deleted.
 
@@ -235,21 +249,24 @@ requires explicit sign-off for, and it is not on the MAUI critical path. Left in
 place deliberately, recorded here so the MAUI style layer uses the `Sr`-prefixed
 keys exclusively and does not entrench the duplicate.
 
-**Open, needs verification before build**
+**Open**
 
-- **Confirm `#12A3C9`-on-white independently.** If it holds at 2.95:1 it is an
-  accessibility fix that outranks everything else here and should not wait.
-- `PatientHomePage.xaml` references `NWISBlack`, `NWISBlackDark` and `NWISGrey`,
-  none of which exist in the `Colors.xaml` supplied. Either a second dictionary
-  exists or that screen throws at parse time.
-- The `ExpanderView.Header` / `.Content` / `.Arrow` styles use class selectors
-  that are not Syncfusion syntax, while the sample screen uses
-  `syncfusion:SfExpander`. There may already be a non-Syncfusion expander in the
-  app, which would reduce the Syncfusion surface further.
 - **Test at 200% font scale early.** `FontAutoScalingEnabled` defaults to `true`
   on `Label`, and the app has fixed heights that will clip scaled text
   (`RowDefinitions="30"`, `HeightRequest="60"`, the icon size styles). SR styles
   should use `MinimumHeightRequest` wherever text is involved.
+- Reconcile `blue.850`'s name against the DHCW Figma variable (see §4).
+- `PatientHomePage.xaml` references `NWISBlack`, `NWISBlackDark` and `NWISGrey`,
+  which are absent from the `Colors.xaml` supplied. Noted for whoever maintains
+  that screen; it does not block this work, since those keys do not survive into
+  the redesign.
+
+**Closed rather than carried forward**
+
+The cyan-on-white contrast failure needed no further investigation once the
+design lead confirmed the redesign does not use that colour as a fill. It is
+recorded above as the reason `DHCWBackgroundClickable` is deleted rather than
+remapped, and needs no action of its own.
 
 ---
 

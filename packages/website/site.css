@@ -549,6 +549,20 @@ body.bare { margin: 0; }
 .switch__btn:last-child { border-right: 0; }
 .switch__btn.is-active { background: var(--sr-color-interactive-primary); color: var(--sr-color-text-inverse); }
 
+/* A switch group is one choice from several. A toggle group is several
+   independent yes/no options, so its buttons carry aria-pressed and each one
+   lights up on its own. Same furniture, different semantics. */
+.switch--toggles .switch__btn[aria-pressed="true"] {
+  background: var(--sr-color-surface-accent);
+  color: var(--sr-color-interactive-primary);
+  font-weight: 500;
+}
+.switch__label {
+  font-size: 13px;
+  color: var(--sr-color-text-secondary);
+  margin-right: -8px;
+}
+
 /* ── token specimens ──────────────────────────────────────────────────────── */
 .type-row { display: flex; align-items: baseline; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--sr-color-border-subtle); }
 .type-row__meta { flex: none; width: 180px; font-size: 13px; color: var(--sr-color-text-secondary); }
