@@ -7,6 +7,7 @@
   "workspaces": [
     "packages/tokens",
     "packages/icons",
+    "packages/maui",
     "packages/web",
     "packages/react",
     "packages/storybook",
@@ -24,7 +25,8 @@
     "dev:prototype": "npm run dev -w @dhcw/case-note-tracking-prototype",
     "check:type": "node scripts/check-typography.mjs --baseline",
     "check:ds": "node scripts/check-design-system.mjs --baseline",
-    "check": "npm run check:type && npm run check:ds",
-    "build:web": "npm run build -w @dhcw/sr-tokens && npm run build -w @dhcw/sr-web"
+    "check": "npm run check:type && npm run check:ds && npm run build:maui",
+    "build:web": "npm run build -w @dhcw/sr-tokens && npm run build -w @dhcw/sr-web",
+    "build:maui": "npm run build -w @dhcw/sr-tokens && npm run build -w @dhcw/sr-maui"
   }
 }
