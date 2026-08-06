@@ -1,0 +1,24 @@
+{
+  "name": "@dhcw/sr-maui",
+  "version": "0.1.0",
+  "description": "DHCW Single Record Design System — native .NET MAUI token and style layer. Colors.xaml is generated from @dhcw/sr-tokens; Styles.xaml is the design system's MAUI expression of it.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "Colors.xaml",
+    "Styles.xaml"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Chuk-DCHW/dhcw-single-record-design-system.git",
+    "directory": "packages/maui"
+  },
+  "bugs": "https://github.com/Chuk-DCHW/dhcw-single-record-design-system/issues"
+}

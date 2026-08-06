@@ -115,17 +115,24 @@ Current products under the Single Record programme: **EPR**, **patient administr
 | Web (reference baseline) | Standard HTML / CSS | Current |
 | Web applications | Blazor / .NET | Current |
 | Web applications | React | Current |
-| Mobile (phone, tablet) | .NET MAUI, rendering the Blazor components in a `BlazorWebView` | Current |
+| Mobile (phone, tablet) | .NET MAUI — **native XAML** | Current |
 | Legacy web | .NET Framework 4.8 | Limited — tokens (CSS custom properties) only |
 | Legacy desktop | Delphi | Maintained, not extended |
 
-**MAUI is the mobile target, and "Blazor Hybrid" is how it draws these
-components** — a `BlazorWebView` inside the MAUI app hosting the same Blazor
-RCL the web uses. The two are not alternatives, and MAUI has no native-XAML
-versions of these components by design (DDR-011). Desktop-only variants
-therefore have no MAUI equivalent — not because the mechanism fails, but
-because a browser-width bar has nowhere to go on a phone. Full explanation in
-`/docs/for-engineers.md` ("What runs where").
+**MAUI is native XAML. Blazor Hybrid is not used anywhere (DDR-021).** An
+earlier version of this file said MAUI rendered these components through a
+`BlazorWebView` hosting the Blazor RCL, and that MAUI had no native-XAML
+components by design. Both were wrong: the mobile app is native MAUI XAML
+(`Grid`, `Border`, `StackLayout`, `FlexLayout`, TinyMvvm for MVVM, Syncfusion
+for a few controls), and `packages/blazor` serves Blazor web only.
+
+What the design system ships for MAUI is a **token and style layer**, not a
+parallel component library: `Tokens.xaml` / `Tokens.Dark.xaml` from
+`@dhcw/sr-tokens`, plus `Colors.xaml` and `Styles.xaml` in `packages/maui`
+built on them. Syncfusion stays where it is genuinely needed (the PDF viewer);
+SR wraps what it would never design and builds natively what it already
+specifies. Full explanation in `/docs/for-engineers.md` ("What runs where") and
+DDR-021.
 
 Components and patterns must be implementation-agnostic at the design level. Per-framework consumption guidance lives in `/docs/for-engineers.md`.
 

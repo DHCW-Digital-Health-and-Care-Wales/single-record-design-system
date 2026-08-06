@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xaml-comp compile="true" ?>
+
+<!--
+    DHCW Single Record Design System — native .NET MAUI styles.
+
+    Merge AFTER Colors.xaml:
+
+        <ResourceDictionary.MergedDictionaries>
+            <sr:Colors />
+            <sr:Styles />
+        </ResourceDictionary.MergedDictionaries>
+
+    Conventions, so this file reads like MAUI rather than like a web design
+    system transliterated into XAML:
+
+      * Implicit styles do the work. A bare <Button> or <Label> is correct with
+        no ceremony; keyed styles exist only where a real choice is being made.
+      * AppThemeBinding for light and dark, never a runtime swap.
+      * VisualStateManager for Normal / Disabled / Focused / On / Off. States
+        live in XAML, not in code-behind.
+      * StyleClass for the type scale.
+      * MinimumHeightRequest, never HeightRequest, wherever text is involved.
+        FontAutoScalingEnabled defaults to true, so a fixed height crops its own
+        content the moment someone raises the system font size.
+      * Every colour is a token. Colors.xaml has no literal hex, and neither
+        does this file — packages/maui/build.mjs fails the build if one appears.
+
+    Type scale is the mobile scale (DDR-005), base Body S 14/20 (DDR-015).
+    Caption 12/16 is the floor: nothing here is smaller.
+-->
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!--#region Typography ===================================================-->
+    <!--
+        The implicit Label is Body S, 14/20. The app this replaces defaulted to
+        12px, which is Caption size, so caption-weight text had nowhere to go
+        but smaller. Setting the base correctly is what removes the need for a
+        10px class.
+    -->
+    <Style TargetType="Label">
+        <Setter Property="FontFamily" Value="Roboto" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="LineBreakMode" Value="WordWrap" />
+        <Setter Property="TextColor"
+                Value="{AppThemeBinding Light={StaticResource SrColorTextPrimary}, Dark={StaticResource SrColorTextPrimaryDark}}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor"
+                                    Value="{AppThemeBinding Light={StaticResource SrColorTextDisabled}, Dark={StaticResource SrColorTextDisabledDark}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style TargetType="Label" Class="HeadingXl"><Setter Property="FontSize" Value="28" /><Setter Property="FontAttributes" Value="Bold" /></Style>
+    <Style TargetType="Label" Class="HeadingL"><Setter Property="FontSize" Value="24" /><Setter Property="FontAttributes" Value="Bold" /></Style>
+    <Style TargetType="Label" Class="HeadingM"><Setter Property="FontSize" Value="20" /><Setter Property="FontAttributes" Value="Bold" /></Style>
+    <Style TargetType="Label" Class="HeadingS"><Setter Property="FontSize" Value="18" /><Setter Property="FontAttributes" Value="Bold" /></Style>
+    <Style TargetType="Label" Class="HeadingXs"><Setter Property="FontSize" Value="16" /><Setter Property="FontAttributes" Value="None" /></Style>
+
+    <Style TargetType="Label" Class="BodyM"><Setter Property="FontSize" Value="16" /></Style>
+    <Style TargetType="Label" Class="BodyS"><Setter Property="FontSize" Value="14" /></Style>
+
+    <!-- Field labels and anything naming a value. Medium weight, not bold. -->
+    <Style TargetType="Label" Class="FieldLabel"><Setter Property="FontSize" Value="14" /></Style>
+
+    <!--
+        Caption is the floor. It carries hints, timestamps and provenance
+        ("last actioned by ... on ..."). Secondary colour, not a smaller size,
+        is what makes it recede.
+    -->
+    <Style TargetType="Label" Class="Caption">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextColor"
+                Value="{AppThemeBinding Light={StaticResource SrColorTextSecondary}, Dark={StaticResource SrColorTextSecondaryDark}}" />
+    </Style>
+
+    <Style TargetType="Label" Class="Error">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextColor" Value="{StaticResource SrColorStatusCritical}" />
+    </Style>
+    <!--#endregion-->
+
+    <!--#region Page and surfaces ============================================-->
+    <Style TargetType="ContentPage" ApplyToDerivedTypes="True">
+        <Setter Property="BackgroundColor"
+                Value="{AppThemeBinding Light={StaticResource SrColorSurfaceBackground}, Dark={StaticResource SrColorSurfaceBackgroundDark}}" />
+    </Style>
+
+    <!--
+        The default Border is a card: a section surface, a subtle edge, and the
+        4px-based radius from DDR-001. Padding is Space 4 (16px), the standard
+        inset for a card that holds text.
+    -->
+    <Style TargetType="Border">
+        <Setter Property="BackgroundColor"
+                Value="{AppThemeBinding Light={StaticResource SrColorSurfaceSectionCards}, Dark={StaticResource SrColorSurfaceSectionCardsDark}}" />
+        <Setter Property="Stroke"
+                Value="{AppThemeBinding Light={StaticResource SrColorBorderDefault}, Dark={StaticResource SrColorBorderDefaultDark}}" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="Padding" Value="16" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="8" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- A card that is the whole tap target. Same surface, no visible edge. -->
+    <Style x:Key="CardTappable" TargetType="Border">
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="BackgroundColor"
+                Value="{AppThemeBinding Light={StaticResource SrColorSurfaceSmallCards}, Dark={StaticResource SrColorSurfaceSmallCardsDark}}" />
+    </Style>
+
+    <!--
+        Status cards. The edge carries the status, the surface stays legible:
+        a saturated fill behind body text is where contrast goes wrong.
+    -->
+    <Style x:Key="CardCritical" TargetType="Border">
+        <Setter Property="Stroke" Value="{StaticResource SrColorStatusCritical}" />
+        <Setter Property="StrokeThickness" Value="2" />
+        <Setter Property="BackgroundColor" Value="{StaticResource SrColorStatusCriticalSurface}" />
+    </Style>
+    <Style x:Key="CardWarning" TargetType="Border">
+        <Setter Property="Stroke" Value="{StaticResource SrColorStatusWarning}" />
+        <Setter Property="StrokeThickness" Value="2" />
+        <Setter Property="BackgroundColor" Value="{StaticResource SrColorStatusWarningSurface}" />
+    </Style>
+    <Style x:Key="CardSuccess" TargetType="Border">
+        <Setter Property="Stroke" Value="{StaticResource SrColorStatusSuccess}" />
+        <Setter Property="StrokeThickness" Value="2" />
+        <Setter Property="BackgroundColor" Value="{StaticResource SrColorStatusSuccessSurface}" />
+    </Style>
+
+    <Style TargetType="BoxView" Class="Divider">
+        <Setter Property="HeightRequest" Value="1" />
+        <Setter Property="Color"
+                Value="{AppThemeBinding Light={StaticResource SrColorBorderSubtle}, Dark={StaticResource SrColorBorderSubtleDark}}" />
+    </Style>
+    <!--#endregion-->
+
+    <!--#region Buttons =======================================================-->
+    <!--
+        Minimum height is 44, the touch target floor (WCAG 2.5.8 asks 24; 44 is
+        the platform convention and the right answer on a ward). It is a
+        MINIMUM: raise the system font size and the button grows rather than
+        clipping its label.
+
+        The implicit Button is the primary action. One per screen.
+    -->
+    <Style TargetType="Button">
+        <Setter Property="FontFamily" Value="Roboto" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="16,12" />
+        <Setter Property="MinimumHeightRequest" Value="44" />
+        <Setter Property="TextColor" Value="{StaticResource SrColorTextInverse}" />
+        <Setter Property="BackgroundColor"
+                Value="{AppThemeBinding Light={StaticResource SrColorInteractivePrimary}, Dark={StaticResource SrColorInteractivePrimaryDark}}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor"
+                                    Value="{AppThemeBinding Light={StaticResource SrColorInteractivePrimaryHover}, Dark={StaticResource SrColorInteractivePrimaryHoverDark}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource SrColorInteractiveDisabled}" />
+                            <Setter Property="TextColor" Value="{StaticResource SrColorTextInverse}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!-- Supporting action beside a primary one. Outlined, not filled. -->
+    <Style x:Key="ButtonSecondary" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="BorderWidth" Value="1" />
+        <Setter Property="BorderColor"
+                Value="{AppThemeBinding Light={StaticResource SrColorInteractivePrimary}, Dark={StaticResource SrColorInteractivePrimaryDark}}" />
+        <Setter Property="TextColor"
+                Value="{AppThemeBinding Light={StaticResource SrColorInteractivePrimary}, Dark={StaticResource SrColorInteractivePrimaryDark}}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource SrColorSurfaceAccent}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="BorderColor" Value="{StaticResource SrColorBorderDisabled}" />
+                            <Setter Property="TextColor" Value="{StaticResource SrColorTextDisabled}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!-- Low emphasis: cancel, back, dismiss. No border, no fill. -->
+    <Style x:Key="ButtonGhost" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="BorderWidth" Value="0" />
+        <Setter Property="FontAttributes" Value="None" />
+        <Setter Property="TextColor"
+                Value="{AppThemeBinding Light={StaticResource SrColorInteractivePrimary}, Dark={StaticResource SrColorInteractivePrimaryDark}}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor" Value="{StaticResource SrColorTextDisabled}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!--
+        Permanent deletion only, and always behind a confirmation. Destructive
+        is not "cancel" — a red Cancel button teaches people that red means
+        "the way out", which is exactly wrong when it means "this is gone".
+    -->
+    <Style x:Key="ButtonDestructive" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource SrColorInteractiveDestructive}" />
+        <Setter Property="TextColor" Value="{StaticResource SrColorTextInverse}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource SrColorInteractiveDisabled}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style TargetType="ImageButton">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="BorderWidth" Value="0" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="8" />
+        <Setter Property="MinimumHeightRequest" Value="44" />
+        <Setter Property="MinimumWidthRequest" Value="44" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="Opacity" Value="0.4" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+    <!--#endregion-->
+
+    <!--#region Form fields ===================================================-->
+    <!--
+        Focus is a visual state here, not a CSS pseudo-class, but it reads the
+        same focus token as the web (Cyan/700, DDR-006) so a focused field looks
+        the same on a phone as it does in a browser.
+    -->
+    <Style TargetType="Entry">
+        <Setter Property="FontFamily" Value="Roboto" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="MinimumHeightRequest" Value="44" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="TextColor"
+                Value="{AppThemeBinding Light={StaticResource SrColorTextPrimary}, Dark={StaticResource SrColorTextPrimaryDark}}" />
+        <Setter Property="PlaceholderColor"
+                Value="{AppThemeBinding Light={StaticResource SrColorTextSecondary}, Dark={StaticResource SrColorTextSecondaryDark}}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor" Value="{StaticResource SrColorTextDisabled}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style TargetType="Editor">
+        <Setter Property="FontFamily" Value="Roboto" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="MinimumHeightRequest" Value="88" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="TextColor"
+                Value="{AppThemeBinding Light={StaticResource SrColorTextPrimary}, Dark={StaticResource SrColorTextPrimaryDark}}" />
+        <Setter Property="PlaceholderColor"
+                Value="{AppThemeBinding Light={StaticResource SrColorTextSecondary}, Dark={StaticResource SrColorTextSecondaryDark}}" />
+    </Style>
+
+    <!--
+        The bordered box an Entry or Editor sits inside. Kept separate from the
+        control so the label, hint and error rows can share the same stack, the
+        way the web Input does.
+    -->
+    <Style x:Key="FieldBox" TargetType="Border">
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="StrokeThickness" Value="1" />
+        <Setter Property="BackgroundColor"
+                Value="{AppThemeBinding Light={StaticResource SrColorSurfaceSectionCards}, Dark={StaticResource SrColorSurfaceSectionCardsDark}}" />
+        <Setter Property="Stroke"
+                Value="{AppThemeBinding Light={StaticResource SrColorBorderDefault}, Dark={StaticResource SrColorBorderDefaultDark}}" />
+        <Setter Property="StrokeShape">
+            <Setter.Value>
+                <RoundRectangle CornerRadius="4" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Focused">
+                        <VisualState.Setters>
+                            <Setter Property="Stroke" Value="{StaticResource SrColorBorderFocus}" />
+                            <Setter Property="StrokeThickness" Value="2" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="Stroke" Value="{StaticResource SrColorBorderDisabled}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!-- Same box, invalid. Paired with an Error label beneath, never colour alone. -->
+    <Style x:Key="FieldBoxError" TargetType="Border" BasedOn="{StaticResource FieldBox}">
+        <Setter Property="Stroke" Value="{StaticResource SrColorStatusCritical}" />
+        <Setter Property="StrokeThickness" Value="2" />
+    </Style>
+
+    <Style TargetType="Picker">
+        <Setter Property="FontFamily" Value="Roboto" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="MinimumHeightRequest" Value="44" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="TextColor"
+                Value="{AppThemeBinding Light={StaticResource SrColorTextPrimary}, Dark={StaticResource SrColorTextPrimaryDark}}" />
+        <Setter Property="TitleColor"
+                Value="{AppThemeBinding Light={StaticResource SrColorTextSecondary}, Dark={StaticResource SrColorTextSecondaryDark}}" />
+    </Style>
+
+    <Style TargetType="DatePicker">
+        <Setter Property="FontFamily" Value="Roboto" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="MinimumHeightRequest" Value="44" />
+        <Setter Property="TextColor"
+                Value="{AppThemeBinding Light={StaticResource SrColorTextPrimary}, Dark={StaticResource SrColorTextPrimaryDark}}" />
+    </Style>
+
+    <Style TargetType="TimePicker">
+        <Setter Property="FontFamily" Value="Roboto" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="MinimumHeightRequest" Value="44" />
+        <Setter Property="TextColor"
+                Value="{AppThemeBinding Light={StaticResource SrColorTextPrimary}, Dark={StaticResource SrColorTextPrimaryDark}}" />
+    </Style>
+
+    <Style TargetType="CheckBox">
+        <Setter Property="MinimumHeightRequest" Value="44" />
+        <Setter Property="Color"
+                Value="{AppThemeBinding Light={StaticResource SrColorInteractivePrimary}, Dark={StaticResource SrColorInteractivePrimaryDark}}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="Color" Value="{StaticResource SrColorInteractiveDisabled}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!--
+        The thumb position carries the state as well as the colour, so it
+        survives greyscale and low-vision viewing.
+    -->
+    <Style TargetType="Switch">
+        <Setter Property="OnColor"
+                Value="{AppThemeBinding Light={StaticResource SrColorInteractivePrimary}, Dark={StaticResource SrColorInteractivePrimaryDark}}" />
+        <Setter Property="ThumbColor" Value="{StaticResource SrColorTextInverse}" />
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="OnColor" Value="{StaticResource SrColorInteractiveDisabled}" />
+                            <Setter Property="ThumbColor" Value="{StaticResource SrColorBorderDisabled}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+    <!--#endregion-->
+
+    <!--#region Feedback ======================================================-->
+    <Style TargetType="ActivityIndicator">
+        <Setter Property="Color"
+                Value="{AppThemeBinding Light={StaticResource SrColorInteractivePrimary}, Dark={StaticResource SrColorInteractivePrimaryDark}}" />
+        <Setter Property="MinimumHeightRequest" Value="24" />
+        <Setter Property="MinimumWidthRequest" Value="24" />
+    </Style>
+
+    <!--
+        Status tags. Text on a tinted surface, never on the saturated status
+        colour itself: Status/Critical behind white text is the contrast failure
+        this system exists to prevent.
+    -->
+    <Style x:Key="TagCritical" TargetType="Border">
+        <Setter Property="Padding" Value="8,4" />
+        <Setter Property="StrokeThickness" Value="0" />
+        <Setter Property="BackgroundColor" Value="{StaticResource SrColorStatusCriticalSurface}" />
+        <Setter Property="StrokeShape">
+            <Setter.Value><RoundRectangle CornerRadius="4" /></Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="TagWarning" TargetType="Border" BasedOn="{StaticResource TagCritical}">
+        <Setter Property="BackgroundColor" Value="{StaticResource SrColorStatusWarningSurface}" />
+    </Style>
+    <Style x:Key="TagSuccess" TargetType="Border" BasedOn="{StaticResource TagCritical}">
+        <Setter Property="BackgroundColor" Value="{StaticResource SrColorStatusSuccessSurface}" />
+    </Style>
+    <Style x:Key="TagInfo" TargetType="Border" BasedOn="{StaticResource TagCritical}">
+        <Setter Property="BackgroundColor" Value="{StaticResource SrColorStatusInfoSurface}" />
+    </Style>
+
+    <Style TargetType="Label" Class="TagTextCritical"><Setter Property="FontSize" Value="12" /><Setter Property="TextColor" Value="{StaticResource SrColorStatusCritical}" /></Style>
+    <Style TargetType="Label" Class="TagTextWarning"><Setter Property="FontSize" Value="12" /><Setter Property="TextColor" Value="{StaticResource SrColorStatusWarning}" /></Style>
+    <Style TargetType="Label" Class="TagTextSuccess"><Setter Property="FontSize" Value="12" /><Setter Property="TextColor" Value="{StaticResource SrColorStatusSuccess}" /></Style>
+    <Style TargetType="Label" Class="TagTextInfo"><Setter Property="FontSize" Value="12" /><Setter Property="TextColor" Value="{StaticResource SrColorStatusInfo}" /></Style>
+    <!--#endregion-->
+
+</ResourceDictionary>

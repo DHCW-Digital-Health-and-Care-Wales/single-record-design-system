@@ -11,6 +11,7 @@
     <Color x:Key="ColorBlue600">#4c72ae</Color>
     <Color x:Key="ColorBlue700">#3d6199</Color>
     <Color x:Key="ColorBlue800">#325083</Color>
+    <Color x:Key="ColorBlue850">#2c3e72</Color>
     <Color x:Key="ColorBlue900">#1e3050</Color>
     <Color x:Key="ColorCyan50">#f4fafc</Color>
     <Color x:Key="ColorCyan100">#ebf5fa</Color>

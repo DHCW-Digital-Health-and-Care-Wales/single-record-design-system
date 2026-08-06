@@ -5,6 +5,7 @@
     "blue": {
       "$description": "NHS Wales Blue — primary brand",
       "900": { "$type": "color", "$value": "#1E3050" },
+      "850": { "$type": "color", "$value": "#2C3E72", "$description": "DHCW organisational navy. Carried from the DHCW Figma primitives, where it is the corporate blue used for application chrome. White text on it is 10.3:1 (AAA). Not the Single Record brand primary — that is Blue/800." },
       "800": { "$type": "color", "$value": "#325083", "$description": "Brand primary (light mode)" },
       "700": { "$type": "color", "$value": "#3D6199" },
       "600": { "$type": "color", "$value": "#4C72AE" },

@@ -87,7 +87,7 @@ Full layout matrix: [`spec.md`](./spec.md#layouts-sr-table-layout--storybook-lay
 | Web (HTML/CSS) | Reference baseline | `packages/web/src/table/table.css`, `.sr-table__*` classes |
 | React | Current | mirrors the `sr-table__*` markup |
 | Blazor / .NET | Current | mirrors the `sr-table__*` markup via the RCL |
-| .NET MAUI | Current | Blazor component via Blazor Hybrid (DDR-011) |
+| .NET MAUI | Planned | Native XAML, not a web view (DDR-021). Tokens available now; native styles in progress |
 | Legacy (.NET 4.8 / Delphi) | Tokens only / best-effort | token CSS custom properties |
 
 > Sorting, filtering and pagination are planned and not yet part of the reference — see [`/components/README.md`](../README.md).

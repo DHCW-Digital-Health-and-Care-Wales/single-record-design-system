@@ -46,6 +46,11 @@ The host app must include `button.css` from `@dhcw/sr-web` and the generated `to
 ## Preview
 
 Blazor components cannot render in the Storybook (HTML/JS) catalogue. Preview
-them in Visual Studio instead: add a Blazor Web host and/or a MAUI Blazor Hybrid
-host, reference this library, and render `<Gallery />`. Full steps in
+them in Visual Studio instead: add a Blazor Web host, reference this library, and
+render `<Gallery />`. Full steps in
 [`docs/engineering/visual-studio-preview.md`](../../docs/engineering/visual-studio-preview.md).
+
+> **This library targets Blazor web only.** It is not what MAUI renders — the
+> mobile app is native XAML (DDR-021). Anything in the linked document about a
+> MAUI Blazor Hybrid host previews *this* Blazor component in a web view, which is
+> not what ships on mobile.

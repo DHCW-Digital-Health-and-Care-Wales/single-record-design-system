@@ -38,6 +38,7 @@ source and this is the summary.
 | [DDR-018](DDR-018-cta-placement-forms-vs-modals.md) | CTA button placement: forms/sections vs. modals | Accepted | 2026-07-23 |
 | [DDR-019](DDR-019-prototype-embed-sandpack.md) | Prototype embed: CodeSandbox Sandpack, not StackBlitz | Accepted | 2026-07-29 |
 | [DDR-020](DDR-020-package-distribution-and-publishing.md) | Package Distribution — Registries, Versioning and Release | Proposed | 2026-08-04 |
+| [DDR-021](DDR-021-maui-is-native-xaml.md) | MAUI is native XAML, and the design system owns its token and style layer | Accepted | 2026-08-06 |
 
 ---
 

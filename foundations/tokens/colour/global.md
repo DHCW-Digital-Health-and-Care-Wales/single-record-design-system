@@ -15,6 +15,7 @@ These values are defined in Figma as **primitive colour variables** in the `Prim
 | Token | Value | Notes |
 |---|---|---|
 | `color.blue.900` | `#1E3050` | Darkest |
+| `color.blue.850` | `#2C3E72` | DHCW organisational navy. Carried from the DHCW Figma primitives, where it is the corporate blue used for application chrome. White text on it is 10.3:1 (AAA). Not the Single Record brand primary — that is Blue/800. |
 | `color.blue.800` | `#325083` | Brand primary |
 | `color.blue.700` | `#3D6199` |  |
 | `color.blue.600` | `#4C72AE` |  |

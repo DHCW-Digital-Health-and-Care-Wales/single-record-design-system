@@ -449,6 +449,21 @@ const radiusSamples = radiusEntries.map(([k, px]) =>
    <figcaption><code>--${k}</code><span class="hex">${px}px</span></figcaption></figure>`).join('');
 
 // ─── Navigation model ─────────────────────────────────────────────────────────
+/**
+ * Component stylesheets the site loads so previews render as the real component.
+ *
+ * ONE list, used for both the <link> tags in the shells and the copy step at the
+ * bottom. These used to be three hand-maintained lists that had to agree; they
+ * drifted, and the Input page shipped with every preview unstyled because
+ * input.css was in none of them. Adding a component here is now the only step.
+ */
+const SITE_COMPONENT_CSS = [
+  'button', 'table', 'patient-banner', 'header', 'footer', 'bottom-nav',
+  'breadcrumbs', 'switch', 'segmented-control', 'navigation', 'input',
+];
+const COMPONENT_CSS_LINKS = (prefix) =>
+  SITE_COMPONENT_CSS.map((c) => `<link rel="stylesheet" href="${prefix}assets/${c}.css">`).join('\n');
+
 const SECTIONS = [
   {
     id: 'get-started', label: 'Get Started', href: 'index.html',
@@ -529,16 +544,7 @@ function shell({ title, prefix, sectionId, activeHref, body, extraHead = '', ext
 <link rel="stylesheet" href="${prefix}assets/fonts.css">
 <link rel="stylesheet" href="${prefix}assets/tokens.css">
 <link rel="stylesheet" href="${prefix}assets/typography.css">
-<link rel="stylesheet" href="${prefix}assets/button.css">
-<link rel="stylesheet" href="${prefix}assets/table.css">
-<link rel="stylesheet" href="${prefix}assets/patient-banner.css">
-<link rel="stylesheet" href="${prefix}assets/header.css">
-<link rel="stylesheet" href="${prefix}assets/footer.css">
-<link rel="stylesheet" href="${prefix}assets/bottom-nav.css">
-<link rel="stylesheet" href="${prefix}assets/breadcrumbs.css">
-<link rel="stylesheet" href="${prefix}assets/switch.css">
-<link rel="stylesheet" href="${prefix}assets/segmented-control.css">
-<link rel="stylesheet" href="${prefix}assets/navigation.css">
+${COMPONENT_CSS_LINKS(prefix)}
 <link rel="stylesheet" href="${prefix}assets/icon.css">
 <link rel="stylesheet" href="${prefix}assets/site.css">
 ${extraHead}
@@ -602,16 +608,7 @@ function bareShell({ title, prefix, body, extraHead = '', extraScript = '' }) {
 <link rel="stylesheet" href="${prefix}assets/fonts.css">
 <link rel="stylesheet" href="${prefix}assets/tokens.css">
 <link rel="stylesheet" href="${prefix}assets/typography.css">
-<link rel="stylesheet" href="${prefix}assets/button.css">
-<link rel="stylesheet" href="${prefix}assets/table.css">
-<link rel="stylesheet" href="${prefix}assets/patient-banner.css">
-<link rel="stylesheet" href="${prefix}assets/header.css">
-<link rel="stylesheet" href="${prefix}assets/footer.css">
-<link rel="stylesheet" href="${prefix}assets/bottom-nav.css">
-<link rel="stylesheet" href="${prefix}assets/breadcrumbs.css">
-<link rel="stylesheet" href="${prefix}assets/switch.css">
-<link rel="stylesheet" href="${prefix}assets/segmented-control.css">
-<link rel="stylesheet" href="${prefix}assets/navigation.css">
+${COMPONENT_CSS_LINKS(prefix)}
 <link rel="stylesheet" href="${prefix}assets/icon.css">
 <link rel="stylesheet" href="${prefix}assets/site.css">
 ${extraHead}
@@ -687,6 +684,46 @@ function reactPropsOf(name) {
   return (REACT_PROPS_CACHE[name] = props);
 }
 
+/**
+ * The MAUI counterpart of the React prop check below.
+ *
+ * A MAUI snippet is XAML, and the thing that silently rots in XAML is a
+ * `{StaticResource ...}` naming a key that no longer exists — it throws at page
+ * parse time in the consuming app, long after anyone copied it from here. So
+ * every resource a MAUI snippet references must resolve against what
+ * @dhcw/sr-maui actually ships (DDR-021).
+ *
+ * Deliberately shallow, same as the React check: it cannot tell you a value is
+ * wrong, only that a name does not exist. That is the failure that happens.
+ */
+const MAUI_RESOURCES = (() => {
+  const known = new Set();
+  for (const f of ['Colors.xaml', 'Styles.xaml']) {
+    const p = resolve(ROOT, 'packages', 'maui', f);
+    if (!existsSync(p)) return null; // package not built yet — skip rather than fail
+    for (const m of readFileSync(p, 'utf8').matchAll(/x:Key="([^"]+)"/g)) known.add(m[1]);
+  }
+  return known;
+})();
+
+function checkMauiSnippet(panelId, code) {
+  if (!MAUI_RESOURCES) return;
+  const seen = new Set();
+  for (const m of code.matchAll(/\{StaticResource\s+([^}]+?)\s*\}/g)) {
+    const name = m[1].trim();
+    if (seen.has(name) || MAUI_RESOURCES.has(name)) continue;
+    seen.add(name);
+    snippetProblems.push(
+      `${panelId}: {StaticResource ${name}} — no such resource in @dhcw/sr-maui. `
+      + `Add the token or style, or fix the snippet.`
+    );
+  }
+  // Same rule the MAUI package enforces on itself: no literal colours.
+  for (const m of code.matchAll(/(?:Value|Color|BackgroundColor|TextColor|Stroke|Fill|BorderColor)\s*=\s*"(#[0-9A-Fa-f]{3,8}|Red|Blue|Green|Maroon|Black|White|Gray|Grey)"/g)) {
+    snippetProblems.push(`${panelId}: literal colour "${m[1]}" in a MAUI snippet — use a token.`);
+  }
+}
+
 const snippetProblems = [];
 function checkReactSnippet(panelId, code) {
   const open = /^\s*<([A-Z]\w*)([\s>])/.exec(code.replace(/^(\s*\/\/[^\n]*\n)+/, ''));
@@ -709,6 +746,7 @@ function checkReactSnippet(panelId, code) {
 /** Dark code panel with framework tabs and a copy button. */
 function codePanel(id, snippets) {
   if (snippets.React) checkReactSnippet(id, snippets.React);
+  if (snippets.MAUI) checkMauiSnippet(id, snippets.MAUI);
   const tabs = FRAMEWORKS.map((f, idx) =>
     `<button class="codepanel__tab${idx === 0 ? ' is-active' : ''}" type="button" role="tab"
        aria-selected="${idx === 0}" data-fw="${f}" data-target="${id}">${f}</button>`).join('');
@@ -796,19 +834,19 @@ function headerBody() {
     HTML: '<header class="sr-header">\n  <div class="sr-header__utility">…</div>\n  <div class="sr-header__main">\n    <span class="sr-header__logo">…</span>\n    <div class="sr-header__search">…</div>\n    <div class="sr-header__actions">…</div>\n  </div>\n</header>',
     React: '<Header\n  variant="desktop"   // "desktop" | "desktop-2" | "mobile"\n  logo={<LogoLockup />}\n  initials="AB"\n  onSearch={handleSearch}\n  onReportIssue={openIssueForm}\n  onLanguageToggle={toggleWelsh}\n/>',
     Blazor: '<SrHeader Variant="Desktop" Initials="AB" />',
-    MAUI: '<!-- Desktop 1 pairs with a browser-width layout MAUI does not have —\n     MAUI is mobile only (phone, tablet); see foundations/grid-and-layout.md.\n     Use variant="mobile" below for the MAUI/Blazor Hybrid header instead. -->',
+    MAUI: '<!-- Desktop 1 pairs with a browser-width layout MAUI does not have —\n     MAUI is mobile only (phone, tablet); see foundations/grid-and-layout.md.\n     Use the mobile type below for the MAUI header instead. -->',
   };
   const barSnippets = {
     HTML: '<header class="sr-header sr-header--bar">\n  <div class="sr-header__main">\n    <div class="sr-header__search">…</div>\n    <div class="sr-header__cluster">…</div>\n  </div>\n</header>',
     React: '<Header\n  variant="desktop-2"   // "desktop" | "desktop-2" | "mobile"\n  initials="AB"\n  org="Cardiff and Vale UHB"\n  onSearch={handleSearch}\n  onLanguageToggle={toggleWelsh}\n/>',
     Blazor: '<SrHeader Variant="Desktop2" Initials="AB" />',
-    MAUI: '<!-- Desktop 2 pairs with the sidebar Navigation, a browser-width pattern —\n     MAUI is mobile only (phone, tablet); see foundations/grid-and-layout.md.\n     Use variant="mobile" below for the MAUI/Blazor Hybrid header instead. -->',
+    MAUI: '<!-- Desktop 2 pairs with the sidebar Navigation, a browser-width pattern —\n     MAUI is mobile only (phone, tablet); see foundations/grid-and-layout.md.\n     Use the mobile type below for the MAUI header instead. -->',
   };
   const mobileSnippets = {
     HTML: '<header class="sr-header sr-header--mobile sr-header--centered">\n  <div class="sr-header__main">\n    <button class="sr-header__menu">…</button>\n    <span class="sr-header__logo">…</span>\n    <div class="sr-header__actions">…</div>\n  </div>\n</header>',
     React: '<Header\n  variant="mobile"\n  showMenu\n  logo={<LogoMark />}\n  initials="AB"\n  onMenuClick={openDrawer}\n/>',
     Blazor: '<SrHeader Variant="Mobile" ShowMenu="true" Initials="AB" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. This is\n     the only Header variant MAUI uses — it has no desktop target. -->\n<SrHeader Variant="Mobile" ShowMenu="true" Initials="AB" />',
+    MAUI: '<!-- Native MAUI XAML for this component is in progress.\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
   };
   // Each variant is introduced before it is shown — heading, then what it is
   // and when to reach for it, then the example. The previous order (example
@@ -889,7 +927,7 @@ ${navItems.map((n) => `  <a class="sr-bottom-nav__item" href="#"${n.current ? ' 
     HTML: '<nav class="sr-bottom-nav" aria-label="Primary">\n  <a class="sr-bottom-nav__item" href="/home" aria-current="page">\n    <span class="sr-bottom-nav__icon">…</span>\n    <span class="sr-bottom-nav__label">Home</span>\n  </a>\n  …\n</nav>',
     React: '<BottomNav\n  items={[\n    { icon: "nav/home", label: "Home", href: "/home" },\n    { icon: "schedule/appointment", label: "Diary", href: "/diary" },\n    …\n  ]}\n  current="Home"\n/>',
     Blazor: '<SrBottomNav Items="@navItems" Current="Home" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. This is\n     the Footer type MAUI uses — MAUI is mobile only (phone, tablet). -->\n<SrBottomNav Items="@navItems" Current="Home" />',
+    MAUI: '<!-- Native MAUI XAML for this component is in progress.\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
   };
   return `
 <p class="breadcrumbs">Components</p>
@@ -1136,7 +1174,7 @@ function patientBannerBody() {
     HTML: '<section class="sr-patient-banner" aria-label="Patient: JOHN, Elvet George (Mr)">\n  <div class="sr-patient-banner__alerts">…</div>\n  <div class="sr-patient-banner__identity">…</div>\n  <div class="sr-patient-banner__actions">…</div>\n</section>\n\n<!-- Border type -->\n<section class="sr-patient-banner sr-patient-banner--border">…</section>\n<!-- Collapsed state -->\n<section class="sr-patient-banner sr-patient-banner--collapsed">…</section>',
     React: '<PatientBanner\n  patient={patient}\n  reactions={reactions}\n  warnings={3}\n  type="fill"          // "fill" | "border"\n  expanded={expanded}  // false renders the collapsed row\n  onToggle={() => setExpanded((v) => !v)}\n  onCopy={(v) => navigator.clipboard?.writeText(v)}\n  actions={<>…</>}\n/>',
     Blazor: '<SrPatientBanner Patient="@patient" Type="Fill" Expanded="@expanded" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrPatientBanner Patient="@patient" Type="Fill" Expanded="@expanded" />',
+    MAUI: '<!-- Native MAUI XAML for this component is in progress.\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
   };
   return `
 <p class="breadcrumbs">Patterns</p>
@@ -1200,8 +1238,12 @@ function typographyBody() {
 <SrHeading Size="HeadingSize.M"  Level="3">Repeat prescriptions</SrHeading>
 <SrHeading Size="HeadingSize.S"  Level="4">Issued in the last 6 months</SrHeading>
 <SrHeading Size="HeadingSize.Xs" Level="5">Dosage changes</SrHeading>`,
-    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->
-<SrHeading Size="HeadingSize.Xl" Level="1">Patient summary</SrHeading>`,
+    MAUI: `<!-- The type scale is StyleClass, so a Label carries its role, not its size. -->
+<Label StyleClass="HeadingXl" Text="Patient summary" />
+<Label StyleClass="HeadingL"  Text="Current medication" />
+<Label StyleClass="HeadingM"  Text="Repeat prescriptions" />
+<Label StyleClass="HeadingS"  Text="Issued in the last 6 months" />
+<Label StyleClass="HeadingXs" Text="Dosage changes" />`,
   };
 
   const labelSpecimen = `
@@ -1227,8 +1269,9 @@ function typographyBody() {
 <SrInput Id="nhs-number" DescribedBy="nhs-number-hint" />
 
 <SrFieldset Legend="Contact preferences" LegendSize="HeadingSize.S" />`,
-    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->
-<SrLabel For="nhs-number">NHS number</SrLabel>`,
+    MAUI: `<Label StyleClass="FieldLabel" Text="NHS number" />
+<Label Text="485 777 3456" />
+<Label StyleClass="Caption" Text="Use the format 06 Dec 1974" />`,
   };
 
   const bodySpecimen = `
@@ -1247,8 +1290,10 @@ views, and for supporting text and form values.</div>
     Blazor: `<SrText Size="TextSize.M">Long-form reading and clinical notes.</SrText>
 <SrText Size="TextSize.S">Primary content in tables and data-dense views.</SrText>
 <SrText Size="TextSize.Caption">Last updated 06 Dec 2024 at 14:22</SrText>`,
-    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->
-<SrText Size="TextSize.S">Primary content in tables and data-dense views.</SrText>`,
+    MAUI: `<!-- Native MAUI XAML for this component is in progress.
+     MAUI is native XAML and does not render the Blazor components, so the
+     Blazor snippet on the previous tab is not a substitute.
+     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
   };
 
   const overrideSnippets = {
@@ -1262,8 +1307,10 @@ views, and for supporting text and form values.</div>
 <Heading as="h2" size="s">Allergies and adverse reactions</Heading>`,
     Blazor: `@* The heading level and the visual size are separate parameters. *@
 <SrHeading Level="2" Size="HeadingSize.S">Allergies and adverse reactions</SrHeading>`,
-    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->
-<SrHeading Level="2" Size="HeadingSize.S">Allergies and adverse reactions</SrHeading>`,
+    MAUI: `<!-- Native MAUI XAML for this component is in progress.
+     MAUI is native XAML and does not render the Blazor components, so the
+     Blazor snippet on the previous tab is not a substitute.
+     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
   };
 
   const linkSnippets = {
@@ -1281,8 +1328,10 @@ views, and for supporting text and form values.</div>
     Blazor: `<SrText Size="TextSize.M">
   Review the <SrLink Href="/medication">current medication list</SrLink> before prescribing.
 </SrText>`,
-    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->
-<SrLink Href="/medication">current medication list</SrLink>`,
+    MAUI: `<!-- Native MAUI XAML for this component is in progress.
+     MAUI is native XAML and does not render the Blazor components, so the
+     Blazor snippet on the previous tab is not a substitute.
+     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
   };
 
   const listSnippets = {
@@ -1299,8 +1348,10 @@ views, and for supporting text and form values.</div>
 <List as="ol" size="m" items={steps} />`,
     Blazor: `<SrList Size="TextSize.M" Items="@medications" />
 <SrList Ordered Size="TextSize.M" Items="@steps" />`,
-    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->
-<SrList Size="TextSize.M" Items="@medications" />`,
+    MAUI: `<!-- Native MAUI XAML for this component is in progress.
+     MAUI is native XAML and does not render the Blazor components, so the
+     Blazor snippet on the previous tab is not a substitute.
+     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
   };
 
   return `
@@ -1414,7 +1465,10 @@ ${codePanel('type-section-break', {
     HTML: `<hr>\n\n<!-- Where the break is structural but should not be seen,\n     use spacing instead of a visible rule. -->\n<div style="margin-block: var(--space-6)"></div>`,
     React: `<Divider />\n<Divider visible={false} />`,
     Blazor: `<SrDivider />\n<SrDivider Visible="false" />`,
-    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrDivider />`,
+    MAUI: `<!-- Native MAUI XAML for this component is in progress.
+     MAUI is native XAML and does not render the Blazor components, so the
+     Blazor snippet on the previous tab is not a substitute.
+     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
   })}
 
 <h2>Text alignment</h2>
@@ -1429,7 +1483,10 @@ ${codePanel('type-alignment', {
     HTML: `<!-- Text columns: left aligned, which is the default. -->\n<td class="sr-table__cell">Atorvastatin 20mg</td>\n\n<!-- Numeric columns: right aligned, heading matches the values. -->\n<th scope="col" class="sr-table__cell--numeric">Dose (mg)</th>\n<td class="sr-table__cell sr-table__cell--numeric">20</td>`,
     React: `<Table.Column field="medication" />\n<Table.Column field="dose" align="right" />`,
     Blazor: `<SrTableColumn Field="medication" />\n<SrTableColumn Field="dose" Align="Align.Right" />`,
-    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrTableColumn Field="dose" Align="Align.Right" />`,
+    MAUI: `<!-- Native MAUI XAML for this component is in progress.
+     MAUI is native XAML and does not render the Blazor components, so the
+     Blazor snippet on the previous tab is not a substitute.
+     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
   })}
 
 <hr>
@@ -1547,7 +1604,7 @@ ${codePanel('colour-usage', {
     HTML: `/* Correct: ask for the role. */\n.sr-panel {\n  background: var(--sr-color-surface-section-cards);\n  border: 1px solid var(--sr-color-border-default);\n  color: var(--sr-color-text-primary);\n}\n\n/* Wrong: a primitive, and a raw hex. */\n.sr-panel {\n  background: var(--color-blue-50);\n  border: 1px solid #d8dde0;\n}`,
     React: `<Panel\n  surface="section-cards"\n  border="default"\n/>\n\n// Token values are never passed as props; the component\n// resolves them from the semantic layer.`,
     Blazor: `<SrPanel Surface="Surface.SectionCards" Border="Border.Default" />\n\n@* app.css consumes the published token stylesheet: *@\n@* @import "@dhcw/sr-tokens/build/css/tokens.css"; *@`,
-    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<!-- XAML resources map to the same semantic names. -->\n<Setter Property="BackgroundColor" Value="{StaticResource SrColorSurfaceSectionCards}" />`,
+    MAUI: `<!-- Native MAUI XAML. The same semantic names, as XAML resources -->\n<!-- from Tokens.xaml. Never a literal colour, and never a primitive. -->\n<Setter Property="BackgroundColor" Value="{StaticResource SrColorSurfaceSectionCards}" />\n<Setter Property="Stroke" Value="{StaticResource SrColorBorderDefault}" />\n<Setter Property="TextColor" Value="{StaticResource SrColorTextPrimary}" />`,
   })}
 
 <h2>Semantic tokens</h2>
@@ -1627,7 +1684,7 @@ ${codePanel('colour-focus', {
     HTML: `.sr-button:focus-visible {\n  outline: 3px solid var(--sr-color-border-focus);\n  outline-offset: 2px;\n}`,
     React: `// Focus styling comes from the component stylesheet.\n// Do not re-implement it per component.`,
     Blazor: `/* Provided by the shared component stylesheet. */\n.sr-button:focus-visible {\n  outline: 3px solid var(--sr-color-border-focus);\n  outline-offset: 2px;\n}`,
-    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid, -->\n<!-- so it inherits the same focus treatment. -->`,
+    MAUI: `<!-- Native MAUI XAML: focus is a visual state, not a CSS pseudo-class, -->\n<!-- but it reads the same focus token. -->\n<VisualState x:Name="Focused">\n  <VisualState.Setters>\n    <Setter Property="Stroke" Value="{StaticResource SrColorBorderFocus}" />\n    <Setter Property="StrokeThickness" Value="3" />\n  </VisualState.Setters>\n</VisualState>`,
   })}
 
 <h2>Dark mode</h2>
@@ -1737,6 +1794,11 @@ ${accessibilityTable([
 // see it. Assert the shape it generates here instead — this is the only
 // snippet on the site that is assembled client-side.
 checkReactSnippet('btn (generated in BUTTON_SCRIPT)', '<Button type="primary" size="small">Confirm patient</Button>');
+// Assert the generated MAUI XAML too: the switcher builds it in the browser, so
+// it never reaches codePanel()'s check. Every keyed style it can emit is listed.
+checkMauiSnippet('btn (generated in BUTTON_SCRIPT)',
+  '<Button Style="{StaticResource ButtonSecondary}" /><Button Style="{StaticResource ButtonGhost}" />'
+  + '<Button Style="{StaticResource ButtonDestructive}" />');
 
 const BUTTON_SCRIPT = `<script>
 (function(){
@@ -1753,7 +1815,15 @@ const BUTTON_SCRIPT = `<script>
       HTML:'<button class="'+cls+'">Confirm patient</button>',
       React:'<Button type="'+v+'"'+(size!=='default'?' size="'+size+'"':'')+'>Confirm patient</Button>',
       Blazor:'<SrButton Type="ButtonType.'+T+'"'+(S?' Size="ButtonSize.'+S+'"':'')+'>Confirm patient</SrButton>',
-      MAUI:'<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\\n<SrButton Type="ButtonType.'+T+'">Confirm patient</SrButton>'
+      MAUI:(function(){
+        var style={primary:'',secondary:'ButtonSecondary',ghost:'ButtonGhost',destructive:'ButtonDestructive'}[v];
+        var note=v==='primary'
+          ? '<!-- Primary is the implicit Button style: no Style attribute needed. -->'
+          : (v==='destructive'
+             ? '<!-- Destructive is permanent deletion, and always behind a confirmation. -->'
+             : '<!-- Intent is a keyed style; size comes from the type scale and padding. -->');
+        return note+'\\n<Button Text="Confirm patient"'+(style?' Style="{StaticResource '+style+'}"':'')+' />';
+      })()
     };
   }
   var FW=['HTML','React','Blazor','MAUI'];
@@ -1801,7 +1871,7 @@ function tableBody() {
     HTML: '<div class="sr-table-wrap">\n  <table class="sr-table">\n    <thead class="sr-table__head">…</thead>\n    <tbody>\n      <tr class="sr-table__row sr-table__row--selected">…</tr>\n    </tbody>\n  </table>\n</div>',
     React: '<Table\n  columns={columns}\n  rows={rows}\n  selectable\n  selectedIds={selectedIds}\n  onSelectionChange={setSelectedIds}\n/>',
     Blazor: '<SrTable Items="@patients" SelectedId="@activePatientId" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrTable Items="@patients" SelectedId="@activePatientId" />',
+    MAUI: '<!-- Native MAUI XAML for this component is in progress.\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
   };
   return `
 <p class="breadcrumbs">Components</p>
@@ -1854,13 +1924,13 @@ ${trail.map((c, i) => (i === trail.length - 1
     HTML: '<nav aria-label="Breadcrumb">\n  <ol class="sr-breadcrumbs">\n    <li class="sr-breadcrumbs__item">\n      <a class="sr-breadcrumbs__link" href="/">Home</a>\n      <span class="sr-breadcrumbs__separator" aria-hidden="true">/</span>\n    </li>\n    …\n    <li class="sr-breadcrumbs__item">\n      <span class="sr-breadcrumbs__current" aria-current="page">Case note volume 3</span>\n    </li>\n  </ol>\n</nav>',
     React: '<Breadcrumbs\n  items={[\n    { label: "Home", href: "/" },\n    { label: "Patient search", href: "/search" },\n    { label: "JOHN, Elvet George", href: "/patients/1" },\n    { label: "Case note volume 3" },\n  ]}\n/>',
     Blazor: '<SrBreadcrumbs Items="@trail" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid.\n     On phone widths use Type=Back — a four-level trail wraps. -->\n<SrBreadcrumbs Items="@trail" Type="Back" />',
+    MAUI: '<!-- Native MAUI XAML for this component is in progress.\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
   };
   const backSnippets = {
     HTML: '<nav aria-label="Breadcrumb">\n  <ol class="sr-breadcrumbs sr-breadcrumbs--back">\n    <li class="sr-breadcrumbs__item">\n      <span class="sr-breadcrumbs__back-icon">…</span>\n      <a class="sr-breadcrumbs__link" href="/patients/1">Back to JOHN, Elvet George</a>\n    </li>\n  </ol>\n</nav>',
     React: '<Breadcrumbs type="back" items={trail} />\n\n// Same items array as the multilevel type — the component takes\n// the item before the current page and names it.',
     Blazor: '<SrBreadcrumbs Items="@trail" Type="Back" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrBreadcrumbs Items="@trail" Type="Back" />',
+    MAUI: '<!-- Native MAUI XAML for this component is in progress.\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
   };
   return `
 <p class="breadcrumbs">Components</p>
@@ -1911,7 +1981,7 @@ ${sw('Off, unavailable', false, true)}
     HTML: '<button type="button" role="switch" aria-checked="true" class="sr-switch">\n  <span class="sr-switch__track"><span class="sr-switch__thumb"></span></span>\n  <span class="sr-switch__label">Show archived requests</span>\n</button>',
     React: '<Switch\n  label="Show archived requests"\n  checked={showArchived}\n  onChange={setShowArchived}\n/>',
     Blazor: '<SrSwitch Label="Show archived requests" @bind-Checked="showArchived" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid.\n     Give the label-and-track row a 44px height on touch. -->\n<SrSwitch Label="Show archived requests" @bind-Checked="showArchived" />',
+    MAUI: '<!-- The thumb position carries the state as well as the colour, so it\n     survives greyscale and low-vision viewing. -->\n<HorizontalStackLayout Spacing="8">\n  <Switch IsToggled="{Binding ShowArchived}" />\n  <Label Text="Show archived requests" VerticalOptions="Center" />\n</HorizontalStackLayout>',
   };
   // Type: Segmented control (Figma 2752:40 segment block, 2770:55996 two-option
   // example). Grouped with the switch because the Figma "Toggles" page
@@ -1931,7 +2001,7 @@ ${seg(['Quick search', 'Advanced'], 0, true)}
     HTML: '<div class="sr-segmented" role="group" aria-label="Search mode">\n  <button type="button" class="sr-segmented__option" aria-pressed="true">Quick search</button>\n  <button type="button" class="sr-segmented__option" aria-pressed="false">Advanced</button>\n</div>',
     React: '<SegmentedControl\n  ariaLabel="Search mode"\n  options={["Quick search", "Advanced"]}\n  value={mode}\n  onChange={setMode}\n/>',
     Blazor: '<SrSegmentedControl Options="@modes" @bind-Value="mode" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid.\n     Give the track a 44px row on touch. -->\n<SrSegmentedControl Options="@modes" @bind-Value="mode" />',
+    MAUI: '<!-- Native MAUI XAML for this component is in progress.\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
   };
   return `
 <p class="breadcrumbs">Components</p>
@@ -1973,134 +2043,216 @@ ${accessibilityTable([
 
 // ─── Components: Input ────────────────────────────────────────────────────────
 /**
- * Input (Figma 1363:22921 / component set 840:14593). Six types share one
- * label/hint/field/error anatomy: Text, Password, Phone number, Date, Time,
- * Textarea. States are real — :focus-within, the disabled attribute, an
- * aria-invalid error — not classes standing in for interaction, so the
- * markup here is the same shape Input.jsx renders.
+ * Input. One anatomy — label, hint, field, error — across six types, driven by
+ * a switcher rather than a page of near-identical static examples, matching the
+ * Buttons page. That is the convention for any component whose variants
+ * multiply: type x state x options is 60+ permutations, and printing them all
+ * documents nothing.
+ *
+ * The preview renders the same markup Input.jsx produces, so what a reader
+ * copies is what the component emits. States are real: focus is browser focus,
+ * disabled is the native attribute, invalid is aria-invalid.
  */
+const INPUT_TYPES = [
+  { id: 'text',     label: 'Text',       field: 'Full name',        ph: 'Enter value',        hint: 'As it appears on the referral letter', err: 'Enter a full name',        html: 'text' },
+  { id: 'password', label: 'Password',   field: 'Password',         ph: '',                   hint: 'Must be 8 or more characters',         err: 'Enter 8 or more characters', html: 'password' },
+  { id: 'phone',    label: 'Phone',      field: 'Phone number',     ph: 'e.g. 07700 900000',  hint: 'Include the area code',                err: 'Enter a valid phone number', html: 'tel' },
+  { id: 'calendar', label: 'Date',       field: 'Date of birth',    ph: 'Add date',           hint: 'For example, 06 Dec 1974',             err: 'Enter a valid date',       html: 'text' },
+  { id: 'time',     label: 'Time',       field: 'Appointment time', ph: 'Add time',           hint: 'Clinic hours are 08:00 to 18:00',      err: 'Enter a valid time',       html: 'text' },
+  { id: 'textarea', label: 'Multi-line', field: 'Notes',            ph: 'Enter value',        hint: 'Keep this brief',                      err: 'Enter some detail',        html: 'text' },
+];
+
+// Icons come from the generated set, never hand-drawn inline (CLAUDE.md).
+const INPUT_ICONS = {
+  eye: iconMarkup('action/eye'),
+  calendar: iconMarkup('schedule/appointment'),
+};
+
+// The switcher builds its React snippet in the browser, so it never passes
+// through codePanel()'s prop check. Assert the shape here instead — same guard
+// the Buttons page uses.
+checkMauiSnippet('input (generated in INPUT_SCRIPT)',
+  '<Label StyleClass="FieldLabel" /><Label StyleClass="Caption" /><Label StyleClass="Error" />'
+  + '<Border Style="{StaticResource FieldBox}" /><Border Style="{StaticResource FieldBoxError}" />');
+checkReactSnippet('input (generated in INPUT_SCRIPT)',
+  '<Input type="password" label="Password" hint="Must be 8 or more characters" required disabled hideLabel placeholder="Enter value" error="Enter a valid value" />');
+
 function inputBody() {
   const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'input', 'guidelines.md'), 'utf8')));
-
-  const field = ({ type = 'text', label, hint, value, placeholder, error, disabled, trailing, textarea }) => {
-    const id = `input-demo-${Math.random().toString(36).slice(2, 8)}`;
-    const classes = ['sr-input', error ? 'sr-input--error' : '', disabled ? 'sr-input--disabled' : ''].filter(Boolean).join(' ');
-    const describedBy = hint ? ` aria-describedby="${id}-hint"` : error ? ` aria-describedby="${id}-error"` : '';
-    const control = textarea
-      ? `<textarea id="${id}" class="sr-input__control"${placeholder ? ` placeholder="${placeholder}"` : ''}${disabled ? ' disabled' : ''}${describedBy}>${value || ''}</textarea>`
-      : `<input id="${id}" type="${type}" class="sr-input__control"${value ? ` value="${value}"` : ''}${placeholder ? ` placeholder="${placeholder}"` : ''}${disabled ? ' disabled' : ''}${error ? ' aria-invalid="true"' : ''}${describedBy}>`;
-    return `<div class="${classes}">
-  <label class="sr-input__label" for="${id}">${label}</label>
-  ${hint ? `<span class="sr-input__hint" id="${id}-hint">${hint}</span>` : ''}
-  <div class="sr-input__field${textarea ? ' sr-input__field--textarea' : ''}">
-    ${control}
-    ${trailing || ''}
-  </div>
-  ${error ? `<span class="sr-input__error" id="${id}-error">${error}</span>` : ''}
-</div>`;
-  };
-
-  const passwordToggle = `<button type="button" class="sr-input__toggle" aria-label="Show password"><span class="sr-icon sr-icon--sm sr-icon--inherit">${iconMarkup('action/eye')}</span></button>`;
-
-  const textDemo = field({ label: 'Field label', placeholder: 'Enter value' });
-  const textSnippets = {
-    HTML: '<label class="sr-input__label" for="patient-name">Field label</label>\n<div class="sr-input__field">\n  <input id="patient-name" type="text" class="sr-input__control" placeholder="Enter value">\n</div>',
-    React: '<Input label="Field label" placeholder="Enter value" />\n// value, onChange, maxLength, name — any native <input> prop — pass\n// straight through: Input forwards what it does not recognise.',
-    Blazor: '<SrInput Label="Field label" Placeholder="Enter value" @bind-Value="value" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrInput Label="Field label" Placeholder="Enter value" @bind-Value="value" />',
-  };
-
-  const states = `<div style="display:flex;flex-direction:column;gap:16px;max-width:320px">
-${field({ label: 'Field label', placeholder: 'Enter value' })}
-${field({ label: 'Field label', value: 'Patient name' })}
-${field({ label: 'Field label', value: 'Invalid entry', error: 'Enter a valid value' })}
-${field({ label: 'Field label', placeholder: 'Enter value', disabled: true })}
-</div>`;
-
-  const passwordDemo = field({ type: 'password', label: 'Password', value: '••••••••', hint: 'Must be 8 or more characters', trailing: passwordToggle });
-  const passwordSnippets = {
-    HTML: '<label class="sr-input__label" for="password">Password</label>\n<span class="sr-input__hint" id="password-hint">Must be 8 or more characters</span>\n<div class="sr-input__field">\n  <input id="password" type="password" class="sr-input__control" aria-describedby="password-hint">\n  <button type="button" class="sr-input__toggle" aria-label="Show password">…</button>\n</div>',
-    React: '<Input type="password" label="Password" hint="Must be 8 or more characters" />',
-    Blazor: '<SrInput Type="InputType.Password" Label="Password" Hint="Must be 8 or more characters" @bind-Value="value" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrInput Type="InputType.Password" Label="Password" @bind-Value="value" />',
-  };
-
-  const phoneDemo = field({ type: 'tel', label: 'Phone number', placeholder: 'e.g. 07700 900000' });
-  const phoneSnippets = {
-    HTML: '<label class="sr-input__label" for="phone">Phone number</label>\n<div class="sr-input__field">\n  <input id="phone" type="tel" class="sr-input__control" placeholder="e.g. 07700 900000">\n</div>',
-    React: '<Input type="phone" label="Phone number" placeholder="e.g. 07700 900000" />',
-    Blazor: '<SrInput Type="InputType.Phone" Label="Phone number" Placeholder="e.g. 07700 900000" @bind-Value="value" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrInput Type="InputType.Phone" Label="Phone number" @bind-Value="value" />',
-  };
-
-  const dateTimeDemo = `<div style="display:flex;gap:16px;flex-wrap:wrap">
-  ${field({ label: 'Date', placeholder: 'Add Date', trailing: `<span class="sr-input__icon">${iconMarkup('schedule/appointment')}</span>` })}
-  ${field({ label: 'Time', placeholder: 'Add Time', trailing: `<span class="sr-input__trailing"><a href="#" class="link-action">Set now</a></span>` })}
-</div>`;
-  const dateTimeSnippets = {
-    HTML: '<!-- Date and Time delegate to DatePicker / TimeSelect behind the same label/hint/error scaffold. -->',
-    React: '<Input type="calendar" label="Date" />\n<Input type="time" label="Time" />',
-    Blazor: '<SrInput Type="InputType.Calendar" Label="Date" @bind-Value="date" />\n<SrInput Type="InputType.Time" Label="Time" @bind-Value="time" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrInput Type="InputType.Calendar" Label="Date" @bind-Value="date" />',
-  };
-
-  const textareaDemo = field({ label: 'Field label', placeholder: 'Enter value', textarea: true, hint: undefined });
-  const textareaSnippets = {
-    HTML: '<label class="sr-input__label" for="notes">Field label</label>\n<div class="sr-input__field sr-input__field--textarea">\n  <textarea id="notes" class="sr-input__control" placeholder="Enter value"></textarea>\n</div>',
-    React: '<Input type="textarea" label="Field label" placeholder="Enter value" />',
-    Blazor: '<SrInput Type="InputType.Textarea" Label="Field label" @bind-Value="value" />',
-    MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrInput Type="InputType.Textarea" Label="Field label" @bind-Value="value" />',
-  };
-
+  const states = [
+    { id: 'default',  label: 'Default' },
+    { id: 'error',    label: 'Error' },
+    { id: 'disabled', label: 'Disabled' },
+  ];
   return `
 <p class="breadcrumbs">Components</p>
 <h1>Input</h1>
-<p class="lede">A single-line or multi-line text field: label, optional hint, the field
-itself, and an optional error message. Six types share one anatomy and one state machine.</p>
+<p class="lede">A field for typing a single value. Pick the type, the state and the options;
+the preview and the code update together.</p>
 
-<h2>Type: Text</h2>
-<p class="muted">The default single-line field.</p>
-${showcase(textDemo, 'input-text', textSnippets)}
-<p class="muted"><strong>States.</strong> Default, filled, error and disabled. Focus is real
-browser focus (<code>:focus-within</code>) and does not have a static preview here — tab into
-the field above to see it.</p>
-<div class="showcase"><div class="showcase__preview">${states}</div></div>
+<section class="showcase">
+  <div class="showcase__toolbar">
+    <div class="switch" role="group" aria-label="Type">
+      ${INPUT_TYPES.map((t, i) => `<button class="switch__btn${i === 0 ? ' is-active' : ''}" type="button" data-itype="${t.id}">${t.label}</button>`).join('')}
+    </div>
+    <div class="switch" role="group" aria-label="State">
+      ${states.map((s, i) => `<button class="switch__btn${i === 0 ? ' is-active' : ''}" type="button" data-istate="${s.id}">${s.label}</button>`).join('')}
+    </div>
+    <div class="switch switch--toggles" role="group" aria-label="Options">
+      <button class="switch__btn" type="button" aria-pressed="false" data-iopt="hint">Hint</button>
+      <button class="switch__btn" type="button" aria-pressed="false" data-iopt="required">Required</button>
+      <button class="switch__btn" type="button" aria-pressed="false" data-iopt="hideLabel">Hidden label</button>
+    </div>
+  </div>
+  <div class="showcase__preview">
+    <div id="input-preview" style="max-width:320px;margin:0 auto"></div>
+  </div>
+  <div id="inp-fw"></div>
+</section>
+<p class="muted">Tab into the field to see the focus state: it is the browser's own focus, not a
+class, so it behaves the same in your application as it does here.</p>
 
-<h2>Type: Password</h2>
-<p class="muted">Masked by default, with a trailing show/hide toggle that carries its own
-accessible name — never an icon alone.</p>
-${showcase(passwordDemo, 'input-password', passwordSnippets)}
-
-<h2>Type: Phone number</h2>
-<p class="muted">The placeholder shows the expected format. It is a guide, not an input mask —
-validation still runs on submit.</p>
-${showcase(phoneDemo, 'input-phone', phoneSnippets)}
-
-<h2>Type: Date and Time</h2>
-<p class="muted">Input in name only: these delegate to <code>DatePicker</code> and
-<code>TimeSelect</code> behind the same label/hint/error scaffold, so a consumer writes one
-component and gets the picker without composing it by hand. See DDR-012 for when the 3-field
-Date Input is the better fit.</p>
-${showcase(dateTimeDemo, 'input-datetime', dateTimeSnippets)}
-
-<h2>Type: Textarea</h2>
-<p class="muted">Multi-line, vertical resize only, 72px minimum height. Not for long-form
-clinical content — that belongs in a dedicated note-taking pattern.</p>
-${showcase(textareaDemo, 'input-textarea', textareaSnippets)}
-<div class="callout"><p><strong>Known gap.</strong> The Figma Textarea variant shows a character
-counter ("240 characters left"). The code does not implement one yet — there is no
-<code>maxLength</code> counter in <code>Input.jsx</code>. Flagged here rather than worked around.</p></div>
 <hr>
 ${renderMarkdown(md)}
 ${accessibilityTable([
-    { req: 'Label is programmatically associated', sc: '1.3.1, 4.1.2', how: 'A real <label for>, always present even when visually hidden via hideLabel. Never a placeholder standing in for a label.', test: 'Screen reader announce' },
-    { req: 'Hint and error are announced with the field', sc: '1.3.1', how: 'aria-describedby links the control to its hint and/or error text.', test: 'Screen reader announce' },
-    { req: 'Error state is exposed programmatically', sc: '4.1.2', how: 'aria-invalid="true" on the error state, not colour alone.', test: 'Screen reader announce, greyscale review' },
-    { req: 'Disabled fields are excluded from the tab order and submission', sc: '4.1.2', how: 'Native disabled attribute, not a visual-only style.', test: 'Keyboard tab, form submit' },
-    { req: 'Password reveal has an accessible name', sc: '4.1.2', how: 'aria-label states the action ("Show password" / "Hide password"), not just an eye icon.', test: 'Screen reader announce' },
-    { req: 'Focus visible', sc: '2.4.7', how: 'Inset SR cyan ring on the field border via :focus-within, with no layout shift.', test: 'Keyboard tab' },
+    { req: 'Label is programmatically associated', sc: '1.3.1, 4.1.2', how: 'A real label element bound to the control, present even when visually hidden. A placeholder never stands in for it.', test: 'Screen reader announce' },
+    { req: 'Hint and error are announced with the field', sc: '1.3.1', how: 'Both are referenced from the control, so they are read as part of it rather than as loose text nearby.', test: 'Screen reader announce' },
+    { req: 'Invalid state is exposed programmatically', sc: '3.3.1, 4.1.2', how: 'The field is marked invalid and the message names what to do, so the error reaches someone who cannot see the red border.', test: 'Screen reader, greyscale review' },
+    { req: 'Required state is conveyed in more than a symbol', sc: '3.3.2', how: 'The asterisk is decorative; the field also announces that it is required.', test: 'Screen reader announce' },
+    { req: 'Disabled fields leave the tab order', sc: '2.1.1', how: 'The native disabled attribute, so the field is skipped and omitted from submission rather than only greyed.', test: 'Keyboard tab, submit' },
+    { req: 'Password reveal names its action', sc: '4.1.2', how: 'The control is labelled "Show password" or "Hide password", not by its icon.', test: 'Screen reader announce' },
+    { req: 'Focus is visible and does not move the layout', sc: '2.4.7, 1.4.11', how: 'An inset focus ring on the field border, drawn inside the existing box so nothing shifts.', test: 'Keyboard tab' },
+    { req: 'Text resizes to 200%', sc: '1.4.4', how: 'The field sizes from its content and has no fixed height, so it grows with the text.', test: 'Browser zoom to 200%' },
   ])}`;
 }
+
+const INPUT_SCRIPT = `<script>
+(function(){
+  var host=document.getElementById('input-preview');
+  if(!host) return;
+  var container=document.getElementById('inp-fw');
+  var TYPES=${jsonForScript(INPUT_TYPES)};
+  var ICONS=${jsonForScript(INPUT_ICONS)};
+  var state={type:'text',state:'default',hint:false,required:false,hideLabel:false};
+
+  function cfg(){ for(var i=0;i<TYPES.length;i++){ if(TYPES[i].id===state.type) return TYPES[i]; } return TYPES[0]; }
+
+  function markup(){
+    var c=cfg(), id='demo-'+c.id;
+    var err=state.state==='error', dis=state.state==='disabled';
+    var isArea=c.id==='textarea', isPw=c.id==='password';
+    var cls='sr-input'+(err?' sr-input--error':'')+(dis?' sr-input--disabled':'');
+    var describedBy=[]; if(state.hint) describedBy.push(id+'-hint'); if(err) describedBy.push(id+'-error');
+    var db=describedBy.length?' aria-describedby="'+describedBy.join(' ')+'"':'';
+    var val=isPw?'••••••••':'';
+    var ctrl=isArea
+      ? '<textarea id="'+id+'" class="sr-input__control" placeholder="'+c.ph+'"'+(dis?' disabled':'')+(err?' aria-invalid="true"':'')+db+' rows="3"></textarea>'
+      : '<input id="'+id+'" type="'+(isPw?'password':c.html)+'" class="sr-input__control"'+(val?' value="'+val+'"':'')+' placeholder="'+c.ph+'"'+(dis?' disabled':'')+(err?' aria-invalid="true"':'')+db+'>';
+    var trailing='';
+    if(isPw) trailing='<button type="button" class="sr-input__toggle" aria-label="Show password"'+(dis?' disabled':'')+'><span class="sr-icon sr-icon--sm sr-icon--inherit">'+ICONS.eye+'</span></button>';
+    else if(c.id==='calendar') trailing='<span class="sr-input__icon">'+ICONS.calendar+'</span>';
+    else if(c.id==='time') trailing='<span class="sr-input__trailing"><button type="button" class="link-action"'+(dis?' disabled':'')+'>Set now</button></span>';
+    return '<div class="'+cls+'">'
+      +'<label class="sr-input__label'+(state.hideLabel?' sr-visually-hidden':'')+'" for="'+id+'">'+c.field
+        +(state.required?'<span class="sr-input__required" aria-hidden="true">*</span><span class="sr-visually-hidden"> required</span>':'')+'</label>'
+      +(state.hint?'<span class="sr-input__hint" id="'+id+'-hint">'+c.hint+'</span>':'')
+      +'<div class="sr-input__field'+(isArea?' sr-input__field--textarea':'')+'">'+ctrl+trailing+'</div>'
+      +(err?'<span class="sr-input__error" id="'+id+'-error">'+c.err+'</span>':'')
+      +'</div>';
+  }
+
+  function attr(n,v){ return v?' '+n+'="'+v+'"':''; }
+  function snippets(){
+    var c=cfg(), err=state.state==='error', dis=state.state==='disabled';
+    var reactType=c.id==='text'?'':' type="'+c.id+'"';
+    var react='<Input'+reactType+' label="'+c.field+'"'
+      +(c.ph?' placeholder="'+c.ph+'"':'')
+      +(state.hint?' hint="'+c.hint+'"':'')
+      +(state.required?' required':'')
+      +(state.hideLabel?' hideLabel':'')
+      +(err?' error="'+c.err+'"':'')
+      +(dis?' disabled':'')+' />';
+    var T=c.id.charAt(0).toUpperCase()+c.id.slice(1);
+    var blazor='<SrInput Type="InputType.'+T+'" Label="'+c.field+'"'
+      +(c.ph?' Placeholder="'+c.ph+'"':'')
+      +(state.hint?' Hint="'+c.hint+'"':'')
+      +(state.required?' Required="true"':'')
+      +(state.hideLabel?' HideLabel="true"':'')
+      +(err?' Error="'+c.err+'"':'')
+      +(dis?' Disabled="true"':'')+' @bind-Value="value" />';
+    // Hand-shaped rather than a dump of the live preview markup: the real thing
+    // inlines a full SVG for the password and date icons, which buries the six
+    // lines a reader actually needs under forty lines of path data.
+    var id=c.id, isArea=c.id==='textarea', isPw=c.id==='password';
+    var db=[]; if(state.hint) db.push(id+'-hint'); if(err) db.push(id+'-error');
+    var h=[];
+    h.push('<div class="sr-input'+(err?' sr-input--error':'')+(dis?' sr-input--disabled':'')+'">');
+    h.push('  <label class="sr-input__label'+(state.hideLabel?' sr-visually-hidden':'')+'" for="'+id+'">'+c.field
+      +(state.required?'<span class="sr-input__required" aria-hidden="true">*</span><span class="sr-visually-hidden"> required</span>':'')+'</label>');
+    if(state.hint) h.push('  <span class="sr-input__hint" id="'+id+'-hint">'+c.hint+'</span>');
+    h.push('  <div class="sr-input__field'+(isArea?' sr-input__field--textarea':'')+'">');
+    var a=(c.ph?' placeholder="'+c.ph+'"':'')+(dis?' disabled':'')+(err?' aria-invalid="true"':'')
+      +(db.length?' aria-describedby="'+db.join(' ')+'"':'');
+    h.push(isArea
+      ? '    <textarea id="'+id+'" class="sr-input__control"'+a+'></textarea>'
+      : '    <input id="'+id+'" type="'+(isPw?'password':c.html)+'" class="sr-input__control"'+a+'>');
+    if(isPw) h.push('    <button type="button" class="sr-input__toggle" aria-label="Show password">…</button>');
+    else if(c.id==='calendar') h.push('    <span class="sr-input__icon">…</span>');
+    else if(c.id==='time') h.push('    <span class="sr-input__trailing"><button type="button">Set now</button></span>');
+    h.push('  </div>');
+    if(err) h.push('  <span class="sr-input__error" id="'+id+'-error">'+c.err+'</span>');
+    h.push('</div>');
+    return {
+      HTML: h.join('\\n'),
+      React: react,
+      Blazor: blazor,
+      MAUI:(function(){
+        var box=err?'FieldBoxError':'FieldBox';
+        var L=[];
+        L.push('<!-- A field is a composition: label, optional hint, the bordered box,');
+        L.push('     and an error message. Styles.xaml ships the pieces. -->');
+        L.push('<VerticalStackLayout Spacing="4">');
+        L.push('  <Label StyleClass="FieldLabel" Text="'+c.field+(state.required?' *':'')+'" />');
+        if(state.hint) L.push('  <Label StyleClass="Caption" Text="'+c.hint+'" />');
+        L.push('  <Border Style="{StaticResource '+box+'}">');
+        L.push(isArea
+          ? '    <Editor Placeholder="'+c.ph+'"'+(dis?' IsEnabled="False"':'')+' />'
+          : '    <Entry Placeholder="'+c.ph+'"'+(isPw?' IsPassword="True"':'')+(dis?' IsEnabled="False"':'')+' />');
+        L.push('  </Border>');
+        if(err) L.push('  <Label StyleClass="Error" Text="'+c.err+'" />');
+        L.push('</VerticalStackLayout>');
+        return L.join('\\n');
+      })()
+    };
+  }
+
+  var FW=['HTML','React','Blazor','MAUI'];
+  function renderFw(){
+    var snips=snippets();
+    window.__snips=window.__snips||{}; window.__snips['inp']=snips;
+    var activeTab=container.querySelector('.codepanel__tab.is-active');
+    var fw=(activeTab&&activeTab.dataset.fw)||'HTML';
+    container.innerHTML='<div class="codepanel" data-panel="inp"><div class="codepanel__bar">'+
+      '<div class="codepanel__tabs" role="tablist" aria-label="Framework">'+
+      FW.map(function(f){return '<button class="codepanel__tab'+(f===fw?' is-active':'')+'" type="button" role="tab" aria-selected="'+(f===fw)+'" data-fw="'+f+'" data-target="inp">'+f+'</button>';}).join('')+
+      '</div><button class="codepanel__copy" type="button" data-copy="inp">Copy code</button></div>'+
+      '<pre><code id="inp-code"></code></pre></div>';
+    document.getElementById('inp-code').textContent=snips[fw];
+    if(window.__wireCode) window.__wireCode(container);
+  }
+  function apply(){ host.innerHTML=markup(); renderFw(); }
+
+  document.querySelectorAll('[data-itype]').forEach(function(b){b.addEventListener('click',function(){
+    b.parentNode.querySelectorAll('.switch__btn').forEach(function(x){x.classList.remove('is-active');});
+    b.classList.add('is-active'); state.type=b.dataset.itype; apply();});});
+  document.querySelectorAll('[data-istate]').forEach(function(b){b.addEventListener('click',function(){
+    b.parentNode.querySelectorAll('.switch__btn').forEach(function(x){x.classList.remove('is-active');});
+    b.classList.add('is-active'); state.state=b.dataset.istate; apply();});});
+  document.querySelectorAll('[data-iopt]').forEach(function(b){b.addEventListener('click',function(){
+    var k=b.dataset.iopt; state[k]=!state[k]; b.setAttribute('aria-pressed',String(state[k])); apply();});});
+  apply();
+})();
+</script>`;
 
 // ─── Components: Navigation ──────────────────────────────────────────────────
 /**
@@ -2356,8 +2508,10 @@ function iconsBody() {
 <span>Observations</span>`,
     Blazor: `<SrIcon Name="clinical/vitals" Size="IconSize.Md" Color="IconColor.Default" />
 <span>Observations</span>`,
-    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->
-<SrIcon Name="clinical/vitals" Size="IconSize.Md" Color="IconColor.Default" />`,
+    MAUI: `<!-- Native MAUI XAML for this component is in progress.
+     MAUI is native XAML and does not render the Blazor components, so the
+     Blazor snippet on the previous tab is not a substitute.
+     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
   };
 
   const a11ySnippets = {
@@ -2392,10 +2546,10 @@ function iconsBody() {
 <SrButton Variant="ButtonVariant.Secondary" AriaLabel="Print summary">
   <SrIcon Name="action/print" Size="IconSize.Sm" Color="IconColor.Inherit" />
 </SrButton>`,
-    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->
-<SrButton Variant="ButtonVariant.Secondary" AriaLabel="Print summary">
-  <SrIcon Name="action/print" Size="IconSize.Sm" Color="IconColor.Inherit" />
-</SrButton>`,
+    MAUI: `<!-- Native MAUI XAML for this component is in progress.
+     MAUI is native XAML and does not render the Blazor components, so the
+     Blazor snippet on the previous tab is not a substitute.
+     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
   };
 
   const statusSnippets = {
@@ -2415,11 +2569,10 @@ function iconsBody() {
   <SrIcon Name="status/warning" Size="IconSize.Sm" Color="IconColor.Critical" />
   Allergy: penicillin
 </SrText>`,
-    MAUI: `<!-- MAUI renders the Blazor component through Blazor Hybrid. -->
-<SrText Size="TextSize.S">
-  <SrIcon Name="status/warning" Size="IconSize.Sm" Color="IconColor.Critical" />
-  Allergy: penicillin
-</SrText>`,
+    MAUI: `<!-- Native MAUI XAML for this component is in progress.
+     MAUI is native XAML and does not render the Blazor components, so the
+     Blazor snippet on the previous tab is not a substitute.
+     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
   };
 
   const buttonRow = `
@@ -2660,9 +2813,13 @@ to review, and what has no equivalent yet.</p>
 
 <h2>Frameworks</h2>
 <p>Every code sample is shown for the four supported targets, in the same order: HTML, React, Blazor
-and MAUI. HTML is the reference implementation; the others wrap the same markup and tokens. MAUI
-renders the Blazor components through Blazor Hybrid, so a component behaves the same on desktop and
-mobile as it does on the web.</p>
+and MAUI. HTML is the reference implementation; React and Blazor wrap the same markup and tokens.</p>
+<p><strong>MAUI is different, and deliberately so.</strong> It is a native platform with its own
+layout engine, so it does not share markup with the web: there is no web view and no shared HTML.
+What it does share is the layer that keeps things consistent, the design tokens, delivered as XAML
+resource dictionaries generated from the same source as the web stylesheet. Native MAUI styles are
+in progress, so a MAUI tab currently either shows real XAML or says plainly that it does not exist
+yet.</p>
 
 <h2>If something is missing or wrong</h2>
 <p>Use <a href="${REPORT_ISSUE_URL}" target="_blank" rel="noopener">Report an issue</a> for anything
@@ -2719,7 +2876,7 @@ ${codePanel('get-files-icon', {
   HTML: '<!-- With the sprite: no JavaScript at all. -->\n<span class="sr-icon sr-icon--sm">\n  <svg><use href="/assets/sprite.svg#icon-nav-search"></use></svg>\n</span>',
   React: 'import Icon from "@dhcw/sr-react/icon";\n\n<Icon name="nav/search" size="sm" />',
   Blazor: '<SrIcon Name="nav/search" Size="IconSize.Sm" />',
-  MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. -->\n<SrIcon Name="nav/search" Size="IconSize.Sm" />',
+  MAUI: '<!-- Native MAUI XAML for this component is in progress.\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
 })}
 
 <div class="callout"><p><strong>The sprite has to be served over HTTP from your own origin.</strong>
@@ -2759,7 +2916,7 @@ ${codePanel('get-files-npm-import', {
   HTML: '<!-- Route 1 (download) is the equivalent for plain HTML — see above. -->',
   React: 'import { Button } from "@dhcw/sr-react";\nimport "@dhcw/sr-web/dist/single-record.css";',
   Blazor: '<!-- The Blazor Razor Class Library is distributed via NuGet, not npm. See DDR-020. -->',
-  MAUI: '<!-- MAUI renders the Blazor component through Blazor Hybrid. See DDR-020. -->',
+  MAUI: '<!-- Native MAUI XAML for this component is in progress.\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
 })}
 <p>Working in a checkout of the repository itself (rather than as a dependency)? Clone
 <a href="https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system" target="_blank" rel="noopener">the org repo</a>, then:</p>
@@ -2879,7 +3036,7 @@ addPage({
 addPage({
   file: 'components/input.html', url: 'components/input.html', title: 'Input',
   section: 'Components', sectionId: 'components', activeHref: 'components/input.html',
-  prefix: '../', body: inputBody(),
+  prefix: '../', body: inputBody(), extraScript: INPUT_SCRIPT,
 });
 addPage({
   file: 'components/navigation.html', url: 'components/navigation.html', title: 'Navigation',
@@ -3174,13 +3331,12 @@ mkdirSync(resolve(DIST, 'patterns'), { recursive: true });
 mkdirSync(resolve(DIST, 'prototypes'), { recursive: true });
 
 for (const f of ['fonts.css', 'tokens.css', 'typography.css']) copyFileSync(resolve(TOKENS, 'css', f), resolve(DIST, 'assets', f));
-copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'button', 'button.css'), resolve(DIST, 'assets', 'button.css'));
-copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'table', 'table.css'), resolve(DIST, 'assets', 'table.css'));
-copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'patient-banner', 'patient-banner.css'), resolve(DIST, 'assets', 'patient-banner.css'));
-copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'header', 'header.css'), resolve(DIST, 'assets', 'header.css'));
-copyFileSync(resolve(ROOT, 'packages', 'web', 'src', 'footer', 'footer.css'), resolve(DIST, 'assets', 'footer.css'));
-for (const c of ['bottom-nav', 'breadcrumbs', 'switch', 'segmented-control', 'navigation']) {
-  copyFileSync(resolve(ROOT, 'packages', 'web', 'src', c, `${c}.css`), resolve(DIST, 'assets', `${c}.css`));
+for (const c of SITE_COMPONENT_CSS) {
+  const from = resolve(ROOT, 'packages', 'web', 'src', c, `${c}.css`);
+  if (!existsSync(from)) {
+    throw new Error(`SITE_COMPONENT_CSS lists "${c}" but packages/web/src/${c}/${c}.css does not exist.`);
+  }
+  copyFileSync(from, resolve(DIST, 'assets', `${c}.css`));
 }
 copyFileSync(resolve(ROOT, 'packages', 'icons', 'src', 'icon.css'), resolve(DIST, 'assets', 'icon.css'));
 copyFileSync(resolve(ROOT, 'figma', 'assets', 'dhcw-logo-white.png'), resolve(DIST, 'assets', 'dhcw-logo-white.png'));
@@ -3222,9 +3378,13 @@ const searchIndex = pages.map((p) => ({
   x: stripTags(p.body).slice(0, 1200),
 }));
 if (snippetProblems.length) {
-  console.error(`\n${snippetProblems.length} React snippet(s) reference props that do not exist:\n`);
+  console.error(`\n${snippetProblems.length} code snippet problem(s):\n`);
   for (const p of snippetProblems) console.error(`  ${p}`);
-  console.error('\nFix the snippet, or the component if the snippet is what we meant to ship.\n');
+  console.error(
+    '\nReact snippets are checked against each component\'s own props; MAUI snippets\n'
+    + 'against the resources @dhcw/sr-maui ships. Fix the snippet, or the component if\n'
+    + 'the snippet is what we meant to ship.\n'
+  );
   process.exit(1);
 }
 
