@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             xmlns:controls="clr-namespace:SrTestbed.Controls"
+             xmlns:views="clr-namespace:SrTestbed.Views"
+             x:Class="SrTestbed.MainPage"
+             ios:Page.UseSafeArea="True"
+             Title="Single Record">
+    <!--
+        Figma: SINGLE RECORD DESIGN SYSTEM, node 554:6606 (Page Template,
+        Viewport=Mobile, 390x844).
+
+        Three bands, as drawn: a fixed header, a scrolling body, a fixed bottom
+        bar. The header and bar are persistent chrome and do not scroll with the
+        content.
+
+        The page background comes from the implicit ContentPage style in
+        Styles.xaml — Surface/Background. Nothing sets it here.
+    -->
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!--#region Header bar ================================================-->
+        <!--
+            64px, matching the SR header bar. Surface/Section-cards stands in for
+            Surface/Header, which has no semantic token yet (see README).
+        -->
+        <Grid Grid.Row="0"
+              BackgroundColor="{AppThemeBinding Light={StaticResource SrColorSurfaceSectionCards}, Dark={StaticResource SrColorSurfaceSectionCardsDark}}"
+              RowDefinitions="Auto,Auto">
+
+            <Grid Grid.Row="0" Padding="16,12" MinimumHeightRequest="64">
+
+                <!-- Search. A real field is not what this screen shows; the
+                     control here is the entry point to search, as drawn. -->
+                <Border Padding="0"
+                        WidthRequest="40"
+                        HeightRequest="40"
+                        HorizontalOptions="Start"
+                        VerticalOptions="Center"
+                        BackgroundColor="Transparent"
+                        Stroke="{AppThemeBinding Light={StaticResource SrColorBorderDefault}, Dark={StaticResource SrColorBorderDefaultDark}}"
+                        StrokeThickness="1"
+                        SemanticProperties.Description="Search">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8" />
+                    </Border.StrokeShape>
+                    <Path Data="{StaticResource SrIconNavSearch}"
+                          Aspect="Uniform"
+                          HeightRequest="20"
+                          WidthRequest="20"
+                          HorizontalOptions="Center"
+                          VerticalOptions="Center"
+                          StrokeThickness="2"
+                          StrokeLineCap="Round"
+                          StrokeLineJoin="Round"
+                          Stroke="{AppThemeBinding Light={StaticResource SrColorTextPrimary}, Dark={StaticResource SrColorTextPrimaryDark}}" />
+                </Border>
+
+                <!--
+                    Brand mark. NEUTRAL PLACEHOLDER, not the NHS / GIG trademark
+                    lockup — the same placeholder geometry the web package uses
+                    (packages/web/src/assets/logo.js), so the two agree.
+
+                    Deliberately NOT theme-bound: a brand mark keeps its colours
+                    in both modes. Everything else on this screen themes.
+                -->
+                <Grid WidthRequest="40" HeightRequest="40"
+                      HorizontalOptions="Center" VerticalOptions="Center"
+                      SemanticProperties.Description="DHCW Single Record">
+                    <Border Padding="0"
+                            BackgroundColor="{StaticResource SrColorInteractivePrimary}"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8" />
+                        </Border.StrokeShape>
+                    </Border>
+                    <Path Data="M20,8 L32,20 L20,32 L8,20 Z"
+                          Aspect="Uniform" Margin="8"
+                          Stroke="{StaticResource SrColorTextInverse}"
+                          StrokeThickness="2.5" />
+                    <Path Data="M20,15 L25,20 L20,25 L15,20 Z"
+                          Aspect="Uniform" Margin="14"
+                          Fill="{StaticResource SrColorTextInverse}" />
+                </Grid>
+
+                <!-- Utility cluster -->
+                <HorizontalStackLayout HorizontalOptions="End" VerticalOptions="Center" Spacing="12">
+
+                    <Path Data="{StaticResource SrIconCommsNotification}"
+                          Aspect="Uniform"
+                          HeightRequest="24"
+                          WidthRequest="24"
+                          VerticalOptions="Center"
+                          StrokeThickness="2"
+                          StrokeLineCap="Round"
+                          StrokeLineJoin="Round"
+                          Stroke="{AppThemeBinding Light={StaticResource SrColorTextPrimary}, Dark={StaticResource SrColorTextPrimaryDark}}"
+                          SemanticProperties.Description="Notifications" />
+
+                    <!--
+                        Avatar. Figma draws this as Cyan/700 with white initials,
+                        which is 2.95:1 — it fails WCAG 2.2 AA for both normal
+                        and large text, and SR's own brand.accent token forbids
+                        using it as a filled surface with text on top.
+                        Interactive/Primary is 8.04:1 and is used instead. The
+                        Figma frame needs the same correction.
+                    -->
+                    <Grid WidthRequest="40" HeightRequest="40" VerticalOptions="Center">
+                        <Border Padding="0"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource SrColorInteractivePrimary}, Dark={StaticResource SrColorInteractivePrimaryDark}}"
+                                StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="20" />
+                            </Border.StrokeShape>
+                            <Label Text="AB"
+                                   StyleClass="FieldLabel"
+                                   TextColor="{StaticResource SrColorTextInverse}"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center" />
+                        </Border>
+                        <!-- Presence. Decorative: the state is not conveyed by
+                             colour alone anywhere that matters clinically. -->
+                        <Border Padding="0"
+                                WidthRequest="10" HeightRequest="10"
+                                HorizontalOptions="End" VerticalOptions="End"
+                                BackgroundColor="{StaticResource SrColorStatusSuccess}"
+                                Stroke="{AppThemeBinding Light={StaticResource SrColorSurfaceSectionCards}, Dark={StaticResource SrColorSurfaceSectionCardsDark}}"
+                                StrokeThickness="1.5">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="5" />
+                            </Border.StrokeShape>
+                        </Border>
+                    </Grid>
+                </HorizontalStackLayout>
+            </Grid>
+
+            <BoxView Grid.Row="1" StyleClass="Divider" />
+        </Grid>
+        <!--#endregion-->
+
+        <!--#region Body =====================================================-->
+        <ScrollView Grid.Row="1">
+            <Grid>
+                <views:HomeView x:Name="Home" />
+                <views:DiagnosticsView x:Name="Diagnostics" IsVisible="False" />
+            </Grid>
+        </ScrollView>
+        <!--#endregion-->
+
+        <!--#region Bottom bar ===============================================-->
+        <Grid Grid.Row="2"
+              BackgroundColor="{AppThemeBinding Light={StaticResource SrColorSurfaceSectionCards}, Dark={StaticResource SrColorSurfaceSectionCardsDark}}"
+              RowDefinitions="Auto,Auto">
+
+            <BoxView Grid.Row="0" StyleClass="Divider" />
+
+            <Grid Grid.Row="1" ColumnDefinitions="*,*,*,*,*">
+                <controls:NavTab Grid.Column="0" Index="0" Text="Home"
+                                 IconData="{StaticResource SrIconNavHome}"
+                                 SelectedIndex="{Binding SelectedTab}"
+                                 Command="{Binding SelectTabCommand}" />
+                <controls:NavTab Grid.Column="1" Index="1" Text="Diary"
+                                 IconData="{StaticResource SrIconScheduleAppointment}"
+                                 SelectedIndex="{Binding SelectedTab}"
+                                 Command="{Binding SelectTabCommand}" />
+                <controls:NavTab Grid.Column="2" Index="2" Text="Patients"
+                                 IconData="{StaticResource SrIconPeoplePatient}"
+                                 SelectedIndex="{Binding SelectedTab}"
+                                 Command="{Binding SelectTabCommand}" />
+                <controls:NavTab Grid.Column="3" Index="3" Text="Messages"
+                                 IconData="{StaticResource SrIconCommsMessage}"
+                                 SelectedIndex="{Binding SelectedTab}"
+                                 Command="{Binding SelectTabCommand}" />
+                <controls:NavTab Grid.Column="4" Index="4" Text="More"
+                                 IconData="{StaticResource SrIconNavMore}"
+                                 SelectedIndex="{Binding SelectedTab}"
+                                 Command="{Binding SelectTabCommand}" />
+            </Grid>
+        </Grid>
+        <!--#endregion-->
+    </Grid>
+</ContentPage>

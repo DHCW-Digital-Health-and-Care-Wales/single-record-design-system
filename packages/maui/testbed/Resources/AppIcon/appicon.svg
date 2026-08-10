@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="456" height="456" viewBox="0 0 456 456">
+  <!-- Testbed app icon. Neutral placeholder, not the NHS / GIG trademark. -->
+  <rect width="456" height="456" fill="#325083"/>
+  <polygon points="228,96 360,228 228,360 96,228" fill="none" stroke="#ffffff" stroke-width="28"/>
+  <polygon points="228,172 284,228 228,284 172,228" fill="#ffffff"/>
+</svg>

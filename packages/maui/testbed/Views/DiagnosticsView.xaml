@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SrTestbed.Views.DiagnosticsView">
+    <!--
+        The reason this testbed exists. Reading XAML tells you a reference is
+        spelled correctly; only a device tells you it resolves, flips theme, and
+        survives a font-scale change. Everything here is a check you cannot do
+        from the repo.
+    -->
+    <VerticalStackLayout Padding="16" Spacing="16">
+
+        <Label Text="Diagnostics" StyleClass="HeadingM" />
+        <Label StyleClass="BodyS"
+               Text="Checks that only run on a real device. Nothing here is design-system vocabulary." />
+
+        <!--#region Theme ====================================================-->
+        <Border>
+            <VerticalStackLayout Spacing="12">
+                <Label Text="Theme" StyleClass="HeadingXs" />
+                <Label StyleClass="Caption"
+                       Text="Every colour below is an AppThemeBinding pair. If a swatch fails to change, that pair is not wired up." />
+                <Label x:Name="ThemeState" StyleClass="BodyS" />
+                <FlexLayout Wrap="Wrap" JustifyContent="Start">
+                    <Button Text="System" Clicked="OnSystem" Margin="0,0,8,8" />
+                    <Button Text="Light" Style="{StaticResource ButtonSecondary}" Clicked="OnLight" Margin="0,0,8,8" />
+                    <Button Text="Dark" Style="{StaticResource ButtonSecondary}" Clicked="OnDark" Margin="0,0,8,8" />
+                </FlexLayout>
+            </VerticalStackLayout>
+        </Border>
+        <!--#endregion-->
+
+        <!--#region Environment ==============================================-->
+        <Border>
+            <VerticalStackLayout Spacing="8">
+                <Label Text="Environment" StyleClass="HeadingXs" />
+                <Label x:Name="EnvReadout" StyleClass="Caption" />
+                <Label StyleClass="Caption"
+                       Text="Raise the system font size to 200% in device settings, then come back. Nothing on the Home tab should crop." />
+            </VerticalStackLayout>
+        </Border>
+        <!--#endregion-->
+
+        <!--#region Type scale ===============================================-->
+        <Border>
+            <VerticalStackLayout Spacing="8">
+                <Label Text="Type scale" StyleClass="HeadingXs" />
+                <Label StyleClass="Caption" Text="Mobile scale. Caption 12/16 is the floor — nothing goes below it." />
+                <Label Text="Heading XL — 28" StyleClass="HeadingXl" />
+                <Label Text="Heading L — 24" StyleClass="HeadingL" />
+                <Label Text="Heading M — 20" StyleClass="HeadingM" />
+                <Label Text="Heading S — 18" StyleClass="HeadingS" />
+                <Label Text="Heading XS — 16" StyleClass="HeadingXs" />
+                <Label Text="Body M — 16" StyleClass="BodyM" />
+                <Label Text="Body S — 14 (the base)" StyleClass="BodyS" />
+                <Label Text="Field label — 14" StyleClass="FieldLabel" />
+                <Label Text="Caption — 12" StyleClass="Caption" />
+                <Label Text="Error — 12" StyleClass="Error" />
+            </VerticalStackLayout>
+        </Border>
+        <!--#endregion-->
+
+        <!--#region Controls =================================================-->
+        <Border>
+            <VerticalStackLayout Spacing="12">
+                <Label Text="Stock controls" StyleClass="HeadingXs" />
+                <Label StyleClass="Caption"
+                       Text="Implicit styles only — none of these carry a Style attribute. If one looks unstyled, Styles.xaml did not merge." />
+
+                <Button Text="Primary action" />
+                <Button Text="Secondary" Style="{StaticResource ButtonSecondary}" />
+                <Button Text="Ghost" Style="{StaticResource ButtonGhost}" />
+                <Button Text="Destructive" Style="{StaticResource ButtonDestructive}" />
+                <Button Text="Disabled" IsEnabled="False" />
+
+                <Label Text="Entry" StyleClass="FieldLabel" />
+                <Entry Placeholder="Type here" />
+
+                <Label Text="Editor" StyleClass="FieldLabel" />
+                <Editor Placeholder="Longer text" HeightRequest="80" />
+
+                <Label Text="Picker" StyleClass="FieldLabel" />
+                <Picker Title="Choose one">
+                    <Picker.Items>
+                        <x:String>First</x:String>
+                        <x:String>Second</x:String>
+                    </Picker.Items>
+                </Picker>
+
+                <Label Text="Date and time" StyleClass="FieldLabel" />
+                <DatePicker />
+                <TimePicker />
+
+                <HorizontalStackLayout Spacing="8">
+                    <CheckBox />
+                    <Label Text="Checkbox" StyleClass="BodyS" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Spacing="8">
+                    <Switch IsToggled="True" />
+                    <Label Text="Switch" StyleClass="BodyS" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+
+                <ActivityIndicator IsRunning="True" HorizontalOptions="Start" />
+            </VerticalStackLayout>
+        </Border>
+        <!--#endregion-->
+
+        <!--#region Status treatments ========================================-->
+        <Border>
+            <VerticalStackLayout Spacing="8">
+                <Label Text="Status" StyleClass="HeadingXs" />
+                <Border Style="{StaticResource CardCritical}"><Label Text="Critical" StyleClass="BodyS" /></Border>
+                <Border Style="{StaticResource CardWarning}"><Label Text="Warning" StyleClass="BodyS" /></Border>
+                <Border Style="{StaticResource CardSuccess}"><Label Text="Success" StyleClass="BodyS" /></Border>
+                <FlexLayout Wrap="Wrap" JustifyContent="Start">
+                    <Border Style="{StaticResource TagCritical}" Margin="0,0,8,8"><Label Text="Critical" StyleClass="TagTextCritical" /></Border>
+                    <Border Style="{StaticResource TagWarning}" Margin="0,0,8,8"><Label Text="Warning" StyleClass="TagTextWarning" /></Border>
+                    <Border Style="{StaticResource TagSuccess}" Margin="0,0,8,8"><Label Text="Success" StyleClass="TagTextSuccess" /></Border>
+                    <Border Style="{StaticResource TagInfo}" Margin="0,0,8,8"><Label Text="Info" StyleClass="TagTextInfo" /></Border>
+                </FlexLayout>
+            </VerticalStackLayout>
+        </Border>
+        <!--#endregion-->
+
+        <!--#region Themed semantics =========================================-->
+        <Border>
+            <VerticalStackLayout Spacing="8">
+                <Label Text="Semantics that change with the theme" StyleClass="HeadingXs" />
+                <Label x:Name="SwatchCaption" StyleClass="Caption" />
+                <VerticalStackLayout x:Name="Swatches" Spacing="4" />
+            </VerticalStackLayout>
+        </Border>
+        <!--#endregion-->
+
+        <!--#region Icons ====================================================-->
+        <Border>
+            <VerticalStackLayout Spacing="8">
+                <Label Text="Icons" StyleClass="HeadingXs" />
+                <Label x:Name="IconCaption" StyleClass="Caption" />
+                <Label StyleClass="Caption"
+                       Text="Generated from the same SVGs as the web set. A blank cell means a geometry that XAML could not parse; a wrong-looking icon means the conversion is off." />
+                <FlexLayout x:Name="IconGrid" Wrap="Wrap" JustifyContent="Start" />
+            </VerticalStackLayout>
+        </Border>
+        <!--#endregion-->
+    </VerticalStackLayout>
+</ContentView>

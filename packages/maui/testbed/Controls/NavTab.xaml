@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SrTestbed.Controls.NavTab">
+    <!--
+        One destination in the bottom bar: icon above label, centred.
+
+        MinimumHeightRequest, not HeightRequest — the bar is 60px in the design,
+        but a tab whose label is at 200% font scale needs to grow rather than
+        crop. That is the whole point of the device test.
+    -->
+    <Grid Padding="4,8" MinimumHeightRequest="60" RowDefinitions="Auto,Auto" RowSpacing="4">
+        <Path x:Name="Glyph"
+              Grid.Row="0"
+              Aspect="Uniform"
+              HeightRequest="24"
+              WidthRequest="24"
+              HorizontalOptions="Center"
+              StrokeThickness="2"
+              StrokeLineCap="Round"
+              StrokeLineJoin="Round" />
+
+        <Label x:Name="Caption"
+               Grid.Row="1"
+               StyleClass="Caption"
+               HorizontalTextAlignment="Center"
+               HorizontalOptions="Center" />
+    </Grid>
+</ContentView>

@@ -4,7 +4,7 @@ The Single Record Design System provides the shared design language, component l
 
 This document is the primary reference for everyone working on Single Record — designers, engineers, and delivery leads.
 
-**Last reviewed:** 2026-08-05. Update this file whenever a component ships, a
+**Last reviewed:** 2026-08-10. Update this file whenever a component ships, a
 token is added, or a system-wide rule changes — not on a schedule. If it
 disagrees with `/foundations/tokens/` or `/components/`, those win and this file
 is out of date.
@@ -405,9 +405,9 @@ snippet that does not work is worse than no snippet, because the reader has no
 reason to doubt it.
 
 **Distribution has a decision record: DDR-020.** Registries (public npm for the
-web packages, NuGet for the Blazor RCL that Blazor *and* MAUI consume), one
-version across all packages, 0.x until the token semantics settle, and release
-by git tag through CI. Status is **Proposed**: it needs governance sign-off,
+web packages, NuGet for the Blazor RCL — which serves **Blazor web only**, not
+MAUI; see DDR-021), one version across all packages, 0.x until the token
+semantics settle, and release by git tag through CI. Status is **Proposed**: it needs governance sign-off,
 and — the blocking item — the npm scope has to be agreed with DHCW. `@dhcw` is
 not this programme's to take: DHCW is building its own design system and Single
 Record is a programme within it, while an npm scope is one global name owned by
@@ -518,9 +518,29 @@ The design system is **implementation-agnostic at the design level**. Tokens are
 | Web (reference baseline) | Standard HTML / CSS | Current |
 | Web applications | Blazor / .NET | Current |
 | Web applications | React | Current |
-| Desktop / Mobile | .NET MAUI | Current |
+| Mobile (phone, tablet) | .NET MAUI — **native XAML** | Current |
 | Legacy web | .NET Framework 4.8 | Limited — tokens via CSS only |
 | Legacy desktop | Delphi | Maintained, not extended |
+
+**MAUI is native XAML, not Blazor Hybrid (DDR-021).** What the design system
+ships for it is a token and style layer, not a parallel component library:
+`Colors.xaml` (210 resources, generated from the tokens), `Icons.xaml` (120 icons
+as XAML path geometry, generated from the same SVGs as the web icon set), and a
+hand-authored `Styles.xaml` of implicit styles, keyed intent styles and the
+`StyleClass` type scale. All in `packages/maui`.
+
+Two things a MAUI consumer needs to know up front. Prefer **`StyleClass` over
+`Style` on a `Label`** — an explicit `Style` replaces the implicit one and
+silently drops the font family, themed colour and disabled state. And **medium
+weight is currently unreachable**: SR's `label` and `heading-xs` are 500 weight,
+MAUI's `FontAttributes` offers only Regular and Bold, so both render regular
+until `Roboto-Medium.ttf` is bundled.
+
+`packages/maui/testbed` is a MAUI app that puts the layer on a real device, with
+a diagnostics page covering theme flipping, font scale, every stock control and
+all 120 icons. Nothing in the MAUI layer has been compiled yet — it is verified
+statically (resource resolution, icon geometry against source, no literal
+colours) and that gap is named in `packages/maui/README.md`.
 
 Code implementation guidance lives in `/docs/for-engineers.md`.
 

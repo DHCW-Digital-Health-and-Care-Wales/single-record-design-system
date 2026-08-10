@@ -1,0 +1,87 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Single Record MAUI testbed.
+
+    A throwaway host whose only job is to put packages/maui's Colors.xaml,
+    Styles.xaml and Icons.xaml on a real device, so the things that cannot be
+    checked by reading XAML can be checked by looking at it:
+
+      * do the resource references actually resolve at runtime
+      * does AppThemeBinding flip cleanly light <-> dark
+      * does MinimumHeightRequest survive 200% system font scale
+      * do the 120 icon geometries render as the icons they claim to be
+
+    Not shipped, not published, not a product. Android by default because that
+    is the friction-free route to an installable binary for BrowserStack App
+    Live: no signing identity, no provisioning profile, no Xcode.
+  -->
+
+  <PropertyGroup>
+    <!--
+      Switch the whole build to another .NET version in one place:
+          dotnet publish -p:SrDotnet=net10.0 ...
+      Run `dotnet` with the list-sdks flag to see what is installed.
+
+      (Written the long way round because an XML comment may not contain a
+      double hyphen, which is what that flag begins with. MSB4025 otherwise.)
+    -->
+    <SrDotnet Condition="'$(SrDotnet)' == ''">net10.0</SrDotnet>
+
+    <!--
+      Add ios/maccatalyst here if you want them. Both need Xcode, and iOS needs
+      a signing identity before it will produce anything installable, which is
+      why neither is on by default.
+    -->
+    <TargetFrameworks>$(SrDotnet)-android</TargetFrameworks>
+
+    <OutputType>Exe</OutputType>
+    <RootNamespace>SrTestbed</RootNamespace>
+    <UseMaui>true</UseMaui>
+    <SingleProject>true</SingleProject>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <ApplicationTitle>SR Testbed</ApplicationTitle>
+    <ApplicationId>wales.nhs.dhcw.singlerecord.testbed</ApplicationId>
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+
+    <!-- Android 5.0. Nothing here needs anything newer. -->
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
+  </PropertyGroup>
+
+  <!--
+    From .NET 8 on, UseMaui no longer implies the package reference (warning
+    MA002). MauiVersion is set by the installed workload, so this tracks it
+    rather than pinning a version that can drift out from under the build.
+  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <MauiIcon Include="Resources/AppIcon/appicon.svg" />
+    <MauiSplashScreen Include="Resources/Splash/splash.svg" Color="#325083" BaseSize="128,128" />
+  </ItemGroup>
+
+  <!--
+    The design system layer, linked rather than copied so the testbed always
+    exercises the real files. Colors.xaml and Icons.xaml are generated; editing
+    the copy the build sees would be editing generated output.
+
+    Order matters at merge time, not here — see App.xaml.
+  -->
+  <ItemGroup>
+    <MauiXaml Include="../Colors.xaml" Link="Resources/Styles/Colors.xaml" />
+    <MauiXaml Include="../Styles.xaml" Link="Resources/Styles/Styles.xaml" />
+    <MauiXaml Include="../Icons.xaml"  Link="Resources/Styles/Icons.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <MauiXaml Update="**/*.xaml" Generator="MSBuild:Compile" />
+  </ItemGroup>
+
+</Project>

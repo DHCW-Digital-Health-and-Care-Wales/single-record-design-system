@@ -5,12 +5,13 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "node build.mjs",
+    "build": "node build-icons.mjs && node build.mjs && node verify-icons.mjs && node verify-xaml.mjs",
     "prepublishOnly": "npm run build"
   },
   "files": [
     "Colors.xaml",
-    "Styles.xaml"
+    "Styles.xaml",
+    "Icons.xaml"
   ],
   "publishConfig": {
     "access": "public"

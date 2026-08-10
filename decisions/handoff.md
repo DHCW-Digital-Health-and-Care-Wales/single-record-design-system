@@ -5,6 +5,165 @@ For the full log of design language changes, see `design-language-backlog.md`.
 
 ---
 
+## Checkpoint — 2026-08-10 (MAUI icons; a testbed app; the cyan finding confirmed)
+
+### The `#12A3C9` contrast finding is confirmed — it was the top open item
+
+Computed independently while building the Figma mobile home screen, which draws
+the avatar as `Cyan/700` filled with white initials:
+
+| Pair | Ratio | AA needs |
+|---|---|---|
+| white on `cyan.700` `#12a3c9` | **2.95:1** | 4.5:1 normal, 3:1 large — **fails both** |
+| white on `interactive.primary` `#325083` | 8.04:1 | passes |
+
+So item 1 of the 2026-08-06 checkpoint is answered: the finding holds. The
+testbed uses `Interactive/Primary`. **Figma `554:6606` still needs the same
+correction**, as does anywhere else the app fills with `Secondary` /
+`DHCWBackgroundClickable`.
+
+Every other pair on that screen passes — 15 of 16 checked, including both
+appointment tags, the link on the page background, and the selected-day pill.
+
+### `Icons.xaml` — 120 icons as XAML geometry
+
+`packages/maui` had no icon story at all. It now generates one from
+`foundations/iconography/svg/`, the same source as the web set.
+
+**Geometry, not images.** MAUI rasterises SVG at build time via `<MauiImage>`,
+but bakes the colour into the PNG. These are `stroke="currentColor"` outlines
+that must take a token and follow the theme, so they ship as path data on a
+`Path` where `Stroke` is an ordinary bindable property.
+
+**The bug worth remembering.** Several icons are drawn from multiple `<path>`
+elements. Concatenating them into one geometry is only safe if each subpath opens
+with an *absolute* moveto — **30 of the 120 open with a relative one**, which is
+measured from the previous subpath's end point and silently displaces the shape.
+The first fix (upper-case the leading `m`) was worse: in `m12 5 7 7-7 7` the
+trailing pairs are implicit *relative* linetos inherited from the lowercase
+moveto, so `M` turns a chevron into a different shape entirely. The correct
+normalisation rewrites the moveto absolute and re-attaches the remainder under an
+explicit relative `l`.
+
+`verify-icons.mjs` walks both forms and compares the absolute points they visit,
+so this cannot regress silently. Verified by planting the naive fix: 40 icons
+fail, with the wrong coordinates printed.
+
+### Two elevation tokens had been silently dropped from `Colors.xaml`
+
+`ElevationRaised` and `ElevationOverlay` are emitted by `@dhcw/sr-tokens` as
+multi-line self-closing `<Shadow …/>` elements. `build.mjs`'s parser was
+line-anchored and matched neither, so both vanished without a word — 208
+resources where 210 were expected. The parser now carries any keyed element
+through verbatim, preserving attribute alignment, and asserts that a
+value-less element which *differs* between light and dark fails the build rather
+than being unified wrongly. The stat cards needed `ElevationRaised`, which is how
+this surfaced.
+
+### `packages/maui/testbed` — a MAUI app to put the layer on a device
+
+Figma `554:6606` (Page Template, Viewport=Mobile) built as native XAML: header,
+GMC link, four stat cards, the Today's Appointments card with its week strip and
+five rows, and the five-destination bottom bar.
+
+**BrowserStack App Live takes an `.apk`/`.ipa`, not a file you open.** There is no
+HTML that would answer any of the questions worth asking, since none of them are
+about HTML. Two routes to a binary, in `testbed/README.md`:
+
+1. **GitHub Actions** — `.github/workflows/build-maui-testbed.yml`, manual
+   dispatch, uploads `sr-testbed.apk`. Nothing to install. It also fails if the
+   committed generated XAML has drifted from what the generator produces.
+2. **Local macOS** — JDK 17 + Android SDK + `maui-android` workload, commands
+   given.
+
+The **More** tab is a diagnostics page and is where the value is: theme switch,
+live Android font scale, the type ladder, every stock control under its implicit
+style only, status treatments, the 16 themed semantics as light/dark swatch
+pairs, and all 120 icons with names. Diary / Patients / Messages are inert
+because the design specifies no screen for them.
+
+**Still not compiled.** No .NET SDK in this environment. What *is* verified:
+`verify-xaml.mjs` checks every consuming XAML file for well-formedness, missing
+`StaticResource` and `StyleClass` references, and literal colours — proven
+against four planted faults, each caught with the right line number. Wired into
+`npm run check`.
+
+### The `Style` vs `StyleClass` trap on Label
+
+Worth knowing before writing more MAUI: an explicit `Style` on a `Label`
+**replaces** the implicit `Label` style, silently dropping the font family, the
+themed text colour and the disabled visual state. `StyleClass` composes on top of
+it and takes a list (`StyleClass="Caption,Muted"`). The testbed uses `StyleClass`
+throughout for exactly this reason. The README documented `<sr:Colors />` for
+merging, which needs an `x:Class` these dictionaries deliberately do not have —
+it would never have compiled. Corrected to `Source=`.
+
+### Three Figma slips on `554:6606`, implemented corrected rather than copied
+
+| Slip | What the testbed does |
+|---|---|
+| Avatar filled `Cyan/700`, white initials — 2.95:1 | `Interactive/Primary`, 8.04:1 |
+| Section card fixed at 440px, fifth row clipped mid-row | Card sizes to content, page scrolls |
+| Code Connect maps all five tags `Tag type="Blue"` while three render green | Blue for Physical, green for Virtual, as drawn |
+
+Also: the frame is a **mobile** frame using **`SR Typography/Desktop/*`** styles
+throughout. The values it draws happen to match the mobile scale for the sizes
+used, so nothing renders wrong, but the bindings are to the wrong set.
+
+### Open for you
+
+1. **Run the testbed and look at it.** Everything above is static verification.
+2. **Fix `554:6606`'s avatar** and audit the app for other `#12A3C9` fills.
+3. **Bundle `Roboto-Medium.ttf`.** SR's `label` and `heading-xs` are 500 weight
+   and MAUI has no medium `FontAttributes`, so both currently render regular. The
+   bottom bar's current destination is distinguished by colour alone as a result.
+4. **Add a `surface.header` semantic.** Chrome is neither a card nor the page
+   background; `Surface/Section-cards` stands in and happens to be right in both
+   modes, which is why nobody noticed.
+5. **`surface.small-cards` is `#0c7b99` in dark mode** — the stat cards turn
+   saturated teal under a navy section card. Passes contrast at 4.87:1, so not a
+   defect, but almost certainly not intended. A concrete instance for the dark
+   mode reconciliation pass.
+6. **Promote `Stat Card` and `Dashboard/Row cards`.** Both are Figma components
+   with no spec and no implementation, composed by hand in the testbed. The week
+   strip is a third candidate.
+7. iOS needs Roboto bundled or every style falls back to San Francisco — the one
+   thing an Android build cannot tell you.
+
+---
+
+## Checkpoint — 2026-08-07 (SrDocumentViewer specification; maui-skills installed)
+
+### SrDocumentViewer specification completed
+
+Wrote the design specification and usage guidelines for the PDF viewer wrapper that the mobile app needs:
+
+- **`components/document-viewer/spec.md`**: Full technical contract. Documents the API (properties `SourceStream`, `EnableTextSelection`, `ZoomLevel`; methods `GoToPage`, `NextPage`, `PreviousPage`, `Dispose`; events `DocumentLoaded`, `PageChanged`, `DocumentLoadFailed`), security model (in-memory PDF handling, validation requirements, text-selection controls for sensitive documents), theming via `AppThemeBinding` to SR tokens, and disposal guarantees (explicit disposal required to release Syncfusion resources — no garbage-collection-only cleanup).
+
+- **`components/document-viewer/guidelines.md`**: Usage guidance. When to use (viewing PDFs already in the app); when not to use (large files, non-PDF formats); mobile-only scope; theming; accessibility (PDFs are not screen-reader traversable; provide transcripts for clinical sensitivity); frameworks table.
+
+### Decision: Syncfusion wrapping scope
+
+**Confirmed:** only `SfPdfViewer` is wrapped. Other Syncfusion controls (`SfTextInputLayout`, `SfCheckBox`, `SfExpander`, `SfBadgeView`, `SfTabItem`) are built natively using SR's token and style layer, per DDR-021. This leaves ~94% of the mobile app's styling and ~0% of its colouring touching Syncfusion.
+
+### Developer handoff
+
+A Syncfusion-licensed developer can now implement `SrDocumentViewer` using:
+1. The spec (properties, methods, events, memory/disposal model)
+2. The guidelines (when to use, theming approach)
+3. The existing `packages/maui/Colors.xaml` and `Styles.xaml` for token values
+4. maui-skills (installed this session) for reference patterns on file handling and native wrapping
+
+No further design work is needed before implementation.
+
+### Open — for the design lead
+
+1. **Verify the cyan.700 / #12A3C9 contrast finding** from the last checkpoint — flagged as highest priority.
+2. **Test at 200% font scale** on BrowserStack App Live once the mobile team has compiled their MAUI app against `packages/maui`.
+3. `PatientHomePage.xaml` references `NWISBlack`, `NWISBlackDark`, `NWISGrey` not found in supplied `Colors.xaml` — app-specific concern; verify it does not affect DS delivery.
+
+---
+
 ## Checkpoint — 2026-08-06 (MAUI is native XAML — DDR-021 corrects a wrong assumption)
 
 ### Correction: MAUI does not use Blazor Hybrid, and never did

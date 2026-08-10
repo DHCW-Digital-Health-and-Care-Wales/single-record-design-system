@@ -5,3 +5,7 @@ node_modules/
 # Assembled Pages deploy dir (generated)
 site-dist/
 packages/storybook/storybook-static/
+
+# .NET build output (packages/maui/testbed)
+[Bb]in/
+[Oo]bj/

@@ -30,19 +30,89 @@ for (const f of [LIGHT, DARK]) {
   }
 }
 
-/** Parse `<Tag x:Key="Name">value</Tag>` and multi-line elements alike. */
+/**
+ * Every keyed resource in a dictionary, as { tag, value, block }.
+ *
+ * `value` is the text content of a simple one-line element and is what the
+ * light/dark comparison works on. `block` is the element's full source, carried
+ * through verbatim so multi-line and self-closing elements survive.
+ *
+ * The earlier version of this matched line-anchored patterns only, which meant
+ * <Shadow x:Key="ElevationRaised" ... /> — written across five lines and
+ * self-closing — matched nothing and was dropped without a word. Both elevation
+ * tokens went missing from Colors.xaml that way.
+ */
 function parseDictionary(path) {
   const src = readFileSync(path, 'utf8');
   const out = new Map();
-  // Single-line elements: the overwhelming majority (Color, x:Double, x:String).
-  for (const m of src.matchAll(/^\s*<([\w:.]+)\s+x:Key="([^"]+)"\s*>([^<]*)<\/[\w:.]+>\s*$/gm)) {
-    out.set(m[2], { tag: m[1], value: m[3], block: m[0].trim() });
+
+  // Opening tags, allowed to span lines. `[\s\S]*?` is lazy, so the first `>`
+  // that is not inside an attribute value ends the tag.
+  for (const m of src.matchAll(/<([\w:.]+)((?:"[^"]*"|'[^']*'|[^>"'])*?)(\/?)>/g)) {
+    const [, tag, attrText, selfClosing] = m;
+    const keyMatch = attrText.match(/\bx:Key="([^"]+)"/);
+    if (!keyMatch) continue;
+    const key = keyMatch[1];
+
+    // Column the opening tag sits at, so multi-line blocks can be re-indented
+    // without losing the alignment of their attributes.
+    const sourceIndent = m.index - (src.lastIndexOf("\n", m.index) + 1);
+
+    if (selfClosing) {
+      out.set(key, { tag, value: null, block: m[0], sourceIndent });
+      continue;
+    }
+
+    // Find this element's matching close tag, counting nested same-name opens.
+    const closeTag = `</${tag}>`;
+    let depth = 1;
+    let cursor = m.index + m[0].length;
+    let end = -1;
+    while (cursor < src.length) {
+      const nextOpen = src.indexOf(`<${tag}`, cursor);
+      const nextClose = src.indexOf(closeTag, cursor);
+      if (nextClose === -1) break;
+      if (nextOpen !== -1 && nextOpen < nextClose) {
+        depth++;
+        cursor = nextOpen + tag.length + 1;
+        continue;
+      }
+      depth--;
+      if (depth === 0) { end = nextClose + closeTag.length; break; }
+      cursor = nextClose + closeTag.length;
+    }
+    if (end === -1) throw new Error(`${path}: <${tag} x:Key="${key}"> is never closed.`);
+
+    const block = src.slice(m.index, end);
+    // A simple element is one whose content holds no further markup — that
+    // content is the value the light/dark comparison needs.
+    const inner = block.slice(m[0].length, block.length - closeTag.length);
+    out.set(key, { tag, value: inner.includes('<') ? null : inner, block, sourceIndent });
   }
-  // Anything else carrying an x:Key (shadows are emitted as nested elements).
-  for (const m of src.matchAll(/^\s*<([\w:.]+)\s+x:Key="([^"]+)"(?![^>]*\/>)[^>]*>$/gm)) {
-    if (!out.has(m[2])) out.set(m[2], { tag: m[1], value: null, block: null });
-  }
+
   return out;
+}
+
+/**
+ * Re-indent a carried-through block into the output, preserving the relative
+ * indentation of its continuation lines — a multi-line element aligns its
+ * attributes under the tag name, and flattening that makes it unreadable.
+ */
+function reindent(block, sourceIndent = 0, indent = '    ') {
+  const lines = block.split('\n');
+  if (lines.length === 1) return indent + lines[0].trim();
+
+  // The block starts at its `<`, so its own leading whitespace is not part of
+  // it — the opening tag's column comes from the source separately.
+  const firstIndent = sourceIndent;
+  return [
+    indent + lines[0].trim(),
+    ...lines.slice(1).map((l) => {
+      if (!l.trim()) return '';
+      const own = l.match(/^\s*/)[0].length;
+      return indent + ' '.repeat(Math.max(0, own - firstIndent)) + l.trim();
+    }),
+  ].join('\n');
 }
 
 const light = parseDictionary(LIGHT);
@@ -51,6 +121,24 @@ const dark = parseDictionary(DARK);
 const differing = [...light.keys()].filter(
   (k) => dark.has(k) && light.get(k).value !== null && light.get(k).value !== dark.get(k).value
 );
+
+// Elements with no simple text value (shadows) are emitted once, unified. That
+// is only correct while they are genuinely identical in both modes — so check,
+// rather than assume it stays true.
+const unifiedButDiffering = [...light.keys()].filter(
+  (k) => dark.has(k) && light.get(k).value === null
+    && light.get(k).block.replace(/\s+/g, ' ') !== dark.get(k).block.replace(/\s+/g, ' ')
+);
+if (unifiedButDiffering.length) {
+  console.error(
+    `\n@dhcw/sr-maui: these resources differ between light and dark but have no simple\n`
+    + `value, so the generator cannot emit a Dark twin for them:\n\n`
+    + unifiedButDiffering.map((k) => `  ${k}`).join('\n')
+    + `\n\nTeach build.mjs how to split them before shipping a dictionary that is wrong\n`
+    + `in one of the two modes.\n`
+  );
+  process.exit(1);
+}
 
 const lines = [];
 lines.push('<?xml version="1.0" encoding="utf-8"?>');
@@ -75,7 +163,7 @@ lines.push('                    xmlns:x="http://schemas.microsoft.com/winfx/2009
 lines.push('');
 lines.push('    <!-- ── Light mode, and every value that does not change with the theme ── -->');
 for (const [key, entry] of light) {
-  if (entry.block) lines.push(`    ${entry.block}`);
+  lines.push(reindent(entry.block, entry.sourceIndent));
 }
 lines.push('');
 lines.push(`    <!-- ── Dark-mode overrides (${differing.length} semantic tokens) ────────────────────── -->`);

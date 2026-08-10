@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SrTestbed.Views.HomeView">
+    <!--
+        Figma 554:6606 -> Screen Content.
+
+        Three deliberate departures from the frame, each noted where it occurs:
+        the section card is not held at a fixed 440px, the avatar's fill is not
+        Cyan/700 (see MainPage), and the appointment rows carry their status as
+        text as well as colour.
+
+        Labels use StyleClass, never Style. An explicit Style REPLACES the
+        implicit Label style in Styles.xaml, which would silently drop the font
+        family, the themed text colour and the disabled visual state. StyleClass
+        composes on top of it, which is what the type scale is built for.
+    -->
+    <ContentView.Resources>
+        <!--
+            Screen-local composition only. Nothing here belongs in the design
+            system until it has a spec — and three of these ARE Figma components
+            with no spec yet (Stat Card, Dashboard/Row cards, the week strip).
+            Recorded in the handoff rather than promoted quietly.
+        -->
+
+        <!-- Type modifiers, composed with the scale classes from Styles.xaml. -->
+        <Style TargetType="Label" Class="Muted">
+            <Setter Property="TextColor"
+                    Value="{AppThemeBinding Light={StaticResource SrColorTextSecondary}, Dark={StaticResource SrColorTextSecondaryDark}}" />
+        </Style>
+        <Style TargetType="Label" Class="Strong">
+            <Setter Property="TextColor"
+                    Value="{AppThemeBinding Light={StaticResource SrColorTextPrimary}, Dark={StaticResource SrColorTextPrimaryDark}}" />
+        </Style>
+        <Style TargetType="Label" Class="Centred">
+            <Setter Property="HorizontalTextAlignment" Value="Center" />
+        </Style>
+        <Style TargetType="Label" Class="Linked">
+            <Setter Property="TextDecorations" Value="Underline" />
+            <Setter Property="TextColor"
+                    Value="{AppThemeBinding Light={StaticResource SrColorInteractiveLink}, Dark={StaticResource SrColorInteractiveLinkDark}}" />
+        </Style>
+
+        <!-- Stat card: Surface/Small-cards, no edge, Elevation/Raised. -->
+        <Style x:Key="StatCard" TargetType="Border">
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="StrokeThickness" Value="0" />
+            <Setter Property="BackgroundColor"
+                    Value="{AppThemeBinding Light={StaticResource SrColorSurfaceSmallCards}, Dark={StaticResource SrColorSurfaceSmallCardsDark}}" />
+            <Setter Property="Shadow" Value="{StaticResource ElevationRaised}" />
+            <Setter Property="StrokeShape">
+                <Setter.Value><RoundRectangle CornerRadius="8" /></Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="StatIcon" TargetType="Path">
+            <Setter Property="Aspect" Value="Uniform" />
+            <Setter Property="HeightRequest" Value="16" />
+            <Setter Property="WidthRequest" Value="16" />
+            <Setter Property="VerticalOptions" Value="Start" />
+            <Setter Property="StrokeThickness" Value="2" />
+            <Setter Property="StrokeLineCap" Value="Round" />
+            <Setter Property="StrokeLineJoin" Value="Round" />
+            <Setter Property="Stroke"
+                    Value="{AppThemeBinding Light={StaticResource SrColorTextSecondary}, Dark={StaticResource SrColorTextSecondaryDark}}" />
+        </Style>
+
+        <Style x:Key="SmallIcon" TargetType="Path">
+            <Setter Property="Aspect" Value="Uniform" />
+            <Setter Property="HeightRequest" Value="16" />
+            <Setter Property="WidthRequest" Value="16" />
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="StrokeThickness" Value="2" />
+            <Setter Property="StrokeLineCap" Value="Round" />
+            <Setter Property="StrokeLineJoin" Value="Round" />
+        </Style>
+
+        <!-- Week strip. 40px is the drawn diameter and the minimum, so a larger
+             font scale grows the pill instead of cropping the date. -->
+        <Style x:Key="DaySelected" TargetType="Border">
+            <Setter Property="Padding" Value="2" />
+            <Setter Property="StrokeThickness" Value="0" />
+            <Setter Property="WidthRequest" Value="40" />
+            <Setter Property="MinimumHeightRequest" Value="40" />
+            <Setter Property="HorizontalOptions" Value="Center" />
+            <Setter Property="BackgroundColor"
+                    Value="{AppThemeBinding Light={StaticResource SrColorSurfaceAccent}, Dark={StaticResource SrColorSurfaceAccentDark}}" />
+            <Setter Property="StrokeShape">
+                <Setter.Value><RoundRectangle CornerRadius="20" /></Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DayColumn" TargetType="VerticalStackLayout">
+            <Setter Property="Padding" Value="2" />
+            <Setter Property="WidthRequest" Value="40" />
+            <Setter Property="MinimumHeightRequest" Value="40" />
+            <Setter Property="HorizontalOptions" Value="Center" />
+        </Style>
+
+        <!-- Appointment row. The 4px rule is a column, not a border: MAUI's
+             Border stroke is uniform on all four sides. -->
+        <Style x:Key="Rule" TargetType="BoxView">
+            <Setter Property="WidthRequest" Value="4" />
+            <Setter Property="VerticalOptions" Value="Fill" />
+        </Style>
+    </ContentView.Resources>
+
+    <VerticalStackLayout Padding="16" Spacing="16">
+
+        <!--#region GMC ======================================================-->
+        <VerticalStackLayout Spacing="8">
+            <FlexLayout Wrap="Wrap" AlignItems="Center" JustifyContent="Start">
+                <Label Text="GMC:" StyleClass="Caption,Strong" Margin="0,0,4,0" />
+                <!-- Underlined as well as coloured: colour is never the only
+                     signal that something is a link (WCAG 1.4.1). -->
+                <Label Text="Hywel Dda University Health Board" StyleClass="Caption,Linked" />
+            </FlexLayout>
+
+            <!--#region Stat cards ===========================================-->
+            <!-- Two equal columns, 8px gutter. Rows are Auto so a card grows
+                 with its own text rather than clipping it. -->
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto"
+                  ColumnSpacing="8" RowSpacing="8">
+
+                <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource StatCard}">
+                    <VerticalStackLayout Spacing="8">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
+                            <Label Grid.Column="0" Text="24" StyleClass="HeadingL" />
+                            <Path Grid.Column="1" Style="{StaticResource StatIcon}"
+                                  Data="{StaticResource SrIconPeopleGp}" />
+                        </Grid>
+                        <Label Text="Appointments" StyleClass="BodyS,Muted" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource StatCard}">
+                    <VerticalStackLayout Spacing="8">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
+                            <Label Grid.Column="0" Text="8" StyleClass="HeadingL" />
+                            <Path Grid.Column="1" Style="{StaticResource StatIcon}"
+                                  Data="{StaticResource SrIconPeopleGp}" />
+                        </Grid>
+                        <Label Text="Referrals" StyleClass="BodyS,Muted" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource StatCard}">
+                    <VerticalStackLayout Spacing="8">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
+                            <Label Grid.Column="0" Text="42" StyleClass="HeadingL" />
+                            <Path Grid.Column="1" Style="{StaticResource StatIcon}"
+                                  Data="{StaticResource SrIconPeopleGp}" />
+                        </Grid>
+                        <Label Text="My Watchlist" StyleClass="BodyS,Muted" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource StatCard}">
+                    <VerticalStackLayout Spacing="8">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
+                            <Label Grid.Column="0" Text="24" StyleClass="HeadingL" />
+                            <Path Grid.Column="1" Style="{StaticResource StatIcon}"
+                                  Data="{StaticResource SrIconPeopleGp}" />
+                        </Grid>
+                        <Label Text="Pending DALs" StyleClass="BodyS,Muted" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+            <!--#endregion-->
+        </VerticalStackLayout>
+        <!--#endregion-->
+
+        <!--#region Today's appointments =====================================-->
+        <!--
+            The frame fixes this card at 440px and clips the fifth row mid-way.
+            That is an artefact of a fixed-height slot, not an interaction — a
+            card that shows half a row promises more without offering a way to
+            reach it. Here the card sizes to its content and the page scrolls,
+            which is what a phone does.
+        -->
+        <Border BackgroundColor="{AppThemeBinding Light={StaticResource SrColorSurfaceSectionCards}, Dark={StaticResource SrColorSurfaceSectionCardsDark}}">
+            <VerticalStackLayout Spacing="8">
+
+                <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                    <HorizontalStackLayout Grid.Column="0" Spacing="4" VerticalOptions="Center">
+                        <Label Text="Today's Appointments" StyleClass="HeadingXs" VerticalOptions="Center" />
+                        <Path Style="{StaticResource SmallIcon}"
+                              Data="{StaticResource SrIconStatusInfo}"
+                              Stroke="{AppThemeBinding Light={StaticResource SrColorTextSecondary}, Dark={StaticResource SrColorTextSecondaryDark}}"
+                              SemanticProperties.Description="About today's appointments" />
+                    </HorizontalStackLayout>
+
+                    <!-- 44px minimum: the card's only tap target. -->
+                    <HorizontalStackLayout Grid.Column="1" Spacing="8" Padding="12,8"
+                                           MinimumHeightRequest="44" VerticalOptions="Center">
+                        <Label Text="View all" StyleClass="FieldLabel,Linked" VerticalOptions="Center" />
+                        <Path Style="{StaticResource SmallIcon}"
+                              Data="{StaticResource SrIconNavForward}"
+                              Stroke="{AppThemeBinding Light={StaticResource SrColorInteractiveLink}, Dark={StaticResource SrColorInteractiveLinkDark}}" />
+                    </HorizontalStackLayout>
+                </Grid>
+
+                <BoxView StyleClass="Divider" />
+
+                <Label Text="April 2026" StyleClass="FieldLabel,Muted" />
+
+                <!--#region Week strip =======================================-->
+                <Grid ColumnDefinitions="*,*,*,*,*,*">
+                    <!-- Monday is selected: Surface/Accent is the semantic that
+                         carries the Cyan/100 the frame draws. -->
+                    <Border Grid.Column="0" Style="{StaticResource DaySelected}">
+                        <VerticalStackLayout>
+                            <Label Text="Mon" StyleClass="Caption,Strong,Centred" />
+                            <Label Text="11" StyleClass="Caption,Strong,Centred" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1" Style="{StaticResource DayColumn}">
+                        <Label Text="Tue" StyleClass="Caption,Centred" />
+                        <Label Text="12" StyleClass="Caption,Centred" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="2" Style="{StaticResource DayColumn}">
+                        <Label Text="Wed" StyleClass="Caption,Centred" />
+                        <Label Text="13" StyleClass="Caption,Centred" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="3" Style="{StaticResource DayColumn}">
+                        <Label Text="Thu" StyleClass="Caption,Centred" />
+                        <Label Text="14" StyleClass="Caption,Centred" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="4" Style="{StaticResource DayColumn}">
+                        <Label Text="Fri" StyleClass="Caption,Centred" />
+                        <Label Text="15" StyleClass="Caption,Centred" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="5" Style="{StaticResource DayColumn}">
+                        <Label Text="Sat" StyleClass="Caption,Centred" />
+                        <Label Text="16" StyleClass="Caption,Centred" />
+                    </VerticalStackLayout>
+                </Grid>
+                <!--#endregion-->
+
+                <!--#region Appointment rows =================================-->
+                <!--
+                    Each row carries a 4px rule: Status/Info for a physical
+                    appointment, Status/Success for a virtual one. The rule
+                    repeats what the "Physical" / "Virtual" text already states,
+                    so the distinction never rests on colour alone.
+
+                    The frame's Code Connect maps all five tags to Tag type="Blue"
+                    while drawing three of them green. Implemented as drawn; the
+                    mapping is what needs correcting.
+                -->
+                <VerticalStackLayout Spacing="8">
+
+                    <Grid ColumnDefinitions="4,*,Auto" ColumnSpacing="12" Padding="0,0,12,0">
+                        <BoxView Grid.Column="0" Style="{StaticResource Rule}"
+                                 Color="{StaticResource SrColorStatusInfo}" />
+                        <VerticalStackLayout Grid.Column="1" Spacing="8">
+                            <Label Text="ggh - Colposcopy Clinic" StyleClass="FieldLabel" />
+                            <Label Text="Hospital location here" StyleClass="Caption" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="2" Spacing="8" HorizontalOptions="End">
+                            <Label Text="Physical" StyleClass="Caption,Strong" HorizontalTextAlignment="End" />
+                            <Border Style="{StaticResource TagInfo}" HorizontalOptions="End">
+                                <Label Text="Status" StyleClass="TagTextInfo" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="4,*,Auto" ColumnSpacing="12" Padding="0,0,12,0">
+                        <BoxView Grid.Column="0" Style="{StaticResource Rule}"
+                                 Color="{StaticResource SrColorStatusSuccess}" />
+                        <VerticalStackLayout Grid.Column="1" Spacing="8">
+                            <Label Text="ggh - Colposcopy Clinic" StyleClass="FieldLabel" />
+                            <Label Text="Telephone Call" StyleClass="Caption" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="2" Spacing="8" HorizontalOptions="End">
+                            <Label Text="Virtual" StyleClass="Caption,Strong" HorizontalTextAlignment="End" />
+                            <Border Style="{StaticResource TagSuccess}" HorizontalOptions="End">
+                                <Label Text="Follow Up" StyleClass="TagTextSuccess" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="4,*,Auto" ColumnSpacing="12" Padding="0,0,12,0">
+                        <BoxView Grid.Column="0" Style="{StaticResource Rule}"
+                                 Color="{StaticResource SrColorStatusInfo}" />
+                        <VerticalStackLayout Grid.Column="1" Spacing="8">
+                            <Label Text="Paediatric Clinic" StyleClass="FieldLabel" />
+                            <Label Text="Hospital location here" StyleClass="Caption" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="2" Spacing="8" HorizontalOptions="End">
+                            <Label Text="Physical" StyleClass="Caption,Strong" HorizontalTextAlignment="End" />
+                            <Border Style="{StaticResource TagInfo}" HorizontalOptions="End">
+                                <Label Text="Status" StyleClass="TagTextInfo" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="4,*,Auto" ColumnSpacing="12" Padding="0,0,12,0">
+                        <BoxView Grid.Column="0" Style="{StaticResource Rule}"
+                                 Color="{StaticResource SrColorStatusSuccess}" />
+                        <VerticalStackLayout Grid.Column="1" Spacing="8">
+                            <Label Text="ggh - Colposcopy Clinic" StyleClass="FieldLabel" />
+                            <Label Text="Telephone Call" StyleClass="Caption" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="2" Spacing="8" HorizontalOptions="End">
+                            <Label Text="Virtual" StyleClass="Caption,Strong" HorizontalTextAlignment="End" />
+                            <Border Style="{StaticResource TagSuccess}" HorizontalOptions="End">
+                                <Label Text="Follow Up" StyleClass="TagTextSuccess" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="4,*,Auto" ColumnSpacing="12" Padding="0,0,12,0">
+                        <BoxView Grid.Column="0" Style="{StaticResource Rule}"
+                                 Color="{StaticResource SrColorStatusSuccess}" />
+                        <VerticalStackLayout Grid.Column="1" Spacing="8">
+                            <Label Text="ggh - Colposcopy Clinic" StyleClass="FieldLabel" />
+                            <Label Text="Telephone Call" StyleClass="Caption" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="2" Spacing="8" HorizontalOptions="End">
+                            <Label Text="Virtual" StyleClass="Caption,Strong" HorizontalTextAlignment="End" />
+                            <Border Style="{StaticResource TagSuccess}" HorizontalOptions="End">
+                                <Label Text="Follow Up" StyleClass="TagTextSuccess" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+                <!--#endregion-->
+            </VerticalStackLayout>
+        </Border>
+        <!--#endregion-->
+    </VerticalStackLayout>
+</ContentView>
