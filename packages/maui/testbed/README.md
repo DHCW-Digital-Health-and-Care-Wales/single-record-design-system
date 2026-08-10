@@ -29,11 +29,20 @@ which is the whole reason to run it.
 ## Route 1 — GitHub Actions (nothing to install)
 
 Actions → **Build MAUI testbed APK** → Run workflow. Download the
-`sr-testbed-apk` artifact, unzip, and upload `sr-testbed.apk` to App Live.
+`sr-testbed-apk` artifact, **unzip it** (GitHub always zips artifacts), and
+upload `sr-testbed.apk` to App Live.
 
-This is the recommended route. It needs no toolchain on your machine, it is
-reproducible, and the workflow also fails if the committed `Colors.xaml` or
-`Icons.xaml` has drifted from what the generator produces.
+This is the recommended route. It needs no toolchain on your machine and it is
+reproducible. The workflow fails rather than uploading something broken if:
+
+- the committed `Colors.xaml` or `Icons.xaml` has drifted from what the
+  generator produces, or
+- **the APK has no launchable activity.** A green publish is not the same as a
+  usable APK — the first one this workflow produced built, signed and uploaded
+  cleanly, and App Live rejected it with *"Launcher activity was not found in
+  AndroidManifest.xml"*. `Platforms/Android/MainActivity.cs` was missing, so
+  nothing carried `MainLauncher = true` and the app had no entry point. The
+  build has no opinion about that; `aapt2` does, so the workflow now asks it.
 
 ## Route 2 — build it locally
 

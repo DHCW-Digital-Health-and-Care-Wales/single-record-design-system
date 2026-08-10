@@ -95,6 +95,37 @@ jobs:
           cp "$found" artifact/sr-testbed.apk
           ls -lh artifact/
 
+      # A green publish is not the same as a usable APK. The first APK this
+      # workflow produced built, signed and uploaded cleanly, and App Live
+      # rejected it: "Launcher activity was not found in AndroidManifest.xml".
+      # The project had no Platforms/Android/MainActivity.cs, so nothing carried
+      # MainLauncher = true and the app had no entry point.
+      #
+      # Inspect what is actually going to BrowserStack, not what MSBuild thinks
+      # it did.
+      - name: Verify the APK can actually launch
+        run: |
+          sdk="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          aapt=$(find "$sdk/build-tools" -name 'aapt2' -type f 2>/dev/null | sort -V | tail -1)
+          if [ -z "$aapt" ]; then
+            aapt=$(find "$sdk/build-tools" -name 'aapt' -type f 2>/dev/null | sort -V | tail -1)
+          fi
+          if [ -z "$aapt" ]; then
+            echo "::error::No aapt/aapt2 found under $sdk — cannot verify the APK."
+            exit 1
+          fi
+          echo "Using $aapt"
+
+          badging=$("$aapt" dump badging artifact/sr-testbed.apk)
+          echo "$badging" | grep -E "^(package|launchable-activity|application-label):" || true
+
+          if ! echo "$badging" | grep -q '^launchable-activity:'; then
+            echo "::error::The APK has no launchable activity, so BrowserStack will reject it."
+            echo "Check that Platforms/Android/MainActivity.cs exists and carries MainLauncher = true."
+            exit 1
+          fi
+          echo "Launcher activity present."
+
       - uses: actions/upload-artifact@v4
         with:
           name: sr-testbed-apk
