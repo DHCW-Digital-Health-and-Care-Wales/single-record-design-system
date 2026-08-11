@@ -471,7 +471,8 @@ const SECTIONS = [
       { href: 'index.html', label: 'SR Design System' },
       { href: 'how-to-use.html', label: 'How to use' },
       { href: 'get-the-files.html', label: 'Get the files' },
-      { href: 'figma.html', label: 'Using figma' },
+      { href: 'figma.html', label: 'Using Figma' },
+      { href: 'storybook.html', label: 'Using Storybook' },
     ],
   },
   {
@@ -698,7 +699,10 @@ function reactPropsOf(name) {
  */
 const MAUI_RESOURCES = (() => {
   const known = new Set();
-  for (const f of ['Colors.xaml', 'Styles.xaml']) {
+  // Icons.xaml is part of the contract too — it was added after this check was
+  // written, so every SrIcon… reference read as a missing resource until it was
+  // listed here.
+  for (const f of ['Colors.xaml', 'Styles.xaml', 'Icons.xaml']) {
     const p = resolve(ROOT, 'packages', 'maui', f);
     if (!existsSync(p)) return null; // package not built yet — skip rather than fail
     for (const m of readFileSync(p, 'utf8').matchAll(/x:Key="([^"]+)"/g)) known.add(m[1]);
@@ -743,6 +747,21 @@ function checkReactSnippet(panelId, code) {
   }
 }
 
+/**
+ * Icon for a navigation card. Decorative: the card's own heading and paragraph
+ * carry the meaning, so it is hidden from assistive technology rather than
+ * given a name that would be read out twice.
+ *
+ * Icons come from the real set (`foundations/iconography/svg/`), so a name that
+ * does not exist fails the build rather than rendering an empty box.
+ */
+function cardIcon(name) {
+  if (!iconNames.includes(name)) {
+    throw new Error(`cardIcon("${name}") — no such icon. See foundations/iconography/svg/.`);
+  }
+  return `<span class="card__icon sr-icon sr-icon--md" aria-hidden="true">${iconMarkup(name)}</span>`;
+}
+
 /** Dark code panel with framework tabs and a copy button. */
 function codePanel(id, snippets) {
   if (snippets.React) checkReactSnippet(id, snippets.React);
@@ -760,9 +779,15 @@ function codePanel(id, snippets) {
 <script>window.__snips=window.__snips||{};window.__snips[${jsonForScript(id)}]=${jsonForScript(snippets)};</script>`;
 }
 
-/** White preview area with the dark code panel attached beneath it. */
-function showcase(previewHtml, id, snippets) {
-  return `<section class="showcase">
+/**
+ * White preview area with the dark code panel attached beneath it.
+ *
+ * Aligned with the content column by default, like every other block on the
+ * page. Pass `{ bleed: true }` only where column width would misrepresent the
+ * component — see `.showcase--bleed` in site.css.
+ */
+function showcase(previewHtml, id, snippets, { bleed = false } = {}) {
+  return `<section class="showcase${bleed ? ' showcase--bleed' : ''}">
   <div class="showcase__preview">${previewHtml}</div>
   ${codePanel(id, snippets)}
 </section>`;
@@ -846,7 +871,24 @@ function headerBody() {
     HTML: '<header class="sr-header sr-header--mobile sr-header--centered">\n  <div class="sr-header__main">\n    <button class="sr-header__menu">…</button>\n    <span class="sr-header__logo">…</span>\n    <div class="sr-header__actions">…</div>\n  </div>\n</header>',
     React: '<Header\n  variant="mobile"\n  showMenu\n  logo={<LogoMark />}\n  initials="AB"\n  onMenuClick={openDrawer}\n/>',
     Blazor: '<SrHeader Variant="Mobile" ShowMenu="true" Initials="AB" />',
-    MAUI: '<!-- Native MAUI XAML for this component is in progress.\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
+    MAUI: `<Grid BackgroundColor="{AppThemeBinding Light={StaticResource SrColorSurfaceSectionCards}, Dark={StaticResource SrColorSurfaceSectionCardsDark}}"
+      ColumnDefinitions="Auto,*,Auto" Padding="16,12" MinimumHeightRequest="64">
+
+    <Path Data="{StaticResource SrIconNavMenu}"
+          Aspect="Uniform" HeightRequest="24" WidthRequest="24"
+          StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
+          Stroke="{AppThemeBinding Light={StaticResource SrColorTextPrimary}, Dark={StaticResource SrColorTextPrimaryDark}}"
+          SemanticProperties.Description="Menu" />
+
+    <Label Grid.Column="1" Text="Single Record" StyleClass="HeadingXs"
+           HorizontalOptions="Center" VerticalOptions="Center" />
+
+    <Path Grid.Column="2" Data="{StaticResource SrIconNavSearch}"
+          Aspect="Uniform" HeightRequest="24" WidthRequest="24"
+          StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
+          Stroke="{AppThemeBinding Light={StaticResource SrColorTextPrimary}, Dark={StaticResource SrColorTextPrimaryDark}}"
+          SemanticProperties.Description="Search" />
+</Grid>`,
   };
   // Each variant is introduced before it is shown — heading, then what it is
   // and when to reach for it, then the example. The previous order (example
@@ -927,7 +969,24 @@ ${navItems.map((n) => `  <a class="sr-bottom-nav__item" href="#"${n.current ? ' 
     HTML: '<nav class="sr-bottom-nav" aria-label="Primary">\n  <a class="sr-bottom-nav__item" href="/home" aria-current="page">\n    <span class="sr-bottom-nav__icon">…</span>\n    <span class="sr-bottom-nav__label">Home</span>\n  </a>\n  …\n</nav>',
     React: '<BottomNav\n  items={[\n    { icon: "nav/home", label: "Home", href: "/home" },\n    { icon: "schedule/appointment", label: "Diary", href: "/diary" },\n    …\n  ]}\n  current="Home"\n/>',
     Blazor: '<SrBottomNav Items="@navItems" Current="Home" />',
-    MAUI: '<!-- Native MAUI XAML for this component is in progress.\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
+    MAUI: `<!-- Icon above label, centred. The current destination takes
+     Interactive/Primary; the rest take Text/Secondary. -->
+<Grid ColumnDefinitions="*,*,*,*,*"
+      BackgroundColor="{AppThemeBinding Light={StaticResource SrColorSurfaceSectionCards}, Dark={StaticResource SrColorSurfaceSectionCardsDark}}">
+
+    <VerticalStackLayout Grid.Column="0" Padding="4,8" Spacing="4" MinimumHeightRequest="60">
+        <Path Data="{StaticResource SrIconNavHome}"
+              Aspect="Uniform" HeightRequest="24" WidthRequest="24" HorizontalOptions="Center"
+              StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
+              Stroke="{AppThemeBinding Light={StaticResource SrColorInteractivePrimary}, Dark={StaticResource SrColorInteractivePrimaryDark}}" />
+        <Label Text="Home" StyleClass="Caption" HorizontalTextAlignment="Center"
+               TextColor="{AppThemeBinding Light={StaticResource SrColorInteractivePrimary}, Dark={StaticResource SrColorInteractivePrimaryDark}}" />
+    </VerticalStackLayout>
+
+    <!-- Diary, Patients, Messages and More follow the same shape with
+         Text/Secondary. MinimumHeightRequest, never HeightRequest: the bar
+         grows at 200% font scale rather than cropping its labels. -->
+</Grid>`,
   };
   return `
 <p class="breadcrumbs">Components</p>
@@ -1174,7 +1233,25 @@ function patientBannerBody() {
     HTML: '<section class="sr-patient-banner" aria-label="Patient: JOHN, Elvet George (Mr)">\n  <div class="sr-patient-banner__alerts">…</div>\n  <div class="sr-patient-banner__identity">…</div>\n  <div class="sr-patient-banner__actions">…</div>\n</section>\n\n<!-- Border type -->\n<section class="sr-patient-banner sr-patient-banner--border">…</section>\n<!-- Collapsed state -->\n<section class="sr-patient-banner sr-patient-banner--collapsed">…</section>',
     React: '<PatientBanner\n  patient={patient}\n  reactions={reactions}\n  warnings={3}\n  type="fill"          // "fill" | "border"\n  expanded={expanded}  // false renders the collapsed row\n  onToggle={() => setExpanded((v) => !v)}\n  onCopy={(v) => navigator.clipboard?.writeText(v)}\n  actions={<>…</>}\n/>',
     Blazor: '<SrPatientBanner Patient="@patient" Type="Fill" Expanded="@expanded" />',
-    MAUI: '<!-- Native MAUI XAML for this component is in progress.\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
+    MAUI: `<!-- A native composite, not a stock control. Surfaces, rules and status
+     colours all come from the token layer. -->
+<Border BackgroundColor="{AppThemeBinding Light={StaticResource SrColorSurfaceSectionCards}, Dark={StaticResource SrColorSurfaceSectionCardsDark}}">
+    <Grid RowDefinitions="Auto,Auto" RowSpacing="8">
+
+        <!-- Fill type tints the alert cards. For the Border type, drop the
+             background and keep the 2px coloured Stroke. -->
+        <HorizontalStackLayout Grid.Row="0" Spacing="8">
+            <Border Style="{StaticResource CardCritical}">
+                <Label Text="Adverse reactions" StyleClass="Caption" />
+            </Border>
+            <Border Style="{StaticResource CardWarning}">
+                <Label Text="3 warnings" StyleClass="Caption" />
+            </Border>
+        </HorizontalStackLayout>
+
+        <Label Grid.Row="1" Text="JOHN, Elvet George (Mr)" StyleClass="HeadingM" />
+    </Grid>
+</Border>`,
   };
   return `
 <p class="breadcrumbs">Patterns</p>
@@ -1185,13 +1262,13 @@ expanded and a collapsed state.</p>
 <h2>Type: Fill</h2>
 <p class="muted">The alert cards are tinted. This is the default — the tint carries further in
 peripheral vision on a busy screen.</p>
-${showcase(pbExpanded('fill'), 'pb-fill', snippets)}
-<div class="showcase"><div class="showcase__preview">${pbCollapsed('fill')}</div></div>
+${showcase(pbExpanded('fill'), 'pb-fill', snippets, { bleed: true })}
+<div class="showcase showcase--bleed"><div class="showcase__preview">${pbCollapsed('fill')}</div></div>
 <h2>Type: Border</h2>
 <p class="muted">The alert cards stay white with a coloured rule. Use where the screen is already
 colour-heavy, or where the view is likely to be printed.</p>
-<div class="showcase"><div class="showcase__preview">${pbExpanded('border')}</div></div>
-<div class="showcase"><div class="showcase__preview">${pbCollapsed('border')}</div></div>
+<div class="showcase showcase--bleed"><div class="showcase__preview">${pbExpanded('border')}</div></div>
+<div class="showcase showcase--bleed"><div class="showcase__preview">${pbCollapsed('border')}</div></div>
 <p class="muted"><strong>Both types are live.</strong> Neither has been retired, and this page will say
 so plainly if one ever is. Pick one per product and stay with it — switching between screens makes
 the alert cards look like they mean different things.</p>
@@ -1290,10 +1367,9 @@ views, and for supporting text and form values.</div>
     Blazor: `<SrText Size="TextSize.M">Long-form reading and clinical notes.</SrText>
 <SrText Size="TextSize.S">Primary content in tables and data-dense views.</SrText>
 <SrText Size="TextSize.Caption">Last updated 06 Dec 2024 at 14:22</SrText>`,
-    MAUI: `<!-- Native MAUI XAML for this component is in progress.
-     MAUI is native XAML and does not render the Blazor components, so the
-     Blazor snippet on the previous tab is not a substitute.
-     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
+    MAUI: `<Label Text="Long-form reading and clinical notes." StyleClass="BodyM" />
+<Label Text="Primary content in tables and data-dense views." StyleClass="BodyS" />
+<Label Text="Last updated 06 Dec 2024 at 14:22" StyleClass="Caption" />`,
   };
 
   const overrideSnippets = {
@@ -1307,10 +1383,11 @@ views, and for supporting text and form values.</div>
 <Heading as="h2" size="s">Allergies and adverse reactions</Heading>`,
     Blazor: `@* The heading level and the visual size are separate parameters. *@
 <SrHeading Level="2" Size="HeadingSize.S">Allergies and adverse reactions</SrHeading>`,
-    MAUI: `<!-- Native MAUI XAML for this component is in progress.
-     MAUI is native XAML and does not render the Blazor components, so the
-     Blazor snippet on the previous tab is not a substitute.
-     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
+    MAUI: `<!-- Correct: a heading that needs to look smaller takes a smaller class. -->
+<Label Text="Allergies and adverse reactions" StyleClass="HeadingS" />
+
+<!-- Wrong: never set the type values on the control itself. -->
+<Label Text="Allergies and adverse reactions" FontSize="18" FontAttributes="Bold" />`,
   };
 
   const linkSnippets = {
@@ -1328,11 +1405,51 @@ views, and for supporting text and form values.</div>
     Blazor: `<SrText Size="TextSize.M">
   Review the <SrLink Href="/medication">current medication list</SrLink> before prescribing.
 </SrText>`,
-    MAUI: `<!-- Native MAUI XAML for this component is in progress.
-     MAUI is native XAML and does not render the Blazor components, so the
-     Blazor snippet on the previous tab is not a substitute.
-     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
+    MAUI: `<!-- MAUI has no link control. A Label with the link colour, an underline and
+     a tap gesture is the equivalent. Keep the underline: colour alone is not a
+     reliable signal (WCAG 1.4.1). -->
+<Label Text="Current medication list" StyleClass="BodyM"
+       TextDecorations="Underline"
+       TextColor="{AppThemeBinding Light={StaticResource SrColorInteractiveLink}, Dark={StaticResource SrColorInteractiveLinkDark}}">
+    <Label.GestureRecognizers>
+        <TapGestureRecognizer Command="{Binding OpenMedicationListCommand}" />
+    </Label.GestureRecognizers>
+</Label>`,
   };
+
+  // Specimens render exactly what the HTML tab prints, so the preview is the
+  // snippet rather than an illustration of it.
+  const linkSpecimen = `<p class="sr-type-body-m">
+  Review the <a href="#">current medication list</a> before prescribing.
+</p>
+<p class="sr-type-body-m" style="margin-bottom:0">
+  <a href="https://www.nhs.uk/" target="_blank" rel="noopener">NHS.UK guidance (opens in a new tab)</a>
+</p>`;
+
+  const listSpecimen = `<ul class="sr-type-body-m">
+  <li>Aspirin 75mg, once daily</li>
+  <li>Atorvastatin 20mg, once daily at night</li>
+</ul>
+<ol class="sr-type-body-m" style="margin-bottom:0">
+  <li>Confirm the patient identity</li>
+  <li>Check for recorded allergies</li>
+</ol>`;
+
+  const breakSpecimen = `<p class="sr-type-body-m">Patient banner sits above the rule.</p>
+<hr>
+<p class="sr-type-body-m" style="margin-bottom:0">The record begins below it.</p>`;
+
+  const alignSpecimen = `<table class="sr-table" style="width:100%">
+  <thead><tr>
+    <th scope="col" class="sr-table__cell">Medication</th>
+    <th scope="col" class="sr-table__cell sr-table__cell--numeric">Dose (mg)</th>
+  </tr></thead>
+  <tbody>
+    <tr><td class="sr-table__cell">Atorvastatin</td><td class="sr-table__cell sr-table__cell--numeric">20</td></tr>
+    <tr><td class="sr-table__cell">Aspirin</td><td class="sr-table__cell sr-table__cell--numeric">75</td></tr>
+    <tr><td class="sr-table__cell">Levothyroxine</td><td class="sr-table__cell sr-table__cell--numeric">125</td></tr>
+  </tbody>
+</table>`;
 
   const listSnippets = {
     HTML: `<ul class="sr-type-body-m">
@@ -1348,10 +1465,18 @@ views, and for supporting text and form values.</div>
 <List as="ol" size="m" items={steps} />`,
     Blazor: `<SrList Size="TextSize.M" Items="@medications" />
 <SrList Ordered Size="TextSize.M" Items="@steps" />`,
-    MAUI: `<!-- Native MAUI XAML for this component is in progress.
-     MAUI is native XAML and does not render the Blazor components, so the
-     Blazor snippet on the previous tab is not a substitute.
-     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
+    MAUI: `<!-- A list is layout in MAUI, not a text style. Bind the collection and let
+     the item template carry the body class. -->
+<VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Medications}">
+    <BindableLayout.ItemTemplate>
+        <DataTemplate>
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                <Label Grid.Column="0" Text="&#8226;" StyleClass="BodyM" />
+                <Label Grid.Column="1" Text="{Binding .}" StyleClass="BodyM" />
+            </Grid>
+        </DataTemplate>
+    </BindableLayout.ItemTemplate>
+</VerticalStackLayout>`,
   };
 
   return `
@@ -1445,7 +1570,7 @@ reliable signal, and removing the underline fails WCAG 1.4.1.</p>
 <p>Write link text that makes sense on its own, because screen reader users often navigate by
 pulling up a list of links. Use "current medication list" rather than "click here". Where a link
 opens in a new tab, say so in the link text.</p>
-${codePanel('type-links', linkSnippets)}
+${showcase(linkSpecimen, 'type-links', linkSnippets)}
 
 <h2>Lists</h2>
 <p>Lists inherit the body styles, so pick the body size that matches the surrounding content and
@@ -1453,7 +1578,7 @@ apply it to the list. Use an unordered list where the order does not matter, suc
 current medications, and an ordered list for steps that must happen in sequence.</p>
 <p>Keep list items short. If an item runs past two lines, it is usually a paragraph or a
 sub-heading with content under it, not a list item.</p>
-${codePanel('type-lists', listSnippets)}
+${showcase(listSpecimen, 'type-lists', listSnippets)}
 
 <h2>Section break</h2>
 <p>Use a horizontal rule to separate distinct groups of content, for example between a patient
@@ -1461,14 +1586,16 @@ banner and the record beneath it. The rule uses the default border token so it s
 against the page.</p>
 <p>Use section breaks sparingly. In a record view, whitespace and headings usually do the job
 better, and too many rules make a screen look busier than it is.</p>
-${codePanel('type-section-break', {
+${showcase(breakSpecimen, 'type-section-break', {
     HTML: `<hr>\n\n<!-- Where the break is structural but should not be seen,\n     use spacing instead of a visible rule. -->\n<div style="margin-block: var(--space-6)"></div>`,
     React: `<Divider />\n<Divider visible={false} />`,
     Blazor: `<SrDivider />\n<SrDivider Visible="false" />`,
-    MAUI: `<!-- Native MAUI XAML for this component is in progress.
-     MAUI is native XAML and does not render the Blazor components, so the
-     Blazor snippet on the previous tab is not a substitute.
-     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
+    MAUI: `<!-- The same Divider class every separator in the system uses. -->
+<BoxView StyleClass="Divider" />
+
+<!-- Structural break that should not be seen: use spacing, not an
+     invisible rule. -->
+<ContentView HeightRequest="24" />`,
   })}
 
 <h2>Text alignment</h2>
@@ -1479,14 +1606,16 @@ white space that make reading harder.</p>
 <p>The one exception is numeric table columns, where right-aligning the values lets users
 compare magnitudes down the column. Right-align the column heading to match the values beneath
 it. Never centre body text or table content.</p>
-${codePanel('type-alignment', {
+${showcase(alignSpecimen, 'type-alignment', {
     HTML: `<!-- Text columns: left aligned, which is the default. -->\n<td class="sr-table__cell">Atorvastatin 20mg</td>\n\n<!-- Numeric columns: right aligned, heading matches the values. -->\n<th scope="col" class="sr-table__cell--numeric">Dose (mg)</th>\n<td class="sr-table__cell sr-table__cell--numeric">20</td>`,
     React: `<Table.Column field="medication" />\n<Table.Column field="dose" align="right" />`,
     Blazor: `<SrTableColumn Field="medication" />\n<SrTableColumn Field="dose" Align="Align.Right" />`,
-    MAUI: `<!-- Native MAUI XAML for this component is in progress.
-     MAUI is native XAML and does not render the Blazor components, so the
-     Blazor snippet on the previous tab is not a substitute.
-     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
+    MAUI: `<!-- Text columns are left aligned, which is the default. -->
+<Label Text="Atorvastatin 20mg" StyleClass="BodyS" />
+
+<!-- Numeric columns are right aligned, and the heading matches the values. -->
+<Label Text="Dose (mg)" StyleClass="FieldLabel" HorizontalTextAlignment="End" />
+<Label Text="20" StyleClass="BodyS" HorizontalTextAlignment="End" />`,
   })}
 
 <hr>
@@ -1871,7 +2000,32 @@ function tableBody() {
     HTML: '<div class="sr-table-wrap">\n  <table class="sr-table">\n    <thead class="sr-table__head">…</thead>\n    <tbody>\n      <tr class="sr-table__row sr-table__row--selected">…</tr>\n    </tbody>\n  </table>\n</div>',
     React: '<Table\n  columns={columns}\n  rows={rows}\n  selectable\n  selectedIds={selectedIds}\n  onSelectionChange={setSelectedIds}\n/>',
     Blazor: '<SrTable Items="@patients" SelectedId="@activePatientId" />',
-    MAUI: '<!-- Native MAUI XAML for this component is in progress.\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
+    MAUI: `<!-- CollectionView, not a table control. The header is a Grid above it using
+     the same column definitions, so the columns line up. -->
+<Grid RowDefinitions="Auto,*">
+
+    <Grid Grid.Row="0" ColumnDefinitions="2*,*,*" Padding="12,8"
+          BackgroundColor="{AppThemeBinding Light={StaticResource SrColorSurfaceSubtle}, Dark={StaticResource SrColorSurfaceSubtleDark}}">
+        <Label Grid.Column="0" Text="Patient" StyleClass="FieldLabel" />
+        <Label Grid.Column="1" Text="NHS number" StyleClass="FieldLabel" />
+        <Label Grid.Column="2" Text="Dose (mg)" StyleClass="FieldLabel"
+               HorizontalTextAlignment="End" />
+    </Grid>
+
+    <CollectionView Grid.Row="1" ItemsSource="{Binding Patients}"
+                    SelectionMode="Single" SelectedItem="{Binding ActivePatient}">
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
+                <Grid ColumnDefinitions="2*,*,*" Padding="12,8">
+                    <Label Grid.Column="0" Text="{Binding Name}" StyleClass="BodyS" />
+                    <Label Grid.Column="1" Text="{Binding NhsNumber}" StyleClass="BodyS" />
+                    <Label Grid.Column="2" Text="{Binding Dose}" StyleClass="BodyS"
+                           HorizontalTextAlignment="End" />
+                </Grid>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+</Grid>`,
   };
   return `
 <p class="breadcrumbs">Components</p>
@@ -1924,13 +2078,35 @@ ${trail.map((c, i) => (i === trail.length - 1
     HTML: '<nav aria-label="Breadcrumb">\n  <ol class="sr-breadcrumbs">\n    <li class="sr-breadcrumbs__item">\n      <a class="sr-breadcrumbs__link" href="/">Home</a>\n      <span class="sr-breadcrumbs__separator" aria-hidden="true">/</span>\n    </li>\n    …\n    <li class="sr-breadcrumbs__item">\n      <span class="sr-breadcrumbs__current" aria-current="page">Case note volume 3</span>\n    </li>\n  </ol>\n</nav>',
     React: '<Breadcrumbs\n  items={[\n    { label: "Home", href: "/" },\n    { label: "Patient search", href: "/search" },\n    { label: "JOHN, Elvet George", href: "/patients/1" },\n    { label: "Case note volume 3" },\n  ]}\n/>',
     Blazor: '<SrBreadcrumbs Items="@trail" />',
-    MAUI: '<!-- Native MAUI XAML for this component is in progress.\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
+    MAUI: `<!-- FlexLayout so a long trail wraps rather than truncating. -->
+<FlexLayout Wrap="Wrap" AlignItems="Center">
+    <Label Text="Home" StyleClass="Caption" TextDecorations="Underline" TextColor="{AppThemeBinding Light={StaticResource SrColorInteractiveLink}, Dark={StaticResource SrColorInteractiveLinkDark}}" />
+    <Label Text="/" StyleClass="Caption" Margin="8,0" />
+    <Label Text="Case notes" StyleClass="Caption" TextDecorations="Underline" TextColor="{AppThemeBinding Light={StaticResource SrColorInteractiveLink}, Dark={StaticResource SrColorInteractiveLinkDark}}" />
+    <Label Text="/" StyleClass="Caption" Margin="8,0" />
+
+    <!-- The current page is not a link, and names itself for screen readers. -->
+    <Label Text="Case note volume 3" StyleClass="Caption"
+           TextColor="{AppThemeBinding Light={StaticResource SrColorTextPrimary}, Dark={StaticResource SrColorTextPrimaryDark}}"
+           SemanticProperties.Description="Case note volume 3, current page" />
+</FlexLayout>`,
   };
   const backSnippets = {
     HTML: '<nav aria-label="Breadcrumb">\n  <ol class="sr-breadcrumbs sr-breadcrumbs--back">\n    <li class="sr-breadcrumbs__item">\n      <span class="sr-breadcrumbs__back-icon">…</span>\n      <a class="sr-breadcrumbs__link" href="/patients/1">Back to JOHN, Elvet George</a>\n    </li>\n  </ol>\n</nav>',
     React: '<Breadcrumbs type="back" items={trail} />\n\n// Same items array as the multilevel type — the component takes\n// the item before the current page and names it.',
     Blazor: '<SrBreadcrumbs Items="@trail" Type="Back" />',
-    MAUI: '<!-- Native MAUI XAML for this component is in progress.\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
+    MAUI: `<!-- The Back type is one destination, not a trail. 44px minimum target. -->
+<HorizontalStackLayout Spacing="8" MinimumHeightRequest="44">
+    <Path Data="{StaticResource SrIconNavBack}"
+          Aspect="Uniform" HeightRequest="16" WidthRequest="16" VerticalOptions="Center"
+          StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
+          Stroke="{AppThemeBinding Light={StaticResource SrColorInteractiveLink}, Dark={StaticResource SrColorInteractiveLinkDark}}" />
+    <Label Text="Back to case notes" StyleClass="FieldLabel" VerticalOptions="Center"
+           TextDecorations="Underline" TextColor="{AppThemeBinding Light={StaticResource SrColorInteractiveLink}, Dark={StaticResource SrColorInteractiveLinkDark}}" />
+    <HorizontalStackLayout.GestureRecognizers>
+        <TapGestureRecognizer Command="{Binding BackCommand}" />
+    </HorizontalStackLayout.GestureRecognizers>
+</HorizontalStackLayout>`,
   };
   return `
 <p class="breadcrumbs">Components</p>
@@ -2001,7 +2177,18 @@ ${seg(['Quick search', 'Advanced'], 0, true)}
     HTML: '<div class="sr-segmented" role="group" aria-label="Search mode">\n  <button type="button" class="sr-segmented__option" aria-pressed="true">Quick search</button>\n  <button type="button" class="sr-segmented__option" aria-pressed="false">Advanced</button>\n</div>',
     React: '<SegmentedControl\n  ariaLabel="Search mode"\n  options={["Quick search", "Advanced"]}\n  value={mode}\n  onChange={setMode}\n/>',
     Blazor: '<SrSegmentedControl Options="@modes" @bind-Value="mode" />',
-    MAUI: '<!-- Native MAUI XAML for this component is in progress.\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
+    MAUI: `<!-- No stock segmented control. Two buttons in a bordered row: the selected
+     one takes the accent surface, and both hold a 44px target. -->
+<Border Padding="2" StrokeThickness="1" Stroke="{AppThemeBinding Light={StaticResource SrColorBorderDefault}, Dark={StaticResource SrColorBorderDefaultDark}}">
+    <Grid ColumnDefinitions="*,*" ColumnSpacing="2">
+        <Button Grid.Column="0" Text="Quick search" MinimumHeightRequest="44"
+                BackgroundColor="{AppThemeBinding Light={StaticResource SrColorSurfaceAccent}, Dark={StaticResource SrColorSurfaceAccentDark}}"
+                TextColor="{AppThemeBinding Light={StaticResource SrColorTextPrimary}, Dark={StaticResource SrColorTextPrimaryDark}}"
+                SemanticProperties.Description="Quick search, selected" />
+        <Button Grid.Column="1" Text="Advanced" Style="{StaticResource ButtonGhost}"
+                MinimumHeightRequest="44" />
+    </Grid>
+</Border>`,
   };
   return `
 <p class="breadcrumbs">Components</p>
@@ -2508,10 +2695,13 @@ function iconsBody() {
 <span>Observations</span>`,
     Blazor: `<SrIcon Name="clinical/vitals" Size="IconSize.Md" Color="IconColor.Default" />
 <span>Observations</span>`,
-    MAUI: `<!-- Native MAUI XAML for this component is in progress.
-     MAUI is native XAML and does not render the Blazor components, so the
-     Blazor snippet on the previous tab is not a substitute.
-     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
+    MAUI: `<!-- Icons ship as geometry in Icons.xaml, so the stroke is a token and
+     follows the theme. Leave Fill unset: these are outlines, and filling them
+     closes shapes meant to read as strokes. -->
+<Path Data="{StaticResource SrIconClinicalVitals}"
+      Aspect="Uniform" HeightRequest="24" WidthRequest="24"
+      StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
+      Stroke="{AppThemeBinding Light={StaticResource SrColorTextPrimary}, Dark={StaticResource SrColorTextPrimaryDark}}" />`,
   };
 
   const a11ySnippets = {
@@ -2546,10 +2736,23 @@ function iconsBody() {
 <SrButton Variant="ButtonVariant.Secondary" AriaLabel="Print summary">
   <SrIcon Name="action/print" Size="IconSize.Sm" Color="IconColor.Inherit" />
 </SrButton>`,
-    MAUI: `<!-- Native MAUI XAML for this component is in progress.
-     MAUI is native XAML and does not render the Blazor components, so the
-     Blazor snippet on the previous tab is not a substitute.
-     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
+    MAUI: `<!-- Decorative: the visible label carries the meaning, so the icon is kept
+     out of the accessibility tree. -->
+<HorizontalStackLayout Spacing="8">
+    <Path Data="{StaticResource SrIconActionPrint}"
+          Aspect="Uniform" HeightRequest="16" WidthRequest="16" VerticalOptions="Center"
+          StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
+          Stroke="{AppThemeBinding Light={StaticResource SrColorTextPrimary}, Dark={StaticResource SrColorTextPrimaryDark}}"
+          AutomationProperties.IsInAccessibleTree="False" />
+    <Label Text="Print record" StyleClass="FieldLabel" VerticalOptions="Center" />
+</HorizontalStackLayout>
+
+<!-- Icon-only: it must carry its own accessible name. -->
+<Path Data="{StaticResource SrIconActionDelete}"
+      Aspect="Uniform" HeightRequest="24" WidthRequest="24"
+      StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
+      Stroke="{AppThemeBinding Light={StaticResource SrColorTextPrimary}, Dark={StaticResource SrColorTextPrimaryDark}}"
+      SemanticProperties.Description="Delete note" />`,
   };
 
   const statusSnippets = {
@@ -2569,10 +2772,17 @@ function iconsBody() {
   <SrIcon Name="status/warning" Size="IconSize.Sm" Color="IconColor.Critical" />
   Allergy: penicillin
 </SrText>`,
-    MAUI: `<!-- Native MAUI XAML for this component is in progress.
-     MAUI is native XAML and does not render the Blazor components, so the
-     Blazor snippet on the previous tab is not a substitute.
-     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->`,
+    MAUI: `<!-- A status icon takes the status token and is always paired with text.
+     Colour is never the only signal (WCAG 1.4.1). -->
+<HorizontalStackLayout Spacing="8">
+    <Path Data="{StaticResource SrIconStatusWarning}"
+          Aspect="Uniform" HeightRequest="16" WidthRequest="16" VerticalOptions="Center"
+          StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
+          Stroke="{StaticResource SrColorStatusWarning}"
+          AutomationProperties.IsInAccessibleTree="False" />
+    <Label Text="Result outside reference range" StyleClass="BodyS"
+           VerticalOptions="Center" />
+</HorizontalStackLayout>`,
   };
 
   const buttonRow = `
@@ -2754,10 +2964,10 @@ clinical and administrative products across web, Blazor/.NET, React and .NET MAU
 is a real implementation of the system, rendered from the built design tokens and the actual
 reference components, not a mockup.</p>
 <div class="cards">
-  <a class="card" href="styles/typography.html"><h3>Styles</h3><p>Typography, colour, spacing, and the token translator.</p></a>
-  <a class="card" href="components/button.html"><h3>Components</h3><p>Buttons and tables, with live previews and framework code.</p></a>
-  <a class="card" href="figma.html"><h3>Figma &amp; catalogue</h3><p>The Figma library and the component catalogue.</p></a>
-  <a class="card" href="contributions.html"><h3>Contribute</h3><p>Report an issue or request a component or change.</p></a>
+  <a class="card" href="styles/typography.html">${cardIcon('action/edit')}<h3>Styles</h3><p>Typography, colour, spacing, and the token translator.</p></a>
+  <a class="card" href="components/button.html">${cardIcon('clinical/record')}<h3>Components</h3><p>Buttons and tables, with live previews and framework code.</p></a>
+  <a class="card" href="figma.html">${cardIcon('nav/dashboard')}<h3>Figma &amp; catalogue</h3><p>The Figma library and the component catalogue.</p></a>
+  <a class="card" href="contributions.html">${cardIcon('action/send')}<h3>Contribute</h3><p>Report an issue or request a component or change.</p></a>
 </div>
 <h2>Principles</h2>
 <ul>
@@ -2876,7 +3086,11 @@ ${codePanel('get-files-icon', {
   HTML: '<!-- With the sprite: no JavaScript at all. -->\n<span class="sr-icon sr-icon--sm">\n  <svg><use href="/assets/sprite.svg#icon-nav-search"></use></svg>\n</span>',
   React: 'import Icon from "@dhcw/sr-react/icon";\n\n<Icon name="nav/search" size="sm" />',
   Blazor: '<SrIcon Name="nav/search" Size="IconSize.Sm" />',
-  MAUI: '<!-- Native MAUI XAML for this component is in progress.\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
+  MAUI: `<!-- Icons.xaml is merged once in App.xaml; after that any icon is a key. -->
+<Path Data="{StaticResource SrIconNavSearch}"
+      Aspect="Uniform" HeightRequest="16" WidthRequest="16"
+      StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
+      Stroke="{AppThemeBinding Light={StaticResource SrColorTextPrimary}, Dark={StaticResource SrColorTextPrimaryDark}}" />`,
 })}
 
 <div class="callout"><p><strong>The sprite has to be served over HTTP from your own origin.</strong>
@@ -2916,7 +3130,14 @@ ${codePanel('get-files-npm-import', {
   HTML: '<!-- Route 1 (download) is the equivalent for plain HTML — see above. -->',
   React: 'import { Button } from "@dhcw/sr-react";\nimport "@dhcw/sr-web/dist/single-record.css";',
   Blazor: '<!-- The Blazor Razor Class Library is distributed via NuGet, not npm. See DDR-020. -->',
-  MAUI: '<!-- Native MAUI XAML for this component is in progress.\n     MAUI is native XAML and does not render the Blazor components, so the\n     Blazor snippet on the previous tab is not a substitute.\n     Design tokens are available now as Tokens.xaml / Tokens.Dark.xaml. -->',
+  MAUI: `<!-- MAUI does not consume the npm package. Take Colors.xaml, Styles.xaml and
+     Icons.xaml from packages/maui, add them as MauiXaml, and merge them in
+     App.xaml. Colors must come first: Styles resolves against it. -->
+<ResourceDictionary.MergedDictionaries>
+    <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+    <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+    <ResourceDictionary Source="Resources/Styles/Icons.xaml" />
+</ResourceDictionary.MergedDictionaries>`,
 })}
 <p>Working in a checkout of the repository itself (rather than as a dependency)? Clone
 <a href="https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system" target="_blank" rel="noopener">the org repo</a>, then:</p>
@@ -2931,21 +3152,66 @@ install command changes.</p></div>`,
 const FIGMA_LIBRARY_URL = 'https://www.figma.com/design/x5fwyefxxgD03csz8ld7SZ/SINGLE-RECORD-DESIGN-SYSTEM?node-id=1307-16983&t=eafR64jJMZD5ez6T-1';
 
 addPage({
-  file: 'figma.html', url: 'figma.html', title: 'Using figma', section: 'Get Started',
+  file: 'figma.html', url: 'figma.html', title: 'Using Figma', section: 'Get Started',
   sectionId: 'get-started', activeHref: 'figma.html', prefix: '',
   body: `
 <p class="breadcrumbs">Get Started</p>
-<h1>Using figma</h1>
+<h1>Using Figma</h1>
 <p class="lede">The Single Record Figma library is the canonical source for variables, components and
 usage notes. Its variables build to the same tokens this website consumes.</p>
 <div class="cards">
-  <a class="card" href="${FIGMA_LIBRARY_URL}" target="_blank" rel="noopener"><h3>Figma Design System file</h3><p>The canonical library: components, variables and usage notes, authored directly in Figma.</p></a>
-  <a class="card" href="${STORYBOOK_URL}"><h3>Using Storybook</h3><p>The interactive playground &mdash; every reference component, rendered with all of its variants and controls.</p></a>
+  <a class="card" href="${FIGMA_LIBRARY_URL}" target="_blank" rel="noopener">${cardIcon('nav/dashboard')}<h3>Figma Design System file</h3><p>The canonical library: components, variables and usage notes, authored directly in Figma.</p></a>
+  <a class="card" href="components/button.html">${cardIcon('clinical/record')}<h3>Component catalogue</h3><p>Every component documented here, with anatomy, states, accessibility notes and code.</p></a>
 </div>
 <h2>Keeping design and code in step</h2>
 <p>Changes to variables in Figma flow into the published token artifact, and this site rebuilds from
 that artifact. If a value here does not match what you see in Figma, the token has not been
-published yet. Report it rather than working around it.</p>`,
+published yet. Report it rather than working around it.</p>
+<h2>Naming</h2>
+<p>Figma component and variable names match the token names this site publishes, so a name you read
+in the library is the name you type in code. Where they differ, the token JSON in
+<code>foundations/tokens/</code> wins and the Figma name is out of date.</p>`,
+});
+
+addPage({
+  file: 'storybook.html', url: 'storybook.html', title: 'Using Storybook', section: 'Get Started',
+  sectionId: 'get-started', activeHref: 'storybook.html', prefix: '',
+  body: `
+<p class="breadcrumbs">Get Started</p>
+<h1>Using Storybook</h1>
+<p class="lede">The interactive playground. Every reference component rendered with all of its
+variants and controls, so you can try a component before you build with it.</p>
+<div class="cards">
+  <a class="card" href="${STORYBOOK_URL}">${cardIcon('action/eye')}<h3>Open Storybook</h3><p>Browse every component and change its props live.</p></a>
+  <a class="card" href="get-the-files.html">${cardIcon('action/download')}<h3>Get the files</h3><p>Once you know what you need, install the packages or download the CSS.</p></a>
+</div>
+
+<h2>What it is for</h2>
+<p>This website documents <em>when</em> to use a component and how it should behave. Storybook shows
+you <em>what it does</em>: change a prop and the component re-renders, so you can see every variant,
+size and state without writing a page first.</p>
+<p>Reach for it when you are choosing between two components, checking whether a variant already
+exists before building one, or confirming how a component behaves at a state you cannot easily
+reproduce in your own app.</p>
+
+<h2>How it relates to this site</h2>
+<p>Both are built from the same source. A component's page here and its Storybook entry render the
+same files from <code>packages/react</code> and <code>packages/web</code>, so they cannot disagree
+about behaviour. If they appear to, the site build is stale &mdash; report it.</p>
+
+<h2>What it does not cover</h2>
+<p>Storybook renders the React reference implementation. It is not a Blazor or MAUI preview, and it
+does not carry the usage guidance, accessibility requirements or content rules that live on the
+component pages here. Use both: this site for the decision, Storybook for the behaviour.</p>
+
+<h2>Running it locally</h2>
+<p>If you are working in the repository rather than reading the published copy:</p>
+${codePanel('storybook-run', {
+    HTML: 'npm install\\nnpm run storybook',
+    React: 'npm install\\nnpm run storybook',
+    Blazor: '<!-- Storybook renders the React reference implementation.\\n     For Blazor, run the Blazor sample app in packages/blazor. -->',
+    MAUI: '<!-- Storybook renders the React reference implementation.\\n     For MAUI, build packages/maui/testbed and run it on a device. -->',
+  })}`,
 });
 
 addPage({
@@ -3189,10 +3455,10 @@ addPage({
 <h1>Contributing</h1>
 <p class="lede">Two separate channels. Pick by intent, so your request lands in the right queue.</p>
 <div class="cards">
-  <a class="card" href="${REPORT_ISSUE_URL}" target="_blank" rel="noopener"><h3>Report an issue</h3>
+  <a class="card" href="${REPORT_ISSUE_URL}" target="_blank" rel="noopener">${cardIcon('status/flagged')}<h3>Report an issue</h3>
     <p>Something is broken, wrong, or inaccessible on this site, in a component, or in the
     guidance.</p></a>
-  <a class="card" href="${CONTRIBUTION_URL}" target="_blank" rel="noopener"><h3>Request a component or change</h3>
+  <a class="card" href="${CONTRIBUTION_URL}" target="_blank" rel="noopener">${cardIcon('action/add')}<h3>Request a component or change</h3>
     <p>A new component, variant or token, or a change to one that already exists.</p></a>
 </div>
 <div class="callout"><p>Both links are placeholders until the final form addresses are supplied.</p></div>

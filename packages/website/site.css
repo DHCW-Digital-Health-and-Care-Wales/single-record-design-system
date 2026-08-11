@@ -331,6 +331,10 @@ body {
 }
 .card:hover { border-color: var(--sr-color-interactive-link); }
 /* Card headings use Heading S (20/28 Bold) from the type scale. */
+/* Decorative icon above the card heading. It takes the link colour so the card
+   reads as one interactive object rather than an icon beside a link. */
+.card__icon { display: block; margin: 0 0 12px; color: var(--sr-color-interactive-link); }
+.card__icon svg { width: 24px; height: 24px; }
 .card h3 { margin: 0 0 6px; font-size: 20px; line-height: 28px; font-weight: 700; color: var(--sr-color-interactive-link); }
 .card p { margin: 0; font-size: 14px; line-height: 20px; color: var(--sr-color-text-secondary); }
 
@@ -457,19 +461,32 @@ body.bare { margin: 0; }
 .embed__panel--code.is-hidden { display: none; }
 
 /* ── showcase: white preview + dark tabbed code panel ─────────────────────── */
+/* A showcase sits in the content column, aligned with the prose, the tables and
+   the standalone code panels around it.
+   It used to be full-bleed — every showcase pulled out to the page padding so
+   the widest component on the site had room. The cost was paid on every other
+   page: a preview and the dark panel under it ran to the sidebar while a
+   code-only section a paragraph later kept its gutter, so two things of the
+   same kind were set to two different widths on one page. Alignment is the
+   default; the components that genuinely need the extra 80px opt in below. */
 .showcase {
-  /* Full-bleed to the page padding. A patient banner is drawn at 1280px and
-     needs every pixel it can get before its demographics grid drops to one
-     column; 40px of reading gutter either side is 40px it cannot spare. Every
-     showcase does it, so a preview is the same width on every page — and the
-     band reads as "this is the component", distinct from the prose around it. */
-  margin: 24px calc(var(--content-gutter) * -1) 32px;
+  margin: 24px 0 32px;
   border: 1px solid var(--sr-color-border-default);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--sr-color-surface-small-cards);
+}
+
+/* Opt-in full bleed, for a component that misrepresents itself at column width.
+   The Patient Banner is the case this exists for: it is drawn at 1280px and its
+   demographics grid drops to one column below roughly 1230px of banner width,
+   which is narrower than the content column but wider than the bleed. */
+.showcase--bleed {
+  margin-left: calc(var(--content-gutter) * -1);
+  margin-right: calc(var(--content-gutter) * -1);
   border-left: 0;
   border-right: 0;
   border-radius: 0;
-  overflow: hidden;
-  background: var(--sr-color-surface-small-cards);
 }
 .showcase__preview { padding: 32px; }
 .showcase__preview > :first-child { margin-top: 0; }
@@ -669,7 +686,12 @@ body.bare { margin: 0; }
 .bucket--none { background: var(--sr-color-status-critical-surface); color: var(--sr-color-status-critical); }
 
 /* ── footer ───────────────────────────────────────────────────────────────── */
-.site-footer { border-top: 1px solid var(--sr-color-border-default); background: var(--sr-color-surface-small-cards); margin-top: 48px; }
+/* No top margin. The sidebar column runs the full height of `.layout`, so 48px
+   of margin here showed as a band of page background between the bottom of the
+   sidebar and the footer — which read as a layout fault rather than as spacing.
+   The border-top and the footer's own surface already separate it from the
+   content above. */
+.site-footer { border-top: 1px solid var(--sr-color-border-default); background: var(--sr-color-surface-small-cards); }
 .site-footer p { max-width: 1440px; margin: 0 auto; padding: 24px 40px; font-size: 14px; color: var(--sr-color-text-secondary); }
 .site-footer a { color: var(--sr-color-interactive-link); }
 

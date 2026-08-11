@@ -53,6 +53,7 @@ This is a healthcare system. Decisions affect real clinical staff and patients. 
 
 ### Before making changes
 - **Read `/decisions/handoff.md` first.** It contains the current state of the design system, hard constraints, open work items, and key Figma node references. Do not skip this.
+- **Read `/docs/engineering/known-issues.md` before writing code in a framework**, and `/docs/figma-known-issues.md` before editing the Figma file. They are organised by topic, so the MAUI section is a two-minute read before touching MAUI. Every entry cost someone hours.
 - Read relevant existing files before editing or creating anything
 - Check `/decisions/` for prior decisions that may affect your work
 - Do not assume anything about component behaviour — look it up or ask
@@ -82,6 +83,18 @@ This is a healthcare system. Decisions affect real clinical staff and patients. 
   2 of 23 components before the 2026-07-28 pass.
 - **State known gaps rather than hiding them.** A spec with no code, or code with
   no spec, is worth naming explicitly in the doc that covers it.
+- **Record findings in `/docs/engineering/known-issues.md`**, not only in a
+  handoff checkpoint. The handoff is chronological and long, so a lesson filed
+  there alone is lost — nobody reads back through two thousand dated lines
+  before writing MAUI. Add an entry when something was non-obvious *and* would
+  plausibly catch the next person. Use the existing Symptom / Why / Fix shape.
+- **Prefer a build gate to a paragraph.** If a finding can be mechanised, write
+  the check and record it with a **Prevented by** line naming that check. A
+  paragraph can be forgotten; a failing build cannot. Where it genuinely cannot
+  be mechanised, say so in the entry — that is useful in itself.
+- **Verify a gate by making it fail.** Plant the defect it targets and confirm
+  it is caught before trusting a pass. The MAUI literal-colour check silently
+  passed a planted `#FF0000` on its first version.
 
 ### When making structural decisions
 - Write a DDR in `/decisions/` before restructuring anything significant

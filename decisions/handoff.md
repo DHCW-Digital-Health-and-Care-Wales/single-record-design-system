@@ -3,6 +3,12 @@
 Read this at the start of every AI-assisted session. Update it at the end.  
 For the full log of design language changes, see `design-language-backlog.md`.
 
+**This file answers "where are we?" — it is organised by date.** For "what do we
+know about framework X?", see `docs/engineering/known-issues.md`, which is
+organised by topic. When a checkpoint below records a lesson rather than a
+status, promote it there too: nobody reads back through two thousand dated lines
+before writing MAUI, so a finding filed only here is a finding lost.
+
 ---
 
 ## Checkpoint — 2026-08-10 (MAUI icons; a testbed app; the cyan finding confirmed)

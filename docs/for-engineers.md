@@ -2,6 +2,11 @@
 
 How to consume and contribute to this design system as an engineer.
 
+> **Before you start in a framework, read
+> [Known Issues & Workarounds](engineering/known-issues.md).** It is organised
+> by framework, so the section you need is a two-minute read, and every entry in
+> it cost someone hours. Add to it when you find the next one.
+
 ---
 
 ## Framework Support
