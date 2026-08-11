@@ -3054,6 +3054,14 @@ project, and link it. That is the whole of the minimum.</p>
 <p>It contains the font, every design token, the typography utilities and all
 ${WEB_COMPONENT_COUNT} component stylesheets, so nothing else has to be fetched or configured. Now any
 markup you copy from a component page on this site will look right.</p>
+<div class="callout"><p><strong>No npm, no build step, no network.</strong> Roboto is embedded in the
+stylesheet itself, so there is no font request to be blocked by a firewall or proxy. If
+<code>npm install</code> is failing on your machine, this route works regardless &mdash; and it is
+worth knowing that the design system adds no third-party dependencies of its own, so whatever is
+failing is in the toolchain rather than in these packages.</p>
+<p>One thing to watch: opening the page straight from disk with <code>file://</code> works for
+everything except the sprite icons, where a cross-file <code>&lt;use&gt;</code> is blocked and fails
+silently. Serve the folder over HTTP, or use <code>icons.js</code> instead.</p></div>
 
 <h2>The files</h2>
 <div class="table-wrap"><table>
