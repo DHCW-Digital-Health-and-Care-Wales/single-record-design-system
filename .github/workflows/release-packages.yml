@@ -13,6 +13,19 @@ name: Release packages
 #
 # This does not replace publishing (DDR-020). It removes the blocker while the
 # scope decision is still open.
+#
+# RUN THIS ON THE PUBLIC ORG MIRROR, NOT HERE.
+#
+#   Release assets inherit the repository's visibility. This repo is private, so
+#   an unauthenticated `npm install https://github.com/.../releases/download/...`
+#   against it returns 404 — the release looks fine in the UI and is unusable to
+#   a consumer. Cut releases on
+#   DHCW-Digital-Health-and-Care-Wales/single-record-design-system, which is
+#   public and is what the website's install instructions point at.
+#
+#   mirror-to-dhcw.yml pushes `HEAD:main` only, so tags do not travel to the
+#   mirror. Trigger this workflow manually from the org repo's Actions tab with
+#   the tag you want; `gh release create` creates the tag there if it is absent.
 
 on:
   push:
