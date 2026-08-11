@@ -3054,6 +3054,14 @@ project, and link it. That is the whole of the minimum.</p>
 <p>It contains the font, every design token, the typography utilities and all
 ${WEB_COMPONENT_COUNT} component stylesheets, so nothing else has to be fetched or configured. Now any
 markup you copy from a component page on this site will look right.</p>
+<div class="callout"><p><strong>No npm, no build step, no network.</strong> Roboto is embedded in the
+stylesheet itself, so there is no font request to be blocked by a firewall or proxy. If
+<code>npm install</code> is failing on your machine, this route works regardless &mdash; and it is
+worth knowing that the design system adds no third-party dependencies of its own, so whatever is
+failing is in the toolchain rather than in these packages.</p>
+<p>One thing to watch: opening the page straight from disk with <code>file://</code> works for
+everything except the sprite icons, where a cross-file <code>&lt;use&gt;</code> is blocked and fails
+silently. Serve the folder over HTTP, or use <code>icons.js</code> instead.</p></div>
 
 <h2>The files</h2>
 <div class="table-wrap"><table>
@@ -3111,24 +3119,56 @@ loose script you have to wire up:</p>
   MAUI renders too.</li>
 </ul>
 
-<h2>Two ways to get the files</h2>
+<h2>How to install it</h2>
 <p>The packages are not published to npm yet — that is a naming and governance decision with its
-own record (DDR-020), not something to slip in. Until it lands, there are two supported routes, and
-both stay supported afterwards: publishing adds a route, it does not remove one.</p>
+own record (DDR-020), not something to slip in.</p>
 
-<h3>Route 1: Download (no build step)</h3>
+<div class="callout callout--warning"><p><strong>Installing this repository from GitHub does not
+work, and any guide telling you to do so is out of date.</strong> This is a monorepo: the thing at
+the repository root is a private workspace container, not a package. Both of these fail, and they
+fail in a confusing way rather than with a clear error:</p>
+<div class="codepanel"><pre><code># Installs ONE package called @dhcw/sr-design-system.
+# @dhcw/sr-react is not in node_modules afterwards.
+npm install github:DHCW-Digital-Health-and-Care-Wales/single-record-design-system#main
+
+# Installs the same repository root under a different name. The package it
+# fetches is private, has no entry point, and importing from it throws
+# ERR_MODULE_NOT_FOUND.
+"@dhcw/sr-react": "github:DHCW-Digital-Health-and-Care-Wales/single-record-design-system#main"</code></pre></div>
+<p>npm has no way to install a single workspace out of a git repository. Use Route 2 below instead
+&mdash; and if you have <code>resolve.alias</code> entries in a Vite config pointing inside
+<code>node_modules/@dhcw</code> to work around this, you can delete them.</p></div>
+
+<h3>Route 1: Download the files (no build step at all)</h3>
 <p>Take <a href="downloads/single-record.css" download>single-record.css</a> and
 <a href="downloads/sprite.svg" download>sprite.svg</a> from the table above and link them directly.
-This is the route for plain HTML, Razor, or anywhere with no npm install at all.</p>
+This is the route for plain HTML, Razor, ASP.NET, or a React app where you write the markup and take
+the styling from the design system.</p>
+<p>Everything on this site's component pages is plain markup with <code>sr-</code> classes, so the
+stylesheet alone gets you a correct-looking component in any framework. What you do not get is the
+React component wrappers — those need Route 2.</p>
 
-<h3>Route 2: npm, installed straight from GitHub</h3>
-<p>For a React, Node or bundler-based project. This installs from the
-<strong>DHCW org repository</strong> — the public source of truth — not a personal fork:</p>
-<div class="codepanel"><pre><code>npm install github:DHCW-Digital-Health-and-Care-Wales/single-record-design-system#main</code></pre></div>
-<p>Then import what you need, same as any npm package:</p>
+<h3>Route 2: npm, from a release (works today)</h3>
+<p>For a React or bundler-based project that wants the component wrappers, not just the CSS. Each
+release attaches the packages as tarballs, which plain npm installs directly &mdash; no registry, no
+credentials, and nothing to configure in your <code>.npmrc</code>. This works the same in Azure
+DevOps CI as it does on your machine.</p>
+<p>Add all four to <code>package.json</code> and run <code>npm install</code>:</p>
+<div class="codepanel"><pre><code>"dependencies": {
+  "@dhcw/sr-tokens": "https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/releases/download/v0.1.0/dhcw-sr-tokens-0.1.0.tgz",
+  "@dhcw/sr-icons":  "https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/releases/download/v0.1.0/dhcw-sr-icons-0.1.0.tgz",
+  "@dhcw/sr-web":    "https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/releases/download/v0.1.0/dhcw-sr-web-0.1.0.tgz",
+  "@dhcw/sr-react":  "https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/releases/download/v0.1.0/dhcw-sr-react-0.1.0.tgz"
+}</code></pre></div>
+<p><strong>All four are needed together.</strong> The React package depends on the other three, so
+installing it alone will fail. Take the tag from the
+<a href="https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/releases" target="_blank" rel="noopener">releases page</a>
+and keep it pinned; bump it deliberately rather than tracking a moving branch.</p>
+<p>Then import what you need. These paths are verified against each package's exports on every
+release &mdash; a release that cannot be installed and imported does not publish:</p>
 ${codePanel('get-files-npm-import', {
   HTML: '<!-- Route 1 (download) is the equivalent for plain HTML — see above. -->',
-  React: 'import { Button } from "@dhcw/sr-react";\nimport "@dhcw/sr-web/dist/single-record.css";',
+  React: '// Once, in your entry file — this is the whole of the styling.\nimport "@dhcw/sr-web/dist/single-record.css";\n\n// Then the components you need. The barrel carries all of them.\nimport { Button, Input, Navigation, PatientBanner, Tag } from "@dhcw/sr-react";\n\n// A single component can also be imported on its own.\nimport Icon from "@dhcw/sr-react/icon";',
   Blazor: '<!-- The Blazor Razor Class Library is distributed via NuGet, not npm. See DDR-020. -->',
   MAUI: `<!-- MAUI does not consume the npm package. Take Colors.xaml, Styles.xaml and
      Icons.xaml from packages/maui, add them as MauiXaml, and merge them in

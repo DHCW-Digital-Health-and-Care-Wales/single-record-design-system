@@ -23,5 +23,14 @@
     "url": "https://github.com/Chuk-DCHW/dhcw-single-record-design-system.git",
     "directory": "packages/tokens"
   },
-  "bugs": "https://github.com/Chuk-DCHW/dhcw-single-record-design-system/issues"
+  "bugs": "https://github.com/Chuk-DCHW/dhcw-single-record-design-system/issues",
+  "exports": {
+    ".": "./build/css/tokens.css",
+    "./dark": "./build/css/tokens-dark.css",
+    "./fonts": "./build/css/fonts.css",
+    "./typography": "./build/css/typography.css",
+    "./flat.json": "./build/json/tokens-flat.json",
+    "./build/*": "./build/*",
+    "./package.json": "./package.json"
+  }
 }

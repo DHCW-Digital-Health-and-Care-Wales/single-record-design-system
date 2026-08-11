@@ -31,7 +31,9 @@
     "./icons.js": "./dist/icons.js",
     "./sprite.svg": "./dist/sprite.svg",
     "./components/*": "./dist/components/*",
-    "./src/*": "./src/*"
+    "./dist/*": "./dist/*",
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
   },
   "scripts": {
     "build": "node build.mjs"

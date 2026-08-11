@@ -6,6 +6,12 @@ How to consume and contribute to this design system as an engineer.
 > [Known Issues & Workarounds](engineering/known-issues.md).** It is organised
 > by framework, so the section you need is a two-minute read, and every entry in
 > it cost someone hours. Add to it when you find the next one.
+>
+> **`npm install` failing on a DHCW machine?** See
+> [npm install troubleshooting](engineering/npm-install-troubleshooting.md).
+> It is almost always TLS interception, an unconfigured proxy, or Visual Studio
+> preferring its own bundled Node over the one you installed — and there is a
+> route that needs no npm at all while you sort it out.
 
 ---
 

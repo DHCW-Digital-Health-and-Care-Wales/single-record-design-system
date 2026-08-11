@@ -1,0 +1,123 @@
+name: Release packages
+
+# Packs the four consumer packages and attaches the tarballs to a GitHub
+# Release, so a product team can install them with plain npm and no registry,
+# no credentials and no Vite aliases.
+#
+# Why this exists: npm cannot install a single workspace out of a git
+# repository. `npm install github:<org>/<repo>` fetches the monorepo ROOT — a
+# private workspace container with no entry point — so consumers ended up
+# hand-writing resolve.alias entries pointing inside node_modules to make it
+# work. Tarballs are the standard answer while a package is not yet on a
+# registry, and they behave exactly like registry packages once installed.
+#
+# This does not replace publishing (DDR-020). It removes the blocker while the
+# scope decision is still open.
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to create or reuse, e.g. v0.1.0'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Build everything the packages ship
+        run: |
+          npm ci
+          npm run build:tokens
+          npm run build:web
+          npm run build:maui
+
+      # A tarball built from stale generated files would install cleanly and be
+      # wrong, which is worse than failing here.
+      - name: Fail if generated output was committed stale
+        run: |
+          if ! git diff --quiet; then
+            echo "::error::Generated output differs from what the build produces. Run the builds and commit."
+            git diff --stat
+            exit 1
+          fi
+
+      - name: Pack the consumer packages
+        run: |
+          mkdir -p release
+          for p in tokens icons web react; do
+            npm pack "./packages/$p" --pack-destination release
+          done
+          ls -lh release/
+
+      # Prove the tarballs are installable before publishing them, using a
+      # throwaway project outside the workspace so no workspace linking can
+      # make a broken tarball look fine.
+      - name: Verify the tarballs actually install and resolve
+        run: |
+          work=$(mktemp -d)
+          cp release/*.tgz "$work/"
+          cd "$work"
+          cat > package.json <<'JSON'
+          { "name": "verify", "version": "1.0.0", "type": "module", "dependencies": {} }
+          JSON
+          npm install ./dhcw-sr-tokens-*.tgz ./dhcw-sr-icons-*.tgz \
+                      ./dhcw-sr-web-*.tgz ./dhcw-sr-react-*.tgz --no-audit --no-fund
+
+          node --input-type=module -e '
+            const paths = [
+              "@dhcw/sr-react",
+              "@dhcw/sr-react/icon",
+              "@dhcw/sr-web",
+              "@dhcw/sr-web/dist/single-record.css",
+              "@dhcw/sr-web/dist/sprite.svg",
+              "@dhcw/sr-tokens",
+              "@dhcw/sr-icons",
+            ];
+            let bad = 0;
+            for (const p of paths) {
+              try { import.meta.resolve(p); console.log("OK   " + p); }
+              catch (e) { console.log("FAIL " + p + "  (" + e.code + ")"); bad++; }
+            }
+            if (bad) { console.error("\n" + bad + " import path(s) do not resolve from the packed tarballs."); process.exit(1); }
+          '
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          notes="Install with plain npm — no registry and no credentials.
+
+          Add to \`package.json\`, then \`npm install\`:
+
+          \`\`\`json
+          \"dependencies\": {
+            \"@dhcw/sr-tokens\": \"https://github.com/${{ github.repository }}/releases/download/$TAG/dhcw-sr-tokens-0.1.0.tgz\",
+            \"@dhcw/sr-icons\":  \"https://github.com/${{ github.repository }}/releases/download/$TAG/dhcw-sr-icons-0.1.0.tgz\",
+            \"@dhcw/sr-web\":    \"https://github.com/${{ github.repository }}/releases/download/$TAG/dhcw-sr-web-0.1.0.tgz\",
+            \"@dhcw/sr-react\":  \"https://github.com/${{ github.repository }}/releases/download/$TAG/dhcw-sr-react-0.1.0.tgz\"
+          }
+          \`\`\`
+
+          All four are needed together: the React package depends on the other three.
+          No Vite aliases are required — if you have any pointing inside
+          \`node_modules/@dhcw\`, delete them."
+
+          gh release view "$TAG" >/dev/null 2>&1 \
+            && gh release upload "$TAG" release/*.tgz --clobber \
+            || gh release create "$TAG" release/*.tgz --title "$TAG" --notes "$notes"

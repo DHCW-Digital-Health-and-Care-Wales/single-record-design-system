@@ -237,6 +237,70 @@ does not, that branch is broken for every prop you did not explicitly name.
 
 ---
 
+## Packaging and install
+
+### You cannot `npm install` a single workspace out of a git repository
+
+**Symptom:** A developer follows the documented install, `npm install` reports
+success, and then `import { Button } from '@dhcw/sr-react'` throws
+`ERR_MODULE_NOT_FOUND`. It reads as a broken npm or a proxy problem, and a lot
+of time goes into the wrong place.
+
+**Why:** This is a monorepo. The thing at the repository root is
+`@dhcw/sr-design-system` — `private: true`, a `workspaces` array, no `main` and
+no `exports`. npm has no mechanism for installing one workspace out of a git
+repo, so both documented forms fetch the *root*:
+
+```bash
+# Installs one package: @dhcw/sr-design-system. sr-react is simply absent.
+npm install github:DHCW-Digital-Health-and-Care-Wales/single-record-design-system#main
+```
+
+```json
+// Installs the same root under an alias. The package it fetches is private
+// with no entry point, so importing from it throws.
+"@dhcw/sr-react": "github:DHCW-Digital-Health-and-Care-Wales/single-record-design-system#main"
+```
+
+Both were verified by running them: `added 1 package`, and
+`node_modules/@dhcw/sr-react/package.json` reports
+`name: @dhcw/sr-design-system, private: true, main: (none)`.
+
+**Fix:** Until the packages are published, use the download route —
+`single-record.css` plus `sprite.svg` — which is complete for anything that is
+not consuming the React wrappers. Publishing is the real answer and is blocked
+on the scope decision in DDR-020.
+
+**Prevented by:** nothing yet. Worth a check that fails if the website
+documents a `github:` install of this repo.
+
+---
+
+### An `exports` map is a closed list, and ours omitted the path everyone writes
+
+**Symptom:** `import '@dhcw/sr-web/dist/single-record.css'` fails with
+`ERR_PACKAGE_PATH_NOT_EXPORTED`, even though the file is right there in the
+package and `files` includes `dist/`.
+
+**Why:** Once `exports` exists, *only* the subpaths it lists are importable —
+`files` and the real directory layout stop mattering. `@dhcw/sr-web` mapped
+`"."` to the CSS but never mapped `./dist/*`, so the fully-qualified path that
+every guide and every developer writes was not reachable.
+
+**Fix:** `"./dist/*": "./dist/*"` in the exports map. The bare
+`import '@dhcw/sr-web'` also works and is shorter, but people write the long
+form and it should not punish them.
+
+**Also worth knowing:** the same map had drifted from `src/` — `autocomplete`,
+`radio`, `select` and `tags` had no entry, so `@dhcw/sr-react/select` failed
+while `import { Select } from '@dhcw/sr-react'` worked. A missing subpath export
+is invisible until someone uses that exact import.
+
+**Prevented by:** nothing yet. A check comparing `exports` against `src/` would
+catch the drift half of this.
+
+---
+
 ## Web / CSS
 
 ### `overflow-x: auto` does not stop a wide child scrolling the page

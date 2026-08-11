@@ -271,6 +271,14 @@ body {
   border-radius: 0 6px 6px 0;
 }
 .callout p:last-child { margin-bottom: 0; }
+/* For a callout that corrects something a reader may already have been told.
+   Warning rather than critical: nothing is broken, but following the old
+   instructions wastes an afternoon. */
+.callout--warning {
+  border-left-color: var(--sr-color-status-warning);
+  background: var(--sr-color-status-warning-surface);
+}
+.callout--warning .codepanel { margin: 12px 0; }
 .content blockquote {
   margin: 16px 0;
   padding: 12px 16px;
