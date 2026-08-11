@@ -460,6 +460,7 @@ const radiusSamples = radiusEntries.map(([k, px]) =>
 const SITE_COMPONENT_CSS = [
   'button', 'table', 'patient-banner', 'header', 'footer', 'bottom-nav',
   'breadcrumbs', 'switch', 'segmented-control', 'navigation', 'input',
+  'tags',
 ];
 const COMPONENT_CSS_LINKS = (prefix) =>
   SITE_COMPONENT_CSS.map((c) => `<link rel="stylesheet" href="${prefix}assets/${c}.css">`).join('\n');
@@ -498,6 +499,7 @@ const SECTIONS = [
       { href: 'components/input.html', label: 'Input' },
       { href: 'components/navigation.html', label: 'Navigation' },
       { href: 'components/table.html', label: 'Tables' },
+      { href: 'components/tags.html', label: 'Tags' },
       { href: 'components/toggles.html', label: 'Toggles' },
     ],
   },
@@ -2441,6 +2443,116 @@ const INPUT_SCRIPT = `<script>
 })();
 </script>`;
 
+
+// ─── Components: Tags ────────────────────────────────────────────────────────
+const TAG_CLOSE = iconMarkup('nav/close');
+
+/** One tag. Count tags take a number rather than a word. */
+function tag(variant, type, size, label) {
+  const cls = ['sr-tag', `sr-tag--${variant}`, `sr-tag--${type}`];
+  if (variant !== 'count') cls.push(`sr-tag--${size}`);
+  if (variant === 'count' && String(label).length > 2) cls.push('sr-tag--wide');
+  const close = variant === 'filter'
+    ? `<button type="button" class="sr-tag__close" aria-label="Remove ${label}">`
+      + `<span class="sr-icon sr-icon--xs sr-icon--inherit">${TAG_CLOSE}</span></button>`
+    : '';
+  return `<span class="${cls.join(' ')}"><span>${label}</span>${close}</span>`;
+}
+
+function tagsBody() {
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'tags', 'guidelines.md'), 'utf8')));
+
+  const statusTypes = ['blue', 'green', 'yellow', 'red', 'grey', 'outline'];
+  const filterTypes = ['blue', 'green', 'yellow', 'red', 'black'];
+  const countTypes = ['dark-blue', 'blue', 'green', 'yellow', 'red', 'grey', 'outline'];
+  const row = (html) => `<div class="tag-row">${html}</div>`;
+
+  const statusDemo =
+    row(statusTypes.map((t) => tag('status', t, 'default', 'Status')).join('')) +
+    row(statusTypes.map((t) => tag('status', t, 'small', 'Status')).join(''));
+
+  const filterDemo =
+    row(filterTypes.map((t) => tag('filter', t, 'default', 'Status')).join('')) +
+    row(filterTypes.map((t) => tag('filter', t, 'small', 'Status')).join(''));
+
+  const countDemo =
+    row(countTypes.map((t) => tag('count', t, 'default', '0')).join('')) +
+    row(['8', '42', '128'].map((n) => tag('count', 'blue', 'default', n)).join(''));
+
+  const inUse = `<div class="tag-inuse">
+  <p class="sr-type-body-s">Awaiting validation ${tag('status', 'yellow', 'default', 'Pending')}</p>
+  <p class="sr-type-body-s">Ward: Aneurin Bevan ${tag('filter', 'blue', 'default', 'Ward')}</p>
+  <p class="sr-type-body-s">Unread results ${tag('count', 'red', 'default', '3')}</p>
+</div>`;
+
+  const statusSnips = {
+    HTML: '<span class="sr-tag sr-tag--status sr-tag--blue sr-tag--default">\n  <span>Pending</span>\n</span>',
+    React: '<Tag variant="status" type="blue" size="default">Pending</Tag>',
+    Blazor: '<!-- Not yet built for Blazor. Use the sr-tag markup with single-record.css. -->',
+    MAUI: '<Border Style="{StaticResource TagInfo}">\n    <Label Text="Pending" StyleClass="TagTextInfo" />\n</Border>',
+  };
+
+  const filterSnips = {
+    HTML: '<span class="sr-tag sr-tag--filter sr-tag--blue sr-tag--default">\n  <span>Ward</span>\n  <button type="button" class="sr-tag__close" aria-label="Remove Ward: Aneurin Bevan">\n    <span class="sr-icon sr-icon--xs sr-icon--inherit">…</span>\n  </button>\n</span>',
+    React: '<Tag\n  variant="filter"\n  type="blue"\n  closeLabel="Remove Ward: Aneurin Bevan"\n  onClose={() => clearFilter("ward")}\n>\n  Ward\n</Tag>',
+    Blazor: '<!-- Not yet built for Blazor. -->',
+    MAUI: '<!-- No filter tag in the MAUI layer yet. A tag Border plus a tapped\n     close Path is the shape to build. -->\n<Border Style="{StaticResource TagInfo}">\n    <HorizontalStackLayout Spacing="8">\n        <Label Text="Ward" StyleClass="TagTextInfo" />\n        <Path Data="{StaticResource SrIconNavClose}"\n              Aspect="Uniform" HeightRequest="12" WidthRequest="12"\n              StrokeThickness="2" Stroke="{StaticResource SrColorStatusInfo}"\n              SemanticProperties.Description="Remove Ward" />\n    </HorizontalStackLayout>\n</Border>',
+  };
+
+  const countSnips = {
+    HTML: '<!-- A circle up to two digits; add sr-tag--wide past that. -->\n<span class="sr-tag sr-tag--count sr-tag--red">\n  <span>3</span>\n</span>',
+    React: '// The wide class is applied for you once the number passes two digits.\n<Tag variant="count" type="red">3</Tag>',
+    Blazor: '<!-- Not yet built for Blazor. -->',
+    MAUI: '<!-- No count tag in the MAUI layer yet. Equal Width/HeightRequest with a\n     full corner radius is the shape. -->\n<Border Style="{StaticResource TagCritical}"\n        WidthRequest="24" HeightRequest="24" Padding="0">\n    <Label Text="3" StyleClass="TagTextCritical"\n           HorizontalOptions="Center" VerticalOptions="Center" />\n</Border>',
+  };
+
+  return `
+<p class="breadcrumbs">Components</p>
+<h1>Tags</h1>
+<p class="lede">A small pill that labels something &mdash; its status, its category, or how many of
+it there are.</p>
+
+<h2>Type: Status</h2>
+<p class="muted">A filled pill, and the one to reach for. Default 24px on the top row, Small 16px
+below.</p>
+${showcase(statusDemo, 'tag-status', statusSnips)}
+
+<h2>Type: Filter</h2>
+<p class="muted">An outlined pill with a close button, for a filter the user can remove. The close
+button is the only interactive part, and its accessible name says what it removes.</p>
+${showcase(filterDemo, 'tag-filter', filterSnips)}
+
+<h2>Type: Count</h2>
+<p class="muted">A 24px disc holding a number. Dark blue is count-only and is for the single primary
+total on a screen. The second row shows one, two and three digits &mdash; past two the circle
+becomes a pill rather than clipping the number.</p>
+${showcase(countDemo, 'tag-count', countSnips)}
+
+<h2>In context</h2>
+<p class="muted">A tag sits inline with the text it annotates, at the size of the body around it.</p>
+<div class="showcase"><div class="showcase__preview">${inUse}</div></div>
+
+${md}
+${accessibilityTable([
+  { req: 'The filter close button is named for what it removes',
+    sc: '4.1.2 Name, Role, Value (A)',
+    how: 'closeLabel renders as aria-label — "Remove Ward: Aneurin Bevan", not a bare "Remove"',
+    test: 'Screen reader: each close button announces its own filter' },
+  { req: 'Text meets 4.5:1 against its own fill',
+    sc: '1.4.3 Contrast (Minimum) (AA)',
+    how: 'Every type and variant pairing checked against the built tokens; the lowest is 5.19:1',
+    test: 'Contrast checker against the built token values' },
+  { req: 'Colour is never the only carrier of meaning',
+    sc: '1.4.1 Use of Colour (A)',
+    how: 'Status and filter tags carry text; a count carries a number',
+    test: 'View the page in greyscale — every tag still reads' },
+  { req: 'Tags scale with text',
+    sc: '1.4.4 Resize Text (AA)',
+    how: 'Inline elements sized from the type scale; the count disc grows with its content',
+    test: 'Zoom to 200% and confirm nothing clips' },
+])}`;
+}
+
 // ─── Components: Navigation ──────────────────────────────────────────────────
 /**
  * Sidebar navigation (Figma 1307:16983). The component is `height: 100vh` and
@@ -3333,6 +3445,11 @@ addPage({
   file: 'components/breadcrumbs.html', url: 'components/breadcrumbs.html', title: 'Breadcrumbs',
   section: 'Components', sectionId: 'components', activeHref: 'components/breadcrumbs.html',
   prefix: '../', body: breadcrumbsBody(),
+});
+addPage({
+  file: 'components/tags.html', url: 'components/tags.html', title: 'Tags',
+  section: 'Components', sectionId: 'components', activeHref: 'components/tags.html',
+  prefix: '../', body: tagsBody(),
 });
 addPage({
   file: 'components/toggles.html', url: 'components/toggles.html', title: 'Toggles',

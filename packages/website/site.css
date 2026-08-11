@@ -821,3 +821,11 @@ body.bare { margin: 0; }
   height: auto;
 }
 .nav-frame .sr-nav__body { overflow: visible; }
+
+/* ── Tags page demos ──────────────────────────────────────────────────────── */
+/* A tag is inline, so a row of them needs an explicit wrap and gap rather than
+   relying on whitespace between the spans. */
+.tag-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.tag-row + .tag-row { margin-top: 12px; }
+.tag-inuse p { margin: 0 0 8px; }
+.tag-inuse p:last-child { margin-bottom: 0; }
