@@ -3135,11 +3135,11 @@ npm install github:DHCW-Digital-Health-and-Care-Wales/single-record-design-syste
 # fetches is private, has no entry point, and importing from it throws
 # ERR_MODULE_NOT_FOUND.
 "@dhcw/sr-react": "github:DHCW-Digital-Health-and-Care-Wales/single-record-design-system#main"</code></pre></div>
-<p>npm has no way to install a single workspace out of a git repository. Until the packages are
-published, the download route below is the supported one, and it is a complete route rather than a
-stopgap.</p></div>
+<p>npm has no way to install a single workspace out of a git repository. Use Route 2 below instead
+&mdash; and if you have <code>resolve.alias</code> entries in a Vite config pointing inside
+<code>node_modules/@dhcw</code> to work around this, you can delete them.</p></div>
 
-<h3>Route 1: Download the files (works today, no build step)</h3>
+<h3>Route 1: Download the files (no build step at all)</h3>
 <p>Take <a href="downloads/single-record.css" download>single-record.css</a> and
 <a href="downloads/sprite.svg" download>sprite.svg</a> from the table above and link them directly.
 This is the route for plain HTML, Razor, ASP.NET, or a React app where you write the markup and take
@@ -3148,10 +3148,24 @@ the styling from the design system.</p>
 stylesheet alone gets you a correct-looking component in any framework. What you do not get is the
 React component wrappers — those need Route 2.</p>
 
-<h3>Route 2: npm packages (once published)</h3>
-<p>For a React or bundler-based project that wants the component wrappers rather than just the CSS.
-When the packages are published, this is what it will look like — the import paths below are the
-real ones, verified against each package's exports:</p>
+<h3>Route 2: npm, from a release (works today)</h3>
+<p>For a React or bundler-based project that wants the component wrappers, not just the CSS. Each
+release attaches the packages as tarballs, which plain npm installs directly &mdash; no registry, no
+credentials, and nothing to configure in your <code>.npmrc</code>. This works the same in Azure
+DevOps CI as it does on your machine.</p>
+<p>Add all four to <code>package.json</code> and run <code>npm install</code>:</p>
+<div class="codepanel"><pre><code>"dependencies": {
+  "@dhcw/sr-tokens": "https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/releases/download/v0.1.0/dhcw-sr-tokens-0.1.0.tgz",
+  "@dhcw/sr-icons":  "https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/releases/download/v0.1.0/dhcw-sr-icons-0.1.0.tgz",
+  "@dhcw/sr-web":    "https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/releases/download/v0.1.0/dhcw-sr-web-0.1.0.tgz",
+  "@dhcw/sr-react":  "https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/releases/download/v0.1.0/dhcw-sr-react-0.1.0.tgz"
+}</code></pre></div>
+<p><strong>All four are needed together.</strong> The React package depends on the other three, so
+installing it alone will fail. Take the tag from the
+<a href="https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/releases" target="_blank" rel="noopener">releases page</a>
+and keep it pinned; bump it deliberately rather than tracking a moving branch.</p>
+<p>Then import what you need. These paths are verified against each package's exports on every
+release &mdash; a release that cannot be installed and imported does not publish:</p>
 ${codePanel('get-files-npm-import', {
   HTML: '<!-- Route 1 (download) is the equivalent for plain HTML — see above. -->',
   React: '// Once, in your entry file — this is the whole of the styling.\nimport "@dhcw/sr-web/dist/single-record.css";\n\n// Then the components you need. The barrel carries all of them.\nimport { Button, Input, Navigation, PatientBanner, Tag } from "@dhcw/sr-react";\n\n// A single component can also be imported on its own.\nimport Icon from "@dhcw/sr-react/icon";',
