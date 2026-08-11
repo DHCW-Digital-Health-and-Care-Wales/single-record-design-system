@@ -4,7 +4,7 @@ The Single Record Design System provides the shared design language, component l
 
 This document is the primary reference for everyone working on Single Record — designers, engineers, and delivery leads.
 
-**Last reviewed:** 2026-08-10. Update this file whenever a component ships, a
+**Last reviewed:** 2026-08-11. Update this file whenever a component ships, a
 token is added, or a system-wide rule changes — not on a schedule. If it
 disagrees with `/foundations/tokens/` or `/components/`, those win and this file
 is out of date.
@@ -65,6 +65,7 @@ Foundations are the base layer of the system — the raw materials that componen
 | Motion | `/foundations/tokens/motion.md` | Duration, easing, animation principles |
 | Border | `/foundations/tokens/border.md` | Border widths and radius scale |
 | Iconography | `/foundations/iconography.md` | Icon library, sizing, usage |
+| Logos | `/components/logos/guidelines.md` | Brand marks: 5 subgroups × icon/full × light/dark. **Only the `dhcw` full lockup is exported** — see the guidelines for the gap and the four Figma fixes needed before the rest can ship |
 | Grid and layout | `/foundations/grid-and-layout.md` | 5 breakpoints (Mobile → XLarge), columns, gutters, EPR content zones. Synced from Figma `289:301` on 2026-08-03 |
 
 ### Token Structure
@@ -504,6 +505,22 @@ The Figma file is the **source of truth** for visual design. All component specs
 | `Single Record` | Semantic aliases — colour, typography, spacing, border, radius | Published to library |
 
 The `Single Record` collection has two modes: **Light** and **Dark**.
+
+### Guidelines frames
+
+Usage guidance is mirrored into Figma as a `Guidelines/{topic}` frame on the
+topic's own page, so designers read the same rules as the DS website without
+leaving the file. Each frame is sourced from that topic's `guidelines.md` — the
+markdown is the single source, and the two must not fork.
+
+| Frame | Page | Node |
+|---|---|---|
+| `Guidelines/Colours` | Colours | `3468:9073` (reference pattern) |
+| `Guidelines/Icons` | Icons | `4328:45` |
+| `Guidelines/Logos` | Branding | `4329:26` |
+| `Guidelines/Navigation` | Navigation | `4330:796` |
+| `Guidelines/Header` | Header | `4331:167` |
+| `Guidelines/Footer` | Footer | `4331:236` |
 
 See `/figma/README.md` for tooling guidance and `/figma/variable-mapping.md` for the full token-to-variable mapping.
 

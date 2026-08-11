@@ -196,6 +196,32 @@ If you need colour-adaptive icons, handle it at the icon component level (e.g. v
 
 ---
 
+## Auto Layout
+
+### A wrapping text block keeps its creation height when `layoutSizingHorizontal = 'FILL'` is set after `textAutoResize = 'HEIGHT'`
+
+**Symptom:** You build a stack of text blocks in a vertical auto-layout frame. Each block is set to `textAutoResize = 'HEIGHT'` so it grows with its content, and `layoutSizingHorizontal = 'FILL'` so it spans the frame. On canvas every block renders at its original height — 20px — so the text overflows and each section overlaps the one below it. The parent frame's height is far short of what the content needs (579px instead of 1099px for the same content).
+
+**Why:** `textAutoResize = 'HEIGHT'` computes the height once, against the node's width *at that moment*. A freshly created text node is around 20px wide, so the computed height is one line. Setting `FILL` afterwards widens the node but does **not** re-run the height calculation — the stale one-line height sticks. The node is not "auto-height" in a live sense; the mode only recomputes when the text or the width is next set directly.
+
+**Fix:** Establish the final width first, then set `textAutoResize` last so the height is computed against the real width:
+
+```js
+body.appendChild(b);
+b.layoutSizingHorizontal = 'FILL';        // width is now the real, final width
+b.textAutoResize = 'NONE';
+b.resize(575, 20);                        // nudge width so the next line recomputes
+b.textAutoResize = 'HEIGHT';              // height computed against 575, not 20
+```
+
+The `NONE` → `resize` → `HEIGHT` round trip is what forces the recalculation; setting `HEIGHT` alone on an already-filled node does not always re-measure. Verify with `node.height` in the returned payload — a stack of multi-line blocks all reporting exactly 20 is the tell.
+
+**Prevented by:** nothing mechanical — this is a Figma-authoring gotcha with no repo-side build to gate it. The cheap check is to `return` the heights from the `use_figma` script and take a `screenshot()` in the same call; both catch it immediately, and neither costs an extra round trip.
+
+**Status:** Resolved 2026-08-11. Hit while building the five `Guidelines/*` frames (Icons, Logos, Navigation, Header, Footer); the first attempt shipped a fully overlapping frame that looked plausible in the returned node IDs and only showed up in the screenshot.
+
+---
+
 ## How to add an entry
 
 Copy this template and add it under the relevant section:
