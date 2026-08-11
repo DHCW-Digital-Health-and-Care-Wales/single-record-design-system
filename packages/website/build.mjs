@@ -3119,24 +3119,42 @@ loose script you have to wire up:</p>
   MAUI renders too.</li>
 </ul>
 
-<h2>Two ways to get the files</h2>
+<h2>How to install it</h2>
 <p>The packages are not published to npm yet — that is a naming and governance decision with its
-own record (DDR-020), not something to slip in. Until it lands, there are two supported routes, and
-both stay supported afterwards: publishing adds a route, it does not remove one.</p>
+own record (DDR-020), not something to slip in.</p>
 
-<h3>Route 1: Download (no build step)</h3>
+<div class="callout callout--warning"><p><strong>Installing this repository from GitHub does not
+work, and any guide telling you to do so is out of date.</strong> This is a monorepo: the thing at
+the repository root is a private workspace container, not a package. Both of these fail, and they
+fail in a confusing way rather than with a clear error:</p>
+<div class="codepanel"><pre><code># Installs ONE package called @dhcw/sr-design-system.
+# @dhcw/sr-react is not in node_modules afterwards.
+npm install github:DHCW-Digital-Health-and-Care-Wales/single-record-design-system#main
+
+# Installs the same repository root under a different name. The package it
+# fetches is private, has no entry point, and importing from it throws
+# ERR_MODULE_NOT_FOUND.
+"@dhcw/sr-react": "github:DHCW-Digital-Health-and-Care-Wales/single-record-design-system#main"</code></pre></div>
+<p>npm has no way to install a single workspace out of a git repository. Until the packages are
+published, the download route below is the supported one, and it is a complete route rather than a
+stopgap.</p></div>
+
+<h3>Route 1: Download the files (works today, no build step)</h3>
 <p>Take <a href="downloads/single-record.css" download>single-record.css</a> and
 <a href="downloads/sprite.svg" download>sprite.svg</a> from the table above and link them directly.
-This is the route for plain HTML, Razor, or anywhere with no npm install at all.</p>
+This is the route for plain HTML, Razor, ASP.NET, or a React app where you write the markup and take
+the styling from the design system.</p>
+<p>Everything on this site's component pages is plain markup with <code>sr-</code> classes, so the
+stylesheet alone gets you a correct-looking component in any framework. What you do not get is the
+React component wrappers — those need Route 2.</p>
 
-<h3>Route 2: npm, installed straight from GitHub</h3>
-<p>For a React, Node or bundler-based project. This installs from the
-<strong>DHCW org repository</strong> — the public source of truth — not a personal fork:</p>
-<div class="codepanel"><pre><code>npm install github:DHCW-Digital-Health-and-Care-Wales/single-record-design-system#main</code></pre></div>
-<p>Then import what you need, same as any npm package:</p>
+<h3>Route 2: npm packages (once published)</h3>
+<p>For a React or bundler-based project that wants the component wrappers rather than just the CSS.
+When the packages are published, this is what it will look like — the import paths below are the
+real ones, verified against each package's exports:</p>
 ${codePanel('get-files-npm-import', {
   HTML: '<!-- Route 1 (download) is the equivalent for plain HTML — see above. -->',
-  React: 'import { Button } from "@dhcw/sr-react";\nimport "@dhcw/sr-web/dist/single-record.css";',
+  React: '// Once, in your entry file — this is the whole of the styling.\nimport "@dhcw/sr-web/dist/single-record.css";\n\n// Then the components you need. The barrel carries all of them.\nimport { Button, Input, Navigation, PatientBanner, Tag } from "@dhcw/sr-react";\n\n// A single component can also be imported on its own.\nimport Icon from "@dhcw/sr-react/icon";',
   Blazor: '<!-- The Blazor Razor Class Library is distributed via NuGet, not npm. See DDR-020. -->',
   MAUI: `<!-- MAUI does not consume the npm package. Take Colors.xaml, Styles.xaml and
      Icons.xaml from packages/maui, add them as MauiXaml, and merge them in
