@@ -375,7 +375,16 @@ function publicise(md) {
   text = text.replace(/[ \t]*·?[ \t]*DHCW UI Standards(?:[^.\n]|\.(?=\d))*/g, '');
 
   // 4. Leftover inline file references.
-  text = text.replace(/[ \t]*`[^`\n]*\.(?:md|json)`/g, '');
+  //
+  // Not every `*.json` is an internal reference. A reader's OWN files are
+  // legitimate things for a public page to name, and an install guide cannot
+  // avoid saying `package.json` — stripping it turns "pinned in your
+  // `package.json`, deliberately" into "pinned in your, deliberately".
+  const READER_FILES = new Set([
+    'package.json', 'package-lock.json', 'tsconfig.json', 'appsettings.json',
+  ]);
+  text = text.replace(/[ \t]*`([^`\n]*\.(?:md|json))`/g, (match, ref) =>
+    READER_FILES.has(ref.split('/').pop()) ? match : '');
 
   // 5. Em dashes are not used anywhere on this site.
   text = text.replace(/[ \t]*—[ \t]*/g, ', ');
@@ -490,6 +499,7 @@ const SECTIONS = [
       { href: 'get-the-files.html', label: 'Get the files' },
       { href: 'figma.html', label: 'Using Figma' },
       { href: 'storybook.html', label: 'Using Storybook' },
+      { href: 'changelog.html', label: "What's new" },
     ],
   },
   {
@@ -572,6 +582,7 @@ ${extraHead}
 <a class="skip" href="#main">Skip to content</a>
 <header class="masthead">
   <div class="masthead__row masthead__utility">
+    <a href="${prefix}changelog.html">What's new</a>
     <a href="${REPORT_ISSUE_URL}" target="_blank" rel="noopener">Report an issue</a>
     <button id="lang" class="lang-toggle" type="button" aria-pressed="false" data-en="Cymraeg" data-cy="English">${ICON_GLOBE}<span>Cymraeg</span></button>
   </div>
@@ -2548,7 +2559,7 @@ ${showcase(countDemo, 'tag-count', countSnips)}
 <p class="muted">A tag sits inline with the text it annotates, at the size of the body around it.</p>
 <div class="showcase"><div class="showcase__preview">${inUse}</div></div>
 
-${md}
+${renderMarkdown(md)}
 ${accessibilityTable([
   { req: 'The filter close button is named for what it removes',
     sc: '4.1.2 Name, Role, Value (A)',
@@ -3346,6 +3357,15 @@ in the library is the name you type in code. Where they differ, the token JSON i
 <code>foundations/tokens/</code> wins and the Figma name is out of date.</p>`,
 });
 
+addPage({
+  file: 'changelog.html', url: 'changelog.html', title: "What's new", section: 'Get Started',
+  sectionId: 'get-started', activeHref: 'changelog.html', prefix: '',
+  body: `
+<p class="breadcrumbs">Get Started</p>
+<h1>What's new</h1>
+<p class="lede">What changed in each release, and whether you need to do anything about it.</p>
+${renderMarkdown(stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'CHANGELOG.md'), 'utf8'))))}`,
+});
 addPage({
   file: 'storybook.html', url: 'storybook.html', title: 'Using Storybook', section: 'Get Started',
   sectionId: 'get-started', activeHref: 'storybook.html', prefix: '',
