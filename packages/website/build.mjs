@@ -15,7 +15,7 @@
  */
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, rmSync, readdirSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { dirname, resolve } from 'node:path';
+import { dirname, resolve, relative, sep } from 'node:path';
 import { posix as posixPath } from 'node:path';
 import { iconMarkup, iconNames } from '../icons/build/icons.js';
 import { logoFullSrc } from '../web/src/assets/logo.js';
@@ -1045,7 +1045,7 @@ ${accessibilityTable([
     { req: 'Version is selectable text', sc: '1.3.1', how: 'Plain text, not an image or pseudo-element, so staff can copy it into a fault report.', test: 'Select and copy' },
     { req: 'Action order matches visual order', sc: '2.4.3', how: 'DOM order is the visual order, so keyboard order is not surprising.', test: 'Keyboard tab' },
     { req: 'Single primary action', sc: '3.2.4', how: 'One primary button identifies the committing action; siblings are secondary.', test: 'Visual review' },
-    { req: 'Focus visible', sc: '2.4.7', how: 'SR cyan ring, DDR-006.', test: 'Keyboard tab' },
+    { req: 'Focus visible', sc: '2.4.7', how: 'SR cyan ring.', test: 'Keyboard tab' },
   ])}`;
 }
 
@@ -2161,7 +2161,7 @@ ${accessibilityTable([
     { req: 'Current page is identified', sc: '4.1.2', how: 'The last item carries aria-current="page" and is plain text, not a link to the page already open.', test: 'Screen reader announce' },
     { req: 'Separators are not announced', sc: '1.3.1', how: 'The "/" and the back chevron are aria-hidden — visual punctuation only.', test: 'Screen reader read-through' },
     { req: 'Link purpose is clear from the text', sc: '2.4.4', how: 'Each crumb uses its destination’s own page heading; the back link names the destination rather than saying "Back".', test: 'Links-list review' },
-    { req: 'Focus visible', sc: '2.4.7', how: 'SR cyan ring on every link, DDR-006.', test: 'Keyboard tab' },
+    { req: 'Focus visible', sc: '2.4.7', how: 'SR cyan ring on every link.', test: 'Keyboard tab' },
   ])}`;
 }
 
@@ -2253,7 +2253,7 @@ ${accessibilityTable([
     { req: 'Operable from the keyboard', sc: '2.1.1', how: 'Tab to reach, Space or Enter to toggle — the native button behaviour, not re-implemented.', test: 'Keyboard only' },
     { req: 'State not signalled by colour alone', sc: '1.4.1', how: 'Thumb position differs between on and off, and the label states what "on" means.', test: 'Greyscale review' },
     { req: 'Target size', sc: '2.5.8', how: 'The 24px track is below the touch minimum on its own; touch layouts give the label-and-track control a 44px row.', test: 'Measure, touch device' },
-    { req: 'Focus visible', sc: '2.4.7', how: 'SR cyan ring around the track and around each segment, outside them so it is not clipped. DDR-006.', test: 'Keyboard tab' },
+    { req: 'Focus visible', sc: '2.4.7', how: 'SR cyan ring around the track and around each segment, outside them so it is not clipped.', test: 'Keyboard tab' },
   ])}`;
 }
 
@@ -2682,7 +2682,7 @@ ${accessibilityTable([
     { req: 'Hidden labels reveal on focus, not only hover', sc: '1.4.13 / 2.1.1', how: 'The icon-only label appears on :hover AND :focus-visible. Hover alone is unreachable from the keyboard.', test: 'Keyboard tab through collapsed nav' },
     { req: 'Expandable parents announce their state', sc: '4.1.2', how: 'Parents are buttons with aria-expanded; the submenu is hidden, not merely off-screen.', test: 'Screen reader, expand and collapse' },
     { req: 'Collapse control says what it will do', sc: '2.4.6', how: '"Expand navigation" / "Collapse navigation" — the outcome, not the glyph.', test: 'Screen reader announce' },
-    { req: 'Focus visible', sc: '2.4.7', how: 'SR cyan ring, inset so the rail edge cannot clip it. DDR-006.', test: 'Keyboard tab at every width' },
+    { req: 'Focus visible', sc: '2.4.7', how: 'SR cyan ring, inset so the rail edge cannot clip it.', test: 'Keyboard tab at every width' },
   ])}`;
 }
 
@@ -3263,7 +3263,7 @@ loose script you have to wire up:</p>
 
 <h2>How to install it</h2>
 <p>The packages are not published to npm yet — that is a naming and governance decision with its
-own record (DDR-020), not something to slip in.</p>
+own record, not something to slip in.</p>
 
 <div class="callout callout--warning"><p><strong>Installing this repository from GitHub does not
 work, and any guide telling you to do so is out of date.</strong> This is a monorepo: the thing at
@@ -3312,8 +3312,8 @@ than 131KB &mdash; the same styling, 45% less of it.</p>
 assemble the pieces, so it keeps using <code>single-record.css</code>.</p></div>
 ${codePanel('get-files-npm-import', {
   HTML: '<!-- Route 1 (download) is the equivalent for plain HTML — see above. -->',
-  React: '// Once, in your entry file: font, tokens and typography.\n// No component CSS here — each component brings its own.\nimport "@dhcw/sr-web/foundations";\n\n// Then the components you need. The barrel carries all of them.\nimport { Button, Input, Navigation, PatientBanner, Tag } from "@dhcw/sr-react";\n\n// A single component can also be imported on its own.\nimport Icon from "@dhcw/sr-react/icon";',
-  Blazor: '<!-- The Blazor Razor Class Library is distributed via NuGet, not npm. See DDR-020. -->',
+  React: '// REQUIRED, once, in your entry file: font, tokens and typography.\n// Not single-record.css — each component brings its own styles.\nimport "@dhcw/sr-web/foundations";\n\n// Then whichever components this file uses. Any component from the barrel\n// goes in the braces — these four are only an example, and you never need\n// to import a component you are not using.\nimport { Button, Input, Navigation, PatientBanner } from "@dhcw/sr-react";\n\n// A single component can also be imported on its own.\nimport Icon from "@dhcw/sr-react/icon";',
+  Blazor: '<!-- The Blazor Razor Class Library is distributed via NuGet, not npm. -->',
   MAUI: `<!-- MAUI does not consume the npm package. Take Colors.xaml, Styles.xaml and
      Icons.xaml from packages/maui, add them as MauiXaml, and merge them in
      App.xaml. Colors must come first: Styles resolves against it. -->
@@ -3862,6 +3862,42 @@ for (const p of pages) {
         body: p.body, extraScript: p.extraScript,
       });
   writeFileSync(resolve(DIST, p.file), html);
+}
+
+// ── Published pages must carry no internal references ────────────────────────
+// publicise() strips decision-record citations out of guidelines markdown, but
+// page content written directly in this file never passes through it — and that
+// is exactly where six DDR citations reached the public site. A rule nobody can
+// see enforced is a rule that decays, so this checks the built output.
+//
+// Prototype embeds are excluded: they inline the components' real source, and
+// those files carry DDR references in their own code comments. Stripping
+// comments out of source we are publishing *as source* would misrepresent it.
+{
+  const leaks = [];
+  const walk = (dir) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const f = resolve(dir, entry.name);
+      if (entry.isDirectory()) { walk(f); continue; }
+      if (!f.endsWith('.html')) continue;
+      if (f.includes(`${sep}prototypes${sep}`)) continue; // inlined source, see above
+      const html = readFileSync(f, 'utf8');
+      for (const m of new Set([...html.matchAll(/DDR-\d+/g)].map((x) => x[0]))) {
+        leaks.push(`${relative(DIST, f)} — ${m}`);
+      }
+    }
+  };
+  walk(DIST);
+  if (leaks.length) {
+    console.error(`\n${leaks.length} internal reference(s) on published pages:\n`);
+    for (const l of leaks) console.error(`  ${l}`);
+    console.error(
+      '\nDecision records are internal. If the point matters to a reader, make it in\n'
+      + 'their terms; if it does not, drop it. Guidelines markdown is stripped\n'
+      + 'automatically — this is page content written in build.mjs.\n'
+    );
+    process.exit(1);
+  }
 }
 
 console.log('Website built to', DIST);
