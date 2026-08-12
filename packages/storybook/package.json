@@ -9,9 +9,9 @@
     "build-storybook": "storybook build -o storybook-static"
   },
   "dependencies": {
-    "@dhcw/sr-tokens": "0.1.0",
-    "@dhcw/sr-web": "0.1.0",
-    "@dhcw/sr-react": "0.1.0"
+    "@dhcw/sr-tokens": "^0.1.1",
+    "@dhcw/sr-web": "^0.1.1",
+    "@dhcw/sr-react": "^0.1.1"
   },
   "devDependencies": {
     "react": "^19.0.0",

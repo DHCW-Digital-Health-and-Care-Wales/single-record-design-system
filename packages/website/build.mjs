@@ -38,6 +38,22 @@ const STORYBOOK_URL = 'storybook/index.html'; // reachable, not in the primary n
 // there is no vendored code to drift out of sync.
 const REACT_SRC = resolve(ROOT, 'packages', 'react', 'src');
 const WEB_SRC = resolve(ROOT, 'packages', 'web', 'src');
+
+// The release the install instructions point at. Read from the package that
+// is actually published, so the tag on this page cannot drift from the tarballs
+// the release workflow produces.
+const RELEASE_VERSION = JSON.parse(
+  readFileSync(resolve(ROOT, 'packages', 'web', 'package.json'), 'utf8')
+).version;
+const RELEASE_TAG = `v${RELEASE_VERSION}`;
+const RELEASE_BASE =
+  `https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/releases/download/${RELEASE_TAG}`;
+const RELEASE_DEPENDENCIES = `<div class="codepanel"><pre><code>"dependencies": {
+${['tokens', 'icons', 'web', 'react']
+  .map((n) => `  ${(JSON.stringify('@dhcw/sr-' + n) + ':').padEnd(19)} "${RELEASE_BASE}/dhcw-sr-${n}-${RELEASE_VERSION}.tgz"`)
+  .join(',\n')}
+}</code></pre></div>`;
+
 const ICONS_PKG = resolve(ROOT, 'packages', 'icons');
 
 // packages/react's own package.json "exports" map is the existing source of
@@ -3269,12 +3285,7 @@ release attaches the packages as tarballs, which plain npm installs directly &md
 credentials, and nothing to configure in your <code>.npmrc</code>. This works the same in Azure
 DevOps CI as it does on your machine.</p>
 <p>Add all four to <code>package.json</code> and run <code>npm install</code>:</p>
-<div class="codepanel"><pre><code>"dependencies": {
-  "@dhcw/sr-tokens": "https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/releases/download/v0.1.0/dhcw-sr-tokens-0.1.0.tgz",
-  "@dhcw/sr-icons":  "https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/releases/download/v0.1.0/dhcw-sr-icons-0.1.0.tgz",
-  "@dhcw/sr-web":    "https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/releases/download/v0.1.0/dhcw-sr-web-0.1.0.tgz",
-  "@dhcw/sr-react":  "https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/releases/download/v0.1.0/dhcw-sr-react-0.1.0.tgz"
-}</code></pre></div>
+${RELEASE_DEPENDENCIES}
 <p><strong>All four are needed together.</strong> The React package depends on the other three, so
 installing it alone will fail. Take the tag from the
 <a href="https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/releases" target="_blank" rel="noopener">releases page</a>
