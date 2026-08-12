@@ -222,6 +222,36 @@ The `NONE` → `resize` → `HEIGHT` round trip is what forces the recalculation
 
 ---
 
+## Assets & Export
+
+### `figma.com` egress is blocked, but vector artwork can still be lifted via `fillGeometry`
+
+**Symptom:** You need a real asset out of Figma and into the repo. `get_screenshot` / `download_assets` hand back a `figma.com` URL, and fetching it fails with `CONNECT tunnel failed, 403` — the environment network policy denies `www.figma.com`. It looks like nothing can be exported from a coding session, so the asset gets stubbed with a placeholder and the gap is written up as blocked-on-a-human.
+
+**Why:** Only the *asset download* is blocked. The MCP channel itself is fine, and a `VECTOR` node carries its full outline on `node.fillGeometry` — an array of `{ data, windingRule }` in SVG path syntax, in the node's own coordinate space. Returning that from a `use_figma` script is a normal MCP response, not an HTTP fetch to Figma, so the policy never applies.
+
+**Fix:** For pure-vector artwork, read the geometry and write the SVG yourself:
+
+```js
+const vec = variant.children.find(c => c.type === 'VECTOR');
+return {
+  width: vec.width, height: vec.height,
+  windingRule: vec.fillGeometry[0].windingRule,   // NONZERO → fill-rule="nonzero"
+  paths: vec.fillGeometry.map(g => g.data),
+  fill: vec.fills[0].color                        // 0–1 floats; ×255 and hex it
+};
+```
+
+Wrap the paths in `<svg viewBox="0 0 {width} {height}">` with the fill and `fill-rule` copied across. Copy the path data verbatim — do not round the coordinates or re-draw the shape. This is how `figma/assets/dhcw-symbol-{blue,white}.svg` reached the repo.
+
+Limits worth knowing before reaching for it: it only covers vector fills. Raster fills, live text, strokes, blend modes, masks and effects are not in `fillGeometry`, so a lockup with an embedded image or unoutlined text still needs a real export. Check `node.type` and the fill types first — a `FRAME` full of `RECTANGLE`s with `IMAGE` fills will silently yield nothing useful.
+
+**Prevented by:** nothing mechanical. The gate here is knowing to check whether the artwork is vector before recording an export as blocked.
+
+**Status:** Resolved 2026-08-12. The DHCW icon-only mark sat as a placeholder for a full session because "figma.com is 403" was read as "no assets can leave Figma".
+
+---
+
 ## How to add an entry
 
 Copy this template and add it under the relevant section:

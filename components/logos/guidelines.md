@@ -101,14 +101,12 @@ Size comes from tokens, never from a hand-typed pixel value:
 
 ## Known gaps
 
-Only three assets are in the repo — the `dhcw` full lockup in navy, white, and
-mono (`figma/assets/`). The remaining 17 variants have not been exported. Until
-they are:
+Five assets are in the repo (`figma/assets/`) — the `dhcw` full lockup in navy,
+white and mono, and the `dhcw` icon-only mark in navy and white. The remaining
+15 variants have not been exported. Until they are:
 
-- `logoSymbolSrc` in `packages/web/src/assets/logo.js` is a **neutral
-  placeholder**, so mobile headers and collapsed navigation render a generic
-  mark rather than the DHCW icon.
-- No product subgroup (`wcp`, `wncr`, `UEC`) has any asset at all.
+- No product subgroup (`nhs_wales`, `wcp`, `wncr`, `UEC`) has any asset at all,
+  so no co-brand or product mark can be rendered in code.
 
 Four issues must be fixed in Figma before export, not after. `wcp/Full` and
 `wncr/Icon/light` contain live text that must be outlined, or the exported SVG

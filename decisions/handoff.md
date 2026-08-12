@@ -30,24 +30,43 @@ and had been for some time — the website masthead was using it while
 - `figma/assets/README.md` was wrong — it documented two filenames that do not
   exist and omitted all three that do. Corrected, and it now carries the audit.
 
-### `logoSymbolSrc` is still a placeholder, and cannot be fixed from here
+### `logoSymbolSrc` is now the real mark — lifted as geometry, not downloaded
+
+The icon-only mark is no longer a placeholder. It could not be *downloaded*
+(see below), but it did not need to be: `use_figma` returns a vector node's own
+`fillGeometry` over the MCP channel, and that is not an asset fetch. The twelve
+paths, fill colour (`#325083` light, `#ffffff` dark) and `NONZERO` winding rule
+were copied verbatim off `Type=Icon, Subgroup=dhcw` into
+`figma/assets/dhcw-symbol-{blue,white}.svg`. It is the authored artwork, not a
+crop of the lockup and not a redraw, so the brand rule on `270:2850` holds.
+
+`build-logo.mjs` now emits `logoSymbolSrc` (navy) and a new
+`logoSymbolInverseSrc` (white) from those two files, inlined as `utf8` SVG data
+URIs — smaller than base64 and legible in a diff. The build throws if a source
+SVG contains a single quote, which would break the generated string literal.
+
+**The same route is open for any remaining variant that is pure vector.** It
+will not work for the full lockups, which contain raster and live text.
+
+### The other 15 variants still cannot be exported from here
 
 Figma's Logos set (`270:2850`) holds **20 variants** — 5 subgroups (`dhcw`,
-`nhs_wales`, `wcp`, `wncr`, `UEC`) × Icon/Full × light/dark. Three are in the
-repo. The other 17 cannot be exported from the coding environment: **outbound
+`nhs_wales`, `wcp`, `wncr`, `UEC`) × Icon/Full × light/dark. Five are in the
+repo. The other 15 cannot be exported from the coding environment: **outbound
 access to `www.figma.com` is denied by the environment network policy**, so the
 MCP asset URLs return HTTP 403 at download (`curl` gives `CONNECT tunnel failed,
 403`; the proxy status endpoint names the host). The MCP tools themselves work
 fine — it is only the asset fetch that is blocked.
 
-Two ways forward, both needing a human: enable `figma.com` egress on the
-environment, or export the 17 by hand and commit them. **Do not work around it
-by cropping the knot out of the lockup** — Figma's own note on `270:2850` says
-"do not stretch, rotate, recolour, or crop", and the icon is a separately drawn
-asset with its own spacing.
+Three ways forward: lift the geometry over MCP as above (works only for pure
+vector artwork), enable `figma.com` egress on the environment, or export the 15
+by hand and commit them. The last two need a human. **Do not work around it by
+cropping a mark out of a lockup** — Figma's own note on `270:2850` says "do not
+stretch, rotate, recolour, or crop", and the icons are separately drawn assets
+with their own spacing.
 
-Blocked on this: mobile headers and collapsed navigation render a generic mark,
-and no product subgroup (`wcp`, `wncr`, `UEC`) has any asset at all. Four Figma
+Blocked on this: no product subgroup (`nhs_wales`, `wcp`, `wncr`, `UEC`) has any
+asset at all, so no co-brand or product mark can render. Four Figma
 fixes are also needed *before* export, not after — live text in `wcp/Full` and
 `wncr/Icon/light` must be outlined, `nhs_wales/Icon/light` has a broken fill,
 and the `wcp`/`wncr` lockups differ in width between colour modes

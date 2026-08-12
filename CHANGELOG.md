@@ -31,14 +31,23 @@ this file says so and tells you what to change.
   different, and to be wider than the placeholder at the same height.
 - The lockup is a PNG rather than a vector. That was the deliberate choice:
   the artwork is trademarked and accuracy matters more than file size here.
+- **The icon-only mark is now real too.** `logoSymbolSrc` — used by mobile
+  headers and by navigation when it is collapsed — used to render a generic
+  square-and-diamond. It now returns the official DHCW icon, taken from the
+  Figma Logos component's own vector geometry rather than cropped out of the
+  lockup. Unlike the lockup it is an SVG, so it stays sharp at any size.
+
+### Added
+
+- `logoSymbolInverseSrc` — the icon-only mark in white, for dark or coloured
+  backgrounds. Use it instead of recolouring `logoSymbolSrc` with CSS; the
+  brand rules forbid recolouring the artwork.
 
 ### Known gap
 
-- **The icon-only mark is still a placeholder.** `logoSymbolSrc` — used by
-  mobile headers and by navigation when it is collapsed — has no official asset
-  in the repository yet, so those two places still render a generic shape. It
-  cannot be produced by cropping the full lockup; the brand rules forbid it and
-  the icon is separately drawn artwork.
+- **Only the DHCW marks are in the repository.** The `nhs_wales`, `wcp`, `wncr`
+  and `UEC` subgroups have no asset, so no co-brand or product mark can be
+  rendered in code yet.
 
 ---
 

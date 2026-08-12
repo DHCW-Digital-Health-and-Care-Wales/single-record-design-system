@@ -65,7 +65,7 @@ Foundations are the base layer of the system — the raw materials that componen
 | Motion | `/foundations/tokens/motion.md` | Duration, easing, animation principles |
 | Border | `/foundations/tokens/border.md` | Border widths and radius scale |
 | Iconography | `/foundations/iconography.md` | Icon library, sizing, usage |
-| Logos | `/components/logos/guidelines.md` | Brand marks: 5 subgroups × icon/full × light/dark. **Only the `dhcw` full lockup is exported** — see the guidelines for the gap and the four Figma fixes needed before the rest can ship |
+| Logos | `/components/logos/guidelines.md` | Brand marks: 5 subgroups × icon/full × light/dark. **Only the `dhcw` lockup and icon are exported** — see the guidelines for the gap and the four Figma fixes needed before the rest can ship |
 | Grid and layout | `/foundations/grid-and-layout.md` | 5 breakpoints (Mobile → XLarge), columns, gutters, EPR content zones. Synced from Figma `289:301` on 2026-08-03 |
 
 ### Token Structure
