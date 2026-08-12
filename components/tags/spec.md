@@ -1,7 +1,7 @@
 # Tag
 
-**Status:** In development
-**Last updated:** 2026-07
+**Status:** Live
+**Last updated:** 2026-08
 
 ---
 
@@ -15,7 +15,8 @@ Reference implementation: `packages/web/src/tags/tags.css` + `tags.stories.js` (
 
 ## Variants
 
-Two variants (Figma **Tags/status** `399:7984`, **Tags/filter** `3229:71674`):
+Three variants (Figma **Tags/status** `399:7984`, **Tags/filter** `3229:71674`,
+**Tags/count** `3504:12900`):
 
 ### `status` — filled label (non-interactive)
 
@@ -39,6 +40,30 @@ Transparent fill, coloured border + text, and a 16px `nav/close` button.
 | Red | `Status/Critical` |
 | Yellow | `Yellow/700` |
 | Black | `Border/Strong` border, `Text/Primary` text |
+
+### `count` — a disc holding a number
+
+A 24px circle. Same colour vocabulary as `status`, with one addition:
+**Dark Blue**, a solid `Interactive/Primary` disc with `Text/Inverse` text,
+for the single primary total on a screen.
+
+| Type | Fill | Border | Text |
+|---|---|---|---|
+| Dark Blue | `Interactive/Primary` | `Interactive/Primary` | `Text/Inverse` |
+| Blue | `Status/Info Surface` | `Status/Info` | `Status/Info` |
+| Green | `Status/Success Surface` | `Status/Success` | `Status/Success` |
+| Yellow | `Status/Warning Surface` | `Yellow/700` | `Yellow/700` |
+| Red | `Status/Critical Surface` | `Status/Critical` | `Status/Critical` |
+| Grey | `Surface/Background` | `Text/Secondary` | `Text/Secondary` |
+| Outline | transparent | `Border/Default` | `Text/Secondary` |
+
+The size modifier does not apply — a count is always 24px. Past two digits the
+React component adds `sr-tag--wide`, which turns the circle into a pill rather
+than clipping the number. Digits are tabular so a column of counts aligns.
+
+All seven pass 4.5:1 for their 12px text; the lowest is Red at 5.19:1. The
+Outline border is a container edge rather than a control boundary and is below
+3:1 by design — the number inside carries the contrast.
 
 | Size | Height | Padding (status / filter) |
 |---|---|---|

@@ -1,6 +1,6 @@
 {
   "name": "@dhcw/sr-web",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Canonical HTML/CSS components for the DHCW Single Record Design System. Framework-agnostic reference implementation following the GOV.UK Frontend model.",
   "license": "MIT",
   "type": "module",
@@ -20,12 +20,13 @@
   },
   "bugs": "https://github.com/Chuk-DCHW/dhcw-single-record-design-system/issues",
   "dependencies": {
-    "@dhcw/sr-tokens": "0.1.0",
-    "@dhcw/sr-icons": "0.1.0"
+    "@dhcw/sr-tokens": "^0.1.1",
+    "@dhcw/sr-icons": "^0.1.1"
   },
   "style": "dist/single-record.css",
   "exports": {
     ".": "./dist/single-record.css",
+    "./foundations": "./dist/foundations.css",
     "./dark": "./dist/single-record-dark.css",
     "./source": "./src/index.css",
     "./icons.js": "./dist/icons.js",

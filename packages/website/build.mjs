@@ -38,6 +38,22 @@ const STORYBOOK_URL = 'storybook/index.html'; // reachable, not in the primary n
 // there is no vendored code to drift out of sync.
 const REACT_SRC = resolve(ROOT, 'packages', 'react', 'src');
 const WEB_SRC = resolve(ROOT, 'packages', 'web', 'src');
+
+// The release the install instructions point at. Read from the package that
+// is actually published, so the tag on this page cannot drift from the tarballs
+// the release workflow produces.
+const RELEASE_VERSION = JSON.parse(
+  readFileSync(resolve(ROOT, 'packages', 'web', 'package.json'), 'utf8')
+).version;
+const RELEASE_TAG = `v${RELEASE_VERSION}`;
+const RELEASE_BASE =
+  `https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/releases/download/${RELEASE_TAG}`;
+const RELEASE_DEPENDENCIES = `<div class="codepanel"><pre><code>"dependencies": {
+${['tokens', 'icons', 'web', 'react']
+  .map((n) => `  ${(JSON.stringify('@dhcw/sr-' + n) + ':').padEnd(19)} "${RELEASE_BASE}/dhcw-sr-${n}-${RELEASE_VERSION}.tgz"`)
+  .join(',\n')}
+}</code></pre></div>`;
+
 const ICONS_PKG = resolve(ROOT, 'packages', 'icons');
 
 // packages/react's own package.json "exports" map is the existing source of
@@ -460,6 +476,7 @@ const radiusSamples = radiusEntries.map(([k, px]) =>
 const SITE_COMPONENT_CSS = [
   'button', 'table', 'patient-banner', 'header', 'footer', 'bottom-nav',
   'breadcrumbs', 'switch', 'segmented-control', 'navigation', 'input',
+  'tags',
 ];
 const COMPONENT_CSS_LINKS = (prefix) =>
   SITE_COMPONENT_CSS.map((c) => `<link rel="stylesheet" href="${prefix}assets/${c}.css">`).join('\n');
@@ -498,6 +515,7 @@ const SECTIONS = [
       { href: 'components/input.html', label: 'Input' },
       { href: 'components/navigation.html', label: 'Navigation' },
       { href: 'components/table.html', label: 'Tables' },
+      { href: 'components/tags.html', label: 'Tags' },
       { href: 'components/toggles.html', label: 'Toggles' },
     ],
   },
@@ -2441,6 +2459,116 @@ const INPUT_SCRIPT = `<script>
 })();
 </script>`;
 
+
+// ─── Components: Tags ────────────────────────────────────────────────────────
+const TAG_CLOSE = iconMarkup('nav/close');
+
+/** One tag. Count tags take a number rather than a word. */
+function tag(variant, type, size, label) {
+  const cls = ['sr-tag', `sr-tag--${variant}`, `sr-tag--${type}`];
+  if (variant !== 'count') cls.push(`sr-tag--${size}`);
+  if (variant === 'count' && String(label).length > 2) cls.push('sr-tag--wide');
+  const close = variant === 'filter'
+    ? `<button type="button" class="sr-tag__close" aria-label="Remove ${label}">`
+      + `<span class="sr-icon sr-icon--xs sr-icon--inherit">${TAG_CLOSE}</span></button>`
+    : '';
+  return `<span class="${cls.join(' ')}"><span>${label}</span>${close}</span>`;
+}
+
+function tagsBody() {
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'tags', 'guidelines.md'), 'utf8')));
+
+  const statusTypes = ['blue', 'green', 'yellow', 'red', 'grey', 'outline'];
+  const filterTypes = ['blue', 'green', 'yellow', 'red', 'black'];
+  const countTypes = ['dark-blue', 'blue', 'green', 'yellow', 'red', 'grey', 'outline'];
+  const row = (html) => `<div class="tag-row">${html}</div>`;
+
+  const statusDemo =
+    row(statusTypes.map((t) => tag('status', t, 'default', 'Status')).join('')) +
+    row(statusTypes.map((t) => tag('status', t, 'small', 'Status')).join(''));
+
+  const filterDemo =
+    row(filterTypes.map((t) => tag('filter', t, 'default', 'Status')).join('')) +
+    row(filterTypes.map((t) => tag('filter', t, 'small', 'Status')).join(''));
+
+  const countDemo =
+    row(countTypes.map((t) => tag('count', t, 'default', '0')).join('')) +
+    row(['8', '42', '128'].map((n) => tag('count', 'blue', 'default', n)).join(''));
+
+  const inUse = `<div class="tag-inuse">
+  <p class="sr-type-body-s">Awaiting validation ${tag('status', 'yellow', 'default', 'Pending')}</p>
+  <p class="sr-type-body-s">Ward: Aneurin Bevan ${tag('filter', 'blue', 'default', 'Ward')}</p>
+  <p class="sr-type-body-s">Unread results ${tag('count', 'red', 'default', '3')}</p>
+</div>`;
+
+  const statusSnips = {
+    HTML: '<span class="sr-tag sr-tag--status sr-tag--blue sr-tag--default">\n  <span>Pending</span>\n</span>',
+    React: '<Tag variant="status" type="blue" size="default">Pending</Tag>',
+    Blazor: '<!-- Not yet built for Blazor. Use the sr-tag markup with single-record.css. -->',
+    MAUI: '<Border Style="{StaticResource TagInfo}">\n    <Label Text="Pending" StyleClass="TagTextInfo" />\n</Border>',
+  };
+
+  const filterSnips = {
+    HTML: '<span class="sr-tag sr-tag--filter sr-tag--blue sr-tag--default">\n  <span>Ward</span>\n  <button type="button" class="sr-tag__close" aria-label="Remove Ward: Aneurin Bevan">\n    <span class="sr-icon sr-icon--xs sr-icon--inherit">…</span>\n  </button>\n</span>',
+    React: '<Tag\n  variant="filter"\n  type="blue"\n  closeLabel="Remove Ward: Aneurin Bevan"\n  onClose={() => clearFilter("ward")}\n>\n  Ward\n</Tag>',
+    Blazor: '<!-- Not yet built for Blazor. -->',
+    MAUI: '<!-- No filter tag in the MAUI layer yet. A tag Border plus a tapped\n     close Path is the shape to build. -->\n<Border Style="{StaticResource TagInfo}">\n    <HorizontalStackLayout Spacing="8">\n        <Label Text="Ward" StyleClass="TagTextInfo" />\n        <Path Data="{StaticResource SrIconNavClose}"\n              Aspect="Uniform" HeightRequest="12" WidthRequest="12"\n              StrokeThickness="2" Stroke="{StaticResource SrColorStatusInfo}"\n              SemanticProperties.Description="Remove Ward" />\n    </HorizontalStackLayout>\n</Border>',
+  };
+
+  const countSnips = {
+    HTML: '<!-- A circle up to two digits; add sr-tag--wide past that. -->\n<span class="sr-tag sr-tag--count sr-tag--red">\n  <span>3</span>\n</span>',
+    React: '// The wide class is applied for you once the number passes two digits.\n<Tag variant="count" type="red">3</Tag>',
+    Blazor: '<!-- Not yet built for Blazor. -->',
+    MAUI: '<!-- No count tag in the MAUI layer yet. Equal Width/HeightRequest with a\n     full corner radius is the shape. -->\n<Border Style="{StaticResource TagCritical}"\n        WidthRequest="24" HeightRequest="24" Padding="0">\n    <Label Text="3" StyleClass="TagTextCritical"\n           HorizontalOptions="Center" VerticalOptions="Center" />\n</Border>',
+  };
+
+  return `
+<p class="breadcrumbs">Components</p>
+<h1>Tags</h1>
+<p class="lede">A small pill that labels something &mdash; its status, its category, or how many of
+it there are.</p>
+
+<h2>Type: Status</h2>
+<p class="muted">A filled pill, and the one to reach for. Default 24px on the top row, Small 16px
+below.</p>
+${showcase(statusDemo, 'tag-status', statusSnips)}
+
+<h2>Type: Filter</h2>
+<p class="muted">An outlined pill with a close button, for a filter the user can remove. The close
+button is the only interactive part, and its accessible name says what it removes.</p>
+${showcase(filterDemo, 'tag-filter', filterSnips)}
+
+<h2>Type: Count</h2>
+<p class="muted">A 24px disc holding a number. Dark blue is count-only and is for the single primary
+total on a screen. The second row shows one, two and three digits &mdash; past two the circle
+becomes a pill rather than clipping the number.</p>
+${showcase(countDemo, 'tag-count', countSnips)}
+
+<h2>In context</h2>
+<p class="muted">A tag sits inline with the text it annotates, at the size of the body around it.</p>
+<div class="showcase"><div class="showcase__preview">${inUse}</div></div>
+
+${md}
+${accessibilityTable([
+  { req: 'The filter close button is named for what it removes',
+    sc: '4.1.2 Name, Role, Value (A)',
+    how: 'closeLabel renders as aria-label — "Remove Ward: Aneurin Bevan", not a bare "Remove"',
+    test: 'Screen reader: each close button announces its own filter' },
+  { req: 'Text meets 4.5:1 against its own fill',
+    sc: '1.4.3 Contrast (Minimum) (AA)',
+    how: 'Every type and variant pairing checked against the built tokens; the lowest is 5.19:1',
+    test: 'Contrast checker against the built token values' },
+  { req: 'Colour is never the only carrier of meaning',
+    sc: '1.4.1 Use of Colour (A)',
+    how: 'Status and filter tags carry text; a count carries a number',
+    test: 'View the page in greyscale — every tag still reads' },
+  { req: 'Tags scale with text',
+    sc: '1.4.4 Resize Text (AA)',
+    how: 'Inline elements sized from the type scale; the count disc grows with its content',
+    test: 'Zoom to 200% and confirm nothing clips' },
+])}`;
+}
+
 // ─── Components: Navigation ──────────────────────────────────────────────────
 /**
  * Sidebar navigation (Figma 1307:16983). The component is `height: 100vh` and
@@ -3070,6 +3198,9 @@ silently. Serve the folder over HTTP, or use <code>icons.js</code> instead.</p><
 <tr><td><a href="downloads/single-record.css" download><code>single-record.css</code></a></td>
     <td>Font, tokens, typography utilities and every component, in one file.</td>
     <td><strong>Yes.</strong> Start here.</td></tr>
+<tr><td><a href="downloads/foundations.css" download><code>foundations.css</code></a></td>
+    <td>Font, tokens and typography utilities &mdash; <em>no</em> component styles.</td>
+    <td>If you use the React package. Each component brings its own stylesheet, so this is the other half.</td></tr>
 <tr><td><a href="downloads/single-record-dark.css" download><code>single-record-dark.css</code></a></td>
     <td>Dark-mode token overrides. Load it <em>after</em> the file above.</td>
     <td>Only if your product supports dark mode. These values are still provisional.</td></tr>
@@ -3154,21 +3285,23 @@ release attaches the packages as tarballs, which plain npm installs directly &md
 credentials, and nothing to configure in your <code>.npmrc</code>. This works the same in Azure
 DevOps CI as it does on your machine.</p>
 <p>Add all four to <code>package.json</code> and run <code>npm install</code>:</p>
-<div class="codepanel"><pre><code>"dependencies": {
-  "@dhcw/sr-tokens": "https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/releases/download/v0.1.0/dhcw-sr-tokens-0.1.0.tgz",
-  "@dhcw/sr-icons":  "https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/releases/download/v0.1.0/dhcw-sr-icons-0.1.0.tgz",
-  "@dhcw/sr-web":    "https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/releases/download/v0.1.0/dhcw-sr-web-0.1.0.tgz",
-  "@dhcw/sr-react":  "https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/releases/download/v0.1.0/dhcw-sr-react-0.1.0.tgz"
-}</code></pre></div>
+${RELEASE_DEPENDENCIES}
 <p><strong>All four are needed together.</strong> The React package depends on the other three, so
 installing it alone will fail. Take the tag from the
 <a href="https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/releases" target="_blank" rel="noopener">releases page</a>
 and keep it pinned; bump it deliberately rather than tracking a moving branch.</p>
 <p>Then import what you need. These paths are verified against each package's exports on every
 release &mdash; a release that cannot be installed and imported does not publish:</p>
+<div class="callout"><p><strong>Import <code>foundations</code>, not <code>single-record.css</code>,
+when you are using the React package.</strong> Every React component already imports its own
+stylesheet, so loading the complete file on top of that ships all 21 component stylesheets plus a
+second copy of each one you actually use. On a screen using seven components that is 238KB rather
+than 131KB &mdash; the same styling, 45% less of it.</p>
+<p>You write the same one line either way; only the target changes. Plain HTML has no bundler to
+assemble the pieces, so it keeps using <code>single-record.css</code>.</p></div>
 ${codePanel('get-files-npm-import', {
   HTML: '<!-- Route 1 (download) is the equivalent for plain HTML — see above. -->',
-  React: '// Once, in your entry file — this is the whole of the styling.\nimport "@dhcw/sr-web/dist/single-record.css";\n\n// Then the components you need. The barrel carries all of them.\nimport { Button, Input, Navigation, PatientBanner, Tag } from "@dhcw/sr-react";\n\n// A single component can also be imported on its own.\nimport Icon from "@dhcw/sr-react/icon";',
+  React: '// Once, in your entry file: font, tokens and typography.\n// No component CSS here — each component brings its own.\nimport "@dhcw/sr-web/foundations";\n\n// Then the components you need. The barrel carries all of them.\nimport { Button, Input, Navigation, PatientBanner, Tag } from "@dhcw/sr-react";\n\n// A single component can also be imported on its own.\nimport Icon from "@dhcw/sr-react/icon";',
   Blazor: '<!-- The Blazor Razor Class Library is distributed via NuGet, not npm. See DDR-020. -->',
   MAUI: `<!-- MAUI does not consume the npm package. Take Colors.xaml, Styles.xaml and
      Icons.xaml from packages/maui, add them as MauiXaml, and merge them in
@@ -3333,6 +3466,11 @@ addPage({
   file: 'components/breadcrumbs.html', url: 'components/breadcrumbs.html', title: 'Breadcrumbs',
   section: 'Components', sectionId: 'components', activeHref: 'components/breadcrumbs.html',
   prefix: '../', body: breadcrumbsBody(),
+});
+addPage({
+  file: 'components/tags.html', url: 'components/tags.html', title: 'Tags',
+  section: 'Components', sectionId: 'components', activeHref: 'components/tags.html',
+  prefix: '../', body: tagsBody(),
 });
 addPage({
   file: 'components/toggles.html', url: 'components/toggles.html', title: 'Toggles',
