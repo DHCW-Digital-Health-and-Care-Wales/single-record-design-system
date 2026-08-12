@@ -110,9 +110,10 @@ they are:
   mark rather than the DHCW icon.
 - No product subgroup (`wcp`, `wncr`, `UEC`) has any asset at all.
 
-Four issues must be fixed in Figma before export, not after
-(`docs/engineering/logo-tokens-recommendations.md`): `wcp/Full` and
-`wncr/Icon/light` contain live text that must be outlined, `nhs_wales/Icon/light`
-has a broken fill, and the `wcp`/`wncr` full lockups differ in width between
-colour modes. NHS Wales marks also need brand-team approval before any public
+Four issues must be fixed in Figma before export, not after. `wcp/Full` and
+`wncr/Icon/light` contain live text that must be outlined, or the exported SVG
+carries a font dependency and renders differently wherever Roboto is absent.
+`nhs_wales/Icon/light` has a broken fill. The `wcp` and `wncr` full lockups
+differ in width between colour modes, which shifts layout in co-brand
+positions. NHS Wales marks also need brand-team approval before any public
 publication.

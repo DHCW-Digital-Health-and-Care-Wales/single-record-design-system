@@ -18,6 +18,30 @@ this file says so and tells you what to change.
 
 ---
 
+## Unreleased
+
+**No action.** Take it and carry on.
+
+### Changed
+
+- **The DHCW logo is now the real lockup.** `logoFullSrc` used to return a drawn
+  placeholder — a blue square with a diamond in it. It now returns the official
+  GIG Cymru / NHS Wales / Digital Health and Care Wales lockup. Anything
+  rendering it picks up the change with no code edit; expect the mark to look
+  different, and to be wider than the placeholder at the same height.
+- The lockup is a PNG rather than a vector. That was the deliberate choice:
+  the artwork is trademarked and accuracy matters more than file size here.
+
+### Known gap
+
+- **The icon-only mark is still a placeholder.** `logoSymbolSrc` — used by
+  mobile headers and by navigation when it is collapsed — has no official asset
+  in the repository yet, so those two places still render a generic shape. It
+  cannot be produced by cropping the full lockup; the brand rules forbid it and
+  the icon is separately drawn artwork.
+
+---
+
 ## v0.1.1 — 2026-08-12
 
 **Optional.** v0.1.0 keeps working. Two of these are worth taking when you have

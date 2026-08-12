@@ -4,7 +4,7 @@ The Single Record Design System provides the shared design language, component l
 
 This document is the primary reference for everyone working on Single Record — designers, engineers, and delivery leads.
 
-**Last reviewed:** 2026-08-11. Update this file whenever a component ships, a
+**Last reviewed:** 2026-08-12. Update this file whenever a component ships, a
 token is added, or a system-wide rule changes — not on a schedule. If it
 disagrees with `/foundations/tokens/` or `/components/`, those win and this file
 is out of date.
@@ -516,11 +516,11 @@ markdown is the single source, and the two must not fork.
 | Frame | Page | Node |
 |---|---|---|
 | `Guidelines/Colours` | Colours | `3468:9073` (reference pattern) |
-| `Guidelines/Icons` | Icons | `4328:45` |
+| `Guidelines/Icons` | Icons | `4380:33481` |
 | `Guidelines/Logos` | Branding | `4329:26` |
-| `Guidelines/Navigation` | Navigation | `4330:796` |
-| `Guidelines/Header` | Header | `4331:167` |
-| `Guidelines/Footer` | Footer | `4331:236` |
+| `Guidelines/Navigation` | Navigation | `4380:33504` |
+| `Guidelines/Header` | Header | `4380:33527` |
+| `Guidelines/Footer` | Footer | `4380:33550` |
 
 See `/figma/README.md` for tooling guidance and `/figma/variable-mapping.md` for the full token-to-variable mapping.
 
