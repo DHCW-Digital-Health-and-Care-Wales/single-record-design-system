@@ -64,11 +64,32 @@ const section = (label, css) => `\n/* ═══ ${label} ${'═'.repeat(Math.max
 rmSync(DIST, { recursive: true, force: true });
 mkdirSync(resolve(DIST, 'components'), { recursive: true });
 
-// ── single-record.css ────────────────────────────────────────────────────────
-const parts = [
+// ── foundations.css ──────────────────────────────────────────────────────────
+// Everything that is NOT a component: the font, the tokens, and the typography
+// utilities. This is the file a bundler-based consumer wants.
+//
+// Why it exists: every React component imports its own stylesheet
+// (`import '@dhcw/sr-web/src/button/button.css'`), so an app that also loads
+// single-record.css gets all 21 component stylesheets AND a second copy of each
+// one it actually uses. Pairing this with the React package means an app ships
+// the foundations plus only the components it imports.
+//
+// Plain HTML has no bundler to assemble the pieces and should keep using
+// single-record.css.
+const foundationParts = [
   ['fonts', readFileSync(resolve(TOKENS, 'css', 'fonts.css'), 'utf8')],
   ['tokens (light)', readFileSync(resolve(TOKENS, 'css', 'tokens.css'), 'utf8')],
   ['typography utilities', readFileSync(resolve(TOKENS, 'css', 'typography.css'), 'utf8')],
+];
+writeFileSync(
+  resolve(DIST, 'foundations.css'),
+  banner('foundations only: font, tokens and typography — no components')
+    + foundationParts.map(([l, c]) => section(l, c)).join('')
+);
+
+// ── single-record.css ────────────────────────────────────────────────────────
+const parts = [
+  ...foundationParts,
   ['icons', readFileSync(resolve(ICONS, 'src', 'icon.css'), 'utf8')],
   ...componentFiles.map((f) => [basename(f, '.css'), readFileSync(f, 'utf8')]),
 ];
@@ -101,6 +122,7 @@ copyFileSync(resolve(ICONS, 'build', 'sprite.svg'), resolve(DIST, 'sprite.svg'))
 
 const kb = (p) => `${Math.round(readFileSync(resolve(DIST, p)).length / 1024)}KB`;
 console.log(`Web assets built to ${DIST}`);
+console.log(`  foundations.css        ${kb('foundations.css')}  (font + tokens + typography, no components)`);
 console.log(`  single-record.css      ${kb('single-record.css')}  (${componentFiles.length} components + tokens + fonts)`);
 console.log(`  single-record-dark.css ${kb('single-record-dark.css')}`);
 console.log(`  icons.js               ${kb('icons.js')}`);

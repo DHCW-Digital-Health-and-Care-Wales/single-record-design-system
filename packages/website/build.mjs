@@ -3182,6 +3182,9 @@ silently. Serve the folder over HTTP, or use <code>icons.js</code> instead.</p><
 <tr><td><a href="downloads/single-record.css" download><code>single-record.css</code></a></td>
     <td>Font, tokens, typography utilities and every component, in one file.</td>
     <td><strong>Yes.</strong> Start here.</td></tr>
+<tr><td><a href="downloads/foundations.css" download><code>foundations.css</code></a></td>
+    <td>Font, tokens and typography utilities &mdash; <em>no</em> component styles.</td>
+    <td>If you use the React package. Each component brings its own stylesheet, so this is the other half.</td></tr>
 <tr><td><a href="downloads/single-record-dark.css" download><code>single-record-dark.css</code></a></td>
     <td>Dark-mode token overrides. Load it <em>after</em> the file above.</td>
     <td>Only if your product supports dark mode. These values are still provisional.</td></tr>
@@ -3278,9 +3281,16 @@ installing it alone will fail. Take the tag from the
 and keep it pinned; bump it deliberately rather than tracking a moving branch.</p>
 <p>Then import what you need. These paths are verified against each package's exports on every
 release &mdash; a release that cannot be installed and imported does not publish:</p>
+<div class="callout"><p><strong>Import <code>foundations</code>, not <code>single-record.css</code>,
+when you are using the React package.</strong> Every React component already imports its own
+stylesheet, so loading the complete file on top of that ships all 21 component stylesheets plus a
+second copy of each one you actually use. On a screen using seven components that is 238KB rather
+than 131KB &mdash; the same styling, 45% less of it.</p>
+<p>You write the same one line either way; only the target changes. Plain HTML has no bundler to
+assemble the pieces, so it keeps using <code>single-record.css</code>.</p></div>
 ${codePanel('get-files-npm-import', {
   HTML: '<!-- Route 1 (download) is the equivalent for plain HTML — see above. -->',
-  React: '// Once, in your entry file — this is the whole of the styling.\nimport "@dhcw/sr-web/dist/single-record.css";\n\n// Then the components you need. The barrel carries all of them.\nimport { Button, Input, Navigation, PatientBanner, Tag } from "@dhcw/sr-react";\n\n// A single component can also be imported on its own.\nimport Icon from "@dhcw/sr-react/icon";',
+  React: '// Once, in your entry file: font, tokens and typography.\n// No component CSS here — each component brings its own.\nimport "@dhcw/sr-web/foundations";\n\n// Then the components you need. The barrel carries all of them.\nimport { Button, Input, Navigation, PatientBanner, Tag } from "@dhcw/sr-react";\n\n// A single component can also be imported on its own.\nimport Icon from "@dhcw/sr-react/icon";',
   Blazor: '<!-- The Blazor Razor Class Library is distributed via NuGet, not npm. See DDR-020. -->',
   MAUI: `<!-- MAUI does not consume the npm package. Take Colors.xaml, Styles.xaml and
      Icons.xaml from packages/maui, add them as MauiXaml, and merge them in

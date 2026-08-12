@@ -26,6 +26,7 @@
   "style": "dist/single-record.css",
   "exports": {
     ".": "./dist/single-record.css",
+    "./foundations": "./dist/foundations.css",
     "./dark": "./dist/single-record-dark.css",
     "./source": "./src/index.css",
     "./icons.js": "./dist/icons.js",

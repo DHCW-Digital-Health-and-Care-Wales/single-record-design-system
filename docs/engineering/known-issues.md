@@ -276,6 +276,31 @@ documents a `github:` install of this repo.
 
 ---
 
+### React consumers were loading every component's CSS twice
+
+**Symptom:** None visible — it renders correctly. The cost is bytes: a React
+screen using seven components shipped **238KB** of CSS where 131KB would do.
+
+**Why:** Every React component imports its own stylesheet
+(`import '@dhcw/sr-web/src/button/button.css'`), which is the right design — an
+app gets only the components it uses. But the documented consumer import was
+`@dhcw/sr-web/dist/single-record.css`, which contains *all 21* component
+stylesheets. So an app got all 21, plus a second copy of each one it actually
+imported.
+
+**Fix:** `@dhcw/sr-web/foundations` — font, tokens and typography utilities,
+no components. Pair it with the React package and the app ships the foundations
+plus only what it imports.
+
+Plain HTML keeps `single-record.css`: with no bundler there is nothing to
+assemble the per-component files, and the whole point of that file is that one
+`<link>` works.
+
+**Worth knowing either way:** 77KB of both files is the embedded Roboto. That is
+the floor, and it is the reason the CSS works with no network access at all.
+
+---
+
 ### An `exports` map is a closed list, and ours omitted the path everyone writes
 
 **Symptom:** `import '@dhcw/sr-web/dist/single-record.css'` fails with
