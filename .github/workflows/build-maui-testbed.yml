@@ -1,7 +1,8 @@
-name: Build MAUI testbed APK
+name: Build MAUI library and testbed APK
 
-# Builds packages/maui/testbed into an installable Android APK and uploads it as
-# a workflow artifact, ready to drop into BrowserStack App Live.
+# Two jobs in one: compiles and packs the DHCW.SingleRecord.Maui NuGet library
+# that products consume, then builds packages/maui/testbed into an installable
+# Android APK and uploads it as a workflow artifact for BrowserStack App Live.
 #
 # Why CI rather than a laptop: the MAUI Android toolchain is a JDK, the Android
 # SDK, and the maui-android workload. Installing that to look at one screen is a
@@ -70,6 +71,52 @@ jobs:
 
       - name: Install the MAUI Android workload
         run: dotnet workload install maui-android --skip-sign-check
+
+      # The library products actually install. Until this step existed it was
+      # authored but never compiled — the XAML validated as XML and nothing
+      # proved the csproj, the targets file or the generated code-behind worked.
+      #
+      # Only the Android TFM builds here: ubuntu has the maui-android workload
+      # and cannot build iOS or macCatalyst at all. A complete multi-TFM pack
+      # needs a macOS or Windows runner, which is why this packs nothing.
+      - name: Build the NuGet library
+        run: |
+          dotnet build packages/maui/nuget/DHCW.SingleRecord.Maui.csproj -c Release
+
+      # A build proves it compiles; this proves it packs, that the buildTransitive
+      # targets and brand marks are actually in the .nupkg, and that a consumer
+      # would get them. NoBuild reuses what was just compiled.
+      - name: Pack the NuGet library and check its contents
+        run: |
+          dotnet pack packages/maui/nuget/DHCW.SingleRecord.Maui.csproj \
+            -c Release --no-build -o nupkg
+          ls -lh nupkg/
+
+          pkg=$(find nupkg -name '*.nupkg' -print -quit)
+          if [ -z "$pkg" ]; then echo "::error::No .nupkg was produced."; exit 1; fi
+
+          # A .nupkg is a zip. Assert on its contents rather than trusting pack.
+          python3 - "$pkg" <<'PY'
+          import sys, zipfile
+          names = zipfile.ZipFile(sys.argv[1]).namelist()
+          missing = []
+          # The targets file is what wires the brand marks into a consuming app;
+          # if it is absent the package installs and silently does nothing.
+          if not any(n.startswith('buildTransitive/') and n.endswith('.targets') for n in names):
+              missing.append('buildTransitive/*.targets')
+          if not any(n.startswith('brand/') and n.endswith('.svg') for n in names):
+              missing.append('brand/*.svg')
+          if not any(n.endswith('DHCW.SingleRecord.Maui.dll') for n in names):
+              missing.append('lib/**/DHCW.SingleRecord.Maui.dll')
+          if not any(n == 'README.md' for n in names):
+              missing.append('README.md')
+          if missing:
+              print('::error::.nupkg is missing: ' + ', '.join(missing))
+              print('\n'.join(sorted(names)))
+              sys.exit(1)
+          brand = sum(1 for n in names if n.startswith('brand/') and n.endswith('.svg'))
+          print(f'nupkg OK - {len(names)} entries, {brand} brand marks')
+          PY
 
       - name: Publish APK
         run: |

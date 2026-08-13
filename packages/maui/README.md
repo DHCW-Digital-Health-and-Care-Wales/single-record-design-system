@@ -6,7 +6,7 @@ Native .NET MAUI token and style layer for the DHCW Single Record Design System.
 `DHCW.SingleRecord.Maui` from NuGet instead** — npm is JavaScript-only, and
 there is no npm in the .NET toolchain. The NuGet project is generated into
 `nuget/` by `build-nuget.mjs`; see `nuget/README.md` for consumer docs, and
-`npm run pack:maui` at the repository root to produce the `.nupkg`.
+`npm run pack:maui` at the repository root to produce the `.nupkg`. It is not on a feed yet — CI builds and packs it on every change, but nothing publishes it.
 
 Copying the three XAML files into an app by hand still works and is still
 supported — the merge syntax differs between the two routes, which is written up

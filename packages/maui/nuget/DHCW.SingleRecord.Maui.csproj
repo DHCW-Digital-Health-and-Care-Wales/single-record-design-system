@@ -11,8 +11,19 @@
   -->
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
-    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
+    <!--
+      net10.0 matches what this repository actually builds with: CI installs the
+      .NET 10 SDK and packages/maui/testbed targets net10.0-android. Targeting
+      net8.0 would have been a guess that nothing here can compile.
+
+      The TFM list is conditional by host OS because the workloads are. Linux CI
+      has maui-android only, and restore evaluates every TFM even when you pass
+      -f, so an unconditional list fails there before it compiles anything.
+      Packing a complete package therefore has to happen on Windows or macOS.
+    -->
+    <TargetFrameworks>net10.0-android</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('osx'))">$(TargetFrameworks);net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net10.0-windows10.0.19041.0</TargetFrameworks>
     <UseMaui>true</UseMaui>
     <SingleProject>true</SingleProject>
     <Nullable>enable</Nullable>

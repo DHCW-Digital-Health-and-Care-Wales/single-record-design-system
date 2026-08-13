@@ -15,12 +15,25 @@ MAUI and web cannot drift apart.
 
 ## Install
 
+**Not published to a feed yet.** The package builds and packs in CI on every
+change, but nothing publishes it, so `dotnet add package` will not resolve it
+today. Publishing is part of the open scope decision in DDR-020. Until then,
+build it from a checkout:
+
 ```
-dotnet add package DHCW.SingleRecord.Maui
+npm run pack:maui                                   # writes dist/nuget/*.nupkg
+dotnet nuget add source /path/to/dist/nuget --name sr-local
+dotnet add package DHCW.SingleRecord.Maui --source sr-local
 ```
 
-Targets `net8.0-android`, `net8.0-ios`, `net8.0-maccatalyst` and, on Windows,
-`net8.0-windows10.0.19041.0`.
+Targets `net10.0-android`. On macOS the pack also includes `net10.0-ios` and
+`net10.0-maccatalyst`; on Windows, `net10.0-windows10.0.19041.0`. The workloads
+only exist on those hosts, so **a complete multi-platform package has to be
+packed on macOS or Windows** — a Linux pack is Android-only.
+
+`net10.0` matches what this repository builds with. If your app targets an
+earlier .NET, say so and the target can be lowered — it was set to what could
+actually be compiled and verified rather than guessed.
 
 ## Set up
 

@@ -3728,10 +3728,24 @@ ${codePanel('get-files-npm-import', {
 <div class="callout"><p><strong>npm cannot serve a MAUI app.</strong> npm is JavaScript-only and
 there is no npm in the .NET toolchain, so none of the packages above can be installed into a MAUI
 project. MAUI has its own package.</p></div>
-<div class="codepanel"><pre><code>dotnet add package DHCW.SingleRecord.Maui</code></pre></div>
-<p>Targets <code>net8.0-android</code>, <code>net8.0-ios</code>, <code>net8.0-maccatalyst</code>,
-and <code>net8.0-windows10.0.19041.0</code> on Windows. It ships three ResourceDictionaries and the
-brand marks:</p>
+<div class="callout"><p><strong>Not on a feed yet.</strong> The package builds and packs in CI on
+every change, but nothing publishes it, so <code>dotnet add package</code> will not resolve it
+today. Until it is published, build it from a checkout &mdash;
+<code>npm run pack:maui</code> writes the <code>.nupkg</code> to <code>dist/nuget/</code> &mdash;
+and add that folder as a local source. Publishing is part of the open scope decision in
+DDR&#8209;020.</p></div>
+<div class="codepanel"><pre><code># once published
+dotnet add package DHCW.SingleRecord.Maui
+
+# until then, from a checkout of the design system
+npm run pack:maui
+dotnet nuget add source /path/to/dist/nuget --name sr-local
+dotnet add package DHCW.SingleRecord.Maui --source sr-local</code></pre></div>
+<p>Targets <code>net10.0-android</code>, matching what this repository builds with. On macOS the
+pack also includes <code>net10.0-ios</code> and <code>net10.0-maccatalyst</code>, and on Windows
+<code>net10.0-windows10.0.19041.0</code> &mdash; the workloads only exist on those hosts, so a
+complete package has to be packed there. It ships three ResourceDictionaries and the brand
+marks:</p>
 <table>
   <thead><tr><th>Dictionary</th><th>Contents</th></tr></thead>
   <tbody>
