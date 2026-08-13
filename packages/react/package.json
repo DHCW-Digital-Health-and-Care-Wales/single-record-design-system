@@ -38,9 +38,9 @@
     "react-dom": "^18.0.0 || ^19.0.0"
   },
   "dependencies": {
-    "@dhcw/sr-web": "^0.1.1",
-    "@dhcw/sr-tokens": "^0.1.1",
-    "@dhcw/sr-icons": "^0.1.1"
+    "@dhcw/sr-web": "^0.2.0",
+    "@dhcw/sr-tokens": "^0.2.0",
+    "@dhcw/sr-icons": "^0.2.0"
   },
   "publishConfig": {
     "access": "public"
