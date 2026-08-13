@@ -46,18 +46,33 @@ missing:
 | `wncr` | Icon (`285:969`, `285:1119`), Full (`285:1220`, `285:1137`) |
 | `UEC` | Icon (`1408:16295`, `1408:16298`), Full (`1408:15337`, `1408:16292`) |
 
-These cannot be exported from the Claude Code environment: outbound access to
-`www.figma.com` is denied by the environment network policy, so the MCP asset
-URLs return HTTP 403 at download. Either enable `figma.com` egress on the
-environment, export them by hand from Figma and commit them here, or — for a
-variant that is pure vector — lift its `fillGeometry` over MCP as the two `dhcw`
-symbols were. Note that four of the missing variants need a Figma fix *before*
-export either way (live text to outline in `wcp/Full` and `wncr/Icon/light`, a
-broken fill in `nhs_wales/Icon/light`, and a width mismatch between colour
-modes in the `wcp` and `wncr` lockups).
+These cannot be *downloaded* from the Claude Code environment: outbound access
+to `www.figma.com` is denied by the environment network policy, so the MCP asset
+URLs return HTTP 403. But most of them do not need a download — see "How the
+symbols got here" above.
+
+**Audited 2026-08-13.** Twelve of the sixteen are pure vector and can be lifted
+via `fillGeometry` today:
+
+| Variant | Liftable | Blocker |
+|---|---|---|
+| `nhs_wales` Icon + Full, both modes | Yes | — |
+| `wcp` Icon + Full, both modes | Yes | — |
+| `wncr` Icon light | Yes | — |
+| `UEC` Icon, both modes | Yes | — |
+| `wncr` Icon dark, Full both modes | No | Strokes — outline them in Figma first |
+| `UEC` Full, both modes | No | Live text — outline it in Figma first |
+
+This supersedes the earlier note that `wcp/Full` contains live text. It does
+not: `wcp` is clean in all four variants. The live-text problem is `UEC/Full`,
+and the stroke problem is `wncr`. Re-audit rather than trusting a stale list —
+the check is a dozen lines of `use_figma` walking `node.type` and the fill and
+stroke arrays.
 
 Consequence today: no product subgroup (`nhs_wales`, `wcp`, `wncr`, `UEC`) has
-any asset in the repo, so nothing can render a co-brand or product mark.
+any asset in the repo, so nothing can render a co-brand or product mark — but
+for twelve of the sixteen that is a task, not a blocker. NHS Wales marks still
+need brand-team approval before public publication.
 
 ## Notes
 

@@ -108,10 +108,23 @@ white and mono, and the `dhcw` icon-only mark in navy and white. The remaining
 - No product subgroup (`nhs_wales`, `wcp`, `wncr`, `UEC`) has any asset at all,
   so no co-brand or product mark can be rendered in code.
 
-Four issues must be fixed in Figma before export, not after. `wcp/Full` and
-`wncr/Icon/light` contain live text that must be outlined, or the exported SVG
-carries a font dependency and renders differently wherever Roboto is absent.
-`nhs_wales/Icon/light` has a broken fill. The `wcp` and `wncr` full lockups
-differ in width between colour modes, which shifts layout in co-brand
-positions. NHS Wales marks also need brand-team approval before any public
+**Audited 2026-08-13:** twelve of the fifteen can be lifted from Figma's vector
+geometry today (all of `nhs_wales`, all of `wcp`, `wncr/Icon/light`, and
+`UEC/Icon`). Only four genuinely need a Figma fix first — see below and
+`figma/assets/README.md`.
+
+The four that must be fixed in Figma before export, not after: `UEC/Full` in
+both colour modes contains live text that must be outlined, or the exported SVG
+carries a font dependency and renders differently wherever Roboto is absent;
+`wncr/Full` in both modes and `wncr/Icon/dark` use strokes, which are not
+carried on the vector geometry and would export as hairlines or vanish.
+
+Two items from the earlier version of this list did not survive the audit and
+are recorded here so they are not chased again: `wcp/Full` does **not** contain
+live text (that was `UEC/Full`), and the `wcp` and `wncr` lockups no longer
+differ in width between colour modes — both are 208×48 and 246×48 respectively.
+`nhs_wales/Icon/light` was reported as having a broken fill; the audit checked
+for raster fills, strokes and text rather than for a wrong colour, so that one
+is **unverified** and still needs a designer's eye. NHS Wales marks also need
+brand-team approval before any public
 publication.
