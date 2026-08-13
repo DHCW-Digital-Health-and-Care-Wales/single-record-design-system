@@ -34,6 +34,7 @@ const SRC = resolve(__dirname, 'src');
 const DIST = resolve(__dirname, 'dist');
 const TOKENS = resolve(ROOT, 'packages', 'tokens', 'build');
 const ICONS = resolve(ROOT, 'packages', 'icons');
+const ROOT_ASSETS = resolve(ROOT, 'figma', 'assets');
 
 const pkg = JSON.parse(readFileSync(resolve(__dirname, 'package.json'), 'utf8'));
 
@@ -112,6 +113,31 @@ writeFileSync(
 // ── per-component stylesheets ────────────────────────────────────────────────
 for (const f of componentFiles) copyFileSync(f, resolve(DIST, 'components', basename(f)));
 copyFileSync(resolve(ICONS, 'src', 'icon.css'), resolve(DIST, 'components', 'icon.css'));
+
+// ── Brand marks ──────────────────────────────────────────────────────────────
+// Shipped as real files as well as the data URIs in src/assets/logo.js: a MAUI
+// app, a Blazor wwwroot or a designer wants a path to reference, not a URI
+// embedded in a JS module.
+//
+// These live apart from the icon set on purpose, and the two contracts are
+// opposites. An icon inherits currentColor and is meant to be recoloured; a
+// brand mark must never be. That is why there is a blue file and a white file
+// rather than one file and a CSS rule — you pick the variant that suits the
+// background. Putting these in @dhcw/sr-icons would licence exactly the
+// behaviour the brand rules forbid.
+const BRAND_FILES = [
+  'dhcw-logo-blue.png',
+  'dhcw-symbol-blue.svg', 'dhcw-symbol-white.svg',
+  'wcp-symbol-blue.svg', 'wcp-symbol-white.svg',
+  'wcp-logo-blue.svg', 'wcp-logo-white.svg',
+  'nhs-wales-symbol-blue.svg', 'nhs-wales-symbol-white.svg',
+  'nhs-wales-logo-colour.svg', 'nhs-wales-logo-white.svg',
+  'wncr-symbol-white.svg',
+];
+mkdirSync(resolve(DIST, 'logos'), { recursive: true });
+for (const f of BRAND_FILES) {
+  copyFileSync(resolve(ROOT_ASSETS, f), resolve(DIST, 'logos', f));
+}
 
 // ── JavaScript: the icon set ─────────────────────────────────────────────────
 // The only JavaScript the HTML/CSS layer needs. Components here are plain

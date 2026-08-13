@@ -1,0 +1,57 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    DHCW Single Record Design System — .NET MAUI token and style layer.
+
+    The three ResourceDictionaries in this project are GENERATED. Do not edit
+    them here: run `npm run build:maui:nuget` at the repository root, which
+    regenerates them from @dhcw/sr-tokens and foundations/iconography/svg/ and
+    copies them in. Editing them in place is silently overwritten on the next
+    build, and puts MAUI out of step with web.
+  -->
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
+    <UseMaui>true</UseMaui>
+    <SingleProject>true</SingleProject>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>DHCW.SingleRecord.Maui</RootNamespace>
+    <AssemblyName>DHCW.SingleRecord.Maui</AssemblyName>
+
+    <!-- A library, not an app: no launch assets, no app icon. -->
+    <IsPackable>true</IsPackable>
+    <PackageId>DHCW.SingleRecord.Maui</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Digital Health and Care Wales</Authors>
+    <Company>Digital Health and Care Wales</Company>
+    <Product>Single Record Design System</Product>
+    <Description>Native .NET MAUI token and style layer for the DHCW Single Record Design System: colour and elevation tokens, the type scale, implicit and keyed styles for stock MAUI controls, and 123 icons as XAML path geometry. Generated from the same sources as the web CSS, so the two cannot drift.</Description>
+    <PackageTags>dhcw;nhs;nhs-wales;design-system;maui;xaml;tokens;accessibility</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/Chuk-DCHW/dhcw-single-record-design-system</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Chuk-DCHW/dhcw-single-record-design-system</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <MauiXaml Update="**/*.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <!--
+      Ships the brand marks and wires them up as MauiImage in the CONSUMING
+      project. buildTransitive is what makes that flow through a PackageReference
+      rather than stopping at this assembly.
+    -->
+    <None Include="buildTransitive\**" Pack="true" PackagePath="buildTransitive\" />
+    <None Include="brand\**\*.svg" Pack="true" PackagePath="brand\" />
+  </ItemGroup>
+
+</Project>

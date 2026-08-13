@@ -18,6 +18,87 @@ this file says so and tells you what to change.
 
 ---
 
+## Unreleased
+
+**No action.** Take it and carry on.
+
+### Changed
+
+- **Icons are now 1px, not 2px (DDR-023). Every icon in every product changes
+  weight.** Lucide ships a 2px stroke and the design system had taken it
+  wholesale; the Figma library had already moved to 1px — 121 of 125 components
+  — and nothing recorded the divergence. 2px read heavier than the text beside
+  it, most visibly on the design-system website.
+
+  **No action needed:** no markup, class name, token or prop changes. Icons
+  simply render lighter.
+
+  One thing to know: at 16px a 1px stroke resolves to about two-thirds of a
+  device pixel and goes visibly light. **Prefer 20px or 24px for any icon that
+  carries meaning on its own**; 16px is fine beside a text label. Do not
+  reintroduce a per-size stroke — size the control up instead.
+
+- **DDR-022 records when to wrap a third-party component on web.** The test is
+  behavioural complexity, not component importance: build on native elements,
+  wrap for keyboard interaction models. Menu, Tabs and Autocomplete are now
+  blocked on a library evaluation rather than hand-built; Select stays as it is.
+  Summarised for engineers in `docs/for-engineers.md` → "Wrapped or built?".
+
+- **The DHCW logo is now the real lockup.** `logoFullSrc` used to return a drawn
+  placeholder — a blue square with a diamond in it. It now returns the official
+  GIG Cymru / NHS Wales / Digital Health and Care Wales lockup. Anything
+  rendering it picks up the change with no code edit; expect the mark to look
+  different, and to be wider than the placeholder at the same height.
+- The lockup is a PNG rather than a vector. That was the deliberate choice:
+  the artwork is trademarked and accuracy matters more than file size here.
+- **The icon-only mark is now real too.** `logoSymbolSrc` — used by mobile
+  headers and by navigation when it is collapsed — used to render a generic
+  square-and-diamond. It now returns the official DHCW icon, taken from the
+  Figma Logos component's own vector geometry rather than cropped out of the
+  lockup. Unlike the lockup it is an SVG, so it stays sharp at any size.
+
+### Added
+
+- `logoSymbolInverseSrc` — the icon-only mark in white, for dark or coloured
+  backgrounds. Use it instead of recolouring `logoSymbolSrc` with CSS; the
+  brand rules forbid recolouring the artwork.
+- **Checkbox, Radio and Select now have website pages**, each with usage
+  guidance, every state, and copyable HTML, React, Blazor and MAUI markup. All
+  three had code but nowhere documenting when to reach for which; each page now
+  opens with the same "which one" table so the choice between them is the first
+  thing you see.
+- **`DHCW.SingleRecord.Maui` on NuGet — MAUI apps no longer copy XAML by hand.**
+  Ships `SrColors`, `SrIcons` and `SrStyles` as typed ResourceDictionaries, plus
+  the brand marks registered as `MauiImage` automatically. npm cannot serve
+  .NET; this is the route for a MAUI app. Merge `SrStyles` **last** — it
+  references keys from the other two. Copying the XAML by hand still works; the
+  merge syntax differs between the two routes.
+- **Three new icons: `action/star`, `schedule/bookmark`, `file/pin`.** 123 icons
+  now, across web, React, the sprite and MAUI.
+- **Brand marks for NHS Wales, Welsh Clinical Portal and WNCR.** Nine logo
+  variants extracted from Figma and shipped from `@dhcw/sr-web`, as data URIs
+  (`nhsWalesLogoSrc`, `wcpSymbolSrc`, and so on) and as real files under
+  `@dhcw/sr-web/logos`. Previously only the DHCW marks existed, so no product
+  or co-brand mark could be rendered at all.
+- **Brand marks are not icons and are not in `@dhcw/sr-icons`.** Icons inherit
+  `currentColor` and are meant to be recoloured; brand marks must never be. Each
+  mark ships as one file per ink — pick the variant that suits the background
+  rather than recolouring.
+- **Three new Radio types — `card-radio`, `card`, and `card-icon`.** An option
+  that needs a line of explanation was previously unbuildable. Pass `type` and
+  `description` to `<Radio>`, or use the `sr-radio--card` classes. The plain
+  radio is unchanged and stays the default.
+
+### Known gap
+
+- **`UEC` has no asset**, so Urgent and Emergency Care cannot render its own
+  mark. Its Figma artwork needs fixing first — the icons have unfilled vectors,
+  the lockups carry live text.
+- **`wncr` is white only**, so a WNCR mark cannot go on a light background. Its
+  navy variant is drawn with strokes and cannot be exported until outlined.
+
+---
+
 ## v0.1.1 — 2026-08-12
 
 **Optional.** v0.1.0 keeps working. Two of these are worth taking when you have

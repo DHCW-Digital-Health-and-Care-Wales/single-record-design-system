@@ -93,6 +93,39 @@ desktop Footer bar, and the reason is unchanged: a 1280px bar has nowhere to go
 on a phone. The mobile counterpart is a different component — `BottomNav`
 rather than the desktop Footer.
 
+### Wrapped or built? (web)
+
+Some components are built from scratch on native elements; some will wrap a
+third-party library. The dividing test is **behavioural complexity, not
+component importance**: if building it ourselves means owning a keyboard
+interaction model rather than a stylesheet, wrap it.
+
+| Built natively | Will wrap a library |
+|---|---|
+| Button, tag, card, banner, patient banner | Combobox / autocomplete |
+| Checkbox, radio, switch, input | Date picker |
+| Table, breadcrumbs, header, footer | Menu / dropdown, tabs |
+| Segmented control, switch | Data grid (virtualised, sortable) |
+
+When a component is wrapped, **the library is an implementation detail and
+never an API**: you import `<Select>` from `@dhcw/sr-react`, the props are ours,
+styling comes from our tokens rather than the library's theme, and we never
+re-export the library's own components or types. If you never need to read the
+library's docs, the wrapper is doing its job.
+
+Two consequences worth knowing:
+
+- **Select is hand-built** — a button plus a listbox, not a native
+  `<select>` — so every keyboard behaviour is ours. Do not fork it.
+- **Menu, Tabs and Autocomplete do not exist yet** and are deliberately blocked
+  on a library evaluation rather than hand-built. The Case Note Tracking
+  prototype has local versions; they are scoped to that prototype on purpose.
+
+Full reasoning, and what an adoption DDR has to cover, in
+[`decisions/DDR-022-wrapping-third-party-components-on-web.md`](../decisions/DDR-022-wrapping-third-party-components-on-web.md).
+
+---
+
 ### The Blazor web host in Azure
 
 A browser-hosted Blazor app for previewing components outside Visual Studio.

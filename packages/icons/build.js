@@ -2,8 +2,8 @@
 // (a single <symbol> sprite) from the canonical source SVGs in
 // foundations/iconography/svg/. Run via `npm run build -w @dhcw/sr-icons`.
 //
-// Source SVGs are the contract (DDR-003 — Lucide, ISC licence, 24x24, 2px
-// stroke, currentColor). This script only repackages them for consumption —
+// Source SVGs are the contract (DDR-003 — Lucide, ISC licence, 24x24,
+// currentColor; 1px stroke per DDR-023, which changed it from Lucide's 2px). This script only repackages them for consumption —
 // it does not modify icon artwork.
 
 import { readdirSync, readFileSync, statSync, mkdirSync, writeFileSync } from 'node:fs';
@@ -53,7 +53,7 @@ for (const file of files) {
   const id = `icon-${name.replace(/\//g, '-')}`;
   symbols.push(
     `<symbol id="${id}" viewBox="0 0 24 24" fill="none" stroke="currentColor" `
-    + `stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${inner}</symbol>`
+    + `stroke-width="1" stroke-linecap="round" stroke-linejoin="round">${inner}</symbol>`
   );
 }
 
@@ -80,7 +80,7 @@ export function iconMarkup(name, { label } = {}) {
   const a11y = label
     ? \`role="img" aria-label="\${label}"\`
     : 'aria-hidden="true" focusable="false"';
-  return \`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" \${a11y}>\${inner}</svg>\`;
+  return \`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" \${a11y}>\${inner}</svg>\`;
 }
 `;
 

@@ -196,6 +196,96 @@ If you need colour-adaptive icons, handle it at the icon component level (e.g. v
 
 ---
 
+## Auto Layout
+
+### A wrapping text block keeps its creation height when `layoutSizingHorizontal = 'FILL'` is set after `textAutoResize = 'HEIGHT'`
+
+**Symptom:** You build a stack of text blocks in a vertical auto-layout frame. Each block is set to `textAutoResize = 'HEIGHT'` so it grows with its content, and `layoutSizingHorizontal = 'FILL'` so it spans the frame. On canvas every block renders at its original height — 20px — so the text overflows and each section overlaps the one below it. The parent frame's height is far short of what the content needs (579px instead of 1099px for the same content).
+
+**Why:** `textAutoResize = 'HEIGHT'` computes the height once, against the node's width *at that moment*. A freshly created text node is around 20px wide, so the computed height is one line. Setting `FILL` afterwards widens the node but does **not** re-run the height calculation — the stale one-line height sticks. The node is not "auto-height" in a live sense; the mode only recomputes when the text or the width is next set directly.
+
+**Fix:** Establish the final width first, then set `textAutoResize` last so the height is computed against the real width:
+
+```js
+body.appendChild(b);
+b.layoutSizingHorizontal = 'FILL';        // width is now the real, final width
+b.textAutoResize = 'NONE';
+b.resize(575, 20);                        // nudge width so the next line recomputes
+b.textAutoResize = 'HEIGHT';              // height computed against 575, not 20
+```
+
+The `NONE` → `resize` → `HEIGHT` round trip is what forces the recalculation; setting `HEIGHT` alone on an already-filled node does not always re-measure. Verify with `node.height` in the returned payload — a stack of multi-line blocks all reporting exactly 20 is the tell.
+
+**Prevented by:** nothing mechanical — this is a Figma-authoring gotcha with no repo-side build to gate it. The cheap check is to `return` the heights from the `use_figma` script and take a `screenshot()` in the same call; both catch it immediately, and neither costs an extra round trip.
+
+**Status:** Resolved 2026-08-11. Hit while building the five `Guidelines/*` frames (Icons, Logos, Navigation, Header, Footer); the first attempt shipped a fully overlapping frame that looked plausible in the returned node IDs and only showed up in the screenshot.
+
+---
+
+## Assets & Export
+
+### `figma.com` egress is blocked, but vector artwork can still be lifted via `fillGeometry`
+
+**Symptom:** You need a real asset out of Figma and into the repo. `get_screenshot` / `download_assets` hand back a `figma.com` URL, and fetching it fails with `CONNECT tunnel failed, 403` — the environment network policy denies `www.figma.com`. It looks like nothing can be exported from a coding session, so the asset gets stubbed with a placeholder and the gap is written up as blocked-on-a-human.
+
+**Why:** Only the *asset download* is blocked. The MCP channel itself is fine, and a `VECTOR` node carries its full outline on `node.fillGeometry` — an array of `{ data, windingRule }` in SVG path syntax, in the node's own coordinate space. Returning that from a `use_figma` script is a normal MCP response, not an HTTP fetch to Figma, so the policy never applies.
+
+**Fix:** For pure-vector artwork, read the geometry and write the SVG yourself:
+
+```js
+const vec = variant.children.find(c => c.type === 'VECTOR');
+return {
+  width: vec.width, height: vec.height,
+  windingRule: vec.fillGeometry[0].windingRule,   // NONZERO → fill-rule="nonzero"
+  paths: vec.fillGeometry.map(g => g.data),
+  fill: vec.fills[0].color                        // 0–1 floats; ×255 and hex it
+};
+```
+
+Wrap the paths in `<svg viewBox="0 0 {width} {height}">` with the fill and `fill-rule` copied across. Copy the path data verbatim — do not round the coordinates or re-draw the shape. This is how `figma/assets/dhcw-symbol-{blue,white}.svg` reached the repo.
+
+Limits worth knowing before reaching for it: it only covers vector fills. Raster fills, live text, strokes, blend modes, masks and effects are not in `fillGeometry`, so a lockup with an embedded image or unoutlined text still needs a real export. Check `node.type` and the fill types first — a `FRAME` full of `RECTANGLE`s with `IMAGE` fills will silently yield nothing useful.
+
+**Prevented by:** nothing mechanical. The gate here is knowing to check whether the artwork is vector before recording an export as blocked.
+
+**Status:** Resolved 2026-08-12. The DHCW icon-only mark sat as a placeholder for a full session because "figma.com is 403" was read as "no assets can leave Figma".
+
+---
+
+### The Logos component's "Colour mode" variant does not mean the same thing in every subgroup
+
+**Symptom.** You export `wcp/Icon/light` expecting the mark used on light
+backgrounds, and get white artwork that is invisible on white. Do the same for
+`nhs_wales/Icon/light` and you get navy, which is correct.
+
+**Why.** The variant name records different things in different subgroups. In
+`nhs_wales` (and `dhcw`) "light" means *for light backgrounds*, so the ink is
+navy. In `wcp` and `wncr` "light" means *the light-coloured artwork*, so the ink
+is white. Both readings are defensible; they are just not the same reading, and
+nothing in the component signals which one applies. Confirmed 2026-08-13 by
+reading the resolved fill of every variant:
+
+| Variant | Ink |
+|---|---|
+| `dhcw/Icon/dark` | `#325083` navy |
+| `nhs_wales/Icon/light` | `#325a8a` navy |
+| `nhs_wales/Icon/dark` | `#ffffff` white |
+| `wcp/Icon/light` | `#ffffff` white |
+| `wcp/Icon/dark` | `#325083` navy |
+
+**Fix.** Never name an exported file, a token, or an API after the Figma variant.
+Read the resolved fill and name by **ink colour** — `wcp-symbol-blue.svg`,
+`wcp-symbol-white.svg` — which is what `figma/assets/` and the `@dhcw/sr-web`
+logo module do. The underlying inconsistency should be fixed in Figma by
+renaming the variant property to something unambiguous (`Ink=navy|white`), but
+until then the ink colour is the only trustworthy signal.
+
+**Prevented by** naming convention only — this cannot currently be mechanised,
+because there is no build step that reads Figma. A check would have to run
+against the live file. Worth knowing rather than worth automating.
+
+---
+
 ## How to add an entry
 
 Copy this template and add it under the relevant section:

@@ -3035,6 +3035,145 @@ textarea.sr-input__control {
   border-color: var(--sr-color-interactive-disabled);
 }
 
+/* ---------- Card types ---------- */
+
+/*
+ * Figma Radio (915:30830) ships four types. `Simple` is the label-only option
+ * above; the three below put the option in a bordered box so it can carry a
+ * description, and differ only in what is on the left and how selection is
+ * shown:
+ *
+ *   Card Radio  ring on the left, selection shown by the border turning navy
+ *   Card        ring on the left, selection shown by the whole card filling
+ *   Card Icon   24px icon on the left, selection shown by the whole card filling
+ *
+ * The box lives on the label, not on .sr-radio, so `:checked +` reaches it with
+ * a sibling selector and no :has() — the same mechanism the simple radio uses
+ * for its ring, and it keeps the whole card clickable.
+ *
+ * Deviation from Figma, deliberate: Card Radio draws a 16px ring there and the
+ * other types draw 20px. Code uses 20px everywhere, matching Simple and
+ * Checkbox. One control size is worth more than the 4px; the Figma set should
+ * be normalised to 20px rather than the code forked to match it.
+ */
+
+.sr-radio--card {
+  display: block;
+  min-height: 0;
+}
+
+.sr-radio--card .sr-radio__input {
+  top: 10px; /* card padding 8 + 2 to sit on the label's first text line */
+  left: 12px;
+}
+
+.sr-radio--card .sr-radio__label {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 0;
+  padding: var(--space-2) var(--space-3) var(--space-2) 40px; /* 12 pad + 20 ring + 8 gap */
+  background-color: var(--sr-color-surface-small-cards);
+  border: var(--border-width-default) solid var(--sr-color-border-default);
+  border-radius: var(--radius-md);
+}
+
+.sr-radio--card .sr-radio__label::before { top: 10px; left: 12px; }
+.sr-radio--card .sr-radio__label::after  { top: 15px; left: 17px; }
+
+.sr-radio__title {
+  display: block;
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+  color: var(--sr-color-text-primary);
+}
+
+.sr-radio__description {
+  display: block;
+  margin-top: var(--space-1);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  color: var(--sr-color-text-secondary);
+}
+
+/* Focus moves to the whole card, since the card is the target. */
+.sr-radio--card .sr-radio__input:focus-visible + .sr-radio__label {
+  box-shadow: 0 0 0 3px var(--sr-color-border-focus);
+}
+.sr-radio--card .sr-radio__input:focus-visible + .sr-radio__label::before {
+  box-shadow: none;
+}
+
+.sr-radio--card .sr-radio__input:hover:not(:disabled) + .sr-radio__label {
+  border-color: var(--sr-color-border-strong);
+}
+
+/* Type: Card Radio — selection is the border. */
+.sr-radio--card-outline .sr-radio__input:checked + .sr-radio__label {
+  border-color: var(--sr-color-interactive-primary);
+}
+
+/* Types: Card and Card Icon — selection fills the card, so every piece of text
+   and the dot invert with it. */
+.sr-radio--card-filled .sr-radio__input:checked + .sr-radio__label {
+  background-color: var(--sr-color-interactive-primary);
+  border-color: var(--sr-color-interactive-primary);
+}
+.sr-radio--card-filled .sr-radio__input:checked + .sr-radio__label .sr-radio__title,
+.sr-radio--card-filled .sr-radio__input:checked + .sr-radio__label .sr-radio__description {
+  color: var(--sr-color-text-inverse);
+}
+.sr-radio--card-filled .sr-radio__input:checked + .sr-radio__label::before {
+  background-color: transparent;
+  border-color: var(--sr-color-text-inverse);
+}
+
+/* Type: Card Icon — a 24px icon replaces the ring. The icon is decorative; the
+   label still carries the accessible name. */
+.sr-radio--card-icon .sr-radio__label {
+  padding-left: 44px; /* 12 pad + 24 icon + 8 gap */
+}
+.sr-radio--card-icon .sr-radio__label::before,
+.sr-radio--card-icon .sr-radio__label::after {
+  content: none;
+}
+
+.sr-radio__icon {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  width: 24px;
+  height: 24px;
+  color: var(--sr-color-text-primary);
+  pointer-events: none;
+}
+.sr-radio__icon svg { width: 100%; height: 100%; }
+
+.sr-radio--card-icon .sr-radio__input:checked ~ .sr-radio__icon {
+  color: var(--sr-color-text-inverse);
+}
+
+.sr-radio--card.sr-radio--error .sr-radio__label {
+  border-color: var(--sr-color-interactive-destructive);
+}
+
+.sr-radio--card .sr-radio__input:disabled + .sr-radio__label {
+  background-color: var(--sr-color-surface-subtle);
+  border-color: var(--sr-color-border-subtle);
+}
+.sr-radio--card .sr-radio__input:disabled + .sr-radio__label .sr-radio__title,
+.sr-radio--card .sr-radio__input:disabled + .sr-radio__label .sr-radio__description {
+  color: var(--sr-color-text-disabled);
+}
+.sr-radio--card-filled .sr-radio__input:disabled:checked + .sr-radio__label {
+  background-color: var(--sr-color-interactive-disabled);
+  border-color: var(--sr-color-interactive-disabled);
+}
+.sr-radio--card-filled .sr-radio__input:disabled:checked + .sr-radio__label .sr-radio__title,
+.sr-radio--card-filled .sr-radio__input:disabled:checked + .sr-radio__label .sr-radio__description {
+  color: var(--sr-color-text-inverse);
+}
+
 /* Accessible name with no visual footprint — used by RadioGroup's `hideLegend`
    where the surrounding copy already names the choice on screen. Same
    declaration as input.css and table.css; there is no shared utilities

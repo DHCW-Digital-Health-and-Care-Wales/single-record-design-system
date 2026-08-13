@@ -9,12 +9,14 @@ Source: [Lucide Icons](https://lucide.dev) — ISC Licence
 
 **Lucide Icons** — ISC licence (fully permissive, suitable for NHS/public sector internal use)
 Version sourced: `main` branch, March 2026
-Grid: 24 × 24 px, 2px stroke
+Grid: 24 × 24 px, 1px stroke (DDR-023; Lucide ships 2px)
+
+**Outline icons only.** Figma also carries an `Icon/warnings/*` group of four filled state badges (`error`, `warning`, `check`, `determinate`). They are deliberately not 1px outlines, are not part of this catalogue, and have no counterpart in `foundations/iconography/svg/`. Do not "normalise" their stroke weights — the fill carries the meaning.
 Total SR aliases: 119 across 10 domains
 
 ### Why Lucide and not NHS App icons
 
-The NHS App icon set contains only 21 consumer-facing navigation icons. These are designed for a public-facing mobile health app and do not cover the breadth of clinical UI concepts required for the Single Record programme — EPR, EMR, patient administration, scheduling, ward management, and related products across 7+ workstreams. Lucide provides 1,500+ icons under a fully permissive licence with a consistent 24px grid and 2px stroke visual language that aligns with NHS design principles, and has published NuGet packages for both Blazor and .NET MAUI.
+The NHS App icon set contains only 21 consumer-facing navigation icons. These are designed for a public-facing mobile health app and do not cover the breadth of clinical UI concepts required for the Single Record programme — EPR, EMR, patient administration, scheduling, ward management, and related products across 7+ workstreams. Lucide provides 1,500+ icons under a fully permissive licence with a consistent 24px grid and stroke-based visual language that aligns with NHS design principles, and has published NuGet packages for both Blazor and .NET MAUI.
 
 ---
 
@@ -28,7 +30,7 @@ All processed icons in `foundations/iconography/svg/` conform to:
 | `height`        | `1em`              | Scales with `font-size` |
 | `fill`          | `none`             | Outline variant only at this stage |
 | `stroke`        | `currentColor`     | Inherits from CSS colour context |
-| `stroke-width`  | `2`                | Lucide default; override to 1.75 at xs/sm via CSS |
+| `stroke-width`  | `1`                | DDR-023. Lucide ships `2`; Single Record overrides it globally. Do not override per size. |
 | `stroke-linecap`| `round`            | Lucide visual language |
 | `stroke-linejoin`| `round`           | Lucide visual language |
 | `aria-hidden`   | `true`             | Decorative by default; label via parent element |

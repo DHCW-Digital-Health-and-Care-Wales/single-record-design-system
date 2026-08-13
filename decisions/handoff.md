@@ -11,6 +11,103 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 ---
 
+## Checkpoint — 2026-08-11 (the real lockup ships; five Guidelines frames in Figma)
+
+### The logo placeholder was half a problem, not a whole one
+
+The 2026-06-27 note said the logo was a neutral placeholder pending an export.
+That was only true of the icon mark. **The official GIG Cymru / NHS Wales / DHCW
+full lockup was already committed** at `figma/assets/` in navy, white and mono,
+and had been for some time — the website masthead was using it while
+`packages/web` still drew a hand-made square-and-diamond.
+
+- `logoFullSrc` is now the real lockup. `packages/web/build-logo.mjs` generates
+  `src/assets/logo.js` from `figma/assets/`, mirroring the
+  `packages/icons/build.js` pattern; wired into `build:web` / `build:site` /
+  `build:pages`. Data URIs stay, because logo.js is consumed by three loaders
+  that agree on nothing else (Storybook/Vite, the website's plain-Node
+  `build.mjs`, and the React stories).
+- `figma/assets/README.md` was wrong — it documented two filenames that do not
+  exist and omitted all three that do. Corrected, and it now carries the audit.
+
+### `logoSymbolSrc` is now the real mark — lifted as geometry, not downloaded
+
+The icon-only mark is no longer a placeholder. It could not be *downloaded*
+(see below), but it did not need to be: `use_figma` returns a vector node's own
+`fillGeometry` over the MCP channel, and that is not an asset fetch. The twelve
+paths, fill colour (`#325083` light, `#ffffff` dark) and `NONZERO` winding rule
+were copied verbatim off `Type=Icon, Subgroup=dhcw` into
+`figma/assets/dhcw-symbol-{blue,white}.svg`. It is the authored artwork, not a
+crop of the lockup and not a redraw, so the brand rule on `270:2850` holds.
+
+`build-logo.mjs` now emits `logoSymbolSrc` (navy) and a new
+`logoSymbolInverseSrc` (white) from those two files, inlined as `utf8` SVG data
+URIs — smaller than base64 and legible in a diff. The build throws if a source
+SVG contains a single quote, which would break the generated string literal.
+
+**The same route is open for any remaining variant that is pure vector.** It
+will not work for the full lockups, which contain raster and live text.
+
+### The other 15 variants still cannot be exported from here
+
+Figma's Logos set (`270:2850`) holds **20 variants** — 5 subgroups (`dhcw`,
+`nhs_wales`, `wcp`, `wncr`, `UEC`) × Icon/Full × light/dark. Five are in the
+repo. The other 15 cannot be exported from the coding environment: **outbound
+access to `www.figma.com` is denied by the environment network policy**, so the
+MCP asset URLs return HTTP 403 at download (`curl` gives `CONNECT tunnel failed,
+403`; the proxy status endpoint names the host). The MCP tools themselves work
+fine — it is only the asset fetch that is blocked.
+
+Three ways forward: lift the geometry over MCP as above (works only for pure
+vector artwork), enable `figma.com` egress on the environment, or export the 15
+by hand and commit them. The last two need a human. **Do not work around it by
+cropping a mark out of a lockup** — Figma's own note on `270:2850` says "do not
+stretch, rotate, recolour, or crop", and the icons are separately drawn assets
+with their own spacing.
+
+Blocked on this: no product subgroup (`nhs_wales`, `wcp`, `wncr`, `UEC`) has any
+asset at all, so no co-brand or product mark can render. Four Figma
+fixes are also needed *before* export, not after — live text in `wcp/Full` and
+`wncr/Icon/light` must be outlined, `nhs_wales/Icon/light` has a broken fill,
+and the `wcp`/`wncr` lockups differ in width between colour modes
+(`docs/engineering/logo-tokens-recommendations.md`).
+
+### Five `Guidelines/*` frames built, mirroring `Guidelines/Colours`
+
+Icons, Logos, Navigation, Header and Footer, each on its own page, each sourced
+from that topic's `guidelines.md` so the markdown stays the single source:
+
+| Frame | Page | Node |
+|---|---|---|
+| `Guidelines/Icons` | Icons | `4328:45` |
+| `Guidelines/Logos` | Branding | `4329:26` |
+| `Guidelines/Navigation` | Navigation | `4330:796` |
+| `Guidelines/Header` | Header | `4331:167` |
+| `Guidelines/Footer` | Footer | `4331:236` |
+
+The pattern from `3468:9073`, for the next one: outer frame 607 wide, VERTICAL
+auto-layout, radius 4, fill `Surface/Section Cards`; a 40px `hdr` bar filled
+`Interactive/Secondary` with `Heading XS` text at 16/12; a body frame with 16px
+padding and 11px gap holding, per section, a `Heading XS` heading in
+`Interactive/Primary` (fixed 20px), a `Body S` bullet block in `Text/Primary`,
+and a 1px `Border/Default` divider.
+
+**`components/logos/guidelines.md` was written this session** — it did not
+exist, so the Logos frame had no source. It is the first `guidelines.md` for a
+foundation rather than a component.
+
+### Lesson promoted to `docs/figma-known-issues.md`
+
+A wrapping text block keeps its **creation** height if `textAutoResize='HEIGHT'`
+is set before `layoutSizingHorizontal='FILL'` — the height is computed once,
+against a ~20px-wide node, and filling the width afterwards never re-measures.
+The first Icons frame came back with plausible node IDs and a completely
+overlapping layout. Set the width first, then `NONE` → `resize` → `HEIGHT`. The
+cheap guard is to `return` the heights and take a `screenshot()` in the same
+`use_figma` call.
+
+---
+
 ## Checkpoint — 2026-08-10 (MAUI icons; a testbed app; the cyan finding confirmed)
 
 ### The `#12A3C9` contrast finding is confirmed — it was the top open item

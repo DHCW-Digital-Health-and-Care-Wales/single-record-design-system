@@ -1,7 +1,16 @@
 # @dhcw/sr-maui
 
 Native .NET MAUI token and style layer for the DHCW Single Record Design System.
-Published to NuGet as `DHCW.SingleRecord.Maui` (DDR-020, as amended).
+
+**This npm package is what the design system builds *from*. A MAUI app installs
+`DHCW.SingleRecord.Maui` from NuGet instead** — npm is JavaScript-only, and
+there is no npm in the .NET toolchain. The NuGet project is generated into
+`nuget/` by `build-nuget.mjs`; see `nuget/README.md` for consumer docs, and
+`npm run pack:maui` at the repository root to produce the `.nupkg`.
+
+Copying the three XAML files into an app by hand still works and is still
+supported — the merge syntax differs between the two routes, which is written up
+in `docs/engineering/known-issues.md`.
 
 **MAUI is native XAML.** There is no `BlazorWebView` and no Blazor Hybrid
 anywhere in the Single Record mobile estate — see DDR-021, which corrects an
@@ -17,7 +26,7 @@ Record rather than competing with them.
 | Artefact | Source | Purpose |
 |---|---|---|
 | `Colors.xaml` | **Generated** by `build.mjs` from `@dhcw/sr-tokens` | 210 resources: every primitive and semantic token, the two elevation shadows, plus a `…Dark` twin for the 16 semantics that change with the theme |
-| `Icons.xaml` | **Generated** by `build-icons.mjs` from `foundations/iconography/svg/` | 120 icons as XAML path geometry |
+| `Icons.xaml` | **Generated** by `build-icons.mjs` from `foundations/iconography/svg/` | 123 icons as XAML path geometry, 1px stroke (DDR-023) |
 | `Styles.xaml` | Hand-authored | Implicit styles for stock MAUI controls, keyed styles for intent variants, `StyleClass` type scale, `VisualStateManager` states |
 
 MAUI cannot consume CSS custom properties, which is why the XAML format exists.
@@ -95,7 +104,7 @@ Icons carry no colour of their own:
 <Path Data="{StaticResource SrIconNavSearch}"
       Stroke="{AppThemeBinding Light={StaticResource SrColorTextPrimary},
                                Dark={StaticResource SrColorTextPrimaryDark}}"
-      StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
+      StrokeThickness="1" StrokeLineCap="Round" StrokeLineJoin="Round"
       Aspect="Uniform" HeightRequest="16" WidthRequest="16" />
 ```
 

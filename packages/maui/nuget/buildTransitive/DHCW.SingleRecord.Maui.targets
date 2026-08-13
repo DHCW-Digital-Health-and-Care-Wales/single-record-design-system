@@ -1,0 +1,25 @@
+<Project>
+  <!--
+    Adds the Single Record brand marks to the consuming app as MauiImage, so a
+    product can reference them by name without copying files out of the package.
+
+    MauiImage rasterises an SVG to a PNG at build time and bakes the colour in.
+    That is correct for a brand mark — the artwork must not be recoloured — and
+    is exactly why icons ship as path geometry in Icons.xaml instead.
+
+    Each mark is one file per ink. Pick the variant that suits the background:
+      srlogodhcwblue / srlogodhcwwhite      DHCW knot
+      srlogowcpblue  / srlogowcpwhite       Welsh Clinical Portal roundel
+      srlogonhswalesblue / ...white         GIG Cymru / NHS Wales knot
+      srlogowncrwhite                       WNCR — white only, see the README
+
+    To opt out, set <SrIncludeBrandImages>false</SrIncludeBrandImages>.
+  -->
+  <PropertyGroup>
+    <SrIncludeBrandImages Condition="'$(SrIncludeBrandImages)' == ''">true</SrIncludeBrandImages>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(SrIncludeBrandImages)' == 'true' AND '$(UseMaui)' == 'true'">
+    <MauiImage Include="$(MSBuildThisFileDirectory)..\brand\*.svg" />
+  </ItemGroup>
+</Project>
