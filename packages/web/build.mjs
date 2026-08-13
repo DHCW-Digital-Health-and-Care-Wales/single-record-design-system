@@ -129,6 +129,10 @@ const BRAND_FILES = [
   'dhcw-logo-blue.png',
   'dhcw-symbol-blue.svg', 'dhcw-symbol-white.svg',
   'wcp-symbol-blue.svg', 'wcp-symbol-white.svg',
+  'wcp-logo-blue.svg', 'wcp-logo-white.svg',
+  'nhs-wales-symbol-blue.svg', 'nhs-wales-symbol-white.svg',
+  'nhs-wales-logo-colour.svg', 'nhs-wales-logo-white.svg',
+  'wncr-symbol-white.svg',
 ];
 mkdirSync(resolve(DIST, 'logos'), { recursive: true });
 for (const f of BRAND_FILES) {

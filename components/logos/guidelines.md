@@ -103,18 +103,25 @@ Size comes from tokens, never from a hand-typed pixel value:
 
 ## Known gaps
 
-Five assets are in the repo (`figma/assets/`) — the `dhcw` full lockup in navy,
-white and mono, and the `dhcw` icon-only mark in navy and white. The remaining
-15 variants have not been exported. Until they are:
+Fourteen assets are in the repo (`figma/assets/`): the `dhcw` lockup in navy,
+white and mono, plus icon-only marks and lockups for `dhcw`, `nhs_wales` and
+`wcp`, and the white-only `wncr` mark. Remaining gaps:
 
-- No product subgroup (`nhs_wales`, `wcp`, `wncr`, `UEC`) has any asset at all,
-  so no co-brand or product mark can be rendered in code.
+- **`UEC` has nothing at all**, so the Urgent and Emergency Care product cannot
+  render its own mark. It needs Figma work first (see below).
+- **`wncr` has no navy mark and no lockup**, so it cannot appear on a light
+  background.
 
-**Audited 2026-08-13:** ten of the fifteen can be lifted from Figma's vector
-geometry today — all of `nhs_wales`, all of `wcp`, and `wncr/Icon/light`. The
-`wcp` icon is now extracted and shipping. `UEC/Icon` looked liftable on a first
-pass but is not: its vector nodes carry no solid fill and yield an empty SVG.
+**Audited and extracted 2026-08-13:** nine of the fifteen have been lifted from
+Figma's vector geometry and now ship — all four `nhs_wales` variants, all four
+`wcp` variants, and `wncr/Icon/light`. `UEC` yields nothing: its Icon variants
+have vector nodes carrying no solid fill, and its Full variants carry live text.
 See `figma/assets/README.md`.
+
+**`wncr` ships white only.** The navy variant is drawn with strokes and cannot
+be lifted, so there is no WNCR mark for light backgrounds and deliberately no
+`wncrSymbolSrc` in code. Recolouring the white artwork to fill the gap would
+breach the brand rules.
 
 **Never name an export after the Figma "Colour mode" variant.** It means
 different things in different subgroups — `nhs_wales/Icon/light` is navy,

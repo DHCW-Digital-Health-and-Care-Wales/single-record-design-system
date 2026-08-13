@@ -56,10 +56,13 @@ to `www.figma.com` is denied by the environment network policy, so the MCP asset
 URLs return HTTP 403. But most of them do not need a download — see "How the
 symbols got here" above.
 
-**Audited 2026-08-13, then corrected.** Ten of the sixteen can be lifted via
-`fillGeometry` today. An earlier pass said twelve: it counted `VECTOR` node
-types, but `UEC/Icon` has vector nodes carrying no solid fill, so it yields an
-empty SVG. Check for *filled* geometry, not for vector node types.
+**Audited 2026-08-13, corrected twice, now complete.** **Nine** of the sixteen
+were liftable via `fillGeometry`, and all nine have been extracted. Two earlier
+counts were wrong and are recorded so the method is not repeated: the first pass
+said twelve because it counted `VECTOR` node types, but `UEC/Icon` has vector
+nodes carrying no solid fill and yields an empty SVG; the second said ten by
+arithmetic error. Check for *filled* geometry, not for vector node types, and
+count the table.
 
 | Variant | Liftable | Blocker |
 |---|---|---|
@@ -70,9 +73,20 @@ empty SVG. Check for *filled* geometry, not for vector node types.
 | `wncr` Icon dark, Full both modes | No | Strokes — outline them in Figma first |
 | `UEC` Full, both modes | No | Live text — outline it in Figma first |
 
-Extracted so far: `wcp` Icon in both inks (`wcp-symbol-blue.svg`,
-`wcp-symbol-white.svg`). The remaining eight liftable variants are unblocked but
-not yet done.
+All nine are now in this folder. Every one was checked by rendering it in a
+browser on both a light and a dark ground before being committed.
+
+Two notes from doing it:
+
+- **`wncr` has no navy mark.** Only the white artwork is liftable, so a WNCR
+  mark cannot be placed on a light background until `wncr/Icon/dark` is
+  outlined in Figma.
+- **The two `nhs_wales` lockup variants are the same drawing.** A geometry hash
+  said otherwise, but comparing them path by path showed the only differences
+  are in the 4th decimal of two transforms — under a thousandth of a pixel. The
+  reversed lockup is therefore derived by recolouring the two-colour one, which
+  keeps them provably in register. Hash equality is too strict a test for
+  "same artwork"; compare the paths.
 
 This supersedes the earlier note that `wcp/Full` contains live text. It does
 not: `wcp` is clean in all four variants. The live-text problem is `UEC/Full`,

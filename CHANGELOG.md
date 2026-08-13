@@ -24,6 +24,12 @@ this file says so and tells you what to change.
 
 ### Changed
 
+- **DDR-022 records when to wrap a third-party component on web.** The test is
+  behavioural complexity, not component importance: build on native elements,
+  wrap for keyboard interaction models. Menu, Tabs and Autocomplete are now
+  blocked on a library evaluation rather than hand-built; Select stays as it is.
+  Summarised for engineers in `docs/for-engineers.md` → "Wrapped or built?".
+
 - **The DHCW logo is now the real lockup.** `logoFullSrc` used to return a drawn
   placeholder — a blue square with a diamond in it. It now returns the official
   GIG Cymru / NHS Wales / Digital Health and Care Wales lockup. Anything
@@ -47,6 +53,15 @@ this file says so and tells you what to change.
   three had code but nowhere documenting when to reach for which; each page now
   opens with the same "which one" table so the choice between them is the first
   thing you see.
+- **Brand marks for NHS Wales, Welsh Clinical Portal and WNCR.** Nine logo
+  variants extracted from Figma and shipped from `@dhcw/sr-web`, as data URIs
+  (`nhsWalesLogoSrc`, `wcpSymbolSrc`, and so on) and as real files under
+  `@dhcw/sr-web/logos`. Previously only the DHCW marks existed, so no product
+  or co-brand mark could be rendered at all.
+- **Brand marks are not icons and are not in `@dhcw/sr-icons`.** Icons inherit
+  `currentColor` and are meant to be recoloured; brand marks must never be. Each
+  mark ships as one file per ink — pick the variant that suits the background
+  rather than recolouring.
 - **Three new Radio types — `card-radio`, `card`, and `card-icon`.** An option
   that needs a line of explanation was previously unbuildable. Pass `type` and
   `description` to `<Radio>`, or use the `sr-radio--card` classes. The plain
