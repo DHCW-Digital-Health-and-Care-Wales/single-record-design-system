@@ -485,7 +485,7 @@ const radiusSamples = radiusEntries.map(([k, px]) =>
 const SITE_COMPONENT_CSS = [
   'button', 'table', 'patient-banner', 'header', 'footer', 'bottom-nav',
   'breadcrumbs', 'switch', 'segmented-control', 'navigation', 'input',
-  'tags',
+  'tags', 'checkbox', 'radio', 'select',
 ];
 const COMPONENT_CSS_LINKS = (prefix) =>
   SITE_COMPONENT_CSS.map((c) => `<link rel="stylesheet" href="${prefix}assets/${c}.css">`).join('\n');
@@ -520,10 +520,13 @@ const SECTIONS = [
     side: [
       { href: 'components/breadcrumbs.html', label: 'Breadcrumbs' },
       { href: 'components/button.html', label: 'Buttons' },
+      { href: 'components/checkbox.html', label: 'Checkbox' },
       { href: 'components/footer.html', label: 'Footer' },
       { href: 'components/header.html', label: 'Header' },
       { href: 'components/input.html', label: 'Input' },
       { href: 'components/navigation.html', label: 'Navigation' },
+      { href: 'components/radio.html', label: 'Radio' },
+      { href: 'components/select.html', label: 'Select' },
       { href: 'components/table.html', label: 'Tables' },
       { href: 'components/tags.html', label: 'Tags' },
       { href: 'components/toggles.html', label: 'Toggles' },
@@ -2257,6 +2260,406 @@ ${accessibilityTable([
   ])}`;
 }
 
+// ─── Components: Checkbox, Radio, Select ─────────────────────────────────────
+/**
+ * The three choice controls. Each page is sectioned the same way — the control,
+ * then the group it lives in, then its states — because the decision a reader
+ * arrives with is "which of these three", and parallel pages make that
+ * comparable. The "which one" table at the top of each page is the answer.
+ *
+ * Static previews rather than a switcher: unlike Input and Buttons, where type
+ * x state x options runs past sixty permutations, these have few enough
+ * variants to show outright, and seeing them side by side is the point.
+ */
+const CHOICE_ERROR_ICON = iconMarkup('status/error-circle');
+
+function choiceWhichOne(current) {
+  const rows = [
+    ['Checkbox', 'Any number, including none', 'On Save', 'components/checkbox.html'],
+    ['Radio', 'Exactly one, all options visible', 'On Save', 'components/radio.html'],
+    ['Select', 'Exactly one, from a longer list', 'On Save', 'components/select.html'],
+    ['Switch', 'On or off', 'Immediately', 'components/toggles.html'],
+  ];
+  return `<h2>Which one</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Control</th><th>Answers</th><th>Takes effect</th></tr></thead>
+<tbody>${rows.map(([name, answers, when, href]) =>
+    `<tr><td>${name === current ? `<strong>${name}</strong>` : `<a href="../${href}">${name}</a>`}</td>`
+    + `<td>${answers}</td><td>${when}</td></tr>`).join('')}</tbody>
+</table></div>`;
+}
+
+/** One fieldset, matching the markup CheckboxGroup / RadioGroup emit. */
+function choiceGroup({ kind, legend, hint, error, required, horizontal, options }) {
+  const g = `sr-${kind}-group`;
+  return `<fieldset class="${g}${error ? ` ${g}--error` : ''}">
+  <legend class="${g}__legend">${legend}${required ? `<span class="${g}__required" aria-hidden="true">*</span>` : ''}</legend>
+  ${hint ? `<p class="${g}__hint">${hint}</p>` : ''}
+  ${error ? `<p class="${g}__error"><span class="${g}__error-icon">${CHOICE_ERROR_ICON}</span>${error}</p>` : ''}
+  <div class="${g}__options${horizontal ? ` ${g}__options--horizontal` : ''}">
+${options}
+  </div>
+</fieldset>`;
+}
+
+let choiceUid = 0;
+function cbOption({ label, checked, indeterminate, disabled, error, name = 'cb' }) {
+  const id = `cbx-${++choiceUid}`;
+  return `    <div class="sr-checkbox${error ? ' sr-checkbox--error' : ''}">
+      <input class="sr-checkbox__input" type="checkbox" id="${id}" name="${name}"${checked ? ' checked' : ''}${disabled ? ' disabled' : ''}${indeterminate ? ' data-indeterminate="true"' : ''}>
+      <label class="sr-checkbox__label" for="${id}">${label}</label>
+    </div>`;
+}
+
+function radioOption({ label, description, icon, type = 'simple', checked, disabled, error, name = 'r' }) {
+  const id = `rad-${++choiceUid}`;
+  const CARD = {
+    simple: '',
+    'card-radio': ' sr-radio--card sr-radio--card-outline',
+    card: ' sr-radio--card sr-radio--card-filled',
+    'card-icon': ' sr-radio--card sr-radio--card-filled sr-radio--card-icon',
+  }[type];
+  const inner = type === 'simple' ? label
+    : `<span class="sr-radio__title">${label}</span>`
+      + (description ? `<span class="sr-radio__description">${description}</span>` : '');
+  return `    <div class="sr-radio${CARD}${error ? ' sr-radio--error' : ''}">
+      <input class="sr-radio__input" type="radio" id="${id}" name="${name}"${checked ? ' checked' : ''}${disabled ? ' disabled' : ''}>
+      <label class="sr-radio__label" for="${id}">${inner}</label>
+${icon ? `      <span class="sr-radio__icon" aria-hidden="true">${iconMarkup(icon)}</span>\n` : ''}    </div>`;
+}
+
+const CHOICE_STACK = (html) => `<div style="display:flex;flex-direction:column;gap:24px;align-items:flex-start">${html}</div>`;
+const CHOICE_ROW = (html) => `<div style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start">${html}</div>`;
+
+// The indeterminate state is a DOM property, not an attribute, so the markup
+// above can only mark it — this applies it once the page has parsed. Same
+// reason CheckboxGroup uses a ref in React.
+const CHOICE_SCRIPT = `<script>
+document.querySelectorAll('input[data-indeterminate="true"]').forEach(function (el) {
+  el.indeterminate = true;
+});
+</script>`;
+
+function checkboxBody() {
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'checkbox', 'guidelines.md'), 'utf8')));
+
+  const demo = choiceGroup({
+    kind: 'checkbox', legend: 'Case note types', hint: 'Select all that apply.',
+    options: [
+      cbOption({ label: 'General notes', checked: true, name: 'notes' }),
+      cbOption({ label: 'Nursing notes', name: 'notes' }),
+      cbOption({ label: 'Correspondence', name: 'notes' }),
+    ].join('\n'),
+  });
+
+  const states = CHOICE_ROW(CHOICE_STACK([
+    cbOption({ label: 'Unchecked' }),
+    cbOption({ label: 'Checked', checked: true }),
+    cbOption({ label: 'Indeterminate', indeterminate: true }),
+  ].join('\n')) + CHOICE_STACK([
+    cbOption({ label: 'Error', error: true }),
+    cbOption({ label: 'Disabled', disabled: true }),
+    cbOption({ label: 'Disabled, checked', checked: true, disabled: true }),
+  ].join('\n')));
+
+  const errorGroup = choiceGroup({
+    kind: 'checkbox', legend: 'Case note types', required: true,
+    error: 'Select at least one note type',
+    options: [
+      cbOption({ label: 'General notes', name: 'err' }),
+      cbOption({ label: 'Nursing notes', name: 'err' }),
+    ].join('\n'),
+  });
+
+  const wrapDemo = `<div style="max-width:280px">${choiceGroup({
+    kind: 'checkbox', legend: 'Consent',
+    options: [cbOption({ label: 'I confirm the patient has consented to their record being shared with the receiving team', name: 'consent' })].join('\n'),
+  })}</div>`;
+
+  const snippets = {
+    HTML: '<fieldset class="sr-checkbox-group">\n  <legend class="sr-checkbox-group__legend">Case note types</legend>\n  <p class="sr-checkbox-group__hint">Select all that apply.</p>\n  <div class="sr-checkbox-group__options">\n    <div class="sr-checkbox">\n      <input class="sr-checkbox__input" type="checkbox" id="n1" name="notes" checked>\n      <label class="sr-checkbox__label" for="n1">General notes</label>\n    </div>\n  </div>\n</fieldset>',
+    React: '<CheckboxGroup legend="Case note types" hint="Select all that apply.">\n  <Checkbox label="General notes" name="notes" defaultChecked />\n  <Checkbox label="Nursing notes" name="notes" />\n</CheckboxGroup>',
+    Blazor: '<SrCheckboxGroup Legend="Case note types" Hint="Select all that apply.">\n  <SrCheckbox Label="General notes" @bind-Checked="general" />\n</SrCheckboxGroup>',
+    MAUI: `<!-- The tick is not the only cue: the box fills too. -->
+<VerticalStackLayout Spacing="12">
+    <Label Text="Case note types" StyleClass="FieldLabel" />
+    <Label Text="Select all that apply." StyleClass="Caption" />
+    <HorizontalStackLayout Spacing="8" MinimumHeightRequest="44">
+        <CheckBox IsChecked="{Binding GeneralNotes}"
+                  Color="{AppThemeBinding Light={StaticResource SrColorInteractivePrimary}, Dark={StaticResource SrColorInteractivePrimaryDark}}" />
+        <Label Text="General notes" VerticalOptions="Center" />
+    </HorizontalStackLayout>
+</VerticalStackLayout>`,
+  };
+
+  return `
+<p class="breadcrumbs">Components</p>
+<h1>Checkbox</h1>
+<p class="lede">A box you tick. Each option is independent — any number of them, including
+none.</p>
+${choiceWhichOne('Checkbox')}
+
+<h2>The group</h2>
+<p class="muted">A checkbox almost never appears alone. The fieldset carries the question; each
+label carries one answer.</p>
+${showcase(demo, 'checkbox', snippets)}
+
+<h2>States</h2>
+<p class="muted">Indeterminate is a parent state — the "Select all" box when only some children
+are ticked. It is never something a user can choose directly.</p>
+<div class="showcase"><div class="showcase__preview">${states}</div></div>
+
+<h2>Error</h2>
+<p class="muted">One message for the whole group, above the options, with a red rule down the
+left. Never a message per option.</p>
+<div class="showcase"><div class="showcase__preview">${errorGroup}</div></div>
+
+<h2>Long labels</h2>
+<p class="muted">A label that runs past the line wraps under <em>itself</em>, not under the box.
+The label is an inline-block with left padding rather than a flex sibling, which is what keeps the
+second line aligned with the first. Do not switch it to flex to "fix" the indent.</p>
+<div class="showcase"><div class="showcase__preview">${wrapDemo}</div></div>
+
+<hr>
+${renderMarkdown(md)}
+${accessibilityTable([
+    { req: 'Group name is announced with each option', sc: '1.3.1, 4.1.2', how: 'A real fieldset and legend, so "Case note types, General notes, checkbox" is announced rather than a bare label. hideLegend hides it visually only.', test: 'Screen reader announce' },
+    { req: 'Each option has a programmatic label', sc: '1.3.1', how: 'A real label element bound to the input, so clicking the text toggles the box and the name reaches assistive technology.', test: 'Screen reader, click the label' },
+    { req: 'Mixed state is exposed', sc: '4.1.2', how: 'indeterminate is set as a DOM property, which the browser exposes as aria-checked="mixed".', test: 'Screen reader, partial select-all' },
+    { req: 'State is not colour alone', sc: '1.4.1', how: 'The box fills and gains a tick; the border darkens. All three change together, so the state survives greyscale.', test: 'Greyscale review' },
+    { req: 'Error is exposed and actionable', sc: '3.3.1, 3.3.3', how: 'The message is referenced from the group and says what to do ("Select at least one note type"), not what went wrong.', test: 'Screen reader, submit empty' },
+    { req: 'Required state is more than an asterisk', sc: '3.3.2', how: 'The asterisk is decorative; the group carries aria-required.', test: 'Screen reader announce' },
+    { req: 'Target size', sc: '2.5.8', how: 'The 20px box relies on the spacing exception: 12px between options puts centres 32px apart. The clickable label extends the target further. Tightening the gap breaks this.', test: 'Measure spacing' },
+    { req: 'Keyboard operable', sc: '2.1.1', how: 'Native input: Tab between options, Space to toggle. No custom key handling.', test: 'Keyboard only' },
+    { req: 'Focus visible', sc: '2.4.7', how: 'A 3px Cyan/700 ring on the box alone, so it is not stretched around a long label.', test: 'Keyboard tab' },
+  ])}`;
+}
+
+function radioBody() {
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'radio', 'guidelines.md'), 'utf8')));
+
+  const demo = choiceGroup({
+    kind: 'radio', legend: 'Priority', hint: 'How soon the patient should be seen.',
+    options: [
+      radioOption({ label: 'Routine', checked: true, name: 'pri' }),
+      radioOption({ label: 'Urgent', name: 'pri' }),
+      radioOption({ label: 'Two-week wait', name: 'pri' }),
+    ].join('\n'),
+  });
+
+  const states = CHOICE_ROW(CHOICE_STACK([
+    radioOption({ label: 'Unselected', name: 's1' }),
+    radioOption({ label: 'Selected', checked: true, name: 's2' }),
+  ].join('\n')) + CHOICE_STACK([
+    radioOption({ label: 'Error', error: true, name: 's3' }),
+    radioOption({ label: 'Disabled', disabled: true, name: 's4' }),
+    radioOption({ label: 'Disabled, selected', checked: true, disabled: true, name: 's5' }),
+  ].join('\n')));
+
+  const cardBox = (html) =>
+    `<div style="display:flex;flex-direction:column;gap:8px;width:280px">${html}</div>`;
+  const cardRadio = cardBox([
+    radioOption({ type: 'card-radio', label: 'Two-week wait', description: 'Seen within 14 days of referral', checked: true, name: 'cr' }),
+    radioOption({ type: 'card-radio', label: 'Routine', description: 'Seen within 18 weeks', name: 'cr' }),
+  ].join('\n'));
+  const cardFilled = cardBox([
+    radioOption({ type: 'card', label: 'Two-week wait', description: 'Seen within 14 days of referral', checked: true, name: 'cf' }),
+    radioOption({ type: 'card', label: 'Routine', description: 'Seen within 18 weeks', name: 'cf' }),
+  ].join('\n'));
+  const cardIcon = cardBox([
+    radioOption({ type: 'card-icon', icon: 'clinical/diagnosis', label: 'Diagnosis', description: 'Coded condition on the problem list', checked: true, name: 'ci' }),
+    radioOption({ type: 'card-icon', icon: 'clinical/medication', label: 'Medication', description: 'Current and past prescriptions', name: 'ci' }),
+  ].join('\n'));
+
+  const horizontal = choiceGroup({
+    kind: 'radio', legend: 'Sex', horizontal: true,
+    options: [
+      radioOption({ label: 'Female', name: 'sex' }),
+      radioOption({ label: 'Male', name: 'sex' }),
+      radioOption({ label: 'Not known', name: 'sex' }),
+    ].join('\n'),
+  });
+
+  const errorGroup = choiceGroup({
+    kind: 'radio', legend: 'Priority', required: true, error: 'Select a priority',
+    options: [
+      radioOption({ label: 'Routine', name: 'perr' }),
+      radioOption({ label: 'Urgent', name: 'perr' }),
+    ].join('\n'),
+  });
+
+  const snippets = {
+    HTML: '<fieldset class="sr-radio-group">\n  <legend class="sr-radio-group__legend">Priority</legend>\n  <div class="sr-radio-group__options">\n    <div class="sr-radio">\n      <input class="sr-radio__input" type="radio" id="p1" name="pri" checked>\n      <label class="sr-radio__label" for="p1">Routine</label>\n    </div>\n  </div>\n</fieldset>',
+    React: '<RadioGroup legend="Priority" hint="How soon the patient should be seen.">\n  <Radio label="Routine" name="pri" defaultChecked />\n  <Radio label="Urgent" name="pri" />\n</RadioGroup>',
+    Blazor: '<SrRadioGroup Legend="Priority">\n  <SrRadio Label="Routine" Name="pri" Value="routine" />\n</SrRadioGroup>',
+    MAUI: `<!-- RadioButton's GroupName is what makes the
+     options one choice, exactly as \`name\` does on the web. -->
+<VerticalStackLayout Spacing="8">
+    <Label Text="Priority" StyleClass="FieldLabel" />
+    <RadioButton Content="Routine" GroupName="Priority" IsChecked="True" MinimumHeightRequest="44" />
+    <RadioButton Content="Urgent" GroupName="Priority" MinimumHeightRequest="44" />
+</VerticalStackLayout>`,
+  };
+
+  const cardSnippets = {
+    HTML: '<div class="sr-radio sr-radio--card sr-radio--card-outline">\n  <input class="sr-radio__input" type="radio" id="pw1" name="pathway">\n  <label class="sr-radio__label" for="pw1">\n    <span class="sr-radio__title">Two-week wait</span>\n    <span class="sr-radio__description">Seen within 14 days of referral</span>\n  </label>\n</div>',
+    React: '<Radio\n  type="card-radio"\n  label="Two-week wait"\n  description="Seen within 14 days of referral"\n  name="pathway"\n/>',
+    Blazor: '<SrRadio Type="CardRadio" Label="Two-week wait"\n         Description="Seen within 14 days of referral" Name="pathway" />',
+    MAUI: `<!-- A card is a Border wrapping the RadioButton's content; the border
+     colour carries selection, so it is not colour alone once the dot is there. -->
+<Border Padding="12,8" StrokeThickness="1"
+        Stroke="{AppThemeBinding Light={StaticResource SrColorBorderDefault}, Dark={StaticResource SrColorBorderDefaultDark}}">
+    <RadioButton GroupName="Pathway" MinimumHeightRequest="44">
+        <RadioButton.Content>
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Two-week wait" />
+                <Label Text="Seen within 14 days of referral" StyleClass="Caption" />
+            </VerticalStackLayout>
+        </RadioButton.Content>
+    </RadioButton>
+</Border>`,
+  };
+
+  return `
+<p class="breadcrumbs">Components</p>
+<h1>Radio</h1>
+<p class="lede">One choice from a short list, with every option visible at once. Past about seven
+options, use a <a href="../components/select.html">Select</a> instead.</p>
+${choiceWhichOne('Radio')}
+
+<h2>The group</h2>
+<p class="muted">Options sharing a <code>name</code> are what make one choice. That shared name is
+also why a radio group takes a single Tab stop, with the arrow keys moving between options.</p>
+${showcase(demo, 'radio', snippets)}
+
+<h2>States</h2>
+<p class="muted">The ring is round and the checkbox is square. That shape difference is the only
+cue telling a reader one is single-select — so it is never restyled.</p>
+<div class="showcase"><div class="showcase__preview">${states}</div></div>
+
+<h2>Type: Card Radio</h2>
+<p class="muted">A bordered box so each option can carry a description. Selection is the border
+turning navy, and the ring keeps its dot — so selection is never the border colour alone.</p>
+${showcase(cardRadio, 'radio-card', cardSnippets)}
+
+<h2>Type: Card</h2>
+<p class="muted">The same box, with selection filling the whole card. Label, description and dot
+all invert together, so the card reads as one selected object rather than a box with a
+highlight.</p>
+<div class="showcase"><div class="showcase__preview">${cardFilled}</div></div>
+
+<h2>Type: Card Icon</h2>
+<p class="muted">A 24px icon replaces the ring where the option has a recognisable mark. The icon
+is decorative — the label still carries the name, because an icon on its own does not identify a
+record type to someone who has not seen it before.</p>
+<div class="showcase"><div class="showcase__preview">${cardIcon}</div></div>
+<p class="muted">Do not mix types within one group. A group of cards beside a group of simple
+radios is fine; a group that is half each is not.</p>
+
+<h2>Horizontal</h2>
+<p class="muted">Only for two or three short options. It wraps rather than overflows, and below
+480px it should be vertical.</p>
+<div class="showcase"><div class="showcase__preview">${horizontal}</div></div>
+
+<h2>Error</h2>
+<p class="muted">One message for the whole group. Note there is no way back to "nothing selected"
+once an option is chosen — where "no answer" is meaningful, give it an option of its own.</p>
+<div class="showcase"><div class="showcase__preview">${errorGroup}</div></div>
+
+<hr>
+${renderMarkdown(md)}
+${accessibilityTable([
+    { req: 'Group name is announced with each option', sc: '1.3.1, 4.1.2', how: 'A real fieldset and legend. hideLegend hides it visually only, so the name still reaches assistive technology.', test: 'Screen reader announce' },
+    { req: 'The group is one Tab stop', sc: '2.1.1', how: 'Native radio grouping by shared name: Tab enters the group, arrow keys move within it. No custom key handling, so this is exactly browser behaviour.', test: 'Keyboard only' },
+    { req: 'Selection is not colour alone', sc: '1.4.1', how: 'The ring fills and gains a white dot; a selected card inverts its whole surface as well as its border.', test: 'Greyscale review' },
+    { req: 'The card icon is not the label', sc: '1.1.1', how: 'The icon is aria-hidden and the visible label carries the name, so the option is identifiable without recognising the mark.', test: 'Screen reader announce' },
+    { req: 'Focus matches the target', sc: '2.4.7', how: 'A 3px Cyan/700 ring on the control for simple radios, and around the whole card for card types — because on a card the card is what is clicked.', test: 'Keyboard tab' },
+    { req: 'Error is exposed and actionable', sc: '3.3.1, 3.3.3', how: 'One message on the group, referenced from it, saying what to do ("Select a priority").', test: 'Screen reader, submit empty' },
+    { req: 'Required state is more than an asterisk', sc: '3.3.2', how: 'The asterisk is decorative; the group carries aria-required.', test: 'Screen reader announce' },
+    { req: 'Target size', sc: '2.5.8', how: 'The 20px ring relies on the spacing exception: 8px between options puts centres 28px apart. Card types are 56px tall and pass outright.', test: 'Measure spacing' },
+    { req: 'Text resizes to 200%', sc: '1.4.4', how: 'Labels wrap under themselves rather than under the ring, and cards size from their content.', test: 'Browser zoom to 200%' },
+  ])}`;
+}
+
+function selectBody() {
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'select', 'guidelines.md'), 'utf8')));
+
+  const trigger = ({ id, label, hint, value, placeholder = 'Select a ward', error, disabled, required, open }) => {
+    const opts = ['Aneurin ward', 'Tawe ward', 'Cynon ward'];
+    return `<div class="sr-select${error ? ' sr-select--error' : ''}${disabled ? ' sr-select--disabled' : ''}">
+  <label class="sr-select__label" for="${id}">${label}${required ? '<span class="sr-select__required" aria-hidden="true">*</span>' : ''}</label>
+  ${hint ? `<p class="sr-select__hint">${hint}</p>` : ''}
+  <div class="sr-select__control">
+    <button type="button" class="sr-select__trigger" id="${id}" aria-haspopup="listbox" aria-expanded="${open ? 'true' : 'false'}"${value ? '' : ' data-placeholder="true"'}${disabled ? ' disabled' : ''}>
+      <span class="sr-select__value">${value || placeholder}</span>
+      <span class="sr-select__chevron">${iconMarkup('nav/chevron-down')}</span>
+    </button>
+    <div class="sr-select__menu" role="listbox"${open ? '' : ' hidden'}>
+${opts.map((o, i) => `      <div class="sr-select__option${i === 1 ? ' is-active' : ''}" role="option" aria-selected="${i === 1}">${o}</div>`).join('\n')}
+    </div>
+  </div>
+  ${error ? `<p class="sr-select__error"><span class="sr-select__error-icon">${CHOICE_ERROR_ICON}</span>${error}</p>` : ''}
+</div>`;
+  };
+
+  const demo = `<div style="max-width:320px;padding-bottom:140px">${trigger({ id: 'sel-demo', label: 'Ward', hint: 'The ward the patient is being admitted to.', open: true })}</div>`;
+
+  const states = `<div style="display:flex;flex-direction:column;gap:24px;max-width:320px">
+${trigger({ id: 'sel-a', label: 'Placeholder' })}
+${trigger({ id: 'sel-b', label: 'With a value', value: 'Tawe ward' })}
+${trigger({ id: 'sel-c', label: 'Error', required: true, error: 'Select a ward to continue' })}
+${trigger({ id: 'sel-d', label: 'Disabled', value: 'Aneurin ward', disabled: true })}
+</div>`;
+
+  const snippets = {
+    HTML: '<div class="sr-select">\n  <label class="sr-select__label" for="ward">Ward</label>\n  <div class="sr-select__control">\n    <button type="button" class="sr-select__trigger" id="ward" aria-haspopup="listbox" aria-expanded="false" data-placeholder="true">\n      <span class="sr-select__value">Select a ward</span>\n    </button>\n    <div class="sr-select__menu" role="listbox" hidden>\n      <div class="sr-select__option" role="option" aria-selected="false">Aneurin ward</div>\n    </div>\n  </div>\n</div>',
+    React: '<Select\n  label="Ward"\n  hint="The ward the patient is being admitted to."\n  placeholder="Select a ward"\n  options={wards}\n  value={ward}\n  onChange={setWard}\n/>',
+    Blazor: '<SrSelect Label="Ward" Placeholder="Select a ward"\n          Options="@wards" @bind-Value="ward" />',
+    MAUI: `<!-- Picker is the native equivalent; the label stays a separate Label so
+     the field stack matches Input, and Title is never the label. -->
+<VerticalStackLayout Spacing="4">
+    <Label Text="Ward" StyleClass="FieldLabel" />
+    <Border Style="{StaticResource FieldBox}">
+        <Picker ItemsSource="{Binding Wards}" SelectedItem="{Binding Ward}"
+                SemanticProperties.Description="Ward" />
+    </Border>
+</VerticalStackLayout>`,
+  };
+
+  return `
+<p class="breadcrumbs">Components</p>
+<h1>Select</h1>
+<p class="lede">One value from a list too long to show all at once — roughly seven to fifty
+options. Below seven, use a <a href="../components/radio.html">Radio group</a>; above fifty, the
+user is searching, not choosing.</p>
+${choiceWhichOne('Select')}
+
+<h2>The field</h2>
+<p class="muted">This is a button and a listbox, not a native <code>&lt;select&gt;</code>. That is
+what makes the menu stylable and consistent across browsers — and it is why every keyboard
+behaviour is ours rather than the platform's. Shown open.</p>
+${showcase(demo, 'select', snippets)}
+
+<h2>States</h2>
+<p class="muted">The placeholder is not a value. "Select a ward" must never be submittable, and it
+stays in secondary text until a real choice is made.</p>
+<div class="showcase"><div class="showcase__preview">${states}</div></div>
+
+<hr>
+${renderMarkdown(md)}
+${accessibilityTable([
+    { req: 'The trigger exposes its role and state', sc: '4.1.2', how: 'A real button with aria-haspopup and aria-expanded; the menu is role="listbox" with role="option" children carrying aria-selected.', test: 'Screen reader announce, open and close' },
+    { req: 'Label is programmatically associated', sc: '1.3.1', how: 'A real label bound to the trigger, so the field announces as "Ward, collapsed" rather than as a bare button.', test: 'Screen reader announce' },
+    { req: 'Fully keyboard operable', sc: '2.1.1', how: 'Enter, Space or Down to open; Up/Down to move; Home/End to jump; typeahead to skip; Enter to choose; Escape to close and return focus to the trigger.', test: 'Keyboard only' },
+    { req: 'Focus does not escape an open menu', sc: '2.4.3', how: 'Focus stays within the listbox while open and returns to the trigger on close, so the tab order never lands behind the menu.', test: 'Keyboard tab with menu open' },
+    { req: 'Open state is not colour alone', sc: '1.4.1', how: 'The chevron rotates 180°, in addition to the focus ring and the menu appearing.', test: 'Greyscale review' },
+    { req: 'Error is exposed and actionable', sc: '3.3.1, 3.3.3', how: 'The field is marked invalid, the message is referenced from it, and it says what to do.', test: 'Screen reader, submit empty' },
+    { req: 'Focus visible and not clipped', sc: '2.4.7', how: 'A 3px Cyan/700 outer stroke drawn outside the field box, so the field border never crops it.', test: 'Keyboard tab' },
+    { req: 'Target size', sc: '2.5.8', how: '40px trigger and 40px options clear the 24px minimum outright; mobile layouts take the full 44px.', test: 'Measure, touch device' },
+    { req: 'Menu length stays reachable', sc: '2.4.3', how: 'The menu caps at 280px and scrolls; past that the list is grouped rather than made taller.', test: 'Keyboard, long list' },
+  ])}`;
+}
+
 // ─── Components: Input ────────────────────────────────────────────────────────
 /**
  * Input. One anatomy — label, hint, field, error — across six types, driven by
@@ -3506,6 +3909,21 @@ addPage({
   prefix: '../', body: navigationBody(),
 });
 addPage({
+  file: 'components/checkbox.html', url: 'components/checkbox.html', title: 'Checkbox',
+  section: 'Components', sectionId: 'components', activeHref: 'components/checkbox.html',
+  prefix: '../', body: checkboxBody(), extraScript: CHOICE_SCRIPT,
+});
+addPage({
+  file: 'components/radio.html', url: 'components/radio.html', title: 'Radio',
+  section: 'Components', sectionId: 'components', activeHref: 'components/radio.html',
+  prefix: '../', body: radioBody(),
+});
+addPage({
+  file: 'components/select.html', url: 'components/select.html', title: 'Select',
+  section: 'Components', sectionId: 'components', activeHref: 'components/select.html',
+  prefix: '../', body: selectBody(),
+});
+addPage({
   file: 'patterns/patient-banner.html', url: 'patterns/patient-banner.html',
   title: 'Patient Banner', section: 'Patterns',
   sectionId: 'patterns', activeHref: 'patterns/patient-banner.html', prefix: '../',
@@ -3893,6 +4311,59 @@ for (const p of pages) {
       '\nDecision records are internal. If the point matters to a reader, make it in\n'
       + 'their terms; if it does not, drop it. Guidelines markdown is stripped\n'
       + 'automatically — this is page content written in build.mjs.\n'
+    );
+    process.exit(1);
+  }
+}
+
+// ── Every component class on a page must have its stylesheet linked ──────────
+// SITE_COMPONENT_CSS being one list stopped the three lists drifting from each
+// other, but not from the pages: it is still hand-maintained, and a page that
+// uses a component whose CSS is not in it renders as unstyled native controls.
+// That shipped once for input.css and again for checkbox/radio/select, both
+// times looking plausible enough in the build log to miss. This reads the
+// built HTML instead: any `sr-<component>` class whose component directory
+// exists in packages/web/src but is not linked is a build failure.
+//
+// Verified by removing 'radio' from the list and confirming the build fails.
+{
+  const componentDirs = readdirSync(resolve(ROOT, 'packages', 'web', 'src'), { withFileTypes: true })
+    .filter((d) => d.isDirectory() && existsSync(resolve(ROOT, 'packages', 'web', 'src', d.name, `${d.name}.css`)))
+    .map((d) => d.name)
+    // Longest first, so `bottom-nav` wins over `bottom` and `radio-group` maps
+    // to `radio` only when no longer directory matches.
+    .sort((a, b) => b.length - a.length);
+  const linked = new Set(SITE_COMPONENT_CSS);
+  const missing = new Map();
+  const walk = (dir) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const f = resolve(dir, entry.name);
+      if (entry.isDirectory()) { walk(f); continue; }
+      if (!f.endsWith('.html')) continue;
+      const html = readFileSync(f, 'utf8');
+      // class attributes only — a class name inside a code sample is showing
+      // markup, not rendering it, and must not drag in a stylesheet.
+      for (const attr of html.matchAll(/\sclass="([^"]*)"/g)) {
+        for (const cls of attr[1].split(/\s+/)) {
+          if (!cls.startsWith('sr-')) continue;
+          const dir = componentDirs.find((d) => cls === `sr-${d}` || cls.startsWith(`sr-${d}-`) || cls.startsWith(`sr-${d}_`));
+          if (!dir || linked.has(dir)) continue;
+          if (!missing.has(dir)) missing.set(dir, new Set());
+          missing.get(dir).add(`${relative(DIST, f)} (${cls})`);
+        }
+      }
+    }
+  };
+  walk(DIST);
+  if (missing.size) {
+    console.error(`\n${missing.size} component stylesheet(s) used but not linked:\n`);
+    for (const [dir, where] of missing) {
+      console.error(`  ${dir} — ${[...where].slice(0, 3).join(', ')}`);
+    }
+    console.error(
+      "\nAdd them to SITE_COMPONENT_CSS. Without it the preview renders as an\n"
+      + 'unstyled native control, which is easy to miss in a screenshot and\n'
+      + 'impossible to miss for a reader copying the markup.\n'
     );
     process.exit(1);
   }

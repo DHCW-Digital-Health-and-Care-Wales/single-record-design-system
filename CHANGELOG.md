@@ -42,6 +42,15 @@ this file says so and tells you what to change.
 - `logoSymbolInverseSrc` — the icon-only mark in white, for dark or coloured
   backgrounds. Use it instead of recolouring `logoSymbolSrc` with CSS; the
   brand rules forbid recolouring the artwork.
+- **Checkbox, Radio and Select now have website pages**, each with usage
+  guidance, every state, and copyable HTML, React, Blazor and MAUI markup. All
+  three had code but nowhere documenting when to reach for which; each page now
+  opens with the same "which one" table so the choice between them is the first
+  thing you see.
+- **Three new Radio types — `card-radio`, `card`, and `card-icon`.** An option
+  that needs a line of explanation was previously unbuildable. Pass `type` and
+  `description` to `<Radio>`, or use the `sr-radio--card` classes. The plain
+  radio is unchanged and stays the default.
 
 ### Known gap
 

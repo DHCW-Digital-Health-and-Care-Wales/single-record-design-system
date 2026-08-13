@@ -199,7 +199,7 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Bottom nav | — | ✅ | ✅ |
 | Breadcrumbs | — (guidelines ✅) | ✅ | ✅ |
 | Button | ✅ | ✅ | ✅ |
-| Checkbox | ✅ | ✅ | ✅ |
+| Checkbox | ✅ (guidelines ✅) | ✅ | ✅ |
 | Date input | — | ✅ | ✅ |
 | Date picker | — | ✅ | ✅ |
 | Footer | — (guidelines ✅) | ✅ | ✅ |
@@ -210,17 +210,17 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Navigation | — (guidelines ✅) | ✅ | ✅ |
 | Patient banner | ✅ | ✅ | ✅ |
 | Progress indicators | ✅ | — | — |
-| Radio | — | ✅ | ✅ |
+| Radio | ✅ (guidelines ✅) | ✅ | ✅ |
 | Search | ✅ | — | — |
 | Segmented control | — (guidelines ✅, with Switch) | ✅ | ✅ |
-| Select | ✅ | ✅ | ✅ |
+| Select | ✅ (guidelines ✅) | ✅ | ✅ |
 | Status indicator | — | ✅ | ✅ |
 | Switch | — (guidelines ✅, with Segmented control) | ✅ | ✅ |
 | Table | ✅ | ✅ | ✅ |
 | Tags | ✅ | ✅ | ✅ |
 | Time select | — | ✅ | ✅ |
 
-**Known gaps, stated plainly:** twelve components ship code without a spec, and
+**Known gaps, stated plainly:** eleven components ship code without a spec, and
 three specs (Link, Progress indicators, Search) have no code. Neither is
 satisfactory — a component without a spec has no agreed contract, and a spec
 without code cannot be consumed. Both lists are worked down as components are
