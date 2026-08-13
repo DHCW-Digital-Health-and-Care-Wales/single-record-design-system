@@ -157,7 +157,17 @@ jobs:
 
           All four are needed together: the React package depends on the other three.
           No Vite aliases are required — if you have any pointing inside
-          \`node_modules/@dhcw\`, delete them."
+          \`node_modules/@dhcw\`, delete them.
+
+          ### Already on an earlier version?
+
+          Both halves of each URL carry the version — the tag and the filename.
+          Run this from your product repository rather than editing eight values
+          by hand. It works on macOS, Linux and Windows:
+
+          \`\`\`
+          node -e \"const v='$VERSION',f='package.json',s=require('fs');s.writeFileSync(f,s.readFileSync(f,'utf8').replace(/\/download\/v[0-9.]+\/dhcw-sr-([a-z]+)-[0-9.]+\.tgz/g,'/download/v'+v+'/dhcw-sr-\$1-'+v+'.tgz'))\" && npm install
+          \`\`\`"
 
           gh release view "$TAG" >/dev/null 2>&1 \
             && gh release upload "$TAG" release/*.tgz --clobber \

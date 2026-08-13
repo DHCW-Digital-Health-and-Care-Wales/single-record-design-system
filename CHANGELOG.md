@@ -18,9 +18,33 @@ this file says so and tells you what to change.
 
 ---
 
-## Unreleased
+## v0.2.0 — 2026-08-13
 
-**No action.** Take it and carry on.
+**Action needed** to upgrade — but only to change the version in four URLs. See
+"Upgrading" below for a one-liner that does it.
+
+Once installed, **no code changes are required**: no markup, class name, token
+name or component prop moves in this release. Icons render lighter and there are
+new brand marks and icons available. Nothing you already wrote stops working.
+
+### Upgrading
+
+From a product repository, run this and commit the result:
+
+```
+node -e "const v='0.2.0',f='package.json',s=require('fs');s.writeFileSync(f,s.readFileSync(f,'utf8').replace(/\/download\/v[0-9.]+\/dhcw-sr-([a-z]+)-[0-9.]+\.tgz/g,'/download/v'+v+'/dhcw-sr-$1-'+v+'.tgz'))" && npm install
+```
+
+It rewrites **both** halves of all four URLs. That is the part worth knowing:
+the version appears twice per dependency — once as the release tag and once in
+the tarball filename — so a hand-edit is eight values, and changing only the tag
+produces a URL that 404s. This release's notes carry the same command.
+
+**On release frequency.** Batching changes into fewer, larger releases is a
+reasonable response to this friction, but it trades one cost for a worse one:
+larger releases are harder to review, harder to roll back, and leave products on
+stale versions for longer. The friction itself is fixable — see "Why the URLs at
+all" below.
 
 ### Changed
 
@@ -108,6 +132,26 @@ this file says so and tells you what to change.
   the lockups carry live text.
 - **`wncr` is white only**, so a WNCR mark cannot go on a light background. Its
   navy variant is drawn with strokes and cannot be exported until outlined.
+
+---
+
+### Why the URLs at all
+
+npm cannot install a single workspace out of a git repository, so tarballs
+attached to a release are the standard answer while these packages are not on a
+registry. The cost is the URL editing above.
+
+**A registry removes it entirely** — `npm update` and nothing to edit, ever.
+DDR-024 examined GitHub Packages for this and rejected it for npm: it requires
+the package scope to equal the owning account (`@dhcw` versus
+`DHCW-Digital-Health-and-Care-Wales`), and it requires an access token for every
+install, which would replace a credential-free install with one that needs a PAT
+in every developer's `.npmrc` and every Azure DevOps pipeline.
+
+**npmjs.org is the route that would work**: public scoped packages, anonymous
+install, `@dhcw` preserved. The open question is whether the `@dhcw` scope is
+available there. That is worth answering if release friction is shaping how
+often the design system ships.
 
 ---
 
