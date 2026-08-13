@@ -176,6 +176,11 @@ which fails if the MAUI geometry stops matching those sources. Neither catches a
 hand-inlined icon pasted into a page — the design-system website had ten of
 those, all now corrected.
 
+**Do not apply this to `Icon/warnings/*` in Figma.** Those four are filled state
+badges, not outlines, and an audit that flags them as "stray stroke weights" is
+reading them wrongly — the fill carries the meaning, and their stroke weight is
+incidental. They have no counterpart in the code icon set.
+
 ---
 
 ### `Path` is ambiguous with `System.IO.Path`

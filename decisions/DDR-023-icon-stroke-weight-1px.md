@@ -22,8 +22,17 @@ labels. The Figma library had already moved: an audit on 2026-08-13 found
 divergence had existed for some time and nothing recorded it, so Figma and
 code had been drifting apart silently.
 
-The four Figma strays (1.8, 1.5, 1.5046 and 0.75) are artefacts, not
-intentions, and should be normalised to 1.
+Four Figma components sit outside that count, at 1.8, 1.5046, 1.5 and 0.75.
+They were initially assumed to be artefacts to normalise. They are not: all four
+are in `Icon/warnings/*`, and inspecting them shows a different species of
+artwork — **filled state badges**, not stroke outlines. `warnings/error` is a
+solid red disc with a white exclamation mark; `warnings/determinate` is a solid
+disc with a dash, the indeterminate state of a selection control. Their stroke
+weights are incidental to artwork whose meaning is carried by fill.
+
+Normalising them would have damaged four deliberate designs to satisfy a rule
+that does not apply to them. Confirmed with the design lead before any change
+was made.
 
 ## Decision
 
@@ -33,6 +42,10 @@ This is a single global value. It applies to the source SVGs in
 `foundations/iconography/svg/`, the generated `icons.js` and `sprite.svg`, the
 MAUI `Icons.xaml` geometry and its documented `StrokeThickness`, the hand-inlined
 chrome icons on the design-system website, and the Figma library.
+
+**This rule covers stroke-drawn outline icons only.** Filled artwork —
+`Icon/warnings/*` in Figma today — is a different species and is not governed
+by it.
 
 **Do not vary the stroke per icon size.** The previous catalogue note
 ("override to 1.75 at xs/sm via CSS") is withdrawn. A per-size stroke means two
@@ -72,8 +85,13 @@ the inconsistency the icon set exists to prevent.
   has not been verified here, because MAUI cannot be run in this environment.
   Flagged in `docs/engineering/known-issues.md` for the first engineer with a
   device.
-- **Figma's four stray weights need normalising** to 1 by the design lead. They
-  are the only remaining source of drift.
+- **`Icon/warnings/*` is explicitly out of scope** and stays as drawn. It is a
+  filled-badge group, not an outline group, and the 1px rule does not reach it.
+  It also has **no counterpart in code** — the source SVGs have a `status` group
+  of 9 outline icons and nothing filled — so any product needing a filled state
+  badge today has no supported asset. Naming that gap is not the same as fixing
+  it; it needs its own decision about whether filled badges belong in the icon
+  set at all, or are a component concern.
 
 ## Alternatives considered
 

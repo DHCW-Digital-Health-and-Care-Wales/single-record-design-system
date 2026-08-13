@@ -3706,15 +3706,69 @@ ${codePanel('get-files-npm-import', {
   HTML: '<!-- Route 1 (download) is the equivalent for plain HTML — see above. -->',
   React: '// REQUIRED, once, in your entry file: font, tokens and typography.\n// Not single-record.css — each component brings its own styles.\nimport "@dhcw/sr-web/foundations";\n\n// Then whichever components this file uses. Any component from the barrel\n// goes in the braces — these four are only an example, and you never need\n// to import a component you are not using.\nimport { Button, Input, Navigation, PatientBanner } from "@dhcw/sr-react";\n\n// A single component can also be imported on its own.\nimport Icon from "@dhcw/sr-react/icon";',
   Blazor: '<!-- The Blazor Razor Class Library is distributed via NuGet, not npm. -->',
-  MAUI: `<!-- MAUI does not consume the npm package. Take Colors.xaml, Styles.xaml and
-     Icons.xaml from packages/maui, add them as MauiXaml, and merge them in
-     App.xaml. Colors must come first: Styles resolves against it. -->
-<ResourceDictionary.MergedDictionaries>
-    <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
-    <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
-    <ResourceDictionary Source="Resources/Styles/Icons.xaml" />
-</ResourceDictionary.MergedDictionaries>`,
+  MAUI: `<!-- MAUI installs from NuGet, not npm — see "Route 3" below.
+     dotnet add package DHCW.SingleRecord.Maui
+
+     Merged BY TYPE, which is the only form that works across an assembly
+     boundary. SrStyles goes last: it resolves against the other two. -->
+<Application xmlns:sr="clr-namespace:DHCW.SingleRecord.Maui;assembly=DHCW.SingleRecord.Maui">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <sr:SrColors />
+                <sr:SrIcons />
+                <sr:SrStyles />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>`,
 })}
+
+<h2 id="maui">Route 3 &mdash; NuGet, for .NET MAUI</h2>
+<div class="callout"><p><strong>npm cannot serve a MAUI app.</strong> npm is JavaScript-only and
+there is no npm in the .NET toolchain, so none of the packages above can be installed into a MAUI
+project. MAUI has its own package.</p></div>
+<div class="codepanel"><pre><code>dotnet add package DHCW.SingleRecord.Maui</code></pre></div>
+<p>Targets <code>net8.0-android</code>, <code>net8.0-ios</code>, <code>net8.0-maccatalyst</code>,
+and <code>net8.0-windows10.0.19041.0</code> on Windows. It ships three ResourceDictionaries and the
+brand marks:</p>
+<table>
+  <thead><tr><th>Dictionary</th><th>Contents</th></tr></thead>
+  <tbody>
+    <tr><td><code>SrColors</code></td><td>Every primitive and semantic colour token, the two elevation shadows, and a <code>&hellip;Dark</code> twin for the semantics that change with the theme</td></tr>
+    <tr><td><code>SrIcons</code></td><td>The icon set as XAML path geometry, one <code>x:String</code> per icon</td></tr>
+    <tr><td><code>SrStyles</code></td><td>Implicit and keyed control styles, the <code>StyleClass</code> type scale, and <code>VisualStateManager</code> states</td></tr>
+  </tbody>
+</table>
+<p>Merge them as shown in the MAUI tab above. <strong>Order matters:</strong> <code>SrStyles</code>
+references keys from the other two, so merging it first fails at runtime rather than at build. If
+your app already has its own <code>Colors.xaml</code>, merge yours <em>after</em> the Single Record
+ones so yours win where they overlap.</p>
+<p><strong>Icons are geometry, not images.</strong> MAUI rasterises an SVG at build time through
+<code>MauiImage</code> and bakes the colour into the PNG. These are outline icons that have to take
+their colour from a token and follow the theme, so they ship as <code>Path</code> data:</p>
+<div class="codepanel"><pre><code>&lt;Path Data="{StaticResource SrIconNavSearch}"
+      Stroke="{AppThemeBinding Light={StaticResource SrColorTextPrimary},
+                               Dark={StaticResource SrColorTextPrimaryDark}}"
+      StrokeThickness="1" StrokeLineCap="Round" StrokeLineJoin="Round"
+      Aspect="Uniform" HeightRequest="24" WidthRequest="24" /&gt;</code></pre></div>
+<p><code>Fill</code> is deliberately unset &mdash; filling closes shapes meant to read as strokes.
+<code>StrokeThickness="1"</code> is correct at a 24px render; MAUI's <code>StrokeThickness</code>
+does not scale with <code>Aspect</code> the way SVG <code>stroke-width</code> scales inside a
+viewBox, so scale it down proportionally at smaller sizes.</p>
+<p><strong>Brand marks come with it</strong>, registered as <code>MauiImage</code> in your app
+automatically. Reference the rasterised output, not the source:
+<code>&lt;Image Source="srsymwcpblue.png" /&gt;</code>. <code>sym</code> is the icon-only mark,
+<code>logo</code> the full lockup &mdash; different artwork, not a crop of one another. Each mark
+ships one file per ink because brand artwork must never be recoloured; pick the variant that suits
+the background. Opt out with
+<code>&lt;SrIncludeBrandImages&gt;false&lt;/SrIncludeBrandImages&gt;</code>.</p>
+<div class="callout"><p><strong>Copying the XAML by hand still works.</strong> Take
+<code>Colors.xaml</code>, <code>Icons.xaml</code> and <code>Styles.xaml</code> from
+<code>packages/maui</code>, add them as <code>MauiXaml</code>, and merge them by
+<code>Source</code> instead of by type &mdash; the copies are plain dictionaries with no
+<code>x:Class</code>, so the <code>&lt;sr:SrColors /&gt;</code> form will not compile against them.
+Same order rule applies.</p></div>
 <p>Working in a checkout of the repository itself (rather than as a dependency)? Clone
 <a href="https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system" target="_blank" rel="noopener">the org repo</a>, then:</p>
 <div class="codepanel"><pre><code>npm install

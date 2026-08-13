@@ -10,6 +10,8 @@ Source: [Lucide Icons](https://lucide.dev) — ISC Licence
 **Lucide Icons** — ISC licence (fully permissive, suitable for NHS/public sector internal use)
 Version sourced: `main` branch, March 2026
 Grid: 24 × 24 px, 1px stroke (DDR-023; Lucide ships 2px)
+
+**Outline icons only.** Figma also carries an `Icon/warnings/*` group of four filled state badges (`error`, `warning`, `check`, `determinate`). They are deliberately not 1px outlines, are not part of this catalogue, and have no counterpart in `foundations/iconography/svg/`. Do not "normalise" their stroke weights — the fill carries the meaning.
 Total SR aliases: 119 across 10 domains
 
 ### Why Lucide and not NHS App icons
