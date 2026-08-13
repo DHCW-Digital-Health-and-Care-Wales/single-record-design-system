@@ -97,22 +97,84 @@ face despite `FontFamily="Roboto"` throughout `Styles.xaml`.
 
 ---
 
-### `<sr:Colors />` does not work for merging dictionaries
+### The merge syntax depends on which way you consumed the design system
 
-**Symptom:** The documented merge syntax fails to compile.
+**Symptom:** `<sr:Colors />` fails to compile, or `Source="…"` cannot find the
+dictionary — depending on which of the two install routes you took. Both syntaxes
+are correct; neither is correct for both routes.
 
-**Why:** That element form instantiates a *type*, which requires an `x:Class` on
-the dictionary. `Colors.xaml`, `Styles.xaml` and `Icons.xaml` deliberately have
-none — they are plain resource dictionaries.
+**Why:** The element form (`<sr:SrColors />`) instantiates a *type*, which needs
+an `x:Class` on the dictionary and is the only form that works across an
+assembly boundary. The `Source` form is a path lookup and only works within your
+own project.
 
-**Fix:** Merge by `Source`, as the stock MAUI template does. **Colors must come
-first**, because `Styles.xaml` resolves `{StaticResource SrColor…}` against it:
+**Fix:** Match the syntax to the route.
+
+**NuGet (`DHCW.SingleRecord.Maui`)** — merge by type. The packaged dictionaries
+carry an `x:Class` precisely so this works:
+
+```xml
+xmlns:sr="clr-namespace:DHCW.SingleRecord.Maui;assembly=DHCW.SingleRecord.Maui"
+...
+<sr:SrColors />
+<sr:SrIcons />
+<sr:SrStyles />
+```
+
+**Copied files** — merge by `Source`, as the stock MAUI template does. The
+copies in `packages/maui/` are plain dictionaries with no `x:Class`:
 
 ```xml
 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
-<ResourceDictionary Source="Resources/Styles/Styles.xaml" />
 <ResourceDictionary Source="Resources/Styles/Icons.xaml" />
+<ResourceDictionary Source="Resources/Styles/Styles.xaml" />
 ```
+
+**Either way, Styles goes last** — it resolves `{StaticResource SrColor…}` and
+`{StaticResource SrIcon…}` against the other two, and merging it first fails at
+runtime rather than at build.
+
+---
+
+### `StrokeThickness` does not scale with `Aspect`, so icons thicken as they shrink
+
+**Symptom:** An icon set to `HeightRequest="16"` looks heavier, relative to its
+own size, than the same icon at 24px — and heavier than the web version.
+
+**Why:** SVG `stroke-width` lives inside the viewBox and scales with the icon;
+MAUI's `StrokeThickness` is a device-independent unit applied after `Aspect`
+has scaled the geometry. `StrokeThickness="1"` is therefore 1px at *any*
+`HeightRequest`, which at 16px is proportionally 1.5× what it is at 24px.
+
+**Fix:** `StrokeThickness="1"` is correct at a 24px render, which is what the
+generated header and the NuGet README document. Below that, scale it with the
+size — `HeightRequest / 24` — rather than leaving it at 1.
+
+**Not verified on a device.** This follows from how MAUI Shapes are documented
+to render, and .NET cannot be run in the environment where the design system is
+built, so it has not been confirmed empirically. First engineer with a device:
+confirm it and replace this paragraph with what you actually see.
+
+---
+
+### Icons are 1px, not Lucide's 2px
+
+**Symptom:** Icons regenerated from Lucide come back visibly heavier than the
+ones in the repository, or a code sample shows `stroke-width="2"`.
+
+**Why:** DDR-023 overrides Lucide's shipped 2px stroke with 1px, globally. The
+Figma library had already moved to 1px — 121 of 125 components — and nothing
+recorded it, so Figma and code drifted apart silently for some time.
+
+**Fix:** Take the stroke from the source SVGs; never hand-write it. If you are
+adding an icon from Lucide, `foundations/iconography/fetch-icons.js` already
+emits `stroke-width="1"` — use it rather than copying markup off lucide.dev.
+
+**Prevented by** `npm run build -w @dhcw/sr-icons`, which regenerates
+`icons.js` and `sprite.svg` from the source SVGs, and by `verify-icons.mjs`,
+which fails if the MAUI geometry stops matching those sources. Neither catches a
+hand-inlined icon pasted into a page — the design-system website had ten of
+those, all now corrected.
 
 ---
 

@@ -24,6 +24,20 @@ this file says so and tells you what to change.
 
 ### Changed
 
+- **Icons are now 1px, not 2px (DDR-023). Every icon in every product changes
+  weight.** Lucide ships a 2px stroke and the design system had taken it
+  wholesale; the Figma library had already moved to 1px — 121 of 125 components
+  — and nothing recorded the divergence. 2px read heavier than the text beside
+  it, most visibly on the design-system website.
+
+  **No action needed:** no markup, class name, token or prop changes. Icons
+  simply render lighter.
+
+  One thing to know: at 16px a 1px stroke resolves to about two-thirds of a
+  device pixel and goes visibly light. **Prefer 20px or 24px for any icon that
+  carries meaning on its own**; 16px is fine beside a text label. Do not
+  reintroduce a per-size stroke — size the control up instead.
+
 - **DDR-022 records when to wrap a third-party component on web.** The test is
   behavioural complexity, not component importance: build on native elements,
   wrap for keyboard interaction models. Menu, Tabs and Autocomplete are now
@@ -53,6 +67,14 @@ this file says so and tells you what to change.
   three had code but nowhere documenting when to reach for which; each page now
   opens with the same "which one" table so the choice between them is the first
   thing you see.
+- **`DHCW.SingleRecord.Maui` on NuGet — MAUI apps no longer copy XAML by hand.**
+  Ships `SrColors`, `SrIcons` and `SrStyles` as typed ResourceDictionaries, plus
+  the brand marks registered as `MauiImage` automatically. npm cannot serve
+  .NET; this is the route for a MAUI app. Merge `SrStyles` **last** — it
+  references keys from the other two. Copying the XAML by hand still works; the
+  merge syntax differs between the two routes.
+- **Three new icons: `action/star`, `schedule/bookmark`, `file/pin`.** 123 icons
+  now, across web, React, the sprite and MAUI.
 - **Brand marks for NHS Wales, Welsh Clinical Portal and WNCR.** Nine logo
   variants extracted from Figma and shipped from `@dhcw/sr-web`, as data URIs
   (`nhsWalesLogoSrc`, `wcpSymbolSrc`, and so on) and as real files under

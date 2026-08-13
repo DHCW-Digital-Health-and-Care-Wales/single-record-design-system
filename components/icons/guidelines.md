@@ -68,7 +68,8 @@ This is the decision that matters most, and it is binary:
   fail some users; the text has to say it.
 - **Don't** rotate or recolour an icon to mean something new. That is a new
   icon, and it goes through Figma.
-- **Don't** scale outside the four sizes. Lucide's 2px stroke is tuned to them.
+- **Don't** scale outside the four sizes, and don't vary the stroke per size — the 1px stroke (DDR-023) is a single global value.
+- **Prefer 20px or 24px for any icon carrying meaning on its own.** At 16px a 1px stroke resolves to about two-thirds of a device pixel and goes visibly light on standard-density screens. 16px is fine beside a text label; it is a poor choice for an icon-only control.
 
 ## Accessibility
 

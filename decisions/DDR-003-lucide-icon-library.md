@@ -2,7 +2,7 @@
 
 **Date:** 2026-03-23
 **Author:** Design lead
-**Status:** Accepted
+**Status:** Accepted — **stroke weight superseded by DDR-023 (2026-08-13)**
 **Supersedes:** `foundations/iconography.md` provisional entry (Material Symbols)
 
 ---
@@ -43,7 +43,7 @@ The SR catalogue defines 106 aliases across 10 clinical/administrative domains. 
 - **Decision:** Not adopted. Visual language mismatch with NHS context.
 
 ### Option C: Lucide Icons (chosen)
-- **Pros:** 1,500+ icons under ISC licence; consistent 24px grid and 2px stroke; clean, minimal visual language compatible with NHS/GDS style; NuGet packages for Blazor (`Lucide.Blazor`) and .NET MAUI (`Lucide.Maui`); active maintenance; 106-icon SR catalogue fully covered
+- **Pros:** 1,500+ icons under ISC licence; consistent 24px grid and stroke language (2px as shipped, changed to 1px by DDR-023); clean, minimal visual language compatible with NHS/GDS style; NuGet packages for Blazor (`Lucide.Blazor`) and .NET MAUI (`Lucide.Maui`); active maintenance; 106-icon SR catalogue fully covered
 - **Cons:** Not an NHS-owned or NHS-endorsed library (acceptable — no NHS-owned library of sufficient scope exists for clinical applications)
 - **Decision:** Adopted.
 

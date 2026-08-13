@@ -16,18 +16,19 @@
   ],
   "scripts": {
     "build-storybook": "npm run build -w @dhcw/sr-tokens && npm run build-storybook -w @dhcw/sr-storybook",
+    "build:logo": "node packages/web/build-logo.mjs",
+    "build:maui": "npm run build -w @dhcw/sr-tokens && npm run build -w @dhcw/sr-maui",
     "build:pages": "npm run build:logo && npm run build -w @dhcw/sr-tokens && npm run build -w @dhcw/sr-web && npm run build -w @dhcw/sr-website && npm run build-storybook -w @dhcw/sr-storybook && node scripts/assemble-pages.mjs",
     "build:site": "npm run build:logo && npm run build -w @dhcw/sr-tokens && npm run build -w @dhcw/sr-web && npm run build -w @dhcw/sr-website",
     "build:tokens": "npm run build -w @dhcw/sr-tokens && node scripts/sync-token-docs.mjs",
-    "check:docs": "node scripts/sync-token-docs.mjs --check",
-    "storybook": "npm run storybook -w @dhcw/sr-storybook",
-    "sync:docs": "node scripts/sync-token-docs.mjs",
-    "dev:prototype": "npm run dev -w @dhcw/case-note-tracking-prototype",
-    "check:type": "node scripts/check-typography.mjs --baseline",
-    "check:ds": "node scripts/check-design-system.mjs --baseline",
-    "check": "npm run check:type && npm run check:ds && npm run build:maui",
     "build:web": "npm run build:logo && npm run build -w @dhcw/sr-tokens && npm run build -w @dhcw/sr-web",
-    "build:maui": "npm run build -w @dhcw/sr-tokens && npm run build -w @dhcw/sr-maui",
-    "build:logo": "node packages/web/build-logo.mjs"
+    "check": "npm run check:type && npm run check:ds && npm run build:maui",
+    "check:docs": "node scripts/sync-token-docs.mjs --check",
+    "check:ds": "node scripts/check-design-system.mjs --baseline",
+    "check:type": "node scripts/check-typography.mjs --baseline",
+    "dev:prototype": "npm run dev -w @dhcw/case-note-tracking-prototype",
+    "pack:maui": "npm run build:maui && dotnet pack packages/maui/nuget/DHCW.SingleRecord.Maui.csproj -c Release -o dist/nuget",
+    "storybook": "npm run storybook -w @dhcw/sr-storybook",
+    "sync:docs": "node scripts/sync-token-docs.mjs"
   }
 }
