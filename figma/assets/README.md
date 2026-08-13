@@ -12,6 +12,11 @@ Official brand assets for the DHCW Single Record programme, taken from the Figma
 | `dhcw-logo-black.png` | — | Mono lockup — print, faxes, single-colour output. |
 | `dhcw-symbol-blue.svg` | `Type=Icon, Subgroup=dhcw, Colour mode=light` (`275:165`) | Navy icon-only mark. Source for `logoSymbolSrc`. |
 | `dhcw-symbol-white.svg` | `Type=Icon, Subgroup=dhcw, Colour mode=dark` (`270:2849`) | White icon-only mark. Source for `logoSymbolInverseSrc`. |
+| `wcp-symbol-blue.svg` | `Type=Icon, Subgroup=wcp, Colour mode=dark` (`284:763`) | Navy Welsh Clinical Portal roundel — light backgrounds. Source for `wcpSymbolSrc`. |
+| `wcp-symbol-white.svg` | `Type=Icon, Subgroup=wcp, Colour mode=light` (`283:166`) | White WCP roundel — dark backgrounds. Source for `wcpSymbolInverseSrc`. |
+
+Note the `wcp` rows: the file named `blue` comes from the variant named `dark`.
+That is not a transcription error — see the naming warning below.
 
 The three lockups are 1132×403, transparent background. The two symbols are
 48×48 SVG on a 0 0 48 48 viewBox.
@@ -51,17 +56,23 @@ to `www.figma.com` is denied by the environment network policy, so the MCP asset
 URLs return HTTP 403. But most of them do not need a download — see "How the
 symbols got here" above.
 
-**Audited 2026-08-13.** Twelve of the sixteen are pure vector and can be lifted
-via `fillGeometry` today:
+**Audited 2026-08-13, then corrected.** Ten of the sixteen can be lifted via
+`fillGeometry` today. An earlier pass said twelve: it counted `VECTOR` node
+types, but `UEC/Icon` has vector nodes carrying no solid fill, so it yields an
+empty SVG. Check for *filled* geometry, not for vector node types.
 
 | Variant | Liftable | Blocker |
 |---|---|---|
 | `nhs_wales` Icon + Full, both modes | Yes | — |
 | `wcp` Icon + Full, both modes | Yes | — |
 | `wncr` Icon light | Yes | — |
-| `UEC` Icon, both modes | Yes | — |
+| `UEC` Icon, both modes | No | Vector nodes with no solid fill — yields an empty SVG |
 | `wncr` Icon dark, Full both modes | No | Strokes — outline them in Figma first |
 | `UEC` Full, both modes | No | Live text — outline it in Figma first |
+
+Extracted so far: `wcp` Icon in both inks (`wcp-symbol-blue.svg`,
+`wcp-symbol-white.svg`). The remaining eight liftable variants are unblocked but
+not yet done.
 
 This supersedes the earlier note that `wcp/Full` contains live text. It does
 not: `wcp` is clean in all four variants. The live-text problem is `UEC/Full`,
@@ -69,10 +80,13 @@ and the stroke problem is `wncr`. Re-audit rather than trusting a stale list —
 the check is a dozen lines of `use_figma` walking `node.type` and the fill and
 stroke arrays.
 
-Consequence today: no product subgroup (`nhs_wales`, `wcp`, `wncr`, `UEC`) has
-any asset in the repo, so nothing can render a co-brand or product mark — but
-for twelve of the sixteen that is a task, not a blocker. NHS Wales marks still
-need brand-team approval before public publication.
+**Name files by ink colour, never by the Figma "Colour mode" variant.** That
+variant does not mean the same thing in every subgroup — `nhs_wales/Icon/light`
+is navy but `wcp/Icon/light` is white. See `docs/figma-known-issues.md`.
+
+Consequence today: of the product subgroups, only `wcp` has an asset in the
+repo. For the remaining liftable variants that is a task, not a blocker. NHS
+Wales marks still need brand-team approval before public publication.
 
 ## Notes
 

@@ -26,8 +26,10 @@ light and a dark colour mode — 20 variants in all.
 | `wncr` | Welsh Nursing Care Record |
 | `UEC` | Urgent and Emergency Care |
 
-"Colour mode" names the background, not the artwork: **light** is the navy mark
-for light backgrounds, **dark** is the white mark for dark or coloured ones.
+"Colour mode" is **not reliable** — it names the background in `dhcw` and
+`nhs_wales` (light = the navy mark, for light backgrounds) but names the artwork
+in `wcp` and `wncr` (light = the white mark). Go by the ink colour of the
+variant you are looking at, not its name. See Known gaps.
 
 ## When to use
 
@@ -108,12 +110,20 @@ white and mono, and the `dhcw` icon-only mark in navy and white. The remaining
 - No product subgroup (`nhs_wales`, `wcp`, `wncr`, `UEC`) has any asset at all,
   so no co-brand or product mark can be rendered in code.
 
-**Audited 2026-08-13:** twelve of the fifteen can be lifted from Figma's vector
-geometry today (all of `nhs_wales`, all of `wcp`, `wncr/Icon/light`, and
-`UEC/Icon`). Only four genuinely need a Figma fix first — see below and
-`figma/assets/README.md`.
+**Audited 2026-08-13:** ten of the fifteen can be lifted from Figma's vector
+geometry today — all of `nhs_wales`, all of `wcp`, and `wncr/Icon/light`. The
+`wcp` icon is now extracted and shipping. `UEC/Icon` looked liftable on a first
+pass but is not: its vector nodes carry no solid fill and yield an empty SVG.
+See `figma/assets/README.md`.
 
-The four that must be fixed in Figma before export, not after: `UEC/Full` in
+**Never name an export after the Figma "Colour mode" variant.** It means
+different things in different subgroups — `nhs_wales/Icon/light` is navy,
+`wcp/Icon/light` is white — so a file named from it can ship a white logo onto a
+white background. Name by ink colour instead. Recorded in
+`docs/figma-known-issues.md`.
+
+The five that must be fixed in Figma before export, not after: `UEC/Icon` in
+both colour modes has vector nodes with no solid fill; `UEC/Full` in
 both colour modes contains live text that must be outlined, or the exported SVG
 carries a font dependency and renders differently wherever Roboto is absent;
 `wncr/Full` in both modes and `wncr/Icon/dark` use strokes, which are not

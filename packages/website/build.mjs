@@ -4220,14 +4220,19 @@ if (!existsSync(resolve(WEB_DIST, 'single-record.css'))) {
     + 'which runs it) before building the website.'
   );
 }
-mkdirSync(resolve(DIST, 'downloads', 'components'), { recursive: true });
-for (const f of readdirSync(WEB_DIST)) {
-  if (f === 'components') continue;
-  copyFileSync(resolve(WEB_DIST, f), resolve(DIST, 'downloads', f));
-}
-for (const f of readdirSync(resolve(WEB_DIST, 'components'))) {
-  copyFileSync(resolve(WEB_DIST, 'components', f), resolve(DIST, 'downloads', 'components', f));
-}
+// Mirror the whole tree rather than listing known subdirectories: this used to
+// special-case `components/`, and adding `logos/` to the web build broke the
+// site with EISDIR. A recursive copy takes any future subdirectory for free.
+const mirror = (from, to) => {
+  mkdirSync(to, { recursive: true });
+  for (const entry of readdirSync(from, { withFileTypes: true })) {
+    const src = resolve(from, entry.name);
+    const dst = resolve(to, entry.name);
+    if (entry.isDirectory()) mirror(src, dst);
+    else copyFileSync(src, dst);
+  }
+};
+mirror(WEB_DIST, resolve(DIST, 'downloads'));
 writeFileSync(resolve(DIST, 'assets', 'site.css'), readFileSync(resolve(__dirname, 'site.css'), 'utf8'));
 writeFileSync(resolve(DIST, 'assets', 'site.js'), SITE_JS);
 

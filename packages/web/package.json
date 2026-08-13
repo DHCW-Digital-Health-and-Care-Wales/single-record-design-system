@@ -34,7 +34,9 @@
     "./components/*": "./dist/components/*",
     "./dist/*": "./dist/*",
     "./src/*": "./src/*",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./logos": "./dist/logos/",
+    "./logos/*": "./dist/logos/*"
   },
   "scripts": {
     "build": "node build.mjs"

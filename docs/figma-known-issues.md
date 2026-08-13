@@ -252,6 +252,40 @@ Limits worth knowing before reaching for it: it only covers vector fills. Raster
 
 ---
 
+### The Logos component's "Colour mode" variant does not mean the same thing in every subgroup
+
+**Symptom.** You export `wcp/Icon/light` expecting the mark used on light
+backgrounds, and get white artwork that is invisible on white. Do the same for
+`nhs_wales/Icon/light` and you get navy, which is correct.
+
+**Why.** The variant name records different things in different subgroups. In
+`nhs_wales` (and `dhcw`) "light" means *for light backgrounds*, so the ink is
+navy. In `wcp` and `wncr` "light" means *the light-coloured artwork*, so the ink
+is white. Both readings are defensible; they are just not the same reading, and
+nothing in the component signals which one applies. Confirmed 2026-08-13 by
+reading the resolved fill of every variant:
+
+| Variant | Ink |
+|---|---|
+| `dhcw/Icon/dark` | `#325083` navy |
+| `nhs_wales/Icon/light` | `#325a8a` navy |
+| `nhs_wales/Icon/dark` | `#ffffff` white |
+| `wcp/Icon/light` | `#ffffff` white |
+| `wcp/Icon/dark` | `#325083` navy |
+
+**Fix.** Never name an exported file, a token, or an API after the Figma variant.
+Read the resolved fill and name by **ink colour** — `wcp-symbol-blue.svg`,
+`wcp-symbol-white.svg` — which is what `figma/assets/` and the `@dhcw/sr-web`
+logo module do. The underlying inconsistency should be fixed in Figma by
+renaming the variant property to something unambiguous (`Ink=navy|white`), but
+until then the ink colour is the only trustworthy signal.
+
+**Prevented by** naming convention only — this cannot currently be mechanised,
+because there is no build step that reads Figma. A check would have to run
+against the live file. Worth knowing rather than worth automating.
+
+---
+
 ## How to add an entry
 
 Copy this template and add it under the relevant section:
