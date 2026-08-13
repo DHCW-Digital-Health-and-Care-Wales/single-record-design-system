@@ -3345,7 +3345,6 @@ addPage({
 usage notes. Its variables build to the same tokens this website consumes.</p>
 <div class="cards">
   <a class="card" href="${FIGMA_LIBRARY_URL}" target="_blank" rel="noopener">${cardIcon('nav/dashboard')}<h3>Figma Design System file</h3><p>The canonical library: components, variables and usage notes, authored directly in Figma.</p></a>
-  <a class="card" href="components/button.html">${cardIcon('clinical/record')}<h3>Component catalogue</h3><p>Every component documented here, with anatomy, states, accessibility notes and code.</p></a>
 </div>
 <h2>Keeping design and code in step</h2>
 <p>Changes to variables in Figma flow into the published token artifact, and this site rebuilds from
@@ -3376,7 +3375,6 @@ addPage({
 variants and controls, so you can try a component before you build with it.</p>
 <div class="cards">
   <a class="card" href="${STORYBOOK_URL}">${cardIcon('action/eye')}<h3>Open Storybook</h3><p>Browse every component and change its props live.</p></a>
-  <a class="card" href="get-the-files.html">${cardIcon('action/download')}<h3>Get the files</h3><p>Once you know what you need, install the packages or download the CSS.</p></a>
 </div>
 
 <h2>What it is for</h2>
