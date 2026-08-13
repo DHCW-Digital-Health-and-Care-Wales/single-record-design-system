@@ -1,0 +1,176 @@
+name: Publish DHCW.SingleRecord.Maui to GitHub Packages
+
+# Packs the MAUI token and style layer and pushes it to the GitHub Packages
+# NuGet feed, so a MAUI app installs it with `dotnet add package` instead of
+# building it out of a checkout of this repository (DDR-024).
+#
+# WHY macOS AND NOT ubuntu
+#
+#   The workloads decide the target frameworks. ubuntu has maui-android only and
+#   cannot build iOS or macCatalyst at all, so a Linux pack silently produces an
+#   Android-only package — it succeeds, publishes, and then fails at the first
+#   iOS consumer. macOS can build all three, so it is the only host that can
+#   produce a complete package. build-maui-testbed.yml still proves the Android
+#   TFM on every PR, which is the cheap check; this is the expensive one.
+#
+# WHY GITHUB PACKAGES AND NOT nuget.org
+#
+#   The brand marks in this package are NHS Wales and DHCW trademarks and are not
+#   covered by its MIT licence. GitHub Packages requires authentication for every
+#   install, including public packages — normally a drawback, here the reason it
+#   is the right feed. See DDR-024.
+#
+# WHICH OWNER PUBLISHES
+#
+#   GitHub Packages scopes a feed to the account that owns it, and consumers
+#   authenticate against that account. Run this wherever the MAUI teams can
+#   authenticate. The feed URL, the RepositoryUrl in the package and the token
+#   are all derived from ${{ github.repository }} so this workflow is correct in
+#   whichever repository it runs from, rather than hardcoding one.
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to publish, e.g. v0.1.1. Must match the version in packages/maui/package.json.'
+        required: true
+        type: string
+      dry_run:
+        description: 'Pack and verify, but do not push'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: macos-latest
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # Android is part of the pack, and its build needs a JDK.
+      - uses: actions/setup-java@v4
+        with:
+          distribution: microsoft
+          java-version: '17'
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Install the MAUI workloads
+        run: dotnet workload install maui --skip-sign-check
+
+      # Regenerating rather than trusting the commit means a stale Colors.xaml or
+      # Icons.xaml cannot be what gets published to every product team.
+      - name: Regenerate and verify the design system layer
+        run: |
+          npm ci
+          npm run build:maui
+
+      - name: Fail if the generated output was committed stale
+        run: |
+          if ! git diff --quiet; then
+            echo "::error::Generated output differs from what the build produces. Run 'npm run build:maui' and commit."
+            git diff --stat
+            exit 1
+          fi
+
+      # The tag is what a human types; the version is what consumers resolve.
+      # If they disagree, the tag is a lie about what was published.
+      - name: Check the tag matches the package version
+        env:
+          TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          VERSION=$(node -p "require('./packages/maui/package.json').version")
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          if [ "$TAG" != "v$VERSION" ]; then
+            echo "::error::Tag $TAG does not match packages/maui/package.json version $VERSION."
+            echo "Bump the version and re-run, or tag v$VERSION."
+            exit 1
+          fi
+          echo "Publishing $VERSION as $TAG"
+
+      - name: Pack
+        run: |
+          dotnet pack packages/maui/nuget/DHCW.SingleRecord.Maui.csproj \
+            -c Release -o nupkg \
+            -p:RepositoryUrl=https://github.com/${{ github.repository }}
+
+      # Pack succeeding is not the same as the package being usable. Without the
+      # buildTransitive targets it installs and silently does nothing, and
+      # without every target framework it fails at the first iOS consumer rather
+      # than here.
+      - name: Verify the package is complete
+        run: |
+          pkg=$(find nupkg -name '*.nupkg' -print -quit)
+          if [ -z "$pkg" ]; then echo "::error::No .nupkg was produced."; exit 1; fi
+          ls -lh nupkg/
+
+          python3 - "$pkg" "$VERSION" <<'PY'
+          import sys, zipfile
+          pkg, version = sys.argv[1], sys.argv[2]
+          names = zipfile.ZipFile(pkg).namelist()
+
+          problems = []
+          if not any(n.startswith('buildTransitive/') and n.endswith('.targets') for n in names):
+              problems.append('buildTransitive/*.targets — brand marks would not register')
+          if not any(n == 'README.md' for n in names):
+              problems.append('README.md')
+
+          brand = [n for n in names if n.startswith('brand/') and n.endswith('.svg')]
+          if len(brand) != 11:
+              problems.append(f'expected 11 brand marks, found {len(brand)}')
+
+          # Every platform this package claims to support must actually be in it.
+          for tfm in ('android', 'ios', 'maccatalyst'):
+              if not any(f'/net10.0-{tfm}/' in n and n.endswith('.dll') for n in names):
+                  problems.append(f'no assembly for net10.0-{tfm} — packed on the wrong host?')
+
+          if problems:
+              print('::error::Package is incomplete: ' + '; '.join(problems))
+              print('\n'.join(sorted(names)))
+              sys.exit(1)
+          print(f'{pkg} OK — v{version}, {len(names)} entries, {len(brand)} brand marks')
+          PY
+
+      - name: Push to GitHub Packages
+        if: ${{ inputs.dry_run != true }}
+        run: |
+          dotnet nuget push nupkg/*.nupkg \
+            --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" \
+            --api-key "${{ secrets.GITHUB_TOKEN }}" \
+            --skip-duplicate
+
+      - name: Summary
+        run: |
+          {
+            echo "### DHCW.SingleRecord.Maui $VERSION"
+            echo
+            if [ "${{ inputs.dry_run }}" = "true" ]; then
+              echo "Dry run — packed and verified, not pushed."
+            else
+              echo "Published to \`https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json\`."
+            fi
+            echo
+            echo "Consumers need a \`nuget.config\` pointing at that feed and a PAT with"
+            echo "\`read:packages\` — GitHub Packages requires authentication even for public"
+            echo "packages. See \`packages/maui/nuget/README.md\`."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nupkg
+          path: nupkg/*.nupkg
+          if-no-files-found: error

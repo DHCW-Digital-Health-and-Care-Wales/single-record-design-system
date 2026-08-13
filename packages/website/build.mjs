@@ -3728,9 +3728,33 @@ ${codePanel('get-files-npm-import', {
 <div class="callout"><p><strong>npm cannot serve a MAUI app.</strong> npm is JavaScript-only and
 there is no npm in the .NET toolchain, so none of the packages above can be installed into a MAUI
 project. MAUI has its own package.</p></div>
+<div class="callout"><p><strong>This feed needs authentication, and that is deliberate.</strong>
+GitHub Packages requires a token for every install, including public packages. The MAUI package
+carries the NHS Wales and DHCW brand marks, which are trademarked artwork not covered by its MIT
+licence, so a feed that cannot be read anonymously is the right place for it. Reasoning in
+DDR&#8209;024.</p></div>
+<p><strong>1. Add a <code>nuget.config</code> beside your solution.</strong> A classic personal
+access token with <code>read:packages</code> is enough to install. The
+<code>%GITHUB_PACKAGES_TOKEN%</code> form reads an environment variable, so this file is safe to
+commit and your token is not in it &mdash; set the variable from a secret in Azure DevOps, or in
+your shell profile locally.</p>
+<div class="codepanel"><pre><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;configuration&gt;
+  &lt;packageSources&gt;
+    &lt;add key="dhcw" value="https://nuget.pkg.github.com/OWNER/index.json" /&gt;
+  &lt;/packageSources&gt;
+  &lt;packageSourceCredentials&gt;
+    &lt;dhcw&gt;
+      &lt;add key="Username" value="YOUR_GITHUB_USERNAME" /&gt;
+      &lt;add key="ClearTextPassword" value="%GITHUB_PACKAGES_TOKEN%" /&gt;
+    &lt;/dhcw&gt;
+  &lt;/packageSourceCredentials&gt;
+&lt;/configuration&gt;</code></pre></div>
+<p><strong>2. Install.</strong></p>
 <div class="codepanel"><pre><code>dotnet add package DHCW.SingleRecord.Maui</code></pre></div>
-<p>Targets <code>net8.0-android</code>, <code>net8.0-ios</code>, <code>net8.0-maccatalyst</code>,
-and <code>net8.0-windows10.0.19041.0</code> on Windows. It ships three ResourceDictionaries and the
+<p>Targets <code>net10.0-android</code>, <code>net10.0-ios</code> and
+<code>net10.0-maccatalyst</code>. <code>net10.0</code> matches what this repository builds with; if
+your app targets an earlier .NET it can be lowered. It ships three ResourceDictionaries and the
 brand marks:</p>
 <table>
   <thead><tr><th>Dictionary</th><th>Contents</th></tr></thead>

@@ -15,12 +15,61 @@ MAUI and web cannot drift apart.
 
 ## Install
 
+Published to the **GitHub Packages** NuGet feed (DDR-024). GitHub Packages
+requires authentication for every install, including public packages — that is
+not a misconfiguration, it is how the feed works, and here it is deliberate: this
+package carries NHS Wales and DHCW brand marks that are not covered by its MIT
+licence.
+
+**1. Add a `nuget.config` next to your solution:**
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+    <add key="dhcw" value="https://nuget.pkg.github.com/OWNER/index.json" />
+  </packageSources>
+  <packageSourceCredentials>
+    <dhcw>
+      <add key="Username" value="YOUR_GITHUB_USERNAME" />
+      <add key="ClearTextPassword" value="%GITHUB_PACKAGES_TOKEN%" />
+    </dhcw>
+  </packageSourceCredentials>
+</configuration>
+```
+
+Replace `OWNER` with the account publishing the feed. A classic personal access
+token with **`read:packages`** is enough to install.
+
+**Do not commit the token.** `%GITHUB_PACKAGES_TOKEN%` reads an environment
+variable, so the file is safe to commit and the secret is not in it. In Azure
+DevOps, set that variable from a secret; locally, set it in your shell profile.
+
+**2. Install:**
+
 ```
 dotnet add package DHCW.SingleRecord.Maui
 ```
 
-Targets `net8.0-android`, `net8.0-ios`, `net8.0-maccatalyst` and, on Windows,
-`net8.0-windows10.0.19041.0`.
+### Target frameworks
+
+`net10.0-android`, `net10.0-ios` and `net10.0-maccatalyst`. `net10.0` matches
+what this repository builds with — if your app targets an earlier .NET, say so
+and it can be lowered; it was set to what could actually be compiled and
+verified rather than guessed.
+
+### Building it yourself
+
+You should not need to, but if you are working on the design system itself:
+
+```
+npm run pack:maui                                   # writes dist/nuget/*.nupkg
+dotnet nuget add source /path/to/dist/nuget --name sr-local
+```
+
+A pack on Linux is **Android-only** — the iOS and macCatalyst workloads only
+exist on macOS, so a complete package has to be packed there. That is why the
+publish workflow runs on a macOS runner.
 
 ## Set up
 

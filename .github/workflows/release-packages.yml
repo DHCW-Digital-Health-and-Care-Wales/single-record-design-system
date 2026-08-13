@@ -77,6 +77,16 @@ jobs:
           done
           ls -lh release/
 
+          # The notes advertise $VERSION; prove that is what npm pack produced.
+          VERSION=$(node -p "require('./packages/tokens/package.json').version")
+          for p in tokens icons web react; do
+            if [ ! -f "release/dhcw-sr-$p-$VERSION.tgz" ]; then
+              echo "::error::Expected release/dhcw-sr-$p-$VERSION.tgz, which the release notes will link. Got:"
+              ls release/
+              exit 1
+            fi
+          done
+
       # Prove the tarballs are installable before publishing them, using a
       # throwaway project outside the workspace so no workspace linking can
       # make a broken tarball look fine.
@@ -114,16 +124,34 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ inputs.tag || github.ref_name }}
         run: |
+          # Read the version rather than hardcoding it. These URLs carry BOTH
+          # the tag and the package version, and the version half used to be
+          # literal "0.1.0". The packages moved to 0.1.1 and nothing updated it,
+          # so the release notes would have handed every consumer four URLs that
+          # 404 — the release itself looking perfectly healthy.
+          VERSION=$(node -p "require('./packages/tokens/package.json').version")
+          echo "Packing version $VERSION under tag $TAG"
+
+          # All four must agree, or the notes are right for some and wrong for
+          # others. Cheaper to fail here than to publish a half-broken release.
+          for p in icons web react; do
+            v=$(node -p "require('./packages/$p/package.json').version")
+            if [ "$v" != "$VERSION" ]; then
+              echo "::error::packages/$p is $v but packages/tokens is $VERSION. Version the four together."
+              exit 1
+            fi
+          done
+
           notes="Install with plain npm — no registry and no credentials.
 
           Add to \`package.json\`, then \`npm install\`:
 
           \`\`\`json
           \"dependencies\": {
-            \"@dhcw/sr-tokens\": \"https://github.com/${{ github.repository }}/releases/download/$TAG/dhcw-sr-tokens-0.1.0.tgz\",
-            \"@dhcw/sr-icons\":  \"https://github.com/${{ github.repository }}/releases/download/$TAG/dhcw-sr-icons-0.1.0.tgz\",
-            \"@dhcw/sr-web\":    \"https://github.com/${{ github.repository }}/releases/download/$TAG/dhcw-sr-web-0.1.0.tgz\",
-            \"@dhcw/sr-react\":  \"https://github.com/${{ github.repository }}/releases/download/$TAG/dhcw-sr-react-0.1.0.tgz\"
+            \"@dhcw/sr-tokens\": \"https://github.com/${{ github.repository }}/releases/download/$TAG/dhcw-sr-tokens-$VERSION.tgz\",
+            \"@dhcw/sr-icons\":  \"https://github.com/${{ github.repository }}/releases/download/$TAG/dhcw-sr-icons-$VERSION.tgz\",
+            \"@dhcw/sr-web\":    \"https://github.com/${{ github.repository }}/releases/download/$TAG/dhcw-sr-web-$VERSION.tgz\",
+            \"@dhcw/sr-react\":  \"https://github.com/${{ github.repository }}/releases/download/$TAG/dhcw-sr-react-$VERSION.tgz\"
           }
           \`\`\`
 
