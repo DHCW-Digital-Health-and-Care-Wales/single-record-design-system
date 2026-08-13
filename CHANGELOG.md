@@ -69,9 +69,11 @@ this file says so and tells you what to change.
 
 ### Known gap
 
-- **Only the DHCW marks are in the repository.** The `nhs_wales`, `wcp`, `wncr`
-  and `UEC` subgroups have no asset, so no co-brand or product mark can be
-  rendered in code yet.
+- **`UEC` has no asset**, so Urgent and Emergency Care cannot render its own
+  mark. Its Figma artwork needs fixing first — the icons have unfilled vectors,
+  the lockups carry live text.
+- **`wncr` is white only**, so a WNCR mark cannot go on a light background. Its
+  navy variant is drawn with strokes and cannot be exported until outlined.
 
 ---
 
