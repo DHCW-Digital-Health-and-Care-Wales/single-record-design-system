@@ -1924,18 +1924,7 @@ patient. Pick the variant, size and framework; the preview and the code update t
   <div id="btn-fw"></div>
 </section>
 
-<h2>When to use</h2>
-<ul>
-  <li>One <strong>Primary</strong> action per view, such as submit or confirm.</li>
-  <li><strong>Secondary</strong> for supporting actions alongside the primary one.</li>
-  <li><strong>Ghost</strong> for low-emphasis actions such as cancel or back.</li>
-  <li><strong>Destructive</strong> for permanent deletion. Always pair it with a confirmation dialog.</li>
-</ul>
-
-<h2>Placement</h2>
-<p>Forms and page-level sections align their actions left, with the primary action first and the
-cancel action as a text link after it. Modals and dialogs group their actions at the bottom
-right, with the primary action last and cancel as an equal-weight button to its left.</p>
+${renderMarkdown(stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'button', 'guidelines.md'), 'utf8'))))}
 
 <p>For general button guidance such as grouping and ordering, follow
 <a href="https://design-system.service.gov.uk/components/button/" target="_blank" rel="noopener">GDS</a> and

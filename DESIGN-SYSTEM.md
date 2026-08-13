@@ -521,6 +521,10 @@ markdown is the single source, and the two must not fork.
 | `Guidelines/Navigation` | Navigation | `4380:33504` |
 | `Guidelines/Header` | Header | `4380:33527` |
 | `Guidelines/Footer` | Footer | `4380:33550` |
+| `Guidelines/Breadcrumbs` | Breadcrumbs | `4457:20` |
+| `Guidelines/Tables` | Tables | `4457:57` |
+| `Guidelines/Toggles` | Toggles | `4457:94` |
+| `Guidelines/Buttons` | Buttons | `4457:134` |
 
 See `/figma/README.md` for tooling guidance and `/figma/variable-mapping.md` for the full token-to-variable mapping.
 
