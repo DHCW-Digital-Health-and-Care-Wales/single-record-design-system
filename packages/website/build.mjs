@@ -3728,24 +3728,34 @@ ${codePanel('get-files-npm-import', {
 <div class="callout"><p><strong>npm cannot serve a MAUI app.</strong> npm is JavaScript-only and
 there is no npm in the .NET toolchain, so none of the packages above can be installed into a MAUI
 project. MAUI has its own package.</p></div>
-<div class="callout"><p><strong>Not on a feed yet.</strong> The package builds and packs in CI on
-every change, but nothing publishes it, so <code>dotnet add package</code> will not resolve it
-today. Until it is published, build it from a checkout &mdash;
-<code>npm run pack:maui</code> writes the <code>.nupkg</code> to <code>dist/nuget/</code> &mdash;
-and add that folder as a local source. Publishing is part of the open scope decision in
-DDR&#8209;020.</p></div>
-<div class="codepanel"><pre><code># once published
-dotnet add package DHCW.SingleRecord.Maui
-
-# until then, from a checkout of the design system
-npm run pack:maui
-dotnet nuget add source /path/to/dist/nuget --name sr-local
-dotnet add package DHCW.SingleRecord.Maui --source sr-local</code></pre></div>
-<p>Targets <code>net10.0-android</code>, matching what this repository builds with. On macOS the
-pack also includes <code>net10.0-ios</code> and <code>net10.0-maccatalyst</code>, and on Windows
-<code>net10.0-windows10.0.19041.0</code> &mdash; the workloads only exist on those hosts, so a
-complete package has to be packed there. It ships three ResourceDictionaries and the brand
-marks:</p>
+<div class="callout"><p><strong>This feed needs authentication, and that is deliberate.</strong>
+GitHub Packages requires a token for every install, including public packages. The MAUI package
+carries the NHS Wales and DHCW brand marks, which are trademarked artwork not covered by its MIT
+licence, so a feed that cannot be read anonymously is the right place for it. Reasoning in
+DDR&#8209;024.</p></div>
+<p><strong>1. Add a <code>nuget.config</code> beside your solution.</strong> A classic personal
+access token with <code>read:packages</code> is enough to install. The
+<code>%GITHUB_PACKAGES_TOKEN%</code> form reads an environment variable, so this file is safe to
+commit and your token is not in it &mdash; set the variable from a secret in Azure DevOps, or in
+your shell profile locally.</p>
+<div class="codepanel"><pre><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;configuration&gt;
+  &lt;packageSources&gt;
+    &lt;add key="dhcw" value="https://nuget.pkg.github.com/OWNER/index.json" /&gt;
+  &lt;/packageSources&gt;
+  &lt;packageSourceCredentials&gt;
+    &lt;dhcw&gt;
+      &lt;add key="Username" value="YOUR_GITHUB_USERNAME" /&gt;
+      &lt;add key="ClearTextPassword" value="%GITHUB_PACKAGES_TOKEN%" /&gt;
+    &lt;/dhcw&gt;
+  &lt;/packageSourceCredentials&gt;
+&lt;/configuration&gt;</code></pre></div>
+<p><strong>2. Install.</strong></p>
+<div class="codepanel"><pre><code>dotnet add package DHCW.SingleRecord.Maui</code></pre></div>
+<p>Targets <code>net10.0-android</code>, <code>net10.0-ios</code> and
+<code>net10.0-maccatalyst</code>. <code>net10.0</code> matches what this repository builds with; if
+your app targets an earlier .NET it can be lowered. It ships three ResourceDictionaries and the
+brand marks:</p>
 <table>
   <thead><tr><th>Dictionary</th><th>Contents</th></tr></thead>
   <tbody>

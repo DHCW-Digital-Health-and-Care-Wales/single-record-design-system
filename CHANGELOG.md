@@ -67,6 +67,18 @@ this file says so and tells you what to change.
   three had code but nowhere documenting when to reach for which; each page now
   opens with the same "which one" table so the choice between them is the first
   thing you see.
+- **`DHCW.SingleRecord.Maui` publishes to GitHub Packages (DDR-024).** A MAUI app
+  installs it with `dotnet add package` instead of building it out of a checkout.
+  **Action needed for MAUI teams:** the feed requires authentication for every
+  install, including public packages — add a `nuget.config` and a token with
+  `read:packages`. That is deliberate rather than an oversight: the package
+  carries NHS Wales and DHCW brand marks that its MIT licence does not cover.
+  Setup is on the "Get the files" page.
+- **The npm packages stay on release tarballs, and still need URL edits per
+  release.** GitHub Packages was considered and rejected for them: it would
+  require the scope to be renamed away from `@dhcw`, and it would put a token in
+  every developer's `.npmrc` for what is currently a credential-free install.
+  DDR-024 records the reasoning and names npmjs.org as the escape hatch.
 - **`DHCW.SingleRecord.Maui` on NuGet — MAUI apps no longer copy XAML by hand.**
   Ships `SrColors`, `SrIcons` and `SrStyles` as typed ResourceDictionaries, plus
   the brand marks registered as `MauiImage` automatically. npm cannot serve

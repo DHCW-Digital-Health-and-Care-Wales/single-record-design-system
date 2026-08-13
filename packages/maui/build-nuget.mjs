@@ -37,6 +37,25 @@ const DICTS = [
 
 mkdirSync(OUT, { recursive: true });
 
+// The package version comes from packages/maui/package.json, and is written
+// into the csproj here rather than maintained in both places.
+//
+// This is not hypothetical tidiness: the npm release workflow hardcoded "0.1.0"
+// in the URLs it advertises, the packages moved to 0.1.1, and nothing noticed —
+// a release would have published four install URLs that 404. One source, patched
+// by the build, is the shape that cannot drift.
+const VERSION = JSON.parse(readFileSync(resolve(here, 'package.json'), 'utf8')).version;
+const csprojPath = resolve(OUT, 'DHCW.SingleRecord.Maui.csproj');
+const csproj = readFileSync(csprojPath, 'utf8');
+const versioned = csproj.replace(
+  /<Version>[^<]*<\/Version>/,
+  `<Version>${VERSION}</Version>`
+);
+if (!/<Version>/.test(csproj)) {
+  throw new Error('csproj has no <Version> element to set');
+}
+if (versioned !== csproj) writeFileSync(csprojPath, versioned);
+
 for (const [file, cls, summary] of DICTS) {
   const src = readFileSync(resolve(here, file), 'utf8');
 
@@ -113,6 +132,6 @@ for (const f of brand) {
 
 const iconCount = (readFileSync(resolve(here, 'Icons.xaml'), 'utf8').match(/<x:String /g) || []).length;
 console.log(
-  `@dhcw/sr-maui: NuGet project assembled — ${DICTS.length} dictionaries `
+  `@dhcw/sr-maui: NuGet project assembled — v${VERSION}, ${DICTS.length} dictionaries `
   + `(${iconCount} icons), ${brand.length} brand marks.`
 );
