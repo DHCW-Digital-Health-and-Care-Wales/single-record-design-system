@@ -11,6 +11,135 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 ---
 
+## Checkpoint — 2026-08-13/14 (v0.2.0 shipped; MAUI compiles and publishes; two DDRs)
+
+### State: released and merged, nothing mid-flight
+
+Everything below is on `main`. No open PRs from this session, no pending CI.
+PRs #106, #107, #108 all merged, all green before merging (see "PRs merged
+this session" below if a merge needs auditing).
+
+### What shipped
+
+- **9 logo variants extracted from Figma** (`fillGeometry` over MCP — the
+  `figma.com` domain is blocked by this environment's egress proxy, so
+  `download_assets` cannot be used; `use_figma` reading path geometry is the
+  only working route). `figma/assets/` went from 5 files to 14. `@dhcw/sr-web`
+  exports them as data URIs and as real files under `@dhcw/sr-web/logos`.
+  Gaps that remain and need Figma work, not code: **WNCR has no navy mark**
+  (its dark variant uses strokes, unliftable), **UEC has no mark at all**
+  (unfilled vector icons, live-text lockups).
+- **Icon stroke 2px → 1px, DDR-023.** Figma had already moved (121/125
+  components at 1px) — code was the outlier. Applied everywhere: source SVGs,
+  `icons.js`, `sprite.svg`, MAUI `Icons.xaml`, 10 hand-inlined website chrome
+  icons. **Do not touch `Icon/warnings/*`** (error/warning/check/determinate)
+  — those are filled state badges, a different species, correctly excluded.
+  Confirmed with design lead before any Figma change.
+- **3 new icons**: `action/star`, `schedule/bookmark`, `file/pin`. Verified
+  against upstream Lucide geometry, not just Figma coordinates.
+- **DDR-022**: when to wrap a third-party component on web vs. build native.
+  Test is behavioural complexity, not component importance. Select stays
+  hand-built; Menu/Tabs/Autocomplete blocked on one library evaluation.
+- **`DHCW.SingleRecord.Maui` NuGet package**: authored, then actually
+  **compiled for the first time** in CI (`build-maui-testbed.yml`) — it had
+  shipped in #106 as XML-validated-only, never built. Compiled clean on
+  first try. Retargeted `net8.0` → `net10.0` (nothing here can build net8.0;
+  CI runs .NET 10). TFMs are conditional on host OS — Linux can only build
+  `-android`, so a **complete multi-platform pack needs macOS or Windows**.
+- **DDR-024**: publish MAUI to GitHub Packages, npm stays on tarballs. The
+  two ecosystems hit GitHub Packages' constraints in opposite directions —
+  see the DDR or the message drafts below for the full reasoning. Publish
+  workflow (`publish-nuget.yml`) runs on `macos-latest`, gates on tag-matches-
+  version and nupkg-contents (targets file, 11 brand marks, all 3 TFM
+  assemblies present), **has never actually run** — needs a `dry_run: true`
+  dispatch as its first real trial before anyone trusts it.
+- **v0.2.0 released**: all 5 packages bumped together (not 0.1.2 — the 1px
+  stroke change is visible in every product, warrants a minor with teeth).
+  One-command upgrade script added to release notes + CHANGELOG (rewrites
+  both the tag AND the filename half of each URL — hand-editing either half
+  alone produces a 404).
+
+### Two real bugs found by verifying, not by reading
+
+Both are worth knowing about as a category, not just as fixed instances —
+they're the same failure shape and it will recur if version bumps are ever
+done by hand again.
+
+1. **Release workflow hardcoded `0.1.0` in the URLs it advertises.** Packages
+   moved to 0.1.1, nothing noticed, a release would have published 4 dead
+   links while the release page looked healthy. Fixed: version now read from
+   `packages/tokens/package.json`, all 4 packages checked for agreement.
+2. **Internal workspace ranges left at `^0.1.1` after the 0.2.0 bump.**
+   Caret ranges on 0.x versions are minor-locked — `^0.1.1` does NOT accept
+   `0.2.0`. `npm ci` fell through to the public registry looking for
+   `@dhcw/sr-icons`, got a 404 (it's never been published there). Local
+   builds never caught this because `node_modules` was already linked; only
+   a clean `npm ci` fails. **Caught by CI on the first push, not by any local
+   check** — which is exactly why `scripts/check-versions.mjs` now exists
+   (`npm run check:versions`, wired into `npm run check`). It also caught
+   its own author's first-pass mistake: a hand-written
+   `packages/*/package.json` glob silently missed
+   `products/case-note-tracking/prototype`, a workspace that lives outside
+   `packages/`. Second pass drives off the `workspaces` array in root
+   `package.json` instead.
+
+**Lesson for next session, if version numbers move again:** run
+`npm run check:versions` before pushing, and `rm -rf node_modules && npm ci`
+at least once — `npm install` alone will not catch a broken workspace link
+because it reuses what's already resolved.
+
+### PRs merged this session
+
+| PR | What | CI before merge |
+|---|---|---|
+| #106 | Logos, DDR-022, DDR-023 (icon stroke), 3 new icons, MAUI NuGet authored (unbuilt) | Green |
+| #107 | MAUI package compiled + packed in CI for first time; DDR-024 authored; publish workflow added; release-workflow version-hardcoding bug fixed | Green |
+| #108 | v0.2.0 bump across all 5 packages; upgrade one-liner; version-drift bug found + fixed + gated | Green (after one failed run, fixed and re-pushed — see above) |
+
+### Messages drafted, not yet sent
+
+User asked for three comms, drafted to files in this session's scratchpad
+(not committed to the repo — copy into email/Slack/Teams as needed):
+
+- MAUI dev: why brand marks can't go in `Icons.xaml`, use the NuGet package's
+  `MauiImage` marks instead.
+- Web/React devs: how installation works, what changed in v0.2.0, the
+  two-halves URL trap on upgrade.
+- Core team/manager: current npm distribution mechanism explained in plain
+  terms, why GitHub Packages doesn't work for npm (auth-on-every-install +
+  scope-must-equal-org, both hard blockers), recommends npmjs.org instead,
+  cites `nhsuk-frontend` as live precedent (verified via web search — it is
+  real and unscoped on npmjs.org). **One explicit open item in that message:
+  whether the `@dhcw` scope is available on npmjs.org has not been checked.**
+  That's the one thing blocking turning this into an actual proposal/DDR.
+
+### Open items, ranked by what blocks what
+
+1. **Check `@dhcw` scope availability on npmjs.org.** Five-minute check
+   (`npm org ls dhcw` or search npmjs.com). Blocks writing a real DDR for the
+   npm-registry move. Nobody has done this yet — the recommendation to the
+   core team is sound reasoning but stops short of this one fact.
+2. **`publish-nuget.yml` has never run.** Dry-run it before the first real
+   MAUI release tag.
+3. **MAUI `StrokeThickness` scaling below 24px is unverified** — no .NET SDK
+   in this environment, so it's a documented open question
+   (`docs/engineering/known-issues.md`), not a tested answer. First engineer
+   with a device should confirm or correct it.
+4. **Four stray Figma icon stroke weights turned out to be a non-issue**
+   (filled badges, not outlines — see DDR-023) but the underlying
+   `Icon/warnings/*` group still has **no counterpart in the code icon set**.
+   Whether filled state badges belong in the icon set at all is an open
+   design question, not an engineering one.
+5. **WNCR and UEC brand marks remain incomplete** in Figma (see "What
+   shipped" above) — needs design work, not code.
+6. **Whether `v0.1.1` was ever actually released on the public mirror is
+   unconfirmed.** This repo shows only `v0.1.0`; the CHANGELOG documents
+   `v0.1.1` as shipped; the mirror repo isn't in this session's GitHub scope.
+   Doesn't block v0.2.0 (clean bump either way) but worth a human glancing at
+   the mirror's releases page.
+
+---
+
 ## Checkpoint — 2026-08-11 (the real lockup ships; five Guidelines frames in Figma)
 
 ### The logo placeholder was half a problem, not a whole one
