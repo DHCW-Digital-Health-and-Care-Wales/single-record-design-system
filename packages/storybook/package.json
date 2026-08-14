@@ -1,7 +1,7 @@
 {
   "name": "@dhcw/sr-storybook",
   "version": "0.1.0",
-  "description": "Storybook component catalogue for the DHCW Single Record Design System. Dev-only — not published. Consumes @dhcw/sr-web and @dhcw/sr-tokens.",
+  "description": "Storybook component catalogue for the DHCW Single Record Design System. Dev-only \u2014 not published. Consumes @dhcw/sr-web and @dhcw/sr-tokens.",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,9 +9,9 @@
     "build-storybook": "storybook build -o storybook-static"
   },
   "dependencies": {
-    "@dhcw/sr-tokens": "^0.1.1",
-    "@dhcw/sr-web": "^0.1.1",
-    "@dhcw/sr-react": "^0.1.1"
+    "@dhcw/sr-tokens": "^0.2.0",
+    "@dhcw/sr-web": "^0.2.0",
+    "@dhcw/sr-react": "^0.2.0"
   },
   "devDependencies": {
     "react": "^19.0.0",

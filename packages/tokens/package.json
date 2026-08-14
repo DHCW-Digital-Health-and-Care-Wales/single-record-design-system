@@ -1,7 +1,7 @@
 {
   "name": "@dhcw/sr-tokens",
-  "version": "0.1.1",
-  "description": "DHCW Single Record Design System — design tokens. Outputs CSS custom properties, SCSS variables, and XAML ResourceDictionary from the canonical JSON token source.",
+  "version": "0.2.0",
+  "description": "DHCW Single Record Design System \u2014 design tokens. Outputs CSS custom properties, SCSS variables, and XAML ResourceDictionary from the canonical JSON token source.",
   "license": "MIT",
   "type": "module",
   "scripts": {
