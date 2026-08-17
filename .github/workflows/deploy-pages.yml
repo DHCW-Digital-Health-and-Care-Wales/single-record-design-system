@@ -25,7 +25,9 @@ on:
       - '.github/workflows/deploy-pages.yml'
   schedule:
     # Preview refresh safety net (mirror pushes don't trigger workflows on the org repo).
-    - cron: '*/30 * * * *'
+    # Hourly, not every 30 min: each run is a full `npm ci` + Storybook build, and
+    # the schedule exists to cover mirror latency, not to be a live rebuild loop.
+    - cron: '0 * * * *'
   workflow_dispatch: {}
 
 permissions:
@@ -38,6 +40,17 @@ concurrency:
 jobs:
   build:
     name: Build site (website + Storybook)
+    # The schedule is a safety net for the org repo only — it exists because
+    # mirror-key pushes don't trigger workflows there (DDR-014). On the source
+    # repo, pushes trigger this workflow directly, so a scheduled run rebuilds
+    # and re-uploads an identical artifact for nothing. Left ungated, that was
+    # 48 builds/day writing a ~10 MB artifact at the default 90-day retention,
+    # which filled the account's 0.5 GB Actions storage quota and then failed
+    # every subsequent run at the upload step ("Artifact storage quota has been
+    # hit"). Push and pull_request runs are unaffected and still run everywhere.
+    if: >-
+      github.event_name != 'schedule' ||
+      github.repository == 'DHCW-Digital-Health-and-Care-Wales/single-record-design-system'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -53,6 +66,10 @@ jobs:
           name: sr-site
           path: site-dist
           if-no-files-found: error
+          # This is a preview/download convenience, not a record. The default is
+          # 90 days, which for a per-push site build is retention far beyond the
+          # few days anyone actually opens one of these.
+          retention-days: 7
 
   deploy:
     name: Deploy to GitHub Pages (org repo)

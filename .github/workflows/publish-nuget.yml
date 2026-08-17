@@ -174,3 +174,7 @@ jobs:
           name: nupkg
           path: nupkg/*.nupkg
           if-no-files-found: error
+          # The published package on the NuGet feed is the durable copy; this
+          # artifact only exists so a dry run has something to inspect. Default
+          # retention is 90 days — no reason to hold a .nupkg that long here.
+          retention-days: 14

@@ -468,6 +468,56 @@ answers the question BrowserStack asks, of the file BrowserStack receives.
 
 ---
 
+### A scheduled build on a fork fills the artifact storage quota
+
+**Symptom:** Over a weekend, hourly mail: *"Deploy DS site (website + Storybook)
+to GitHub Pages: Some jobs were not successful"* — on scheduled runs, attached to
+no commit anyone made. Then GitHub: *"You have used 100% of the Actions storage
+included for the account"* (0.5 GB). In the run logs the Storybook build is
+clean and green; the failure is one line at the very end:
+
+```
+Failed to CreateArtifact: Artifact storage quota has been hit.
+```
+
+**Why:** `deploy-pages.yml` runs on a schedule as a safety net for the *org*
+repo, because mirror-key pushes don't trigger workflows there (DDR-014). The
+**deploy** job was guarded to the org repo; the **build** job was not. So the
+source repo — where pushes already trigger the workflow directly — rebuilt the
+whole site and uploaded a ~190-file artifact every 30 minutes, 48 times a day,
+at `upload-artifact`'s default **90-day** retention. Nothing ever aged out.
+
+Two things make this hard to see coming. Retention is invisible at the moment
+you write the step and only bites months later. And the quota failure lands on
+the *upload* step of a *scheduled* run, so the mail points at a job nobody
+started, under a log that looks entirely successful.
+
+**Fix:** Guard the job, not just the deploy step —
+
+```yaml
+if: >-
+  github.event_name != 'schedule' ||
+  github.repository == 'ORG/repo'
+```
+
+and set `retention-days` on every upload. Push and PR runs still build
+everywhere, which was the point of running the build unguarded.
+
+**Prevented by:** `npm run check:workflows` (`scripts/check-workflows.mjs`),
+in `npm run check`. It fails any `actions/upload-artifact` step with no
+`retention-days`. Setting it to `90` explicitly passes — the goal is that the
+number is a decision, not a default nobody saw. The repo-guard half is not
+mechanised: "which events should run on which repo" is intent, not a rule a
+script can infer.
+
+**Also worth knowing:** the check's own first run reported a false positive on
+the one step written as `- name:` with `uses:` on the next line — it read the
+step's indent off the `uses:` line and treated `with:` as the start of the next
+step. Caught only because the defect was planted deliberately in *both* step
+shapes. One shape passing is not the gate working.
+
+---
+
 ### Generated files must be regenerated in CI, not trusted
 
 `Colors.xaml` and `Icons.xaml` are committed so consumers can take them straight
