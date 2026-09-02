@@ -18,8 +18,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Chuk-DCHW/dhcw-single-record-design-system.git",
+    "url": "https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system.git",
     "directory": "packages/icons"
   },
-  "bugs": "https://github.com/Chuk-DCHW/dhcw-single-record-design-system/issues"
+  "bugs": "https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/issues",
+  "homepage": "https://dhcw-digital-health-and-care-wales.github.io/single-record-design-system/"
 }
