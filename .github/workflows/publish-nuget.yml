@@ -49,6 +49,12 @@ permissions:
 
 jobs:
   publish:
+    # Org repo only, and here the guard decides *which feed* the package lands
+    # in, not just who runs the job: the push target below is
+    # nuget.pkg.github.com/${{ github.repository_owner }}. Run from the personal
+    # upstream and DHCW.SingleRecord.Maui publishes to a personal feed that no
+    # MAUI team is configured to read, while appearing to have succeeded.
+    if: github.repository == 'DHCW-Digital-Health-and-Care-Wales/single-record-design-system'
     runs-on: macos-latest
     timeout-minutes: 45
 

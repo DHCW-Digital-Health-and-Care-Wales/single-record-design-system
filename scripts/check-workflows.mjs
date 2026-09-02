@@ -96,8 +96,47 @@ if (problems.length) {
   process.exit(1);
 }
 
+// ─── Publishing workflows must be pinned to the org repo ─────────────────────
+//
+// The mirror copies `main` wholesale, so every workflow file exists in BOTH the
+// personal upstream and the DHCW org repo. Anything that publishes outside this
+// repository therefore needs a repo guard, or the same release fires twice from
+// two places.
+//
+// For publish-nuget.yml the guard decides more than who runs it: the push
+// target is nuget.pkg.github.com/${{ github.repository_owner }}, so an unguarded
+// run from the personal upstream publishes to a personal feed nobody reads,
+// and reports success. That failure is invisible until a MAUI developer says
+// the package never appeared.
+//
+// Deliberately keyed on the workflow *filename* rather than sniffing for
+// publish commands: a new publishing workflow should have to be added here on
+// purpose, which is a moment to think about where it runs.
+const ORG_REPO = 'DHCW-Digital-Health-and-Care-Wales/single-record-design-system';
+const MUST_BE_ORG_ONLY = ['release-packages.yml', 'publish-nuget.yml'];
+
+const unguarded = MUST_BE_ORG_ONLY.filter((name) => {
+  if (!files.includes(name)) return false;
+  const body = readFileSync(resolve(DIR, name), 'utf8');
+  return !body.includes(`github.repository == '${ORG_REPO}'`);
+});
+
+if (unguarded.length) {
+  console.error(
+    `\ncheck:workflows — ${unguarded.length} publishing workflow(s) with no org guard:\n\n  `
+    + unguarded.map((n) => `.github/workflows/${n}`).join('\n  ')
+    + `\n\nEach needs, on its job:\n\n`
+    + `    if: github.repository == '${ORG_REPO}'\n\n`
+    + 'Without it the workflow also runs in the personal upstream, which the mirror\n'
+    + 'keeps byte-identical — so one release publishes twice, and for NuGet the\n'
+    + 'second copy lands in a feed no consumer is configured to read.\n'
+  );
+  process.exit(1);
+}
+
 const count = files.length;
 console.log(
   `check:workflows — ${count} workflow${count === 1 ? '' : 's'}, `
-  + 'all artifact uploads set retention-days.'
+  + 'all artifact uploads set retention-days, '
+  + `${MUST_BE_ORG_ONLY.length} publishing workflow(s) pinned to the org repo.`
 );
