@@ -12,6 +12,7 @@
   --color-blue-600: #4c72ae;
   --color-blue-700: #3d6199;
   --color-blue-800: #325083; /** Brand primary (light mode) */
+  --color-blue-850: #2c3e72; /** DHCW organisational navy. Carried from the DHCW Figma primitives, where it is the corporate blue used for application chrome. White text on it is 10.3:1 (AAA). Not the Single Record brand primary — that is Blue/800. */
   --color-blue-900: #1e3050;
   --color-cyan-50: #f4fafc;
   --color-cyan-100: #ebf5fa;
@@ -68,17 +69,21 @@
   --color-info-blue-700: #005aa8; /** Interactive/Link (light), Status/Info */
   --color-info-blue-800: #004483; /** Interactive/Primary Hover (dark mode) */
   --color-info-blue-900: #002e5c;
-  --color-info-blue-default: #005aa8; /** Alias for 700 — retained for backward compatibility */
-  --color-focus-yellow-default: #ffeb3b;
-  --color-grey-100: #f0f4f5;
-  --color-grey-200: #d8dde0;
-  --color-grey-600: #4c6272;
-  --color-grey-900: #212b32;
-  --color-white-default: #ffffff;
+  --color-grey-50: #f7fafa; /** Lightest neutral wash */
+  --color-grey-100: #f0f4f5; /** Grey background. NHS grey-5. */
+  --color-grey-200: #d8dde0; /** Default borders. NHS grey-4. */
+  --color-grey-300: #c6cdd1; /** Subtle dividers, disabled fills (1.6:1) */
+  --color-grey-400: #aeb7bd; /** Borders, dividers — non-text (2.0:1). NHS grey-3. */
+  --color-grey-500: #768692; /** Muted/placeholder fill, disabled text, icons, strong borders (3.75:1 — passes 3:1 non-text; below 4.5:1 for body text). NHS grey-2. */
+  --color-grey-600: #4c6272; /** Secondary/hint text (6.4:1 — AA). NHS grey-1. Accessible placeholder-text value. */
+  --color-grey-700: #3b4e5b; /** Headings on grey surfaces (8.7:1) */
+  --color-grey-800: #2c3a44; /** Strong text on tinted surfaces (11.7:1) */
+  --color-grey-900: #212b32; /** Primary text (14.4:1 on white) */
+  --color-white-default: #ffffff; /** Card and panel surfaces in light mode; Text/Inverse on saturated fills */
   --color-border-subtle: #f0f4f5; /** Ultra-light border for row dividers and internal table separators. Use only on white or near-white backgrounds where Border/Default would be too prominent. Do not use as the only structural indicator on a surface. */
   --color-border-default: #d8dde0; /** Standard border for inputs, cards, and section dividers. */
   --color-border-strong: #4c6272; /** High-contrast border for section edges, active table rows, and structural dividers that must be clearly visible. */
-  --color-border-focus: #12a3c9; /** Focus ring colour — Cyan/700 (DDR-006). Applied to all interactive elements on keyboard focus. Always paired with Border/Width/Strong (2px) and an inner gap ring. */
+  --color-border-focus: #0d8bad; /** Focus ring colour — Cyan/800 (DDR-025, amending DDR-006). Applied to all interactive elements on keyboard focus. Always paired with Border/Width/Strong (2px) and an inner gap ring. Kept in step with sr.color.border.focus by hand: this token and the sr-prefixed one are the known duplication awaiting a token-structure decision. */
   --sr-color-interactive-primary: #325083; /** Brand primary. White text on blue-800 = 7.1:1 (AAA). */
   --sr-color-interactive-primary-hover: #1e3050; /** Hover step for primary. */
   --sr-color-interactive-secondary: #1b294a; /** Muted dark for secondary interactive elements. */
@@ -97,17 +102,17 @@
   --sr-color-border-subtle: #f0f4f5;
   --sr-color-border-default: #d8dde0;
   --sr-color-border-strong: #4c6272;
-  --sr-color-border-focus: #12a3c9; /** Focus ring — cyan/700 in both modes (DDR-006). Supersedes the previous focus-yellow. */
+  --sr-color-border-focus: #0d8bad; /** Focus ring — Cyan/800 in both modes (DDR-025, amending DDR-006). Cyan/700 was 2.95:1 on a card and 2.71:1 on the page, under the 3:1 SC 1.4.11 requires. Cyan/800 is the only stop clearing 3:1 in both modes: darker stops fix light mode and fail dark, where surfaces are navy. */
   --sr-color-border-disabled: #9ea1af;
   --sr-color-brand-accent: #12a3c9; /** Decorative accent only. Borders, icon strokes, chart accents, tab indicators. Never use as a filled surface with text on top. */
   --sr-color-status-critical: #b32014; /** Red/700 (#B32014) — raised from Red/600 for AA contrast on light status surfaces and text. */
-  --sr-color-status-critical-surface: #fcdbd9;
+  --sr-color-status-critical-surface: #fef3f2; /** Red/50 (#FEF3F2) — lightened from Red/100 so Status/Critical text on it reaches 6.16:1 (was 5.19:1). */
   --sr-color-status-success: #006630; /** Green/700 (#006630) — raised from Green/600 for AA contrast on light status surfaces and text. */
-  --sr-color-status-success-surface: #d9efe5;
+  --sr-color-status-success-surface: #f0faf4; /** Green/50 (#F0FAF4) — lightened from Green/100 so Status/Success text on it reaches 6.69:1 (was 5.92:1). */
   --sr-color-status-warning: #f8ca4d;
-  --sr-color-status-warning-surface: #fdf3d7;
+  --sr-color-status-warning-surface: #fffaeb; /** Yellow/50 (#FFFAEB) — lightened from Yellow/100 to match the other status surfaces. Note that Status/Warning (Yellow/500) on it is 1.49:1 and must never carry text unaided; see the warning-role exception in the Icons guidance. */
   --sr-color-status-info: #005aa8;
-  --sr-color-status-info-surface: #d6e8f5;
+  --sr-color-status-info-surface: #eef5fc; /** Info Blue/50 (#EEF5FC) — lightened from Info Blue/100 so Status/Info text on it reaches 6.31:1 (was 5.52:1). */
   --space-0: 0px; /** Explicit zero */
   --space-1: 4px; /** Icon padding, micro gaps */
   --space-2: 8px; /** Tight component internals */
@@ -186,6 +191,8 @@
   --radius-md: 4px; /** Standard rounding. Use for buttons, cards, panels, notification banners, and tooltips. Default for most interactive components. */
   --radius-lg: 8px; /** Prominent rounding. Use for modals, side drawers, floating menus, and large overlay surfaces. */
   --radius-full: 9999px; /** Pill shape. Use for status chips, avatar rings, toggle switches, and search input end-caps. Not appropriate for rectangular content containers. */
+  --elevation-raised: 0 1px 4px rgba(27, 41, 74, 0.12); /** Cards and panels: a gentle lift from the page surface. Use only where a border alone is insufficient to separate a surface from its background, for example a white card on a near-white page. Also used by the patient banner and the navigation sidebar. */
+  --elevation-overlay: 0 4px 16px rgba(27, 41, 74, 0.18); /** All floating layers: modals, side drawers, dropdown menus and tooltips. The deeper shadow communicates that the surface sits above the page rather than on it. Never use the raised step for a floating layer — a card-weight shadow reads flat against a modal's own backdrop. */
   --size-touch-24: 24px; /** Global: WCAG 2.2 AA minimum (SC 2.5.8). Requires ≥10px inactive spacing on all sides. */
   --size-touch-32: 32px; /** Global: desktop compact target. Desktop mouse contexts only. */
   --size-touch-44: 44px; /** Global: WCAG 2.2 AAA (SC 2.5.5). Required for all touch interfaces. */

@@ -83,7 +83,7 @@
   --color-border-subtle: #f0f4f5; /** Ultra-light border for row dividers and internal table separators. Use only on white or near-white backgrounds where Border/Default would be too prominent. Do not use as the only structural indicator on a surface. */
   --color-border-default: #d8dde0; /** Standard border for inputs, cards, and section dividers. */
   --color-border-strong: #4c6272; /** High-contrast border for section edges, active table rows, and structural dividers that must be clearly visible. */
-  --color-border-focus: #12a3c9; /** Focus ring colour — Cyan/700 (DDR-006). Applied to all interactive elements on keyboard focus. Always paired with Border/Width/Strong (2px) and an inner gap ring. */
+  --color-border-focus: #0d8bad; /** Focus ring colour — Cyan/800 (DDR-025, amending DDR-006). Applied to all interactive elements on keyboard focus. Always paired with Border/Width/Strong (2px) and an inner gap ring. Kept in step with sr.color.border.focus by hand: this token and the sr-prefixed one are the known duplication awaiting a token-structure decision. */
   --sr-color-interactive-primary: #325083; /** Brand primary. White text on blue-800 = 7.1:1 (AAA). */
   --sr-color-interactive-primary-hover: #1e3050; /** Hover step for primary. */
   --sr-color-interactive-secondary: #1b294a; /** Muted dark for secondary interactive elements. */
@@ -102,17 +102,17 @@
   --sr-color-border-subtle: #f0f4f5;
   --sr-color-border-default: #d8dde0;
   --sr-color-border-strong: #4c6272;
-  --sr-color-border-focus: #12a3c9; /** Focus ring — cyan/700 in both modes (DDR-006). Supersedes the previous focus-yellow. */
+  --sr-color-border-focus: #0d8bad; /** Focus ring — Cyan/800 in both modes (DDR-025, amending DDR-006). Cyan/700 was 2.95:1 on a card and 2.71:1 on the page, under the 3:1 SC 1.4.11 requires. Cyan/800 is the only stop clearing 3:1 in both modes: darker stops fix light mode and fail dark, where surfaces are navy. */
   --sr-color-border-disabled: #9ea1af;
   --sr-color-brand-accent: #12a3c9; /** Decorative accent only. Borders, icon strokes, chart accents, tab indicators. Never use as a filled surface with text on top. */
   --sr-color-status-critical: #b32014; /** Red/700 (#B32014) — raised from Red/600 for AA contrast on light status surfaces and text. */
-  --sr-color-status-critical-surface: #fcdbd9;
+  --sr-color-status-critical-surface: #fef3f2; /** Red/50 (#FEF3F2) — lightened from Red/100 so Status/Critical text on it reaches 6.16:1 (was 5.19:1). */
   --sr-color-status-success: #006630; /** Green/700 (#006630) — raised from Green/600 for AA contrast on light status surfaces and text. */
-  --sr-color-status-success-surface: #d9efe5;
+  --sr-color-status-success-surface: #f0faf4; /** Green/50 (#F0FAF4) — lightened from Green/100 so Status/Success text on it reaches 6.69:1 (was 5.92:1). */
   --sr-color-status-warning: #f8ca4d;
-  --sr-color-status-warning-surface: #fdf3d7;
+  --sr-color-status-warning-surface: #fffaeb; /** Yellow/50 (#FFFAEB) — lightened from Yellow/100 to match the other status surfaces. Note that Status/Warning (Yellow/500) on it is 1.49:1 and must never carry text unaided; see the warning-role exception in the Icons guidance. */
   --sr-color-status-info: #005aa8;
-  --sr-color-status-info-surface: #d6e8f5;
+  --sr-color-status-info-surface: #eef5fc; /** Info Blue/50 (#EEF5FC) — lightened from Info Blue/100 so Status/Info text on it reaches 6.31:1 (was 5.52:1). */
   --space-0: 0px; /** Explicit zero */
   --space-1: 4px; /** Icon padding, micro gaps */
   --space-2: 8px; /** Tight component internals */

@@ -28,7 +28,7 @@
         "subtle":   { "$type": "color", "$value": "{color.grey.100}" },
         "default":  { "$type": "color", "$value": "{color.grey.200}" },
         "strong":   { "$type": "color", "$value": "{color.grey.600}" },
-        "focus":    { "$type": "color", "$value": "{color.cyan.700}",  "$description": "Focus ring — cyan/700 in both modes (DDR-006). Supersedes the previous focus-yellow." },
+        "focus":    { "$type": "color", "$value": "{color.cyan.800}",  "$description": "Focus ring — Cyan/800 in both modes (DDR-025, amending DDR-006). Cyan/700 was 2.95:1 on a card and 2.71:1 on the page, under the 3:1 SC 1.4.11 requires. Cyan/800 is the only stop clearing 3:1 in both modes: darker stops fix light mode and fail dark, where surfaces are navy." },
         "disabled": { "$type": "color", "$value": "{color.navy.300}" }
       },
       "brand": {
@@ -36,13 +36,13 @@
       },
       "status": {
         "critical":         { "$type": "color", "$value": "{color.red.700}", "$description": "Red/700 (#B32014) — raised from Red/600 for AA contrast on light status surfaces and text." },
-        "critical-surface": { "$type": "color", "$value": "{color.red.100}" },
+        "critical-surface": { "$type": "color", "$value": "{color.red.50}", "$description": "Red/50 (#FEF3F2) — lightened from Red/100 so Status/Critical text on it reaches 6.16:1 (was 5.19:1)." },
         "success":          { "$type": "color", "$value": "{color.green.700}", "$description": "Green/700 (#006630) — raised from Green/600 for AA contrast on light status surfaces and text." },
-        "success-surface":  { "$type": "color", "$value": "{color.green.100}" },
+        "success-surface":  { "$type": "color", "$value": "{color.green.50}", "$description": "Green/50 (#F0FAF4) — lightened from Green/100 so Status/Success text on it reaches 6.69:1 (was 5.92:1)." },
         "warning":          { "$type": "color", "$value": "{color.yellow.500}" },
-        "warning-surface":  { "$type": "color", "$value": "{color.yellow.100}" },
+        "warning-surface":  { "$type": "color", "$value": "{color.yellow.50}", "$description": "Yellow/50 (#FFFAEB) — lightened from Yellow/100 to match the other status surfaces. Note that Status/Warning (Yellow/500) on it is 1.49:1 and must never carry text unaided; see the warning-role exception in the Icons guidance." },
         "info":             { "$type": "color", "$value": "{color.info-blue.700}" },
-        "info-surface":     { "$type": "color", "$value": "{color.info-blue.100}" }
+        "info-surface":     { "$type": "color", "$value": "{color.info-blue.50}", "$description": "Info Blue/50 (#EEF5FC) — lightened from Info Blue/100 so Status/Info text on it reaches 6.31:1 (was 5.52:1)." }
       }
     }
   }

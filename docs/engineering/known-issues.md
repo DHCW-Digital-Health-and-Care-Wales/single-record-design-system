@@ -395,6 +395,154 @@ catch the drift half of this.
 
 ## Web / CSS
 
+### A form control's rest border needs 3:1, and Border/Default does not reach it
+
+**Symptom:** An unchecked checkbox or radio looks faint, especially on a laptop
+screen in a bright ward. It reads as decoration rather than as something to
+click.
+
+**Why:** Both drew their rest border with `Border/Default` (Grey/200 `#D8DDE0`),
+which is **1.37:1 on white**. WCAG 2.2 SC 1.4.11 Non-text Contrast requires
+**3:1** for the visual boundary of a UI component, and an unchecked box is
+exactly that — the border is the only thing telling you the control is there.
+This is easy to get wrong because Border/Default is the right choice for a
+*divider*, where nothing is being identified as interactive, and the two uses
+look similar in a stylesheet.
+
+**Fix:** Form control boundaries use `Border/Strong` (Grey/600 `#4C6272`,
+6.37:1). Dividers, card outlines and table rules stay on `Border/Default` —
+they are not control boundaries and 1.4.11 does not apply to them.
+
+**Watch the state that used to be the fix.** Both components had hover set to
+`Border/Strong`. Once rest uses it, hover is a no-op — the same value applied
+twice. Hover moved to `Interactive/Primary`, previewing the checked colour.
+Any component that darkens on hover has this collision waiting for it.
+
+**Prevented by:** `npm run check:contrast`
+(`scripts/check-contrast.mjs`), which asserts the pairs the system commits to
+and fails the build when one drops below its ratio. Verified by planting the
+old Grey/200 value and confirming it was caught at 1.37:1.
+
+---
+
+### The focus ring was 2.95:1 against the 3:1 SC 1.4.11 wants — fixed, DDR-025
+
+**Resolved 2026-09-02.** `Border/Focus` is now Cyan/800 `#0D8BAD`. The entry is
+kept because the reasoning is the reusable part: the trap here is fixing a
+contrast failure in one mode and creating one in the other.
+
+**Symptom:** Nothing visible. This was found by computing it, not by looking.
+
+**Why:** `Border/Focus` is Cyan/700 `#12A3C9` (DDR-006). Against a white card
+it is **2.95:1**; against the page background (Blue/50 `#F4F5F8`) it is
+**2.71:1**. SC 1.4.11 requires 3:1 for a focus indicator. The card case misses
+by 0.05, the page case by more. It affects every focusable component, because
+the ring is system-wide.
+
+Worth separating from the other `#12A3C9` finding already on file: that one is
+*white text on a cyan fill* at 2.95:1 in the MAUI app. This is *cyan on white*
+— a different pair that happens to land on a near-identical number, and it had
+not been computed before.
+
+**Fix:** Applied — `Border/Focus` moved to Cyan/800 `#0D8BAD` (DDR-025).
+
+**Check both modes before picking a stop.** The obvious move is to darken the
+ring, and in light mode any of 800/850/900 works. Dark mode inverts the
+problem: its surfaces are navy, so a darker ring gets *worse*, and Cyan/850 —
+the intuitive choice, and the one first proposed here — fails dark mode at
+2.95:1 on `navy.900`, mirroring exactly the light-mode failure it was meant to
+fix. Only one stop clears 3:1 in both:
+
+| Stop | Light: white / page | Dark: navy.900 / blue.900 | Verdict |
+|---|---|---|---|
+| Cyan/700 (current) | 2.95 / 2.71 | 4.86 / 4.46 | fails light |
+| **Cyan/800 `#0D8BAD`** | **3.95 / 3.63** | **3.63 / 3.33** | **passes both** |
+| Cyan/850 `#0C7B99` | 4.87 / 4.47 | 2.95 / 2.70 | fails dark |
+| Cyan/900 `#0A6A84` | 6.16 / 5.65 | 2.29 / 2.10 | fails dark |
+
+Cyan/800 is also the smallest visual change, being the nearest stop to the
+current value.
+
+**An exception was considered and rejected.** The warning-icon exception holds
+because the warning colour is a fill that always sits beside a text label, so
+nothing depends on the colour alone. A focus ring has no such backstop: it is
+the only thing telling a keyboard user where they are.
+
+**Two things had to change together, and one of them was not the token.**
+Thirteen focus rings across eight components (`button`, `header`, `navigation`,
+`breadcrumbs`, `segmented-control`, `table`, `tags`, `bottom-nav`) hardcoded
+`var(--color-cyan-700)` — the raw primitive — instead of
+`var(--sr-color-border-focus)`. Changing the token alone would have moved the
+other rings and left those thirteen behind, giving the system two focus colours
+at once. They were repointed first. **This is the shape to look for whenever a
+semantic token changes: grep for the primitive as well as the semantic name.**
+
+**Prevented by:** `npm run check:contrast` asserts the ring against page
+background and section cards in **both modes**, so a future change that clears
+one mode and breaks the other fails the build.
+
+**Separately, and true of any stop:** in dark mode `surface.small-cards`
+resolves to Cyan/850, so a cyan ring on a small card is 1.65:1 today and
+cannot be fixed by moving the ring. That is the dark-mode surface assignment
+flagged in the 2026-08-10 checkpoint, not a focus-ring problem.
+
+**Tracked by:** `npm run check:contrast`, which reports it under OPEN FINDINGS
+on every run without failing the build. It is pre-existing debt with a name on
+it, not an exemption — the check is what stops it being forgotten again.
+
+---
+
+### The dark-mode primary button is near-black text on mid-blue — open
+
+**Symptom:** In dark mode the primary button's label is barely legible, at
+2.26:1. Nobody has reported it, because the website's dark-mode toggle is
+currently off — but any product consuming `single-record-dark.css` has this
+today.
+
+**Why:** `button.css` sets `color: var(--sr-color-text-inverse)` on an
+`--sr-color-interactive-primary` fill. That is right in light mode: white on
+Blue/800, 8.04:1. In dark mode `text-inverse` is `#212b32`, near-black — and
+that is not a bug in the token. Its own description says it means *"text on
+light elements within a dark-mode interface"*, which is a sensible thing for a
+token to mean. The mismatch is that **a primary button is not a light element
+in either mode**, so it is reaching for the wrong token.
+
+DDR-011 records the intent as white on Info-Blue/600 at 5.1:1. That is not what
+renders.
+
+**The general shape, which is the reusable part:** a token whose meaning is
+*relative to the mode* ("inverse") cannot be used by a component whose surface
+is *absolute* (always saturated). Anywhere a component fills with a brand colour
+and labels it with `text-inverse`, check both modes.
+
+**Fix:** Not applied. The fix is a token that means "text on a primary fill" and
+holds white in both modes, which is a token-structure change and needs a DDR.
+Found by extending the contrast gate to dark mode, not by looking.
+
+**Tracked by:** `npm run check:contrast`, under OPEN FINDINGS.
+
+---
+
+### The Blazor CSS under `wwwroot/` is a hand-copied mirror and had drifted
+
+**Symptom:** A token change lands everywhere except Blazor, which keeps
+rendering the old values with nothing failing.
+
+**Why:** `packages/blazor/wwwroot/css/` holds copies of `tokens.css`,
+`tokens-dark.css` and `button.css`. The copy commands are written down in
+`DHCW.SingleRecord.Components.csproj` — as a **comment**. Nothing runs them.
+When the focus ring moved to Cyan/800 the mirror still carried Cyan/700
+throughout, and its `button.css` still referenced the `--color-cyan-700`
+primitive that had just been removed from source.
+
+**Fix:** `npm run fix:blazor-mirror` re-copies all three.
+
+**Prevented by:** `npm run check:blazor-mirror` (`scripts/check-blazor-mirror.mjs`),
+wired into `npm run check`, which fails when any mirrored file differs from its
+source. Verified by planting a change in the copy and confirming it was caught.
+
+---
+
 ### `overflow-x: auto` does not stop a wide child scrolling the page
 
 **Symptom:** A wide table scrolls inside its wrapper *and* drags the whole page

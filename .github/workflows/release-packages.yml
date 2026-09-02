@@ -42,6 +42,16 @@ permissions:
 
 jobs:
   release:
+    # Releases run in the DHCW org repo only (DDR-014, Gate 2). The same
+    # workflow file exists in the personal upstream because the mirror copies
+    # main wholesale, so without this guard a `v*` tag pushed upstream would
+    # publish a second time from the wrong place. It skips there instead.
+    #
+    # The org repo cannot release automatically on a tag: the mirror pushes
+    # `HEAD:main` only, so tags never arrive, and pushes made with a deploy key
+    # do not trigger workflows regardless. Use "Run workflow" here and give it
+    # the tag — that dispatch creates the tag as well as releasing it.
+    if: github.repository == 'DHCW-Digital-Health-and-Care-Wales/single-record-design-system'
     runs-on: ubuntu-latest
     timeout-minutes: 15
 

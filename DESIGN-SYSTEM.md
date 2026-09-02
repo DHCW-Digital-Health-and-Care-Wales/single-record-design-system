@@ -4,7 +4,7 @@ The Single Record Design System provides the shared design language, component l
 
 This document is the primary reference for everyone working on Single Record — designers, engineers, and delivery leads.
 
-**Last reviewed:** 2026-08-12. Update this file whenever a component ships, a
+**Last reviewed:** 2026-09-02. Update this file whenever a component ships, a
 token is added, or a system-wide rule changes — not on a schedule. If it
 disagrees with `/foundations/tokens/` or `/components/`, those win and this file
 is out of date.
@@ -478,6 +478,26 @@ WCAG 2.2 AA is the mandatory baseline for all components and products. The `/acc
 | `/accessibility/focus-management.md` | Focus ring standards, keyboard navigation |
 
 Every component spec must include an accessibility section. New components are not approved without it.
+
+### Contrast is gated, not just documented
+
+`npm run check:contrast` asserts the colour pairs the system commits to and fails the build when one falls below its required ratio. It covers form control boundaries at 3:1 (SC 1.4.11) and text at 4.5:1 (SC 1.4.3). Pairs that fall short are listed in one of two ways, and the distinction is deliberate:
+
+| Kind | Meaning |
+|---|---|
+| Accepted exception | A decision has been taken and written down. Currently one: the warning role, which is a fill colour and always carries a text label. |
+| Open finding | A real defect with no signed-off fix yet. Reported on every run; does not fail the build, because a colour change needs sign-off. |
+
+The gate checks **both light and dark modes**, which is not thoroughness for its own sake: darkening a colour to clear light mode can push it under in dark mode, where surfaces are navy. That nearly shipped as the focus-ring fix.
+
+**Two open findings stand today**, both in dark mode and both found by the gate rather than by eye:
+
+1. **The primary button's label is 2.26:1.** `button.css` labels an `interactive-primary` fill with `text-inverse`, which is white in light mode but near-black in dark mode by design. Needs a token meaning "text on a primary fill". Latent — the website's dark-mode toggle is off, but products consuming `single-record-dark.css` have it.
+2. **A focus ring on a small card is 1.23:1**, because `surface.small-cards` resolves to Cyan/850 in dark mode. That is the dark-mode surface assignment flagged on 2026-08-10, not a ring problem.
+
+**Form control boundaries use `Border/Strong`, not `Border/Default`.** Grey/200 is 1.37:1 on white and cannot serve as the visible edge of a checkbox, radio or field. Grey/200 remains correct for dividers and card outlines, which identify nothing as interactive.
+
+**The focus ring is `Cyan/800` (DDR-025).** Cyan/700 was 2.95:1 on a card and 2.71:1 on the page, under the 3:1 SC 1.4.11 requires. Cyan/800 is the only stop clearing 3:1 in both modes.
 
 ---
 

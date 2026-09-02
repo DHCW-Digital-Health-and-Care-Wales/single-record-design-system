@@ -2365,6 +2365,34 @@ function checkboxBody() {
     options: [cbOption({ label: 'I confirm the patient has consented to their record being shared with the receiving team', name: 'consent' })].join('\n'),
   })}</div>`;
 
+  // One panel for the whole state set rather than a switcher: the states are
+  // shown side by side so they can be compared, and the code should answer
+  // "how do I write the one I am looking at" without hiding the other five.
+  const stateSnippets = {
+    HTML: '<!-- Rest, hover and focus come from the stylesheet. Only these four\n     need markup. Indeterminate is the exception: it is a DOM property,\n     not an attribute, so it cannot be set in HTML alone. -->\n<div class="sr-checkbox">\n  <input class="sr-checkbox__input" type="checkbox" id="c1" checked>\n  <label class="sr-checkbox__label" for="c1">Checked</label>\n</div>\n\n<div class="sr-checkbox sr-checkbox--error">\n  <input class="sr-checkbox__input" type="checkbox" id="c2">\n  <label class="sr-checkbox__label" for="c2">Error</label>\n</div>\n\n<div class="sr-checkbox">\n  <input class="sr-checkbox__input" type="checkbox" id="c3" disabled>\n  <label class="sr-checkbox__label" for="c3">Disabled</label>\n</div>\n\n<script>\n  // Indeterminate, set the only way it can be set.\n  document.getElementById(\'c4\').indeterminate = true;\n<\/script>',
+    React: '<Checkbox label="Unchecked" />\n<Checkbox label="Checked" defaultChecked />\n<Checkbox label="Indeterminate" indeterminate />\n<Checkbox label="Error" error />\n<Checkbox label="Disabled" disabled />\n<Checkbox label="Disabled, checked" defaultChecked disabled />',
+    Blazor: '<SrCheckbox Label="Unchecked" />\n<SrCheckbox Label="Checked" Checked="true" />\n<SrCheckbox Label="Indeterminate" Indeterminate="true" />\n<SrCheckbox Label="Error" Error="true" />\n<SrCheckbox Label="Disabled" Disabled="true" />',
+    MAUI: `<!-- MAUI's CheckBox has no indeterminate state and no error state of its
+     own: a group-level error message carries the error, and a tri-state
+     parent needs a custom control. Colour is the token, not a literal. -->
+<VerticalStackLayout Spacing="12">
+    <HorizontalStackLayout Spacing="8" MinimumHeightRequest="44">
+        <CheckBox IsChecked="False"
+                  Color="{AppThemeBinding Light={StaticResource SrColorBorderStrong}, Dark={StaticResource SrColorBorderStrongDark}}" />
+        <Label Text="Unchecked" VerticalOptions="Center" />
+    </HorizontalStackLayout>
+    <HorizontalStackLayout Spacing="8" MinimumHeightRequest="44">
+        <CheckBox IsChecked="True"
+                  Color="{AppThemeBinding Light={StaticResource SrColorInteractivePrimary}, Dark={StaticResource SrColorInteractivePrimaryDark}}" />
+        <Label Text="Checked" VerticalOptions="Center" />
+    </HorizontalStackLayout>
+    <HorizontalStackLayout Spacing="8" MinimumHeightRequest="44" IsEnabled="False">
+        <CheckBox IsChecked="False" />
+        <Label Text="Disabled" VerticalOptions="Center" />
+    </HorizontalStackLayout>
+</VerticalStackLayout>`,
+  };
+
   const snippets = {
     HTML: '<fieldset class="sr-checkbox-group">\n  <legend class="sr-checkbox-group__legend">Case note types</legend>\n  <p class="sr-checkbox-group__hint">Select all that apply.</p>\n  <div class="sr-checkbox-group__options">\n    <div class="sr-checkbox">\n      <input class="sr-checkbox__input" type="checkbox" id="n1" name="notes" checked>\n      <label class="sr-checkbox__label" for="n1">General notes</label>\n    </div>\n  </div>\n</fieldset>',
     React: '<CheckboxGroup legend="Case note types" hint="Select all that apply.">\n  <Checkbox label="General notes" name="notes" defaultChecked />\n  <Checkbox label="Nursing notes" name="notes" />\n</CheckboxGroup>',
@@ -2396,7 +2424,7 @@ ${showcase(demo, 'checkbox', snippets)}
 <h2>States</h2>
 <p class="muted">Indeterminate is a parent state — the "Select all" box when only some children
 are ticked. It is never something a user can choose directly.</p>
-<div class="showcase"><div class="showcase__preview">${states}</div></div>
+${showcase(states, 'checkbox-states', stateSnippets)}
 
 <h2>Error</h2>
 <p class="muted">One message for the whole group, above the options, with a red rule down the
@@ -2490,6 +2518,63 @@ function radioBody() {
 </VerticalStackLayout>`,
   };
 
+  const stateSnippets = {
+    HTML: '<!-- Rest, hover and focus come from the stylesheet. `name` is what binds\n     the options into one choice, so it is present in every state. -->\n<div class="sr-radio">\n  <input class="sr-radio__input" type="radio" id="r1" name="s">\n  <label class="sr-radio__label" for="r1">Unselected</label>\n</div>\n\n<div class="sr-radio">\n  <input class="sr-radio__input" type="radio" id="r2" name="s" checked>\n  <label class="sr-radio__label" for="r2">Selected</label>\n</div>\n\n<div class="sr-radio sr-radio--error">\n  <input class="sr-radio__input" type="radio" id="r3" name="s">\n  <label class="sr-radio__label" for="r3">Error</label>\n</div>\n\n<div class="sr-radio">\n  <input class="sr-radio__input" type="radio" id="r4" name="s" disabled>\n  <label class="sr-radio__label" for="r4">Disabled</label>\n</div>',
+    React: '<Radio label="Unselected" name="s" />\n<Radio label="Selected" name="s" defaultChecked />\n<Radio label="Error" name="s" error />\n<Radio label="Disabled" name="s" disabled />\n<Radio label="Disabled, selected" name="s" defaultChecked disabled />',
+    Blazor: '<SrRadio Label="Unselected" Name="s" Value="a" />\n<SrRadio Label="Selected" Name="s" Value="b" Checked="true" />\n<SrRadio Label="Error" Name="s" Value="c" Error="true" />\n<SrRadio Label="Disabled" Name="s" Value="d" Disabled="true" />',
+    MAUI: `<!-- GroupName does the work \`name\` does on the web. There is no error
+     state on RadioButton itself; the group's message carries it. -->
+<VerticalStackLayout Spacing="8">
+    <RadioButton Content="Unselected" GroupName="State" MinimumHeightRequest="44" />
+    <RadioButton Content="Selected" GroupName="State" IsChecked="True" MinimumHeightRequest="44" />
+    <RadioButton Content="Disabled" GroupName="State" IsEnabled="False" MinimumHeightRequest="44" />
+</VerticalStackLayout>`,
+  };
+
+  const cardFilledSnippets = {
+    HTML: '<div class="sr-radio sr-radio--card sr-radio--card-fill">\n  <input class="sr-radio__input" type="radio" id="cf1" name="pathway" checked>\n  <label class="sr-radio__label" for="cf1">\n    <span class="sr-radio__title">Two-week wait</span>\n    <span class="sr-radio__description">Seen within 14 days of referral</span>\n  </label>\n</div>',
+    React: '<Radio\n  type="card"\n  label="Two-week wait"\n  description="Seen within 14 days of referral"\n  name="pathway"\n  defaultChecked\n/>',
+    Blazor: '<SrRadio Type="Card" Label="Two-week wait"\n         Description="Seen within 14 days of referral" Name="pathway" Checked="true" />',
+    MAUI: `<!-- Selection fills the card, so the label and description invert with it.
+     Bind the Border fill and the text colour together or the text is lost. -->
+<Border Padding="12,8" StrokeThickness="1"
+        Background="{AppThemeBinding Light={StaticResource SrColorInteractivePrimary}, Dark={StaticResource SrColorInteractivePrimaryDark}}"
+        Stroke="{AppThemeBinding Light={StaticResource SrColorInteractivePrimary}, Dark={StaticResource SrColorInteractivePrimaryDark}}">
+    <RadioButton GroupName="Pathway" IsChecked="True" MinimumHeightRequest="44">
+        <RadioButton.Content>
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Two-week wait" StyleClass="Inverse" />
+                <Label Text="Seen within 14 days of referral" StyleClass="Caption,Inverse" />
+            </VerticalStackLayout>
+        </RadioButton.Content>
+    </RadioButton>
+</Border>`,
+  };
+
+  const cardIconSnippets = {
+    HTML: '<!-- The icon renders AFTER the label in the DOM. An element between the\n     input and the label breaks the `:checked +` adjacency the styling needs. -->\n<div class="sr-radio sr-radio--card sr-radio--card-icon">\n  <input class="sr-radio__input" type="radio" id="ci1" name="kind" checked>\n  <label class="sr-radio__label" for="ci1">\n    <span class="sr-radio__title">Diagnosis</span>\n    <span class="sr-radio__description">Coded condition on the problem list</span>\n  </label>\n  <span class="sr-radio__icon" aria-hidden="true"><!-- Icon: clinical/diagnosis --></span>\n</div>',
+    React: '<Radio\n  type="card-icon"\n  icon="clinical/diagnosis"\n  label="Diagnosis"\n  description="Coded condition on the problem list"\n  name="kind"\n  defaultChecked\n/>',
+    Blazor: '<SrRadio Type="CardIcon" Icon="clinical/diagnosis" Label="Diagnosis"\n         Description="Coded condition on the problem list" Name="kind" Checked="true" />',
+    MAUI: `<!-- The icon is decorative: the label still carries the name, so the
+     option is identifiable to someone who has not seen the mark before. -->
+<Border Padding="12,8" StrokeThickness="1"
+        Stroke="{AppThemeBinding Light={StaticResource SrColorBorderStrong}, Dark={StaticResource SrColorBorderStrongDark}}">
+    <RadioButton GroupName="Kind" IsChecked="True" MinimumHeightRequest="44">
+        <RadioButton.Content>
+            <HorizontalStackLayout Spacing="12">
+                <Path Data="{StaticResource SrIconClinicalDiagnosis}"
+                      Stroke="{AppThemeBinding Light={StaticResource SrColorInteractivePrimary}, Dark={StaticResource SrColorInteractivePrimaryDark}}"
+                      StrokeThickness="1" HeightRequest="24" WidthRequest="24" />
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Diagnosis" />
+                    <Label Text="Coded condition on the problem list" StyleClass="Caption" />
+                </VerticalStackLayout>
+            </HorizontalStackLayout>
+        </RadioButton.Content>
+    </RadioButton>
+</Border>`,
+  };
+
   const cardSnippets = {
     HTML: '<div class="sr-radio sr-radio--card sr-radio--card-outline">\n  <input class="sr-radio__input" type="radio" id="pw1" name="pathway">\n  <label class="sr-radio__label" for="pw1">\n    <span class="sr-radio__title">Two-week wait</span>\n    <span class="sr-radio__description">Seen within 14 days of referral</span>\n  </label>\n</div>',
     React: '<Radio\n  type="card-radio"\n  label="Two-week wait"\n  description="Seen within 14 days of referral"\n  name="pathway"\n/>',
@@ -2524,7 +2609,7 @@ ${showcase(demo, 'radio', snippets)}
 <h2>States</h2>
 <p class="muted">The ring is round and the checkbox is square. That shape difference is the only
 cue telling a reader one is single-select — so it is never restyled.</p>
-<div class="showcase"><div class="showcase__preview">${states}</div></div>
+${showcase(states, 'radio-states', stateSnippets)}
 
 <h2>Type: Card Radio</h2>
 <p class="muted">A bordered box so each option can carry a description. Selection is the border
@@ -2535,13 +2620,13 @@ ${showcase(cardRadio, 'radio-card', cardSnippets)}
 <p class="muted">The same box, with selection filling the whole card. Label, description and dot
 all invert together, so the card reads as one selected object rather than a box with a
 highlight.</p>
-<div class="showcase"><div class="showcase__preview">${cardFilled}</div></div>
+${showcase(cardFilled, 'radio-card-fill', cardFilledSnippets)}
 
 <h2>Type: Card Icon</h2>
 <p class="muted">A 24px icon replaces the ring where the option has a recognisable mark. The icon
 is decorative — the label still carries the name, because an icon on its own does not identify a
 record type to someone who has not seen it before.</p>
-<div class="showcase"><div class="showcase__preview">${cardIcon}</div></div>
+${showcase(cardIcon, 'radio-card-icon', cardIconSnippets)}
 <p class="muted">Do not mix types within one group. A group of cards beside a group of simple
 radios is fine; a group that is half each is not.</p>
 
@@ -2600,6 +2685,25 @@ ${trigger({ id: 'sel-c', label: 'Error', required: true, error: 'Select a ward t
 ${trigger({ id: 'sel-d', label: 'Disabled', value: 'Aneurin ward', disabled: true })}
 </div>`;
 
+  const stateSnippets = {
+    HTML: '<!-- data-placeholder="true" is what keeps "Select a ward" in secondary\n     text. Remove it when a real value is set, or the value renders as\n     though it were still a placeholder. -->\n<div class="sr-select">\n  <label class="sr-select__label" for="s1">Placeholder</label>\n  <div class="sr-select__control">\n    <button type="button" class="sr-select__trigger" id="s1" aria-haspopup="listbox" aria-expanded="false" data-placeholder="true">\n      <span class="sr-select__value">Select a ward</span>\n    </button>\n  </div>\n</div>\n\n<div class="sr-select sr-select--error">\n  <label class="sr-select__label" for="s2">Error <span class="sr-select__required">*</span></label>\n  <div class="sr-select__control">\n    <button type="button" class="sr-select__trigger" id="s2" aria-haspopup="listbox" aria-expanded="false" aria-describedby="s2-err" data-placeholder="true">\n      <span class="sr-select__value">Select a ward</span>\n    </button>\n  </div>\n  <p class="sr-select__error" id="s2-err">Select a ward to continue</p>\n</div>\n\n<div class="sr-select">\n  <label class="sr-select__label" for="s3">Disabled</label>\n  <div class="sr-select__control">\n    <button type="button" class="sr-select__trigger" id="s3" disabled>\n      <span class="sr-select__value">Aneurin ward</span>\n    </button>\n  </div>\n</div>',
+    React: '<Select label="Placeholder" placeholder="Select a ward" options={wards} />\n<Select label="With a value" options={wards} defaultValue="tawe" />\n<Select\n  label="Error"\n  options={wards}\n  required\n  error="Select a ward to continue"\n/>\n<Select label="Disabled" options={wards} defaultValue="aneurin" disabled />',
+    Blazor: '<SrSelect Label="Placeholder" Placeholder="Select a ward" Options="@wards" />\n<SrSelect Label="With a value" Options="@wards" @bind-Value="ward" />\n<SrSelect Label="Error" Options="@wards" Required="true"\n          Error="Select a ward to continue" />\n<SrSelect Label="Disabled" Options="@wards" Disabled="true" />',
+    MAUI: `<!-- Picker has no error state of its own: the message is a sibling Label,
+     and the field Border takes the critical stroke. Title is never the label.
+     The status colours carry no AppThemeBinding because they hold the same
+     value in both modes, so there is no SrColorStatusCriticalDark to bind. -->
+<VerticalStackLayout Spacing="4">
+    <Label Text="Ward" StyleClass="FieldLabel" />
+    <Border Style="{StaticResource FieldBox}"
+            Stroke="{StaticResource SrColorStatusCritical}">
+        <Picker ItemsSource="{Binding Wards}" SelectedItem="{Binding Ward}"
+                SemanticProperties.Description="Ward" />
+    </Border>
+    <Label Text="Select a ward to continue" StyleClass="Caption,Critical" />
+</VerticalStackLayout>`,
+  };
+
   const snippets = {
     HTML: '<div class="sr-select">\n  <label class="sr-select__label" for="ward">Ward</label>\n  <div class="sr-select__control">\n    <button type="button" class="sr-select__trigger" id="ward" aria-haspopup="listbox" aria-expanded="false" data-placeholder="true">\n      <span class="sr-select__value">Select a ward</span>\n    </button>\n    <div class="sr-select__menu" role="listbox" hidden>\n      <div class="sr-select__option" role="option" aria-selected="false">Aneurin ward</div>\n    </div>\n  </div>\n</div>',
     React: '<Select\n  label="Ward"\n  hint="The ward the patient is being admitted to."\n  placeholder="Select a ward"\n  options={wards}\n  value={ward}\n  onChange={setWard}\n/>',
@@ -2632,7 +2736,7 @@ ${showcase(demo, 'select', snippets)}
 <h2>States</h2>
 <p class="muted">The placeholder is not a value. "Select a ward" must never be submittable, and it
 stays in secondary text until a real choice is made.</p>
-<div class="showcase"><div class="showcase__preview">${states}</div></div>
+${showcase(states, 'select-states', stateSnippets)}
 
 <hr>
 ${renderMarkdown(md)}

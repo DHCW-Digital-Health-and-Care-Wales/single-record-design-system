@@ -51,7 +51,7 @@ All semantic tokens use the `sr` prefix (Single Record). They are defined in Fig
 | `sr.color.border.subtle`   | `grey.100` | `navy.700` | Row dividers and internal table separators |
 | `sr.color.border.default`  | `grey.200` | `navy.500` | Standard borders — inputs, cards, section dividers |
 | `sr.color.border.strong`   | `grey.600` | `navy.300` | High-contrast borders — active rows, structural dividers |
-| `sr.color.border.focus`    | `cyan.700` | `cyan.700` | Focus ring (**DDR-006**, supersedes focus-yellow). Pair with `Border/Width/Strong` (2px) and an inner dark ring on saturated backgrounds. |
+| `sr.color.border.focus`    | `cyan.800` | `cyan.800` | Focus ring (**DDR-006**, supersedes focus-yellow). Pair with `Border/Width/Strong` (2px) and an inner dark ring on saturated backgrounds. |
 | `sr.color.border.disabled` | `navy.300` | `navy.300` | Disabled borders |
 
 ---
@@ -73,13 +73,13 @@ Used in banners, badges, row highlights, and clinical alert states. Dark mode ke
 | Token | Light | Dark | Meaning |
 |---|---|---|---|
 | `sr.color.status.critical`         | `red.700`       | `red.700`       | Failed, invalid, critical |
-| `sr.color.status.critical-surface` | `red.100`       | `red.100`       | Critical background |
+| `sr.color.status.critical-surface` | `red.50`       | `red.50`       | Critical background |
 | `sr.color.status.success`          | `green.700`     | `green.700`     | Completed, confirmed |
-| `sr.color.status.success-surface`  | `green.100`     | `green.100`     | Success background |
+| `sr.color.status.success-surface`  | `green.50`     | `green.50`     | Success background |
 | `sr.color.status.warning`          | `yellow.500`    | `yellow.500`    | Requires attention |
-| `sr.color.status.warning-surface`  | `yellow.100`    | `yellow.100`    | Warning background |
+| `sr.color.status.warning-surface`  | `yellow.50`    | `yellow.50`    | Warning background |
 | `sr.color.status.info`             | `info-blue.700` | `info-blue.700` | Informational |
-| `sr.color.status.info-surface`     | `info-blue.100` | `info-blue.100` | Info background |
+| `sr.color.status.info-surface`     | `info-blue.50` | `info-blue.50` | Info background |
 
 **Clinical alert note:** Do not rely on colour alone to communicate clinical status. Always pair with an icon and text label. See `/accessibility/colour-and-contrast.md`.
 
