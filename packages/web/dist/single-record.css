@@ -128,13 +128,13 @@
   --sr-color-border-disabled: #9ea1af;
   --sr-color-brand-accent: #12a3c9; /** Decorative accent only. Borders, icon strokes, chart accents, tab indicators. Never use as a filled surface with text on top. */
   --sr-color-status-critical: #b32014; /** Red/700 (#B32014) — raised from Red/600 for AA contrast on light status surfaces and text. */
-  --sr-color-status-critical-surface: #fcdbd9;
+  --sr-color-status-critical-surface: #fef3f2; /** Red/50 (#FEF3F2) — lightened from Red/100 so Status/Critical text on it reaches 6.16:1 (was 5.19:1). */
   --sr-color-status-success: #006630; /** Green/700 (#006630) — raised from Green/600 for AA contrast on light status surfaces and text. */
-  --sr-color-status-success-surface: #d9efe5;
+  --sr-color-status-success-surface: #f0faf4; /** Green/50 (#F0FAF4) — lightened from Green/100 so Status/Success text on it reaches 6.69:1 (was 5.92:1). */
   --sr-color-status-warning: #f8ca4d;
-  --sr-color-status-warning-surface: #fdf3d7;
+  --sr-color-status-warning-surface: #fffaeb; /** Yellow/50 (#FFFAEB) — lightened from Yellow/100 to match the other status surfaces. Note that Status/Warning (Yellow/500) on it is 1.49:1 and must never carry text unaided; see the warning-role exception in the Icons guidance. */
   --sr-color-status-info: #005aa8;
-  --sr-color-status-info-surface: #d6e8f5;
+  --sr-color-status-info-surface: #eef5fc; /** Info Blue/50 (#EEF5FC) — lightened from Info Blue/100 so Status/Info text on it reaches 6.31:1 (was 5.52:1). */
   --space-0: 0px; /** Explicit zero */
   --space-1: 4px; /** Icon padding, micro gaps */
   --space-2: 8px; /** Tight component internals */
@@ -939,7 +939,10 @@
   width: 20px;
   height: 20px;
   background-color: var(--sr-color-surface-small-cards);
-  border: var(--border-width-2) solid var(--sr-color-border-default);
+  /* Border/Strong, not Border/Default. An unchecked box is a UI component
+     boundary under WCAG 2.2 SC 1.4.11, which requires 3:1: Grey/200 gave
+     1.37:1 on white, Grey/600 gives 6.37:1. */
+  border: var(--border-width-2) solid var(--sr-color-border-strong);
   border-radius: var(--radius-sm);
 }
 
@@ -978,8 +981,10 @@
 
 /* ---------- States ---------- */
 
+/* Hover previews the checked colour. It cannot stay on Border/Strong now that
+   rest uses it — that would make hover a no-op. */
 .sr-checkbox__input:hover:not(:disabled) + .sr-checkbox__label::before {
-  border-color: var(--sr-color-border-strong);
+  border-color: var(--sr-color-interactive-primary);
 }
 
 .sr-checkbox__input:checked + .sr-checkbox__label::before,
@@ -2973,7 +2978,9 @@ textarea.sr-input__control {
   width: 20px;
   height: 20px;
   background-color: var(--sr-color-surface-small-cards);
-  border: var(--border-width-2) solid var(--sr-color-border-default);
+  /* Border/Strong, not Border/Default — same SC 1.4.11 reasoning as Checkbox:
+     Grey/200 gave 1.37:1 on white against the 3:1 the criterion requires. */
+  border: var(--border-width-2) solid var(--sr-color-border-strong);
   border-radius: var(--radius-full);
 }
 
@@ -2997,8 +3004,9 @@ textarea.sr-input__control {
 
 /* ---------- States ---------- */
 
+/* Hover previews the checked colour; Border/Strong is now the rest state. */
 .sr-radio__input:hover:not(:disabled) + .sr-radio__label::before {
-  border-color: var(--sr-color-border-strong);
+  border-color: var(--sr-color-interactive-primary);
 }
 
 .sr-radio__input:checked + .sr-radio__label::before {

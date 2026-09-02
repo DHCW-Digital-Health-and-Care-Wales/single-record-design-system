@@ -395,6 +395,65 @@ catch the drift half of this.
 
 ## Web / CSS
 
+### A form control's rest border needs 3:1, and Border/Default does not reach it
+
+**Symptom:** An unchecked checkbox or radio looks faint, especially on a laptop
+screen in a bright ward. It reads as decoration rather than as something to
+click.
+
+**Why:** Both drew their rest border with `Border/Default` (Grey/200 `#D8DDE0`),
+which is **1.37:1 on white**. WCAG 2.2 SC 1.4.11 Non-text Contrast requires
+**3:1** for the visual boundary of a UI component, and an unchecked box is
+exactly that — the border is the only thing telling you the control is there.
+This is easy to get wrong because Border/Default is the right choice for a
+*divider*, where nothing is being identified as interactive, and the two uses
+look similar in a stylesheet.
+
+**Fix:** Form control boundaries use `Border/Strong` (Grey/600 `#4C6272`,
+6.37:1). Dividers, card outlines and table rules stay on `Border/Default` —
+they are not control boundaries and 1.4.11 does not apply to them.
+
+**Watch the state that used to be the fix.** Both components had hover set to
+`Border/Strong`. Once rest uses it, hover is a no-op — the same value applied
+twice. Hover moved to `Interactive/Primary`, previewing the checked colour.
+Any component that darkens on hover has this collision waiting for it.
+
+**Prevented by:** `npm run check:contrast`
+(`scripts/check-contrast.mjs`), which asserts the pairs the system commits to
+and fails the build when one drops below its ratio. Verified by planting the
+old Grey/200 value and confirming it was caught at 1.37:1.
+
+---
+
+### The focus ring is 2.95:1 and SC 1.4.11 wants 3:1 — open, needs sign-off
+
+**Symptom:** Nothing visible. This was found by computing it, not by looking.
+
+**Why:** `Border/Focus` is Cyan/700 `#12A3C9` (DDR-006). Against a white card
+it is **2.95:1**; against the page background (Blue/50 `#F4F5F8`) it is
+**2.71:1**. SC 1.4.11 requires 3:1 for a focus indicator. The card case misses
+by 0.05, the page case by more. It affects every focusable component, because
+the ring is system-wide.
+
+Worth separating from the other `#12A3C9` finding already on file: that one is
+*white text on a cyan fill* at 2.95:1 in the MAUI app. This is *cyan on white*
+— a different pair that happens to land on a near-identical number, and it had
+not been computed before.
+
+**Fix:** Not applied. Colour changes need sign-off (CLAUDE.md), and this one
+amends an accepted DDR. Two routes for the design lead:
+
+| Option | Result |
+|---|---|
+| Move `border.focus` to Cyan/850 `#0C7B99` | 4.87:1 on a card, 4.47:1 on the page. Already in the palette; added in July as the lightest cyan clearing AA. |
+| Keep Cyan/700 | Needs a DDR amending DDR-006 and recording the exception, the way the warning-icon exception is recorded. |
+
+**Tracked by:** `npm run check:contrast`, which reports it under OPEN FINDINGS
+on every run without failing the build. It is pre-existing debt with a name on
+it, not an exemption — the check is what stops it being forgotten again.
+
+---
+
 ### `overflow-x: auto` does not stop a wide child scrolling the page
 
 **Symptom:** A wide table scrolls inside its wrapper *and* drags the whole page

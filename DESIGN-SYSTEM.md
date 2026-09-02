@@ -4,7 +4,7 @@ The Single Record Design System provides the shared design language, component l
 
 This document is the primary reference for everyone working on Single Record — designers, engineers, and delivery leads.
 
-**Last reviewed:** 2026-08-12. Update this file whenever a component ships, a
+**Last reviewed:** 2026-09-02. Update this file whenever a component ships, a
 token is added, or a system-wide rule changes — not on a schedule. If it
 disagrees with `/foundations/tokens/` or `/components/`, those win and this file
 is out of date.
@@ -478,6 +478,19 @@ WCAG 2.2 AA is the mandatory baseline for all components and products. The `/acc
 | `/accessibility/focus-management.md` | Focus ring standards, keyboard navigation |
 
 Every component spec must include an accessibility section. New components are not approved without it.
+
+### Contrast is gated, not just documented
+
+`npm run check:contrast` asserts the colour pairs the system commits to and fails the build when one falls below its required ratio. It covers form control boundaries at 3:1 (SC 1.4.11) and text at 4.5:1 (SC 1.4.3). Pairs that fall short are listed in one of two ways, and the distinction is deliberate:
+
+| Kind | Meaning |
+|---|---|
+| Accepted exception | A decision has been taken and written down. Currently one: the warning role, which is a fill colour and always carries a text label. |
+| Open finding | A real defect with no signed-off fix yet. Reported on every run; does not fail the build, because a colour change needs sign-off. |
+
+**One open finding stands today:** the focus ring (Cyan/700, DDR-006) is 2.95:1 on a card and 2.71:1 on the page background, against the 3:1 SC 1.4.11 requires. It affects every focusable component. See `docs/engineering/known-issues.md` for the two options.
+
+**Form control boundaries use `Border/Strong`, not `Border/Default`.** Grey/200 is 1.37:1 on white and cannot serve as the visible edge of a checkbox, radio or field. Grey/200 remains correct for dividers and card outlines, which identify nothing as interactive.
 
 ---
 

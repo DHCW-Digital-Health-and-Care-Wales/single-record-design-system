@@ -127,7 +127,9 @@
   width: 20px;
   height: 20px;
   background-color: var(--sr-color-surface-small-cards);
-  border: var(--border-width-2) solid var(--sr-color-border-default);
+  /* Border/Strong, not Border/Default — same SC 1.4.11 reasoning as Checkbox:
+     Grey/200 gave 1.37:1 on white against the 3:1 the criterion requires. */
+  border: var(--border-width-2) solid var(--sr-color-border-strong);
   border-radius: var(--radius-full);
 }
 
@@ -151,8 +153,9 @@
 
 /* ---------- States ---------- */
 
+/* Hover previews the checked colour; Border/Strong is now the rest state. */
 .sr-radio__input:hover:not(:disabled) + .sr-radio__label::before {
-  border-color: var(--sr-color-border-strong);
+  border-color: var(--sr-color-interactive-primary);
 }
 
 .sr-radio__input:checked + .sr-radio__label::before {
