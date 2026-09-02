@@ -11,6 +11,12 @@
  * cannot know which colours are ever placed on which, so it produces noise
  * that gets baselined away. These are the pairs someone has committed to.
  *
+ * BOTH MODES ARE CHECKED, and that is the point rather than thoroughness for
+ * its own sake. The focus ring fix was nearly shipped as Cyan/850 on light-mode
+ * numbers alone; dark mode's surfaces are navy, so darkening the ring helps
+ * light and hurts dark, and Cyan/850 would have failed dark at 2.95:1 —
+ * the same failure it was meant to fix, moved to the other mode.
+ *
  * Thresholds:
  *   4.5  AA normal text (SC 1.4.3)
  *   3.0  AA large text, and non-text UI component boundaries (SC 1.4.11)
@@ -22,7 +28,8 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const TOKENS = resolve(ROOT, 'packages', 'tokens', 'build', 'json', 'tokens-flat.json');
+const LIGHT_JSON = resolve(ROOT, 'packages', 'tokens', 'build', 'json', 'tokens-flat.json');
+const DARK_CSS = resolve(ROOT, 'packages', 'tokens', 'build', 'css', 'tokens-dark.css');
 
 /** Relative luminance, WCAG 2.x definition. */
 function luminance(hex) {
@@ -37,18 +44,41 @@ function ratio(a, b) {
   return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
 }
 
+const light = JSON.parse(readFileSync(LIGHT_JSON, 'utf8'));
+
 /**
- * Each entry: [foreground token, background token, minimum, what asserts it].
- * `#fff` and `#000` are allowed as literals — they are not design decisions.
+ * Dark values only exist in the emitted CSS — there is no dark flat-JSON
+ * artifact — so parse the custom properties back out of it. Dark mode carries
+ * the same key names as light with different values, which is why they cannot
+ * simply be merged.
+ */
+const dark = Object.fromEntries(
+  [...readFileSync(DARK_CSS, 'utf8').matchAll(/^\s*--([a-z0-9-]+):\s*(#[0-9a-f]{3,8})\s*;/gim)]
+    .map((m) => [m[1], m[2]]),
+);
+
+/**
+ * Each entry: [foreground token, background token, minimum, what asserts it,
+ * modes]. `modes` defaults to 'both'; use 'light' or 'dark' where a pair only
+ * exists in one. Tokens absent from dark mode fall back to their light value,
+ * which is correct — the dark sheet only overrides what actually differs.
  */
 const PAIRS = [
   // --- Form control boundaries. SC 1.4.11 non-text contrast, 3:1. ---
   ['sr-color-border-strong', 'sr-color-surface-small-cards', 3,
-    'Checkbox and Radio rest border (checkbox.css, radio.css)'],
+    'Checkbox and Radio rest border (checkbox.css, radio.css)', 'light'],
   ['sr-color-border-strong', 'sr-color-surface-background', 3,
-    'Checkbox and Radio rest border on the page background'],
+    'Checkbox and Radio rest border on the page background', 'light'],
   ['sr-color-interactive-primary', 'sr-color-surface-small-cards', 3,
-    'Checkbox and Radio checked fill, and their hover border'],
+    'Checkbox and Radio checked fill, and their hover border', 'light'],
+
+  // --- Focus ring. SC 1.4.11, 3:1, and it must hold in BOTH modes. ---
+  ['sr-color-border-focus', 'sr-color-surface-background', 3,
+    'Focus ring on the page background (DDR-025)'],
+  ['sr-color-border-focus', 'sr-color-surface-section-cards', 3,
+    'Focus ring on a section card (DDR-025)'],
+  ['sr-color-border-focus', 'sr-color-surface-small-cards', 3,
+    'Focus ring on a small card (DDR-025)', 'light'],
 
   // --- Status text on its own surface. SC 1.4.3 normal text, 4.5:1. ---
   ['sr-color-status-critical', 'sr-color-status-critical-surface', 4.5,
@@ -60,58 +90,63 @@ const PAIRS = [
 
   // --- Body and interactive text. SC 1.4.3, 4.5:1. ---
   ['sr-color-text-primary', 'sr-color-surface-background', 4.5, 'Body text on the page'],
-  ['sr-color-text-primary', 'sr-color-surface-small-cards', 4.5, 'Body text on a card'],
+  ['sr-color-text-primary', 'sr-color-surface-section-cards', 4.5, 'Body text on a section card'],
   ['sr-color-text-secondary', 'sr-color-surface-background', 4.5,
     'Secondary and placeholder text (the 2026-07-09 placeholder decision)'],
-  ['sr-color-interactive-link', 'sr-color-surface-background', 4.5, 'Links on the page'],
+  ['sr-color-interactive-link', 'sr-color-surface-background', 4.5, 'Links on the page', 'light'],
   ['sr-color-text-inverse', 'sr-color-interactive-primary', 4.5,
-    'White label on a primary button'],
+    'White label on a primary button', 'light'],
 ];
 
 /**
  * Pairs below their ratio that the build does not fail on. Two kinds, and the
  * difference matters:
  *
- *   'accepted' — a decision has been taken and written down. It is not a bug.
- *   'open'     — a real defect nobody has signed off a fix for yet. Colour
- *                changes need sign-off (CLAUDE.md), so this script reports it
- *                loudly rather than quietly correcting it.
+ *   'accepted' — a decision has been taken and written down. Not a bug.
+ *   'open'     — a real defect with no signed-off fix. Colour changes need
+ *                sign-off (CLAUDE.md), so this reports loudly rather than
+ *                quietly correcting.
  *
- * An 'open' entry is debt with a name on it, not an exemption. Nothing may be
- * added here without a line saying who has to decide and what the options are.
+ * An 'open' entry is debt with a name on it, not an exemption. Nothing goes
+ * here without a line saying who decides and what the options are.
  */
 const KNOWN = [
   {
-    fg: 'sr-color-status-warning', bg: 'sr-color-status-warning-surface', min: 4.5,
+    fg: 'sr-color-status-warning', bg: 'sr-color-status-warning-surface', min: 4.5, mode: 'light',
     status: 'accepted',
     note: 'Yellow/500 is a fill colour, not a text colour. The warning role always '
       + 'carries a text label rather than standing alone, so the pair is never load-'
       + 'bearing. Recorded on the Icons page.',
   },
   {
-    fg: 'sr-color-border-focus', bg: 'sr-color-surface-small-cards', min: 3,
+    fg: 'sr-color-text-inverse', bg: 'sr-color-interactive-primary', min: 4.5, mode: 'dark',
     status: 'open',
-    note: 'Focus ring (Cyan/700, DDR-006) on a card. SC 1.4.11 wants 3:1 for a focus '
-      + 'indicator and this is 2.95:1 — a miss by 0.05, but a miss. Affects every '
-      + 'focusable component in the system.',
+    note: 'The dark-mode primary button is near-black text on mid-blue. button.css sets '
+      + 'color: text-inverse on a interactive-primary fill, which is correct in light '
+      + 'mode (white on Blue/800, 8.04:1) but inverts in dark mode, where text-inverse '
+      + 'is #212b32 by design — it means "text on a LIGHT element within a dark UI". A '
+      + 'primary button is not a light element in either mode, so it gets the wrong '
+      + 'token. DDR-011 records the intent as white on Info-Blue/600 at 5.1:1, which is '
+      + 'not what renders. The fix is a token that means "text on a primary fill" in '
+      + 'both modes, which is a token-structure decision and needs a DDR. Latent rather '
+      + 'than live: the website dark-mode toggle is currently off, but any product '
+      + 'consuming single-record-dark.css has this today.',
   },
   {
-    fg: 'sr-color-border-focus', bg: 'sr-color-surface-background', min: 3,
+    fg: 'sr-color-border-focus', bg: 'sr-color-surface-small-cards', min: 3, mode: 'dark',
     status: 'open',
-    note: 'The same ring on the page background, at 2.71:1. Cyan/800 #0D8BAD is the '
-      + 'only stop clearing 3:1 in BOTH modes (3.95/3.63 light, 3.63/3.33 dark) — '
-      + 'darker stops fix light mode and fail dark, where the surfaces are navy. '
-      + 'Note 13 rings across 8 components hardcode --color-cyan-700 rather than the '
-      + 'token, so they must be repointed first or the change only moves half of them.',
+    note: 'In dark mode surface.small-cards resolves to Cyan/850, so a cyan focus ring '
+      + 'on a small card is near-invisible whatever stop the ring uses. This is the '
+      + 'dark-mode surface assignment flagged on 2026-08-10 — stat cards turning '
+      + 'saturated teal — not a focus-ring problem. It resolves when that assignment '
+      + 'does, in the dark-mode reconciliation pass.',
   },
 ];
 
-const tokens = JSON.parse(readFileSync(TOKENS, 'utf8'));
-
-function value(name) {
+function value(name, mode) {
   if (/^#[0-9a-f]{6}$/i.test(name)) return name;
-  const v = tokens[name];
-  if (!v) throw new Error(`No such token: ${name}. Run "npm run build:tokens" first.`);
+  const v = mode === 'dark' ? (dark[name] ?? light[name]) : light[name];
+  if (!v) throw new Error(`No such token: ${name} (${mode}). Run "npm run build:tokens" first.`);
   if (!/^#[0-9a-f]{6}$/i.test(v)) throw new Error(`${name} is not a plain hex: ${v}`);
   return v;
 }
@@ -119,45 +154,49 @@ function value(name) {
 const failures = [];
 const lines = [];
 
-for (const [fg, bg, min, why] of PAIRS) {
-  const r = ratio(value(fg), value(bg));
-  const ok = r >= min;
-  if (!ok) failures.push({ fg, bg, min, why, r });
-  lines.push(`  ${ok ? 'ok  ' : 'FAIL'}  ${r.toFixed(2).padStart(5)}:1  (needs ${min})  ${why}`);
+for (const mode of ['light', 'dark']) {
+  const applicable = PAIRS.filter(([, , , , m = 'both']) => m === 'both' || m === mode);
+  lines.push(`  ${mode.toUpperCase()} MODE`);
+  for (const [fg, bg, min, why] of applicable) {
+    const r = ratio(value(fg, mode), value(bg, mode));
+    const ok = r >= min;
+    if (!ok) failures.push({ fg, bg, min, why, r, mode });
+    lines.push(`  ${ok ? 'ok  ' : 'FAIL'}  ${r.toFixed(2).padStart(5)}:1  (needs ${min})  ${why}`);
+  }
+  lines.push('');
 }
-
-const open = KNOWN.filter((k) => k.status === 'open');
-const accepted = KNOWN.filter((k) => k.status === 'accepted');
 
 const report = (list, heading) => {
   if (!list.length) return;
-  lines.push('', `  ${heading}`);
+  lines.push(`  ${heading}`);
   for (const k of list) {
-    const r = ratio(value(k.fg), value(k.bg));
-    lines.push(`  --    ${r.toFixed(2).padStart(5)}:1  (needs ${k.min})  ${k.fg} on ${k.bg}`);
+    const r = ratio(value(k.fg, k.mode), value(k.bg, k.mode));
+    lines.push(`  --    ${r.toFixed(2).padStart(5)}:1  (needs ${k.min})  [${k.mode}] ${k.fg} on ${k.bg}`);
     lines.push(`        ${k.note}`);
   }
+  lines.push('');
 };
 
+const open = KNOWN.filter((k) => k.status === 'open');
+const accepted = KNOWN.filter((k) => k.status === 'accepted');
 report(accepted, 'Accepted exceptions — decided and written down:');
 report(open, 'OPEN FINDINGS — real defects, awaiting a colour decision:');
 
 console.log(lines.join('\n'));
 
 if (failures.length) {
-  console.error(`\ncheck:contrast — ${failures.length} asserted pair(s) below the required ratio.\n`);
+  console.error(`check:contrast — ${failures.length} asserted pair(s) below the required ratio.\n`);
   for (const f of failures) {
-    console.error(`  ${f.fg} on ${f.bg}`);
+    console.error(`  [${f.mode}] ${f.fg} on ${f.bg}`);
     console.error(`    ${f.r.toFixed(2)}:1, needs ${f.min}:1 — ${f.why}\n`);
   }
   console.error('Colour changes need sign-off (CLAUDE.md). If the new value is');
-  console.error('intended, the pair or its threshold has to move with it.\n');
+  console.error('intended, the pair or its threshold has to move with it.');
+  console.error('Check the other mode before settling on a fix: darkening a colour');
+  console.error('to clear light mode can push it under in dark mode, and vice versa.\n');
   process.exit(1);
 }
 
-console.log(`\ncheck:contrast — ${PAIRS.length} asserted pairs pass, `
+const checked = PAIRS.reduce((n, [, , , , m = 'both']) => n + (m === 'both' ? 2 : 1), 0);
+console.log(`check:contrast — ${checked} asserted pair-checks pass across both modes, `
   + `${accepted.length} accepted exception(s), ${open.length} open finding(s).`);
-if (open.length) {
-  console.log('Open findings are pre-existing and do not fail the build. They are');
-  console.log('waiting on a colour decision, which needs sign-off — not on code.');
-}

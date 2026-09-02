@@ -28,7 +28,7 @@
         "subtle":   { "$type": "color", "$value": "{color.grey.100}" },
         "default":  { "$type": "color", "$value": "{color.grey.200}" },
         "strong":   { "$type": "color", "$value": "{color.grey.600}" },
-        "focus":    { "$type": "color", "$value": "{color.cyan.700}",  "$description": "Focus ring — cyan/700 in both modes (DDR-006). Supersedes the previous focus-yellow." },
+        "focus":    { "$type": "color", "$value": "{color.cyan.800}",  "$description": "Focus ring — Cyan/800 in both modes (DDR-025, amending DDR-006). Cyan/700 was 2.95:1 on a card and 2.71:1 on the page, under the 3:1 SC 1.4.11 requires. Cyan/800 is the only stop clearing 3:1 in both modes: darker stops fix light mode and fail dark, where surfaces are navy." },
         "disabled": { "$type": "color", "$value": "{color.navy.300}" }
       },
       "brand": {

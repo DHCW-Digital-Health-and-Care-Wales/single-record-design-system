@@ -488,9 +488,16 @@ Every component spec must include an accessibility section. New components are n
 | Accepted exception | A decision has been taken and written down. Currently one: the warning role, which is a fill colour and always carries a text label. |
 | Open finding | A real defect with no signed-off fix yet. Reported on every run; does not fail the build, because a colour change needs sign-off. |
 
-**One open finding stands today:** the focus ring (Cyan/700, DDR-006) is 2.95:1 on a card and 2.71:1 on the page background, against the 3:1 SC 1.4.11 requires. It affects every focusable component. See `docs/engineering/known-issues.md` for the two options.
+The gate checks **both light and dark modes**, which is not thoroughness for its own sake: darkening a colour to clear light mode can push it under in dark mode, where surfaces are navy. That nearly shipped as the focus-ring fix.
+
+**Two open findings stand today**, both in dark mode and both found by the gate rather than by eye:
+
+1. **The primary button's label is 2.26:1.** `button.css` labels an `interactive-primary` fill with `text-inverse`, which is white in light mode but near-black in dark mode by design. Needs a token meaning "text on a primary fill". Latent — the website's dark-mode toggle is off, but products consuming `single-record-dark.css` have it.
+2. **A focus ring on a small card is 1.23:1**, because `surface.small-cards` resolves to Cyan/850 in dark mode. That is the dark-mode surface assignment flagged on 2026-08-10, not a ring problem.
 
 **Form control boundaries use `Border/Strong`, not `Border/Default`.** Grey/200 is 1.37:1 on white and cannot serve as the visible edge of a checkbox, radio or field. Grey/200 remains correct for dividers and card outlines, which identify nothing as interactive.
+
+**The focus ring is `Cyan/800` (DDR-025).** Cyan/700 was 2.95:1 on a card and 2.71:1 on the page, under the 3:1 SC 1.4.11 requires. Cyan/800 is the only stop clearing 3:1 in both modes.
 
 ---
 

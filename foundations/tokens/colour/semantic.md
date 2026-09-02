@@ -51,7 +51,7 @@ All semantic tokens use the `sr` prefix (Single Record). They are defined in Fig
 | `sr.color.border.subtle`   | `grey.100` | `navy.700` | Row dividers and internal table separators |
 | `sr.color.border.default`  | `grey.200` | `navy.500` | Standard borders — inputs, cards, section dividers |
 | `sr.color.border.strong`   | `grey.600` | `navy.300` | High-contrast borders — active rows, structural dividers |
-| `sr.color.border.focus`    | `cyan.700` | `cyan.700` | Focus ring (**DDR-006**, supersedes focus-yellow). Pair with `Border/Width/Strong` (2px) and an inner dark ring on saturated backgrounds. |
+| `sr.color.border.focus`    | `cyan.800` | `cyan.800` | Focus ring (**DDR-006**, supersedes focus-yellow). Pair with `Border/Width/Strong` (2px) and an inner dark ring on saturated backgrounds. |
 | `sr.color.border.disabled` | `navy.300` | `navy.300` | Disabled borders |
 
 ---

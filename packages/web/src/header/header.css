@@ -61,7 +61,7 @@
 }
 .sr-header__utility-link:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--color-cyan-700);
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--sr-color-border-focus);
 }
 
 /* ---------- Main bar ---------- */
@@ -152,7 +152,7 @@
 }
 .sr-header__notification:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--color-cyan-700);
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--sr-color-border-focus);
 }
 .sr-header__notification svg {
   width: 24px;
@@ -269,7 +269,7 @@
 }
 .sr-header__menu:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--color-cyan-700);
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--sr-color-border-focus);
 }
 .sr-header__menu svg {
   width: 24px;

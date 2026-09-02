@@ -32,7 +32,7 @@
         "subtle":   { "$type": "color", "$value": "{color.navy.700}", "$description": "Subtle dividers on dark surfaces." },
         "default":  { "$type": "color", "$value": "{color.navy.500}", "$description": "Standard borders on dark surfaces." },
         "strong":   { "$type": "color", "$value": "{color.navy.300}", "$description": "High-contrast borders on dark surfaces." },
-        "focus":    { "$type": "color", "$value": "{color.cyan.700}", "$description": "Focus ring — cyan/700 in both modes (DDR-006). Same primitive as light mode for consistency." },
+        "focus":    { "$type": "color", "$value": "{color.cyan.800}", "$description": "Focus ring — Cyan/800 in both modes (DDR-025, amending DDR-006). Same primitive as light mode. Dark mode is why the stop is 800 and not darker: on navy.900 Cyan/800 is 3.63:1 while Cyan/850 is 2.95:1." },
         "disabled": { "$type": "color", "$value": "{color.navy.300}" }
       },
 

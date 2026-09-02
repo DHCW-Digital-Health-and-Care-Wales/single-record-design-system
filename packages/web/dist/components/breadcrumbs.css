@@ -40,7 +40,7 @@
 }
 .sr-breadcrumbs__link:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--color-cyan-700);
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--sr-color-border-focus);
 }
 
 .sr-breadcrumbs__separator {

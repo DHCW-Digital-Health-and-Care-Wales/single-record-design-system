@@ -105,7 +105,7 @@
   --color-border-subtle: #f0f4f5; /** Ultra-light border for row dividers and internal table separators. Use only on white or near-white backgrounds where Border/Default would be too prominent. Do not use as the only structural indicator on a surface. */
   --color-border-default: #d8dde0; /** Standard border for inputs, cards, and section dividers. */
   --color-border-strong: #4c6272; /** High-contrast border for section edges, active table rows, and structural dividers that must be clearly visible. */
-  --color-border-focus: #12a3c9; /** Focus ring colour — Cyan/700 (DDR-006). Applied to all interactive elements on keyboard focus. Always paired with Border/Width/Strong (2px) and an inner gap ring. */
+  --color-border-focus: #0d8bad; /** Focus ring colour — Cyan/800 (DDR-025, amending DDR-006). Applied to all interactive elements on keyboard focus. Always paired with Border/Width/Strong (2px) and an inner gap ring. Kept in step with sr.color.border.focus by hand: this token and the sr-prefixed one are the known duplication awaiting a token-structure decision. */
   --sr-color-interactive-primary: #325083; /** Brand primary. White text on blue-800 = 7.1:1 (AAA). */
   --sr-color-interactive-primary-hover: #1e3050; /** Hover step for primary. */
   --sr-color-interactive-secondary: #1b294a; /** Muted dark for secondary interactive elements. */
@@ -124,7 +124,7 @@
   --sr-color-border-subtle: #f0f4f5;
   --sr-color-border-default: #d8dde0;
   --sr-color-border-strong: #4c6272;
-  --sr-color-border-focus: #12a3c9; /** Focus ring — cyan/700 in both modes (DDR-006). Supersedes the previous focus-yellow. */
+  --sr-color-border-focus: #0d8bad; /** Focus ring — Cyan/800 in both modes (DDR-025, amending DDR-006). Cyan/700 was 2.95:1 on a card and 2.71:1 on the page, under the 3:1 SC 1.4.11 requires. Cyan/800 is the only stop clearing 3:1 in both modes: darker stops fix light mode and fail dark, where surfaces are navy. */
   --sr-color-border-disabled: #9ea1af;
   --sr-color-brand-accent: #12a3c9; /** Decorative accent only. Borders, icon strokes, chart accents, tab indicators. Never use as a filled surface with text on top. */
   --sr-color-status-critical: #b32014; /** Red/700 (#B32014) — raised from Red/600 for AA contrast on light status surfaces and text. */
@@ -561,7 +561,7 @@
 }
 .sr-bottom-nav__item:focus-visible {
   outline: none;
-  box-shadow: inset 0 0 0 2px var(--color-cyan-700);
+  box-shadow: inset 0 0 0 2px var(--sr-color-border-focus);
 }
 .sr-bottom-nav__item[aria-current="page"] {
   color: var(--sr-color-interactive-link);
@@ -626,7 +626,7 @@
 }
 .sr-breadcrumbs__link:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--color-cyan-700);
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--sr-color-border-focus);
 }
 
 .sr-breadcrumbs__separator {
@@ -762,7 +762,7 @@
   outline: none;
   box-shadow:
     0 0 0 2px var(--sr-color-surface-background),
-    0 0 0 4px var(--color-cyan-700);
+    0 0 0 4px var(--sr-color-border-focus);
 }
 
 /* ---------- Disabled (all types) ---------- */
@@ -1466,7 +1466,7 @@
 }
 .sr-header__utility-link:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--color-cyan-700);
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--sr-color-border-focus);
 }
 
 /* ---------- Main bar ---------- */
@@ -1557,7 +1557,7 @@
 }
 .sr-header__notification:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--color-cyan-700);
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--sr-color-border-focus);
 }
 .sr-header__notification svg {
   width: 24px;
@@ -1674,7 +1674,7 @@
 }
 .sr-header__menu:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--color-cyan-700);
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--sr-color-border-focus);
 }
 .sr-header__menu svg {
   width: 24px;
@@ -2251,7 +2251,7 @@ textarea.sr-input__control {
 }
 .sr-nav__collapse:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--color-cyan-700);
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--sr-color-border-focus);
 }
 .sr-nav--collapsed .sr-nav__collapse {
   transform: rotate(180deg);
@@ -2329,7 +2329,7 @@ textarea.sr-input__control {
 }
 .sr-nav__item:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--color-cyan-700);
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--sr-color-border-focus);
 }
 .sr-nav__item[aria-current="page"] {
   background-color: var(--sr-color-surface-accent);
@@ -2421,7 +2421,7 @@ textarea.sr-input__control {
 }
 .sr-nav__subitem:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--color-cyan-700);
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--sr-color-border-focus);
 }
 .sr-nav__subitem[aria-current="page"] {
   color: var(--sr-color-interactive-primary);
@@ -3255,13 +3255,13 @@ textarea.sr-input__control {
 /* Focus — Cyan/700 ring outside the segment (DDR-006). */
 .sr-segmented__option:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--sr-color-surface-subtle), 0 0 0 4px var(--color-cyan-700);
+  box-shadow: 0 0 0 2px var(--sr-color-surface-subtle), 0 0 0 4px var(--sr-color-border-focus);
 }
 .sr-segmented__option[aria-pressed="true"]:focus-visible {
   box-shadow:
     0 1px 1px rgba(0, 0, 0, 0.06),
     0 0 0 2px var(--sr-color-surface-subtle),
-    0 0 0 4px var(--color-cyan-700);
+    0 0 0 4px var(--sr-color-border-focus);
 }
 
 /* Disabled — unselected: muted text; selected: muted outline (not a filled blue). */
@@ -3834,7 +3834,7 @@ td.sr-table__select {
   outline: none;
   box-shadow:
     0 0 0 2px var(--sr-color-surface-section-cards),
-    0 0 0 4px var(--color-cyan-700);
+    0 0 0 4px var(--sr-color-border-focus);
 }
 .sr-table__action:disabled,
 .sr-table__action[aria-disabled="true"] {
@@ -3988,7 +3988,7 @@ td.sr-table__select {
 }
 .sr-tag__close:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--color-cyan-700);
+  box-shadow: 0 0 0 2px var(--sr-color-border-focus);
 }
 
 /* ═══ time-select ═════════════════════════════════════════════════ */

@@ -425,7 +425,11 @@ old Grey/200 value and confirming it was caught at 1.37:1.
 
 ---
 
-### The focus ring is 2.95:1 and SC 1.4.11 wants 3:1 — open, needs sign-off
+### The focus ring was 2.95:1 against the 3:1 SC 1.4.11 wants — fixed, DDR-025
+
+**Resolved 2026-09-02.** `Border/Focus` is now Cyan/800 `#0D8BAD`. The entry is
+kept because the reasoning is the reusable part: the trap here is fixing a
+contrast failure in one mode and creating one in the other.
 
 **Symptom:** Nothing visible. This was found by computing it, not by looking.
 
@@ -440,8 +444,7 @@ Worth separating from the other `#12A3C9` finding already on file: that one is
 — a different pair that happens to land on a near-identical number, and it had
 not been computed before.
 
-**Fix:** Not applied. Colour changes need sign-off (CLAUDE.md), and this one
-amends an accepted DDR.
+**Fix:** Applied — `Border/Focus` moved to Cyan/800 `#0D8BAD` (DDR-025).
 
 **Check both modes before picking a stop.** The obvious move is to darken the
 ring, and in light mode any of 800/850/900 works. Dark mode inverts the
@@ -458,23 +461,25 @@ fix. Only one stop clears 3:1 in both:
 | Cyan/900 `#0A6A84` | 6.16 / 5.65 | 2.29 / 2.10 | fails dark |
 
 Cyan/800 is also the smallest visual change, being the nearest stop to the
-current value. Keeping Cyan/700 instead needs a DDR amending DDR-006 and
-recording the exception, the way the warning-icon exception is recorded — but
-see the note below on why that is a weaker case than the warning one.
+current value.
 
-**A focus ring is a poor candidate for an exception.** The warning-icon
-exception holds because the warning colour is a fill that always sits beside a
-text label, so nothing depends on the colour alone. A focus ring has no such
-backstop: it is the only thing telling a keyboard user where they are, and
-there is nothing else in the interface carrying that information.
+**An exception was considered and rejected.** The warning-icon exception holds
+because the warning colour is a fill that always sits beside a text label, so
+nothing depends on the colour alone. A focus ring has no such backstop: it is
+the only thing telling a keyboard user where they are.
 
-**Two things have to change together, and one of them is not the token.**
+**Two things had to change together, and one of them was not the token.**
 Thirteen focus rings across eight components (`button`, `header`, `navigation`,
-`breadcrumbs`, `segmented-control`, `table`, `tags`, `bottom-nav`) hardcode
+`breadcrumbs`, `segmented-control`, `table`, `tags`, `bottom-nav`) hardcoded
 `var(--color-cyan-700)` — the raw primitive — instead of
-`var(--sr-color-border-focus)`. Changing the token alone would move the other
-rings and leave those thirteen on the old colour, giving the system two focus
-colours at once. Repoint them first, then change the token.
+`var(--sr-color-border-focus)`. Changing the token alone would have moved the
+other rings and left those thirteen behind, giving the system two focus colours
+at once. They were repointed first. **This is the shape to look for whenever a
+semantic token changes: grep for the primitive as well as the semantic name.**
+
+**Prevented by:** `npm run check:contrast` asserts the ring against page
+background and section cards in **both modes**, so a future change that clears
+one mode and breaks the other fails the build.
 
 **Separately, and true of any stop:** in dark mode `surface.small-cards`
 resolves to Cyan/850, so a cyan ring on a small card is 1.65:1 today and
@@ -484,6 +489,57 @@ flagged in the 2026-08-10 checkpoint, not a focus-ring problem.
 **Tracked by:** `npm run check:contrast`, which reports it under OPEN FINDINGS
 on every run without failing the build. It is pre-existing debt with a name on
 it, not an exemption — the check is what stops it being forgotten again.
+
+---
+
+### The dark-mode primary button is near-black text on mid-blue — open
+
+**Symptom:** In dark mode the primary button's label is barely legible, at
+2.26:1. Nobody has reported it, because the website's dark-mode toggle is
+currently off — but any product consuming `single-record-dark.css` has this
+today.
+
+**Why:** `button.css` sets `color: var(--sr-color-text-inverse)` on an
+`--sr-color-interactive-primary` fill. That is right in light mode: white on
+Blue/800, 8.04:1. In dark mode `text-inverse` is `#212b32`, near-black — and
+that is not a bug in the token. Its own description says it means *"text on
+light elements within a dark-mode interface"*, which is a sensible thing for a
+token to mean. The mismatch is that **a primary button is not a light element
+in either mode**, so it is reaching for the wrong token.
+
+DDR-011 records the intent as white on Info-Blue/600 at 5.1:1. That is not what
+renders.
+
+**The general shape, which is the reusable part:** a token whose meaning is
+*relative to the mode* ("inverse") cannot be used by a component whose surface
+is *absolute* (always saturated). Anywhere a component fills with a brand colour
+and labels it with `text-inverse`, check both modes.
+
+**Fix:** Not applied. The fix is a token that means "text on a primary fill" and
+holds white in both modes, which is a token-structure change and needs a DDR.
+Found by extending the contrast gate to dark mode, not by looking.
+
+**Tracked by:** `npm run check:contrast`, under OPEN FINDINGS.
+
+---
+
+### The Blazor CSS under `wwwroot/` is a hand-copied mirror and had drifted
+
+**Symptom:** A token change lands everywhere except Blazor, which keeps
+rendering the old values with nothing failing.
+
+**Why:** `packages/blazor/wwwroot/css/` holds copies of `tokens.css`,
+`tokens-dark.css` and `button.css`. The copy commands are written down in
+`DHCW.SingleRecord.Components.csproj` — as a **comment**. Nothing runs them.
+When the focus ring moved to Cyan/800 the mirror still carried Cyan/700
+throughout, and its `button.css` still referenced the `--color-cyan-700`
+primitive that had just been removed from source.
+
+**Fix:** `npm run fix:blazor-mirror` re-copies all three.
+
+**Prevented by:** `npm run check:blazor-mirror` (`scripts/check-blazor-mirror.mjs`),
+wired into `npm run check`, which fails when any mirrored file differs from its
+source. Verified by planting a change in the copy and confirming it was caught.
 
 ---
 

@@ -239,7 +239,7 @@ td.sr-table__select {
   outline: none;
   box-shadow:
     0 0 0 2px var(--sr-color-surface-section-cards),
-    0 0 0 4px var(--color-cyan-700);
+    0 0 0 4px var(--sr-color-border-focus);
 }
 .sr-table__action:disabled,
 .sr-table__action[aria-disabled="true"] {
