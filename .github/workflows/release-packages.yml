@@ -36,9 +36,22 @@ on:
         description: 'Tag to create or reuse, e.g. v0.1.0'
         required: true
         type: string
+      publish_npm:
+        description: 'Publish to npmjs.org as well as attaching tarballs'
+        required: false
+        default: false
+        type: boolean
+      dry_run:
+        description: 'Pack, verify and npm-publish --dry-run, but change nothing'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
+  # Provenance signs each package against the commit and workflow that built
+  # it, which needs an OIDC token. Read-only elsewhere.
+  id-token: write
 
 jobs:
   release:
@@ -61,6 +74,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+          # Writes the .npmrc that `npm publish` reads. Without it the publish
+          # goes to whatever registry happens to be configured, which on a
+          # runner is nothing useful.
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Build everything the packages ship
         run: |
@@ -129,7 +146,69 @@ jobs:
             if (bad) { console.error("\n" + bad + " import path(s) do not resolve from the packed tarballs."); process.exit(1); }
           '
 
+      # ─── npm ─────────────────────────────────────────────────────────────
+      #
+      # Runs before the GitHub Release deliberately: if publishing fails, no
+      # release should exist claiming the version shipped.
+      #
+      # Publishing is opt-in per run rather than automatic on a tag. Tarballs
+      # have been the supported route for months and a registry publish is
+      # irreversible — npm allows unpublish only within 72 hours, and never
+      # re-publishing the same version afterwards. A tag should not be able to
+      # push four packages to a public registry because somebody pushed it.
+      - name: Pre-flight the npm publish
+        if: ${{ inputs.publish_npm }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "::error::NPM_TOKEN is not set on this repository. Add it under"
+            echo "Settings > Secrets and variables > Actions before publishing."
+            exit 1
+          fi
+
+          VERSION=$(node -p "require('./packages/tokens/package.json').version")
+
+          # A version carrying a pre-release suffix (0.2.1-rc.0) must never
+          # become `latest`, or every consumer on a caret range picks it up.
+          # It goes to `next`, which is opt-in: npm install @dhcw/sr-tokens@next
+          case "$VERSION" in
+            *-*) DIST_TAG=next ;;
+            *)   DIST_TAG=latest ;;
+          esac
+          echo "DIST_TAG=$DIST_TAG" >> "$GITHUB_ENV"
+          echo "Version $VERSION will publish under dist-tag '$DIST_TAG'."
+
+          # Dry-run all four BEFORE publishing any. npm has no transaction: a
+          # failure on the third package leaves the first two published and
+          # unpublishable at that version. This turns an auth, naming or
+          # permission error into a clean stop instead of a half-release.
+          for p in tokens icons web react; do
+            echo "--- pre-flight @dhcw/sr-$p"
+            npm publish "./packages/$p" --dry-run --access public --tag "$DIST_TAG"
+          done
+
+      - name: Publish to npmjs.org
+        if: ${{ inputs.publish_npm && !inputs.dry_run }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          # Dependency order: sr-react depends on the other three. A partial
+          # publish then leaves a resolvable subset rather than a package whose
+          # dependencies do not exist yet.
+          #
+          # --provenance signs each package against this commit and workflow,
+          # which is why the packages' repository.url must name THIS repository.
+          # It points at the org mirror for exactly that reason.
+          for p in tokens icons web react; do
+            echo "--- publishing @dhcw/sr-$p"
+            npm publish "./packages/$p" --access public --provenance --tag "$DIST_TAG"
+          done
+
+          echo "PUBLISHED_NPM=true" >> "$GITHUB_ENV"
+
       - name: Publish the release
+        if: ${{ !inputs.dry_run }}
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ inputs.tag || github.ref_name }}
@@ -152,9 +231,39 @@ jobs:
             fi
           done
 
-          notes="Install with plain npm — no registry and no credentials.
+          # Once a version is on the registry, that is the route a developer
+          # should use. The tarballs stay in the release either way — they are
+          # what a machine with no registry access installs from — but they
+          # stop being the headline.
+          npm_notes=""
+          if [ "${PUBLISHED_NPM:-}" = "true" ]; then
+            install_line="npm install @dhcw/sr-tokens @dhcw/sr-icons @dhcw/sr-web @dhcw/sr-react"
+            if [ "${DIST_TAG:-latest}" != "latest" ]; then
+              install_line="npm install @dhcw/sr-tokens@$DIST_TAG @dhcw/sr-icons@$DIST_TAG @dhcw/sr-web@$DIST_TAG @dhcw/sr-react@$DIST_TAG"
+              pre_note="
 
-          Add to \`package.json\`, then \`npm install\`:
+          This is a **pre-release**, published under the \\\`$DIST_TAG\\\` tag. It is
+          not picked up by a version range and will not reach anyone who does not
+          ask for it by name."
+            else
+              pre_note=""
+            fi
+            npm_notes="## Install from npm
+
+          \`\`\`
+          $install_line
+          \`\`\`
+
+          Updates then arrive through \\\`npm update\\\` — no URLs to edit.$pre_note
+
+          ---
+
+          "
+          fi
+
+          notes="${npm_notes}## Install from the release tarballs
+
+          No registry and no credentials. Add to \`package.json\`, then \`npm install\`:
 
           \`\`\`json
           \"dependencies\": {

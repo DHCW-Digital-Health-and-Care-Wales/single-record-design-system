@@ -15,10 +15,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Chuk-DCHW/dhcw-single-record-design-system.git",
+    "url": "https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system.git",
     "directory": "packages/web"
   },
-  "bugs": "https://github.com/Chuk-DCHW/dhcw-single-record-design-system/issues",
+  "bugs": "https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/issues",
   "dependencies": {
     "@dhcw/sr-tokens": "^0.2.0",
     "@dhcw/sr-icons": "^0.2.0"
@@ -40,5 +40,6 @@
   },
   "scripts": {
     "build": "node build.mjs"
-  }
+  },
+  "homepage": "https://dhcw-digital-health-and-care-wales.github.io/single-record-design-system/"
 }
