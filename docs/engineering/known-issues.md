@@ -441,12 +441,45 @@ Worth separating from the other `#12A3C9` finding already on file: that one is
 not been computed before.
 
 **Fix:** Not applied. Colour changes need sign-off (CLAUDE.md), and this one
-amends an accepted DDR. Two routes for the design lead:
+amends an accepted DDR.
 
-| Option | Result |
-|---|---|
-| Move `border.focus` to Cyan/850 `#0C7B99` | 4.87:1 on a card, 4.47:1 on the page. Already in the palette; added in July as the lightest cyan clearing AA. |
-| Keep Cyan/700 | Needs a DDR amending DDR-006 and recording the exception, the way the warning-icon exception is recorded. |
+**Check both modes before picking a stop.** The obvious move is to darken the
+ring, and in light mode any of 800/850/900 works. Dark mode inverts the
+problem: its surfaces are navy, so a darker ring gets *worse*, and Cyan/850 —
+the intuitive choice, and the one first proposed here — fails dark mode at
+2.95:1 on `navy.900`, mirroring exactly the light-mode failure it was meant to
+fix. Only one stop clears 3:1 in both:
+
+| Stop | Light: white / page | Dark: navy.900 / blue.900 | Verdict |
+|---|---|---|---|
+| Cyan/700 (current) | 2.95 / 2.71 | 4.86 / 4.46 | fails light |
+| **Cyan/800 `#0D8BAD`** | **3.95 / 3.63** | **3.63 / 3.33** | **passes both** |
+| Cyan/850 `#0C7B99` | 4.87 / 4.47 | 2.95 / 2.70 | fails dark |
+| Cyan/900 `#0A6A84` | 6.16 / 5.65 | 2.29 / 2.10 | fails dark |
+
+Cyan/800 is also the smallest visual change, being the nearest stop to the
+current value. Keeping Cyan/700 instead needs a DDR amending DDR-006 and
+recording the exception, the way the warning-icon exception is recorded — but
+see the note below on why that is a weaker case than the warning one.
+
+**A focus ring is a poor candidate for an exception.** The warning-icon
+exception holds because the warning colour is a fill that always sits beside a
+text label, so nothing depends on the colour alone. A focus ring has no such
+backstop: it is the only thing telling a keyboard user where they are, and
+there is nothing else in the interface carrying that information.
+
+**Two things have to change together, and one of them is not the token.**
+Thirteen focus rings across eight components (`button`, `header`, `navigation`,
+`breadcrumbs`, `segmented-control`, `table`, `tags`, `bottom-nav`) hardcode
+`var(--color-cyan-700)` — the raw primitive — instead of
+`var(--sr-color-border-focus)`. Changing the token alone would move the other
+rings and leave those thirteen on the old colour, giving the system two focus
+colours at once. Repoint them first, then change the token.
+
+**Separately, and true of any stop:** in dark mode `surface.small-cards`
+resolves to Cyan/850, so a cyan ring on a small card is 1.65:1 today and
+cannot be fixed by moving the ring. That is the dark-mode surface assignment
+flagged in the 2026-08-10 checkpoint, not a focus-ring problem.
 
 **Tracked by:** `npm run check:contrast`, which reports it under OPEN FINDINGS
 on every run without failing the build. It is pre-existing debt with a name on

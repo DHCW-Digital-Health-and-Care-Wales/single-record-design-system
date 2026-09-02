@@ -98,9 +98,11 @@ const KNOWN = [
   {
     fg: 'sr-color-border-focus', bg: 'sr-color-surface-background', min: 3,
     status: 'open',
-    note: 'The same ring on the page background, at 2.71:1. Design lead to decide: '
-      + 'Cyan/850 #0C7B99 clears both surfaces at 4.87 and 4.47 and is already in the '
-      + 'palette, or keep Cyan/700 and record the exception in a DDR amending DDR-006.',
+    note: 'The same ring on the page background, at 2.71:1. Cyan/800 #0D8BAD is the '
+      + 'only stop clearing 3:1 in BOTH modes (3.95/3.63 light, 3.63/3.33 dark) — '
+      + 'darker stops fix light mode and fail dark, where the surfaces are navy. '
+      + 'Note 13 rings across 8 components hardcode --color-cyan-700 rather than the '
+      + 'token, so they must be repointed first or the change only moves half of them.',
   },
 ];
 
