@@ -125,7 +125,7 @@ jobs:
           ls -lh nupkg/
 
           python3 - "$pkg" "$VERSION" <<'PY'
-          import sys, zipfile
+          import re, sys, zipfile
           pkg, version = sys.argv[1], sys.argv[2]
           names = zipfile.ZipFile(pkg).namelist()
 
@@ -140,8 +140,21 @@ jobs:
               problems.append(f'expected 11 brand marks, found {len(brand)}')
 
           # Every platform this package claims to support must actually be in it.
+          #
+          # The TFM in the csproj is `net10.0-android`, but NuGet packs it under
+          # the *materialised* platform version — lib/net10.0-android36.0/ — and
+          # likewise net10.0-ios18.0 and net10.0-maccatalyst18.0. Matching the
+          # literal segment '/net10.0-android/' therefore never hits, and the
+          # first real run of this workflow reported all three platforms missing
+          # from a package that contained all three.
+          #
+          # The trailing [0-9.]* is optional, so this holds whether or not the
+          # platform version is materialised, and it stays correct when the
+          # Android or iOS API level moves. Anchored at lib/ so a stray .dll
+          # elsewhere in the package cannot satisfy it.
           for tfm in ('android', 'ios', 'maccatalyst'):
-              if not any(f'/net10.0-{tfm}/' in n and n.endswith('.dll') for n in names):
+              pattern = re.compile(rf'^lib/net10\.0-{tfm}[0-9.]*/.+\.dll$')
+              if not any(pattern.match(n) for n in names):
                   problems.append(f'no assembly for net10.0-{tfm} — packed on the wrong host?')
 
           if problems:

@@ -268,6 +268,46 @@ Full correction in **DDR-021**. `packages/blazor` serves Blazor web only.
 
 ---
 
+### A packed MAUI TFM is `net10.0-android36.0`, not `net10.0-android`
+
+**Symptom:** `publish-nuget.yml`'s completeness check reported *"no assembly for
+net10.0-android — packed on the wrong host?"* for all three platforms, on a
+macOS run, from a package that contained all three. The message points at the
+host, so the natural next move is to go looking at runners and workloads. That
+is the wrong tree.
+
+**Why:** the csproj targets `net10.0-android`, but NuGet packs under the
+**materialised** platform version — `lib/net10.0-android36.0/`, and likewise
+`net10.0-ios18.0` and `net10.0-maccatalyst18.0`. A check matching the literal
+path segment `/net10.0-android/` therefore never matches anything, whatever the
+package contains.
+
+It reported *android* missing too, which is the tell: android compiles on Linux
+in the PR workflow on every change, so it was certainly present. Three
+simultaneous failures including one that could not really be missing means the
+matcher is wrong, not the package.
+
+**Fix:** match the TFM with an optional trailing version, anchored at `lib/`:
+
+```python
+pattern = re.compile(rf'^lib/net10\.0-{tfm}[0-9.]*/.+\.dll$')
+```
+
+`[0-9.]*` is optional, so it holds whether or not the version is materialised,
+and stays correct when an Android or iOS API level moves.
+
+**The general shape, which is the reusable part:** when a check that has never
+run reports something impossible, suspect the check. This one was written,
+reviewed and shipped without ever executing — its first real run was the dry
+run that found this.
+
+**Verified** by running the old and new matchers over a realistic packed-name
+list: the old one reproduces the exact three-error message against a good
+package; the new one passes it, still fails a genuinely Linux-only pack on ios
+and maccatalyst, and is not satisfied by a stray `.dll` outside `lib/`.
+
+---
+
 ## React
 
 ### A snippet can use a prop the component does not have
