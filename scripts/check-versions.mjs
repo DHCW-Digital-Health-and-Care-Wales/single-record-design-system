@@ -47,23 +47,36 @@ for (const f of manifests) {
       const target = versions.get(name);
       if (!target) continue; // not a workspace — e.g. a tarball URL in a product
 
-      // Only ranges are checked; a tarball URL or "*" is a deliberate choice.
-      const m = /^\^(\d+)\.(\d+)\.(\d+)$/.exec(range);
-      if (!m) continue;
+      // Only caret ranges are checked; a tarball URL or "*" is a deliberate
+      // choice. The prerelease part is matched too, so `^0.2.1-rc.0` is
+      // inspected rather than silently skipped — see below for why that
+      // matters.
+      if (!/^\^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(range)) continue;
 
-      const [, major, minor] = m;
-      const [tMajor, tMinor] = target.version.split('.');
+      // The rule is exact agreement, not semver satisfaction: a caret range on
+      // an internal package must name that package's current version exactly.
+      //
+      // This is stricter than semver, deliberately. The five packages are
+      // versioned in lockstep and released together, so any drift between a
+      // range and its target is a mistake rather than a decision — and the
+      // alternative is reimplementing semver here, which would need a
+      // dependency (CLAUDE.md: not without a DDR) or a hand-rolled comparator
+      // that is exactly the kind of thing that looks right and is not.
+      //
+      // It catches both traps this repo has actually hit:
+      //
+      //   ^0.1.1 against 0.2.0      caret on 0.x is minor-locked, so this does
+      //                             not resolve, and only a clean npm ci says so
+      //   ^0.2.0 against 0.2.1-rc.0 a prerelease satisfies a range only when
+      //                             the range carries a prerelease at the same
+      //                             version, so this does not resolve either.
+      //                             Verified with semver.satisfies: false.
+      const expected = `^${target.version}`;
 
-      // Caret on 0.x is confined to the minor. That is the trap: ^0.1.1 looks
-      // like it would accept 0.2.0 and does not.
-      const satisfied = major === '0' && tMajor === '0'
-        ? minor === tMinor
-        : major === tMajor;
-
-      if (!satisfied) {
+      if (range !== expected) {
         problems.push(
-          `${f}\n    ${section} "${name}": "${range}" does not accept `
-          + `${target.version} (${target.file})`
+          `${f}\n    ${section} "${name}": "${range}" should be "${expected}" `
+          + `(${target.file} is ${target.version})`
         );
       }
     }
