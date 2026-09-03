@@ -48,6 +48,15 @@ const RELEASE_VERSION = JSON.parse(
 const RELEASE_TAG = `v${RELEASE_VERSION}`;
 const RELEASE_BASE =
   `https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/releases/download/${RELEASE_TAG}`;
+
+// A prerelease publishes under the `next` dist-tag, so the install line on this
+// page has to carry it or a reader copies a command that resolves to something
+// else. Derived from the version rather than typed, for the same reason the
+// version itself is: the release workflow derives its dist-tag the same way.
+const IS_PRERELEASE = RELEASE_VERSION.includes('-');
+const NPM_TAG = IS_PRERELEASE ? '@next' : '';
+const NPM_PKGS = ['tokens', 'icons', 'web', 'react'].map((n) => `@dhcw/sr-${n}${NPM_TAG}`);
+const NPM_INSTALL = `npm install ${NPM_PKGS.join(' ')}`;
 const RELEASE_DEPENDENCIES = `<div class="codepanel"><pre><code>"dependencies": {
 ${['tokens', 'icons', 'web', 'react']
   .map((n) => `  ${(JSON.stringify('@dhcw/sr-' + n) + ':').padEnd(19)} "${RELEASE_BASE}/dhcw-sr-${n}-${RELEASE_VERSION}.tgz"`)
@@ -3758,8 +3767,19 @@ loose script you have to wire up:</p>
 </ul>
 
 <h2>How to install it</h2>
-<p>The packages are not published to npm yet — that is a naming and governance decision with its
-own record, not something to slip in.</p>
+<p>Four routes. Which one you want depends on what you are building, not on
+preference &mdash; a MAUI app cannot use npm at all, and a plain HTML page has no bundler to
+assemble packages.</p>
+
+<table>
+  <thead><tr><th>You are building</th><th>Route</th><th>Needs credentials?</th></tr></thead>
+  <tbody>
+    <tr><td>React, or anything with a bundler</td><td><a href="#route-npm">1 &mdash; npm</a></td><td>No</td></tr>
+    <tr><td>Plain HTML, Razor, ASP.NET</td><td><a href="#route-download">2 &mdash; download the files</a></td><td>No</td></tr>
+    <tr><td>Any of the above, on a machine that cannot reach npmjs.org</td><td><a href="#route-tarball">3 &mdash; release tarballs</a></td><td>No</td></tr>
+    <tr><td>.NET MAUI, or Blazor</td><td><a href="#route-nuget">4 &mdash; NuGet</a></td><td><strong>Yes</strong></td></tr>
+  </tbody>
+</table>
 
 <div class="callout callout--warning"><p><strong>Installing this repository from GitHub does not
 work, and any guide telling you to do so is out of date.</strong> This is a monorepo: the thing at
@@ -3773,11 +3793,36 @@ npm install github:DHCW-Digital-Health-and-Care-Wales/single-record-design-syste
 # fetches is private, has no entry point, and importing from it throws
 # ERR_MODULE_NOT_FOUND.
 "@dhcw/sr-react": "github:DHCW-Digital-Health-and-Care-Wales/single-record-design-system#main"</code></pre></div>
-<p>npm has no way to install a single workspace out of a git repository. Use Route 2 below instead
+<p>npm has no way to install a single workspace out of a git repository. Use Route 1 instead
 &mdash; and if you have <code>resolve.alias</code> entries in a Vite config pointing inside
 <code>node_modules/@dhcw</code> to work around this, you can delete them.</p></div>
 
-<h3>Route 1: Download the files (no build step at all)</h3>
+<h3 id="route-npm">Route 1 &mdash; npm</h3>
+<p>The packages are on npmjs.org. No registry configuration, no <code>.npmrc</code>, no token
+&mdash; a plain <code>npm install</code> works on your machine and in CI alike.</p>
+${IS_PRERELEASE ? `<div class="callout callout--warning"><p><strong>${RELEASE_VERSION} is a release
+candidate, published under the <code>next</code> tag.</strong> It is not picked up by a version
+range and reaches nobody who does not ask for it by name, which is why the commands below carry
+<code>@next</code>. Take it if you have been asked to help test; otherwise wait for the stable
+release.</p></div>` : ''}
+
+<p><strong>Installing for the first time.</strong> All four together &mdash; the React package
+depends on the other three, so installing it alone fails:</p>
+<div class="codepanel"><pre><code>${NPM_INSTALL}</code></pre></div>
+
+<p><strong>Updating later.</strong> ${IS_PRERELEASE
+  ? `While you are on a release candidate, re-run the command above to move to a newer one. Once a
+     stable release exists, install it without <code>@next</code> and updates arrive through
+     <code>npm update</code> from then on.`
+  : `Nothing to edit. Your <code>package.json</code> carries a version range, so:`}</p>
+${IS_PRERELEASE ? '' : `<div class="codepanel"><pre><code>npm update @dhcw/sr-tokens @dhcw/sr-icons @dhcw/sr-web @dhcw/sr-react</code></pre></div>
+<p>That is the whole difference between this route and the tarballs below: there, a new version
+means editing eight values by hand.</p>`}
+
+<p>The <a href="changelog.html">changelog</a> says whether a release needs anything from you. Most
+do not.</p>
+
+<h3 id="route-download">Route 2 &mdash; Download the files (no build step at all)</h3>
 <p>Take <a href="downloads/single-record.css" download>single-record.css</a> and
 <a href="downloads/sprite.svg" download>sprite.svg</a> from the table above and link them directly.
 This is the route for plain HTML, Razor, ASP.NET, or a React app where you write the markup and take
@@ -3786,11 +3831,15 @@ the styling from the design system.</p>
 stylesheet alone gets you a correct-looking component in any framework. What you do not get is the
 React component wrappers — those need Route 2.</p>
 
-<h3>Route 2: npm, from a release (works today)</h3>
-<p>For a React or bundler-based project that wants the component wrappers, not just the CSS. Each
-release attaches the packages as tarballs, which plain npm installs directly &mdash; no registry, no
-credentials, and nothing to configure in your <code>.npmrc</code>. This works the same in Azure
-DevOps CI as it does on your machine.</p>
+<h3 id="route-tarball">Route 3 &mdash; npm, from a release tarball</h3>
+<p><strong>Route 1 is easier &mdash; use this one only if npmjs.org is unreachable</strong> from
+your build machine, or if a policy pins you to artefacts fetched from a known URL. Each release
+attaches the packages as tarballs, which plain npm installs directly from a GitHub release rather
+than from a registry.</p>
+<p>The cost is that a version is baked into eight URLs, so <strong>updating means editing all of
+them</strong> and re-running <code>npm install</code>. The one-liner in each release's notes does
+the rewrite for you; doing it by hand is where the 404s come from, because the version appears
+twice per dependency.</p>
 <p>Add all four to <code>package.json</code> and run <code>npm install</code>:</p>
 ${RELEASE_DEPENDENCIES}
 <p><strong>All four are needed together.</strong> The React package depends on the other three, so
@@ -3809,8 +3858,8 @@ assemble the pieces, so it keeps using <code>single-record.css</code>.</p></div>
 ${codePanel('get-files-npm-import', {
   HTML: '<!-- Route 1 (download) is the equivalent for plain HTML — see above. -->',
   React: '// REQUIRED, once, in your entry file: font, tokens and typography.\n// Not single-record.css — each component brings its own styles.\nimport "@dhcw/sr-web/foundations";\n\n// Then whichever components this file uses. Any component from the barrel\n// goes in the braces — these four are only an example, and you never need\n// to import a component you are not using.\nimport { Button, Input, Navigation, PatientBanner } from "@dhcw/sr-react";\n\n// A single component can also be imported on its own.\nimport Icon from "@dhcw/sr-react/icon";',
-  Blazor: '<!-- The Blazor Razor Class Library is distributed via NuGet, not npm. -->',
-  MAUI: `<!-- MAUI installs from NuGet, not npm — see "Route 3" below.
+  Blazor: '<!-- Blazor installs from NuGet, not npm. See Route 4 below.\n     dotnet add package DHCW.SingleRecord.Blazor\n\n     Then reference the stylesheet; there is nothing to import. -->\n<link rel="stylesheet" href="_content/DHCW.SingleRecord.Blazor/css/single-record.css" />',
+  MAUI: `<!-- MAUI installs from NuGet, not npm. See Route 4 below.
      dotnet add package DHCW.SingleRecord.Maui
 
      Merged BY TYPE, which is the only form that works across an assembly
@@ -3828,15 +3877,27 @@ ${codePanel('get-files-npm-import', {
 </Application>`,
 })}
 
-<h2 id="maui">Route 3 &mdash; NuGet, for .NET MAUI</h2>
-<div class="callout"><p><strong>npm cannot serve a MAUI app.</strong> npm is JavaScript-only and
+<h2 id="route-nuget">Route 4 &mdash; NuGet, for .NET</h2>
+<div class="callout"><p><strong>npm cannot serve a .NET app.</strong> npm is JavaScript-only and
 there is no npm in the .NET toolchain, so none of the packages above can be installed into a MAUI
-project. MAUI has its own package.</p></div>
+or Blazor project. .NET has its own two packages, versioned in lockstep with the npm ones so that
+one version number describes the whole design system:</p>
+<table>
+  <thead><tr><th>Package</th><th>For</th><th>Ships</th></tr></thead>
+  <tbody>
+    <tr><td><code>DHCW.SingleRecord.Maui</code></td><td>Native MAUI XAML</td><td>Three ResourceDictionaries and the brand marks</td></tr>
+    <tr><td><code>DHCW.SingleRecord.Blazor</code></td><td>Blazor</td><td>The stylesheets, as static web assets</td></tr>
+  </tbody>
+</table>
+<p>Both are a <strong>token and style layer, not a component library</strong>. You write your own
+markup or XAML and take the styling from the design system, the same way a plain HTML consumer
+does.</p></div>
 <div class="callout"><p><strong>This feed needs authentication, and that is deliberate.</strong>
 GitHub Packages requires a token for every install, including public packages. The MAUI package
 carries the NHS Wales and DHCW brand marks, which are trademarked artwork not covered by its MIT
 licence, so a feed that cannot be read anonymously is the right place for it. Reasoning in
 DDR&#8209;024.</p></div>
+<h3>Both packages: the feed</h3>
 <p><strong>1. Add a <code>nuget.config</code> beside your solution.</strong> A classic personal
 access token with <code>read:packages</code> is enough to install. The
 <code>%GITHUB_PACKAGES_TOKEN%</code> form reads an environment variable, so this file is safe to
@@ -3854,8 +3915,13 @@ your shell profile locally.</p>
     &lt;/dhcw&gt;
   &lt;/packageSourceCredentials&gt;
 &lt;/configuration&gt;</code></pre></div>
-<p><strong>2. Install.</strong></p>
-<div class="codepanel"><pre><code>dotnet add package DHCW.SingleRecord.Maui</code></pre></div>
+<p><strong>2. Install whichever you need.</strong></p>
+<div class="codepanel"><pre><code>dotnet add package DHCW.SingleRecord.Maui
+dotnet add package DHCW.SingleRecord.Blazor</code></pre></div>
+<p><strong>Updating</strong> is <code>dotnet add package</code> again, or bumping the
+<code>Version</code> on the <code>PackageReference</code>. Both packages move together, so
+take the same version for both.</p>
+<h3>MAUI</h3>
 <p>Targets <code>net10.0-android</code>, <code>net10.0-ios</code> and
 <code>net10.0-maccatalyst</code>. <code>net10.0</code> matches what this repository builds with; if
 your app targets an earlier .NET it can be lowered. It ships three ResourceDictionaries and the
@@ -3897,6 +3963,34 @@ the background. Opt out with
 <code>Source</code> instead of by type &mdash; the copies are plain dictionaries with no
 <code>x:Class</code>, so the <code>&lt;sr:SrColors /&gt;</code> form will not compile against them.
 Same order rule applies.</p></div>
+<h3>Blazor</h3>
+<p><code>DHCW.SingleRecord.Blazor</code> ships the stylesheets as static web assets, so a Blazor
+host references them by URL rather than importing anything. Add these to <code>App.razor</code> or
+<code>_Host.cshtml</code>:</p>
+<div class="codepanel"><pre><code>&lt;link rel="stylesheet" href="_content/DHCW.SingleRecord.Blazor/css/single-record.css" /&gt;
+
+&lt;!-- Dark mode is opt-in and must load SECOND: it overrides the tokens above. --&gt;
+&lt;link rel="stylesheet" href="_content/DHCW.SingleRecord.Blazor/css/single-record-dark.css" /&gt;</code></pre></div>
+<p>Then set <code>data-theme="dark"</code> on <code>&lt;html&gt;</code> to switch, and write markup
+with the same <code>sr-</code> classes every other framework uses:</p>
+<div class="codepanel"><pre><code>&lt;button class="sr-button sr-button--primary" @onclick="Confirm"&gt;Confirm patient&lt;/button&gt;</code></pre></div>
+<p>The package carries the same files as Route 2's download, from the same build, so Blazor and web
+cannot drift:</p>
+<table>
+  <thead><tr><th>Path</th><th>Contents</th></tr></thead>
+  <tbody>
+    <tr><td><code>css/single-record.css</code></td><td>Everything: font, tokens, type utilities, all components</td></tr>
+    <tr><td><code>css/single-record-dark.css</code></td><td>Dark-mode overrides. Opt-in, loaded second</td></tr>
+    <tr><td><code>css/foundations.css</code></td><td>Tokens and type only, no components</td></tr>
+    <tr><td><code>css/sprite.svg</code></td><td>The icon set, for <code>&lt;use&gt;</code> references</td></tr>
+    <tr><td><code>css/components/*.css</code></td><td>One component at a time</td></tr>
+  </tbody>
+</table>
+<div class="callout"><p><strong>There are no Razor components in the package, and that is
+deliberate.</strong> It is a style layer, matching what the MAUI package does. Shipping one wrapped
+component out of twenty-one would imply a set that does not exist &mdash; you would still be writing
+your own markup for the other twenty.</p></div>
+
 <p>Working in a checkout of the repository itself (rather than as a dependency)? Clone
 <a href="https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system" target="_blank" rel="noopener">the org repo</a>, then:</p>
 <div class="codepanel"><pre><code>npm install
