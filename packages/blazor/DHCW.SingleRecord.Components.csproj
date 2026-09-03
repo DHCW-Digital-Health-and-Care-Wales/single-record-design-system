@@ -1,13 +1,30 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
+  <!--
+    The PREVIEW gallery library, not the published package.
+
+    Two projects live under packages/blazor and they do different jobs:
+
+      DHCW.SingleRecord.Components.csproj   this file — SrButton and Gallery,
+                                            for the Visual Studio preview host
+                                            described in docs/engineering/
+                                            visual-studio-preview.md
+      nuget/DHCW.SingleRecord.Blazor.csproj GENERATED — the token and style
+                                            layer that actually ships
+
+    They are separate because they answer different questions. The published
+    package is a stylesheet layer with no components (see its README for why);
+    this one exists so there is something to look at in a browser.
+  -->
+
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>DHCW.SingleRecord.Components</RootNamespace>
-    <!-- Publishes the design-system CSS under wwwroot as RCL static web assets,
-         served to any host at _content/DHCW.SingleRecord.Components/css/… -->
     <StaticWebAssetBasePath>_content/DHCW.SingleRecord.Components</StaticWebAssetBasePath>
+    <!-- Never packed. The shipping package is nuget/DHCW.SingleRecord.Blazor. -->
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,13 +33,16 @@
   </ItemGroup>
 
   <!--
-    CSS under wwwroot/css is a copied mirror of the design-system source of truth
-    (packages/tokens/build/css/*.css and packages/web/src/**/*.css). Refresh it
-    after a token/component change with:
-        npm run build:tokens
-        cp packages/tokens/build/css/tokens*.css   packages/blazor/wwwroot/css/
-        cp packages/web/src/button/button.css       packages/blazor/wwwroot/css/
-    (add more component CSS here as components are added)
+    Serves the SAME generated CSS the published package ships, by reference
+    rather than by copy. There used to be a hand-maintained mirror under
+    packages/blazor/wwwroot/, refreshed by commands written in this file as a
+    comment that nothing ran — so it drifted, and it carried three files where
+    a web consumer got twenty-one components.
+
+    Regenerate with `npm run build:blazor`.
   -->
+  <ItemGroup>
+    <Content Include="nuget\wwwroot\css\**\*" LinkBase="wwwroot\css" />
+  </ItemGroup>
 
 </Project>

@@ -65,7 +65,7 @@
   font: var(--sr-type-label-font);
   letter-spacing: var(--sr-type-label-letter-spacing);
   color: var(--sr-color-text-primary);
-  background-color: var(--color-info-blue-50);
+  background-color: var(--sr-color-surface-accent);
   padding: var(--space-2); /* 8px */
   white-space: nowrap;
 }
@@ -142,7 +142,7 @@ td.sr-table__select {
 }
 .sr-table__head th.sr-table__select {
   height: 36px;
-  background-color: var(--color-info-blue-50);
+  background-color: var(--sr-color-surface-accent);
 }
 .sr-table__select .sr-checkbox {
   display: inline-flex;
@@ -233,7 +233,7 @@ td.sr-table__select {
 }
 .sr-table__action:hover {
   background-color: var(--sr-color-surface-accent);
-  color: var(--sr-color-interactive-primary-hover);
+  color: var(--sr-color-interactive-on-accent-hover);
 }
 .sr-table__action:focus-visible {
   outline: none;

@@ -227,7 +227,7 @@
 }
 .sr-nav__item[aria-current="page"] {
   background-color: var(--sr-color-surface-accent);
-  color: var(--sr-color-interactive-primary);
+  color: var(--sr-color-interactive-on-accent);
   font: var(--sr-type-label-font);
   letter-spacing: var(--sr-type-label-letter-spacing);
 }
@@ -318,7 +318,7 @@
   box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--sr-color-border-focus);
 }
 .sr-nav__subitem[aria-current="page"] {
-  color: var(--sr-color-interactive-primary);
+  color: var(--sr-color-interactive-on-accent);
   font: var(--sr-type-label-font);
   letter-spacing: var(--sr-type-label-letter-spacing);
 }

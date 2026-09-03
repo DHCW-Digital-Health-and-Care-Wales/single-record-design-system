@@ -1,8 +1,15 @@
-name: Publish DHCW.SingleRecord.Maui to GitHub Packages
+name: Publish the .NET packages to GitHub Packages
 
-# Packs the MAUI token and style layer and pushes it to the GitHub Packages
-# NuGet feed, so a MAUI app installs it with `dotnet add package` instead of
-# building it out of a checkout of this repository (DDR-024).
+# Packs the two .NET token and style layers and pushes them to the GitHub
+# Packages NuGet feed, so a .NET app installs them with `dotnet add package`
+# instead of building them out of a checkout of this repository (DDR-024).
+#
+#   DHCW.SingleRecord.Maui    resource dictionaries for native MAUI XAML
+#   DHCW.SingleRecord.Blazor  stylesheets for Blazor
+#
+# Both ship on the same tag and are versioned in lockstep, so they publish
+# together or fail together. They run on one macOS job because MAUI needs macOS
+# for a complete set of target frameworks; Blazor would pack anywhere.
 #
 # WHY macOS AND NOT ubuntu
 #
@@ -34,7 +41,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag to publish, e.g. v0.1.1. Must match the version in packages/maui/package.json.'
+        description: 'Tag to publish, e.g. v0.2.1. Must match the version in packages/maui and packages/blazor.'
         required: true
         type: string
       dry_run:
@@ -84,11 +91,15 @@ jobs:
         run: |
           npm ci
           npm run build:maui
+          # Blazor packs from packages/blazor/nuget, which is generated from the
+          # built web CSS. Without this the workflow would pack whatever was
+          # committed, which is the drift the generator exists to remove.
+          npm run build:blazor
 
       - name: Fail if the generated output was committed stale
         run: |
           if ! git diff --quiet; then
-            echo "::error::Generated output differs from what the build produces. Run 'npm run build:maui' and commit."
+            echo "::error::Generated output differs from what the build produces. Run 'npm run build:maui && npm run build:blazor' and commit."
             git diff --stat
             exit 1
           fi
@@ -106,11 +117,30 @@ jobs:
             echo "Bump the version and re-run, or tag v$VERSION."
             exit 1
           fi
-          echo "Publishing $VERSION as $TAG"
+
+          # Both .NET packages ship on this tag, so both must be at it. They are
+          # versioned in lockstep with the npm packages — one version number
+          # describes the whole design system — and a mismatch here would
+          # publish two packages claiming to be the same release while carrying
+          # different content.
+          BLAZOR=$(node -p "require('./packages/blazor/package.json').version")
+          if [ "$BLAZOR" != "$VERSION" ]; then
+            echo "::error::packages/blazor is $BLAZOR but packages/maui is $VERSION. Version them together."
+            exit 1
+          fi
+          echo "Publishing $VERSION as $TAG (MAUI and Blazor)"
 
       - name: Pack
         run: |
           dotnet pack packages/maui/nuget/DHCW.SingleRecord.Maui.csproj \
+            -c Release -o nupkg \
+            -p:RepositoryUrl=https://github.com/${{ github.repository }}
+
+          # Blazor is a single-target Razor class library, so it packs anywhere
+          # — unlike MAUI, which needs macOS for a complete set of target
+          # frameworks. It rides along on the same macOS runner rather than
+          # getting its own job, because the two must publish or fail together.
+          dotnet pack packages/blazor/nuget/DHCW.SingleRecord.Blazor.csproj \
             -c Release -o nupkg \
             -p:RepositoryUrl=https://github.com/${{ github.repository }}
 
@@ -120,9 +150,16 @@ jobs:
       # than here.
       - name: Verify the package is complete
         run: |
-          pkg=$(find nupkg -name '*.nupkg' -print -quit)
-          if [ -z "$pkg" ]; then echo "::error::No .nupkg was produced."; exit 1; fi
           ls -lh nupkg/
+
+          # Name the package explicitly. This used to be `find … -print -quit`,
+          # which took whichever .nupkg the filesystem happened to return first
+          # — fine with one package, and silently the wrong one now there are
+          # two.
+          pkg="nupkg/DHCW.SingleRecord.Maui.${VERSION}.nupkg"
+          if [ ! -f "$pkg" ]; then
+            echo "::error::$pkg was not produced. Got:"; ls nupkg/; exit 1
+          fi
 
           python3 - "$pkg" "$VERSION" <<'PY'
           import re, sys, zipfile
@@ -162,6 +199,48 @@ jobs:
               print('\n'.join(sorted(names)))
               sys.exit(1)
           print(f'{pkg} OK — v{version}, {len(names)} entries, {len(brand)} brand marks')
+          PY
+
+      # Blazor's failure mode is the opposite of MAUI's. MAUI can pack on the
+      # wrong host and lose target frameworks; Blazor is a single target and
+      # always compiles, but its whole substance is static web assets copied in
+      # by the generator. A packaging mistake there produces a package that
+      # installs, references cleanly, and styles nothing.
+      - name: Verify the Blazor package carries the stylesheets
+        run: |
+          pkg="nupkg/DHCW.SingleRecord.Blazor.${VERSION}.nupkg"
+          if [ ! -f "$pkg" ]; then
+            echo "::error::$pkg was not produced. Got:"; ls nupkg/; exit 1
+          fi
+
+          python3 - "$pkg" "$VERSION" <<'PY'
+          import sys, zipfile
+          pkg, version = sys.argv[1], sys.argv[2]
+          names = zipfile.ZipFile(pkg).namelist()
+
+          # An RCL packs wwwroot under staticwebassets/, so match on the tail
+          # rather than assuming the prefix.
+          def has(tail):
+              return any(n.endswith(tail) for n in names)
+
+          problems = []
+          for f in ('css/single-record.css', 'css/single-record-dark.css',
+                    'css/foundations.css', 'css/sprite.svg'):
+              if not has(f):
+                  problems.append(f)
+          if not has('README.md'):
+              problems.append('README.md')
+
+          per_component = [n for n in names if '/css/components/' in n and n.endswith('.css')]
+          if len(per_component) < 20:
+              problems.append(f'expected 20+ per-component stylesheets, found {len(per_component)}')
+
+          if problems:
+              print('::error::Blazor package is missing: ' + '; '.join(problems))
+              print('\n'.join(sorted(names)))
+              sys.exit(1)
+          print(f'{pkg} OK — v{version}, {len(names)} entries, '
+                f'{len(per_component)} per-component stylesheets')
           PY
 
       - name: Push to GitHub Packages

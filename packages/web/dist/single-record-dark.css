@@ -97,14 +97,17 @@
   --sr-color-interactive-link: #afd4e5; /** Soft cyan — readable as inline link text on dark backgrounds. */
   --sr-color-interactive-destructive: #d5281b; /** Unchanged across modes. */
   --sr-color-interactive-disabled: #828dac; /** Same primitive as light mode — visually correct on dark surfaces. */
+  --sr-color-interactive-on-accent: #7eb0d9; /** Info-blue/300 — the light counterpart to dark mode's interactive/primary (info-blue/600), so the hue family holds across states. 5.71:1 on surface/accent, where interactive/primary itself is 2.07:1. */
+  --sr-color-interactive-on-accent-hover: #aecce8; /** Info-blue/200, 7.91:1 on surface/accent. Hover goes LIGHTER here, the opposite direction to light mode, because the surface underneath is dark. */
   --sr-color-surface-background: #1b294a; /** Main page background in dark mode. */
-  --sr-color-surface-small-cards: #0c7b99; /** Card and panel surfaces. Cyan/850 (#0C7B99) — gives 4.88:1 contrast with white text (AA). */
+  --sr-color-surface-small-cards: #1e3050; /** Card and panel surfaces, matching section-cards. Was Cyan/850, which cleared white text at 4.88:1 but turned every stat card saturated teal under a navy section card, and left the focus ring at 1.23:1 on it — a cyan ring on a cyan surface. Blue/900 gives white 13.18:1 and the ring 3.33:1. Its 1.09:1 against the page background is deliberate and matches light mode, where a white card on Blue/50 is 1.05:1: a card is delineated by its border and elevation, never by its fill. */
   --sr-color-surface-section-cards: #1e3050; /** Primary background for card sections in modular layout. */
   --sr-color-surface-accent: #1e3050; /** Deep blue for accent / highlighted areas. */
   --sr-color-surface-subtle: #464c64; /** Subtle section background — table rows, inactive tabs. */
   --sr-color-text-primary: #ffffff; /** Primary text on dark — 13.8:1 on navy-900 (AAA). */
   --sr-color-text-secondary: #d8dde0; /** Secondary text on dark. */
-  --sr-color-text-inverse: #212b32; /** Text on light elements within a dark-mode interface. */
+  --sr-color-text-inverse: #212b32; /** Text on light elements within a dark-mode interface. It flips with the mode by design — which is why a saturated fill, which does not flip, must use text/on-fill instead. */
+  --sr-color-text-on-fill: #ffffff; /** White, same as light mode, and deliberately NOT flipped. A primary or destructive button is saturated in both modes, so its label stays white: 6.38:1 on interactive/primary and 5.06:1 on interactive/destructive here. */
   --sr-color-text-disabled: #9ea1af; /** Disabled text on dark surfaces. */
   --sr-color-border-subtle: #464c64; /** Subtle dividers on dark surfaces. */
   --sr-color-border-default: #707488; /** Standard borders on dark surfaces. */

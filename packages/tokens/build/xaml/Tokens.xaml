@@ -89,6 +89,8 @@
     <Color x:Key="SrColorInteractiveLink">#005aa8</Color>
     <Color x:Key="SrColorInteractiveDestructive">#d5281b</Color>
     <Color x:Key="SrColorInteractiveDisabled">#828dac</Color>
+    <Color x:Key="SrColorInteractiveOnAccent">#325083</Color>
+    <Color x:Key="SrColorInteractiveOnAccentHover">#1e3050</Color>
     <Color x:Key="SrColorSurfaceBackground">#f4f5f8</Color>
     <Color x:Key="SrColorSurfaceSmallCards">#ffffff</Color>
     <Color x:Key="SrColorSurfaceSectionCards">#ffffff</Color>
@@ -97,6 +99,7 @@
     <Color x:Key="SrColorTextPrimary">#212b32</Color>
     <Color x:Key="SrColorTextSecondary">#4c6272</Color>
     <Color x:Key="SrColorTextInverse">#ffffff</Color>
+    <Color x:Key="SrColorTextOnFill">#ffffff</Color>
     <Color x:Key="SrColorTextDisabled">#707488</Color>
     <Color x:Key="SrColorBorderSubtle">#f0f4f5</Color>
     <Color x:Key="SrColorBorderDefault">#d8dde0</Color>

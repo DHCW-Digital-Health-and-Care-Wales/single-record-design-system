@@ -78,7 +78,9 @@ const PAIRS = [
   ['sr-color-border-focus', 'sr-color-surface-section-cards', 3,
     'Focus ring on a section card (DDR-025)'],
   ['sr-color-border-focus', 'sr-color-surface-small-cards', 3,
-    'Focus ring on a small card (DDR-025)', 'light'],
+    'Focus ring on a small card (DDR-025)'],
+  ['sr-color-text-primary', 'sr-color-surface-small-cards', 4.5,
+    'Body text on a small card'],
 
   // --- Status text on its own surface. SC 1.4.3 normal text, 4.5:1. ---
   ['sr-color-status-critical', 'sr-color-status-critical-surface', 4.5,
@@ -94,8 +96,27 @@ const PAIRS = [
   ['sr-color-text-secondary', 'sr-color-surface-background', 4.5,
     'Secondary and placeholder text (the 2026-07-09 placeholder decision)'],
   ['sr-color-interactive-link', 'sr-color-surface-background', 4.5, 'Links on the page', 'light'],
-  ['sr-color-text-inverse', 'sr-color-interactive-primary', 4.5,
-    'White label on a primary button', 'light'],
+  // --- Text on a saturated fill. Both modes: the fill stays saturated. ---
+  ['sr-color-text-on-fill', 'sr-color-interactive-primary', 4.5,
+    'Label on a primary button (button.css)'],
+  ['sr-color-text-on-fill', 'sr-color-interactive-destructive', 4.5,
+    'Label on a destructive button (button.css)'],
+
+  // --- Interactive text ON the accent surface. Both modes, and the reason
+  //     interactive/on-accent exists: interactive/primary is 2.07:1 here in
+  //     dark, because both it and the surface are dark. ---
+  ['sr-color-interactive-on-accent', 'sr-color-surface-accent', 4.5,
+    'Current nav item (navigation.css)'],
+  ['sr-color-interactive-on-accent-hover', 'sr-color-surface-accent', 4.5,
+    'Row action on hover (table.css)'],
+
+  // --- Text on the accent surface, where three components used to reach past
+  //     the semantic layer to raw info-blue-50 — a light tint with no dark
+  //     value, so white-on-near-white at 1.10:1 in dark mode. ---
+  ['sr-color-text-primary', 'sr-color-surface-accent', 4.5,
+    'Table row header (table.css)'],
+  ['sr-color-text-secondary', 'sr-color-surface-accent', 4.5,
+    'Select option on hover (select.css)'],
 ];
 
 /**
@@ -117,29 +138,6 @@ const KNOWN = [
     note: 'Yellow/500 is a fill colour, not a text colour. The warning role always '
       + 'carries a text label rather than standing alone, so the pair is never load-'
       + 'bearing. Recorded on the Icons page.',
-  },
-  {
-    fg: 'sr-color-text-inverse', bg: 'sr-color-interactive-primary', min: 4.5, mode: 'dark',
-    status: 'open',
-    note: 'The dark-mode primary button is near-black text on mid-blue. button.css sets '
-      + 'color: text-inverse on a interactive-primary fill, which is correct in light '
-      + 'mode (white on Blue/800, 8.04:1) but inverts in dark mode, where text-inverse '
-      + 'is #212b32 by design — it means "text on a LIGHT element within a dark UI". A '
-      + 'primary button is not a light element in either mode, so it gets the wrong '
-      + 'token. DDR-011 records the intent as white on Info-Blue/600 at 5.1:1, which is '
-      + 'not what renders. The fix is a token that means "text on a primary fill" in '
-      + 'both modes, which is a token-structure decision and needs a DDR. Latent rather '
-      + 'than live: the website dark-mode toggle is currently off, but any product '
-      + 'consuming single-record-dark.css has this today.',
-  },
-  {
-    fg: 'sr-color-border-focus', bg: 'sr-color-surface-small-cards', min: 3, mode: 'dark',
-    status: 'open',
-    note: 'In dark mode surface.small-cards resolves to Cyan/850, so a cyan focus ring '
-      + 'on a small card is near-invisible whatever stop the ring uses. This is the '
-      + 'dark-mode surface assignment flagged on 2026-08-10 — stat cards turning '
-      + 'saturated teal — not a focus-ring problem. It resolves when that assignment '
-      + 'does, in the dark-mode reconciliation pass.',
   },
 ];
 

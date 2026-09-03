@@ -9,7 +9,9 @@
         "secondary":     { "$type": "color", "$value": "{color.navy.900}",       "$description": "Muted dark for secondary interactive elements." },
         "link":          { "$type": "color", "$value": "{color.info-blue.700}",  "$description": "Inline link colour. 6.8:1 on surface/background (AA)." },
         "destructive":   { "$type": "color", "$value": "{color.red.600}",        "$description": "Destructive UI action (delete, remove). Pair with confirmation." },
-        "disabled":      { "$type": "color", "$value": "{color.blue.400}",       "$description": "Disabled interactive element fill." }
+        "disabled":      { "$type": "color", "$value": "{color.blue.400}",       "$description": "Disabled interactive element fill." },
+        "on-accent":       { "$type": "color", "$value": "{color.blue.800}", "$description": "Interactive text or icon sitting ON surface/accent — a current nav item, a row action. Same value as interactive/primary in light mode, so nothing changes here; it exists because dark mode needs a different answer. Primary is a FILL colour and stays saturated in dark, where an accent surface is also dark — 2.07:1. This token carries the light-on-dark counterpart instead." },
+        "on-accent-hover": { "$type": "color", "$value": "{color.blue.900}", "$description": "Hover step for interactive/on-accent. Darker in light mode, lighter in dark — hover always moves away from the surface, and which direction that is depends on the mode." }
       },
       "surface": {
         "background":     { "$type": "color", "$value": "{color.blue.50}",       "$description": "Default page/app background." },
@@ -21,7 +23,8 @@
       "text": {
         "primary":   { "$type": "color", "$value": "{color.grey.900}",     "$description": "Default text. 15.6:1 on surface/background (AAA)." },
         "secondary": { "$type": "color", "$value": "{color.grey.600}",     "$description": "Supporting text. 7.2:1 on surface/background (AAA)." },
-        "inverse":   { "$type": "color", "$value": "{color.white.default}","$description": "Text on dark or saturated surfaces." },
+        "inverse":   { "$type": "color", "$value": "{color.white.default}","$description": "Text on a surface whose lightness is the OPPOSITE of the current mode: dark text in light mode's terms. It therefore flips between modes — white here, near-black in dark. Do not use it on a saturated brand fill; that is text/on-fill." },
+        "on-fill":   { "$type": "color", "$value": "{color.white.default}","$description": "Text on a saturated interactive or status fill — a primary button, a destructive button, a filled badge. White in BOTH modes, because those fills stay saturated in both. This is the distinction text/inverse cannot make: inverse is relative to the mode, this is absolute." },
         "disabled":  { "$type": "color", "$value": "{color.navy.500}",     "$description": "Disabled text. 4.6:1 on surface/background (AA)." }
       },
       "border": {

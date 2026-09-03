@@ -4,7 +4,7 @@ The Single Record Design System provides the shared design language, component l
 
 This document is the primary reference for everyone working on Single Record — designers, engineers, and delivery leads.
 
-**Last reviewed:** 2026-09-02. Update this file whenever a component ships, a
+**Last reviewed:** 2026-09-03. Update this file whenever a component ships, a
 token is added, or a system-wide rule changes — not on a schedule. If it
 disagrees with `/foundations/tokens/` or `/components/`, those win and this file
 is out of date.
@@ -108,15 +108,25 @@ The colour system is built from four brand palettes (Blue, Cyan, Navy, Grey) and
 
 See `/foundations/tokens/colour/global.md` for the full primitive palette and `/foundations/tokens/colour/semantic.md` for semantic token definitions and contrast ratios.
 
-**Dark mode is behind the light-mode work, and deliberately so.** Light-mode
-semantic assignments — which colour means which state, which surface, which
-interaction — have moved a long way and are still moving. Re-deriving the dark
-values after every one of those changes would cost more than it is worth and
-would still be wrong at the end. The dark tokens build and are structurally
-complete; they are not yet reviewed against the current light-mode meanings, so
-treat them as provisional. The pass to reconcile them is a deliberate later
-step, taken once the light-mode assignments hold still — not an oversight, and
-not something to do piecemeal alongside other work.
+**Dark mode has been reconciled against how components actually use the tokens**
+(DDR-026, 2026-09-03). It is no longer provisional.
+
+The reconciliation was done by extracting the real `(color, background-color)`
+pairs from the component stylesheets and computing every one in both modes,
+rather than by reviewing screens. Six failed in dark mode, none of them because
+a colour was wrong — each was a component reaching for a token whose meaning did
+not hold in both modes. The three lessons are worth carrying into any new
+component:
+
+- **`text/inverse` flips with the mode by design.** A saturated fill does not
+  flip, so its label uses `text/on-fill` instead.
+- **`interactive/primary` is a fill colour.** As text on `surface/accent` it is
+  dark-on-dark in dark mode; that job belongs to `interactive/on-accent`.
+- **A raw primitive has no dark value.** A component using one opts out of dark
+  mode silently. Always use an `--sr-color-*` token.
+
+`npm run check:contrast` now asserts 36 pairs in both modes, so these cannot
+return unnoticed.
 
 ### Typography System
 
@@ -490,12 +500,17 @@ Every component spec must include an accessibility section. New components are n
 
 The gate checks **both light and dark modes**, which is not thoroughness for its own sake: darkening a colour to clear light mode can push it under in dark mode, where surfaces are navy. That nearly shipped as the focus-ring fix.
 
-**Two open findings stand today**, both in dark mode and both found by the gate rather than by eye:
+**No open findings stand today.** The dark-mode reconciliation (DDR-026) closed the last two. 36 pairs are asserted across both modes; the one remaining exception is the warning role, a fill colour that always carries a text label.
 
-1. **The primary button's label is 2.26:1.** `button.css` labels an `interactive-primary` fill with `text-inverse`, which is white in light mode but near-black in dark mode by design. Needs a token meaning "text on a primary fill". Latent — the website's dark-mode toggle is off, but products consuming `single-record-dark.css` have it.
-2. **A focus ring on a small card is 1.23:1**, because `surface.small-cards` resolves to Cyan/850 in dark mode. That is the dark-mode surface assignment flagged on 2026-08-10, not a ring problem.
+**Three tokens exist because dark mode needs a different answer to light mode**, and the old tokens had no way to give one (DDR-026):
 
-**Form control boundaries use `Border/Strong`, not `Border/Default`.** Grey/200 is 1.37:1 on white and cannot serve as the visible edge of a checkbox, radio or field. Grey/200 remains correct for dividers and card outlines, which identify nothing as interactive.
+| Token | For |
+|---|---|
+| `text/on-fill` | Text on a saturated interactive or status fill. White in **both** modes — unlike `text/inverse`, which flips with the mode by design. |
+| `interactive/on-accent` | Interactive text sitting on `surface/accent`. `interactive/primary` is a fill colour and stays dark in dark mode, where the accent surface is also dark. |
+| `interactive/on-accent-hover` | Its hover step. Darker in light, lighter in dark — hover moves away from the surface, and which way that is depends on the mode. |
+
+**A component that reaches past the semantic layer opts out of dark mode.** Three did, using the raw `--color-info-blue-50`, which has no dark value; in dark mode they rendered white text on a near-white tint. Always use an `--sr-color-*` token.
 
 **The focus ring is `Cyan/800` (DDR-025).** Cyan/700 was 2.95:1 on a card and 2.71:1 on the page, under the 3:1 SC 1.4.11 requires. Cyan/800 is the only stop clearing 3:1 in both modes.
 

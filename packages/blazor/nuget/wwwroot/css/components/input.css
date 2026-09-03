@@ -1,0 +1,183 @@
+/**
+ * DHCW Single Record — Input
+ * Reference HTML/CSS implementation, matched to the Figma Input set (840:14593):
+ * Type=Text|Password|Phone|Calendar|Time|Textarea, State=Default|Focus|Error|
+ * Disabled, with optional Label and Hint. Consumes @dhcw/sr-tokens.
+ *
+ * Anatomy (vertical stack, gap = space-1):
+ *   .sr-input__label   — field label (+ required asterisk)
+ *   .sr-input__hint    — helper/hint text (above the field)
+ *   .sr-input__field   — bordered row: [leading icon] control [trailing icon]
+ *   .sr-input__error   — validation message (Error state only)
+ *
+ * State is driven by real interaction where possible: focus via :focus-within,
+ * error via the .sr-input--error modifier + aria-invalid, disabled via the
+ * disabled attribute + .sr-input--disabled.
+ *
+ * Note: Calendar/Time render as a field with a trailing icon; the picker
+ * popover (date picker) is a separate, deferred component.
+ */
+
+.sr-input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.sr-input__label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+  color: var(--sr-color-text-primary);
+}
+.sr-input__required {
+  color: var(--sr-color-status-critical);
+}
+
+.sr-input__hint {
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  color: var(--sr-color-text-secondary);
+}
+
+.sr-input__field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: 40px;
+  box-sizing: border-box;
+  padding: 0 var(--space-3);
+  background-color: var(--sr-color-surface-section-cards);
+  border: 1px solid var(--sr-color-border-default);
+  border-radius: var(--radius-sm);
+}
+.sr-input__field:focus-within {
+  border-color: var(--sr-color-border-focus);
+  /* inset ring reads as a 2px focus border with no layout shift */
+  box-shadow: inset 0 0 0 1px var(--sr-color-border-focus);
+}
+
+.sr-input__field--textarea {
+  align-items: stretch;
+  min-height: auto;
+  padding: var(--space-2) var(--space-3);
+}
+
+.sr-input__control {
+  flex: 1 1 0;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: var(--sr-color-text-primary);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+}
+.sr-input__control::placeholder {
+  color: var(--sr-color-text-secondary);
+}
+.sr-input__control:focus {
+  outline: none;
+}
+textarea.sr-input__control {
+  resize: vertical;
+  min-height: 72px;
+  padding: 0;
+}
+
+.sr-input__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  color: var(--sr-color-text-secondary);
+}
+.sr-input__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.sr-input__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--sr-color-text-secondary);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+.sr-input__toggle:hover {
+  color: var(--sr-color-text-primary);
+}
+.sr-input__toggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sr-color-border-focus);
+}
+
+/* ---------- Error ---------- */
+.sr-input--error .sr-input__field {
+  border-color: var(--sr-color-status-critical);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-critical);
+}
+.sr-input__error {
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  color: var(--sr-color-status-critical);
+}
+
+/* ---------- Disabled ---------- */
+.sr-input--disabled .sr-input__field {
+  background-color: var(--sr-color-surface-subtle);
+  border-color: var(--sr-color-border-disabled);
+  box-shadow: none;
+}
+.sr-input--disabled .sr-input__control {
+  color: var(--sr-color-text-disabled);
+  cursor: not-allowed;
+}
+.sr-input--disabled .sr-input__label,
+.sr-input--disabled .sr-input__icon {
+  color: var(--sr-color-text-disabled);
+}
+
+/* Accessible label with no visual footprint — used by Input's `hideLabel`,
+   for search bars whose placeholder carries the visible meaning.
+
+   NOTE: this is duplicated from table.css. Each component CSS file in this
+   package is independently importable, so a shared utility has to live in
+   every file that uses it until there is a foundations stylesheet to hold it.
+   Worth extracting when a third component needs it. */
+.sr-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Trailing action inside the field (scan trigger, unit toggle, clear).
+   Inside the border so it reads as part of the field, with a divider so it is
+   still legible as a separate control rather than decoration. */
+.sr-input__trailing {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  align-self: stretch;
+  margin-left: var(--space-2);
+  padding-left: var(--space-2);
+  border-left: 1px solid var(--sr-color-border-subtle);
+}
