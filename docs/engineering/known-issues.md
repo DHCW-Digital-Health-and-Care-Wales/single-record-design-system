@@ -346,6 +346,64 @@ does not, that branch is broken for every prop you did not explicitly name.
 
 ## Packaging and install
 
+### `--tag next` does not spare a package's FIRST publish from becoming `latest`
+
+**Symptom:** `0.2.1-rc.0` was published with `--tag next` specifically so that no
+consumer could pick it up. The registry then showed:
+
+```
+sr-icons  {'next': '0.2.1-rc.0', 'latest': '0.2.1-rc.0'}
+```
+
+so a bare `npm install @dhcw/sr-icons` served a release candidate.
+
+**Why:** a package must have a `latest` tag. On the first publish there is no
+other version to point it at, so npm sets `latest` to whatever was just
+published, whatever `--tag` says. On every subsequent publish `--tag next`
+behaves as expected and leaves `latest` alone.
+
+**What it does and does not affect:**
+
+| | |
+|---|---|
+| Tarball URL consumers | unaffected — no npm range involved |
+| `"^0.2.0"` in a `package.json` | unaffected — a caret range does not match a prerelease |
+| A bare `npm install @dhcw/sr-tokens` | **serves the prerelease** |
+
+**Fix:** publish a stable version, which moves `latest` to it. There is no way
+to undo it in place — `latest` cannot be unset, and with a single published
+version there is nowhere else to move it.
+
+**Expect this again** for any *new* package added to the published set: the
+first `@dhcw/sr-blazor` release candidate would do exactly the same.
+
+**Reported by:** the `Warn if a prerelease became latest` step in
+`release-packages.yml`, which reads the registry back after publishing and
+prints a warning naming the affected packages. It cannot prevent it, and the
+step says so — the point is that nobody has to notice by hand, which is how it
+was found the first time.
+
+---
+
+### `repository.url` without a `git+` prefix is auto-corrected on every publish
+
+**Symptom:** every `npm publish` prints
+
+```
+npm warn publish npm auto-corrected some errors in your package.json
+npm warn publish "repository.url" was normalized to "git+https://…"
+```
+
+**Why:** npm expects a git URL for `repository.url` and normalises a bare
+`https://…` form at publish time. The published metadata is correct — npm fixed
+it — but the warning recurs on every release and invites the assumption that
+something is wrong with the package.
+
+**Fix:** write it as `git+https://…` in the manifest. `npm pkg fix` does it, or
+edit the four manifests directly.
+
+---
+
 ### You cannot `npm install` a single workspace out of a git repository
 
 **Symptom:** A developer follows the documented install, `npm install` reports
