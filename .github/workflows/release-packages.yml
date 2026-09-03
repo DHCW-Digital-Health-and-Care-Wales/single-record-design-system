@@ -207,6 +207,38 @@ jobs:
 
           echo "PUBLISHED_NPM=true" >> "$GITHUB_ENV"
 
+      # `--tag next` does not protect a package's FIRST publish. npm has to
+      # point `latest` at something and there is no other version to choose, so
+      # the first release candidate for a package becomes `latest` as well —
+      # which means a bare `npm install @dhcw/sr-tokens` serves a prerelease.
+      #
+      # That happened on 0.2.1-rc.0 and was found by reading the registry
+      # afterwards rather than by the workflow, which is the gap this closes.
+      # It cannot be fixed here: `latest` cannot be unset, and with one version
+      # published there is nowhere else to move it. So it reports, loudly, and
+      # says what actually resolves it.
+      - name: Warn if a prerelease became `latest`
+        if: ${{ inputs.publish_npm && !inputs.dry_run }}
+        run: |
+          [ "${DIST_TAG:-latest}" = "latest" ] && exit 0
+
+          bad=""
+          for p in tokens icons web react; do
+            actual=$(npm view "@dhcw/sr-$p" dist-tags.latest 2>/dev/null || echo "")
+            echo "@dhcw/sr-$p: latest=$actual next=$(npm view "@dhcw/sr-$p" dist-tags.next 2>/dev/null || echo '')"
+            [ "$actual" = "$VERSION" ] && bad="$bad @dhcw/sr-$p"
+          done
+
+          if [ -n "$bad" ]; then
+            {
+              echo "::warning::Prerelease $VERSION is also the 'latest' tag for:$bad"
+              echo "A bare 'npm install' of these serves a prerelease. This happens on a"
+              echo "package's first publish, when npm has no other version to point 'latest'"
+              echo "at. It cannot be undone from here — publishing a stable version moves"
+              echo "'latest' to it, which is the fix."
+            } >&2
+          fi
+
       - name: Publish the release
         if: ${{ !inputs.dry_run }}
         env:
