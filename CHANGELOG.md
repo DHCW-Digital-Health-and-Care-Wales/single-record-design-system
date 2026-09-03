@@ -18,6 +18,48 @@ this file says so and tells you what to change.
 
 ---
 
+## v0.2.1-rc.0 — 2026-09-03
+
+**No action.** This is a **release candidate**, not a release. It exists to prove
+the npm publishing route end to end before a real version goes out.
+
+It is published under the `next` tag, which means a version range will not pick
+it up and nobody receives it without asking for it by name. If you are on v0.2.0,
+stay there — this changes nothing for you.
+
+### Trying it, if you have been asked to
+
+```
+npm install @dhcw/sr-tokens@next @dhcw/sr-icons@next @dhcw/sr-web@next @dhcw/sr-react@next
+```
+
+No URLs, no credentials. That is the point of the exercise: confirming that a
+plain `npm install` works before v0.2.1 goes to `latest`.
+
+Tell us if the install fails, if anything renders differently from v0.2.0, or if
+your build resolves a path it did not before.
+
+### What changed since v0.2.0
+
+Two accessibility fixes, both of which change what you see:
+
+- **Checkbox and Radio have a visible border at rest.** They used Border/Default
+  (Grey/200), which is 1.37:1 on white — under the 3:1 WCAG 2.2 requires for the
+  boundary of a control. They now use Border/Strong (Grey/600, 6.37:1). Hover
+  moves to the primary blue, since it previously used the colour that rest now
+  has.
+- **The focus ring moves from Cyan/700 to Cyan/800** (`#0D8BAD`). Cyan/700 was
+  2.95:1 on a white card against the 3:1 a focus indicator requires. Cyan/800 is
+  the only step that clears 3:1 in both light and dark mode. Every focusable
+  component is slightly darker on focus.
+
+Plus lighter status surfaces (the 50 step rather than 100), which raises the
+contrast of text on status banners and tags.
+
+**Nothing renames.** No markup, class name, token name or component prop moves.
+
+---
+
 ## v0.2.0 — 2026-08-13
 
 **Action needed** to upgrade — but only to change the version in four URLs. See
