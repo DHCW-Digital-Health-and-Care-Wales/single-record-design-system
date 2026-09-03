@@ -1,0 +1,399 @@
+/**
+ * DHCW Single Record — Navigation (Sidebar)
+ * Reference HTML/CSS implementation, matched to the Figma Navigation set
+ * (Navigation/Sidebar/Desktop, 725:8903 — Type=Sectioned & Type=Linear, each
+ * with State=Expanded / Collapsed ("rail", 108px) / Collapsed 2 (icon-only,
+ * 48px)). Consumes @dhcw/sr-tokens CSS custom properties.
+ *
+ * Anatomy:
+ *   .sr-nav                 — sidebar container (fixed width, full height column)
+ *     .sr-nav__header        — logo + collapse toggle, bottom border
+ *     .sr-nav__body          — scrollable section list (grows to fill space)
+ *       .sr-nav__section      — one labelled group (e.g. PATIENTS)
+ *         .sr-nav__section-label
+ *         .sr-nav__list
+ *           .sr-nav__item      — nav row: icon + label + optional badge/chevron
+ *     .sr-nav__footer        — Settings / Log out, top border, pinned to bottom
+ *
+ * State: Default | Hover | Focus (CSS pseudo-classes) | Active (aria-current="page")
+ * Submenu: items with children render trailing chevron-down; current item
+ *          uses aria-current="page" rather than a bespoke "active" class so
+ *          assistive tech announces the current section.
+ */
+
+.sr-nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* 248px — the Figma item building block (`665:21099`) is 248px wide and
+     `foundations/grid-and-layout.md` derives the EPR content zones from a
+     248px sidebar. The component shipped at 220px, which left the grid spec
+     28px out and truncated "Appointments" whenever a row carried both a badge
+     and a chevron. Reconciled to 248px on both sides at once, 2026-08. */
+  width: 248px;
+  /* Full-height rail that stays put while the page content scrolls. Figma
+     draws the sidebar at the full 832px frame height in every variant, so
+     this is the component's intended behaviour, not a layout choice left to
+     the consumer. `height: 100%` does NOT work here: inside an auto-height
+     flex row the percentage resolves against an indefinite height and the
+     background collapses to the content. */
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  background-color: var(--sr-color-surface-section-cards);
+  /* Figma Elevation/Raised — no elevation token exists yet, value matches spec */
+  box-shadow: var(--elevation-raised);
+}
+
+/* Icon-only (Figma State=Collapsed 2, `3569:15850` / `2212:7613`): **48px**.
+   This was 72px, which matched neither the Figma frame nor the component's own
+   guidelines — the doc has always said 48. 48px holds a 24px icon with 12px
+   either side; the label is a tooltip, so nothing else needs room. */
+.sr-nav--collapsed {
+  width: 48px;
+}
+.sr-nav--collapsed .sr-nav__list,
+.sr-nav--collapsed .sr-nav__footer {
+  padding-left: var(--space-2);
+  padding-right: var(--space-2);
+}
+
+/* "Rail" collapsed state (Figma State=Collapsed, 108px). The icon sits ABOVE
+   the label, both centred, and the label stays permanently visible — it is not
+   a truncated version of the expanded row. Item box is 44px tall on a 60px
+   pitch (Figma 125:5360 / DS 1942:7143). Labels drop to 12px so the longest
+   ("Patient Search") fits the 92px content box without truncating.
+
+   Distinct from .sr-nav--collapsed (Figma State=Collapsed 2, 48px icon-only),
+   which has no persistent label and reveals one on hover/focus instead. */
+.sr-nav--rail {
+  width: 108px;
+}
+.sr-nav--rail .sr-nav__section-label,
+.sr-nav--rail .sr-nav__item-badge,
+.sr-nav--rail .sr-nav__item-chevron,
+.sr-nav--rail .sr-nav__submenu {
+  display: none;
+}
+.sr-nav--rail .sr-nav__collapse {
+  transform: rotate(180deg);
+}
+.sr-nav--rail .sr-nav__logo {
+  display: none;
+}
+.sr-nav--rail .sr-nav__header {
+  justify-content: center;
+}
+.sr-nav--rail .sr-nav__list {
+  gap: var(--space-4);
+  padding: 0 var(--space-2);
+}
+.sr-nav--rail .sr-nav__item {
+  justify-content: center;
+  padding: var(--space-1) var(--space-2);
+  min-height: 44px;
+}
+.sr-nav--rail .sr-nav__item-main {
+  flex-direction: column;
+  gap: var(--space-1);
+  text-align: center;
+}
+.sr-nav--rail .sr-nav__item-label {
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+}
+
+/* ---------- Header ---------- */
+/* 64px, matching the product adaptation (Figma 125:5361) rather than the
+   80px on the DS master (665:20955). 64px is also the Header bar's height, so
+   the sidebar's bottom rule lines up with the header's instead of sitting 16px
+   below it. See the handoff note on the 80/64 discrepancy. */
+.sr-nav__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--sr-color-border-default);
+  box-sizing: border-box;
+}
+
+.sr-nav__logo img {
+  display: block;
+  height: 28px;
+  width: auto;
+}
+
+.sr-nav__collapse {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--sr-color-text-secondary);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+.sr-nav__collapse:hover {
+  color: var(--sr-color-text-primary);
+}
+.sr-nav__collapse:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--sr-color-border-focus);
+}
+.sr-nav--collapsed .sr-nav__collapse {
+  transform: rotate(180deg);
+}
+/* Collapsed: the brand lockup is hidden; only the toggle remains, centred. */
+.sr-nav--collapsed .sr-nav__logo {
+  display: none;
+}
+.sr-nav--collapsed .sr-nav__header {
+  justify-content: center;
+}
+
+/* ---------- Body / sections ---------- */
+.sr-nav__body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  /* 24px below the header rule before the first item (Figma: header ends at
+     64, list starts at 88). */
+  padding: var(--space-6) 0 var(--space-4);
+}
+
+.sr-nav__section-label {
+  display: block;
+  padding: var(--space-1) var(--space-5);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  color: var(--sr-color-text-secondary);
+  text-transform: uppercase;
+}
+
+.sr-nav__list {
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--space-3);
+  list-style: none;
+  margin: 0;
+}
+
+/* Sectioned nav packs items flush inside a group (Figma 665:20955, 36px
+   pitch) because the section labels already separate them. Linear has no
+   labels, so items carry their own separation: 36px item + 16px gap = the
+   52px pitch of the product adaptation (125:5361). */
+.sr-nav--linear .sr-nav__list {
+  gap: var(--space-4);
+}
+
+.sr-nav--collapsed .sr-nav__section-label {
+  display: none;
+}
+
+/* ---------- Nav item ---------- */
+.sr-nav__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  border: none;
+  background: transparent;
+  color: var(--sr-color-text-primary);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.sr-nav__item:hover {
+  background-color: var(--sr-color-surface-subtle);
+}
+.sr-nav__item:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--sr-color-border-focus);
+}
+.sr-nav__item[aria-current="page"] {
+  background-color: var(--sr-color-surface-accent);
+  color: var(--sr-color-interactive-on-accent);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+}
+
+.sr-nav__item-main {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.sr-nav__item-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  color: inherit;
+}
+.sr-nav__item-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.sr-nav__item-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sr-nav__item-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-width: 32px;
+  height: 20px;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-full);
+  background-color: var(--sr-color-interactive-primary);
+  color: var(--sr-color-text-inverse);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  text-align: center;
+}
+
+.sr-nav__item-chevron {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  color: var(--sr-color-text-secondary);
+  transition: transform 0.15s ease;
+}
+.sr-nav__item-chevron svg {
+  width: 100%;
+  height: 100%;
+}
+/* Expanded submenu — chevron points up. */
+.sr-nav__item-chevron--open {
+  transform: rotate(180deg);
+}
+
+/* ---------- Submenu ---------- */
+.sr-nav__submenu {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  /* Indent children under the parent's label (icon width + gaps). */
+  padding: var(--space-1) var(--space-3) var(--space-1) calc(var(--space-3) + 16px + var(--space-2));
+}
+
+.sr-nav__subitem {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--sr-color-text-secondary);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+  text-decoration: none;
+}
+.sr-nav__subitem:hover {
+  background-color: var(--sr-color-surface-subtle);
+  color: var(--sr-color-text-primary);
+}
+.sr-nav__subitem:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--sr-color-border-focus);
+}
+.sr-nav__subitem[aria-current="page"] {
+  color: var(--sr-color-interactive-on-accent);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+}
+
+/* Collapsed rail never shows submenus. */
+.sr-nav--collapsed .sr-nav__submenu {
+  display: none;
+}
+
+.sr-nav--collapsed .sr-nav__item-badge,
+.sr-nav--collapsed .sr-nav__item-chevron {
+  display: none;
+}
+.sr-nav--collapsed .sr-nav__item {
+  position: relative;
+  justify-content: center;
+}
+
+/* The icon-only rail does not scroll its own body.
+   Its labels are tooltips positioned outside the 48px width, and `.sr-nav__body`
+   sets `overflow-y: auto` — which per the overflow spec forces `overflow-x` to
+   `auto` as well, because a visible axis cannot sit beside a clipped one. The
+   hidden tooltips therefore contributed to the rail's scroll width (measured:
+   144px of content in a 48px rail) and it grew a horizontal scrollbar, while a
+   shown tooltip would have been clipped by the same container.
+   Widening the rail is not the fix — 48px is the Figma width (`3569:15850`),
+   and a tooltip is deliberately wider than the rail it belongs to. Where a
+   product has more destinations than fit the rail's height, the 108px
+   collapsed state is the one that scrolls cleanly and keeps its labels
+   in-flow. */
+.sr-nav--collapsed .sr-nav__body {
+  overflow: visible;
+}
+
+/* Icon-only label becomes a tooltip. Revealed on :hover AND :focus-visible —
+   never hover alone. A keyboard user tabbing through the rail can only ever
+   trigger :focus-visible, so a hover-only reveal would leave them with an
+   icon and no name (fails WCAG 2.2 SC 1.4.13 / 2.1.1). Screen readers are
+   unaffected either way — aria-label already names every item. */
+.sr-nav--collapsed .sr-nav__item-label {
+  position: absolute;
+  left: calc(100% + var(--space-2));
+  top: 50%;
+  transform: translateY(-50%);
+  width: max-content;
+  max-width: 200px;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  background-color: var(--sr-color-text-primary);
+  color: var(--sr-color-text-inverse);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  white-space: normal;
+  /* The expanded row truncates its label with an ellipsis; a tooltip must not.
+     It exists precisely to show the name in full, so it overrides the
+     `overflow: hidden` / `text-overflow: ellipsis` it would otherwise inherit
+     from the base rule and wraps inside its 200px instead. */
+  overflow: visible;
+  text-overflow: clip;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.1s ease;
+  z-index: 20;
+}
+.sr-nav--collapsed .sr-nav__item:hover .sr-nav__item-label,
+.sr-nav--collapsed .sr-nav__item:focus-visible .sr-nav__item-label {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ---------- Footer ---------- */
+.sr-nav__footer {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-2) var(--space-3) var(--space-6);
+  border-top: 1px solid var(--sr-color-border-default);
+}

@@ -1,0 +1,106 @@
+/**
+ * DHCW Single Record — Date input (3-field)
+ * GDS/NHS "Date input" pattern: three separate day/month/year text fields.
+ * The DEFAULT control for dates the user knows (DOB, admission, onset). See
+ * DDR-012. Consumes @dhcw/sr-tokens.
+ *
+ * Anatomy:
+ *   <fieldset .sr-date-input>
+ *     <legend .sr-date-input__legend>       — the date being asked for
+ *     .sr-date-input__hint                  — optional helper text
+ *     .sr-date-input__fields                — Day / Month / Year
+ *       .sr-date-input__item
+ *         label + input (numeric)
+ *     .sr-date-input__error                 — one message per group
+ */
+
+.sr-date-input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.sr-date-input__legend {
+  padding: 0;
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+  color: var(--sr-color-text-primary);
+}
+.sr-date-input__required {
+  color: var(--sr-color-status-critical);
+}
+
+.sr-date-input__hint {
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  color: var(--sr-color-text-secondary);
+}
+
+.sr-date-input__fields {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-3);
+  margin-top: var(--space-1);
+}
+
+.sr-date-input__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.sr-date-input__item-label {
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+  color: var(--sr-color-text-primary);
+}
+
+.sr-date-input__field {
+  height: 40px;
+  box-sizing: border-box;
+  padding: 0 var(--space-3);
+  background-color: var(--sr-color-surface-section-cards);
+  border: 1px solid var(--sr-color-border-default);
+  border-radius: var(--radius-sm);
+  color: var(--sr-color-text-primary);
+  font: inherit;
+  font: var(--sr-type-body-m-font);
+  letter-spacing: var(--sr-type-body-m-letter-spacing);
+}
+.sr-date-input__field:focus {
+  outline: none;
+  border-color: var(--sr-color-border-focus);
+  box-shadow: inset 0 0 0 1px var(--sr-color-border-focus);
+}
+/* Width signals expected length (GDS): 2 chars for day/month, 4 for year. */
+.sr-date-input__field--day,
+.sr-date-input__field--month {
+  width: 48px;
+}
+.sr-date-input__field--year {
+  width: 72px;
+}
+
+/* ---------- Error ---------- */
+.sr-date-input--error .sr-date-input__field {
+  border-color: var(--sr-color-status-critical);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-critical);
+}
+.sr-date-input__error {
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  color: var(--sr-color-status-critical);
+}
+
+/* ---------- Disabled ---------- */
+.sr-date-input--disabled .sr-date-input__field {
+  background-color: var(--sr-color-surface-subtle);
+  border-color: var(--sr-color-border-disabled);
+  box-shadow: none;
+  color: var(--sr-color-text-disabled);
+  cursor: not-allowed;
+}

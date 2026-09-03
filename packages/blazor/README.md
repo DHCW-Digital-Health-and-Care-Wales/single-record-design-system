@@ -1,56 +1,51 @@
 # @dhcw/sr-blazor
 
-Razor component library for the DHCW Single Record Design System.
+The Single Record Design System's **token and style layer for Blazor**.
 
-Razor components wrapping `@dhcw/sr-web` HTML/CSS, consuming `@dhcw/sr-tokens` CSS custom properties. Published as a NuGet package.
+Two projects live here and they do different jobs:
 
-Follows the pattern established by `GovUk.Frontend.AspNetCore` — Razor Tag Helpers that auto-host the design system's CSS/JS/fonts.
+| | |
+|---|---|
+| `nuget/DHCW.SingleRecord.Blazor.csproj` | **GENERATED**, and what ships. Stylesheets only. |
+| `DHCW.SingleRecord.Components.csproj` | The preview gallery — `SrButton` and `Gallery.razor`, for the Visual Studio host. Never packed. |
 
-**Status:** In progress — Button (`SrButton`) is the first component. Now a
-buildable Razor Class Library (`DHCW.SingleRecord.Components.csproj`, net8.0) with
-a shared `<Gallery />` and the design-system CSS bundled as static web assets
-(`wwwroot/css`, served at `_content/DHCW.SingleRecord.Components/css/…`).
+## The package is a style layer, not a component library
 
-To preview in Visual Studio (Blazor web + native MAUI), see
-[`docs/engineering/visual-studio-preview.md`](../../docs/engineering/visual-studio-preview.md).
+It ships stylesheets. A Blazor consumer writes their own markup with the `sr-*`
+classes, exactly as an HTML consumer does.
 
-## Usage
+That is the same shape as `DHCW.SingleRecord.Maui`, which ships resource
+dictionaries rather than controls, and it is deliberate: shipping one Razor
+component out of twenty-one would imply a component set that does not exist.
+When one does, it can be added here without changing how the styles are consumed.
 
-```razor
-@using DHCW.SingleRecord.Components
+## Nothing under `nuget/` is hand-maintained
 
-<SrButton Type="ButtonType.Primary" Size="ButtonSize.Large" OnClick="HandleSave">
-    Save record
-</SrButton>
+`build-nuget.mjs` generates the whole project from `packages/web/dist`, which is
+itself built from the tokens and component sources. Editing it is silently
+overwritten on the next build.
 
-<SrButton Type="ButtonType.Destructive" OnClick="HandleDelete">
-    Delete record
-</SrButton>
+```
+npm run build:blazor
 ```
 
-## Prerequisites
+This replaced a hand copy under `packages/blazor/wwwroot/`, refreshed by commands
+written in the csproj as a comment that nothing ran. It drifted, and it carried
+three stylesheets where a web consumer got twenty-one components.
 
-The host app must include `button.css` from `@dhcw/sr-web` and the generated `tokens.css` from `@dhcw/sr-tokens` in its stylesheet bundle.
+## What a consumer gets
 
-## Parameters
+| File | For |
+|---|---|
+| `css/single-record.css` | Everything: font, tokens, type utilities, all components |
+| `css/single-record-dark.css` | Dark-mode overrides. Opt-in, **load second** |
+| `css/foundations.css` | Tokens and type only, no components |
+| `css/sprite.svg` | The icon set, for `<use>` references |
+| `css/components/*.css` | One component at a time |
 
-| Parameter | Type | Default | Description |
-|---|---|---|---|
-| `Type` | `ButtonType` | `Primary` | Visual type (Primary, Secondary, Ghost, Destructive) |
-| `Size` | `ButtonSize` | `Default` | Height variant (Large, Default, Small) |
-| `Disabled` | `bool` | `false` | Disabled state |
-| `LeadingIcon` | `RenderFragment?` | `null` | Optional leading icon slot |
-| `TrailingIcon` | `RenderFragment?` | `null` | Optional trailing icon slot |
-| `OnClick` | `EventCallback<MouseEventArgs>` | — | Click handler |
+Served at `_content/DHCW.SingleRecord.Blazor/css/…`.
 
-## Preview
+## Version
 
-Blazor components cannot render in the Storybook (HTML/JS) catalogue. Preview
-them in Visual Studio instead: add a Blazor Web host, reference this library, and
-render `<Gallery />`. Full steps in
-[`docs/engineering/visual-studio-preview.md`](../../docs/engineering/visual-studio-preview.md).
-
-> **This library targets Blazor web only.** It is not what MAUI renders — the
-> mobile app is native XAML (DDR-021). Anything in the linked document about a
-> MAUI Blazor Hybrid host previews *this* Blazor component in a web view, which is
-> not what ships on mobile.
+Lockstep with the npm packages and `DHCW.SingleRecord.Maui` — one version number
+describes the whole design system, and `npm run check:versions` enforces it.

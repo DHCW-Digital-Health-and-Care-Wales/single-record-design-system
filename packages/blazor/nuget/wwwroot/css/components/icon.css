@@ -1,0 +1,30 @@
+/**
+ * DHCW Single Record — Icon
+ * Sizing/colour tokens for icons rendered via @dhcw/sr-icons.
+ * See SINGLE-RECORD-DS-REFERENCE.md §13 Iconography for the full size/colour scale.
+ */
+
+.sr-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  line-height: 0;
+}
+.sr-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.sr-icon--xs { width: 16px; height: 16px; } /* sr.icon.size.xs — inline within dense content */
+.sr-icon--sm { width: 20px; height: 20px; } /* sr.icon.size.sm — standard inline icons */
+.sr-icon--md { width: 24px; height: 24px; } /* sr.icon.size.md — default */
+.sr-icon--lg { width: 32px; height: 32px; } /* sr.icon.size.lg — prominent icons, empty states */
+
+.sr-icon--inherit     { color: inherit; } /* icon sits inside a coloured ancestor (e.g. .sr-button) and must track its currentColor */
+.sr-icon--default     { color: var(--sr-color-text-primary); }
+.sr-icon--subtle      { color: var(--sr-color-text-secondary); }
+.sr-icon--inverse     { color: var(--sr-color-text-inverse); }
+.sr-icon--interactive { color: var(--sr-color-interactive-primary); }
+.sr-icon--critical    { color: var(--sr-color-status-critical); }
+.sr-icon--warning     { color: var(--sr-color-status-warning); }
+.sr-icon--success     { color: var(--sr-color-status-success); }
+.sr-icon--info        { color: var(--sr-color-status-info); }
