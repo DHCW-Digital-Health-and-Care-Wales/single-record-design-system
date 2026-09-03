@@ -88,6 +88,8 @@ $sr-color-interactive-secondary: #1b294a; // Muted dark for secondary interactiv
 $sr-color-interactive-link: #005aa8; // Inline link colour. 6.8:1 on surface/background (AA).
 $sr-color-interactive-destructive: #d5281b; // Destructive UI action (delete, remove). Pair with confirmation.
 $sr-color-interactive-disabled: #828dac; // Disabled interactive element fill.
+$sr-color-interactive-on-accent: #325083; // Interactive text or icon sitting ON surface/accent — a current nav item, a row action. Same value as interactive/primary in light mode, so nothing changes here; it exists because dark mode needs a different answer. Primary is a FILL colour and stays saturated in dark, where an accent surface is also dark — 2.07:1. This token carries the light-on-dark counterpart instead.
+$sr-color-interactive-on-accent-hover: #1e3050; // Hover step for interactive/on-accent. Darker in light mode, lighter in dark — hover always moves away from the surface, and which direction that is depends on the mode.
 $sr-color-surface-background: #f4f5f8; // Default page/app background.
 $sr-color-surface-small-cards: #ffffff; // Card and panel surfaces.
 $sr-color-surface-section-cards: #ffffff; // Primary background for card sections in modular layout.
@@ -95,7 +97,8 @@ $sr-color-surface-accent: #ebf5fa; // Tinted surface — highlighted regions, ca
 $sr-color-surface-subtle: #f4f5f8; // Subtle section background — table rows, inactive tabs.
 $sr-color-text-primary: #212b32; // Default text. 15.6:1 on surface/background (AAA).
 $sr-color-text-secondary: #4c6272; // Supporting text. 7.2:1 on surface/background (AAA).
-$sr-color-text-inverse: #ffffff; // Text on dark or saturated surfaces.
+$sr-color-text-inverse: #ffffff; // Text on a surface whose lightness is the OPPOSITE of the current mode: dark text in light mode's terms. It therefore flips between modes — white here, near-black in dark. Do not use it on a saturated brand fill; that is text/on-fill.
+$sr-color-text-on-fill: #ffffff; // Text on a saturated interactive or status fill — a primary button, a destructive button, a filled badge. White in BOTH modes, because those fills stay saturated in both. This is the distinction text/inverse cannot make: inverse is relative to the mode, this is absolute.
 $sr-color-text-disabled: #707488; // Disabled text. 4.6:1 on surface/background (AA).
 $sr-color-border-subtle: #f0f4f5;
 $sr-color-border-default: #d8dde0;

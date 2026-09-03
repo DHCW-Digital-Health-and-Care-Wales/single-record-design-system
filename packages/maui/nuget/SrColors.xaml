@@ -107,6 +107,8 @@
     <Color x:Key="SrColorInteractiveLink">#005aa8</Color>
     <Color x:Key="SrColorInteractiveDestructive">#d5281b</Color>
     <Color x:Key="SrColorInteractiveDisabled">#828dac</Color>
+    <Color x:Key="SrColorInteractiveOnAccent">#325083</Color>
+    <Color x:Key="SrColorInteractiveOnAccentHover">#1e3050</Color>
     <Color x:Key="SrColorSurfaceBackground">#f4f5f8</Color>
     <Color x:Key="SrColorSurfaceSmallCards">#ffffff</Color>
     <Color x:Key="SrColorSurfaceSectionCards">#ffffff</Color>
@@ -115,6 +117,7 @@
     <Color x:Key="SrColorTextPrimary">#212b32</Color>
     <Color x:Key="SrColorTextSecondary">#4c6272</Color>
     <Color x:Key="SrColorTextInverse">#ffffff</Color>
+    <Color x:Key="SrColorTextOnFill">#ffffff</Color>
     <Color x:Key="SrColorTextDisabled">#707488</Color>
     <Color x:Key="SrColorBorderSubtle">#f0f4f5</Color>
     <Color x:Key="SrColorBorderDefault">#d8dde0</Color>
@@ -239,13 +242,15 @@
     <x:Double x:Key="LogoIconSize">32</x:Double>
     <x:Double x:Key="LogoFullHeight">48</x:Double>
 
-    <!-- ── Dark-mode overrides (16 semantic tokens) ────────────────────── -->
+    <!-- ── Dark-mode overrides (18 semantic tokens) ────────────────────── -->
     <Color x:Key="SrColorInteractivePrimaryDark">#0d62a3</Color>
     <Color x:Key="SrColorInteractivePrimaryHoverDark">#004483</Color>
     <Color x:Key="SrColorInteractiveSecondaryDark">#aab1c6</Color>
     <Color x:Key="SrColorInteractiveLinkDark">#afd4e5</Color>
+    <Color x:Key="SrColorInteractiveOnAccentDark">#7eb0d9</Color>
+    <Color x:Key="SrColorInteractiveOnAccentHoverDark">#aecce8</Color>
     <Color x:Key="SrColorSurfaceBackgroundDark">#1b294a</Color>
-    <Color x:Key="SrColorSurfaceSmallCardsDark">#0c7b99</Color>
+    <Color x:Key="SrColorSurfaceSmallCardsDark">#1e3050</Color>
     <Color x:Key="SrColorSurfaceSectionCardsDark">#1e3050</Color>
     <Color x:Key="SrColorSurfaceAccentDark">#1e3050</Color>
     <Color x:Key="SrColorSurfaceSubtleDark">#464c64</Color>

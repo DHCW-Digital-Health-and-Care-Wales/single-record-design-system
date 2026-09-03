@@ -112,6 +112,8 @@
   --sr-color-interactive-link: #005aa8; /** Inline link colour. 6.8:1 on surface/background (AA). */
   --sr-color-interactive-destructive: #d5281b; /** Destructive UI action (delete, remove). Pair with confirmation. */
   --sr-color-interactive-disabled: #828dac; /** Disabled interactive element fill. */
+  --sr-color-interactive-on-accent: #325083; /** Interactive text or icon sitting ON surface/accent — a current nav item, a row action. Same value as interactive/primary in light mode, so nothing changes here; it exists because dark mode needs a different answer. Primary is a FILL colour and stays saturated in dark, where an accent surface is also dark — 2.07:1. This token carries the light-on-dark counterpart instead. */
+  --sr-color-interactive-on-accent-hover: #1e3050; /** Hover step for interactive/on-accent. Darker in light mode, lighter in dark — hover always moves away from the surface, and which direction that is depends on the mode. */
   --sr-color-surface-background: #f4f5f8; /** Default page/app background. */
   --sr-color-surface-small-cards: #ffffff; /** Card and panel surfaces. */
   --sr-color-surface-section-cards: #ffffff; /** Primary background for card sections in modular layout. */
@@ -119,7 +121,8 @@
   --sr-color-surface-subtle: #f4f5f8; /** Subtle section background — table rows, inactive tabs. */
   --sr-color-text-primary: #212b32; /** Default text. 15.6:1 on surface/background (AAA). */
   --sr-color-text-secondary: #4c6272; /** Supporting text. 7.2:1 on surface/background (AAA). */
-  --sr-color-text-inverse: #ffffff; /** Text on dark or saturated surfaces. */
+  --sr-color-text-inverse: #ffffff; /** Text on a surface whose lightness is the OPPOSITE of the current mode: dark text in light mode's terms. It therefore flips between modes — white here, near-black in dark. Do not use it on a saturated brand fill; that is text/on-fill. */
+  --sr-color-text-on-fill: #ffffff; /** Text on a saturated interactive or status fill — a primary button, a destructive button, a filled badge. White in BOTH modes, because those fills stay saturated in both. This is the distinction text/inverse cannot make: inverse is relative to the mode, this is absolute. */
   --sr-color-text-disabled: #707488; /** Disabled text. 4.6:1 on surface/background (AA). */
   --sr-color-border-subtle: #f0f4f5;
   --sr-color-border-default: #d8dde0;
@@ -721,7 +724,7 @@
 /* ---------- Type: Primary ---------- */
 .sr-button--primary {
   background-color: var(--sr-color-interactive-primary);
-  color: var(--sr-color-text-inverse);
+  color: var(--sr-color-text-on-fill);
 }
 .sr-button--primary:hover {
   background-color: var(--sr-color-interactive-primary-hover);
@@ -751,7 +754,7 @@
 /* ---------- Type: Destructive (red — irreversible actions) ---------- */
 .sr-button--destructive {
   background-color: var(--sr-color-interactive-destructive);
-  color: var(--sr-color-text-inverse);
+  color: var(--sr-color-text-on-fill);
 }
 .sr-button--destructive:hover {
   background-color: var(--color-red-700);
@@ -773,7 +776,7 @@
 .sr-button--primary:disabled,
 .sr-button--primary[aria-disabled="true"] {
   background-color: var(--sr-color-interactive-disabled);
-  color: var(--sr-color-text-inverse);
+  color: var(--sr-color-text-on-fill);
 }
 .sr-button--secondary:disabled,
 .sr-button--secondary[aria-disabled="true"],
@@ -2333,7 +2336,7 @@ textarea.sr-input__control {
 }
 .sr-nav__item[aria-current="page"] {
   background-color: var(--sr-color-surface-accent);
-  color: var(--sr-color-interactive-primary);
+  color: var(--sr-color-interactive-on-accent);
   font: var(--sr-type-label-font);
   letter-spacing: var(--sr-type-label-letter-spacing);
 }
@@ -2424,7 +2427,7 @@ textarea.sr-input__control {
   box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards), 0 0 0 4px var(--sr-color-border-focus);
 }
 .sr-nav__subitem[aria-current="page"] {
-  color: var(--sr-color-interactive-primary);
+  color: var(--sr-color-interactive-on-accent);
   font: var(--sr-type-label-font);
   letter-spacing: var(--sr-type-label-letter-spacing);
 }
@@ -3242,7 +3245,7 @@ textarea.sr-input__control {
 
 /* Hover (unselected) — soft blue wash + brand-blue text. */
 .sr-segmented__option:hover:not([aria-pressed="true"]):not(:disabled) {
-  background-color: var(--color-info-blue-50);
+  background-color: var(--sr-color-surface-accent);
   color: var(--sr-color-interactive-primary);
 }
 
@@ -3424,7 +3427,7 @@ textarea.sr-input__control {
 
 /* Hover — soft Info Blue/50 wash, text stays secondary (distinct from active). */
 .sr-select__option:hover {
-  background-color: var(--color-info-blue-50);
+  background-color: var(--sr-color-surface-accent);
   color: var(--sr-color-text-secondary);
 }
 /* Keyboard-active and selected — brand-blue fill, inverse text (+ white chevron). */
@@ -3660,7 +3663,7 @@ textarea.sr-input__control {
   font: var(--sr-type-label-font);
   letter-spacing: var(--sr-type-label-letter-spacing);
   color: var(--sr-color-text-primary);
-  background-color: var(--color-info-blue-50);
+  background-color: var(--sr-color-surface-accent);
   padding: var(--space-2); /* 8px */
   white-space: nowrap;
 }
@@ -3737,7 +3740,7 @@ td.sr-table__select {
 }
 .sr-table__head th.sr-table__select {
   height: 36px;
-  background-color: var(--color-info-blue-50);
+  background-color: var(--sr-color-surface-accent);
 }
 .sr-table__select .sr-checkbox {
   display: inline-flex;
@@ -3828,7 +3831,7 @@ td.sr-table__select {
 }
 .sr-table__action:hover {
   background-color: var(--sr-color-surface-accent);
-  color: var(--sr-color-interactive-primary-hover);
+  color: var(--sr-color-interactive-on-accent-hover);
 }
 .sr-table__action:focus-visible {
   outline: none;

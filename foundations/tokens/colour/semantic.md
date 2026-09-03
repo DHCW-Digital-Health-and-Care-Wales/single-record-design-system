@@ -26,7 +26,7 @@ All semantic tokens use the `sr` prefix (Single Record). They are defined in Fig
 | Token | Light | Dark | Usage |
 |---|---|---|---|
 | `sr.color.surface.background`     | `blue.50`  | `navy.900`  | Default page/app background |
-| `sr.color.surface.small-cards`    | `white`    | `cyan.850`  | Cards, panels, modals |
+| `sr.color.surface.small-cards`    | `white`    | `blue.900`  | Cards, panels, modals |
 | `sr.color.surface.section-cards`  | `white`    | `blue.900`  | Primary background for card sections in modular layout |
 | `sr.color.surface.accent`         | `cyan.100` | `blue.900`  | Accent / highlight backgrounds |
 | `sr.color.surface.subtle`         | `blue.50`  | `navy.700`  | Subtle section backgrounds — table rows, inactive tabs |

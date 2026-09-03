@@ -10,12 +10,14 @@
         "secondary":     { "$type": "color", "$value": "{color.blue.300}",      "$description": "Muted blue for secondary interactive elements on dark." },
         "link":          { "$type": "color", "$value": "{color.cyan.400}",      "$description": "Soft cyan — readable as inline link text on dark backgrounds." },
         "destructive":   { "$type": "color", "$value": "{color.red.600}",       "$description": "Unchanged across modes." },
-        "disabled":      { "$type": "color", "$value": "{color.blue.400}",      "$description": "Same primitive as light mode — visually correct on dark surfaces." }
+        "disabled":      { "$type": "color", "$value": "{color.blue.400}",      "$description": "Same primitive as light mode — visually correct on dark surfaces." },
+        "on-accent":       { "$type": "color", "$value": "{color.info-blue.300}", "$description": "Info-blue/300 — the light counterpart to dark mode's interactive/primary (info-blue/600), so the hue family holds across states. 5.71:1 on surface/accent, where interactive/primary itself is 2.07:1." },
+        "on-accent-hover": { "$type": "color", "$value": "{color.info-blue.200}", "$description": "Info-blue/200, 7.91:1 on surface/accent. Hover goes LIGHTER here, the opposite direction to light mode, because the surface underneath is dark." }
       },
 
       "surface": {
         "background":    { "$type": "color", "$value": "{color.navy.900}",  "$description": "Main page background in dark mode." },
-        "small-cards":   { "$type": "color", "$value": "{color.cyan.850}",  "$description": "Card and panel surfaces. Cyan/850 (#0C7B99) — gives 4.88:1 contrast with white text (AA)." },
+        "small-cards":   { "$type": "color", "$value": "{color.blue.900}",  "$description": "Card and panel surfaces, matching section-cards. Was Cyan/850, which cleared white text at 4.88:1 but turned every stat card saturated teal under a navy section card, and left the focus ring at 1.23:1 on it — a cyan ring on a cyan surface. Blue/900 gives white 13.18:1 and the ring 3.33:1. Its 1.09:1 against the page background is deliberate and matches light mode, where a white card on Blue/50 is 1.05:1: a card is delineated by its border and elevation, never by its fill." },
         "section-cards": { "$type": "color", "$value": "{color.blue.900}",  "$description": "Primary background for card sections in modular layout." },
         "accent":        { "$type": "color", "$value": "{color.blue.900}",  "$description": "Deep blue for accent / highlighted areas." },
         "subtle":        { "$type": "color", "$value": "{color.navy.700}",  "$description": "Subtle section background — table rows, inactive tabs." }
@@ -24,7 +26,8 @@
       "text": {
         "primary":   { "$type": "color", "$value": "{color.white.default}", "$description": "Primary text on dark — 13.8:1 on navy-900 (AAA)." },
         "secondary": { "$type": "color", "$value": "{color.grey.200}",      "$description": "Secondary text on dark." },
-        "inverse":   { "$type": "color", "$value": "{color.grey.900}",      "$description": "Text on light elements within a dark-mode interface." },
+        "inverse":   { "$type": "color", "$value": "{color.grey.900}",      "$description": "Text on light elements within a dark-mode interface. It flips with the mode by design — which is why a saturated fill, which does not flip, must use text/on-fill instead." },
+        "on-fill":   { "$type": "color", "$value": "{color.white.default}", "$description": "White, same as light mode, and deliberately NOT flipped. A primary or destructive button is saturated in both modes, so its label stays white: 6.38:1 on interactive/primary and 5.06:1 on interactive/destructive here." },
         "disabled":  { "$type": "color", "$value": "{color.navy.300}",      "$description": "Disabled text on dark surfaces." }
       },
 

@@ -39,7 +39,7 @@
 
 /* Hover (unselected) — soft blue wash + brand-blue text. */
 .sr-segmented__option:hover:not([aria-pressed="true"]):not(:disabled) {
-  background-color: var(--color-info-blue-50);
+  background-color: var(--sr-color-surface-accent);
   color: var(--sr-color-interactive-primary);
 }
 

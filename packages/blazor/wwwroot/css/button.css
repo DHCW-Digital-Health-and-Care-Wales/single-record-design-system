@@ -63,7 +63,7 @@
 /* ---------- Type: Primary ---------- */
 .sr-button--primary {
   background-color: var(--sr-color-interactive-primary);
-  color: var(--sr-color-text-inverse);
+  color: var(--sr-color-text-on-fill);
 }
 .sr-button--primary:hover {
   background-color: var(--sr-color-interactive-primary-hover);
@@ -93,7 +93,7 @@
 /* ---------- Type: Destructive (red — irreversible actions) ---------- */
 .sr-button--destructive {
   background-color: var(--sr-color-interactive-destructive);
-  color: var(--sr-color-text-inverse);
+  color: var(--sr-color-text-on-fill);
 }
 .sr-button--destructive:hover {
   background-color: var(--color-red-700);
@@ -115,7 +115,7 @@
 .sr-button--primary:disabled,
 .sr-button--primary[aria-disabled="true"] {
   background-color: var(--sr-color-interactive-disabled);
-  color: var(--sr-color-text-inverse);
+  color: var(--sr-color-text-on-fill);
 }
 .sr-button--secondary:disabled,
 .sr-button--secondary[aria-disabled="true"],

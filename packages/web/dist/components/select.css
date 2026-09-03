@@ -145,7 +145,7 @@
 
 /* Hover — soft Info Blue/50 wash, text stays secondary (distinct from active). */
 .sr-select__option:hover {
-  background-color: var(--color-info-blue-50);
+  background-color: var(--sr-color-surface-accent);
   color: var(--sr-color-text-secondary);
 }
 /* Keyboard-active and selected — brand-blue fill, inverse text (+ white chevron). */
