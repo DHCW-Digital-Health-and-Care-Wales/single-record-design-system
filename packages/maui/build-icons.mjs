@@ -21,6 +21,7 @@
 import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { normalisePathData } from './svg-path.mjs';
 
 const here = fileURLToPath(new URL('.', import.meta.url));
 const SVG_ROOT = resolve(here, '../../foundations/iconography/svg');
@@ -102,22 +103,16 @@ function absoluteLeadingMoveto(d) {
   const s = d.trim();
   if (!s.startsWith('m')) return s;
 
-  const NUM = /^[\s,]*(-?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?)/;
-  let rest = s.slice(1);
-  const pair = [];
-  for (let i = 0; i < 2; i++) {
-    const m = NUM.exec(rest);
-    if (!m) throw new Error(`malformed relative moveto in "${s.slice(0, 24)}…"`);
-    pair.push(m[1]);
-    rest = rest.slice(m[0].length);
-  }
-  rest = rest.replace(/^[\s,]+/, '');
-
-  const moveto = `M${pair[0]},${pair[1]}`;
-  if (rest === '') return moveto;
-  // A letter next is an explicit command and keeps its own relativity. A bare
-  // number is an implicit relative lineto that must be spelled out.
-  return /^[a-zA-Z]/.test(rest) ? `${moveto} ${rest}` : `${moveto} l ${rest}`;
+  // The input has already been through normalisePathData, so every command is
+  // explicit and every argument is separated: an implicit trailing lineto has
+  // been spelled out as its own `l`. That makes this a one-character change —
+  // upper-case the leading `m` and nothing else moves.
+  //
+  // It used to re-parse the arguments here with a plain number regex and
+  // re-attach the remainder under an explicit `l`. That worked, but it carried
+  // its own copy of the number grammar and would have mis-read an arc for the
+  // same reason the tokeniser did. Normalising first removes the duplicate.
+  return `M${s.slice(1)}`;
 }
 
 function svgToGeometry(src, label) {
@@ -128,8 +123,12 @@ function svgToGeometry(src, label) {
     try {
       if (tag === 'path') {
         if (!a.d) throw new Error('<path> with no d');
-        // 30 of the 120 icons depend on this normalisation — see the function.
-        parts.push(absoluteLeadingMoveto(a.d.replace(/\s+/g, ' ').trim()));
+        // Normalise BEFORE anything else reads the path. Lucide writes arc
+        // flags run together with the following number (`a2 2 0 012.36-1.968`),
+        // which any plain number-matching parser — including XAML's own, and
+        // this file's former moveto rewriter — reads as one number, shifting
+        // every remaining argument. Ten icons in the set carry that form.
+        parts.push(absoluteLeadingMoveto(normalisePathData(a.d)));
       } else if (tag === 'circle') parts.push(circleToPath(a));
       else if (tag === 'rect') parts.push(rectToPath(a));
       else if (tag === 'line') parts.push(lineToPath(a));

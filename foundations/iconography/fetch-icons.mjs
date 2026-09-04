@@ -1,12 +1,18 @@
 #!/usr/bin/env node
 /**
- * fetch-icons.js
+ * fetch-icons.mjs
  * Fetches Lucide SVGs via curl, normalises them to the SR visual spec, and
  * writes them to foundations/iconography/svg/{domain}/{sr-name}.svg
  *
+ * ESM, and named .mjs, because the repo root is `"type": "module"` (DDR-007).
+ * As CommonJS named .js this script threw `require is not defined` on every
+ * invocation — so it had been unrunnable for months, and four icons had been
+ * added to svg/ by hand with no entry here and no recorded Lucide provenance.
+ * `npm run check:icons` now fails on exactly that drift.
+ *
  * Repeat workflow:
  *   1. Add new icons to the ICONS array below.
- *   2. Run: node foundations/iconography/fetch-icons.js
+ *   2. Run: node foundations/iconography/fetch-icons.mjs
  *
  * SR SVG spec applied to every icon:
  *   - width / height  → 1em  (scales with font-size / size tokens)
@@ -21,16 +27,38 @@
  * Substitutions (original Lucide name no longer exists):
  *   nav/filter      — filter       → list-filter   (renamed in Lucide)
  *   clinical/consent — file-check-2 → file-pen      (not found; file-pen = consent/signed document)
+ *
+ * Both substitutions predate the version pin below and are kept as recorded.
+ * Verify them against the pinned version before adding more: several names that
+ * appear "renamed" are only absent from Lucide's `main` branch, not from the
+ * release this repository builds against.
  */
 
-'use strict';
+import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
 
-const { writeFileSync, mkdirSync, existsSync } = require('fs');
-const { join } = require('path');
-const { execSync } = require('child_process');
+const HERE     = dirname(fileURLToPath(import.meta.url));
+const SVG_DIR  = join(HERE, 'svg');
 
-const SVG_DIR  = join(__dirname, 'svg');
-const BASE_URL = 'https://raw.githubusercontent.com/lucide-icons/lucide/main/icons';
+// Read from the pinned `lucide-static` package, not from the Lucide repo's
+// `main` branch over the network.
+//
+// This script used to curl
+// `raw.githubusercontent.com/lucide-icons/lucide/main/icons/{name}.svg`, so the
+// icon set was sourced from whatever `main` happened to be on the day it ran —
+// unpinnable, unreproducible, and needing network access to build. `main` has
+// since moved ahead of the published release: `trash-2`, `history` and
+// `circle-help` all 404 there while all three are present in 1.41.0. Fetching
+// `main` therefore reported working icons as missing, and would silently have
+// swapped geometry under us whenever Lucide redrew a glyph.
+//
+// The version below is pinned exactly (no caret) and carried in the lock file,
+// so the same input produces the same 144 SVGs on every machine and in CI.
+// To take a newer Lucide, bump it deliberately and review the resulting diff.
+const require = createRequire(import.meta.url);
+const ICON_DIR = join(dirname(require.resolve('lucide-static/package.json')), 'icons');
 
 // ── Icon catalogue ─────────────────────────────────────────────────────────────
 const ICONS = [
@@ -48,10 +76,14 @@ const ICONS = [
   { domain: 'nav', name: 'settings',       lucide: 'settings' },
   { domain: 'nav', name: 'filter',         lucide: 'list-filter',  note: 'filter renamed to list-filter in current Lucide' },
   { domain: 'nav', name: 'sort',           lucide: 'arrow-up-down' },
-  { domain: 'nav', name: 'more',           lucide: 'ellipsis' },
+  { domain: 'nav', name: 'more-horizontal', lucide: 'ellipsis',      note: 'renamed from nav/more — disambiguates now both orientations exist' },
   { domain: 'nav', name: 'clear',          lucide: 'circle-x' },
   { domain: 'nav', name: 'dashboard',      lucide: 'layout-grid' },
-  { domain: 'nav', name: 'menu2',          lucide: 'ellipsis-vertical' },
+  { domain: 'nav', name: 'menu-kebab',     lucide: 'ellipsis-vertical', note: 'renamed from nav/menu2 — pairs with nav/menu (burger)' },
+  { domain: 'nav', name: 'log-out',        lucide: 'log-out' },
+  { domain: 'nav', name: 'account',        lucide: 'circle-user' },
+  { domain: 'nav', name: 'support',        lucide: 'circle-help' },
+  { domain: 'nav', name: 'feedback',       lucide: 'message-square-text' },
 
   // Actions & editing (20)
   { domain: 'action', name: 'add',      lucide: 'plus' },
@@ -69,11 +101,24 @@ const ICONS = [
   { domain: 'action', name: 'undo',     lucide: 'undo-2' },
   { domain: 'action', name: 'lock',     lucide: 'lock' },
   { domain: 'action', name: 'check',    lucide: 'check' },
-  { domain: 'action', name: 'edit2',    lucide: 'square-pen' },
+  { domain: 'action', name: 'edit-note', lucide: 'file-pen',  note: 'renamed from action/edit2; glyph moved square-pen -> file-pen (pencil on document)' },
   { domain: 'action', name: 'eye',      lucide: 'eye' },
   { domain: 'action', name: 'eye-off',  lucide: 'eye-off' },
   { domain: 'action', name: 'hold',     lucide: 'pause' },
   { domain: 'action', name: 'scan',     lucide: 'barcode' },
+  // Previously present as SVG files with no generator entry, so their Lucide
+  // provenance was unrecorded and re-running this script would not reproduce
+  // them. Adopted here and given the meanings assigned in DDR-029.
+  { domain: 'action', name: 'send',     lucide: 'send' },
+  { domain: 'action', name: 'star',     lucide: 'star' },
+  { domain: 'action', name: 'bookmark', lucide: 'bookmark', note: 'moved from schedule/ — bookmarking is not a scheduling concept' },
+  // Additions
+  { domain: 'action', name: 'play',      lucide: 'play' },
+  { domain: 'action', name: 'pause',     lucide: 'pause' },
+  { domain: 'action', name: 'expand',    lucide: 'maximize-2' },
+  { domain: 'action', name: 'collapse',  lucide: 'minimize-2' },
+  { domain: 'action', name: 'unlock',    lucide: 'lock-open', note: 'pairs with action/lock; a lock state with no unlock counterpart is incomplete' },
+  { domain: 'action', name: 'watchlist', lucide: 'binoculars', note: 'under active monitoring; distinct from bookmark (save) and star (personal attention)' },
 
   // Status & feedback (9)
   { domain: 'status', name: 'success',  lucide: 'circle-check' },
@@ -97,6 +142,8 @@ const ICONS = [
   { domain: 'people', name: 'specialist',  lucide: 'microscope' },
   { domain: 'people', name: 'admin-staff', lucide: 'user-cog' },
   { domain: 'people', name: 'anonymous',   lucide: 'user-x' },
+  { domain: 'people', name: 'demographics',   lucide: 'id-card' },
+  { domain: 'people', name: 'patient-search', lucide: 'user-round-search' },
 
   // Clinical records & data (18)
   // Note: clinical/record and file/pdf both map to file-text — distinct SR aliases, same Lucide source
@@ -106,18 +153,23 @@ const ICONS = [
   { domain: 'clinical', name: 'medication',  lucide: 'pill' },
   { domain: 'clinical', name: 'allergy',     lucide: 'shield-alert' },
   { domain: 'clinical', name: 'diagnosis',   lucide: 'clipboard-list' },
-  { domain: 'clinical', name: 'lab-result',  lucide: 'flask-conical' },
+  { domain: 'clinical', name: 'test',        lucide: 'flask-conical', note: 'renamed from clinical/lab-result — the flask is an ordered test, not the returned finding' },
   { domain: 'clinical', name: 'imaging',     lucide: 'scan' },
   { domain: 'clinical', name: 'procedure',   lucide: 'syringe' },
   { domain: 'clinical', name: 'note',        lucide: 'notebook-pen' },
   { domain: 'clinical', name: 'history',     lucide: 'history' },
   { domain: 'clinical', name: 'consent',     lucide: 'file-pen',     note: 'file-check-2 not found in current Lucide; file-pen (signed document) used instead' },
-  { domain: 'clinical', name: 'referral',    lucide: 'send' },
+  { domain: 'clinical', name: 'referral',    lucide: 'file-output', note: 'reassigned from send — the paper plane belongs to action/send (DDR-029); a referral is a letter sent onward' },
   { domain: 'clinical', name: 'discharge',   lucide: 'log-out' },
   { domain: 'clinical', name: 'admission',   lucide: 'log-in' },
   { domain: 'clinical', name: 'blood',       lucide: 'droplet' },
-  { domain: 'clinical', name: 'cross',       lucide: 'cross' },
+  { domain: 'clinical', name: 'treatment',   lucide: 'cross', note: 'renamed from clinical/cross — the glyph was previously unassigned; now means care delivered' },
   { domain: 'clinical', name: 'dna',         lucide: 'dna' },
+  // Additions — the order/finding and ask/sign-off splits (DDR-029)
+  { domain: 'clinical', name: 'result',      lucide: 'clipboard-list' },
+  { domain: 'clinical', name: 'request',     lucide: 'file-plus', note: 'not file/signed — a request is an outbound ask, signed is a completed sign-off' },
+  { domain: 'clinical', name: 'assessment',  lucide: 'clipboard-pen', note: 'broad clinical judgement; deliberately not merged into clinical/vitals' },
+  { domain: 'clinical', name: 'attendance',  lucide: 'door-open', note: 'urgent and emergency care arrival; distinct from clinical/admission (taken onto a ward)' },
 
   // Scheduling & appointments (10)
   { domain: 'schedule', name: 'appointment',        lucide: 'calendar' },
@@ -129,7 +181,9 @@ const ICONS = [
   { domain: 'schedule', name: 'waiting-list',       lucide: 'list-ordered' },
   { domain: 'schedule', name: 'duration',           lucide: 'timer' },
   { domain: 'schedule', name: 'overnight',          lucide: 'moon' },
-  { domain: 'schedule', name: 'urgent',             lucide: 'calendar-clock' },
+  { domain: 'schedule', name: 'priority',           lucide: 'calendar-clock', note: 'renamed from schedule/urgent — removes the collision with clinical urgency (status/critical)' },
+  { domain: 'schedule', name: 'calendar',           lucide: 'calendar', note: 'the calendar surface itself; schedule/appointment is a booked event' },
+  { domain: 'schedule', name: 'events',             lucide: 'calendar-days' },
 
   // Location & organisation (11)
   { domain: 'location', name: 'ward',         lucide: 'building-2' },
@@ -164,6 +218,7 @@ const ICONS = [
   { domain: 'file', name: 'archive',    lucide: 'archive' },
   { domain: 'file', name: 'form',       lucide: 'clipboard' },
   { domain: 'file', name: 'signed',     lucide: 'file-check' },
+  { domain: 'file', name: 'pin',        lucide: 'pin', note: 'adopted — was an SVG file with no generator entry' },
 
   // Data & analytics (8)
   { domain: 'data', name: 'chart',      lucide: 'chart-line' },
@@ -174,6 +229,18 @@ const ICONS = [
   { domain: 'data', name: 'audit',      lucide: 'shield-check' },
   { domain: 'data', name: 'grid-2x2',   lucide: 'grid-2x2' },
   { domain: 'data', name: 'grid-3x3',   lucide: 'grid-3x3' },
+
+  // Device & hardware (5)
+  //
+  // A domain of its own rather than entries in action/, because these are
+  // hardware affordances surfaced by the .NET MAUI mobile work, not editing
+  // actions. They are platform-conditional and absent on web surfaces; filing
+  // them under action/ would hide that.
+  { domain: 'device', name: 'camera',      lucide: 'camera' },
+  { domain: 'device', name: 'camera-swap', lucide: 'switch-camera' },
+  { domain: 'device', name: 'video',       lucide: 'video' },
+  { domain: 'device', name: 'torch-on',    lucide: 'flashlight' },
+  { domain: 'device', name: 'torch-off',   lucide: 'flashlight-off' },
 ];
 
 // ── SVG normalisation ─────────────────────────────────────────────────────────
@@ -191,12 +258,17 @@ const failed    = [];
 const notes     = [];
 
 for (const { domain, name, lucide, note } of ICONS) {
-  const url     = `${BASE_URL}/${lucide}.svg`;
   const outDir  = join(SVG_DIR, domain);
   const outFile = join(outDir, `${name}.svg`);
 
   try {
-    const raw = execSync(`curl -sf --max-time 15 "${url}"`, { encoding: 'utf8' });
+    // lucide-static prefixes each file with `<!-- @license lucide-static … -->`
+    // and wraps the opening tag across several lines. Strip leading comments
+    // before the sanity check so the guard tests the markup, not the banner.
+    // Attribution lives in foundations/iconography/LICENSE-lucide.txt and the
+    // catalogue, not in 144 copies of a comment.
+    const raw = readFileSync(join(ICON_DIR, `${lucide}.svg`), 'utf8')
+      .replace(/^\s*(?:<!--[\s\S]*?-->\s*)+/, '');
     if (!raw.trim().startsWith('<svg') && !raw.trim().startsWith('<?xml')) {
       failed.push({ domain, name, lucide, reason: 'Unexpected content' });
       continue;

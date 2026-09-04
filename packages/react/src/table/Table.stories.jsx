@@ -66,7 +66,7 @@ function Demo({ selectable = true, sortable = true, stickyHead = false }) {
         stickyHead={stickyHead}
         rowActions={(row) => (
           <button type="button" className="sr-table__action" aria-label={`Actions for ${row.volume}`}>
-            <Icon name="nav/menu2" size="sm" color="inherit" />
+            <Icon name="nav/menu-kebab" size="sm" color="inherit" />
           </button>
         )}
       />

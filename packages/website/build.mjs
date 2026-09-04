@@ -998,7 +998,7 @@ function footerBody() {
     { icon: 'schedule/appointment', label: 'Diary' },
     { icon: 'people/patient', label: 'Patients' },
     { icon: 'comms/message', label: 'Messages' },
-    { icon: 'nav/more', label: 'More' },
+    { icon: 'nav/more-horizontal', label: 'More' },
   ];
   const bottomNav = `<nav class="sr-bottom-nav" aria-label="Primary" style="max-width:390px;margin:0 auto">
 ${navItems.map((n) => `  <a class="sr-bottom-nav__item" href="#"${n.current ? ' aria-current="page"' : ''}>
@@ -3106,7 +3106,7 @@ function navigationBody() {
     ] },
     { label: 'Clinical', items: [
       { icon: 'people/specialist', label: 'Specialists' },
-      { icon: 'clinical/lab-result', label: 'Tests' },
+      { icon: 'clinical/test', label: 'Tests' },
     ] },
     { label: 'Nursing', items: [
       { icon: 'people/patient', label: 'Adults' },
@@ -3272,6 +3272,7 @@ const ICON_DOMAINS = {
   comms: 'Communication and messaging',
   file: 'Documents and files',
   data: 'Data and analytics',
+  device: 'Device and hardware',
 };
 
 function iconsBody() {

@@ -51,7 +51,7 @@ const SECTIONS = [
     label: 'Clinical',
     items: [
       { icon: 'people/specialist', label: 'Specialists' },
-      { icon: 'clinical/lab-result', label: 'Tests' },
+      { icon: 'clinical/test', label: 'Tests' },
     ],
   },
   {
@@ -65,7 +65,7 @@ const SECTIONS = [
     label: 'Urgent & Emergency',
     items: [
       { icon: 'location/bed', label: 'Nursing' },
-      { icon: 'clinical/cross', label: 'Urgent & Emergency' },
+      { icon: 'location/ambulance', label: 'Urgent & Emergency' },
     ],
   },
 ];

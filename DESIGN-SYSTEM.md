@@ -4,7 +4,7 @@ The Single Record Design System provides the shared design language, component l
 
 This document is the primary reference for everyone working on Single Record — designers, engineers, and delivery leads.
 
-**Last reviewed:** 2026-09-03. Update this file whenever a component ships, a
+**Last reviewed:** 2026-09-04. Update this file whenever a component ships, a
 token is added, or a system-wide rule changes — not on a schedule. If it
 disagrees with `/foundations/tokens/` or `/components/`, those win and this file
 is out of date.
@@ -98,7 +98,7 @@ The colour system is built from four brand palettes (Blue, Cyan, Navy, Grey) and
 | Palette | Primary role |
 |---|---|
 | Blue | NHS Wales brand primary — buttons, links, interactive states |
-| Cyan | DHCW brand secondary — accents, highlights, focus ring (Cyan/700 per DDR-006) |
+| Cyan | DHCW brand secondary — accents, highlights, focus ring (Cyan/800 per DDR-025) |
 | Navy | Deep brand navy — headers, structure |
 | Grey | Neutral UI — text, borders, surfaces |
 | Red | Error / critical status |
@@ -516,6 +516,42 @@ The gate checks **both light and dark modes**, which is not thoroughness for its
 
 ---
 
+## Iconography
+
+**146 icons across 11 domains**, from Lucide (ISC), on a 24 × 24 grid at **1px
+stroke** (DDR-023 — Lucide ships 2px; do not restore it). Every icon is
+`currentColor` with no baked fill, so one asset serves both modes.
+
+The catalogue is **generated**, not maintained. `foundations/iconography/fetch-icons.mjs`
+holds the `ICONS` array; the SVGs, the sprite, `Icons.xaml`, and the tables in
+`catalogue.md` all derive from it. Add an icon there and run
+`npm run sync:icons` — never add an SVG or a catalogue row by hand.
+
+Three rules govern what gets an icon at all:
+
+| DDR | Rule |
+|---|---|
+| DDR-027 | **Tier A/B/C sourcing.** Product screen and module names (Tier C) get **no bespoke icon** — reuse an existing glyph or use a text label. This is the rule that stops catalogue sprawl. |
+| DDR-028 | **No colour in an icon.** `currentColor` and `none` only. Anything needing a second colour is a component, not an icon — see `StatusIndicator` (DDR-013). |
+| DDR-029 | **One glyph, one meaning.** A Lucide glyph mapped to two SR aliases fails the build unless recorded with a reason. |
+
+Lucide is consumed from **`lucide-static`, pinned exactly** and carried in the
+lock file. It used to be fetched from Lucide's `main` branch, so the icon set was
+whatever `main` held that day — and `main` runs ahead of the published release,
+so names present in the shipped version (`trash-2`, `history`, `circle-help`)
+404 there. Bump the pin deliberately and review the SVG diff.
+
+**Known gap:** six glyphs currently carry two meanings each — `clipboard-list`,
+`pause`, `door-open`, `log-out`, `calendar`, `file-pen` — plus the pre-existing
+`triangle-alert`. They are listed in DDR-029 and in `scripts/check-icons.mjs`,
+and resolving them needs a clinical decision on which concept keeps the glyph.
+`log-out` for both *discharge a patient* and *sign out* is the one to fix first.
+
+`npm run check:icons` enforces all of the above: generator/disk agreement, no
+baked colour, 1px stroke, and duplicate glyphs.
+
+---
+
 ## Design Decisions
 
 Design decisions that affect the system — token choices, pattern departures, structural changes — are recorded as Design Decision Records (DDRs) in `/decisions/`.
@@ -524,9 +560,38 @@ Design decisions that affect the system — token choices, pattern departures, s
 |---|---|
 | DDR-001 | 4px base spacing unit |
 | DDR-002 | WCAG 2.2 AA as mandatory baseline |
-| DDR-003 | Lucide icon library |
+| DDR-003 | Lucide as icon library |
+| DDR-004 | Desktop heading scale revision |
+| DDR-005 | Typography scale cleanup (4px grid) |
+| DDR-006 | Focus ring: Cyan/700 — **superseded by DDR-025** |
+| DDR-007 | Packages monorepo structure for multi-framework delivery |
+| DDR-008 | Modal dialog: one base component, confirmation and result as patterns |
+| DDR-009 | Storybook as the component catalogue |
+| DDR-010 | Storybook 9 / Vite 7 upgrade to clear Dependabot advisories |
+| DDR-011 | Desktop vs mobile: the form-factor model |
+| DDR-012 | Date and time entry: 3-field input by default, calendar picker for scheduling |
+| DDR-013 | Filled status indicators (Figma `warnings/*`) as a component, not outline icons |
+| DDR-014 | Design-to-publish workflow — export routing, ownership, CI/CD |
+| DDR-015 | Primary-content minimum type size: Body S (14px) |
+| DDR-016 | DS website IA and publishing (one Pages site: website at root, Storybook at `/storybook`) |
+| DDR-017 | Navigation sidebar: collapse/expand behaviour |
+| DDR-018 | CTA button placement: forms and sections vs modals |
+| DDR-019 | Prototype embed: CodeSandbox Sandpack, not StackBlitz |
+| DDR-020 | Package distribution — registries, versioning, release |
+| DDR-021 | MAUI is native XAML, and the design system owns its token and style layer |
+| DDR-022 | When to wrap a third-party component on web, and what wrapping means |
+| DDR-023 | Icon stroke weight is 1px, not Lucide's 2px |
+| DDR-024 | MAUI ships on GitHub Packages; npm stays on release tarballs |
+| DDR-025 | Focus ring: Cyan/800, both modes (supersedes DDR-006) |
+| DDR-026 | Dark mode is a token-semantics problem, not a palette problem |
+| DDR-027 | Icon sourcing tiers, and the rule against module icons |
+| DDR-028 | Icons carry no colour; `currentColor` only |
+| DDR-029 | One glyph, one meaning |
 
 Use `DDR-000-template.md` as the starting point for new records. A DDR is required before any non-trivial structural change is made.
+
+> This table listed three of twenty-nine records until 2026-09-04. If you add a
+> DDR, add its row here in the same change.
 
 ---
 
@@ -580,7 +645,7 @@ The design system is **implementation-agnostic at the design level**. Tokens are
 
 **MAUI is native XAML, not Blazor Hybrid (DDR-021).** What the design system
 ships for it is a token and style layer, not a parallel component library:
-`Colors.xaml` (210 resources, generated from the tokens), `Icons.xaml` (120 icons
+`Colors.xaml` (210 resources, generated from the tokens), `Icons.xaml` (146 icons
 as XAML path geometry, generated from the same SVGs as the web icon set), and a
 hand-authored `Styles.xaml` of implicit styles, keyed intent styles and the
 `StyleClass` type scale. All in `packages/maui`.
@@ -594,7 +659,7 @@ until `Roboto-Medium.ttf` is bundled.
 
 `packages/maui/testbed` is a MAUI app that puts the layer on a real device, with
 a diagnostics page covering theme flipping, font scale, every stock control and
-all 120 icons. Nothing in the MAUI layer has been compiled yet — it is verified
+all 146 icons. Nothing in the MAUI layer has been compiled yet — it is verified
 statically (resource resolution, icon geometry against source, no literal
 colours) and that gap is named in `packages/maui/README.md`.
 

@@ -823,6 +823,116 @@ confirming `npm ci --dry-run` calls the same state fatal.
 
 ---
 
+### SVG arc flags may run into the next number, and a check can mis-read both sides
+
+**Symptom:** After pinning Lucide, `verify-icons.mjs` reported four icons whose
+emitted XAML geometry "differs" from the source — with diffs full of `NaN`:
+
+```
+SrIconLocationRoom: geometry differs
+  source:  … NaN,NaN 10.268,3 7,3 arc:2,2,0,0,
+  emitted: … NaN,NaN arc:10.268,3,NaN,7,NaN 2,
+```
+
+**Why:** In an elliptical arc, the large-arc and sweep flags are single digits,
+and the SVG grammar lets them run straight into the following number with no
+separator. Lucide now emits arcs that way:
+
+```
+a2 2 0 012.36-1.968     is   a 2 2 0 0 1 2.36 -1.968
+a2 2 0 00-2 2           is   a 2 2 0 0 0 -2 2
+```
+
+Every other command takes plain numbers, so the obvious tokeniser — one regex
+matching command letters or numbers — is correct everywhere except arcs, where
+it reads `00` as a single token and shifts every remaining argument by one:
+
+```
+naive     : ["a","2","2","0","00","-2","2","v","16"]
+arc-aware : ["a","2","2","0","0","0","-2","2","v","16"]
+```
+
+**The part worth remembering:** this did not fail loudly. `verify-icons.mjs`
+parses the source geometry and the emitted geometry with *the same function*, so
+when both sides mis-parsed a path identically they agreed and the check passed.
+`action/eye` shipped like that. Ten icons in the set carry the concatenated
+form. The mis-parse only surfaced once the two sides diverged, on four icons
+where the opening-moveto rewrite happened to shift things differently.
+
+> **A check that can be wrong on both sides at once is not a check.** It is the
+> same lesson as "a gate that checks the source and trusts the toolchain",
+> arrived at from the other direction: here the gate checked both artefacts, but
+> through one shared flaw. When a comparison derives both sides through the same
+> code, ask what a bug in that code would do — if the answer is "they still
+> match", the comparison proves nothing.
+
+This also reached the shipped artefact. `Icons.xaml` took `d` verbatim, so the
+concatenated form was handed to XAML's own path parser, which reads those flags
+as numbers too.
+
+**Fix:** `packages/maui/svg-path.mjs` — one arc-aware tokeniser, used by both
+the emitter and the verifier. Path data is normalised before emission so flags
+are always separate tokens, which is unambiguous to any conformant parser. The
+moveto rewriter, which carried its own copy of the number grammar and had the
+same latent bug, now runs on normalised data and is one line.
+
+**Prevented by:** `node verify-icons.mjs` in the MAUI build, which now compares
+geometry parsed correctly — it went from 4 false mismatches to 146 icons
+verified identical. Proven by tokenising a real 1.41.0 arc path both ways and
+showing the naive tokeniser produce `"00"`.
+
+---
+
+### A generator in the wrong module system fails silently into hand-editing
+
+**Symptom:** Four icons — `action/send`, `action/star`, `action/bookmark`,
+`file/pin` — existed in `foundations/iconography/svg/` with no entry in the
+generator that is supposed to produce every icon. Nothing reported it. The
+catalogue said "119 aliases"; there were 123 SVGs.
+
+**Why:** `fetch-icons.js` was CommonJS (`require`) in a repo whose root is
+`"type": "module"` (DDR-007). Every invocation died with:
+
+```
+ReferenceError: require is not defined in ES module scope
+```
+
+So the generator had been unrunnable for months. Faced with a tool that will not
+start, the reasonable thing to do is add the four SVGs by hand — which is what
+happened, and it works, right up until someone runs the generator successfully
+and wonders why four icons vanish from the diff.
+
+Two things make this shape hard to spot. The failure is at *startup*, so it
+never produced a partial or wrong output that would look suspicious — it just
+never ran, and the committed output stayed plausible. And the workaround leaves
+no trace: a hand-written SVG is indistinguishable from a generated one.
+
+**Related:** the same generator fetched Lucide's `main` branch, so the icon set
+was whatever `main` held on the day it ran. `main` has since moved ahead of the
+published release — `trash-2`, `history` and `circle-help` all 404 there while
+all three are in 1.41.0 — so a name check against `main` reports *working* icons
+as missing. It now reads from `lucide-static`, pinned exactly and carried in the
+lock file. Between the last `main` fetch and the pin, twelve glyphs had changed,
+one materially: Lucide redrew `barcode` from a framed scanner to plain bars, so
+`action/scan` no longer reads as "scan".
+
+**Fix:** rename to `.mjs` and convert to ESM; pin the Lucide source.
+
+**Prevented by:** `npm run check:icons` (`scripts/check-icons.mjs`), in
+`npm run check`. It fails when an SVG on disk has no generator entry, and when a
+generator entry has no SVG — so neither hand-adding an icon nor forgetting to
+regenerate can pass. `npm run sync:icons --check` does the same for the
+catalogue tables, which are now generated rather than typed.
+
+**Also worth knowing:** `@dhcw/sr-icons` was not in `build:web`, `build:site` or
+`build:pages` — its `build/icons.js` was committed and consumed by the web build
+without ever being regenerated. So the first full site build after this change
+still served the *old* 123 icons and looked convincing. It is now in all three
+chains. A generated artefact that nothing regenerates is a stale artefact
+waiting to happen; see the entry below.
+
+---
+
 ### Generated files must be regenerated in CI, not trusted
 
 `Colors.xaml` and `Icons.xaml` are committed so consumers can take them straight

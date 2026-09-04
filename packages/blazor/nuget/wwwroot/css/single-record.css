@@ -3609,7 +3609,7 @@ textarea.sr-input__control {
  *
  * Layouts (`.sr-table--{layout}` — the Storybook "layout" toggle):
  *   plain        — column headers only.
- *   kebab-left   — leading column of kebab (nav/menu2) row-menu buttons.
+ *   kebab-left   — leading column of kebab (nav/menu-kebab) row-menu buttons.
  *   icons-left   — leading column of direct row-action icon buttons.
  *   row-headers  — column headers on top AND a row-header cell down the left.
  *

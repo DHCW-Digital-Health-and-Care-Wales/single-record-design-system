@@ -16,13 +16,27 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { tokenisePathData } from './svg-path.mjs';
 
 const here = fileURLToPath(new URL('.', import.meta.url));
 const SVG_ROOT = resolve(here, '../../foundations/iconography/svg');
 
 /** Absolute points a path visits, in order. Curve control points included. */
 function walk(d) {
-  const tokens = d.match(/[MmLlHhVvCcSsQqTtAaZz]|-?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?/g) || [];
+  // Arc-aware. This used to be a single regex matching command letters or
+  // numbers, which is correct for every command except the arc: SVG lets the
+  // two arc flags run into the following number (`a2 2 0 012.36-1.968`), and a
+  // plain number match reads `012.36` as one value and shifts every remaining
+  // argument by one.
+  //
+  // That did not merely produce a wrong comparison — it produced a MATCHING
+  // one. Source and emitted geometry both went through this function, so when
+  // both mis-parsed the same path in the same way they agreed and the check
+  // passed. `action/eye` shipped that way for months. The mis-parse only
+  // surfaced when the two sides diverged on four icons.
+  //
+  // A check that can be wrong on both sides at once is not a check.
+  const tokens = tokenisePathData(d);
   const pts = [];
   let i = 0, cur = [0, 0], start = [0, 0], cmd = null;
   const n = () => Number(tokens[i++]);

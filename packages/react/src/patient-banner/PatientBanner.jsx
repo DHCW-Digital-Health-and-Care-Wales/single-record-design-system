@@ -122,7 +122,7 @@ const PatientBanner = forwardRef(function PatientBanner(
                   aria-label="Edit adverse reactions"
                   onClick={onEditReactions}
                 >
-                  <Icon name="action/edit2" size="xs" color="inherit" />
+                  <Icon name="action/edit-note" size="xs" color="inherit" />
                 </button>
               )}
             </div>
@@ -153,7 +153,7 @@ const PatientBanner = forwardRef(function PatientBanner(
                   aria-label="Edit warnings"
                   onClick={onEditWarnings}
                 >
-                  <Icon name="action/edit2" size="xs" color="inherit" />
+                  <Icon name="action/edit-note" size="xs" color="inherit" />
                 </button>
               )}
             </div>

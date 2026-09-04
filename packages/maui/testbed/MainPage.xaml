@@ -173,7 +173,7 @@
                                  SelectedIndex="{Binding SelectedTab}"
                                  Command="{Binding SelectTabCommand}" />
                 <controls:NavTab Grid.Column="4" Index="4" Text="More"
-                                 IconData="{StaticResource SrIconNavMore}"
+                                 IconData="{StaticResource SrIconNavMoreHorizontal}"
                                  SelectedIndex="{Binding SelectedTab}"
                                  Command="{Binding SelectTabCommand}" />
             </Grid>
