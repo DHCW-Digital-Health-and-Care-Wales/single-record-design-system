@@ -775,6 +775,54 @@ shapes. One shape passing is not the gate working.
 
 ---
 
+### Adding a workspace without regenerating the lock file breaks every workflow
+
+**Symptom:** Hourly mail, *"Deploy DS site (website + Storybook) to GitHub Pages:
+Some jobs were not successful"* — the same subject line as the storage-quota
+entry above, and a different cause. Every local check is green: `npm run check`,
+`npm run build:site`, `npm run build:pages` all pass. The run log fails at the
+very first step, before any build:
+
+```
+npm error `npm ci` can only install packages when your package.json and
+npm error package-lock.json or npm-shrinkwrap.json are in sync.
+npm error Missing: @dhcw/sr-blazor@0.2.1-rc.0 from lock file
+```
+
+**Why:** `packages/blazor` was added to the root `workspaces` array without
+running `npm install` to regenerate `package-lock.json`. `npm ci` refuses to
+install anything at all when the two disagree — it is not a warning and there is
+no partial install — so *every* workflow that starts with `npm ci` fails at step
+one. That is all of them: Pages, NuGet, releases.
+
+Three things hide it:
+
+1. **Local builds never notice.** `npm install` repairs the lock as a side
+   effect of running, and every local build afterwards uses an already-linked
+   `node_modules`. Only a clean `npm ci` compares the two files.
+2. **The error names the package, not the omission.** "Missing @dhcw/sr-blazor
+   from lock file" reads as a broken dependency, when the actual mistake is one
+   line absent from an array in `package.json`.
+3. **It arrives as the hourly schedule**, so the mail is attached to a
+   scheduled run rather than to the commit that caused it, and it looks like
+   infrastructure rather than a diff.
+
+**Fix:** `npm install --package-lock-only` and commit the lock in the *same*
+change that touches `workspaces` or bumps a workspace version.
+
+**Prevented by:** `npm run check:versions` (`scripts/check-versions.mjs`), in
+`npm run check`. It now compares the lock against the manifests offline, in
+milliseconds, and fails on all four drift shapes: a workspace in `package.json`
+but not the lock, a stale workspace left in the lock, a version bump that never
+reached the lock, and an internal range that disagrees between the two. The
+script already *told* you to run `npm install --package-lock-only`; it just
+never checked that anyone did.
+
+Verified by planting each of the four defects and confirming a failure, and by
+confirming `npm ci --dry-run` calls the same state fatal.
+
+---
+
 ### Generated files must be regenerated in CI, not trusted
 
 `Colors.xaml` and `Icons.xaml` are committed so consumers can take them straight
