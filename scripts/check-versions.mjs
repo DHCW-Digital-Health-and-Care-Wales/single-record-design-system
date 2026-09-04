@@ -83,17 +83,90 @@ for (const f of manifests) {
   }
 }
 
+// ---------------------------------------------------------------------------
+// The lock file has to agree with the manifests, not just the manifests with
+// each other.
+//
+// Everything above passed while CI was red for two days. Adding
+// packages/blazor to the root `workspaces` array without regenerating the lock
+// left `npm ci` refusing to install at all — "Missing: @dhcw/sr-blazor from
+// lock file" — which is the FIRST step of every workflow, so the hourly Pages
+// deploy failed before it built anything, and the failure said nothing about
+// Blazor's absence from a list.
+//
+// Nothing local catches this: `npm install` fixes the lock as a side effect of
+// running, and every build here uses an already-linked node_modules. Only a
+// clean `npm ci` sees it, and the cheapest place to run one of those was CI.
+// So the drift gets checked directly, offline, in milliseconds.
+
+const lock = read('package-lock.json');
+const lockRoot = lock.packages?.[''] ?? {};
+
+const lockWorkspaces = new Set(lockRoot.workspaces ?? []);
+for (const w of root.workspaces) {
+  if (!lockWorkspaces.has(w)) {
+    problems.push(
+      `package-lock.json\n    workspace "${w}" is in package.json but not in the lock file`
+    );
+  }
+}
+for (const w of lockWorkspaces) {
+  if (!root.workspaces.includes(w)) {
+    problems.push(
+      `package-lock.json\n    workspace "${w}" is in the lock file but no longer in package.json`
+    );
+  }
+}
+
+for (const f of manifests) {
+  const dir = dirname(f);
+  const d = read(f);
+  const entry = lock.packages?.[dir];
+
+  if (!entry) {
+    problems.push(
+      `package-lock.json\n    no entry for "${dir}" (${d.name}) — a clean install cannot resolve it`
+    );
+    continue;
+  }
+
+  // A version bump that never reached the lock is the same class of bug as a
+  // missing workspace, and produces the same EUSAGE refusal.
+  if (entry.version && d.version && entry.version !== d.version) {
+    problems.push(
+      `package-lock.json\n    "${dir}" is ${entry.version} in the lock but `
+      + `${d.version} in ${f}`
+    );
+  }
+
+  // And the internal ranges are recorded in both places, so they can drift in
+  // both places.
+  for (const section of ['dependencies', 'peerDependencies', 'devDependencies']) {
+    for (const [name, range] of Object.entries(d[section] ?? {})) {
+      if (!name.startsWith('@dhcw/')) continue;
+      const locked = entry[section]?.[name];
+      if (locked !== undefined && locked !== range) {
+        problems.push(
+          `package-lock.json\n    "${dir}" ${section} "${name}": lock says `
+          + `"${locked}", ${f} says "${range}"`
+        );
+      }
+    }
+  }
+}
+
 if (problems.length) {
   console.error(
-    `\ncheck:versions — ${problems.length} internal range(s) out of step:\n\n  `
+    `\ncheck:versions — ${problems.length} problem(s):\n\n  `
     + problems.join('\n\n  ')
-    + '\n\nA clean `npm ci` will fail on these: npm stops linking the workspace and\n'
-    + 'tries the public registry, where these packages do not exist.\n'
-    + 'Fix the ranges, then run `npm install --package-lock-only`.\n'
+    + '\n\nA clean `npm ci` will fail on these — which means every workflow fails at\n'
+    + 'its install step, before it builds or tests anything.\n'
+    + 'Fix the ranges, then run `npm install --package-lock-only` and commit the lock.\n'
   );
   process.exit(1);
 }
 
 console.log(
-  `check:versions — ${versions.size} workspaces, all internal ranges consistent.`
+  `check:versions — ${versions.size} workspaces, internal ranges consistent, `
+  + 'lock file in sync.'
 );
