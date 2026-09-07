@@ -78,7 +78,7 @@ Adding an SVG straight into `svg/` without a generator entry is what produced fo
 
 <!-- BEGIN GENERATED CATALOGUE — edit fetch-icons.mjs, then run npm run sync:icons -->
 
-**141 SR aliases across 11 domains.**
+**142 SR aliases across 11 domains.**
 
 Every row below is generated from the `ICONS` array in `fetch-icons.mjs`. Do not edit this section by hand — add the icon to the generator, run `npm run sync:icons`, and the table follows.
 
@@ -108,7 +108,7 @@ Every row below is generated from the `ICONS` array in `fetch-icons.mjs`. Do not
 | nav/support | circle-help | NavSupport |  |
 | nav/feedback | message-square-text | NavFeedback |  |
 
-### Actions & editing (28)
+### Actions & editing (29)
 
 | SR alias | Lucide glyph | Component name | Notes |
 |---|---|---|---|
@@ -135,6 +135,7 @@ Every row below is generated from the `ICONS` array in `fetch-icons.mjs`. Do not
 | action/send | send | ActionSend |  |
 | action/star | star | ActionStar |  |
 | action/bookmark | bookmark | ActionBookmark | moved from schedule/ — bookmarking is not a scheduling concept |
+| action/bookmark-off | bookmark-off | ActionBookmarkOff | the removal/unsaved state of action/bookmark, in the eye/eye-off and lock/unlock pattern |
 | action/play | play | ActionPlay |  |
 | action/expand | maximize-2 | ActionExpand |  |
 | action/collapse | minimize-2 | ActionCollapse |  |

@@ -4,6 +4,7 @@
 
 export const icons = {
   "action/add": "<path d=\"M5 12h14\" />\n  <path d=\"M12 5v14\" />",
+  "action/bookmark-off": "<path d=\"M19 19v1a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5\" />\n  <path d=\"m2 2 20 20\" />\n  <path d=\"M8.656 3H17a2 2 0 0 1 2 2v8.344\" />",
   "action/bookmark": "<path d=\"M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z\" />",
   "action/check": "<path d=\"M20 6 9 17l-5-5\" />",
   "action/collapse": "<path d=\"m14 10 7-7\" />\n  <path d=\"M20 10h-6V4\" />\n  <path d=\"m3 21 7-7\" />\n  <path d=\"M4 14h6v6\" />",

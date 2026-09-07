@@ -112,6 +112,7 @@ const ICONS = [
   { domain: 'action', name: 'send',     lucide: 'send' },
   { domain: 'action', name: 'star',     lucide: 'star' },
   { domain: 'action', name: 'bookmark', lucide: 'bookmark', note: 'moved from schedule/ — bookmarking is not a scheduling concept' },
+  { domain: 'action', name: 'bookmark-off', lucide: 'bookmark-off', note: 'the removal/unsaved state of action/bookmark, in the eye/eye-off and lock/unlock pattern' },
   // Additions
   { domain: 'action', name: 'play',      lucide: 'play' },
   { domain: 'action', name: 'expand',    lucide: 'maximize-2' },
