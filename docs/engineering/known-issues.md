@@ -883,6 +883,44 @@ showing the naive tokeniser produce `"00"`.
 
 ---
 
+### `npm publish --dry-run` does not tell you the version is already published
+
+**Symptom:** the release workflow's pre-flight passes cleanly, then the real
+publish fails:
+
+```
+403 Forbidden - You cannot publish over the previously published versions: 0.2.1-rc.0
+```
+
+**Why:** `npm publish --dry-run` validates the *tarball* — files, fields, size —
+entirely locally. It never asks the registry what exists. So a re-publish looks
+healthy right up to the moment it is refused.
+
+Two things make this worse than a wasted run:
+
+1. **npm never accepts that version again.** Unpublish is available for 72 hours,
+   and even then the version number is burned. There is no "try again".
+2. **There is no transaction across packages.** The release publishes four. The
+   first can succeed and the second fail, leaving a half-release that can be
+   neither completed nor undone.
+
+The setup is easy to walk into: a release candidate is published, work continues
+for a fortnight, and the version in `package.json` is still the one already on
+the registry. Everything local passes — `check:versions` only checks the repo
+against itself, and it is perfectly consistent at a version that happens to be
+taken.
+
+**Prevented by:** the pre-flight in `release-packages.yml` now asks the registry
+directly (`npm view "@dhcw/sr-$p@$VERSION" version`) for every package before
+publishing any, and fails with the bump procedure spelled out. Verified against
+the live registry both ways: it reports 0.2.1-rc.0 as taken, and 0.3.0 as free.
+
+**The rule:** a version is a claim about the registry, and only the registry can
+confirm it. Local checks establish that the repository agrees with itself — a
+different question, and not the one that stops a burned version.
+
+---
+
 ### Fixing a broken generator can overwrite good artwork with a bad entry
 
 **Symptom:** `action/scan` — a framed barcode scanner, in use in Figma
