@@ -48,7 +48,7 @@ Variants: `State` × `Last`.
 |---|---|---|
 | Done | Filled `Status/Success` circle, white `Icon/action/check` (16px) | `Status/Success` line to next step |
 | Current | Filled `Interactive/Primary` circle, white number, soft outer halo (`spread: 4`, 20% Primary) | `Border/Default` line |
-| Error | Filled `Status/Critical` circle, white `Icon/status/alert` (16px). Optional sub-text in `Status/Critical` (e.g. "2 fields missing"). | `Border/Default` line |
+| Error | Filled `Status/Critical` circle, white `Icon/status/warning` (16px). Optional sub-text in `Status/Critical` (e.g. "2 fields missing"). | `Border/Default` line |
 | Upcoming | White circle, 2px `Border/Default` ring, grey number | `Border/Default` line |
 
 `Last=True` hides the trailing connector — use for the final step.
@@ -106,7 +106,7 @@ Tag surfaces:
 | Where | Icon | Node |
 |---|---|---|
 | Done step / tab tick | `Icon/action/check` | `1745:24` (imported this commit) |
-| Error step | `Icon/status/alert` | `1745:29` (imported this commit) |
+| Error step | `Icon/status/warning` | `1745:29` (imported this commit) |
 
 Both new icons are Lucide-derived, 24×24, stroke 2, bound to `Text/Primary`. Recoloured per use via semantic variables (`Text/Inverse` inside coloured circles, etc.).
 
@@ -117,7 +117,7 @@ Both new icons are Lucide-derived, 24×24, stroke 2, bound to `Text/Primary`. Re
 - **Steppers**: render as `<ol>` with each step as `<li>`. Current step carries `aria-current="step"`. Error step pairs the alert icon with a text description ("2 fields missing") — never colour alone.
 - **Progress Bar**: `role="progressbar"` with `aria-valuemin`, `aria-valuemax`, `aria-valuenow`. Indeterminate omits `aria-valuenow` and sets `aria-busy="true"`.
 - **Segmented**: announce as "Section 3 of 5 complete" via `aria-label` on the wrapping element.
-- **Timeline**: `<ol>` with timestamps as `<time datetime="…">`. Alert items: pair the red dot with `Icon/status/alert` text and a descriptive `aria-label`.
+- **Timeline**: `<ol>` with timestamps as `<time datetime="…">`. Alert items: pair the red dot with `Icon/status/warning` text and a descriptive `aria-label`.
 - All status colours used here meet WCAG 1.4.11 against `Surface/Small Cards` (white): `Status/Success` 4.7:1, `Status/Critical` 4.9:1, `Interactive/Primary` 7.5:1.
 
 ---

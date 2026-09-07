@@ -1,7 +1,7 @@
 {
   "name": "@dhcw/sr-design-system",
   "version": "0.1.0",
-  "description": "DHCW Single Record Design System \u2014 monorepo root. Manages the tokens, web, react, blazor, maui, icons, and storybook packages.",
+  "description": "DHCW Single Record Design System — monorepo root. Manages the tokens, web, react, blazor, maui, icons, and storybook packages.",
   "private": true,
   "type": "module",
   "workspaces": [
@@ -20,20 +20,25 @@
     "build:blazor": "npm run build:web && npm run build -w @dhcw/sr-blazor",
     "build:logo": "node packages/web/build-logo.mjs",
     "build:maui": "npm run build -w @dhcw/sr-tokens && npm run build -w @dhcw/sr-maui",
-    "build:pages": "npm run build:logo && npm run build -w @dhcw/sr-tokens && npm run build -w @dhcw/sr-web && npm run build -w @dhcw/sr-website && npm run build-storybook -w @dhcw/sr-storybook && node scripts/assemble-pages.mjs",
-    "build:site": "npm run build:logo && npm run build -w @dhcw/sr-tokens && npm run build -w @dhcw/sr-web && npm run build -w @dhcw/sr-website",
+    "build:pages": "npm run build:logo && npm run build -w @dhcw/sr-tokens && npm run build -w @dhcw/sr-icons && npm run build -w @dhcw/sr-web && npm run build -w @dhcw/sr-website && npm run build-storybook -w @dhcw/sr-storybook && node scripts/assemble-pages.mjs",
+    "build:site": "npm run build:logo && npm run build -w @dhcw/sr-tokens && npm run build -w @dhcw/sr-icons && npm run build -w @dhcw/sr-web && npm run build -w @dhcw/sr-website",
     "build:tokens": "npm run build -w @dhcw/sr-tokens && node scripts/sync-token-docs.mjs",
-    "build:web": "npm run build:logo && npm run build -w @dhcw/sr-tokens && npm run build -w @dhcw/sr-web",
-    "check": "npm run check:versions && npm run check:workflows && npm run check:type && npm run check:ds && npm run check:contrast && npm run build:maui && npm run build:blazor",
+    "build:web": "npm run build:logo && npm run build -w @dhcw/sr-tokens && npm run build -w @dhcw/sr-icons && npm run build -w @dhcw/sr-web",
+    "check": "npm run check:versions && npm run check:workflows && npm run check:type && npm run check:ds && npm run check:contrast && npm run check:icons && npm run build:maui && npm run build:blazor",
     "check:contrast": "node scripts/check-contrast.mjs",
     "check:docs": "node scripts/sync-token-docs.mjs --check",
     "check:ds": "node scripts/check-design-system.mjs --baseline",
+    "check:icons": "node scripts/check-icons.mjs && node scripts/sync-icon-docs.mjs --check && node foundations/iconography/fetch-icons.mjs --check",
     "check:type": "node scripts/check-typography.mjs --baseline",
     "check:versions": "node scripts/check-versions.mjs",
     "check:workflows": "node scripts/check-workflows.mjs",
     "dev:prototype": "npm run dev -w @dhcw/case-note-tracking-prototype",
     "pack:maui": "npm run build:maui && dotnet pack packages/maui/nuget/DHCW.SingleRecord.Maui.csproj -c Release -o dist/nuget",
     "storybook": "npm run storybook -w @dhcw/sr-storybook",
-    "sync:docs": "node scripts/sync-token-docs.mjs"
+    "sync:docs": "node scripts/sync-token-docs.mjs",
+    "sync:icons": "node scripts/sync-icon-docs.mjs"
+  },
+  "devDependencies": {
+    "lucide-static": "1.41.0"
   }
 }

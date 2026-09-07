@@ -102,4 +102,4 @@ radios on the same screen is fine; a group that is half each is not.
   Code uses 20px throughout, matching `Simple` and Checkbox. **The Figma set
   should be normalised to 20px** — the deviation is recorded in `radio.css`.
 - `Card Icon` has no guidance yet on which icons are appropriate; the Figma
-  variant uses `clinical/diagnosis` as a placeholder.
+  variant uses `clinical/result` as a placeholder.

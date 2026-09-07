@@ -51,7 +51,7 @@ export const NAV_SECTIONS = [
 
 export const NAV_FOOTER = [
   { icon: 'nav/settings', label: 'Settings' },
-  { icon: 'clinical/discharge', label: 'Log Out' },
+  { icon: 'nav/log-out', label: 'Log Out' },
 ];
 
 export const STATS = [

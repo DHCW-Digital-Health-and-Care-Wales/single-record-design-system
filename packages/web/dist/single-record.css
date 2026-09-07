@@ -138,6 +138,19 @@
   --sr-color-status-warning-surface: #fffaeb; /** Yellow/50 (#FFFAEB) — lightened from Yellow/100 to match the other status surfaces. Note that Status/Warning (Yellow/500) on it is 1.49:1 and must never carry text unaided; see the warning-role exception in the Icons guidance. */
   --sr-color-status-info: #005aa8;
   --sr-color-status-info-surface: #eef5fc; /** Info Blue/50 (#EEF5FC) — lightened from Info Blue/100 so Status/Info text on it reaches 6.31:1 (was 5.52:1). */
+  --sr-icon-size-xs: 16px; /** 16px — inline icons within dense content */
+  --sr-icon-size-sm: 20px; /** 20px — standard inline icons */
+  --sr-icon-size-md: 24px; /** 24px — default icon size, matching the source grid 1:1 */
+  --sr-icon-size-lg: 32px; /** 32px — prominent icons, empty states */
+  --sr-icon-stroke: 1; /** 1px at every size (DDR-023). There is deliberately no per-size variant. */
+  --sr-icon-color-default: #212b32; /** Default icon colour — matches primary text */
+  --sr-icon-color-subtle: #4c6272; /** Subdued icon — matches secondary text */
+  --sr-icon-color-inverse: #ffffff; /** Icon on dark or coloured surfaces */
+  --sr-icon-color-interactive: #325083; /** Interactive icon (clickable, hoverable) */
+  --sr-icon-color-critical: #b32014; /** Critical / error state icon */
+  --sr-icon-color-warning: #f8ca4d; /** Warning state icon */
+  --sr-icon-color-success: #006630; /** Success / confirmed state icon */
+  --sr-icon-color-info: #005aa8; /** Informational icon */
   --space-0: 0px; /** Explicit zero */
   --space-1: 4px; /** Icon padding, micro gaps */
   --space-2: 8px; /** Tight component internals */
@@ -174,14 +187,13 @@
   --font-letter-spacing-default: 0px; /** No additional tracking — body text and headings */
   --font-letter-spacing-wide: 0.3px; /** Expanded tracking — labels and UI controls */
   --font-letter-spacing-caption: 0.2px; /** Gentle expansion — captions and supporting text */
-  --icon-size-xs: 16px; /** Smallest inline icon — dense stroke (1.75) */
-  --icon-size-sm: 20px; /** Small inline icon — dense stroke (1.75) */
-  --icon-size-md: 24px; /** Default icon size — standard stroke (2) */
-  --icon-size-lg: 32px; /** Large icon, e.g. empty-state illustrations — standard stroke (2) */
-  --icon-stroke-default: 2; /** Standard stroke weight — used at md and lg sizes */
-  --icon-stroke-dense: 1.75; /** Dense stroke weight — used at xs and sm sizes to preserve legibility at small scale */
+  --icon-size-xs: 16px; /** Smallest inline icon — within dense content such as table cells */
+  --icon-size-sm: 20px; /** Small inline icon — standard inline usage */
+  --icon-size-md: 24px; /** Default icon size. Matches the 24x24 source grid 1:1 */
+  --icon-size-lg: 32px; /** Large icon — prominent placements and empty states */
+  --icon-stroke: 1; /** 1px, at every size. DDR-023: Lucide ships 2px and Single Record overrides it globally. Do NOT vary stroke by size — this token previously carried a 2 'default' and a 1.75 'dense' pair that no icon has ever used. Every SVG in foundations/iconography/svg/ is stroke-width 1, and npm run check:icons fails on any that is not. */
   --icon-variant-outline: outline; /** Default variant for all icons. Stroke only, no fill. */
-  --icon-variant-filled: filled; /** Reserved for navigation active states only. Filled variants are not assigned speculatively — each must be explicitly required by a navigation component. */
+  --icon-variant-filled: filled; /** Reserved for navigation active states only. Filled variants are not assigned speculatively — each must be explicitly required by a navigation component. A mark that needs a second colour is a component, not an icon (DDR-027). */
   --spacing-component-xs: 4px; /** Icon-only buttons, tight badges */
   --spacing-component-sm: 8px; /** Compact inputs, table cells */
   --spacing-component-md: 16px; /** Default padding for most components */
@@ -409,10 +421,15 @@
   height: 100%;
 }
 
-.sr-icon--xs { width: 16px; height: 16px; } /* sr.icon.size.xs — inline within dense content */
-.sr-icon--sm { width: 20px; height: 20px; } /* sr.icon.size.sm — standard inline icons */
-.sr-icon--md { width: 24px; height: 24px; } /* sr.icon.size.md — default */
-.sr-icon--lg { width: 32px; height: 32px; } /* sr.icon.size.lg — prominent icons, empty states */
+/* Sizes come from the token layer. These used to be four hardcoded px values
+   with the token name written beside them in a comment — the comment was the
+   only link, and `sr.icon.size.*` was not emitted to any platform at all, so
+   nothing could have consumed it. Both halves are fixed: the tokens build now
+   includes semantic/iconography.json, and these rules read it. */
+.sr-icon--xs { width: var(--sr-icon-size-xs); height: var(--sr-icon-size-xs); } /* inline within dense content */
+.sr-icon--sm { width: var(--sr-icon-size-sm); height: var(--sr-icon-size-sm); } /* standard inline icons */
+.sr-icon--md { width: var(--sr-icon-size-md); height: var(--sr-icon-size-md); } /* default — matches the 24px source grid 1:1 */
+.sr-icon--lg { width: var(--sr-icon-size-lg); height: var(--sr-icon-size-lg); } /* prominent icons, empty states */
 
 .sr-icon--inherit     { color: inherit; } /* icon sits inside a coloured ancestor (e.g. .sr-button) and must track its currentColor */
 .sr-icon--default     { color: var(--sr-color-text-primary); }
@@ -3609,7 +3626,7 @@ textarea.sr-input__control {
  *
  * Layouts (`.sr-table--{layout}` — the Storybook "layout" toggle):
  *   plain        — column headers only.
- *   kebab-left   — leading column of kebab (nav/menu2) row-menu buttons.
+ *   kebab-left   — leading column of kebab (nav/menu-kebab) row-menu buttons.
  *   icons-left   — leading column of direct row-action icon buttons.
  *   row-headers  — column headers on top AND a row-header cell down the left.
  *

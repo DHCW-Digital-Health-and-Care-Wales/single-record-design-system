@@ -998,7 +998,7 @@ function footerBody() {
     { icon: 'schedule/appointment', label: 'Diary' },
     { icon: 'people/patient', label: 'Patients' },
     { icon: 'comms/message', label: 'Messages' },
-    { icon: 'nav/more', label: 'More' },
+    { icon: 'nav/more-horizontal', label: 'More' },
   ];
   const bottomNav = `<nav class="sr-bottom-nav" aria-label="Primary" style="max-width:390px;margin:0 auto">
 ${navItems.map((n) => `  <a class="sr-bottom-nav__item" href="#"${n.current ? ' aria-current="page"' : ''}>
@@ -2493,7 +2493,7 @@ function radioBody() {
     radioOption({ type: 'card', label: 'Routine', description: 'Seen within 18 weeks', name: 'cf' }),
   ].join('\n'));
   const cardIcon = cardBox([
-    radioOption({ type: 'card-icon', icon: 'clinical/diagnosis', label: 'Diagnosis', description: 'Coded condition on the problem list', checked: true, name: 'ci' }),
+    radioOption({ type: 'card-icon', icon: 'clinical/result', label: 'Diagnosis', description: 'Coded condition on the problem list', checked: true, name: 'ci' }),
     radioOption({ type: 'card-icon', icon: 'clinical/medication', label: 'Medication', description: 'Current and past prescriptions', name: 'ci' }),
   ].join('\n'));
 
@@ -2561,9 +2561,9 @@ function radioBody() {
   };
 
   const cardIconSnippets = {
-    HTML: '<!-- The icon renders AFTER the label in the DOM. An element between the\n     input and the label breaks the `:checked +` adjacency the styling needs. -->\n<div class="sr-radio sr-radio--card sr-radio--card-icon">\n  <input class="sr-radio__input" type="radio" id="ci1" name="kind" checked>\n  <label class="sr-radio__label" for="ci1">\n    <span class="sr-radio__title">Diagnosis</span>\n    <span class="sr-radio__description">Coded condition on the problem list</span>\n  </label>\n  <span class="sr-radio__icon" aria-hidden="true"><!-- Icon: clinical/diagnosis --></span>\n</div>',
-    React: '<Radio\n  type="card-icon"\n  icon="clinical/diagnosis"\n  label="Diagnosis"\n  description="Coded condition on the problem list"\n  name="kind"\n  defaultChecked\n/>',
-    Blazor: '<SrRadio Type="CardIcon" Icon="clinical/diagnosis" Label="Diagnosis"\n         Description="Coded condition on the problem list" Name="kind" Checked="true" />',
+    HTML: '<!-- The icon renders AFTER the label in the DOM. An element between the\n     input and the label breaks the `:checked +` adjacency the styling needs. -->\n<div class="sr-radio sr-radio--card sr-radio--card-icon">\n  <input class="sr-radio__input" type="radio" id="ci1" name="kind" checked>\n  <label class="sr-radio__label" for="ci1">\n    <span class="sr-radio__title">Diagnosis</span>\n    <span class="sr-radio__description">Coded condition on the problem list</span>\n  </label>\n  <span class="sr-radio__icon" aria-hidden="true"><!-- Icon: clinical/result --></span>\n</div>',
+    React: '<Radio\n  type="card-icon"\n  icon="clinical/result"\n  label="Diagnosis"\n  description="Coded condition on the problem list"\n  name="kind"\n  defaultChecked\n/>',
+    Blazor: '<SrRadio Type="CardIcon" Icon="clinical/result" Label="Diagnosis"\n         Description="Coded condition on the problem list" Name="kind" Checked="true" />',
     MAUI: `<!-- The icon is decorative: the label still carries the name, so the
      option is identifiable to someone who has not seen the mark before. -->
 <Border Padding="12,8" StrokeThickness="1"
@@ -2571,7 +2571,7 @@ function radioBody() {
     <RadioButton GroupName="Kind" IsChecked="True" MinimumHeightRequest="44">
         <RadioButton.Content>
             <HorizontalStackLayout Spacing="12">
-                <Path Data="{StaticResource SrIconClinicalDiagnosis}"
+                <Path Data="{StaticResource SrIconClinicalResult}"
                       Stroke="{AppThemeBinding Light={StaticResource SrColorInteractivePrimary}, Dark={StaticResource SrColorInteractivePrimaryDark}}"
                       StrokeThickness="1" HeightRequest="24" WidthRequest="24" />
                 <VerticalStackLayout Spacing="4">
@@ -3106,7 +3106,7 @@ function navigationBody() {
     ] },
     { label: 'Clinical', items: [
       { icon: 'people/specialist', label: 'Specialists' },
-      { icon: 'clinical/lab-result', label: 'Tests' },
+      { icon: 'clinical/test', label: 'Tests' },
     ] },
     { label: 'Nursing', items: [
       { icon: 'people/patient', label: 'Adults' },
@@ -3115,7 +3115,7 @@ function navigationBody() {
   ];
   const FOOTER_NAV = [
     { icon: 'nav/settings', label: 'Settings' },
-    { icon: 'clinical/discharge', label: 'Log Out' },
+    { icon: 'nav/log-out', label: 'Log Out' },
   ];
   const navItem = (it) => `<button type="button" class="sr-nav__item" aria-label="${it.label}"${
     it.current ? ' aria-current="page"' : ''}${it.children ? ' aria-expanded="false"' : ''}>
@@ -3272,6 +3272,7 @@ const ICON_DOMAINS = {
   comms: 'Communication and messaging',
   file: 'Documents and files',
   data: 'Data and analytics',
+  device: 'Device and hardware',
 };
 
 function iconsBody() {
@@ -3461,7 +3462,10 @@ open-source icon set published under the ISC licence. Every icon is drawn on a 2
 1px stroke, round caps and round joins, so icons sit together evenly whatever the mix on screen.</p>
 <p>${iconNames.length} icons are published, grouped into ${byDomain.size} domains that follow how
 clinical and administrative staff talk about their work: navigation, actions, status, people,
-clinical records, scheduling, location, communication, files and data.</p>
+clinical records, scheduling, location, communication, files, data and device.</p>
+<p><strong>One glyph carries one meaning.</strong> A drawing is never reused for two different
+concepts, because the person reading the screen sees the picture, not the name behind it. The build
+fails if two Single Record names ever resolve to the same Lucide drawing.</p>
 <p>Icons are referenced by their Single Record name, such as <code>clinical/medication</code>, not by
 the underlying Lucide file name. The Single Record name is stable: if an upstream drawing is renamed
 or replaced, the name your product uses does not change.</p>
@@ -3472,8 +3476,9 @@ the colour role; the SVG itself is drawn with <code>currentColor</code> and inhe
 ${showcase(`<div class="icon-specs">${sizeSpecimen}</div>`, 'icon-basic', basicSnippets)}
 
 <h2>Sizes</h2>
-<p>Four sizes are published. Stroke weight is reduced slightly at the two smallest sizes so the
-drawing does not fill in at low pixel densities.</p>
+<p>Four sizes are published. <strong>Stroke stays at 1px in all of them</strong> — it is not
+thinned at small sizes or thickened at large ones. One stroke weight across the set is what makes a
+row of mixed icons look like one family.</p>
 <div class="table-wrap"><table>
 <thead><tr><th>Class</th><th>Size</th><th>Use for</th></tr></thead>
 <tbody>
@@ -3498,6 +3503,21 @@ rather than a stroke colour and reaches only 1.6:1 on white. Never let a warning
 message on its own: give it a text label, and where the icon has to read on its own use
 <code>sr-icon--critical</code> or the warning surface behind a labelled banner. A darker warning
 value is under review.</p></div>
+
+<h2>On each platform</h2>
+<p>Sizes, stroke and the colour roles are published as design tokens from a single source, so the
+same size is the same number wherever you build. Reach for the token rather than typing 24px.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Platform</th><th>Icon</th><th>Size and colour</th></tr></thead>
+<tbody>
+<tr><td>Web / Blazor</td><td><code>&lt;svg&gt;&lt;use href="sprite.svg#icon-nav-search"&gt;</code>, or the <code>sr-icon</code> wrapper</td><td><code>var(--sr-icon-size-md)</code>, <code>var(--sr-icon-color-subtle)</code></td></tr>
+<tr><td>React</td><td><code>&lt;Icon name="nav/search" /&gt;</code></td><td><code>size="md"</code>, <code>color="subtle"</code></td></tr>
+<tr><td>.NET MAUI</td><td><code>&lt;Path Data="{StaticResource SrIconNavSearch}" /&gt;</code></td><td><code>{StaticResource SrIconSizeMd}</code>, <code>{StaticResource SrIconStroke}</code>, <code>{StaticResource SrIconColorSubtle}</code></td></tr>
+<tr><td>Delphi</td><td>Rasterised PNG exported from the SVG</td><td>Export at 16, 20, 24 and 32px</td></tr>
+</tbody></table></div>
+<p>MAUI receives the icons as XAML path geometry rather than images, so an icon takes its colour
+from a token like everything else and stays sharp at any density. <code>SrIconStroke</code> is a
+<code>Double</code>, ready to bind to a <code>Path</code>'s <code>StrokeThickness</code>.</p>
 
 <h2>Icons with text</h2>
 <p>Most icons in Single Record sit next to a label. In that pairing the text carries the meaning and

@@ -105,7 +105,7 @@ the overrides as you adopt.
 | Dictionary | Contents |
 |---|---|
 | `SrColors` | 210 resources — every primitive and semantic colour token, two elevation shadows, and a `…Dark` twin for the 16 semantics that change with the theme |
-| `SrIcons` | 123 icons as XAML path geometry, one `x:String` per icon |
+| `SrIcons` | The Single Record icon set as XAML path geometry, one `x:String` per icon. See `foundations/iconography/catalogue.md` |
 | `SrStyles` | Implicit styles for stock MAUI controls, keyed styles for intent variants, the `StyleClass` type scale, and `VisualStateManager` states |
 
 ### Colours

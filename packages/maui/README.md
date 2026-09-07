@@ -26,7 +26,7 @@ Record rather than competing with them.
 | Artefact | Source | Purpose |
 |---|---|---|
 | `Colors.xaml` | **Generated** by `build.mjs` from `@dhcw/sr-tokens` | 210 resources: every primitive and semantic token, the two elevation shadows, plus a `…Dark` twin for the 16 semantics that change with the theme |
-| `Icons.xaml` | **Generated** by `build-icons.mjs` from `foundations/iconography/svg/` | 123 icons as XAML path geometry, 1px stroke (DDR-023) |
+| `Icons.xaml` | **Generated** by `build-icons.mjs` from `foundations/iconography/svg/` | Every icon in the catalogue as XAML path geometry, 1px stroke (DDR-023). See `foundations/iconography/catalogue.md` |
 | `Styles.xaml` | Hand-authored | Implicit styles for stock MAUI controls, keyed styles for intent variants, `StyleClass` type scale, `VisualStateManager` states |
 
 MAUI cannot consume CSS custom properties, which is why the XAML format exists.

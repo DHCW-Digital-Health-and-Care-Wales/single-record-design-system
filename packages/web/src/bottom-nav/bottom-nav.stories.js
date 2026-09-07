@@ -12,7 +12,7 @@ const ITEMS = [
   { icon: 'schedule/appointment', label: 'Diary', href: '#' },
   { icon: 'people/patient', label: 'Patients', href: '#' },
   { icon: 'comms/message', label: 'Messages', href: '#' },
-  { icon: 'nav/more', label: 'More', href: '#' },
+  { icon: 'nav/more-horizontal', label: 'More', href: '#' },
 ];
 
 const render = ({ current }) => {

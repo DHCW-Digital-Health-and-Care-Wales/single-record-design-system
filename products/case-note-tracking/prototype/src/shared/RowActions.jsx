@@ -96,7 +96,7 @@ export function RowActionMenu({ row, onAction }) {
         aria-expanded={open}
         onClick={toggle}
       >
-        <Icon name="nav/menu2" size="sm" color="inherit" />
+        <Icon name="nav/menu-kebab" size="sm" color="inherit" />
       </button>
       {open && coords &&
         createPortal(

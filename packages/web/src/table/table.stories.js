@@ -11,7 +11,7 @@ import { iconMarkup } from '@dhcw/sr-icons/build/icons.js';
  *
  * The `layout` toggle switches how per-row actions / headers are presented:
  *   plain        — column headers only, no row actions.
- *   kebab-left   — leading column of kebab (nav/menu2) row-menu buttons.
+ *   kebab-left   — leading column of kebab (nav/menu-kebab) row-menu buttons.
  *   icons-left   — leading column of direct row-action icon buttons.
  *   row-headers  — column headers on top AND a row-header cell down the left.
  *
@@ -48,7 +48,7 @@ const leadingActionCell = (layout, subject) => {
   const td = document.createElement('td');
   td.className = 'sr-table__actions';
   if (layout === 'kebab-left') {
-    td.appendChild(actionButton('nav/menu2', `Actions for ${subject}`));
+    td.appendChild(actionButton('nav/menu-kebab', `Actions for ${subject}`));
   } else if (layout === 'icons-left') {
     td.appendChild(actionButton('action/eye', `View ${subject}`));
     td.appendChild(actionButton('action/edit', `Edit ${subject}`));
@@ -140,7 +140,7 @@ export default {
   args: { layout: 'kebab-left', selectedIndex: undefined },
 };
 
-/** Kebab (nav/menu2) row-menu button in a leading column — matches the Figma default. */
+/** Kebab (nav/menu-kebab) row-menu button in a leading column — matches the Figma default. */
 export const KebabLeft = { args: { layout: 'kebab-left' } };
 
 /** Direct row-action icons (view / edit) in a leading column. */

@@ -638,7 +638,7 @@ A 24px target satisfies AA only if no other target is within 24px. A 32px button
 | Grid | 24 × 24px |
 | Stroke | 2px, round linecap, round linejoin |
 | Variant | Outline only (filled deferred to navigation component phase) |
-| Coverage | 1,500+ icons; 106 SR aliases defined across 10 domains |
+| Coverage | 2,000+ glyphs in Lucide. SR alias and domain counts: `foundations/iconography/catalogue.md` (generated) |
 | Blazor | `Lucide.Blazor` NuGet |
 | MAUI | `Lucide.Maui` NuGet |
 | Delphi | Rasterised PNG export at 16, 20, 24, 32px (1x and 2x) |
