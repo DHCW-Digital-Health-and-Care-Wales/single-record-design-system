@@ -61,7 +61,7 @@ const SECTIONS = [
 
 const FOOTER_ITEMS = [
   { icon: 'nav/settings', label: 'Settings' },
-  { icon: 'clinical/discharge', label: 'Log Out' },
+  { icon: 'nav/log-out', label: 'Log Out' },
 ];
 
 const Demo = ({ initialCollapsed, current, type }) => {

@@ -78,7 +78,7 @@ Adding an SVG straight into `svg/` without a generator entry is what produced fo
 
 <!-- BEGIN GENERATED CATALOGUE — edit fetch-icons.mjs, then run npm run sync:icons -->
 
-**146 SR aliases across 11 domains.**
+**141 SR aliases across 11 domains.**
 
 Every row below is generated from the `ICONS` array in `fetch-icons.mjs`. Do not edit this section by hand — add the icon to the generator, run `npm run sync:icons`, and the table follows.
 
@@ -108,7 +108,7 @@ Every row below is generated from the `ICONS` array in `fetch-icons.mjs`. Do not
 | nav/support | circle-help | NavSupport |  |
 | nav/feedback | message-square-text | NavFeedback |  |
 
-### Actions & editing (29)
+### Actions & editing (28)
 
 | SR alias | Lucide glyph | Component name | Notes |
 |---|---|---|---|
@@ -130,26 +130,24 @@ Every row below is generated from the `ICONS` array in `fetch-icons.mjs`. Do not
 | action/edit-note | file-pen | ActionEditNote | renamed from action/edit2; glyph moved square-pen -> file-pen (pencil on document) |
 | action/eye | eye | ActionEye | Added to match the updated Figma icon components |
 | action/eye-off | eye-off | ActionEyeOff | Added to match the updated Figma icon components |
-| action/hold | pause | ActionHold | Added to match the updated Figma icon components |
+| action/hold | pause | ActionHold | Hold is the label used across SR apps; there is no media-pause use case, so this glyph carries one meaning (DDR-029) |
 | action/scan | barcode | ActionScan | Added to match the updated Figma icon components |
 | action/send | send | ActionSend |  |
 | action/star | star | ActionStar |  |
 | action/bookmark | bookmark | ActionBookmark | moved from schedule/ — bookmarking is not a scheduling concept |
 | action/play | play | ActionPlay |  |
-| action/pause | pause | ActionPause |  |
 | action/expand | maximize-2 | ActionExpand |  |
 | action/collapse | minimize-2 | ActionCollapse |  |
 | action/unlock | lock-open | ActionUnlock | pairs with action/lock; a lock state with no unlock counterpart is incomplete |
 | action/watchlist | binoculars | ActionWatchlist | under active monitoring; distinct from bookmark (save) and star (personal attention) |
 
-### Status & feedback (9)
+### Status & feedback (8)
 
 | SR alias | Lucide glyph | Component name | Notes |
 |---|---|---|---|
 | status/success | circle-check | StatusSuccess |  |
 | status/error-circle | circle-alert | StatusErrorCircle | Replaces the former `status/error` alias, whose circle-x glyph moved to `nav/clear` |
-| status/alert | triangle-alert | StatusAlert | Added to match the updated Figma icon components |
-| status/warning | triangle-alert | StatusWarning |  |
+| status/warning | triangle-alert | StatusWarning | Sole owner of the triangle. status/alert was retired as an undifferentiated duplicate; comms/alert (bell-ring) covers "needs attention" (DDR-029) |
 | status/info | info | StatusInfo |  |
 | status/critical | siren | StatusCritical |  |
 | status/pending | clock | StatusPending |  |
@@ -173,7 +171,7 @@ Every row below is generated from the `ICONS` array in `fetch-icons.mjs`. Do not
 | people/demographics | id-card | PeopleDemographics |  |
 | people/patient-search | user-round-search | PeoplePatientSearch |  |
 
-### Clinical records & data (22)
+### Clinical records & data (20)
 
 | SR alias | Lucide glyph | Component name | Notes |
 |---|---|---|---|
@@ -182,29 +180,26 @@ Every row below is generated from the `ICONS` array in `fetch-icons.mjs`. Do not
 | clinical/vitals | heart-pulse | ClinicalVitals |  |
 | clinical/medication | pill | ClinicalMedication |  |
 | clinical/allergy | shield-alert | ClinicalAllergy |  |
-| clinical/diagnosis | clipboard-list | ClinicalDiagnosis |  |
 | clinical/test | flask-conical | ClinicalTest | renamed from clinical/lab-result — the flask is an ordered test, not the returned finding |
 | clinical/imaging | scan | ClinicalImaging |  |
 | clinical/procedure | syringe | ClinicalProcedure |  |
 | clinical/note | notebook-pen | ClinicalNote |  |
 | clinical/history | history | ClinicalHistory |  |
-| clinical/consent | file-pen | ClinicalConsent | file-check-2 not found in current Lucide; file-pen (signed document) used instead |
 | clinical/referral | file-output | ClinicalReferral | reassigned from send — the paper plane belongs to action/send (DDR-029); a referral is a letter sent onward |
-| clinical/discharge | log-out | ClinicalDischarge |  |
+| clinical/discharge | arrow-right-from-line | ClinicalDischarge | Was log-out, which now belongs to nav/log-out. A departure across a boundary, rather than a session metaphor (DDR-029) |
 | clinical/admission | log-in | ClinicalAdmission |  |
 | clinical/blood | droplet | ClinicalBlood |  |
 | clinical/treatment | cross | ClinicalTreatment | renamed from clinical/cross — the glyph was previously unassigned; now means care delivered |
 | clinical/dna | dna | ClinicalDna | Verified present in current Lucide |
-| clinical/result | clipboard-list | ClinicalResult |  |
+| clinical/result | clipboard-list | ClinicalResult | Replaces clinical/diagnosis, which had no observed label use — result is the concept products actually surface (DDR-029) |
 | clinical/request | file-plus | ClinicalRequest | not file/signed — a request is an outbound ask, signed is a completed sign-off |
 | clinical/assessment | clipboard-pen | ClinicalAssessment | broad clinical judgement; deliberately not merged into clinical/vitals |
 | clinical/attendance | door-open | ClinicalAttendance | urgent and emergency care arrival; distinct from clinical/admission (taken onto a ward) |
 
-### Scheduling & appointments (12)
+### Scheduling & appointments (11)
 
 | SR alias | Lucide glyph | Component name | Notes |
 |---|---|---|---|
-| schedule/appointment | calendar | ScheduleAppointment |  |
 | schedule/add-appointment | calendar-plus | ScheduleAddAppointment |  |
 | schedule/cancel-appointment | calendar-x | ScheduleCancelAppointment |  |
 | schedule/time | clock-3 | ScheduleTime |  |
@@ -213,7 +208,7 @@ Every row below is generated from the `ICONS` array in `fetch-icons.mjs`. Do not
 | schedule/waiting-list | list-ordered | ScheduleWaitingList |  |
 | schedule/duration | timer | ScheduleDuration |  |
 | schedule/overnight | moon | ScheduleOvernight |  |
-| schedule/priority | calendar-clock | SchedulePriority | renamed from schedule/urgent — removes the collision with clinical urgency (status/critical) |
+| schedule/appointment | calendar-clock | ScheduleAppointment | A booked event: a calendar carrying a time. Was schedule/urgent, briefly schedule/priority — both read as severity, which collides with clinical urgency (status/critical) |
 | schedule/calendar | calendar | ScheduleCalendar | the calendar surface itself; schedule/appointment is a booked event |
 | schedule/events | calendar-days | ScheduleEvents |  |
 
@@ -225,7 +220,7 @@ Every row below is generated from the `ICONS` array in `fetch-icons.mjs`. Do not
 | location/hospital | hospital | LocationHospital |  |
 | location/gp-practice | house-plus | LocationGpPractice |  |
 | location/bed | bed | LocationBed |  |
-| location/room | door-open | LocationRoom |  |
+| location/room | door-closed | LocationRoom | Was door-open, which now means arrival (clinical/attendance). A closed door is a room; an opening door is someone arriving |
 | location/map-pin | map-pin | LocationMapPin |  |
 | location/department | landmark | LocationDepartment |  |
 | location/organisation | network | LocationOrganisation |  |

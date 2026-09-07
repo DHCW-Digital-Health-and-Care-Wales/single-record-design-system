@@ -2493,7 +2493,7 @@ function radioBody() {
     radioOption({ type: 'card', label: 'Routine', description: 'Seen within 18 weeks', name: 'cf' }),
   ].join('\n'));
   const cardIcon = cardBox([
-    radioOption({ type: 'card-icon', icon: 'clinical/diagnosis', label: 'Diagnosis', description: 'Coded condition on the problem list', checked: true, name: 'ci' }),
+    radioOption({ type: 'card-icon', icon: 'clinical/result', label: 'Diagnosis', description: 'Coded condition on the problem list', checked: true, name: 'ci' }),
     radioOption({ type: 'card-icon', icon: 'clinical/medication', label: 'Medication', description: 'Current and past prescriptions', name: 'ci' }),
   ].join('\n'));
 
@@ -2561,9 +2561,9 @@ function radioBody() {
   };
 
   const cardIconSnippets = {
-    HTML: '<!-- The icon renders AFTER the label in the DOM. An element between the\n     input and the label breaks the `:checked +` adjacency the styling needs. -->\n<div class="sr-radio sr-radio--card sr-radio--card-icon">\n  <input class="sr-radio__input" type="radio" id="ci1" name="kind" checked>\n  <label class="sr-radio__label" for="ci1">\n    <span class="sr-radio__title">Diagnosis</span>\n    <span class="sr-radio__description">Coded condition on the problem list</span>\n  </label>\n  <span class="sr-radio__icon" aria-hidden="true"><!-- Icon: clinical/diagnosis --></span>\n</div>',
-    React: '<Radio\n  type="card-icon"\n  icon="clinical/diagnosis"\n  label="Diagnosis"\n  description="Coded condition on the problem list"\n  name="kind"\n  defaultChecked\n/>',
-    Blazor: '<SrRadio Type="CardIcon" Icon="clinical/diagnosis" Label="Diagnosis"\n         Description="Coded condition on the problem list" Name="kind" Checked="true" />',
+    HTML: '<!-- The icon renders AFTER the label in the DOM. An element between the\n     input and the label breaks the `:checked +` adjacency the styling needs. -->\n<div class="sr-radio sr-radio--card sr-radio--card-icon">\n  <input class="sr-radio__input" type="radio" id="ci1" name="kind" checked>\n  <label class="sr-radio__label" for="ci1">\n    <span class="sr-radio__title">Diagnosis</span>\n    <span class="sr-radio__description">Coded condition on the problem list</span>\n  </label>\n  <span class="sr-radio__icon" aria-hidden="true"><!-- Icon: clinical/result --></span>\n</div>',
+    React: '<Radio\n  type="card-icon"\n  icon="clinical/result"\n  label="Diagnosis"\n  description="Coded condition on the problem list"\n  name="kind"\n  defaultChecked\n/>',
+    Blazor: '<SrRadio Type="CardIcon" Icon="clinical/result" Label="Diagnosis"\n         Description="Coded condition on the problem list" Name="kind" Checked="true" />',
     MAUI: `<!-- The icon is decorative: the label still carries the name, so the
      option is identifiable to someone who has not seen the mark before. -->
 <Border Padding="12,8" StrokeThickness="1"
@@ -3115,7 +3115,7 @@ function navigationBody() {
   ];
   const FOOTER_NAV = [
     { icon: 'nav/settings', label: 'Settings' },
-    { icon: 'clinical/discharge', label: 'Log Out' },
+    { icon: 'nav/log-out', label: 'Log Out' },
   ];
   const navItem = (it) => `<button type="button" class="sr-nav__item" aria-label="${it.label}"${
     it.current ? ' aria-current="page"' : ''}${it.children ? ' aria-expanded="false"' : ''}>

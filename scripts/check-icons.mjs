@@ -41,63 +41,13 @@ const GENERATOR = resolve(ROOT, 'foundations/iconography/fetch-icons.mjs');
 // add an entry to silence a build; add it because someone decided.
 const ACCEPTED_DUPLICATES = [
   {
-    glyph: 'triangle-alert',
-    names: ['status/alert', 'status/warning'],
-    status: 'open',
-    why: 'Pre-existing. Two names for one glyph with no documented difference. '
-       + 'Resolve by retiring one or redrawing the other; carry into comprehension testing.',
-  },
-  {
     glyph: 'file-text',
     names: ['clinical/record', 'file/pdf'],
     status: 'accepted',
     why: 'Deliberate: a clinical record and a PDF are the same document mark in '
-       + 'different domains, and the domain prefix disambiguates at the call site.',
-  },
-  {
-    glyph: 'clipboard-list',
-    names: ['clinical/diagnosis', 'clinical/result'],
-    status: 'open',
-    why: 'Introduced by the icon remediation brief, which assigns clipboard-list '
-       + 'to clinical/result while clinical/diagnosis already held it, and does '
-       + 'not say what diagnosis becomes. Needs a clinical decision, not a '
-       + 'default. Both are in the clipboard family flagged for comprehension testing.',
-  },
-  {
-    glyph: 'pause',
-    names: ['action/hold', 'action/pause'],
-    status: 'open',
-    why: 'action/hold (a clinical hold) and action/pause (media transport) are '
-       + 'different concepts wearing one glyph. Introduced by adding action/pause.',
-  },
-  {
-    glyph: 'door-open',
-    names: ['location/room', 'clinical/attendance'],
-    status: 'open',
-    why: 'Introduced by adding clinical/attendance. A room and an arrival event '
-       + 'are different things; the brief specifies door-open for both readings.',
-  },
-  {
-    glyph: 'log-out',
-    names: ['clinical/discharge', 'nav/log-out'],
-    status: 'open',
-    why: 'Introduced by adding nav/log-out. Discharging a patient and signing '
-       + 'out of the application must not share a mark in a clinical product.',
-  },
-  {
-    glyph: 'calendar',
-    names: ['schedule/appointment', 'schedule/calendar'],
-    status: 'open',
-    why: 'Introduced by adding schedule/calendar. The brief distinguishes the '
-       + 'calendar surface from a booked event, but assigns the same glyph to both.',
-  },
-  {
-    glyph: 'file-pen',
-    names: ['clinical/consent', 'action/edit-note'],
-    status: 'open',
-    why: 'clinical/consent was substituted to file-pen when file-check-2 vanished; '
-       + 'the brief then assigns file-pen to action/edit-note. Consent is a signed '
-       + 'document, not an edit affordance.',
+       + 'different domains, and the domain prefix disambiguates at the call site. '
+       + 'Both readings are the same object, which is what separates this from the '
+       + 'seven duplicates resolved on 2026-09-07.',
   },
 ];
 

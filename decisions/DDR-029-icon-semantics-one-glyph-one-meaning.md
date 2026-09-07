@@ -34,7 +34,7 @@ the glyph or its meaning.** Numeric suffixes are not names.
 | `nav/menu2` | `nav/menu-kebab` | `ellipsis-vertical` | Explicit; pairs with `nav/menu` for the burger |
 | `nav/more` | `nav/more-horizontal` | `ellipsis` | Disambiguates now both orientations exist |
 | `clinical/lab-result` | `clinical/test` | `flask-conical` | The flask is an ordered test, not the returned finding |
-| `schedule/urgent` | `schedule/priority` | unchanged | Removes the collision with clinical urgency |
+| `schedule/urgent` | `schedule/appointment` | `calendar-clock` | Removes the collision with clinical urgency. Went via `schedule/priority`, which read as severity for the same reason `urgent` did |
 | `clinical/cross` | `clinical/treatment` | `cross` | Assigns a previously unassigned glyph one explicit meaning |
 | `schedule/bookmark` | `action/bookmark` | `bookmark` | Bookmarking is not a scheduling concept |
 
@@ -71,32 +71,34 @@ measurement set rather than a broad judgement activity.
 `clinical/admission` (unchanged, taken onto a ward).
 
 **Urgency.** `status/critical` is the highest severity on the status scale in a
-patient-safety context. `schedule/priority` is time-based priority on
-appointments. Emergency is a module name and gets no icon (Tier C, DDR-027).
+patient-safety context, and is the only icon that carries urgency. Scheduling
+has no urgency icon: `schedule/appointment` is simply a booked event.
+Emergency is a module name and gets no icon (Tier C, DDR-027).
 
 ---
 
-## Recorded duplicates
+## Duplicates found, and how each was resolved
 
-Enforcing this rule surfaced eight glyphs serving two aliases. Two are
-deliberate; **six are open defects**, recorded rather than hidden.
+Enforcing this rule surfaced eight glyphs serving two aliases each. Seven were
+resolved by the design lead on 2026-09-07; one is deliberate and stays.
 
-| Glyph | Aliases | Status |
+| Glyph | Was shared by | Resolution |
 |---|---|---|
-| `file-text` | `clinical/record` + `file/pdf` | **Accepted** — the same document mark in two domains, disambiguated by the domain prefix at the call site |
-| `triangle-alert` | `status/alert` + `status/warning` | **Open** — pre-existing; two names, no documented difference |
-| `clipboard-list` | `clinical/diagnosis` + `clinical/result` | **Open** — the brief assigns `clipboard-list` to `clinical/result` while `clinical/diagnosis` already held it, and does not say what diagnosis becomes. Needs a clinical decision. |
-| `pause` | `action/hold` + `action/pause` | **Open** — a clinical hold and a media transport control are different concepts |
-| `door-open` | `location/room` + `clinical/attendance` | **Open** — a room and an arrival event are different things |
-| `log-out` | `clinical/discharge` + `nav/log-out` | **Open** — discharging a patient and signing out must not share a mark in a clinical product |
-| `calendar` | `schedule/appointment` + `schedule/calendar` | **Open** — the brief distinguishes the calendar surface from a booked event but gives both the same glyph |
-| `file-pen` | `clinical/consent` + `action/edit-note` | **Open** — consent is a signed document, not an edit affordance |
+| `log-out` | `clinical/discharge` + `nav/log-out` | **nav/log-out keeps it.** `clinical/discharge` moves to `arrow-right-from-line` — a departure across a boundary rather than a session metaphor. The repo had already drifted this way: four call sites were using `clinical/discharge` for a "Log Out" nav item. |
+| `pause` | `action/hold` + `action/pause` | **action/hold keeps it.** Hold is the label used across SR apps and there is no media-pause case. `action/pause` retired. |
+| `clipboard-list` | `clinical/diagnosis` + `clinical/result` | **clinical/result keeps it.** Result is the concept products actually surface; no Diagnosis label case was observed. `clinical/diagnosis` retired. |
+| `file-pen` | `clinical/consent` + `action/edit-note` | **action/edit-note keeps it.** No consent use case. `clinical/consent` retired — it had only ever been a substitution for the vanished `file-check-2`. |
+| `calendar` | `schedule/appointment` + `schedule/calendar` | **schedule/calendar keeps it** as the calendar surface. `schedule/appointment` becomes `calendar-clock` — a booked event is a calendar carrying a time. This also retires `schedule/priority` (briefly renamed from `schedule/urgent`): both read as severity, which is what collided with clinical urgency in the first place. |
+| `triangle-alert` | `status/alert` + `status/warning` | **status/warning keeps it.** `status/alert` retired as an undifferentiated duplicate; `comms/alert` (`bell-ring`) already covers "needs attention". |
+| `door-open` | `location/room` + `clinical/attendance` | **clinical/attendance keeps it** — an opening door is an arrival. `location/room` moves to `door-closed`; a closed door is a room you can enter. Both stay in the door family. |
+| `file-text` | `clinical/record` + `file/pdf` | **Accepted, not a defect.** Both readings are the same object — a document — seen from two domains, and the domain prefix disambiguates at the call site. This is what separates it from the seven above. |
 
-Six of these were introduced by implementing the remediation brief exactly as
-written. They are listed here, and in `scripts/check-icons.mjs`, so they are
-visible and resolvable rather than discovered by a user. Resolving them needs
-clinical input on which concept keeps the glyph — that is not an implementation
-decision.
+Five of these were introduced by implementing the remediation brief exactly as
+written; two (`triangle-alert`, and the `log-out` drift) pre-dated it and had
+never been reported. That is the argument for the check: the brief's own
+principle could not be held by reading the brief.
+
+The catalogue is **141 icons across 11 domains** after the retirements.
 
 ---
 
@@ -104,13 +106,15 @@ decision.
 
 | Risk | Icons | Fallback if comprehension fails |
 |---|---|---|
-| Clipboard family similarity | `clinical/diagnosis`, `clinical/result`, `clinical/assessment` | Stronger modifier, or a text label for the weakest performer |
+| Clipboard family similarity | `clinical/result`, `clinical/assessment` | Stronger modifier, or a text label for the weakest performer. `clinical/diagnosis` was retired, so this is now two icons rather than three |
 | Cross vs plus at small sizes | `clinical/treatment`, `action/add` | Text label for Treatment — **not** a substitute glyph |
 | Watchlist glyph choice | `action/watchlist` (binoculars) vs `action/bookmark` | Adopt whichever tests higher; retire the other as a watchlist marker |
 
 Alongside the priority patient-safety icons already identified: `status/critical`,
-`clinical/allergy`, `schedule/priority`, `status/warning`, `clinical/discharge`,
-`clinical/admission`.
+`clinical/allergy`, `status/warning`, `clinical/discharge`, `clinical/admission`.
+
+`clinical/discharge` and `clinical/admission` are no longer a matched visual pair
+(`arrow-right-from-line` and `log-in`), which is worth testing explicitly.
 
 ---
 

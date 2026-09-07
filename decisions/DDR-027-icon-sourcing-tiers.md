@@ -55,6 +55,49 @@ an identity gets a text label.
 | Referrals (as a module) | Reuse `clinical/referral`. |
 | Watchlist (as a destination) | Reuse `action/watchlist`. |
 
+### The boundary between an icon and a component
+
+Tier A/B/C answers *should this concept get a mark*. This answers *is the mark
+an icon at all* — and it is the question that produced the `warnings/` confusion.
+
+**An icon is a single-colour outline.** One `currentColor` path set, 24 × 24,
+1px stroke, recolourable by the consumer, identical in light and dark mode. If
+an artwork satisfies that, it belongs in the icon set.
+
+**Anything that needs a second colour, a fill that carries meaning, or internal
+structure the consumer must not recolour is a component**, not an icon. Three
+reliable signals, any one of which is decisive:
+
+| Signal | Why it forces a component |
+|---|---|
+| More than one colour in the mark | `currentColor` can express exactly one. A second colour must be a token the component owns, or it will not follow dark mode. |
+| The fill *is* the meaning | A filled disc is not a heavier outline; recolouring it changes what it says. That is behaviour, and behaviour lives in a component. |
+| It has variants | `success` / `error` / `warning` is a prop. An icon set expresses that as three unrelated files with no shared contract. |
+
+This is why the four `warnings/*` badges are the `StatusIndicator` component
+(DDR-013) and not `status/*-solid` icons. They are two-tone by construction — a
+`currentColor` disc with a knocked-out glyph in a second colour — and flattening
+them to a single colour renders a solid disc with an invisible glyph.
+
+**Health board and other bespoke marks** — coloured, multi-shape, or otherwise
+outside the outline contract — take the same route. They are **not** icons, and
+they must not be pushed into the icon set "so they are all in one place". A
+coloured mark in `foundations/iconography/svg/` would fail `check:icons` on the
+first build, which is the correct answer: the check is the boundary.
+
+Route them by what they are:
+
+| Kind of mark | Where it belongs |
+|---|---|
+| A health board's identity mark or crest | Brand assets, alongside the NHS Wales and DHCW marks — not the icon set. Ownership and usage rules sit with the brand team. |
+| A coloured, multi-shape mark with variants (a status badge, a category chip) | A component with a variant prop, like `StatusIndicator` |
+| A one-off illustration or empty-state graphic | An illustration asset, versioned with the product that uses it |
+| The same concept, but expressible as one outline | An icon — take it through the generator like any other |
+
+The single-colour rule is what makes 141 icons work as one system across web,
+Blazor, MAUI and Delphi from one source file. Admitting one coloured exception
+costs that, so the exception becomes a component instead.
+
 ### Custom icons
 
 Permitted under the ISC licence, but only where **no Lucide equivalent exists**.
