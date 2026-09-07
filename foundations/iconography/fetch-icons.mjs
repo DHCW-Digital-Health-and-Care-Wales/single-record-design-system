@@ -105,7 +105,7 @@ const ICONS = [
   { domain: 'action', name: 'eye',      lucide: 'eye' },
   { domain: 'action', name: 'eye-off',  lucide: 'eye-off' },
   { domain: 'action', name: 'hold',     lucide: 'pause' , note: 'Hold is the label used across SR apps; there is no media-pause use case, so this glyph carries one meaning (DDR-029)'},
-  { domain: 'action', name: 'scan',     lucide: 'barcode' },
+  { domain: 'action', name: 'scan',     lucide: 'scan-barcode', note: 'scan-barcode (framed scanner), NOT barcode. The entry said barcode for months but never took effect because the generator could not run; the committed artwork was always scan-barcode. Fixing the generator briefly "corrected" the icon to the wrong glyph.' },
   // Previously present as SVG files with no generator entry, so their Lucide
   // provenance was unrecorded and re-running this script would not reproduce
   // them. Adopted here and given the meanings assigned in DDR-029.
@@ -251,6 +251,15 @@ function normaliseSvg(raw) {
 const succeeded = [];
 const failed    = [];
 const notes     = [];
+const redrawn   = [];   // existing icons whose ARTWORK changed
+const added     = [];
+
+// Run with --check to fail instead of writing when artwork would change. Use it
+// in CI and before a Lucide bump.
+const CHECK = process.argv.includes('--check');
+
+// Compare shape, not formatting: the drawing instructions only.
+const shapeOf = (svg) => (svg.match(/<(?:path|line|rect|circle|polyline|polygon|ellipse)\b[^>]*>/g) || []).join('');
 
 for (const { domain, name, lucide, note } of ICONS) {
   const outDir  = join(SVG_DIR, domain);
@@ -268,8 +277,31 @@ for (const { domain, name, lucide, note } of ICONS) {
       failed.push({ domain, name, lucide, reason: 'Unexpected content' });
       continue;
     }
-    mkdirSync(outDir, { recursive: true });
-    writeFileSync(outFile, normaliseSvg(raw), 'utf8');
+    const next = normaliseSvg(raw);
+
+    // Report artwork that CHANGES, before overwriting it.
+    //
+    // This exists because of `action/scan`. Its entry said `barcode` while the
+    // committed artwork was `scan-barcode` — a framed scanner, in use in Figma
+    // prototypes. The mismatch was invisible for months because the generator
+    // could not run at all, so the wrong name never took effect. The moment the
+    // generator was fixed it "corrected" a working icon to the wrong glyph, and
+    // the only trace was one line in `git diff --stat` among twelve others.
+    //
+    // A rewrite of existing artwork is exactly the change that needs a human to
+    // look at it, so it is now announced rather than buried.
+    let previous = null;
+    try { previous = readFileSync(outFile, 'utf8'); } catch { /* new icon */ }
+    if (previous === null) {
+      added.push(`${domain}/${name}`);
+    } else if (shapeOf(previous) !== shapeOf(next)) {
+      redrawn.push({ icon: `${domain}/${name}`, lucide });
+    }
+
+    if (!CHECK) {
+      mkdirSync(outDir, { recursive: true });
+      writeFileSync(outFile, next, 'utf8');
+    }
     succeeded.push({ domain, name, lucide });
     if (note) notes.push(`  ${domain}/${name}: ${note}`);
   } catch (err) {
@@ -277,7 +309,34 @@ for (const { domain, name, lucide, note } of ICONS) {
   }
 }
 
-console.log(`\n✓ ${succeeded.length} icons written to foundations/iconography/svg/`);
+console.log(
+  `\n✓ ${succeeded.length} icons ${CHECK ? 'checked' : 'written'} `
+  + '— foundations/iconography/svg/',
+);
+
+if (added.length) {
+  console.log(`\n+ ${added.length} new icon(s): ${added.join(', ')}`);
+}
+
+if (redrawn.length) {
+  console.log(
+    `\n⚠  ${redrawn.length} EXISTING icon(s) changed artwork — these are already in\n`
+    + '   use in Figma prototypes and products. Look at each one before committing:\n',
+  );
+  for (const r of redrawn) console.log(`     ${r.icon.padEnd(28)} (lucide: ${r.lucide})`);
+  console.log(
+    '\n   A change here is either an upstream Lucide redraw (usually fine, still\n'
+    + '   worth a glance) or a wrong `lucide:` name in the ICONS array (not fine —\n'
+    + '   it silently swaps a working icon for a different glyph).\n',
+  );
+  if (CHECK) {
+    console.error(
+      'check failed: artwork would change. Re-run without --check once you have\n'
+      + 'reviewed the list above, and commit the SVGs with the reason.\n',
+    );
+    process.exit(1);
+  }
+}
 
 if (notes.length) {
   console.log('\nSubstitution notes:');

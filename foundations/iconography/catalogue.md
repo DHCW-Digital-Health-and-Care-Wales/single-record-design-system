@@ -131,7 +131,7 @@ Every row below is generated from the `ICONS` array in `fetch-icons.mjs`. Do not
 | action/eye | eye | ActionEye | Added to match the updated Figma icon components |
 | action/eye-off | eye-off | ActionEyeOff | Added to match the updated Figma icon components |
 | action/hold | pause | ActionHold | Hold is the label used across SR apps; there is no media-pause use case, so this glyph carries one meaning (DDR-029) |
-| action/scan | barcode | ActionScan | Added to match the updated Figma icon components |
+| action/scan | scan-barcode | ActionScan | scan-barcode (framed scanner), NOT barcode. The entry said barcode for months but never took effect because the generator could not run; the committed artwork was always scan-barcode. Fixing the generator briefly "corrected" the icon to the wrong glyph. |
 | action/send | send | ActionSend |  |
 | action/star | star | ActionStar |  |
 | action/bookmark | bookmark | ActionBookmark | moved from schedule/ — bookmarking is not a scheduling concept |

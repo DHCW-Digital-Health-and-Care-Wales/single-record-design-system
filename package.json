@@ -28,7 +28,7 @@
     "check:contrast": "node scripts/check-contrast.mjs",
     "check:docs": "node scripts/sync-token-docs.mjs --check",
     "check:ds": "node scripts/check-design-system.mjs --baseline",
-    "check:icons": "node scripts/check-icons.mjs && node scripts/sync-icon-docs.mjs --check",
+    "check:icons": "node scripts/check-icons.mjs && node scripts/sync-icon-docs.mjs --check && node foundations/iconography/fetch-icons.mjs --check",
     "check:type": "node scripts/check-typography.mjs --baseline",
     "check:versions": "node scripts/check-versions.mjs",
     "check:workflows": "node scripts/check-workflows.mjs",

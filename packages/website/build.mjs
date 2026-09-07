@@ -2571,7 +2571,7 @@ function radioBody() {
     <RadioButton GroupName="Kind" IsChecked="True" MinimumHeightRequest="44">
         <RadioButton.Content>
             <HorizontalStackLayout Spacing="12">
-                <Path Data="{StaticResource SrIconClinicalDiagnosis}"
+                <Path Data="{StaticResource SrIconClinicalResult}"
                       Stroke="{AppThemeBinding Light={StaticResource SrColorInteractivePrimary}, Dark={StaticResource SrColorInteractivePrimaryDark}}"
                       StrokeThickness="1" HeightRequest="24" WidthRequest="24" />
                 <VerticalStackLayout Spacing="4">

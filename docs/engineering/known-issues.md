@@ -883,6 +883,53 @@ showing the naive tokeniser produce `"00"`.
 
 ---
 
+### Fixing a broken generator can overwrite good artwork with a bad entry
+
+**Symptom:** `action/scan` — a framed barcode scanner, in use in Figma
+prototypes — silently became a plain barcode with no frame. Nothing failed. The
+only trace was one line among twelve in `git diff --stat`.
+
+**Why:** the generator entry said `lucide: 'barcode'`, but the committed artwork
+was `scan-barcode`. Those are different glyphs. The entry had been wrong for
+months and it did not matter, because the generator could not run at all (see
+the entry below). It was inert.
+
+Repairing the generator made every entry live at once — including the wrong one.
+A working icon was "corrected" to match a bug.
+
+**This is the dangerous shape.** A tool that has been broken for a long time
+accumulates unverified configuration behind it. Nobody checked those entries,
+because nothing consumed them. Fixing the tool applies all of that at once, and
+the damage looks like a routine regeneration diff.
+
+An audit of all 106 entries against the artwork they claimed to produce found
+**105 correct and one wrong.** So the fix was right, the entries were nearly all
+right, and the one that was not would have quietly shipped a different icon to
+every product and prototype consuming it.
+
+**Fix:** correct the entry to `scan-barcode`; the regenerated SVG is
+byte-identical to the original.
+
+**Prevented by:** `node foundations/iconography/fetch-icons.mjs` now compares the
+drawing instructions of each icon it is about to write against what is already
+on disk, and **names every existing icon whose artwork would change** before
+overwriting it. `--check` exits non-zero instead of writing, and runs as part of
+`npm run check:icons`. Verified by replanting the exact defect
+(`scan-barcode` → `barcode`) and confirming it is reported and fails.
+
+New icons are listed separately, so a redraw of something in use never hides in
+a batch of additions.
+
+**Also worth knowing:** ten other icons genuinely changed artwork when Lucide was
+pinned — `action/hold`, `comms/task`, `location/department`, `people/contact`,
+four `schedule/*`, `status/success`. Those are upstream redraws of the *same*
+glyph, not wrong entries, and were confirmed as such by matching each original
+against every glyph in the pinned package. The check reports both kinds
+identically and on purpose: only a person can tell "Lucide tidied the tick" from
+"this is now a different icon".
+
+---
+
 ### A generator in the wrong module system fails silently into hand-editing
 
 **Symptom:** Four icons — `action/send`, `action/star`, `action/bookmark`,
