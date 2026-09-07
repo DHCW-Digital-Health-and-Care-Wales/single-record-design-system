@@ -65,5 +65,5 @@ Then write markup:
 
 ## Version
 
-0.2.1-rc.0, versioned in lockstep with the npm packages and
+0.3.0, versioned in lockstep with the npm packages and
 `DHCW.SingleRecord.Maui` — one version number describes the whole design system.

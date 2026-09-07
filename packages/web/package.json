@@ -1,6 +1,6 @@
 {
   "name": "@dhcw/sr-web",
-  "version": "0.2.1-rc.0",
+  "version": "0.3.0",
   "description": "Canonical HTML/CSS components for the DHCW Single Record Design System. Framework-agnostic reference implementation following the GOV.UK Frontend model.",
   "license": "MIT",
   "type": "module",
@@ -20,8 +20,8 @@
   },
   "bugs": "https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/issues",
   "dependencies": {
-    "@dhcw/sr-tokens": "^0.2.1-rc.0",
-    "@dhcw/sr-icons": "^0.2.1-rc.0"
+    "@dhcw/sr-tokens": "^0.3.0",
+    "@dhcw/sr-icons": "^0.3.0"
   },
   "style": "dist/single-record.css",
   "exports": {

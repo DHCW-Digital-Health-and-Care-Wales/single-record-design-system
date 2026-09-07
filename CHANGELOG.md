@@ -18,6 +18,77 @@ this file says so and tells you what to change.
 
 ---
 
+## v0.3.0 — 2026-09-07
+
+**Action needed** if you use icons by name. This release renames, retires and
+adds icons, and corrects the icon token layer. It is the first stable release on
+npm — `latest` moves off the release candidate.
+
+```
+npm install @dhcw/sr-tokens@0.3.0 @dhcw/sr-icons@0.3.0 @dhcw/sr-web@0.3.0 @dhcw/sr-react@0.3.0
+```
+
+### Icons renamed — update these names
+
+| Was | Now |
+|---|---|
+| `action/edit2` | `action/edit-note` |
+| `nav/menu2` | `nav/menu-kebab` |
+| `nav/more` | `nav/more-horizontal` |
+| `clinical/lab-result` | `clinical/test` |
+| `clinical/cross` | `clinical/treatment` |
+| `schedule/bookmark` | `action/bookmark` |
+| `schedule/urgent` | `schedule/appointment` (the old `schedule/appointment` is now `schedule/calendar`) |
+
+### Icons retired — pick a replacement
+
+| Gone | Use instead |
+|---|---|
+| `clinical/diagnosis` | `clinical/result` |
+| `clinical/consent` | `action/edit-note` |
+| `status/alert` | `status/warning` |
+| `action/pause` | `action/hold` |
+
+Each was a second name for a drawing another icon already owned. One glyph now
+carries one meaning, and the build fails if that stops being true (DDR-029).
+
+### Icons whose drawing changed
+
+`clinical/referral`, `clinical/discharge` and `location/room` were reassigned to
+different glyphs so no drawing means two things. `action/scan` is **unchanged** —
+it was briefly wrong in the repository and has been restored to the framed
+scanner it has always been.
+
+### 23 icons added
+
+Including a new `device/` domain for mobile hardware (`camera`, `camera-swap`,
+`video`, `torch-on`, `torch-off`), and `action/send`, `action/watchlist`,
+`action/bookmark-off`, `action/expand`, `action/collapse`, `action/unlock`,
+`clinical/result`, `clinical/request`, `clinical/assessment`,
+`clinical/attendance`, `nav/log-out`, `nav/account`, `nav/support`,
+`nav/feedback`, `people/demographics`, `people/patient-search`,
+`schedule/calendar`, `schedule/events`.
+
+### Icon tokens now reach your platform
+
+**Optional, but this is the fix worth knowing about.** The semantic icon tokens
+— sizes, stroke and eight colour roles — were defined but emitted to no platform
+at all. They now land in CSS, SCSS, XAML and JSON:
+
+```css
+var(--sr-icon-size-md)    var(--sr-icon-stroke)    var(--sr-icon-color-subtle)
+```
+```xml
+{StaticResource SrIconSizeMd}   {StaticResource SrIconStroke}   {StaticResource SrIconColorSubtle}
+```
+
+**Stroke is 1, at every size.** If you read `--icon-stroke-default` (2) or
+`IconStrokeDefault` (2), stop: those were wrong and are gone. No icon has ever
+been drawn at 2px. `SrIconStroke` is now an `x:Double`, so MAUI can bind it to a
+`Path`'s `StrokeThickness`.
+
+---
+
 ## v0.2.1-rc.0 — 2026-09-03
 
 **No action.** This is a **release candidate**, not a release. It exists to prove

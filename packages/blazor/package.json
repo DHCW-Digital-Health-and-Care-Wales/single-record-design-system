@@ -1,6 +1,6 @@
 {
   "name": "@dhcw/sr-blazor",
-  "version": "0.2.1-rc.0",
+  "version": "0.3.0",
   "private": true,
   "description": "DHCW Single Record Design System — Blazor token and style layer. The NuGet project under nuget/ is generated from @dhcw/sr-web's built CSS, so Blazor and web cannot drift.",
   "license": "MIT",

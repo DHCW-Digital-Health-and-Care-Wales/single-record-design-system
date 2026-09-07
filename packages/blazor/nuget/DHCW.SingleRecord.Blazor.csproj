@@ -20,7 +20,7 @@
 
     <IsPackable>true</IsPackable>
     <PackageId>DHCW.SingleRecord.Blazor</PackageId>
-    <Version>0.2.1-rc.0</Version>
+    <Version>0.3.0</Version>
     <Authors>Digital Health and Care Wales</Authors>
     <Company>Digital Health and Care Wales</Company>
     <Product>Single Record Design System</Product>
