@@ -4,7 +4,7 @@ The Single Record Design System provides the shared design language, component l
 
 This document is the primary reference for everyone working on Single Record — designers, engineers, and delivery leads.
 
-**Last reviewed:** 2026-09-04. Update this file whenever a component ships, a
+**Last reviewed:** 2026-09-07. Update this file whenever a component ships, a
 token is added, or a system-wide rule changes — not on a schedule. If it
 disagrees with `/foundations/tokens/` or `/components/`, those win and this file
 is out of date.
@@ -227,11 +227,14 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Status indicator | — | ✅ | ✅ |
 | Switch | — (guidelines ✅, with Segmented control) | ✅ | ✅ |
 | Table | ✅ | ✅ | ✅ |
+| Tabs | ✅ (guidelines ✅) | ✅ | ✅ |
 | Tags | ✅ | ✅ | ✅ |
 | Time select | — | ✅ | ✅ |
 
 **Known gaps, stated plainly:** eleven components ship code without a spec, and
-three specs (Link, Progress indicators, Search) have no code. Neither is
+three specs (Link, Progress indicators, Search) have no code. Search is next —
+its spec is complete and references the Figma sets directly, so it is
+implementation rather than design work. Neither is
 satisfactory — a component without a spec has no agreed contract, and a spec
 without code cannot be consumed. Both lists are worked down as components are
 touched.

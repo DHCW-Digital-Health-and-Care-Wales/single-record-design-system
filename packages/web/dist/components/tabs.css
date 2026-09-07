@@ -1,0 +1,188 @@
+/**
+ * DHCW Single Record — Tabs
+ * Reference HTML/CSS implementation, matched to the Figma "Menu Tab" set
+ * (817:7219 on page 1753:21420): State=Default|Hover|Focus|Active|Disabled ×
+ * Orientation=Horizontal|Vertical. Consumes @dhcw/sr-tokens.
+ *
+ * Tabs switch the VIEW: one tablist controls one panel region, and exactly one
+ * tab is selected. Not the Segmented control — that picks a value within a view
+ * and is a group of buttons with aria-pressed. If choosing changes what is
+ * rendered below it, it is Tabs; if it filters or sets an option, it is the
+ * Segmented control.
+ *
+ * Markup follows the WAI-ARIA tabs pattern: role="tablist" > role="tab" with
+ * aria-selected and aria-controls, each pointing at a role="tabpanel". Keyboard
+ * behaviour (roving tabindex, arrow keys, Home/End) is the consumer's job —
+ * see tabs.stories.js for a working reference, and Tabs.jsx in @dhcw/sr-react.
+ */
+
+.sr-tabs {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0;
+  /* The strip carries no track line. The Figma component does not draw one, and
+     inventing a rule here would put code ahead of the design. If a track is
+     wanted, it is a Figma change first. */
+}
+
+.sr-tabs__tab {
+  /* 40px tall with 16px padding and an 8px gap — straight from the component. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2); /* 8px */
+  min-height: 40px;
+  padding: var(--space-4); /* 16px */
+  border: none;
+  background: transparent;
+  color: var(--sr-color-text-primary);
+  font: var(--sr-type-body-s-font); /* 14/20 Regular */
+  white-space: nowrap;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/**
+ * Reserve the SELECTED width on every tab.
+ *
+ * The selected tab is Medium with 0.3px tracking; the rest are Regular with
+ * none. That is a real width change — 89px against 92px in the Figma set — so
+ * without this the whole strip shifts sideways every time someone changes tab,
+ * and the tab under the pointer moves out from under it.
+ *
+ * The pseudo-element renders the same text at the selected weight, collapsed to
+ * zero height, so the tab is always as wide as its widest state. It needs
+ * `data-label` to match the visible text; @dhcw/sr-react sets it for you, and a
+ * tab without it simply loses the reservation rather than breaking.
+ */
+.sr-tabs__tab::after {
+  content: attr(data-label);
+  display: block;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  font: var(--sr-type-label-font); /* 14/20 Medium */
+  letter-spacing: var(--sr-type-label-letter-spacing);
+  pointer-events: none;
+}
+
+/* Hover — soft page-background wash, brand-blue label. Unselected tabs only:
+   the selected tab is already at its strongest and has nowhere to go. */
+.sr-tabs__tab:hover:not([aria-selected='true']):not(:disabled) {
+  background-color: var(--sr-color-surface-background);
+  color: var(--sr-color-interactive-primary);
+}
+
+/* Selected — Medium label plus a 3px indicator on the leading edge.
+   The indicator is an inset shadow rather than a border so it cannot change the
+   40px height or nudge the label. */
+.sr-tabs__tab[aria-selected='true'] {
+  color: var(--sr-color-interactive-primary);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+  box-shadow: inset 0 -3px 0 var(--sr-color-interactive-primary);
+}
+
+/* Focus — 2px Border/Focus ring (DDR-025), drawn outside so it does not disturb
+   the layout. Selected AND focused keeps both: the ring is where you are, the
+   indicator is what is showing. */
+.sr-tabs__tab:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sr-color-border-focus);
+}
+.sr-tabs__tab[aria-selected='true']:focus-visible {
+  box-shadow:
+    inset 0 -3px 0 var(--sr-color-interactive-primary),
+    0 0 0 2px var(--sr-color-border-focus);
+}
+
+.sr-tabs__tab:disabled,
+.sr-tabs__tab[aria-disabled='true'] {
+  color: var(--sr-color-text-disabled);
+  cursor: not-allowed;
+  background: transparent;
+}
+
+/* Count badge — a pill, Interactive/Primary with white text.
+   Decorative: the count must also reach the accessible name of the tab, or a
+   screen reader announces the tab without it. */
+.sr-tabs__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 20px;
+  padding: 0 var(--space-2); /* 0 8px */
+  border-radius: var(--radius-full);
+  background-color: var(--sr-color-interactive-primary);
+  color: var(--sr-color-text-on-fill);
+  font: var(--sr-type-caption-font); /* 12/16 Regular */
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+}
+
+.sr-tabs__tab:disabled .sr-tabs__badge,
+.sr-tabs__tab[aria-disabled='true'] .sr-tabs__badge {
+  background-color: var(--sr-color-interactive-disabled);
+}
+
+/* ── Vertical ──────────────────────────────────────────────────────────────
+   Same tab, stacked, with the indicator on the left edge. Set
+   aria-orientation="vertical" on the tablist so Up/Down become the arrow keys
+   a screen reader user is told to press. */
+
+.sr-tabs--vertical {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.sr-tabs--vertical .sr-tabs__tab {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.sr-tabs--vertical .sr-tabs__tab[aria-selected='true'] {
+  box-shadow: inset 3px 0 0 var(--sr-color-interactive-primary);
+}
+
+.sr-tabs--vertical .sr-tabs__tab[aria-selected='true']:focus-visible {
+  box-shadow:
+    inset 3px 0 0 var(--sr-color-interactive-primary),
+    0 0 0 2px var(--sr-color-border-focus);
+}
+
+/* ── Panels ───────────────────────────────────────────────────────────────
+   The panel is focusable so that a keyboard user who tabs off the tablist lands
+   in the content it controls rather than skipping past it. */
+
+.sr-tabs__panel {
+  padding: var(--space-4) 0;
+  color: var(--sr-color-text-primary);
+  font: var(--sr-type-body-m-font);
+}
+
+.sr-tabs__panel:focus-visible {
+  outline: 2px solid var(--sr-color-border-focus);
+  outline-offset: 2px;
+}
+
+.sr-tabs__panel[hidden] {
+  display: none;
+}
+
+/* ── Overflow ─────────────────────────────────────────────────────────────
+   A horizontal strip that outgrows its container scrolls rather than wrapping:
+   a wrapped tablist reads as two rows of unrelated controls. Vertical stacks
+   are unaffected. */
+
+.sr-tabs:not(.sr-tabs--vertical) {
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sr-tabs__tab {
+    transition: none;
+  }
+}

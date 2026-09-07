@@ -494,7 +494,7 @@ const radiusSamples = radiusEntries.map(([k, px]) =>
 const SITE_COMPONENT_CSS = [
   'button', 'table', 'patient-banner', 'header', 'footer', 'bottom-nav',
   'breadcrumbs', 'switch', 'segmented-control', 'navigation', 'input',
-  'tags', 'checkbox', 'radio', 'select',
+  'tags', 'checkbox', 'radio', 'select', 'tabs',
 ];
 const COMPONENT_CSS_LINKS = (prefix) =>
   SITE_COMPONENT_CSS.map((c) => `<link rel="stylesheet" href="${prefix}assets/${c}.css">`).join('\n');
@@ -536,6 +536,7 @@ const SECTIONS = [
       { href: 'components/navigation.html', label: 'Navigation' },
       { href: 'components/radio.html', label: 'Radio' },
       { href: 'components/select.html', label: 'Select' },
+      { href: 'components/tabs.html', label: 'Tabs' },
       { href: 'components/table.html', label: 'Tables' },
       { href: 'components/tags.html', label: 'Tags' },
       { href: 'components/toggles.html', label: 'Toggles' },
@@ -2664,6 +2665,124 @@ ${accessibilityTable([
   ])}`;
 }
 
+const TABS_SCRIPT = `<script>
+// Reference keyboard behaviour for the tabs on this page: roving tabindex,
+// arrow keys with wrap, Home/End, and disabled tabs stepped over. This is the
+// half of the tabs pattern that is easiest to leave out.
+document.querySelectorAll('[role="tablist"]').forEach(function (list) {
+  var tabs = Array.prototype.slice.call(list.querySelectorAll('[role="tab"]'));
+  var vertical = list.getAttribute('aria-orientation') === 'vertical';
+  function panelFor(t) { return document.getElementById(t.getAttribute('aria-controls')); }
+  function select(i) {
+    tabs.forEach(function (t, j) {
+      var on = i === j;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      var p = panelFor(t); if (p) p.hidden = !on;
+    });
+    tabs[i].focus();
+  }
+  function step(from, dir) {
+    var n = tabs.length, i = from;
+    for (var k = 0; k < n; k++) {
+      i = (i + dir + n) % n;
+      if (!tabs[i].disabled) return i;
+    }
+    return from;
+  }
+  list.addEventListener('click', function (e) {
+    var t = e.target.closest('[role="tab"]');
+    var i = tabs.indexOf(t);
+    if (i >= 0 && !t.disabled) select(i);
+  });
+  list.addEventListener('keydown', function (e) {
+    var cur = tabs.indexOf(document.activeElement);
+    if (cur < 0) return;
+    var next = vertical ? 'ArrowDown' : 'ArrowRight';
+    var prev = vertical ? 'ArrowUp' : 'ArrowLeft';
+    var target = null;
+    if (e.key === next) target = step(cur, 1);
+    else if (e.key === prev) target = step(cur, -1);
+    else if (e.key === 'Home') target = tabs.findIndex(function (t) { return !t.disabled; });
+    else if (e.key === 'End') target = tabs.map(function (t) { return !t.disabled; }).lastIndexOf(true);
+    if (target === null || target < 0) return;
+    e.preventDefault();
+    select(target);
+  });
+});
+</script>`;
+
+function tabsBody() {
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'tabs', 'guidelines.md'), 'utf8')));
+
+  const strip = ({ id, items, vertical = false, selected = 0 }) => {
+    const list = `<div class="sr-tabs${vertical ? ' sr-tabs--vertical' : ''}" role="tablist" aria-label="${vertical ? 'Record sections' : 'Patient record'}"${vertical ? ' aria-orientation="vertical"' : ''}>
+${items.map((it, i) => {
+  const on = i === selected;
+  const name = it.count !== undefined ? ` aria-label="${it.label}, ${it.count} items"` : '';
+  return `  <button type="button" class="sr-tabs__tab" role="tab" id="${id}-tab-${i}" aria-selected="${on}" aria-controls="${id}-panel-${i}" tabindex="${on ? 0 : -1}" data-label="${it.label}"${it.disabled ? ' disabled aria-disabled="true"' : ''}${name}>${it.label}${it.count !== undefined ? `<span class="sr-tabs__badge" aria-hidden="true">${it.count}</span>` : ''}</button>`;
+}).join('\n')}
+</div>`;
+    const panels = items.map((it, i) => `<div class="sr-tabs__panel" role="tabpanel" id="${id}-panel-${i}" aria-labelledby="${id}-tab-${i}" tabindex="0"${i === selected ? '' : ' hidden'}>${it.panel || (it.label + ' content.')}</div>`).join('\n');
+    return vertical
+      ? `<div style="display:flex;gap:24px">${list}<div style="flex:1">${panels}</div></div>`
+      : `${list}\n${panels}`;
+  };
+
+  const basic = strip({ id: 'demo-h', items: [
+    { label: 'Summary', panel: 'Patient summary content.' },
+    { label: 'Results', panel: 'Results content.' },
+    { label: 'Medication', panel: 'Medication content.' },
+    { label: 'Documents', panel: 'Documents content.' },
+  ] });
+
+  const counted = strip({ id: 'demo-c', items: [
+    { label: 'Summary', panel: 'Patient summary content.' },
+    { label: 'Results', count: 20, panel: 'Twenty results.' },
+    { label: 'Tasks', count: 3, panel: 'Three tasks.' },
+    { label: 'Imaging', disabled: true, panel: 'No imaging on file.' },
+  ] });
+
+  const vertical = strip({ id: 'demo-v', vertical: true, items: [
+    { label: 'Summary', panel: 'Patient summary content.' },
+    { label: 'Results', panel: 'Results content.' },
+    { label: 'Medication', panel: 'Medication content.' },
+    { label: 'Documents', panel: 'Documents content.' },
+  ] });
+
+  const snippets = {
+    HTML: '<div class="sr-tabs" role="tablist" aria-label="Patient record">\n  <button type="button" class="sr-tabs__tab" role="tab" id="t-0"\n          aria-selected="true" aria-controls="p-0" tabindex="0" data-label="Summary">Summary</button>\n  <button type="button" class="sr-tabs__tab" role="tab" id="t-1"\n          aria-selected="false" aria-controls="p-1" tabindex="-1" data-label="Results">Results</button>\n</div>\n<div class="sr-tabs__panel" role="tabpanel" id="p-0" aria-labelledby="t-0" tabindex="0">…</div>\n<div class="sr-tabs__panel" role="tabpanel" id="p-1" aria-labelledby="t-1" tabindex="0" hidden>…</div>\n\n<!-- Arrow keys, Home/End and the roving tabindex are yours to wire up. -->',
+    React: '<Tabs\n  ariaLabel="Patient record"\n  tabs={[\n    { id: \'summary\', label: \'Summary\', panel: <Summary /> },\n    { id: \'results\', label: \'Results\', count: 20, panel: <Results /> },\n    { id: \'imaging\', label: \'Imaging\', disabled: true, panel: null },\n  ]}\n  onChange={(id) => track(id)}\n/>',
+    Blazor: '<div class="sr-tabs" role="tablist" aria-label="Patient record">\n  @foreach (var (t, i) in Tabs.Select((t, i) => (t, i)))\n  {\n    <button type="button" class="sr-tabs__tab" role="tab"\n            aria-selected="@(i == Selected)" tabindex="@(i == Selected ? 0 : -1)"\n            data-label="@t.Label" @onclick="() => Select(i)">@t.Label</button>\n  }\n</div>',
+    MAUI: '<!-- The design system layer ships no tab strip for MAUI. Use the platform\n     tabbed shell and take the SR tokens: SrIconSizeMd, SrColorInteractivePrimary,\n     and the 3px selected indicator. -->',
+  };
+
+  return `
+<p class="breadcrumbs">Components — Tabs</p>
+<h1>Tabs</h1>
+<p class="lede">Switch between views of the same record, without leaving the page.</p>
+
+<h2>Horizontal</h2>
+<p>The default. The selected tab is marked three ways — colour, weight and a 3px indicator — so
+selection never rests on colour alone. Click a tab, then use the arrow keys: the whole strip is one
+tab stop.</p>
+${showcase(basic, 'tabs-basic', snippets)}
+
+<h2>Counts, and a disabled tab</h2>
+<p>A count badge shows a quantity. It is hidden from assistive technology and the number is folded
+into the tab's name instead, so a screen reader announces "Results, 20 items" rather than just
+"Results". Arrow past the disabled tab — it is stepped over, never focused.</p>
+${showcase(counted, 'tabs-counts', snippets)}
+
+<h2>Vertical</h2>
+<p>For a side rail against a long record, and for labels too long to sit comfortably in a row. The
+indicator moves to the leading edge and the arrow keys become Up and Down.</p>
+${showcase(vertical, 'tabs-vertical', snippets)}
+
+${md}
+`;
+}
+
 function selectBody() {
   const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'select', 'guidelines.md'), 'utf8')));
 
@@ -4207,6 +4326,11 @@ addPage({
   file: 'components/select.html', url: 'components/select.html', title: 'Select',
   section: 'Components', sectionId: 'components', activeHref: 'components/select.html',
   prefix: '../', body: selectBody(),
+});
+addPage({
+  file: 'components/tabs.html', url: 'components/tabs.html', title: 'Tabs',
+  section: 'Components', sectionId: 'components', activeHref: 'components/tabs.html',
+  prefix: '../', body: tabsBody(), extraScript: TABS_SCRIPT,
 });
 addPage({
   file: 'patterns/patient-banner.html', url: 'patterns/patient-banner.html',

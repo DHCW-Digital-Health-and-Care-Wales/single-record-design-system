@@ -22,3 +22,4 @@ export { default as Autocomplete } from './autocomplete/Autocomplete.jsx';
 export { default as Table } from './table/Table.jsx';
 export { default as Modal } from './modal/Modal.jsx';
 export { default as PatientBanner } from './patient-banner/PatientBanner.jsx';
+export { default as Tabs } from './tabs/Tabs.jsx';
