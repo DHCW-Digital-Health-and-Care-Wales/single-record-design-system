@@ -1,4 +1,6 @@
 {
-  "total": 0,
-  "counts": {}
+  "total": 1,
+  "counts": {
+    "packages/web/src/search/search.css": 1
+  }
 }

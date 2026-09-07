@@ -494,7 +494,7 @@ const radiusSamples = radiusEntries.map(([k, px]) =>
 const SITE_COMPONENT_CSS = [
   'button', 'table', 'patient-banner', 'header', 'footer', 'bottom-nav',
   'breadcrumbs', 'switch', 'segmented-control', 'navigation', 'input',
-  'tags', 'checkbox', 'radio', 'select', 'tabs',
+  'tags', 'checkbox', 'radio', 'select', 'tabs', 'search',
 ];
 const COMPONENT_CSS_LINKS = (prefix) =>
   SITE_COMPONENT_CSS.map((c) => `<link rel="stylesheet" href="${prefix}assets/${c}.css">`).join('\n');
@@ -535,6 +535,7 @@ const SECTIONS = [
       { href: 'components/input.html', label: 'Input' },
       { href: 'components/navigation.html', label: 'Navigation' },
       { href: 'components/radio.html', label: 'Radio' },
+      { href: 'components/search.html', label: 'Search' },
       { href: 'components/select.html', label: 'Select' },
       { href: 'components/tabs.html', label: 'Tabs' },
       { href: 'components/table.html', label: 'Tables' },
@@ -2783,6 +2784,236 @@ ${md}
 `;
 }
 
+const SEARCH_SCRIPT = `<script>
+// Reference combobox behaviour for the Typeahead demo on this page: the arrow
+// keys, Home/End, Enter and Esc, plus aria-activedescendant. A suggestions list
+// you can only reach with a mouse is not a combobox, and that is the half most
+// implementations leave out.
+document.querySelectorAll('[data-sr-typeahead]').forEach(function (root) {
+  var input = root.querySelector('[role="combobox"]');
+  var menu = root.querySelector('[role="listbox"]');
+  if (!input || !menu) return;
+  var rows = Array.prototype.slice.call(menu.querySelectorAll('[role="option"]'));
+  var active = -1;
+
+  function setOpen(on) {
+    menu.hidden = !on;
+    input.setAttribute('aria-expanded', String(on));
+    if (!on) { active = -1; paint(); }
+  }
+  function paint() {
+    rows.forEach(function (r, i) {
+      r.classList.toggle('is-active', i === active);
+      r.setAttribute('aria-selected', String(i === active));
+    });
+    if (active >= 0) {
+      input.setAttribute('aria-activedescendant', rows[active].id);
+      rows[active].scrollIntoView({ block: 'nearest' });
+    } else {
+      input.removeAttribute('aria-activedescendant');
+    }
+  }
+  function choose(i) {
+    if (!rows[i]) return;
+    input.value = rows[i].getAttribute('data-label');
+    setOpen(false);
+    input.focus();
+  }
+
+  rows.forEach(function (r, i) {
+    // mousedown would blur the input and close the list before the click
+    // landed, so the row would look unclickable.
+    r.addEventListener('mousedown', function (e) { e.preventDefault(); });
+    r.addEventListener('click', function () { choose(i); });
+  });
+
+  input.addEventListener('focus', function () { setOpen(true); });
+  input.addEventListener('blur', function () { setOpen(false); });
+  input.addEventListener('keydown', function (e) {
+    var open = !menu.hidden;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (!open) setOpen(true);
+      active = Math.min(active + 1, rows.length - 1); paint();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      active = Math.max(active - 1, 0); paint();
+    } else if (e.key === 'Home' && open) {
+      e.preventDefault(); active = 0; paint();
+    } else if (e.key === 'End' && open) {
+      e.preventDefault(); active = rows.length - 1; paint();
+    } else if (e.key === 'Enter' && open && active >= 0) {
+      e.preventDefault(); choose(active);
+    } else if (e.key === 'Escape' && open) {
+      // Closes the list; does not clear the query. Losing a long query to a
+      // stray Esc is worse than the list staying open.
+      e.preventDefault(); setOpen(false);
+    }
+  });
+});
+
+// Clear button: empties the field and puts focus back in it, because clearing
+// is a step in searching, not the end of it.
+document.querySelectorAll('.sr-search__clear').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var field = btn.closest('.sr-search__field');
+    var input = field && field.querySelector('.sr-search__control-input');
+    if (!input) return;
+    input.value = '';
+    input.focus();
+    var submit = btn.closest('.sr-search__row');
+    submit = submit && submit.querySelector('.sr-search__submit');
+    if (submit) submit.disabled = true;
+  });
+});
+
+// The submit button stays disabled until there is something to send.
+document.querySelectorAll('.sr-search__row').forEach(function (row) {
+  var input = row.querySelector('.sr-search__control-input');
+  var submit = row.querySelector('.sr-search__submit');
+  if (!input || !submit) return;
+  input.addEventListener('input', function () { submit.disabled = !input.value; });
+});
+</script>`;
+
+const SEARCH_ICON = iconMarkup('nav/search');
+const SEARCH_CLEAR = iconMarkup('nav/clear');
+const SEARCH_SPINNER = iconMarkup('status/loading');
+const SEARCH_ERROR_ICON = iconMarkup('status/error-circle');
+
+function searchBody() {
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'search', 'guidelines.md'), 'utf8')));
+
+  /** One Search field. `type` mirrors the Figma Type property. */
+  const field = ({
+    id, type = 'basic', label, hideLabel = true, hint, required, error,
+    placeholder = 'Search patients', value = '', state = 'default', suggestions,
+  }) => {
+    const disabled = state === 'disabled';
+    const loading = state === 'loading';
+    const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(' ');
+    const typeahead = type === 'typeahead';
+
+    const trailing = loading
+      ? `<span class="sr-search__spinner">${SEARCH_SPINNER}</span>`
+      : (value
+        ? `<button type="button" class="sr-search__clear" aria-label="Clear search">${SEARCH_CLEAR}</button>`
+        : '');
+
+    const menu = typeahead && suggestions
+      ? `\n        <ul class="sr-search__suggestions" id="${id}-menu" role="listbox" aria-label="${label}" hidden>
+${suggestions.length ? suggestions.map((s, i) => `          <li class="sr-search__suggestion" id="${id}-opt-${i}" role="option" aria-selected="false" data-label="${s.label}"><span class="sr-search__suggestion-label">${s.html || s.label}</span>${s.meta ? `<span class="sr-search__suggestion-meta">${s.meta}</span>` : ''}</li>`).join('\n')
+          : `          <li class="sr-search__status-row" role="presentation">No matches for "${value}"</li>`}
+        </ul>`
+      : '';
+
+    const button = type === 'with-button'
+      ? `\n      <button type="submit" class="sr-search__submit"${value ? '' : ' disabled'}>Search</button>`
+      : type === 'with-icon-button'
+        ? `\n      <button type="submit" class="sr-search__submit sr-search__submit--icon" aria-label="Search"${value ? '' : ' disabled'}>${SEARCH_ICON}</button>`
+        : '';
+
+    return `<div class="sr-search${error ? ' sr-search--error' : ''}${disabled ? ' sr-search--disabled' : ''}"${typeahead ? ' data-sr-typeahead' : ''}>
+  <label class="${hideLabel ? 'sr-visually-hidden' : 'sr-search__label'}" for="${id}-input">${label}${required && !hideLabel ? '<span class="sr-search__required" aria-hidden="true">*</span>' : ''}</label>
+  ${hint ? `<div class="sr-search__hint" id="${id}-hint">${hint}</div>` : ''}
+  <div class="sr-search__row">
+    <div class="sr-search__control">
+      <div class="sr-search__field">
+        <span class="sr-search__icon">${SEARCH_ICON}</span>
+        <input type="search" class="sr-search__control-input" id="${id}-input" autocomplete="off" placeholder="${placeholder}" value="${value}"${disabled ? ' disabled' : ''}${describedBy ? ` aria-describedby="${describedBy}"` : ''}${required ? ' aria-required="true"' : ''}${error ? ' aria-invalid="true"' : ''}${typeahead ? ` role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="${id}-menu"` : ''}>
+        ${trailing}
+      </div>${menu}
+    </div>${button}
+  </div>
+  ${error ? `<div class="sr-search__error" id="${id}-error"><span class="sr-search__error-icon">${SEARCH_ERROR_ICON}</span>${error}</div>` : ''}
+</div>`;
+  };
+
+  // `label` is the plain text that lands in the field when the row is chosen;
+  // `html` is the same string with the matched run wrapped for bolding.
+  const mark = (q, rest) => `<span class="sr-search__match">${q}</span>${rest}`;
+  const CLINICIANS = [
+    { label: 'Cardew, Dr A', html: mark('Card', 'ew, Dr A'), meta: 'Cardiology · Consultant' },
+    { label: 'Cardiff-Jones, Dr J', html: mark('Card', 'iff-Jones, Dr J'), meta: 'Emergency Medicine · Registrar' },
+    { label: 'Cardiology Department', html: mark('Card', 'iology Department'), meta: 'Service area' },
+  ];
+
+  const snippets = {
+    HTML: '<div class="sr-search">\n  <label class="sr-visually-hidden" for="q">Search patients</label>\n  <div class="sr-search__row">\n    <div class="sr-search__control">\n      <div class="sr-search__field">\n        <span class="sr-search__icon"><!-- nav/search --></span>\n        <input type="search" class="sr-search__control-input" id="q"\n               placeholder="Search patients" autocomplete="off">\n        <button type="button" class="sr-search__clear" aria-label="Clear search">\n          <!-- nav/clear -->\n        </button>\n      </div>\n    </div>\n    <button type="submit" class="sr-search__submit" disabled>Search</button>\n  </div>\n</div>\n\n<!-- Typeahead adds role="combobox" + a role="listbox" popover. The arrow keys,\n     Home/End, Enter and Esc are yours to wire up. -->',
+    React: "<Search\n  type=\"typeahead\"\n  label=\"Find a clinician\"\n  placeholder=\"Search clinicians\"\n  suggestions={results}\n  filter={false}            {/* the service already filtered */}\n  loading={isFetching}\n  onChange={(q) => debouncedLookup(q)}\n  onSelect={(opt) => open(opt.value)}\n/>",
+    Blazor: '<div class="sr-search">\n  <label class="sr-visually-hidden" for="q">@Label</label>\n  <div class="sr-search__row">\n    <div class="sr-search__control">\n      <div class="sr-search__field">\n        <span class="sr-search__icon"><SrIcon Name="nav/search" /></span>\n        <input type="search" class="sr-search__control-input" id="q"\n               @bind="Query" @bind:event="oninput" placeholder="@Placeholder" />\n      </div>\n    </div>\n    <button type="submit" class="sr-search__submit" disabled="@(string.IsNullOrEmpty(Query))">Search</button>\n  </div>\n</div>',
+    MAUI: '<!-- No native combobox on MAUI. Compose an Entry with a CollectionView and\n     wire the semantics by hand; take the SR tokens for the field:\n     SrColorSurfaceSectionCards, SrColorBorderDefault, SrRadiusSm,\n     SrColorBorderFocus for the focus ring. Not yet built - see the spec. -->',
+  };
+
+  return `
+<p class="breadcrumbs">Components — Search</p>
+<h1>Search</h1>
+<p class="lede">Find content by typing. The only search field in the system.</p>
+
+<h2>Basic</h2>
+<p>A live inline filter: results update as the user types, with no submit step. Use it where the
+results are cheap to recompute and visible without scrolling.</p>
+${showcase(field({ id: 's-basic', label: 'Search patients' }), 'search-basic', snippets)}
+
+<h2>With a button</h2>
+<p>For a query that costs something — a backend call, a cross-organisation lookup. The button is
+disabled until there is a query, so an empty search cannot be sent. Type into the field and watch it
+enable.</p>
+${showcase(field({ id: 's-btn', type: 'with-button', label: 'Search patients', placeholder: 'Enter NHS number or name…' }), 'search-button', snippets)}
+
+<h2>With an icon button</h2>
+<p>The same control where a text button will not fit — mobile, dense toolbars. The button is 40×40,
+square to the field and comfortably over the 24×24 minimum in WCAG 2.2. Use it because space demands
+it, not by preference: the word "Search" is easier to read at a glance than a glyph.</p>
+${showcase(field({ id: 's-icon', type: 'with-icon-button', label: 'Search patients', value: 'Smith' }), 'search-icon-button', snippets)}
+
+<h2>Typeahead</h2>
+<p>Type to look something up, then pick a result. Focus the field below and use <kbd>↓</kbd>
+<kbd>↑</kbd> <kbd>Home</kbd> <kbd>End</kbd> <kbd>Enter</kbd> <kbd>Esc</kbd> — the whole model works
+without the mouse. The matched run is bold, and the second line disambiguates results that would
+otherwise read alike.</p>
+${showcase(field({ id: 's-ta', type: 'typeahead', label: 'Find a clinician', hideLabel: false, placeholder: 'Search clinicians', value: 'Card', suggestions: CLINICIANS }), 'search-typeahead', snippets)}
+
+<h2>No results</h2>
+<p>The failed query is quoted back, so the user can see what was actually tried. It is usually a typo
+they spot instantly.</p>
+${showcase(field({ id: 's-none', type: 'typeahead', label: 'Find a clinician', hideLabel: false, value: 'xyzzy', suggestions: [] }), 'search-no-results', snippets)}
+
+<h2>States</h2>
+<p>Filled shows the clear affordance; loading replaces it with a spinner and announces
+"Searching…" to assistive technology; error carries an icon and a message, never the red border
+alone.</p>
+<div class="showcase"><div class="showcase__preview" style="display:grid;gap:24px;max-width:420px">
+${field({ id: 's-filled', label: 'Search patients', value: 'Smith' })}
+${field({ id: 's-loading', label: 'Search patients', value: 'Smith', state: 'loading' })}
+${field({ id: 's-err', label: 'Search patients', value: 'S', error: 'Enter at least 2 characters' })}
+${field({ id: 's-dis', label: 'Search patients', value: 'Smith', state: 'disabled' })}
+</div></div>
+
+<h2>As a labelled form field</h2>
+<p>Search carries its own <code>Label</code>, <code>Hint</code> and <code>Required</code> properties.
+Do not wrap an Input around it — the Input set's <code>Type=Search</code> variants were removed on
+4 June 2026, and Search is now the only search field in the system.</p>
+<div class="showcase"><div class="showcase__preview" style="max-width:420px">
+${field({ id: 's-form', label: 'Search patients', hideLabel: false, required: true, hint: 'Search by NHS number, name or date of birth' })}
+</div></div>
+
+<hr>
+${renderMarkdown(md)}
+${accessibilityTable([
+    { req: 'The field has a name', sc: '1.3.1, 4.1.2', how: 'Every field has a real label. A standalone search bar hides it with .sr-visually-hidden, which removes the visual footprint and nothing else.', test: 'Screen reader announce' },
+    { req: 'Suggestions follow the combobox pattern', sc: '4.1.2', how: 'role="combobox" with aria-expanded, aria-controls and aria-activedescendant; the popover is role="listbox" with role="option" rows.', test: 'Screen reader, arrow through the list' },
+    { req: 'The whole list is reachable by keyboard', sc: '2.1.1', how: '↓ ↑ move the active row, Home/End jump to the ends, Enter selects, Esc closes. Esc does not clear the query.', test: 'Keyboard only' },
+    { req: 'Focus is visible and does not move the layout', sc: '1.4.11, 2.4.7', how: 'A 3px Border/Focus ring outside the 1px border, so nothing in the row shifts when focus lands.', test: 'Keyboard tab' },
+    { req: 'The matched run is not colour alone', sc: '1.4.1', how: 'The match is bolded, and the row carries aria-selected and aria-activedescendant regardless of how it looks.', test: 'Greyscale review' },
+    { req: 'Loading is announced', sc: '4.1.3', how: 'A role="status" live region says "Searching…" alongside the spinner, so the wait is not visual only.', test: 'Screen reader, slow network' },
+    { req: 'Errors are exposed and actionable', sc: '3.3.1, 3.3.3', how: 'aria-invalid on the input, the message linked by aria-describedby, and an icon beside it so the error is not the border colour.', test: 'Screen reader, submit short query' },
+    { req: 'Controls meet the target size', sc: '2.5.8', how: 'The icon button is 40×40 and the field is 40px tall. The clear button is 24×24, the minimum, and sits inside a 40px row.', test: 'Measure' },
+    { req: 'Clear does not strand focus', sc: '2.4.3', how: 'Clearing empties the field and returns focus to it, rather than leaving focus on a button that has just disappeared.', test: 'Keyboard only' },
+    { req: 'Text resizes to 200%', sc: '1.4.4', how: 'The field and popover size from their content; suggestion rows wrap onto two lines rather than truncating.', test: 'Browser zoom to 200%' },
+  ])}`;
+}
+
 function selectBody() {
   const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'select', 'guidelines.md'), 'utf8')));
 
@@ -4327,6 +4558,12 @@ addPage({
   section: 'Components', sectionId: 'components', activeHref: 'components/select.html',
   prefix: '../', body: selectBody(),
 });
+addPage({
+  file: 'components/search.html', url: 'components/search.html', title: 'Search',
+  section: 'Components', sectionId: 'components', activeHref: 'components/search.html',
+  prefix: '../', body: searchBody(), extraScript: SEARCH_SCRIPT,
+});
+
 addPage({
   file: 'components/tabs.html', url: 'components/tabs.html', title: 'Tabs',
   section: 'Components', sectionId: 'components', activeHref: 'components/tabs.html',

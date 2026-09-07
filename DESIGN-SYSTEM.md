@@ -221,7 +221,7 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Patient banner | ✅ | ✅ | ✅ |
 | Progress indicators | ✅ | — | — |
 | Radio | ✅ (guidelines ✅) | ✅ | ✅ |
-| Search | ✅ | — | — |
+| Search | ✅ (guidelines ✅) | ✅ | ✅ |
 | Segmented control | — (guidelines ✅, with Switch) | ✅ | ✅ |
 | Select | ✅ (guidelines ✅) | ✅ | ✅ |
 | Status indicator | — | ✅ | ✅ |
@@ -232,9 +232,7 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Time select | — | ✅ | ✅ |
 
 **Known gaps, stated plainly:** eleven components ship code without a spec, and
-three specs (Link, Progress indicators, Search) have no code. Search is next —
-its spec is complete and references the Figma sets directly, so it is
-implementation rather than design work. Neither is
+two specs (Link, Progress indicators) have no code. Neither is
 satisfactory — a component without a spec has no agreed contract, and a spec
 without code cannot be consumed. Both lists are worked down as components are
 touched.
@@ -311,6 +309,16 @@ in its markup — SendIT needs *Print Labels* and *Approve Summary list*. The
 Save/Mark-as-complete pair remains the default, so nothing existing changed.
 Whatever a screen passes must still keep to the pattern: exactly one primary,
 and no destructive action in persistent chrome.
+
+**`Search` is the only search field, and `Autocomplete` composes it.** The
+Input set's `Type=Search` variants were removed in Figma on 2026-06-04; Search
+(`1715:375`) now carries its own `Label` / `Hint` / `Required` properties, so a
+search inside a labelled form field needs no Input wrapper. Autocomplete is a
+composition of the **Search field** (you type into it) and the **Select
+listbox** (you choose a value from it) — its CSS header used to claim it
+composed "the Input search field", which by then did not exist. Search's own
+Typeahead popover is styled separately on purpose: its rows are results to act
+on, not a value that stays chosen.
 
 **`Autocomplete` can be marked required.** Every other form field in the
 system could express `required`, so a required combobox — SendIT's "Open

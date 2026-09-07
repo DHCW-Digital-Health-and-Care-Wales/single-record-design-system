@@ -710,6 +710,44 @@ past its share.
 
 ## Build & CI
 
+### A line-anchored regex turns a lint rule into a formatting test
+
+**Symptom:** `check:type` had a clean baseline of zero raw typography
+declarations. Moving one existing declaration — `.sr-autocomplete__match
+{ font-weight: 700; }` — out of `autocomplete.css` and onto its own line in a
+new `search.css` made the check fail as a regression. Nothing had been added.
+
+**Why:** the rule was `/^\s*(font-size|line-height|font-weight|letter-spacing)
+\s*:\s*(var\(--font-|[0-9])/`. Anchored to `^`, it only sees a declaration
+that starts a line. A rule written on one line — `.x { font-weight: 700; }` —
+has the declaration in the middle, so it never matched. The check was therefore
+half a type rule and half a formatting rule: the same CSS passed or failed
+depending on where the author put a newline. Anyone who wanted to dodge it only
+had to collapse the rule onto one line, and nobody would have had to know they
+were dodging anything.
+
+**Fix:** match at the start of a line *or* after `{` or `;`, which is where a
+declaration can legally begin:
+
+```js
+const RAW = /(^|[{;])\s*(font-size|line-height|font-weight|letter-spacing)\s*:\s*(var\(--font-|[0-9])/;
+```
+
+Closing the hole revealed no hidden debt in this repo — the only match was the
+one declaration that had prompted the look. That is luck, not vindication; the
+rule had been unenforceable on single-line CSS for as long as it had existed.
+
+**Prevented by:** `scripts/check-typography.mjs`, verified by planting
+`.sr-planted { font-size: 15px; }` — exactly the shape that used to slip
+through — and confirming the check fails on it before trusting the pass.
+
+**The general lesson:** a regex-based gate on source text is only as good as
+the formatting it assumes. Before trusting one, write the defect it targets in
+the *other* legal formatting and check it still fails. Anchors (`^`, `$`) are
+where this goes wrong most often.
+
+---
+
 ### A gate that checks the source and trusts the toolchain is not a gate
 
 The single most expensive lesson here, learned twice in one session.

@@ -1,4 +1,4 @@
-import '@dhcw/sr-web/src/input/input.css';
+import '@dhcw/sr-web/src/search/search.css';
 import '@dhcw/sr-web/src/select/select.css';
 import './autocomplete.css';
 import '@dhcw/sr-tokens/build/css/tokens.css';
@@ -8,8 +8,10 @@ import { iconMarkup } from '@dhcw/sr-icons/build/icons.js';
  * Autocomplete — DHCW Single Record Design System
  *
  * A searchable select (combobox): type to filter a long, known option list.
- * Composed from the Input search field and the Select listbox — reuses their
- * classes so it reads as one system. Input is role="combobox"; results are
+ * Composed from the Search field and the Select listbox — you type into it, so
+ * the field is a Search field; you choose a value from it, so the menu is a
+ * Select menu. Reuses their classes so it reads as one system. The control is
+ * role="combobox"; results are
  * role="listbox"/role="option" with the same ARIA and keyboard model as
  * Select (Up/Down move, Enter select, Esc close).
  */
@@ -29,7 +31,7 @@ const highlight = (label, query) => {
   if (i === -1) return document.createTextNode(label);
   frag.appendChild(document.createTextNode(label.slice(0, i)));
   const mark = document.createElement('span');
-  mark.className = 'sr-autocomplete__match';
+  mark.className = 'sr-search__match';
   mark.textContent = label.slice(i, i + query.length);
   frag.appendChild(mark);
   frag.appendChild(document.createTextNode(label.slice(i + query.length)));
@@ -43,14 +45,14 @@ const buildAutocomplete = ({ label, hint, placeholder = 'Search…', options = W
 
   if (label) {
     const lab = document.createElement('label');
-    lab.className = 'sr-input__label';
+    lab.className = 'sr-search__label';
     lab.htmlFor = `${id}-input`;
     lab.textContent = label;
     root.appendChild(lab);
   }
   if (hint) {
     const h = document.createElement('div');
-    h.className = 'sr-input__hint';
+    h.className = 'sr-search__hint';
     h.id = `${id}-hint`;
     h.textContent = hint;
     root.appendChild(h);
@@ -60,14 +62,14 @@ const buildAutocomplete = ({ label, hint, placeholder = 'Search…', options = W
   control.className = 'sr-autocomplete__control';
 
   const field = document.createElement('div');
-  field.className = 'sr-input__field';
+  field.className = 'sr-search__field';
 
   const leading = document.createElement('span');
-  leading.className = 'sr-input__icon';
+  leading.className = 'sr-search__icon';
   leading.innerHTML = iconMarkup('nav/search');
 
   const input = document.createElement('input');
-  input.className = 'sr-input__control';
+  input.className = 'sr-search__control-input';
   input.id = `${id}-input`;
   input.type = 'text';
   input.autocomplete = 'off';
@@ -80,9 +82,9 @@ const buildAutocomplete = ({ label, hint, placeholder = 'Search…', options = W
 
   const clear = document.createElement('button');
   clear.type = 'button';
-  clear.className = 'sr-autocomplete__clear';
+  clear.className = 'sr-search__clear';
   clear.setAttribute('aria-label', 'Clear search');
-  clear.innerHTML = iconMarkup('nav/close');
+  clear.innerHTML = iconMarkup('nav/clear');
   clear.hidden = true;
 
   field.append(leading, input, clear);

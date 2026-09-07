@@ -1,7 +1,7 @@
 # Search
 
-**Status:** In Figma (component sets `1715:375` and `1716:238` on page `1701:17851`)
-**Last updated:** 2026-06-04
+**Status:** Built (web, React). Figma component sets `1715:375` and `1716:238` on page `1701:17851`.
+**Last updated:** 2026-09-07
 
 ---
 
@@ -47,7 +47,7 @@ Stroke colour is recoloured per state via semantic variables (`Text/Secondary`, 
 
 Two related components.
 
-### `Search` (`1705:363`) — 4 types × 6 states = 24 variants
+### `Search` (`1715:375`) — 4 types × 6 states = 24 variants
 
 | Property | Values |
 |---|---|
@@ -58,10 +58,10 @@ Two related components.
 |---|---|
 | Basic | Inline filter for tables, lists, dropdowns. Fires live as the user types. No submit step. |
 | With Button | Search is a submitted action hitting the backend — patient search, document lookup. The button is `Interactive/Disabled` until input is valid. |
-| With Icon Button | Same as With Button, but the trailing control is a 44×44 icon-only button. Use on mobile or any layout where horizontal space is tight. |
+| With Icon Button | Same as With Button, but the trailing control is a 40×40 icon-only button, square to the field height. Use on mobile or any layout where horizontal space is tight. |
 | Typeahead | Looks like Basic but pairs with the `Search Suggestions` popover. Used for clinician lookup, coded terms, location search, reference data. |
 
-### `Search Suggestions` (`1707:160`) — 3 states
+### `Search Suggestions` (`1716:238`) — 3 states
 
 | State | Use |
 |---|---|
@@ -86,9 +86,30 @@ Dock it directly under a Typeahead Search instance. Width defaults to 360 — re
 
 - **Container**: 40px height (matches Button Default and Input Field), `Radius/4`, 1px border. Focus state keeps the border and adds a 3px outer ring (see Focus below).
 - **Leading icon**: 18×18 magnifying glass, stroke = `Text/Secondary` (or `Text/Disabled`).
-- **Value**: `SR Typography/Desktop/Body M`. `Text/Primary` when filled, `Text/Secondary` when showing placeholder.
+- **Value**: `SR Typography/Desktop/Body S` (14/20). `Text/Primary` when filled, `Text/Secondary` when showing placeholder. See Known gaps — the Figma set is split between 14 and 16 here.
 - **Trailing**: clear (×) when filled, spinner when loading, otherwise empty.
-- **Button**: only on With Button / With Icon Button variants. Text button uses 24px horizontal padding; icon button is 44×44 square.
+- **Button**: only on With Button / With Icon Button variants. Text button uses 24px horizontal padding; icon button is 40×40 square — sized to the field, and above the 24×24 minimum of WCAG 2.2 SC 2.5.8 (AA).
+
+### Classes
+
+| Part | Class | Notes |
+|---|---|---|
+| Root | `.sr-search` (`--error`, `--disabled`) | vertical stack, gap 4 |
+| Label | `.sr-search__label` (+ `.sr-search__required`) | `.sr-visually-hidden` when the label is hidden |
+| Hint | `.sr-search__hint` | |
+| Row | `.sr-search__row` | field + optional submit button, gap 8 |
+| Control | `.sr-search__control` | positioning context; wraps the field only |
+| Field | `.sr-search__field` | 40px, 1px border, radius `--radius-sm` |
+| Leading icon | `.sr-search__icon` | `Icon/nav/search`, 20×20 |
+| Input | `.sr-search__control-input` | `type="search"`; native clear suppressed |
+| Clear | `.sr-search__clear` | `Icon/nav/clear`, name `Clear search` |
+| Spinner | `.sr-search__spinner` | `Icon/status/loading` |
+| Submit | `.sr-search__submit` (`--icon`) | disabled until there is a query |
+| Suggestions | `.sr-search__suggestions` | `role="listbox"` |
+| Suggestion | `.sr-search__suggestion` (`.is-active`) | `role="option"`, two lines |
+| Matched run | `.sr-search__match` | bold |
+| Loading / empty row | `.sr-search__status-row` | inside the popover |
+| Error | `.sr-search__error` (+ `__error-icon`) | icon and message, not colour alone |
 
 ---
 
@@ -141,8 +162,25 @@ For With Button / With Icon Button: the adjacent button uses `Interactive/Disabl
 
 ---
 
+## Known gaps
+
+- **The Figma set is inconsistent about the value's type size.** `Default` and
+  the two button types draw the value at 14/20 (Body S); `Filled`, `Loading` and
+  `Error` draw it at 16/24 (Body M). A real `<input>` cannot change size between
+  placeholder and value, so the code ships 14/20, matching Input, Select and
+  Date input. Design to confirm and make the six variants agree.
+- **Radius.** Figma draws 4px; `--radius-sm` is 2px. Code follows the token, as
+  Input and Select already do — a system-wide mismatch, not a Search one.
+- **Suggestion row padding** is 8/12 in code against Figma's 10/14, which is off
+  the 4px grid; 12 also matches the Select option's left inset.
+- **No MAUI implementation.** See Engineering Notes.
+
+---
+
 ## Related
 
+- `/components/search/guidelines.md` — usage guidance (Figma panel + website)
+- `/components/autocomplete/` — searchable **select**: composes this field with the Select listbox
 - `/components/button/spec.md` — the buttons inside With Button / With Icon Button consume the Button component visually (custom sized to match the input).
 - `/components/input-field/spec.md` — Search shares anatomy with the standard text input.
 - `/decisions/DDR-006-focus-ring-cyan.md` — focus colour.

@@ -35,11 +35,17 @@ const ROOTS = [
 
 // Raw typography declarations that should be a composite style instead.
 // `font-size: inherit` and similar keyword resets are not scale violations.
-const RAW = /^\s*(font-size|line-height|font-weight|letter-spacing)\s*:\s*(var\(--font-|[0-9])/;
+//
+// The declaration is matched at the start of a line OR after a `{` or `;`, so a
+// rule written on one line is caught too. It used to be anchored to `^` alone,
+// which meant `.x { font-weight: 700; }` passed while the same declaration on
+// its own line failed — the check was a formatting test as much as a type one.
+// Closing that hole revealed no hidden debt; it would have, eventually.
+const RAW = /(^|[{;])\s*(font-size|line-height|font-weight|letter-spacing)\s*:\s*(var\(--font-|[0-9])/;
 // `line-height: 0` / `1` on a wrapper collapses inline-box leading around an
 // icon. That is a layout reset, not a type style, and has no composite
 // equivalent — excluded so the check stays about the scale.
-const LAYOUT_RESET = /^\s*line-height\s*:\s*(0|1)(\s*;|\s*$)/;
+const LAYOUT_RESET = /(^|[{;])\s*line-height\s*:\s*(0|1)\s*(;|}|$)/;
 
 function walk(dir, out = []) {
   for (const entry of readdirSync(dir)) {

@@ -1,0 +1,352 @@
+/**
+ * DHCW Single Record — Search
+ * Reference HTML/CSS implementation, matched to the Figma "Search" set
+ * (1715:375) and "Search Suggestions" set (1716:238) on page 1701:17851.
+ * Consumes @dhcw/sr-tokens.
+ *
+ * Search is the ONLY search field in the system. The Input set's `Type=Search`
+ * variants were removed on 2026-06-04 — a search box is not a text input with a
+ * different icon, because it owns a clear affordance, a loading state, an
+ * optional submit button and (for Typeahead) a suggestions popover.
+ *
+ * Types, matching the Figma `Type` property:
+ *   Basic            — live inline filter, no submit step.
+ *   With Button      — submitted query; .sr-search__submit alongside the field.
+ *   With Icon Button — same, but a 40x40 icon-only button where space is tight.
+ *   Typeahead        — Basic plus the .sr-search__suggestions popover.
+ *
+ * Anatomy (vertical stack, gap = space-1), mirroring Input and Select:
+ *   .sr-search__label       — field label (+ required asterisk)
+ *   .sr-search__hint        — helper text (above the field)
+ *   .sr-search__row         — field + optional submit button, side by side
+ *   .sr-search__control     — positioning context for the popover
+ *   .sr-search__field       — bordered row: search icon, control, clear/spinner
+ *   .sr-search__suggestions — listbox popover (role="listbox")
+ *   .sr-search__suggestion  — one result row (role="option")
+ *   .sr-search__error       — validation message (Error state only)
+ *
+ * Semantics: for Typeahead the control is role="combobox" with aria-expanded,
+ * aria-controls and aria-activedescendant; see search.stories.js for a working
+ * keyboard reference, and Search.jsx in @dhcw/sr-react.
+ */
+
+.sr-search {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.sr-search__label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+  color: var(--sr-color-text-primary);
+}
+.sr-search__required {
+  color: var(--sr-color-status-critical);
+}
+
+.sr-search__hint {
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  color: var(--sr-color-text-secondary);
+}
+
+/* Field and submit button sit on one row, 8px apart. */
+.sr-search__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+/* Positioning context for the suggestions popover. It wraps the FIELD only, so
+   the popover aligns to the input rather than to the input plus the button. */
+.sr-search__control {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* ---------- Field ---------- */
+.sr-search__field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: 40px;
+  box-sizing: border-box;
+  padding: 0 var(--space-3); /* 12px */
+  background-color: var(--sr-color-surface-section-cards);
+  border: 1px solid var(--sr-color-border-default);
+  border-radius: var(--radius-sm);
+}
+
+/* Focus — the 1px border stays and a 3px ring is drawn OUTSIDE it, so nothing
+   in the row moves when focus lands. Same treatment as Select; DDR-006. */
+.sr-search__field:focus-within {
+  border-color: var(--sr-color-border-default);
+  box-shadow: 0 0 0 3px var(--sr-color-border-focus);
+}
+
+.sr-search__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  color: var(--sr-color-text-secondary);
+}
+.sr-search__icon svg { width: 100%; height: 100%; }
+
+.sr-search__control-input {
+  flex: 1 1 0;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: var(--sr-color-text-primary);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+}
+.sr-search__control-input::placeholder {
+  color: var(--sr-color-text-secondary);
+}
+.sr-search__control-input:focus { outline: none; }
+/* We draw our own clear button, so suppress the browser's native one — two
+   crosses in the same field is worse than none. */
+.sr-search__control-input::-webkit-search-cancel-button,
+.sr-search__control-input::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Clear (x) — present once there is a query. */
+.sr-search__clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--sr-color-text-secondary);
+  cursor: pointer;
+}
+.sr-search__clear svg { width: 20px; height: 20px; }
+.sr-search__clear:hover { color: var(--sr-color-text-primary); }
+.sr-search__clear:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sr-color-border-focus);
+}
+
+/* Spinner — replaces the clear button while a query is in flight. */
+.sr-search__spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  color: var(--sr-color-text-secondary);
+}
+.sr-search__spinner svg {
+  width: 100%;
+  height: 100%;
+  animation: sr-search-spin 1s linear infinite;
+}
+@keyframes sr-search-spin {
+  to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sr-search__spinner svg { animation-duration: 3s; }
+}
+
+/* ---------- Submit button ----------
+   Sized to the field (40px) rather than to the Button component's own metrics,
+   which is why this is not a Button instance: a Button next to a 40px field
+   would not line up. Visual language is Button/Primary. */
+.sr-search__submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-height: 40px;
+  padding: 0 var(--space-6); /* 24px */
+  border: none;
+  border-radius: var(--radius-sm);
+  background-color: var(--sr-color-interactive-primary);
+  color: var(--sr-color-text-inverse);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+  cursor: pointer;
+}
+.sr-search__submit:hover:not(:disabled) {
+  background-color: var(--sr-color-interactive-primary-hover);
+}
+.sr-search__submit:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--sr-color-border-focus);
+}
+/* Disabled until the query is valid — the Figma Default state ships this way,
+   so an empty search bar cannot be submitted. */
+.sr-search__submit:disabled {
+  background-color: var(--sr-color-interactive-disabled);
+  cursor: not-allowed;
+}
+
+/* Icon-only variant: a 40x40 square, matching the field height. Above the
+   24x24 minimum of WCAG 2.2 SC 2.5.8 (AA). */
+.sr-search__submit--icon {
+  width: 40px;
+  padding: 0;
+}
+.sr-search__submit--icon svg { width: 20px; height: 20px; }
+
+/* ---------- Suggestions popover (Typeahead) ---------- */
+.sr-search__suggestions {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  left: 0;
+  right: 0;
+  z-index: 20;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background-color: var(--sr-color-surface-small-cards);
+  border: 1px solid var(--sr-color-border-default);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--elevation-overlay);
+  max-height: 320px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.sr-search__suggestions[hidden] { display: none; }
+
+/* A result row is two lines — the thing found, then what disambiguates it.
+   Unlike a Select option (one line, a value being chosen) a suggestion is a
+   RESULT, which is why this list is styled separately rather than reusing
+   .sr-select__option. */
+.sr-search__suggestion {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  /* Figma draws 10/14; both are off the 4px grid, so this snaps to 8/12 —
+     the same left inset as a Select option, which keeps the two lists aligned
+     when they sit in the same form. */
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--sr-color-surface-small-cards);
+  cursor: pointer;
+}
+.sr-search__suggestion + .sr-search__suggestion {
+  border-top: 1px solid var(--sr-color-border-subtle);
+}
+
+.sr-search__suggestion-label {
+  font: var(--sr-type-body-m-font);
+  letter-spacing: var(--sr-type-body-m-letter-spacing);
+  color: var(--sr-color-text-primary);
+}
+.sr-search__suggestion-meta {
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  color: var(--sr-color-text-secondary);
+}
+
+/* Hover and keyboard-active share one treatment: a soft accent wash. The row
+   keeps Text/Primary rather than inverting, because inverted text would fight
+   the bolded match inside it. The active row is also carried by
+   aria-activedescendant, so this is not a colour-only cue. */
+.sr-search__suggestion:hover,
+.sr-search__suggestion.is-active {
+  background-color: var(--sr-color-surface-accent);
+}
+
+/* The matched substring, bolded in place. */
+.sr-search__match {
+  font-weight: var(--font-weight-bold);
+}
+
+/* Loading and empty rows live in the same popover. */
+.sr-search__status-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 52px;
+  padding: var(--space-4) var(--space-3);
+  color: var(--sr-color-text-secondary);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+  text-align: center;
+}
+.sr-search__status-row svg { width: 20px; height: 20px; }
+.sr-search__status-row .sr-search__spinner { color: inherit; }
+
+/* ---------- Error ---------- */
+.sr-search--error .sr-search__field {
+  border-color: var(--sr-color-status-critical);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-critical);
+}
+.sr-search--error .sr-search__field:focus-within {
+  box-shadow:
+    inset 0 0 0 1px var(--sr-color-status-critical),
+    0 0 0 3px var(--sr-color-border-focus);
+}
+/* Icon as well as colour, so the error is not carried by the border alone. */
+.sr-search__error {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  color: var(--sr-color-status-critical);
+}
+.sr-search__error-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+}
+.sr-search__error-icon svg { width: 100%; height: 100%; }
+
+/* ---------- Disabled ---------- */
+.sr-search--disabled .sr-search__field {
+  background-color: var(--sr-color-surface-background);
+  border-color: var(--sr-color-border-disabled);
+  box-shadow: none;
+}
+.sr-search--disabled .sr-search__control-input {
+  color: var(--sr-color-text-disabled);
+  cursor: not-allowed;
+}
+.sr-search--disabled .sr-search__label,
+.sr-search--disabled .sr-search__icon {
+  color: var(--sr-color-text-disabled);
+}
+
+/* Accessible label with no visual footprint — for a standalone search bar
+   whose placeholder carries the visible meaning. Every search field still
+   needs a real label; hiding it is a layout choice, not a licence to drop it.
+
+   NOTE: duplicated from input.css and table.css. Each component stylesheet in
+   this package is independently importable, so a shared utility has to live in
+   every file that uses it until there is a foundations stylesheet to hold it.
+   Three copies now — this is the point at which extracting it is overdue. */
+.sr-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
