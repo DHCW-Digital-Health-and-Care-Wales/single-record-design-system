@@ -1,18 +1,19 @@
 {
   "icon": {
     "size": {
-      "xs": { "$type": "dimension", "$value": "16px", "$description": "Smallest inline icon — dense stroke (1.75)" },
-      "sm": { "$type": "dimension", "$value": "20px", "$description": "Small inline icon — dense stroke (1.75)" },
-      "md": { "$type": "dimension", "$value": "24px", "$description": "Default icon size — standard stroke (2)" },
-      "lg": { "$type": "dimension", "$value": "32px", "$description": "Large icon, e.g. empty-state illustrations — standard stroke (2)" }
+      "xs": { "$type": "dimension", "$value": "16px", "$description": "Smallest inline icon — within dense content such as table cells" },
+      "sm": { "$type": "dimension", "$value": "20px", "$description": "Small inline icon — standard inline usage" },
+      "md": { "$type": "dimension", "$value": "24px", "$description": "Default icon size. Matches the 24x24 source grid 1:1" },
+      "lg": { "$type": "dimension", "$value": "32px", "$description": "Large icon — prominent placements and empty states" }
     },
     "stroke": {
-      "default": { "$type": "number", "$value": 2,    "$description": "Standard stroke weight — used at md and lg sizes" },
-      "dense":   { "$type": "number", "$value": 1.75, "$description": "Dense stroke weight — used at xs and sm sizes to preserve legibility at small scale" }
+      "$type": "number",
+      "$value": 1,
+      "$description": "1px, at every size. DDR-023: Lucide ships 2px and Single Record overrides it globally. Do NOT vary stroke by size — this token previously carried a 2 'default' and a 1.75 'dense' pair that no icon has ever used. Every SVG in foundations/iconography/svg/ is stroke-width 1, and npm run check:icons fails on any that is not."
     },
     "variant": {
       "outline": { "$type": "string", "$value": "outline", "$description": "Default variant for all icons. Stroke only, no fill." },
-      "filled":  { "$type": "string", "$value": "filled",  "$description": "Reserved for navigation active states only. Filled variants are not assigned speculatively — each must be explicitly required by a navigation component." }
+      "filled":  { "$type": "string", "$value": "filled",  "$description": "Reserved for navigation active states only. Filled variants are not assigned speculatively — each must be explicitly required by a navigation component. A mark that needs a second colour is a component, not an icon (DDR-027)." }
     }
   }
 }

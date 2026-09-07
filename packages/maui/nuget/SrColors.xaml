@@ -133,6 +133,19 @@
     <Color x:Key="SrColorStatusWarningSurface">#fffaeb</Color>
     <Color x:Key="SrColorStatusInfo">#005aa8</Color>
     <Color x:Key="SrColorStatusInfoSurface">#eef5fc</Color>
+    <x:Double x:Key="SrIconSizeXs">16</x:Double>
+    <x:Double x:Key="SrIconSizeSm">20</x:Double>
+    <x:Double x:Key="SrIconSizeMd">24</x:Double>
+    <x:Double x:Key="SrIconSizeLg">32</x:Double>
+    <x:Double x:Key="SrIconStroke">1</x:Double>
+    <Color x:Key="SrIconColorDefault">#212b32</Color>
+    <Color x:Key="SrIconColorSubtle">#4c6272</Color>
+    <Color x:Key="SrIconColorInverse">#ffffff</Color>
+    <Color x:Key="SrIconColorInteractive">#325083</Color>
+    <Color x:Key="SrIconColorCritical">#b32014</Color>
+    <Color x:Key="SrIconColorWarning">#f8ca4d</Color>
+    <Color x:Key="SrIconColorSuccess">#006630</Color>
+    <Color x:Key="SrIconColorInfo">#005aa8</Color>
     <x:Double x:Key="Space0">0</x:Double>
     <x:Double x:Key="Space1">4</x:Double>
     <x:Double x:Key="Space2">8</x:Double>
@@ -173,8 +186,7 @@
     <x:Double x:Key="IconSizeSm">20</x:Double>
     <x:Double x:Key="IconSizeMd">24</x:Double>
     <x:Double x:Key="IconSizeLg">32</x:Double>
-    <x:String x:Key="IconStrokeDefault">2</x:String>
-    <x:String x:Key="IconStrokeDense">1.75</x:String>
+    <x:Double x:Key="IconStroke">1</x:Double>
     <x:String x:Key="IconVariantOutline">outline</x:String>
     <x:String x:Key="IconVariantFilled">filled</x:String>
     <x:Double x:Key="SpacingComponentXs">4</x:Double>
@@ -242,7 +254,7 @@
     <x:Double x:Key="LogoIconSize">32</x:Double>
     <x:Double x:Key="LogoFullHeight">48</x:Double>
 
-    <!-- ── Dark-mode overrides (18 semantic tokens) ────────────────────── -->
+    <!-- ── Dark-mode overrides (22 semantic tokens) ────────────────────── -->
     <Color x:Key="SrColorInteractivePrimaryDark">#0d62a3</Color>
     <Color x:Key="SrColorInteractivePrimaryHoverDark">#004483</Color>
     <Color x:Key="SrColorInteractiveSecondaryDark">#aab1c6</Color>
@@ -261,5 +273,9 @@
     <Color x:Key="SrColorBorderSubtleDark">#464c64</Color>
     <Color x:Key="SrColorBorderDefaultDark">#707488</Color>
     <Color x:Key="SrColorBorderStrongDark">#9ea1af</Color>
+    <Color x:Key="SrIconColorDefaultDark">#ffffff</Color>
+    <Color x:Key="SrIconColorSubtleDark">#d8dde0</Color>
+    <Color x:Key="SrIconColorInverseDark">#212b32</Color>
+    <Color x:Key="SrIconColorInteractiveDark">#0d62a3</Color>
 
 </ResourceDictionary>

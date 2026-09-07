@@ -175,6 +175,66 @@ for (const d of ACCEPTED_DUPLICATES) {
   }
 }
 
+// --- 5. No hand-typed icon totals in prose.
+//
+// Every one of these had drifted: "119 icons across nine groups", "106 icons
+// across 10 domains", "123 icons as XAML path geometry", "120 icons with their
+// names", "106 SR aliases". Five different numbers for one catalogue, none of
+// them right, spread across guidelines, a Storybook story, two MAUI READMEs and
+// the reference doc.
+//
+// A count in prose is a count that goes stale the next time an icon is added.
+// The catalogue tables are generated (npm run sync:icons); everywhere else
+// should point at them rather than restate them. Where a number genuinely helps
+// a reader, it has to be the right one — so it is checked.
+const COUNT_PATTERNS = [
+  /(\d{2,4})\s+icons?\b/gi,
+  /(\d{2,4})\s+SR aliases\b/gi,
+];
+// Files that legitimately discuss historical counts: decision records explaining
+// what changed, and the known-issues log describing past defects.
+const PROSE_EXEMPT = [
+  'decisions/',
+  'docs/engineering/known-issues.md',
+  'CHANGELOG.md',
+  'scripts/check-icons.mjs',
+  'scripts/sync-icon-docs.mjs',
+  'foundations/iconography/fetch-icons.mjs',
+];
+const PROSE_FILES = [
+  'foundations/iconography.md',
+  'foundations/iconography/catalogue.md',
+  'components/icons/guidelines.md',
+  'packages/icons/src/icon.stories.js',
+  'packages/icons/README.md',
+  'packages/maui/README.md',
+  'packages/maui/nuget/README.md',
+  'packages/maui/testbed/README.md',
+  'SINGLE-RECORD-DS-REFERENCE.md',
+  'DESIGN-SYSTEM.md',
+];
+
+for (const rel of PROSE_FILES) {
+  if (PROSE_EXEMPT.some((e) => rel.startsWith(e))) continue;
+  const file = resolve(ROOT, rel);
+  if (!existsSync(file)) continue;
+  const text = readFileSync(file, 'utf8');
+  for (const pattern of COUNT_PATTERNS) {
+    for (const m of text.matchAll(pattern)) {
+      const stated = Number(m[1]);
+      // 24 is the grid, not a count; ignore obviously unrelated numbers.
+      if (stated === 24 || stated < 50) continue;
+      if (stated !== entries.length) {
+        problems.push(
+          `${rel} says "${m[0].trim()}" but the catalogue has ${entries.length}. `
+          + 'Either correct it or, better, point at foundations/iconography/catalogue.md — '
+          + 'that file is generated and cannot drift.',
+        );
+      }
+    }
+  }
+}
+
 const open = ACCEPTED_DUPLICATES.filter((d) => d.status === 'open');
 
 // ---------------------------------------------------------------------------

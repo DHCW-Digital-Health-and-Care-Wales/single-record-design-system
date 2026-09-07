@@ -11,7 +11,7 @@ device:
 | Do the resource references resolve at runtime? | Anything unstyled on the More tab means a dictionary did not merge |
 | Does `AppThemeBinding` flip cleanly? | More → Theme, which lists the 16 semantics that differ and shows both values |
 | Does `MinimumHeightRequest` survive 200% font scale? | Device settings → font size → 200%, then Home |
-| Do the 120 icon geometries render as the icons they claim to be? | More → Icons |
+| Do the icon geometries render as the icons they claim to be? | More → Icons |
 
 ## First, the thing to be clear about
 
@@ -114,7 +114,7 @@ the stat cards in particular — those are the tightest boxes on the screen.
 theme switch, the environment readout (including the live font scale on Android),
 the type-scale ladder, every stock control under its implicit style only, the
 status treatments, the 16 themed semantics as light/dark swatch pairs, and all
-120 icons with their names.
+every icon in the catalogue with its name.
 
 Diary, Patients and Messages are drawn because the design draws them and lead
 nowhere. Inventing three screens the design system has not specified would be

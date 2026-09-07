@@ -14,10 +14,15 @@
   height: 100%;
 }
 
-.sr-icon--xs { width: 16px; height: 16px; } /* sr.icon.size.xs — inline within dense content */
-.sr-icon--sm { width: 20px; height: 20px; } /* sr.icon.size.sm — standard inline icons */
-.sr-icon--md { width: 24px; height: 24px; } /* sr.icon.size.md — default */
-.sr-icon--lg { width: 32px; height: 32px; } /* sr.icon.size.lg — prominent icons, empty states */
+/* Sizes come from the token layer. These used to be four hardcoded px values
+   with the token name written beside them in a comment — the comment was the
+   only link, and `sr.icon.size.*` was not emitted to any platform at all, so
+   nothing could have consumed it. Both halves are fixed: the tokens build now
+   includes semantic/iconography.json, and these rules read it. */
+.sr-icon--xs { width: var(--sr-icon-size-xs); height: var(--sr-icon-size-xs); } /* inline within dense content */
+.sr-icon--sm { width: var(--sr-icon-size-sm); height: var(--sr-icon-size-sm); } /* standard inline icons */
+.sr-icon--md { width: var(--sr-icon-size-md); height: var(--sr-icon-size-md); } /* default — matches the 24px source grid 1:1 */
+.sr-icon--lg { width: var(--sr-icon-size-lg); height: var(--sr-icon-size-lg); } /* prominent icons, empty states */
 
 .sr-icon--inherit     { color: inherit; } /* icon sits inside a coloured ancestor (e.g. .sr-button) and must track its currentColor */
 .sr-icon--default     { color: var(--sr-color-text-primary); }

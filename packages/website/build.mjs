@@ -3462,7 +3462,10 @@ open-source icon set published under the ISC licence. Every icon is drawn on a 2
 1px stroke, round caps and round joins, so icons sit together evenly whatever the mix on screen.</p>
 <p>${iconNames.length} icons are published, grouped into ${byDomain.size} domains that follow how
 clinical and administrative staff talk about their work: navigation, actions, status, people,
-clinical records, scheduling, location, communication, files and data.</p>
+clinical records, scheduling, location, communication, files, data and device.</p>
+<p><strong>One glyph carries one meaning.</strong> A drawing is never reused for two different
+concepts, because the person reading the screen sees the picture, not the name behind it. The build
+fails if two Single Record names ever resolve to the same Lucide drawing.</p>
 <p>Icons are referenced by their Single Record name, such as <code>clinical/medication</code>, not by
 the underlying Lucide file name. The Single Record name is stable: if an upstream drawing is renamed
 or replaced, the name your product uses does not change.</p>
@@ -3473,8 +3476,9 @@ the colour role; the SVG itself is drawn with <code>currentColor</code> and inhe
 ${showcase(`<div class="icon-specs">${sizeSpecimen}</div>`, 'icon-basic', basicSnippets)}
 
 <h2>Sizes</h2>
-<p>Four sizes are published. Stroke weight is reduced slightly at the two smallest sizes so the
-drawing does not fill in at low pixel densities.</p>
+<p>Four sizes are published. <strong>Stroke stays at 1px in all of them</strong> — it is not
+thinned at small sizes or thickened at large ones. One stroke weight across the set is what makes a
+row of mixed icons look like one family.</p>
 <div class="table-wrap"><table>
 <thead><tr><th>Class</th><th>Size</th><th>Use for</th></tr></thead>
 <tbody>
@@ -3499,6 +3503,21 @@ rather than a stroke colour and reaches only 1.6:1 on white. Never let a warning
 message on its own: give it a text label, and where the icon has to read on its own use
 <code>sr-icon--critical</code> or the warning surface behind a labelled banner. A darker warning
 value is under review.</p></div>
+
+<h2>On each platform</h2>
+<p>Sizes, stroke and the colour roles are published as design tokens from a single source, so the
+same size is the same number wherever you build. Reach for the token rather than typing 24px.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Platform</th><th>Icon</th><th>Size and colour</th></tr></thead>
+<tbody>
+<tr><td>Web / Blazor</td><td><code>&lt;svg&gt;&lt;use href="sprite.svg#icon-nav-search"&gt;</code>, or the <code>sr-icon</code> wrapper</td><td><code>var(--sr-icon-size-md)</code>, <code>var(--sr-icon-color-subtle)</code></td></tr>
+<tr><td>React</td><td><code>&lt;Icon name="nav/search" /&gt;</code></td><td><code>size="md"</code>, <code>color="subtle"</code></td></tr>
+<tr><td>.NET MAUI</td><td><code>&lt;Path Data="{StaticResource SrIconNavSearch}" /&gt;</code></td><td><code>{StaticResource SrIconSizeMd}</code>, <code>{StaticResource SrIconStroke}</code>, <code>{StaticResource SrIconColorSubtle}</code></td></tr>
+<tr><td>Delphi</td><td>Rasterised PNG exported from the SVG</td><td>Export at 16, 20, 24 and 32px</td></tr>
+</tbody></table></div>
+<p>MAUI receives the icons as XAML path geometry rather than images, so an icon takes its colour
+from a token like everything else and stays sharp at any density. <code>SrIconStroke</code> is a
+<code>Double</code>, ready to bind to a <code>Path</code>'s <code>StrokeThickness</code>.</p>
 
 <h2>Icons with text</h2>
 <p>Most icons in Single Record sit next to a label. In that pairing the text carries the meaning and

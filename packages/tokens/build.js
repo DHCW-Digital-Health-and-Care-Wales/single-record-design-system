@@ -77,6 +77,12 @@ const xamlFormat = {
         const numVal = parseFloat(val);
         return `    <x:Double x:Key="${name}">${numVal}</x:Double>`;
       }
+      // A DTCG `number` is a number in XAML too. Falling through to x:String
+      // gave MAUI a string where it needs a Double — `SrIconStroke` could not
+      // be bound to a Path's StrokeThickness, which is the one place it is for.
+      if (type === 'number' && Number.isFinite(Number(val))) {
+        return `    <x:Double x:Key="${name}">${Number(val)}</x:Double>`;
+      }
       if (type === 'shadow') {
         const s = parseCssShadow(val);
         if (!s) return `    <!-- ${name}: could not parse "${val}" as a shadow -->`;
@@ -247,6 +253,12 @@ const sharedSources = [
   `${TOKENS_ROOT}/primitives/spacing.json`,
   `${TOKENS_ROOT}/primitives/typography.json`,
   `${TOKENS_ROOT}/primitives/iconography.json`,
+  // The semantic icon layer was missing from this list, so `sr.icon.size.*`,
+  // `sr.icon.stroke` and the eight `sr.icon.color.*` roles were defined in the
+  // repository and documented in foundations/iconography.md but emitted to no
+  // platform at all — not CSS, not SCSS, not XAML, not JSON. Only the raw
+  // primitives reached consumers.
+  `${TOKENS_ROOT}/semantic/iconography.json`,
   `${TOKENS_ROOT}/semantic/typography.json`,
   `${TOKENS_ROOT}/semantic/spacing.json`,
   `${TOKENS_ROOT}/breakpoints.json`,

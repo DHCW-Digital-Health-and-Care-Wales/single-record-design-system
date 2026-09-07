@@ -518,7 +518,7 @@ The gate checks **both light and dark modes**, which is not thoroughness for its
 
 ## Iconography
 
-**146 icons across 11 domains**, from Lucide (ISC), on a 24 × 24 grid at **1px
+**142 icons across 11 domains**, from Lucide (ISC), on a 24 × 24 grid at **1px
 stroke** (DDR-023 — Lucide ships 2px; do not restore it). Every icon is
 `currentColor` with no baked fill, so one asset serves both modes.
 
@@ -540,6 +540,33 @@ lock file. It used to be fetched from Lucide's `main` branch, so the icon set wa
 whatever `main` held that day — and `main` runs ahead of the published release,
 so names present in the shipped version (`trash-2`, `history`, `circle-help`)
 404 there. Bump the pin deliberately and review the SVG diff.
+
+**The generator names every existing icon whose artwork it is about to change.**
+That guard exists because `action/scan`'s entry said `barcode` while the drawn
+icon was `scan-barcode` — a wrong entry that lay dormant while the generator was
+unrunnable, then silently replaced a working icon the moment it was repaired. An
+audit of all 106 entries against their artwork found 105 correct and that one
+wrong. Upstream redraws and wrong entries are reported identically, on purpose:
+only a person can tell them apart.
+
+### Icon tokens
+
+Sizes, stroke and the eight colour roles come from one token source and are
+emitted to **CSS, SCSS, XAML and JSON**, so a size is the same number on every
+platform.
+
+| Platform | How to consume |
+|---|---|
+| Web / Blazor | `var(--sr-icon-size-md)`, `var(--sr-icon-stroke)`, `var(--sr-icon-color-subtle)`; or `.sr-icon--md` / `.sr-icon--subtle`, which read those tokens |
+| React | `<Icon name="nav/search" size="md" color="subtle" />` |
+| .NET MAUI | `{StaticResource SrIconSizeMd}` and `{StaticResource SrIconStroke}` (both `x:Double`), `{StaticResource SrIconColorSubtle}` (`Color`) |
+
+**Stroke is 1, at every size** (DDR-023). The token layer previously carried
+`icon.stroke.default: 2` and `icon.stroke.dense: 1.75` — shipped to Blazor CSS
+and MAUI XAML as real consumable values — while every icon was drawn at 1. And
+the whole semantic layer (`sr.icon.*`, including all eight colour roles) was
+missing from the token build's source list, so it was documented but emitted
+nowhere. Both are fixed.
 
 **Known gap:** six glyphs currently carry two meanings each — `clipboard-list`,
 `pause`, `door-open`, `log-out`, `calendar`, `file-pen` — plus the pre-existing
@@ -645,7 +672,7 @@ The design system is **implementation-agnostic at the design level**. Tokens are
 
 **MAUI is native XAML, not Blazor Hybrid (DDR-021).** What the design system
 ships for it is a token and style layer, not a parallel component library:
-`Colors.xaml` (210 resources, generated from the tokens), `Icons.xaml` (146 icons
+`Colors.xaml` (210 resources, generated from the tokens), `Icons.xaml` (142 icons
 as XAML path geometry, generated from the same SVGs as the web icon set), and a
 hand-authored `Styles.xaml` of implicit styles, keyed intent styles and the
 `StyleClass` type scale. All in `packages/maui`.
@@ -659,7 +686,7 @@ until `Roboto-Medium.ttf` is bundled.
 
 `packages/maui/testbed` is a MAUI app that puts the layer on a real device, with
 a diagnostics page covering theme flipping, font scale, every stock control and
-all 146 icons. Nothing in the MAUI layer has been compiled yet — it is verified
+all 142 icons. Nothing in the MAUI layer has been compiled yet — it is verified
 statically (resource resolution, icon geometry against source, no literal
 colours) and that gap is named in `packages/maui/README.md`.
 

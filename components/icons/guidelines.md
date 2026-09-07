@@ -15,7 +15,7 @@
 
 ## Where icons come from
 
-**Lucide, and only Lucide.** The set is 119 icons across nine groups
+**Lucide, and only Lucide.** The set is catalogued in `foundations/iconography/catalogue.md`, which is generated from the icon generator — see there for the current aliases and domains
 (`action`, `clinical`, `comms`, `data`, `file`, `location`, `nav`, `people`,
 `schedule`, `status`). The source of truth is `foundations/iconography/svg/`;
 `packages/icons/build/icons.js` is generated from it.
