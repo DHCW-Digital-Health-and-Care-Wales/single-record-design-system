@@ -117,11 +117,6 @@ instance — do not wrap an Input around it.
 
 ## Known gaps
 
-- **The Figma set is inconsistent about the value's type size.** `Default` and
-  the two button types draw the value at 14/20 (Body S); `Filled`, `Loading` and
-  `Error` draw it at 16/24 (Body M). A real `<input>` cannot change size between
-  placeholder and value, so the code ships **14/20**, matching Input, Select and
-  Date input. Design to confirm and make the six variants agree.
 - **Radius.** Figma draws 4px; `--radius-sm` is 2px. The code follows the token,
   as Input and Select already do. This is a system-wide mismatch, not a Search
   one.

@@ -1,7 +1,7 @@
 # Search
 
 **Status:** Built (web, React). Figma component sets `1715:375` and `1716:238` on page `1701:17851`.
-**Last updated:** 2026-09-07
+**Last updated:** 2026-09-08
 
 ---
 
@@ -86,7 +86,7 @@ Dock it directly under a Typeahead Search instance. Width defaults to 360 — re
 
 - **Container**: 40px height (matches Button Default and Input Field), `Radius/4`, 1px border. Focus state keeps the border and adds a 3px outer ring (see Focus below).
 - **Leading icon**: 18×18 magnifying glass, stroke = `Text/Secondary` (or `Text/Disabled`).
-- **Value**: `SR Typography/Desktop/Body S` (14/20). `Text/Primary` when filled, `Text/Secondary` when showing placeholder. See Known gaps — the Figma set is split between 14 and 16 here.
+- **Value**: `SR Typography/Desktop/Body S` (14/20), in every one of the 24 variants. `Text/Primary` when filled, `Text/Secondary` when showing placeholder. A real `<input>` cannot change size between placeholder and value; twelve variants were bound to Body M until 2026-09-08.
 - **Trailing**: clear (×) when filled, spinner when loading, otherwise empty.
 - **Button**: only on With Button / With Icon Button variants. Text button uses 24px horizontal padding; icon button is 40×40 square — sized to the field, and above the 24×24 minimum of WCAG 2.2 SC 2.5.8 (AA).
 
@@ -164,11 +164,6 @@ For With Button / With Icon Button: the adjacent button uses `Interactive/Disabl
 
 ## Known gaps
 
-- **The Figma set is inconsistent about the value's type size.** `Default` and
-  the two button types draw the value at 14/20 (Body S); `Filled`, `Loading` and
-  `Error` draw it at 16/24 (Body M). A real `<input>` cannot change size between
-  placeholder and value, so the code ships 14/20, matching Input, Select and
-  Date input. Design to confirm and make the six variants agree.
 - **Radius.** Figma draws 4px; `--radius-sm` is 2px. Code follows the token, as
   Input and Select already do — a system-wide mismatch, not a Search one.
 - **Suggestion row padding** is 8/12 in code against Figma's 10/14, which is off

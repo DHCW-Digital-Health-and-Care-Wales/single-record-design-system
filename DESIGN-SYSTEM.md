@@ -4,7 +4,7 @@ The Single Record Design System provides the shared design language, component l
 
 This document is the primary reference for everyone working on Single Record — designers, engineers, and delivery leads.
 
-**Last reviewed:** 2026-09-07. Update this file whenever a component ships, a
+**Last reviewed:** 2026-09-08. Update this file whenever a component ships, a
 token is added, or a system-wide rule changes — not on a schedule. If it
 disagrees with `/foundations/tokens/` or `/components/`, those win and this file
 is out of date.
@@ -310,7 +310,10 @@ Save/Mark-as-complete pair remains the default, so nothing existing changed.
 Whatever a screen passes must still keep to the pattern: exactly one primary,
 and no destructive action in persistent chrome.
 
-**`Search` is the only search field, and `Autocomplete` composes it.** The
+**`Search` is the only search field, and `Autocomplete` composes it.** All 24
+Search variants draw the value at `Body S` (14/20); twelve were bound to
+`Body M` until 2026-09-08, which no `<input>` could have reproduced — it
+cannot change size between placeholder and value. The
 Input set's `Type=Search` variants were removed in Figma on 2026-06-04; Search
 (`1715:375`) now carries its own `Label` / `Hint` / `Required` properties, so a
 search inside a labelled form field needs no Input wrapper. Autocomplete is a
