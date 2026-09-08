@@ -237,16 +237,19 @@ satisfactory — a component without a spec has no agreed contract, and a spec
 without code cannot be consumed. Both lists are worked down as components are
 touched.
 
-**No Menu/Dropdown component, and no Tabs component.** The Case Note Tracking
-prototype's row-level action menu (Figma `47:4041`) needed a small popover
-list — send/receive/tag/merge/deactivate/delete — and its My Requests screen
-(`127:4813`) needed an All/Sent/Received tab switcher, with neither component
-in this table to reach for. Both are built locally, from tokens only, in
+**No Menu/Dropdown component.** The Case Note Tracking prototype's row-level
+action menu (Figma `47:4041`) needed a small popover list —
+send/receive/tag/merge/deactivate/delete — with nothing in this table to reach
+for. It is built locally, from tokens only, in
 `products/case-note-tracking/prototype/src/shared/RowActions.jsx`
-(`RowActionMenu`) and `MyRequests.jsx` (the tab buttons) — scoped to that
-prototype rather than promoted to `packages/web`/`packages/react`. Promote
-either once a second consumer needs the same pattern, with a spec in
-`/components/menu/` or `/components/tabs/`.
+(`RowActionMenu`) — scoped to that prototype rather than promoted to
+`packages/web`/`packages/react`. Promote it once a second consumer needs the
+same pattern, with a spec in `/components/menu/`.
+
+Tabs used to be on this list too: the same prototype's My Requests screen
+(`127:4813`) hand-rolled an All/Sent/Received switcher. Tabs shipped on
+2026-09-07, so that screen should now consume `@dhcw/sr-react` → `Tabs`
+instead of its local buttons — it is the one remaining hand-rolled copy.
 
 **Navigation, Breadcrumbs and the two Toggles now have website pages.**
 Navigation had guidelines and full code and no page at all. Switch and
