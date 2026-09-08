@@ -2721,7 +2721,7 @@ function tabsBody() {
 ${items.map((it, i) => {
   const on = i === selected;
   const name = it.count !== undefined ? ` aria-label="${it.label}, ${it.count} items"` : '';
-  return `  <button type="button" class="sr-tabs__tab" role="tab" id="${id}-tab-${i}" aria-selected="${on}" aria-controls="${id}-panel-${i}" tabindex="${on ? 0 : -1}" data-label="${it.label}"${it.disabled ? ' disabled aria-disabled="true"' : ''}${name}>${it.label}${it.count !== undefined ? `<span class="sr-tabs__badge" aria-hidden="true">${it.count}</span>` : ''}</button>`;
+  return `  <button type="button" class="sr-tabs__tab" role="tab" id="${id}-tab-${i}" aria-selected="${on}" aria-controls="${id}-panel-${i}" tabindex="${on ? 0 : -1}"${it.disabled ? ' disabled aria-disabled="true"' : ''}${name}>${it.label}${it.count !== undefined ? `<span class="sr-tabs__badge" aria-hidden="true">${it.count}</span>` : ''}</button>`;
 }).join('\n')}
 </div>`;
     const panels = items.map((it, i) => `<div class="sr-tabs__panel" role="tabpanel" id="${id}-panel-${i}" aria-labelledby="${id}-tab-${i}" tabindex="0"${i === selected ? '' : ' hidden'}>${it.panel || (it.label + ' content.')}</div>`).join('\n');
@@ -2752,9 +2752,9 @@ ${items.map((it, i) => {
   ] });
 
   const snippets = {
-    HTML: '<div class="sr-tabs" role="tablist" aria-label="Patient record">\n  <button type="button" class="sr-tabs__tab" role="tab" id="t-0"\n          aria-selected="true" aria-controls="p-0" tabindex="0" data-label="Summary">Summary</button>\n  <button type="button" class="sr-tabs__tab" role="tab" id="t-1"\n          aria-selected="false" aria-controls="p-1" tabindex="-1" data-label="Results">Results</button>\n</div>\n<div class="sr-tabs__panel" role="tabpanel" id="p-0" aria-labelledby="t-0" tabindex="0">…</div>\n<div class="sr-tabs__panel" role="tabpanel" id="p-1" aria-labelledby="t-1" tabindex="0" hidden>…</div>\n\n<!-- Arrow keys, Home/End and the roving tabindex are yours to wire up. -->',
+    HTML: '<div class="sr-tabs" role="tablist" aria-label="Patient record">\n  <button type="button" class="sr-tabs__tab" role="tab" id="t-0"\n          aria-selected="true" aria-controls="p-0" tabindex="0">Summary</button>\n  <button type="button" class="sr-tabs__tab" role="tab" id="t-1"\n          aria-selected="false" aria-controls="p-1" tabindex="-1">Results</button>\n</div>\n<div class="sr-tabs__panel" role="tabpanel" id="p-0" aria-labelledby="t-0" tabindex="0">…</div>\n<div class="sr-tabs__panel" role="tabpanel" id="p-1" aria-labelledby="t-1" tabindex="0" hidden>…</div>\n\n<!-- Arrow keys, Home/End and the roving tabindex are yours to wire up. -->',
     React: '<Tabs\n  ariaLabel="Patient record"\n  tabs={[\n    { id: \'summary\', label: \'Summary\', panel: <Summary /> },\n    { id: \'results\', label: \'Results\', count: 20, panel: <Results /> },\n    { id: \'imaging\', label: \'Imaging\', disabled: true, panel: null },\n  ]}\n  onChange={(id) => track(id)}\n/>',
-    Blazor: '<div class="sr-tabs" role="tablist" aria-label="Patient record">\n  @foreach (var (t, i) in Tabs.Select((t, i) => (t, i)))\n  {\n    <button type="button" class="sr-tabs__tab" role="tab"\n            aria-selected="@(i == Selected)" tabindex="@(i == Selected ? 0 : -1)"\n            data-label="@t.Label" @onclick="() => Select(i)">@t.Label</button>\n  }\n</div>',
+    Blazor: '<div class="sr-tabs" role="tablist" aria-label="Patient record">\n  @foreach (var (t, i) in Tabs.Select((t, i) => (t, i)))\n  {\n    <button type="button" class="sr-tabs__tab" role="tab"\n            aria-selected="@(i == Selected)" tabindex="@(i == Selected ? 0 : -1)"\n            @onclick="() => Select(i)">@t.Label</button>\n  }\n</div>',
     MAUI: '<!-- The design system layer ships no tab strip for MAUI. Use the platform\n     tabbed shell and take the SR tokens: SrIconSizeMd, SrColorInteractivePrimary,\n     and the 3px selected indicator. -->',
   };
 

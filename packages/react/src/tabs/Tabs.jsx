@@ -101,7 +101,6 @@ export default function Tabs({
               aria-label={t.count !== undefined ? `${t.label}, ${t.count} items` : undefined}
               disabled={t.disabled}
               tabIndex={isSelected ? 0 : -1}
-              data-label={t.label}
               onClick={() => select(i)}
               onKeyDown={(e) => onKeyDown(e, i)}
             >

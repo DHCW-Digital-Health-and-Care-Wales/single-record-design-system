@@ -43,7 +43,6 @@ const render = ({ tabs, selectedIndex = 0, orientation = 'horizontal', ariaLabel
     btn.setAttribute('aria-controls', `${id}-panel-${i}`);
     // Roving tabindex: one stop for the whole tablist, then arrow keys inside.
     btn.tabIndex = selected ? 0 : -1;
-    btn.dataset.label = tab.label;
     btn.textContent = tab.label;
 
     if (tab.disabled) {

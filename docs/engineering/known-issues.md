@@ -710,6 +710,54 @@ past its share.
 
 ## Build & CI
 
+### A `::after` inside a flex container is a flex ITEM, not a layer behind it
+
+**Symptom:** Tabs shipped with every tab roughly twice as wide as its own label
+— 164px for text measuring 62px — and 52px tall against a specified 40px.
+Nothing looked wrong on the component page, because every tab was inflated by
+the same proportion. It only surfaced when the strip was changed from scrolling
+to wrapping and four tabs claimed four rows.
+
+**Why, part one — the width.** Selecting a tab switches the label to Medium,
+which is ~3px wider than Regular, so the strip reflows. The fix attempted was a
+hidden copy of the label at the selected weight:
+
+```css
+.sr-tabs__tab { display: inline-flex; gap: 8px; }
+.sr-tabs__tab::after { content: attr(data-label); display: block; height: 0; }
+```
+
+`display: block` reads like "a block behind the content". It is not. In a flex
+container every child box — pseudo-elements included — is blockified into a
+flex ITEM, so the copy sat *beside* the label with the 8px gap between them.
+Width became `label + gap + label + padding`.
+
+**Why, part two — the height.** `padding: var(--space-4)` applies 16px to all
+four sides, not the horizontal-only 16px the component specifies. A 20px line
+box plus 32px is 52px. `min-height: 40px` was satisfied, so nothing complained.
+
+**Fix:** `padding: 0 var(--space-4)`, and the reservation removed entirely. To
+stack a hidden copy behind real text you need both in one grid cell, and a bare
+text node cannot be placed in a grid — it needs its own wrapping element. Not
+worth it for 3px; the better fix is in the design, keeping one weight.
+
+**The trap that made it survive review.** The check applied was "does the strip
+shift when you change tab?" It passed — but it would have passed with the tabs
+at any uniform size, including a wrong one. **A check that a defect satisfies is
+not a check.** The question had to be "is the tab the size the spec says",
+against the number, not "does it look stable".
+
+**Prevented by:** nothing yet, and it should be. This is a rendered-geometry
+fact, so no CSS-source lint can see it — the same lesson as *"A gate that checks
+the source and trusts the toolchain is not a gate"* below. The mechanised form
+is a headless-browser check asserting the numbers the specs already state (tab
+40px tall, tab width = label + 32, search field 40px, no tablist scrolling
+horizontally) against the built site. That needs Playwright as a declared
+devDependency, which is a DDR under CLAUDE.md — write the DDR and the check
+together.
+
+---
+
 ### A line-anchored regex turns a lint rule into a formatting test
 
 **Symptom:** `check:type` had a clean baseline of zero raw typography

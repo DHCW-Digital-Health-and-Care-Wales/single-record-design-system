@@ -1,7 +1,7 @@
 # Tabs
 
 **Status:** Built (web, React). Figma component set `817:7219` on page `1753:21420`.
-**Last updated:** 2026-09-07
+**Last updated:** 2026-09-08
 
 ---
 
@@ -46,6 +46,9 @@ with a count.
 The strip carries **no track line**. The Figma component does not draw one; if a
 rule under the tabs is wanted, it is a Figma change first.
 
+**Overflow wraps, it does not scroll.** A horizontally scrolling strip gives no
+indication that anything is off-screen. Every tab stays visible.
+
 ---
 
 ## States
@@ -66,20 +69,25 @@ showing.
 
 ## Sizing
 
-40px tall. 16px padding, 8px gap between label and badge. Badge is 20px tall
-with a 32px minimum width and full radius.
+40px tall. 16px padding **left and right only**, 8px gap between label and
+badge. A tab is exactly as wide as its label plus 32px. Badge is 20px tall with
+a 32px minimum width and full radius.
 
 **The selected label is heavier and wider than the unselected one** (Medium with
-0.3px tracking against Regular with none — 92px against 89px in the Figma set).
-Left alone that shifts the whole strip every time someone changes tab. The
-implementation reserves the selected width on every tab using a hidden
-pseudo-element, which needs `data-label` on the button to match the visible
-text. `@dhcw/sr-react` sets it; a tab without it loses the reservation but still
-renders.
+0.3px tracking against Regular with none — 92px against 89px in the Figma set),
+so selecting a tab nudges the tabs to its right by about 2–3px. That is
+accepted, and nothing in the CSS tries to absorb it.
+
+> The first implementation did try, by rendering the label again at the selected
+> weight in a `::after` collapsed to zero height. Because the tab is a flex
+> container the pseudo-element became a flex *item* and sat beside the label
+> rather than behind it, making every tab roughly twice as wide as its own text.
+> It was removed on 2026-09-08. Doing it properly needs the label in its own
+> element so the two copies can share a grid cell — not worth it for 3px.
 
 > Worth revisiting in design: a weight change that alters width is the cause of
-> that workaround. Keeping one weight and distinguishing selection by colour and
-> indicator alone would remove it.
+> all of this. Keeping one weight and distinguishing selection by colour and the
+> 3px indicator alone would remove the reflow entirely.
 
 ---
 
@@ -89,7 +97,7 @@ renders.
 
 | Breakpoint | Behaviour |
 |---|---|
-| Mobile ≤767 | Horizontal strip scrolls sideways rather than wrapping. A wrapped tablist reads as two rows of unrelated controls. Consider Vertical where the labels are long. |
+| Mobile ≤767 | Horizontal strip wraps onto further rows. Consider Vertical where the labels are long. |
 | Tablet 768–1023 | As desktop. |
 | Desktop ≥1024 | Horizontal by default; Vertical for a side rail beside a long record. |
 
@@ -146,8 +154,8 @@ panel.
 
 ## Do / Don't
 
-- **Do** keep the tablist to what fits comfortably; a strip that always scrolls
-  is a sign the content wants a different structure.
+- **Do** keep the tablist to what fits comfortably; a strip that always wraps to
+  three rows is a sign the content wants a different structure.
 - **Do** put the selected tab's content in the panel it controls, not elsewhere.
 - **Don't** use Tabs for navigation between product areas — that needs a URL.
 - **Don't** use Tabs where the options are a filter; that is the Segmented control.

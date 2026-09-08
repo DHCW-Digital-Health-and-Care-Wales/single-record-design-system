@@ -64,8 +64,10 @@ A tab is a label, optionally with a count. There are no icon slots.
 
 - **Do** use one or two words per tab. A tab strip is scanned, not read.
 - **Do** name views with nouns. Tabs do not perform actions.
-- **Do** let the strip scroll sideways on small screens rather than wrap. A
-  wrapped tablist reads as two rows of unrelated controls.
+- **Do** let the strip wrap onto another row when it does not fit, rather than
+  scroll. A scrolling strip gives no sign that anything is off-screen, which is
+  the same objection as the bullet below: it hides tabs from the people who need
+  to see them.
 - **Don't** hide anything a member of staff must see behind a tab.
 - **Don't** disable a tab to hide content. Omit it, or show the panel and
   explain why it is empty — a disabled tab tells the reader something exists

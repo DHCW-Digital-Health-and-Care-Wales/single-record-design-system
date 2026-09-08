@@ -27,13 +27,16 @@
 }
 
 .sr-tabs__tab {
-  /* 40px tall with 16px padding and an 8px gap — straight from the component. */
+  /* 40px tall, 16px padding LEFT AND RIGHT ONLY, 8px gap — from the component.
+     `padding: var(--space-4)` applied 16px on all four sides, which made every
+     tab 52px tall (20px line box + 32px) rather than the specified 40px. The
+     min-height was satisfied and so nothing complained. */
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2); /* 8px */
   min-height: 40px;
-  padding: var(--space-4); /* 16px */
+  padding: 0 var(--space-4); /* 0 16px */
   border: none;
   background: transparent;
   color: var(--sr-color-text-primary);
@@ -45,28 +48,29 @@
 }
 
 /**
- * Reserve the SELECTED width on every tab.
+ * There is deliberately NO width reservation here.
  *
- * The selected tab is Medium with 0.3px tracking; the rest are Regular with
- * none. That is a real width change — 89px against 92px in the Figma set — so
- * without this the whole strip shifts sideways every time someone changes tab,
- * and the tab under the pointer moves out from under it.
+ * The selected tab is Medium with 0.3px tracking and the rest are Regular with
+ * none, so selecting a tab widens it by about 3px and nudges the tabs to its
+ * right. An earlier version tried to absorb that by rendering the label again
+ * at the selected weight in a `::after`, collapsed to zero height.
  *
- * The pseudo-element renders the same text at the selected weight, collapsed to
- * zero height, so the tab is always as wide as its widest state. It needs
- * `data-label` to match the visible text; @dhcw/sr-react sets it for you, and a
- * tab without it simply loses the reservation rather than breaking.
+ * That did not work. `.sr-tabs__tab` is a flex container, so the pseudo-element
+ * became a flex ITEM and sat BESIDE the label with the 8px gap between them,
+ * rather than behind it. Every tab came out roughly twice as wide as its own
+ * text — 164px for a label measuring 62px. Nothing looked broken because every
+ * tab was inflated by the same proportion, and the check it was meant to
+ * satisfy — "does the strip shift on select" — passed for the wrong reason.
+ * The bug only surfaced when the strip started wrapping and four tabs claimed
+ * four rows.
+ *
+ * Doing it properly needs the label wrapped in its own element so the two
+ * copies can be stacked in one grid cell; a bare text node cannot be placed.
+ * That is not worth it for 3px. The better fix is in the design: keep one
+ * weight and let colour and the 3px indicator carry selection, which is
+ * already raised in components/tabs/spec.md. Until then the 3px reflow stays,
+ * and it is far less harmful than what it replaced.
  */
-.sr-tabs__tab::after {
-  content: attr(data-label);
-  display: block;
-  height: 0;
-  overflow: hidden;
-  visibility: hidden;
-  font: var(--sr-type-label-font); /* 14/20 Medium */
-  letter-spacing: var(--sr-type-label-letter-spacing);
-  pointer-events: none;
-}
 
 /* Hover — soft page-background wash, brand-blue label. Unselected tabs only:
    the selected tab is already at its strongest and has nowhere to go. */
@@ -172,13 +176,24 @@
 }
 
 /* ── Overflow ─────────────────────────────────────────────────────────────
-   A horizontal strip that outgrows its container scrolls rather than wrapping:
-   a wrapped tablist reads as two rows of unrelated controls. Vertical stacks
-   are unaffected. */
+   A horizontal strip that outgrows its container WRAPS onto another row.
+
+   This used to scroll, on the argument that a wrapped tablist reads as two
+   rows of unrelated controls. That argument lost to a stronger one: a
+   horizontally scrolling strip gives no indication that anything is off-screen,
+   so it hides tabs from the very people who most need to see them. Clinicians
+   are explicit that hidden navigation costs them — it adds recall effort and
+   damages discoverability. Wrapping shows every tab at once, which is the point
+   of a tab strip. Vertical stacks are unaffected.
+
+   The row-gap is deliberate and small: 4px detaches a selected tab's 3px bottom
+   indicator from the row beneath it, so the indicator cannot read as a rule
+   over the following row, while staying tight enough that the rows still read
+   as one control. */
 
 .sr-tabs:not(.sr-tabs--vertical) {
-  overflow-x: auto;
-  scrollbar-width: thin;
+  flex-wrap: wrap;
+  row-gap: var(--space-1);
 }
 
 @media (prefers-reduced-motion: reduce) {
