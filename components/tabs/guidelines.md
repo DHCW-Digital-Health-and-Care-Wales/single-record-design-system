@@ -60,6 +60,31 @@ record, and reads better when labels are long.
 
 A tab is a label, optionally with a count. There are no icon slots.
 
+## When a tab has sub-views
+
+Use a second level, not a chevron. The outer tab's panel holds a complete second
+tablist of its own — `Level=Secondary`, the pill.
+
+A tab cannot have children. `role="tab"` controls exactly one panel, so a tab
+that opened a menu would announce itself as a tab and then do something else.
+Two levels is the limit; a third means the structure needs rethinking, not
+another row.
+
+**Sub-tabs or the Segmented control?** One line:
+
+> **Track = filter. No track = navigate.**
+
+The Segmented control sits in a grey track and sets an option *within* the view
+you are looking at. A sub-tab pill has no track and changes *which* view you
+see. If choosing changes what is rendered below it, it is a sub-tab.
+
+**Do not use sub-tabs to anchor scrolling.** A list that jumps to sections of a
+page that are all present at once is in-page navigation, not tabs — every panel
+but one is hidden in a tablist, which is the opposite of what a contents list
+does.
+
+---
+
 ## Do & don't
 
 - **Do** use one or two words per tab. A tab strip is scanned, not read.
@@ -69,6 +94,7 @@ A tab is a label, optionally with a count. There are no icon slots.
   the same objection as the bullet below: it hides tabs from the people who need
   to see them.
 - **Don't** hide anything a member of staff must see behind a tab.
+- **Don't** put a chevron on a tab. If it needs to expand, it is not a tab.
 - **Don't** disable a tab to hide content. Omit it, or show the panel and
   explain why it is empty — a disabled tab tells the reader something exists
   and refuses to show it.

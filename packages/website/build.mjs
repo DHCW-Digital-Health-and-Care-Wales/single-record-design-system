@@ -2716,8 +2716,9 @@ document.querySelectorAll('[role="tablist"]').forEach(function (list) {
 function tabsBody() {
   const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'tabs', 'guidelines.md'), 'utf8')));
 
-  const strip = ({ id, items, vertical = false, selected = 0 }) => {
-    const list = `<div class="sr-tabs${vertical ? ' sr-tabs--vertical' : ''}" role="tablist" aria-label="${vertical ? 'Record sections' : 'Patient record'}"${vertical ? ' aria-orientation="vertical"' : ''}>
+  const strip = ({ id, items, vertical = false, selected = 0, level = 'primary', label }) => {
+    const cls = `sr-tabs${vertical ? ' sr-tabs--vertical' : ''}${level === 'secondary' ? ' sr-tabs--secondary' : ''}`;
+    const list = `<div class="${cls}" role="tablist" aria-label="${label || (vertical ? 'Record sections' : 'Patient record')}"${vertical ? ' aria-orientation="vertical"' : ''}>
 ${items.map((it, i) => {
   const on = i === selected;
   const name = it.count !== undefined ? ` aria-label="${it.label}, ${it.count} items"` : '';
@@ -2751,9 +2752,25 @@ ${items.map((it, i) => {
     { label: 'Documents', panel: 'Documents content.' },
   ] });
 
+  const sub = strip({ id: 'demo-s', level: 'secondary', label: 'Results type', items: [
+    { label: 'Bloods', panel: 'Blood results.' },
+    { label: 'Imaging', panel: 'Imaging results.' },
+    { label: 'Microbiology', panel: 'Microbiology results.' },
+    { label: 'Histopathology', panel: 'Histopathology results.' },
+  ] });
+
+  // The parent's Results panel holds the whole secondary tablist — that nesting
+  // is the composition DDR-030 describes, not a separate component.
+  const twoLevel = strip({ id: 'demo-2', selected: 1, items: [
+    { label: 'Summary', panel: 'Patient summary content.' },
+    { label: 'Results', panel: sub },
+    { label: 'Medication', panel: 'Medication content.' },
+    { label: 'Documents', panel: 'Documents content.' },
+  ] });
+
   const snippets = {
     HTML: '<div class="sr-tabs" role="tablist" aria-label="Patient record">\n  <button type="button" class="sr-tabs__tab" role="tab" id="t-0"\n          aria-selected="true" aria-controls="p-0" tabindex="0">Summary</button>\n  <button type="button" class="sr-tabs__tab" role="tab" id="t-1"\n          aria-selected="false" aria-controls="p-1" tabindex="-1">Results</button>\n</div>\n<div class="sr-tabs__panel" role="tabpanel" id="p-0" aria-labelledby="t-0" tabindex="0">…</div>\n<div class="sr-tabs__panel" role="tabpanel" id="p-1" aria-labelledby="t-1" tabindex="0" hidden>…</div>\n\n<!-- Arrow keys, Home/End and the roving tabindex are yours to wire up. -->',
-    React: '<Tabs\n  ariaLabel="Patient record"\n  tabs={[\n    { id: \'summary\', label: \'Summary\', panel: <Summary /> },\n    { id: \'results\', label: \'Results\', count: 20, panel: <Results /> },\n    { id: \'imaging\', label: \'Imaging\', disabled: true, panel: null },\n  ]}\n  onChange={(id) => track(id)}\n/>',
+    React: '<Tabs\n  ariaLabel="Patient record"\n  {/* level="secondary" for sub-tabs, inside a parent tab\'s panel */}\n  tabs={[\n    { id: \'summary\', label: \'Summary\', panel: <Summary /> },\n    { id: \'results\', label: \'Results\', count: 20, panel: <Results /> },\n    { id: \'imaging\', label: \'Imaging\', disabled: true, panel: null },\n  ]}\n  onChange={(id) => track(id)}\n/>',
     Blazor: '<div class="sr-tabs" role="tablist" aria-label="Patient record">\n  @foreach (var (t, i) in Tabs.Select((t, i) => (t, i)))\n  {\n    <button type="button" class="sr-tabs__tab" role="tab"\n            aria-selected="@(i == Selected)" tabindex="@(i == Selected ? 0 : -1)"\n            @onclick="() => Select(i)">@t.Label</button>\n  }\n</div>',
     MAUI: '<!-- The design system layer ships no tab strip for MAUI. Use the platform\n     tabbed shell and take the SR tokens: SrIconSizeMd, SrColorInteractivePrimary,\n     and the 3px selected indicator. -->',
   };
@@ -2779,6 +2796,25 @@ ${showcase(counted, 'tabs-counts', snippets)}
 <p>For a side rail against a long record, and for labels too long to sit comfortably in a row. The
 indicator moves to the leading edge and the arrow keys become Up and Down.</p>
 ${showcase(vertical, 'tabs-vertical', snippets)}
+
+<h2>Two levels</h2>
+<p>When a tab has sub-views, the second level is a <strong>separate, complete tablist inside the
+first tab's panel</strong> — not a tab with a chevron. A <code>role="tab"</code> controls exactly one
+panel and cannot have children, so a tab that opened a menu would announce itself as a tab and then
+do something else.</p>
+<p>The second level is a pill so the two rows cannot be confused, and it is 32px against the
+parent's 40px — a child that outweighs its parent inverts the hierarchy. Arrow keys work within each
+level independently.</p>
+${showcase(twoLevel, 'tabs-two-level', snippets)}
+
+<h2>Sub-tabs and the Segmented control</h2>
+<p>Both are single-select and both fill the chosen option in brand blue. One line separates them:</p>
+<p><strong>Track = filter. No track = navigate.</strong></p>
+<p>The Segmented control sits in a grey track and sets an option <em>within</em> the view you are
+already looking at — it is a group of buttons with <code>aria-pressed</code>. A sub-tab pill has no
+track and changes <em>which</em> view you see — it is a <code>role="tab"</code> bound to a panel.
+The unselected pill carries a 1px <code>Border/Strong</code> outline, which is what tells you it is
+an option at all, so it clears the 3:1 that WCAG 2.2 SC 1.4.11 wants for a control boundary.</p>
 
 ${md}
 `;

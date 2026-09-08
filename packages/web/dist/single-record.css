@@ -4361,6 +4361,84 @@ td.sr-table__select {
   background-color: var(--sr-color-interactive-disabled);
 }
 
+/* ── Level=Secondary: sub-tab pills ────────────────────────────────────────
+   The second level of a two-level tab structure (DDR-030). The outer tablist
+   selects a group; that group's PANEL contains one of these.
+
+   It is a pill, not a smaller underlined tab, because two identical strips
+   stacked are ambiguous about which row you are on. It is a BARE pill — no
+   track — because the track is what distinguishes the Segmented control:
+
+     track = filter (aria-pressed, sets an option within this view)
+     no track = navigate (role=tab, switches which view you see)
+
+   32px against the parent's 40px. A child that outweighs its parent inverts
+   the hierarchy. */
+
+.sr-tabs--secondary {
+  gap: var(--space-2); /* 8px — pills are separate controls, not a strip */
+  flex-wrap: wrap;
+  row-gap: var(--space-2);
+}
+
+.sr-tabs--secondary .sr-tabs__tab {
+  min-height: 32px;
+  padding: 0 var(--space-3); /* 0 12px */
+  box-sizing: border-box;
+  /* Border/Strong (Grey/500, 3.75:1) not Border/Default (1.37:1). The border
+     is what says "this is an option", so it is a UI component boundary under
+     WCAG 2.2 SC 1.4.11 and needs 3:1. Asserted by check:contrast. */
+  border: 1px solid var(--sr-color-border-strong);
+  border-radius: var(--radius-full);
+  box-shadow: none; /* no indicator at this level — the fill carries selection */
+  color: var(--sr-color-text-secondary);
+}
+
+/* Hover leaves the BORDER ALONE and moves only the wash and the label.
+   Taking the border to Interactive/Primary — the treatment Checkbox and Radio
+   use — would make a hovered pill identical to Button/Secondary, which is also
+   transparent with a blue outline and a blue label. Only the radius would
+   separate "switch to this view" from "do this thing". */
+.sr-tabs--secondary .sr-tabs__tab:hover:not([aria-selected='true']):not(:disabled) {
+  background-color: var(--sr-color-surface-accent);
+  color: var(--sr-color-interactive-primary);
+}
+
+.sr-tabs--secondary .sr-tabs__tab[aria-selected='true'] {
+  background-color: var(--sr-color-interactive-primary);
+  border-color: var(--sr-color-interactive-primary);
+  color: var(--sr-color-text-inverse);
+  box-shadow: none;
+}
+
+/* The ring is offset by a 2px halo in the surface colour so the cyan never sits
+   directly against the pill's own border. Same treatment as the Segmented
+   control and the Switch. */
+.sr-tabs--secondary .sr-tabs__tab:focus-visible,
+.sr-tabs--secondary .sr-tabs__tab[aria-selected='true']:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--sr-color-surface-section-cards),
+    0 0 0 4px var(--sr-color-border-focus);
+}
+
+.sr-tabs--secondary .sr-tabs__tab:disabled,
+.sr-tabs--secondary .sr-tabs__tab[aria-disabled='true'] {
+  border-color: var(--sr-color-border-disabled);
+  color: var(--sr-color-text-disabled);
+  background: transparent;
+}
+
+/* Vertical secondary stacks the pills and lets each hug its own label, rather
+   than stretching them all to the widest — a column of full-width pills reads
+   as a menu, not as a set of options. */
+.sr-tabs--secondary.sr-tabs--vertical {
+  align-items: flex-start;
+}
+.sr-tabs--secondary.sr-tabs--vertical .sr-tabs__tab[aria-selected='true'] {
+  box-shadow: none;
+}
+
 /* ── Vertical ──────────────────────────────────────────────────────────────
    Same tab, stacked, with the indicator on the left edge. Set
    aria-orientation="vertical" on the tablist so Up/Down become the arrow keys

@@ -228,6 +228,7 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Switch | — (guidelines ✅, with Segmented control) | ✅ | ✅ |
 | Table | ✅ | ✅ | ✅ |
 | Tabs | ✅ (guidelines ✅) | ✅ | ✅ |
+| Tabs — sub-tab pill (`Level=Secondary`) | ✅ (in the Tabs spec) | ✅ | ✅ |
 | Tags | ✅ | ✅ | ✅ |
 | Time select | — | ✅ | ✅ |
 
@@ -312,6 +313,13 @@ in its markup — SendIT needs *Print Labels* and *Approve Summary list*. The
 Save/Mark-as-complete pair remains the default, so nothing existing changed.
 Whatever a screen passes must still keep to the pattern: exactly one primary,
 and no destructive action in persistent chrome.
+
+**A tab with sub-views is a second tablist, not a chevron.** `role="tab"`
+controls exactly one panel and cannot have children, so a tab that opened a menu
+would announce itself as a tab and then do something else. The second level is
+`Tabs Level=Secondary` — a bare pill — placed inside the first tab's panel. It
+is separated from the Segmented control by one rule: **track = filter, no track
+= navigate**. Two levels is the limit. DDR-030.
 
 **`Search` is the only search field, and `Autocomplete` composes it.** All 24
 Search variants draw the value at `Body S` (14/20); twelve were bound to

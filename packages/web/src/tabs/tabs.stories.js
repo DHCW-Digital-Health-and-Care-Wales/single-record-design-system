@@ -12,7 +12,7 @@ import '@dhcw/sr-tokens/build/css/tokens.css';
 
 const uid = (() => { let n = 0; return () => `sr-tabs-${++n}`; })();
 
-const render = ({ tabs, selectedIndex = 0, orientation = 'horizontal', ariaLabel }) => {
+const render = ({ tabs, selectedIndex = 0, orientation = 'horizontal', level = 'primary', ariaLabel }) => {
   const root = document.createElement('div');
   const id = uid();
   const vertical = orientation === 'vertical';
@@ -23,7 +23,8 @@ const render = ({ tabs, selectedIndex = 0, orientation = 'horizontal', ariaLabel
   wrap.style.gap = vertical ? '24px' : '0';
 
   const list = document.createElement('div');
-  list.className = `sr-tabs${vertical ? ' sr-tabs--vertical' : ''}`;
+  list.className = `sr-tabs${vertical ? ' sr-tabs--vertical' : ''}`
+    + `${level === 'secondary' ? ' sr-tabs--secondary' : ''}`;
   list.setAttribute('role', 'tablist');
   list.setAttribute('aria-label', ariaLabel || 'Patient record sections');
   if (vertical) list.setAttribute('aria-orientation', 'vertical');
@@ -128,10 +129,12 @@ export default {
   render,
   argTypes: {
     orientation: { control: 'inline-radio', options: ['horizontal', 'vertical'] },
+    level: { control: 'inline-radio', options: ['primary', 'secondary'] },
     selectedIndex: { control: { type: 'number', min: 0 } },
   },
   args: {
     orientation: 'horizontal',
+    level: 'primary',
     selectedIndex: 0,
     tabs: [
       { label: 'Summary', panel: 'Patient summary content.' },
@@ -180,6 +183,47 @@ export const NoLayoutShift = {
       { label: 'Correspondence', panel: 'Correspondence.' },
       { label: 'Investigations', panel: 'Investigations.' },
       { label: 'Observations', panel: 'Observations.' },
+    ],
+  },
+};
+
+/**
+ * Level=Secondary — the sub-tab pill (DDR-030). A bare pill, not a track: the
+ * track is what marks the Segmented control, which filters within a view rather
+ * than switching between views.
+ */
+export const Secondary = {
+  args: {
+    level: 'secondary',
+    tabs: [
+      { label: 'Bloods', panel: 'Blood results.' },
+      { label: 'Imaging', panel: 'Imaging results.' },
+      { label: 'Microbiology', panel: 'Microbiology results.' },
+      { label: 'Histopathology', panel: 'Histopathology results.' },
+    ],
+  },
+};
+
+/** A disabled sub-tab is stepped over by the arrow keys, same as the parent. */
+export const SecondaryWithDisabled = {
+  args: {
+    level: 'secondary',
+    tabs: [
+      { label: 'Bloods', panel: 'Blood results.' },
+      { label: 'Imaging', panel: 'Imaging results.' },
+      { label: 'Microbiology', disabled: true, panel: 'None on file.' },
+    ],
+  },
+};
+
+export const SecondaryVertical = {
+  args: {
+    level: 'secondary',
+    orientation: 'vertical',
+    tabs: [
+      { label: 'Bloods', panel: 'Blood results.' },
+      { label: 'Imaging', panel: 'Imaging results.' },
+      { label: 'Microbiology', panel: 'Microbiology results.' },
     ],
   },
 };

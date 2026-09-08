@@ -1,7 +1,7 @@
 # Tabs
 
 **Status:** Built (web, React). Figma component set `817:7219` on page `1753:21420`.
-**Last updated:** 2026-09-08
+**Last updated:** 2026-09-08 (Level=Secondary added)
 
 ---
 
@@ -26,11 +26,46 @@ between areas of the product is Navigation, and must change the URL.
 
 | Property | Values | Default |
 |---|---|---|
+| `Level` | `Primary`, `Secondary` | Primary |
 | `Orientation` | `Horizontal`, `Vertical` | Horizontal |
 | `Count Badge` | boolean | off |
 
+`Level=Secondary` is the sub-tab pill — the second level of a two-level tab
+structure. See **Two levels** below and DDR-030.
+
 There are no leading or trailing icon properties. A tab is a label, optionally
 with a count.
+
+---
+
+## Two levels
+
+A tab with sub-views does **not** get a chevron. `role="tablist"` may contain
+only `role="tab"`, and a `tab` controls exactly one `tabpanel` — there is no
+tab-with-children. A control announced as *"Results, tab, 2 of 4, selected"*
+promises a panel; producing a menu instead fails SC 4.1.2.
+
+Instead the outer tab's **panel contains a second, complete tablist**:
+
+```
+role="tablist"   Summary | Results | Medication | Documents
+  └─ role="tabpanel" (Results)
+       role="tablist"   Bloods | Imaging | Microbiology     ← Level=Secondary
+         └─ role="tabpanel" (Bloods)
+```
+
+Both levels get the full keyboard model, independently. This is a composition a
+consumer assembles, not a separate component. **Two levels is the limit** — a
+third means the information architecture is wrong.
+
+**Sub-tabs vs the Segmented control.** Both are single-select and both fill the
+chosen option in brand blue. One line separates them:
+
+> **Track = filter. No track = navigate.**
+
+The Segmented control sits in a grey track and sets an option *within* the view
+you are already looking at (`aria-pressed`). A sub-tab pill has no track and
+changes *which* view you see (`role="tab"` bound to a panel).
 
 ---
 
@@ -67,7 +102,37 @@ showing.
 
 ---
 
-## Sizing
+## Sizing — Level=Secondary
+
+32px tall, 12px horizontal padding, full radius, 8px between pills, wrapping.
+Deliberately smaller and lighter than the 40px parent: a child that outweighs
+its parent inverts the hierarchy.
+
+| State | Fill | Border | Label |
+|---|---|---|---|
+| Default | transparent | 1px `Border/Strong` | `Text/Secondary` |
+| Hover | `Surface/Accent` | **unchanged** | `Interactive/Primary` |
+| Selected | `Interactive/Primary` | `Interactive/Primary` | `Text/Inverse` |
+| Focus | — | — | 2px surface halo, then 2px `Border/Focus` |
+| Disabled | transparent | `Border/Disabled` | `Text/Disabled` |
+
+**The unselected pill's border is the affordance**, so it is a UI component
+boundary under SC 1.4.11 and needs 3:1 — hence `Border/Strong` (3.75:1) and not
+`Border/Default` (1.37:1).
+
+**Hover leaves the border alone.** Taking it to `Interactive/Primary` — the
+treatment Checkbox and Radio use — would make a hovered pill identical to
+`Button/Secondary`, also a transparent blue-outlined blue-labelled control. Only
+the corner radius would separate "switch view" from "do this thing".
+
+> Figma draws the secondary Focus ring as a single 2px outside stroke, the same
+> simplification the primary variants make. A Figma node cannot carry two
+> strokes, so the surface halo between the border and the ring exists only in
+> code.
+
+---
+
+## Sizing — Level=Primary
 
 40px tall. 16px padding **left and right only**, 8px gap between label and
 badge. A tab is exactly as wide as its label plus 32px. Badge is 20px tall with
@@ -170,3 +235,4 @@ panel.
 - Segmented control — picking a value within the current view
 - `decisions/DDR-011-desktop-mobile-form-factor-model.md` — the Adaptive class
 - `decisions/DDR-025-focus-ring-cyan-800.md` — the focus ring
+- `decisions/DDR-030-two-level-tabs-and-sub-tab-pills.md` — two levels, and the pill / segmented boundary

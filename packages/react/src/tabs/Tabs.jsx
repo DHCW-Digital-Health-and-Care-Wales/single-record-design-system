@@ -12,6 +12,11 @@ import '@dhcw/sr-web/src/tabs/tabs.css';
  * Controlled (`value` + `onChange`) or uncontrolled (`defaultValue`).
  * `tabs`: [{ id, label, count, disabled, panel }].
  *
+ * `level="secondary"` renders the sub-tab pill (DDR-030). Put one inside a
+ * primary tab's panel to get a two-level structure — that nesting is a
+ * composition, not a separate component, and each level is its own complete
+ * tablist with its own keyboard model.
+ *
  * Implements the WAI-ARIA tabs pattern in full — roving tabindex, arrow keys,
  * Home/End, and disabled tabs skipped rather than focused. That behaviour is
  * the reason this wrapper exists; without it every consumer reimplements it,
@@ -23,6 +28,7 @@ export default function Tabs({
   defaultValue,
   onChange,
   orientation = 'horizontal',
+  level = 'primary',
   ariaLabel = 'Sections',
   className,
   ...rest
@@ -72,8 +78,12 @@ export default function Tabs({
     select(target);
   };
 
-  const listClasses = ['sr-tabs', vertical && 'sr-tabs--vertical', className]
-    .filter(Boolean).join(' ');
+  const listClasses = [
+    'sr-tabs',
+    vertical && 'sr-tabs--vertical',
+    level === 'secondary' && 'sr-tabs--secondary',
+    className,
+  ].filter(Boolean).join(' ');
 
   return (
     <div style={vertical ? { display: 'flex', gap: '24px' } : undefined} {...rest}>
