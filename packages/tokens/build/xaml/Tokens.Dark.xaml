@@ -81,7 +81,7 @@
     <Color x:Key="ColorWhiteDefault">#ffffff</Color>
     <Color x:Key="ColorBorderSubtle">#f0f4f5</Color>
     <Color x:Key="ColorBorderDefault">#d8dde0</Color>
-    <Color x:Key="ColorBorderStrong">#4c6272</Color>
+    <Color x:Key="ColorBorderStrong">#768692</Color>
     <Color x:Key="ColorBorderFocus">#0d8bad</Color>
     <Color x:Key="SrColorInteractivePrimary">#0d62a3</Color>
     <Color x:Key="SrColorInteractivePrimaryHover">#004483</Color>

@@ -80,7 +80,7 @@ $color-grey-900: #212b32; // Primary text (14.4:1 on white)
 $color-white-default: #ffffff; // Card and panel surfaces in light mode; Text/Inverse on saturated fills
 $color-border-subtle: #f0f4f5; // Ultra-light border for row dividers and internal table separators. Use only on white or near-white backgrounds where Border/Default would be too prominent. Do not use as the only structural indicator on a surface.
 $color-border-default: #d8dde0; // Standard border for inputs, cards, and section dividers.
-$color-border-strong: #4c6272; // High-contrast border for section edges, active table rows, and structural dividers that must be clearly visible.
+$color-border-strong: #768692; // The boundary of a UI component — checkbox and radio at rest, switch track on hover, sub-tab pill outline. 3.75:1 on white and 3.44:1 on the page background, clearing the 3:1 of WCAG 2.2 SC 1.4.11. Was Grey/600 (6.37:1) until 2026-09-08. Not a text colour. Kept in step with sr.color.border.strong by the build — see the border-token divergence check in packages/tokens/build.js.
 $color-border-focus: #0d8bad; // Focus ring colour — Cyan/800 (DDR-025, amending DDR-006). Applied to all interactive elements on keyboard focus. Always paired with Border/Width/Strong (2px) and an inner gap ring. Kept in step with sr.color.border.focus by hand: this token and the sr-prefixed one are the known duplication awaiting a token-structure decision.
 $sr-color-interactive-primary: #0d62a3; // Dark-mode brand primary. Info-blue/600 — replaces the prior cyan-based primary for better contrast with white text and a calmer hue on dark surfaces.
 $sr-color-interactive-primary-hover: #004483; // Hover step for primary in dark mode.

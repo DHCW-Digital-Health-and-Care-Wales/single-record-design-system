@@ -139,7 +139,7 @@ All semantic variables alias primitives — no raw hex values.
 |---|---|---|---|
 | `SR/Border/Subtle`  | `sr.color.border.subtle`  | `color.grey.100` | `color.navy.700` |
 | `SR/Border/Default` | `sr.color.border.default` | `color.grey.200` | `color.navy.500` |
-| `SR/Border/Strong`  | `sr.color.border.strong`  | `color.grey.600` | `color.navy.300` |
+| `SR/Border/Strong`  | `sr.color.border.strong`  | `color.grey.500` | `color.navy.300` |
 | `SR/Border/Focus`   | `sr.color.border.focus`   | `color.focus-yellow` | `color.focus-yellow` |
 
 ### Status

@@ -507,9 +507,14 @@ This is easy to get wrong because Border/Default is the right choice for a
 *divider*, where nothing is being identified as interactive, and the two uses
 look similar in a stylesheet.
 
-**Fix:** Form control boundaries use `Border/Strong` (Grey/600 `#4C6272`,
-6.37:1). Dividers, card outlines and table rules stay on `Border/Default` —
-they are not control boundaries and 1.4.11 does not apply to them.
+**Fix:** Form control boundaries use `Border/Strong`. Dividers, card outlines
+and table rules stay on `Border/Default` — they are not control boundaries and
+1.4.11 does not apply to them.
+
+> `Border/Strong` was Grey/600 (`#4C6272`, 6.37:1) when this was written. It was
+> repointed to **Grey/500** (`#768692`, 3.75:1 on white, 3.44:1 on the page) on
+> 2026-09-08, so a control outline reads as an affordance without shouting where
+> several sit in a row. Still clears 3:1; the point of this entry is unchanged.
 
 **Watch the state that used to be the fix.** Both components had hover set to
 `Border/Strong`. Once rest uses it, hover is a no-op — the same value applied

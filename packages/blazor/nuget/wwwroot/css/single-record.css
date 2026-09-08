@@ -104,7 +104,7 @@
   --color-white-default: #ffffff; /** Card and panel surfaces in light mode; Text/Inverse on saturated fills */
   --color-border-subtle: #f0f4f5; /** Ultra-light border for row dividers and internal table separators. Use only on white or near-white backgrounds where Border/Default would be too prominent. Do not use as the only structural indicator on a surface. */
   --color-border-default: #d8dde0; /** Standard border for inputs, cards, and section dividers. */
-  --color-border-strong: #4c6272; /** High-contrast border for section edges, active table rows, and structural dividers that must be clearly visible. */
+  --color-border-strong: #768692; /** The boundary of a UI component — checkbox and radio at rest, switch track on hover, sub-tab pill outline. 3.75:1 on white and 3.44:1 on the page background, clearing the 3:1 of WCAG 2.2 SC 1.4.11. Was Grey/600 (6.37:1) until 2026-09-08. Not a text colour. Kept in step with sr.color.border.strong by the build — see the border-token divergence check in packages/tokens/build.js. */
   --color-border-focus: #0d8bad; /** Focus ring colour — Cyan/800 (DDR-025, amending DDR-006). Applied to all interactive elements on keyboard focus. Always paired with Border/Width/Strong (2px) and an inner gap ring. Kept in step with sr.color.border.focus by hand: this token and the sr-prefixed one are the known duplication awaiting a token-structure decision. */
   --sr-color-interactive-primary: #325083; /** Brand primary. White text on blue-800 = 7.1:1 (AAA). */
   --sr-color-interactive-primary-hover: #1e3050; /** Hover step for primary. */
@@ -126,7 +126,7 @@
   --sr-color-text-disabled: #707488; /** Disabled text. 4.6:1 on surface/background (AA). */
   --sr-color-border-subtle: #f0f4f5;
   --sr-color-border-default: #d8dde0;
-  --sr-color-border-strong: #4c6272;
+  --sr-color-border-strong: #768692; /** The boundary of a UI component — checkbox and radio at rest, switch track on hover, sub-tab pill outline. Clears the 3:1 of WCAG 2.2 SC 1.4.11 on both light surfaces: 3.75:1 on white, 3.44:1 on the page background. Was Grey/600 (6.37:1) until 2026-09-08; lightened so a control outline reads as an affordance without shouting, which matters where several sit in a row. Not a text colour — 3.75:1 is under the 4.5:1 SC 1.4.3 wants for body text. Dividers, card outlines and table rules are NOT control boundaries and stay on border/default. */
   --sr-color-border-focus: #0d8bad; /** Focus ring — Cyan/800 in both modes (DDR-025, amending DDR-006). Cyan/700 was 2.95:1 on a card and 2.71:1 on the page, under the 3:1 SC 1.4.11 requires. Cyan/800 is the only stop clearing 3:1 in both modes: darker stops fix light mode and fail dark, where surfaces are navy. */
   --sr-color-border-disabled: #9ea1af;
   --sr-color-brand-accent: #12a3c9; /** Decorative accent only. Borders, icon strokes, chart accents, tab indicators. Never use as a filled surface with text on top. */
@@ -962,7 +962,8 @@
   background-color: var(--sr-color-surface-small-cards);
   /* Border/Strong, not Border/Default. An unchecked box is a UI component
      boundary under WCAG 2.2 SC 1.4.11, which requires 3:1: Grey/200 gave
-     1.37:1 on white, Grey/600 gives 6.37:1. */
+     1.37:1 on white, Border/Strong gives 3.75:1. Asserted by check:contrast,
+     so the ratio lives there rather than in this comment. */
   border: var(--border-width-2) solid var(--sr-color-border-strong);
   border-radius: var(--radius-sm);
 }

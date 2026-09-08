@@ -81,7 +81,7 @@
     <Color x:Key="ColorWhiteDefault">#ffffff</Color>
     <Color x:Key="ColorBorderSubtle">#f0f4f5</Color>
     <Color x:Key="ColorBorderDefault">#d8dde0</Color>
-    <Color x:Key="ColorBorderStrong">#4c6272</Color>
+    <Color x:Key="ColorBorderStrong">#768692</Color>
     <Color x:Key="ColorBorderFocus">#0d8bad</Color>
     <Color x:Key="SrColorInteractivePrimary">#325083</Color>
     <Color x:Key="SrColorInteractivePrimaryHover">#1e3050</Color>
@@ -103,7 +103,7 @@
     <Color x:Key="SrColorTextDisabled">#707488</Color>
     <Color x:Key="SrColorBorderSubtle">#f0f4f5</Color>
     <Color x:Key="SrColorBorderDefault">#d8dde0</Color>
-    <Color x:Key="SrColorBorderStrong">#4c6272</Color>
+    <Color x:Key="SrColorBorderStrong">#768692</Color>
     <Color x:Key="SrColorBorderFocus">#0d8bad</Color>
     <Color x:Key="SrColorBorderDisabled">#9ea1af</Color>
     <Color x:Key="SrColorBrandAccent">#12a3c9</Color>

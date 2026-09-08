@@ -30,7 +30,7 @@
       "border": {
         "subtle":   { "$type": "color", "$value": "{color.grey.100}" },
         "default":  { "$type": "color", "$value": "{color.grey.200}" },
-        "strong":   { "$type": "color", "$value": "{color.grey.600}" },
+        "strong":   { "$type": "color", "$value": "{color.grey.500}",  "$description": "The boundary of a UI component — checkbox and radio at rest, switch track on hover, sub-tab pill outline. Clears the 3:1 of WCAG 2.2 SC 1.4.11 on both light surfaces: 3.75:1 on white, 3.44:1 on the page background. Was Grey/600 (6.37:1) until 2026-09-08; lightened so a control outline reads as an affordance without shouting, which matters where several sit in a row. Not a text colour — 3.75:1 is under the 4.5:1 SC 1.4.3 wants for body text. Dividers, card outlines and table rules are NOT control boundaries and stay on border/default." },
         "focus":    { "$type": "color", "$value": "{color.cyan.800}",  "$description": "Focus ring — Cyan/800 in both modes (DDR-025, amending DDR-006). Cyan/700 was 2.95:1 on a card and 2.71:1 on the page, under the 3:1 SC 1.4.11 requires. Cyan/800 is the only stop clearing 3:1 in both modes: darker stops fix light mode and fail dark, where surfaces are navy." },
         "disabled": { "$type": "color", "$value": "{color.navy.300}" }
       },

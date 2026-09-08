@@ -13,7 +13,7 @@ Four semantic tokens covering the full contrast range needed for clinical UI. Al
 |---|---|---|---|
 | `sr.color.border.subtle`  | `#f0f4f5` | `#464c64` | Row dividers in data tables, internal separators on white/card surfaces. Use when Default would overpower the content. |
 | `sr.color.border.default` | `#d8dde0` | `#707488` | Standard inputs, cards, panels, list separators. The baseline for most bordered elements. |
-| `sr.color.border.strong`  | `#4c6272` | `#9ea1af` | Active/selected states, structural dividers, section headers that must read clearly. |
+| `sr.color.border.strong`  | `#768692` | `#9ea1af` | The boundary of a UI component — checkbox and radio at rest, switch hover track, sub-tab pill outline. 3.75:1 on white (SC 1.4.11). Not a text colour. |
 | `sr.color.border.focus`   | `#12a3c9` | `#12a3c9` | Focus rings only (Cyan/700 — DDR-006). Never use for decorative purposes. Always pair with an inner white gap ring. |
 
 **Notes:**
@@ -80,7 +80,7 @@ This table is a starting point — each component spec is the authoritative sour
   /* Border colours */
   --sr-color-border-subtle:  var(--sr-color-grey-100);
   --sr-color-border-default: var(--sr-color-grey-200);
-  --sr-color-border-strong:  var(--sr-color-grey-600);
+  --sr-color-border-strong:  var(--sr-color-grey-500);
   --sr-color-border-focus:   var(--color-cyan-700);
 
   /* Border widths */

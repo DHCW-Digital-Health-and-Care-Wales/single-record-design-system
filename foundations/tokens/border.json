@@ -17,8 +17,8 @@
       },
       "strong":  {
         "$type": "color",
-        "$value": "{color.grey.600}",
-        "$description": "High-contrast border for section edges, active table rows, and structural dividers that must be clearly visible."
+        "$value": "{color.grey.500}",
+        "$description": "The boundary of a UI component — checkbox and radio at rest, switch track on hover, sub-tab pill outline. 3.75:1 on white and 3.44:1 on the page background, clearing the 3:1 of WCAG 2.2 SC 1.4.11. Was Grey/600 (6.37:1) until 2026-09-08. Not a text colour. Kept in step with sr.color.border.strong by the build — see the border-token divergence check in packages/tokens/build.js."
       },
       "focus":   {
         "$type": "color",

@@ -145,7 +145,8 @@
   background-color: var(--sr-color-surface-small-cards);
   /* Border/Strong, not Border/Default. An unchecked box is a UI component
      boundary under WCAG 2.2 SC 1.4.11, which requires 3:1: Grey/200 gave
-     1.37:1 on white, Grey/600 gives 6.37:1. */
+     1.37:1 on white, Border/Strong gives 3.75:1. Asserted by check:contrast,
+     so the ratio lives there rather than in this comment. */
   border: var(--border-width-2) solid var(--sr-color-border-strong);
   border-radius: var(--radius-sm);
 }
