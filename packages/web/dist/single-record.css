@@ -3914,7 +3914,13 @@ textarea.sr-input__control {
   width: 44px;
   height: 24px;
   border-radius: var(--radius-full);
-  background-color: var(--sr-color-border-default);
+  /* Border/Strong, not Border/Default. The thumb's POSITION is what says on or
+     off, so the thumb has to be distinguishable from the track it sits in —
+     SC 1.4.11, 3:1. On Border/Default the white thumb was 1.37:1, effectively
+     invisible, and the track itself was 1.26:1 against the page so the whole
+     control had no boundary either. Border/Strong fixes both: 3.75:1 thumb to
+     track, 3.44:1 track to page. */
+  background-color: var(--sr-color-border-strong);
   transition: background-color 0.15s ease;
 }
 .sr-switch__thumb {
@@ -3924,8 +3930,21 @@ textarea.sr-input__control {
   width: 20px;
   height: 20px;
   border-radius: var(--radius-full);
+  /* Surface/Section Cards flips with the mode — white on light, dark navy on
+     dark — which is what keeps the thumb legible against a track that also
+     flips (Border/Strong is Grey/500 light, Navy/300 dark). 3.75:1 light,
+     5.13:1 dark. A fixed white thumb would be 2.57:1 in dark mode. */
   background-color: var(--sr-color-surface-section-cards);
   transition: transform 0.15s ease;
+}
+
+/* Checked, the thumb sits on a FILLED interactive surface rather than a neutral
+   track, so it takes the colour meant for exactly that — white in both modes.
+   Leaving it on the flipping surface colour gave 2.07:1 in dark mode, where the
+   dark thumb and the dark blue track are close in luminance. 8.04:1 light,
+   6.38:1 dark. */
+.sr-switch[aria-checked="true"] .sr-switch__thumb {
+  background-color: var(--sr-color-text-on-fill);
 }
 
 .sr-switch__label {
@@ -3941,8 +3960,13 @@ textarea.sr-input__control {
   transform: translateX(20px);
 }
 
-.sr-switch:hover .sr-switch__track {
-  background-color: var(--sr-color-border-strong);
+/* Hover used to darken the track to Border/Strong. Now that Border/Strong IS
+   the rest colour that is a no-op, and the obvious replacement — previewing the
+   checked colour, as Checkbox and Radio do — would make an OFF switch look ON.
+   So hover moves to the label instead, which is the same signal Tabs and the
+   sub-tab pill already use. */
+.sr-switch:hover .sr-switch__label {
+  color: var(--sr-color-interactive-primary);
 }
 .sr-switch[aria-checked="true"]:hover .sr-switch__track {
   background-color: var(--sr-color-interactive-primary-hover);

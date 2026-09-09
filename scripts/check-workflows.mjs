@@ -30,6 +30,10 @@ import { fileURLToPath } from 'node:url';
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const DIR = resolve(ROOT, '.github/workflows');
 
+// Artifacts live at most this long unless a step says why not. See the
+// retention check below for how this number was arrived at.
+const MAX_RETENTION_DAYS = 14;
+
 // Deliberately not a YAML parse. The only YAML library in the tree is a
 // transitive dependency of something else, and promoting it to a direct one
 // needs a DDR (CLAUDE.md). These are our own workflow files in a house style,
@@ -69,8 +73,28 @@ for (const file of files) {
       const indent = line.search(/\S/);
       if (indent < keyIndent || startsStep(line)) break; // next step — done
 
-      if (/^\s*retention-days:\s*\S/.test(line)) {
+      const r = line.match(/^\s*retention-days:\s*(\d+)/);
+      if (r) {
         found = true;
+        // Setting a number was the original bar, and it turned out to be too
+        // low a one. On 2026-09-09 the account hit 90% of its 0.5 GB with every
+        // upload carrying an explicit, passing retention: a 27 MB APK at 30
+        // days and a 3.25 MB site at 7. Both were deliberate numbers, and
+        // together they were still most of the quota.
+        //
+        // The quota is 0.5 GB and there is no budget for a larger plan, so a
+        // ceiling is a real constraint rather than tidiness. Anything above it
+        // has to say why in the workflow, next to the number.
+        const days = Number(r[1]);
+        if (days > MAX_RETENTION_DAYS && !/# *quota-ok\b/.test(line)) {
+          problems.push(
+            `${relative(ROOT, path)}:${j + 1}\n`
+            + `    retention-days: ${days} exceeds the ${MAX_RETENTION_DAYS}-day ceiling.\n`
+            + `    The account has 0.5 GB of Actions storage and no budget for more.\n`
+            + `    Lower it, or append \`# quota-ok\` with a reason if it genuinely `
+            + `has to be kept longer.`
+          );
+        }
         break;
       }
     }
@@ -87,11 +111,11 @@ for (const file of files) {
 
 if (problems.length) {
   console.error(
-    `\ncheck:workflows — ${problems.length} artifact upload(s) with no retention set:\n\n  `
+    `\ncheck:workflows — ${problems.length} artifact retention problem(s):\n\n  `
     + problems.join('\n\n  ')
-    + '\n\nUnbounded retention is what filled the 0.5 GB Actions storage quota and made\n'
-    + 'every workflow run fail at the upload step. Set `retention-days` explicitly —\n'
-    + 'including to 90, if that is genuinely the intent.\n'
+    + '\n\nArtifact retention is what fills the 0.5 GB Actions storage quota, and a full\n'
+    + 'quota fails every subsequent run at the upload step. Set `retention-days`\n'
+    + `explicitly and keep it at or under ${MAX_RETENTION_DAYS}.\n`
   );
   process.exit(1);
 }

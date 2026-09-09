@@ -173,9 +173,20 @@ jobs:
           fi
           echo "Launcher activity present."
 
-      - uses: actions/upload-artifact@v4
+      # The APK is 27 MB. Every step above this one — build, pack, aapt2 badging —
+      # is the actual check, and it has already run by the time we get here; the
+      # upload only exists so a human can sideload the thing onto a device.
+      #
+      # On a 0.5 GB account quota, 27 MB x every PR run x 30 days is most of the
+      # quota on its own. It is what took the account to 90% on 2026-09-09. So the
+      # APK is only uploaded when somebody actually asks for it by dispatching the
+      # workflow, and then only for long enough to install it. PR runs still build
+      # and verify the APK; they just do not keep it.
+      - name: Upload testbed APK (dispatch only — see the note above)
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
         with:
           name: sr-testbed-apk
           path: artifact/sr-testbed.apk
           if-no-files-found: error
-          retention-days: 30
+          retention-days: 3

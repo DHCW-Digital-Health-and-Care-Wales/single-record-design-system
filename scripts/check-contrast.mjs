@@ -71,12 +71,17 @@ const PAIRS = [
     'Checkbox and Radio rest border on the page background', 'light'],
   ['sr-color-interactive-primary', 'sr-color-surface-small-cards', 3,
     'Checkbox and Radio checked fill, and their hover border', 'light'],
-  // The thumb is what shows on/off, so it needs 3:1 against the track it sits
-  // on. Asserted because border/strong was lightened on 2026-09-08 and this
-  // pair went from 6.37:1 to 3.75:1 — comfortable, but no longer far from the
-  // line, and nothing was watching it before.
+  // The Switch thumb's POSITION is what conveys on/off, so it needs 3:1 against
+  // the track it sits in — in BOTH modes and BOTH states. Four pairs, because
+  // both the thumb and the track change colour with the mode, and the thumb
+  // changes again when checked.
   ['sr-color-surface-section-cards', 'sr-color-border-strong', 3,
-    'Switch thumb against the hover track (switch.css)', 'light'],
+    'Switch thumb against the unchecked track (switch.css)'],
+  ['sr-color-text-on-fill', 'sr-color-interactive-primary', 3,
+    'Switch thumb against the checked track (switch.css)'],
+  // The control needs a boundary of its own too, not just an internal one.
+  ['sr-color-border-strong', 'sr-color-surface-background', 3,
+    'Switch track against the page (switch.css)', 'light'],
 
   // --- Focus ring. SC 1.4.11, 3:1, and it must hold in BOTH modes. ---
   ['sr-color-border-focus', 'sr-color-surface-background', 3,
@@ -138,18 +143,6 @@ const PAIRS = [
  * here without a line saying who decides and what the options are.
  */
 const KNOWN = [
-  {
-    fg: 'sr-color-surface-section-cards', bg: 'sr-color-border-default', min: 3, mode: 'light',
-    status: 'open',
-    note: 'The Switch thumb is white on a border/default track when the switch is '
-      + 'OFF — 1.37:1. The thumb\'s position is what conveys on/off, so SC 1.4.11 '
-      + 'wants 3:1 for it. Found on 2026-09-08 while repointing border/strong; it '
-      + 'predates that change and is not caused by it (the HOVER track is fine at '
-      + '3.75:1, and is now asserted above). Options: move the rest track to '
-      + 'border/strong, or give the thumb its own border. Both are colour changes '
-      + 'and need the design lead to sign off (CLAUDE.md), so this is recorded '
-      + 'rather than quietly fixed.',
-  },
   {
     fg: 'sr-color-status-warning', bg: 'sr-color-status-warning-surface', min: 4.5, mode: 'light',
     status: 'accepted',

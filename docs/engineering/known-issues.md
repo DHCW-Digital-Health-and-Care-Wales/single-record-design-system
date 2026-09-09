@@ -516,6 +516,19 @@ and table rules stay on `Border/Default` — they are not control boundaries and
 > 2026-09-08, so a control outline reads as an affordance without shouting where
 > several sit in a row. Still clears 3:1; the point of this entry is unchanged.
 
+> **The Switch had the same bug and it took a year to notice.** Its track was
+> `Border/Default`, so the white thumb was 1.37:1 against it and the track was
+> 1.26:1 against the page — the thumb's POSITION is what conveys on/off, so
+> that is the state indicator, invisible. Fixed 2026-09-09 by moving the track
+> to `Border/Strong`. Two things fell out of it. Hover had to move, because it
+> had been *set to* `Border/Strong` and became a no-op — it is now the label
+> going `Interactive/Primary`, since previewing the checked colour (what
+> Checkbox and Radio do) would make an OFF switch look ON. And the checked
+> thumb had to stop using `Surface/Section Cards`, which flips dark in dark
+> mode and gave 2.07:1 on the dark blue track; checked, the thumb sits on a
+> filled surface, so it uses `Text/On Fill` — white in both modes. All four
+> thumb/track pairs are now asserted.
+
 **Watch the state that used to be the fix.** Both components had hover set to
 `Border/Strong`. Once rest uses it, hover is a no-op — the same value applied
 twice. Hover moved to `Interactive/Primary`, previewing the checked colour.
@@ -760,6 +773,54 @@ is a headless-browser check asserting the numbers the specs already state (tab
 horizontally) against the built site. That needs Playwright as a declared
 devDependency, which is a DDR under CLAUDE.md — write the DDR and the check
 together.
+
+---
+
+### The quota refilled with every retention number set correctly
+
+**Symptom:** *"You have used 90% of the Actions storage included for the
+Chuk-DCHW account"* — 0.45 GB of 0.5 GB — five months after the same quota was
+filled once before and fixed.
+
+**Why it was not the same bug.** The first time, a scheduled job re-uploaded the
+site every 30 minutes at the 90-day default. That was fixed: the job is guarded,
+and every scheduled run since shows `conclusion: skipped`, costing nothing. The
+cron was not the cause the second time and stopping it would have saved nothing.
+
+**What it actually was — sizes, not defaults:**
+
+| Artifact | Size | Retention | Trigger |
+|---|---|---|---|
+| `sr-testbed-apk` | **27.4 MB** | 30 days | every PR touching `packages/maui/**` or `foundations/tokens/**` |
+| `sr-site` | 3.25 MB | 7 days | every push and PR |
+
+Roughly ten APKs inside their 30-day window is ~274 MB — over half the quota
+from one artifact nobody had downloaded. Both numbers were *explicit and
+deliberate*, so the existing check passed: it only asked whether
+`retention-days` was set, not whether the answer was affordable.
+
+**Fix:** the APK uploads only on `workflow_dispatch` now, at 3 days. PR runs
+still build and verify it — the build, the pack and the `aapt2 badging` check
+are the actual value; the upload only exists so a human can sideload it. The
+site artifact is PR-only at 2 days, because a push to main is published to Pages
+anyway and the artifact was a second copy of something already at a URL.
+
+**Prevented by:** `check:workflows` now enforces a **14-day ceiling** as well as
+requiring the field, with a `# quota-ok` escape that has to carry a reason.
+Verified by planting `retention-days: 30`.
+
+**Retention changes are not retroactive.** An artifact keeps the expiry it was
+created with, so lowering the number stops the bleeding and frees nothing.
+Existing artifacts have to be deleted:
+
+```
+gh api --paginate /repos/OWNER/REPO/actions/artifacts --jq '.artifacts[].id' \
+  | xargs -I{} gh api -X DELETE /repos/OWNER/REPO/actions/artifacts/{}
+```
+
+**The general lesson:** a gate that checks a field is set is not the same as a
+gate that checks the value is sane. "Is there a number here" passed for five
+months while the numbers behind it consumed the quota.
 
 ---
 

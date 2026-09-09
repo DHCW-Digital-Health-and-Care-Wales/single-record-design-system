@@ -42,6 +42,12 @@ specified 40px. If you were compensating for either, stop.
 **`data-label` is gone from Tabs markup.** It fed a width-reservation trick that
 did not work and has been removed. Nothing reads it now.
 
+**The Switch's off state is visible now.** Its track was `Border/Default`, so
+the white thumb was 1.37:1 against it — and the thumb's position is what tells
+you the switch is off. The track is now `Border/Strong`. Hover moved to the
+label (previewing the checked colour would make an off switch look on), and the
+checked thumb moved to `Text/On Fill` so it stays white in dark mode.
+
 **Border/Strong moved from Grey/600 `#4C6272` to Grey/500 `#768692`.** Still
 clears the 3:1 that SC 1.4.11 requires for a control boundary (3.75:1 on white,
 3.44:1 on the page), but reads as an affordance rather than shouting. It affects
