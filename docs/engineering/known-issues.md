@@ -862,6 +862,53 @@ where this goes wrong most often.
 
 ---
 
+### Two ways to misread a pipeline, in one 120-line script
+
+The artifact purge failed twice, on consecutive runs, for two different reasons
+in the same shell script. Both cost a run against a quota that was already full.
+
+**First: SIGPIPE.** The listing line was `awk … doomed.tsv | head -40`. `head`
+closes the pipe after 40 lines, `awk` takes SIGPIPE, `set -o pipefail` turns
+that into 141 and `set -e` aborts — above the dry-run check and above the delete
+loop, so the job died having deleted nothing. The dry run *looked* like it had
+worked, because it printed everything it was going to print before dying at the
+end of the same statement.
+
+Whether it bites is a race against the 64KB pipe buffer, so it only appears once
+the list is long. The fixture had four rows and passed; the real list had 661 and
+failed every time. **Fix:** `awk 'NR<=40 {…}'` — let awk do its own limiting and
+have no pipe at all.
+
+**Second: reading a status line instead of an exit code.** The delete loop asked
+`gh` for the HTTP status with `--include | head -1 | awk '{print $2}'`. For 24 of
+661 the first line was not the final status: `gh` retries, and a retried request
+prints more than one. Those 24 were reported as failures and the job exited 1 —
+but the repository was empty afterwards, so every one of them had succeeded.
+
+**Fix:** trust `gh`'s exit code, which is the outcome after its own retries. Read
+the message only to *categorise* a failure, never to decide whether one happened.
+A status line is a diagnostic, not a result.
+
+**What made the second one avoidable and wasn't.** The first fix shipped without
+anyone looking for the same mistake elsewhere in the same file — and the identical
+`| head -1` sat eleven lines below it, in the commit that fixed the first one.
+**A fix is not finished until the same mistake has been searched for everywhere
+else in the file it was found in.**
+
+**And a false theory is worth killing quickly.** The second failure looked exactly
+like the first, so SIGPIPE was the obvious explanation. Tested against multi-line
+headers: 0 misreads in 20 attempts. Not that. The cheap test stopped a plausible,
+wrong fix from shipping.
+
+**Prevented by:** nothing mechanical, and it is honest to say so — these are shell
+pipeline semantics, not a rule a linter here would carry. What *did* find them
+both is a habit worth the ten minutes: extract the script body, point it at a fake
+`gh`, and run every path at the real data shape. That found the byte-accounting
+error too, where a run that stopped early would have claimed it freed 2115 MB
+after deleting six artifacts.
+
+---
+
 ### A gate that checks the source and trusts the toolchain is not a gate
 
 The single most expensive lesson here, learned twice in one session.
