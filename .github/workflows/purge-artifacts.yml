@@ -124,15 +124,36 @@ jobs:
           ok=0; gone=0; failed=0; limited=0; done_count=0; freed=0
           total=$count
 
+          # Trust gh's EXIT CODE, not the HTTP status line.
+          #
+          # The first run of this deleted all 661 artifacts and then reported 24
+          # of them as failures — the repository was empty afterwards, so every
+          # delete had in fact worked. The old form scraped the status with
+          # `--include | head -1 | awk '{print $2}'`, and for 24 of them the
+          # first line it read was not the final status: gh retries, and a
+          # retried request prints more than one. The status line is a
+          # diagnostic, not a result.
+          #
+          # gh's exit code is the outcome after its own retries, so that is what
+          # decides. The message is only read to CATEGORISE a failure, never to
+          # decide whether one happened. Genuine failures now print their error,
+          # because "24 failed" with no error text is not something anyone can
+          # act on.
           while IFS=$'\t' read -r id name size created; do
-            code=$(gh api -X DELETE "/repos/$REPO/actions/artifacts/$id" \
-                     --silent --include 2>/dev/null | head -1 | awk '{print $2}' || echo "000")
-            case "$code" in
-              204|202) ok=$((ok + 1)); freed=$((freed + size)) ;;
-              404)     gone=$((gone + 1)) ;;
-              403|429) limited=$((limited + 1)) ;;
-              *)       failed=$((failed + 1)) ;;
-            esac
+            if err=$(gh api -X DELETE "/repos/$REPO/actions/artifacts/$id" --silent 2>&1); then
+              ok=$((ok + 1)); freed=$((freed + size))
+            else
+              case "$err" in
+                *404*|*"Not Found"*)                gone=$((gone + 1)) ;;
+                *403*|*429*|*"rate limit"*|*abuse*) limited=$((limited + 1)) ;;
+                *)
+                  failed=$((failed + 1))
+                  if [ "$failed" -le 5 ]; then
+                    echo "::warning::$name ($id): $(printf '%s' "$err" | tr '\n' ' ' | cut -c1-160)"
+                  fi
+                  ;;
+              esac
+            fi
 
             done_count=$((done_count + 1))
             if [ $((done_count % 100)) -eq 0 ]; then
