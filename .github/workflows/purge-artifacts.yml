@@ -36,7 +36,7 @@ on:
         default: '0'
         type: string
       dry_run:
-        description: 'List what would go, delete nothing.'
+        description: 'Dry run — only LIST what would be deleted. UNTICK this to actually delete.'
         required: false
         default: true
         type: boolean
@@ -99,7 +99,14 @@ jobs:
           echo "To delete:           $count  ($((bytes / 1024 / 1024)) MB)"
           echo
 
-          awk -F'\t' '{printf "  %-20s %8.1f MB  %s\n", $2, $3/1048576, $4}' doomed.tsv | head -40
+          # awk does its own limiting. Piping into `head -40` killed this job:
+          # head closes the pipe after 40 lines, awk takes SIGPIPE, and with
+          # `set -o pipefail` the pipeline exits 141 and `set -e` aborts — before
+          # a single artifact was deleted. It is a race against the 64KB pipe
+          # buffer, so it only bites once the list is long enough, which is
+          # exactly when you need this to work. Reproduced at 5000 rows: 141
+          # every time with the pipe, 0 every time without it.
+          awk -F'\t' 'NR<=40 {printf "  %-20s %8.1f MB  %s\n", $2, $3/1048576, $4}' doomed.tsv
           if [ "$count" -gt 40 ]; then echo "  … and $((count - 40)) more"; fi
           echo
 
@@ -108,15 +115,55 @@ jobs:
             exit 0
           fi
 
-          ok=0; failed=0
+          # GITHUB_TOKEN is limited to 1000 REST requests an hour per repository.
+          # 661 deletions plus pagination sits close enough to that ceiling to
+          # plan for hitting it, so a rate-limited run stops cleanly and says to
+          # come back rather than grinding through hundreds of guaranteed
+          # failures. Re-running is safe: this job is idempotent, and anything
+          # already gone answers 404, which counts as done.
+          ok=0; gone=0; failed=0; limited=0; done_count=0; freed=0
+          total=$count
+
           while IFS=$'\t' read -r id name size created; do
-            if gh api -X DELETE "/repos/$REPO/actions/artifacts/$id" --silent 2>/dev/null; then
-              ok=$((ok + 1))
-            else
-              failed=$((failed + 1))
+            code=$(gh api -X DELETE "/repos/$REPO/actions/artifacts/$id" \
+                     --silent --include 2>/dev/null | head -1 | awk '{print $2}' || echo "000")
+            case "$code" in
+              204|202) ok=$((ok + 1)); freed=$((freed + size)) ;;
+              404)     gone=$((gone + 1)) ;;
+              403|429) limited=$((limited + 1)) ;;
+              *)       failed=$((failed + 1)) ;;
+            esac
+
+            done_count=$((done_count + 1))
+            if [ $((done_count % 100)) -eq 0 ]; then
+              echo "  $done_count / $total …"
+            fi
+
+            # Ten refusals is a wall, not ten bad artifacts. Counted in total
+            # rather than consecutively: 403 on an artifact delete is about
+            # permission or rate, neither of which clears up mid-run.
+            if [ "$limited" -ge 10 ]; then
+              echo "::warning::Stopping early — $limited refusals, most likely the hourly API"
+              echo "::warning::rate limit. Deleted $ok so far. Re-run this workflow in an hour;"
+              echo "::warning::it picks up where it left off."
+              break
             fi
           done < doomed.tsv
 
-          echo "Deleted $ok, failed $failed, freed about $((bytes / 1024 / 1024)) MB."
-          echo "Storage usage on the billing page can take a few minutes to catch up."
-          [ "$failed" -eq 0 ]
+          echo
+          echo "Deleted:            $ok"
+          [ "$gone" -gt 0 ]    && echo "Already expired:    $gone"
+          [ "$limited" -gt 0 ] && echo "Refused (limit):    $limited"
+          [ "$failed" -gt 0 ]  && echo "Failed:             $failed"
+          # Bytes actually deleted, not bytes planned — a run that stops early
+          # must not claim it freed the whole list.
+          echo "Freed:              $((freed / 1024 / 1024)) MB of $((bytes / 1024 / 1024)) MB"
+          echo
+          echo "The storage figure on the billing page takes a few minutes to catch up."
+
+          # A rate-limited stop is a partial success, not a broken job — the run
+          # should not go red for it, because the fix is simply to run it again.
+          if [ "$failed" -gt 0 ]; then
+            echo "::error::$failed artifact(s) failed for a reason other than rate limiting."
+            exit 1
+          fi
