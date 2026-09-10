@@ -507,9 +507,27 @@ This is easy to get wrong because Border/Default is the right choice for a
 *divider*, where nothing is being identified as interactive, and the two uses
 look similar in a stylesheet.
 
-**Fix:** Form control boundaries use `Border/Strong` (Grey/600 `#4C6272`,
-6.37:1). Dividers, card outlines and table rules stay on `Border/Default` —
-they are not control boundaries and 1.4.11 does not apply to them.
+**Fix:** Form control boundaries use `Border/Strong`. Dividers, card outlines
+and table rules stay on `Border/Default` — they are not control boundaries and
+1.4.11 does not apply to them.
+
+> `Border/Strong` was Grey/600 (`#4C6272`, 6.37:1) when this was written. It was
+> repointed to **Grey/500** (`#768692`, 3.75:1 on white, 3.44:1 on the page) on
+> 2026-09-08, so a control outline reads as an affordance without shouting where
+> several sit in a row. Still clears 3:1; the point of this entry is unchanged.
+
+> **The Switch had the same bug and it took a year to notice.** Its track was
+> `Border/Default`, so the white thumb was 1.37:1 against it and the track was
+> 1.26:1 against the page — the thumb's POSITION is what conveys on/off, so
+> that is the state indicator, invisible. Fixed 2026-09-09 by moving the track
+> to `Border/Strong`. Two things fell out of it. Hover had to move, because it
+> had been *set to* `Border/Strong` and became a no-op — it is now the label
+> going `Interactive/Primary`, since previewing the checked colour (what
+> Checkbox and Radio do) would make an OFF switch look ON. And the checked
+> thumb had to stop using `Surface/Section Cards`, which flips dark in dark
+> mode and gave 2.07:1 on the dark blue track; checked, the thumb sits on a
+> filled surface, so it uses `Text/On Fill` — white in both modes. All four
+> thumb/track pairs are now asserted.
 
 **Watch the state that used to be the fix.** Both components had hover set to
 `Border/Strong`. Once rest uses it, hover is a no-op — the same value applied
@@ -709,6 +727,140 @@ past its share.
 ---
 
 ## Build & CI
+
+### A `::after` inside a flex container is a flex ITEM, not a layer behind it
+
+**Symptom:** Tabs shipped with every tab roughly twice as wide as its own label
+— 164px for text measuring 62px — and 52px tall against a specified 40px.
+Nothing looked wrong on the component page, because every tab was inflated by
+the same proportion. It only surfaced when the strip was changed from scrolling
+to wrapping and four tabs claimed four rows.
+
+**Why, part one — the width.** Selecting a tab switches the label to Medium,
+which is ~3px wider than Regular, so the strip reflows. The fix attempted was a
+hidden copy of the label at the selected weight:
+
+```css
+.sr-tabs__tab { display: inline-flex; gap: 8px; }
+.sr-tabs__tab::after { content: attr(data-label); display: block; height: 0; }
+```
+
+`display: block` reads like "a block behind the content". It is not. In a flex
+container every child box — pseudo-elements included — is blockified into a
+flex ITEM, so the copy sat *beside* the label with the 8px gap between them.
+Width became `label + gap + label + padding`.
+
+**Why, part two — the height.** `padding: var(--space-4)` applies 16px to all
+four sides, not the horizontal-only 16px the component specifies. A 20px line
+box plus 32px is 52px. `min-height: 40px` was satisfied, so nothing complained.
+
+**Fix:** `padding: 0 var(--space-4)`, and the reservation removed entirely. To
+stack a hidden copy behind real text you need both in one grid cell, and a bare
+text node cannot be placed in a grid — it needs its own wrapping element. Not
+worth it for 3px; the better fix is in the design, keeping one weight.
+
+**The trap that made it survive review.** The check applied was "does the strip
+shift when you change tab?" It passed — but it would have passed with the tabs
+at any uniform size, including a wrong one. **A check that a defect satisfies is
+not a check.** The question had to be "is the tab the size the spec says",
+against the number, not "does it look stable".
+
+**Prevented by:** nothing yet, and it should be. This is a rendered-geometry
+fact, so no CSS-source lint can see it — the same lesson as *"A gate that checks
+the source and trusts the toolchain is not a gate"* below. The mechanised form
+is a headless-browser check asserting the numbers the specs already state (tab
+40px tall, tab width = label + 32, search field 40px, no tablist scrolling
+horizontally) against the built site. That needs Playwright as a declared
+devDependency, which is a DDR under CLAUDE.md — write the DDR and the check
+together.
+
+---
+
+### The quota refilled with every retention number set correctly
+
+**Symptom:** *"You have used 90% of the Actions storage included for the
+Chuk-DCHW account"* — 0.45 GB of 0.5 GB — five months after the same quota was
+filled once before and fixed.
+
+**Why it was not the same bug.** The first time, a scheduled job re-uploaded the
+site every 30 minutes at the 90-day default. That was fixed: the job is guarded,
+and every scheduled run since shows `conclusion: skipped`, costing nothing. The
+cron was not the cause the second time and stopping it would have saved nothing.
+
+**What it actually was — sizes, not defaults:**
+
+| Artifact | Size | Retention | Trigger |
+|---|---|---|---|
+| `sr-testbed-apk` | **27.4 MB** | 30 days | every PR touching `packages/maui/**` or `foundations/tokens/**` |
+| `sr-site` | 3.25 MB | 7 days | every push and PR |
+
+Roughly ten APKs inside their 30-day window is ~274 MB — over half the quota
+from one artifact nobody had downloaded. Both numbers were *explicit and
+deliberate*, so the existing check passed: it only asked whether
+`retention-days` was set, not whether the answer was affordable.
+
+**Fix:** the APK uploads only on `workflow_dispatch` now, at 3 days. PR runs
+still build and verify it — the build, the pack and the `aapt2 badging` check
+are the actual value; the upload only exists so a human can sideload it. The
+site artifact is PR-only at 2 days, because a push to main is published to Pages
+anyway and the artifact was a second copy of something already at a URL.
+
+**Prevented by:** `check:workflows` now enforces a **14-day ceiling** as well as
+requiring the field, with a `# quota-ok` escape that has to carry a reason.
+Verified by planting `retention-days: 30`.
+
+**Retention changes are not retroactive.** An artifact keeps the expiry it was
+created with, so lowering the number stops the bleeding and frees nothing.
+Existing artifacts have to be deleted:
+
+```
+gh api --paginate /repos/OWNER/REPO/actions/artifacts --jq '.artifacts[].id' \
+  | xargs -I{} gh api -X DELETE /repos/OWNER/REPO/actions/artifacts/{}
+```
+
+**The general lesson:** a gate that checks a field is set is not the same as a
+gate that checks the value is sane. "Is there a number here" passed for five
+months while the numbers behind it consumed the quota.
+
+---
+
+### A line-anchored regex turns a lint rule into a formatting test
+
+**Symptom:** `check:type` had a clean baseline of zero raw typography
+declarations. Moving one existing declaration — `.sr-autocomplete__match
+{ font-weight: 700; }` — out of `autocomplete.css` and onto its own line in a
+new `search.css` made the check fail as a regression. Nothing had been added.
+
+**Why:** the rule was `/^\s*(font-size|line-height|font-weight|letter-spacing)
+\s*:\s*(var\(--font-|[0-9])/`. Anchored to `^`, it only sees a declaration
+that starts a line. A rule written on one line — `.x { font-weight: 700; }` —
+has the declaration in the middle, so it never matched. The check was therefore
+half a type rule and half a formatting rule: the same CSS passed or failed
+depending on where the author put a newline. Anyone who wanted to dodge it only
+had to collapse the rule onto one line, and nobody would have had to know they
+were dodging anything.
+
+**Fix:** match at the start of a line *or* after `{` or `;`, which is where a
+declaration can legally begin:
+
+```js
+const RAW = /(^|[{;])\s*(font-size|line-height|font-weight|letter-spacing)\s*:\s*(var\(--font-|[0-9])/;
+```
+
+Closing the hole revealed no hidden debt in this repo — the only match was the
+one declaration that had prompted the look. That is luck, not vindication; the
+rule had been unenforceable on single-line CSS for as long as it had existed.
+
+**Prevented by:** `scripts/check-typography.mjs`, verified by planting
+`.sr-planted { font-size: 15px; }` — exactly the shape that used to slip
+through — and confirming the check fails on it before trusting the pass.
+
+**The general lesson:** a regex-based gate on source text is only as good as
+the formatting it assumes. Before trusting one, write the defect it targets in
+the *other* legal formatting and check it still fails. Anchors (`^`, `$`) are
+where this goes wrong most often.
+
+---
 
 ### A gate that checks the source and trusts the toolchain is not a gate
 

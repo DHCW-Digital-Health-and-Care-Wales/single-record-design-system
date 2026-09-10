@@ -71,6 +71,17 @@ const PAIRS = [
     'Checkbox and Radio rest border on the page background', 'light'],
   ['sr-color-interactive-primary', 'sr-color-surface-small-cards', 3,
     'Checkbox and Radio checked fill, and their hover border', 'light'],
+  // The Switch thumb's POSITION is what conveys on/off, so it needs 3:1 against
+  // the track it sits in — in BOTH modes and BOTH states. Four pairs, because
+  // both the thumb and the track change colour with the mode, and the thumb
+  // changes again when checked.
+  ['sr-color-surface-section-cards', 'sr-color-border-strong', 3,
+    'Switch thumb against the unchecked track (switch.css)'],
+  ['sr-color-text-on-fill', 'sr-color-interactive-primary', 3,
+    'Switch thumb against the checked track (switch.css)'],
+  // The control needs a boundary of its own too, not just an internal one.
+  ['sr-color-border-strong', 'sr-color-surface-background', 3,
+    'Switch track against the page (switch.css)', 'light'],
 
   // --- Focus ring. SC 1.4.11, 3:1, and it must hold in BOTH modes. ---
   ['sr-color-border-focus', 'sr-color-surface-background', 3,

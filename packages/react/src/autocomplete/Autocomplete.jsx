@@ -1,13 +1,15 @@
 import React, { useId, useMemo, useRef, useState } from 'react';
-import '@dhcw/sr-web/src/input/input.css';
+import '@dhcw/sr-web/src/search/search.css';
 import '@dhcw/sr-web/src/select/select.css';
 import '@dhcw/sr-web/src/autocomplete/autocomplete.css';
 import Icon from '../icon/Icon.jsx';
 
 /**
  * Autocomplete — DHCW Single Record Design System (React)
- * Searchable select (combobox). Composed from the Input search field and the
- * Select listbox (shared CSS). See packages/web/src/autocomplete.
+ * Searchable select (combobox). Composed from the Search field and the Select
+ * listbox (shared CSS) — you type into it, so the field is a Search field; you
+ * choose a value from it, so the menu is a Select menu. See
+ * packages/web/src/autocomplete/autocomplete.css for why those two.
  *
  * Props:
  *   options   [{ label, value }]
@@ -24,7 +26,7 @@ function Highlight({ label, query }) {
   return (
     <>
       {label.slice(0, i)}
-      <span className="sr-autocomplete__match">{label.slice(i, i + query.length)}</span>
+      <span className="sr-search__match">{label.slice(i, i + query.length)}</span>
       {label.slice(i + query.length)}
     </>
   );
@@ -97,29 +99,29 @@ export default function Autocomplete({
   return (
     <div className={['sr-autocomplete', className].filter(Boolean).join(' ')} {...rest}>
       {label && (
-        <label className="sr-input__label" htmlFor={`${rid}-input`}>
+        <label className="sr-search__label" htmlFor={`${rid}-input`}>
           {label}
           {required && (
-            <span className="sr-input__required" aria-hidden="true">
+            <span className="sr-search__required" aria-hidden="true">
               *
             </span>
           )}
         </label>
       )}
       {hint && (
-        <div className="sr-input__hint" id={`${rid}-hint`}>
+        <div className="sr-search__hint" id={`${rid}-hint`}>
           {hint}
         </div>
       )}
 
       <div className="sr-autocomplete__control">
-        <div className="sr-input__field">
-          <span className="sr-input__icon">
+        <div className="sr-search__field">
+          <span className="sr-search__icon">
             <Icon name="nav/search" size="sm" color="inherit" />
           </span>
           <input
             ref={inputRef}
-            className="sr-input__control"
+            className="sr-search__control-input"
             id={`${rid}-input`}
             type="text"
             autoComplete="off"
@@ -144,7 +146,7 @@ export default function Autocomplete({
           {query && (
             <button
               type="button"
-              className="sr-autocomplete__clear"
+              className="sr-search__clear"
               aria-label="Clear search"
               onClick={() => {
                 commitQuery('');
@@ -153,7 +155,7 @@ export default function Autocomplete({
                 inputRef.current?.focus();
               }}
             >
-              <Icon name="nav/close" size="xs" color="inherit" />
+              <Icon name="nav/clear" size="sm" color="inherit" />
             </button>
           )}
           {/* Without this the field looks like a plain search box and the

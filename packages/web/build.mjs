@@ -26,7 +26,7 @@
  */
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, rmSync, readdirSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { dirname, resolve, basename } from 'node:path';
+import { dirname, resolve, basename, relative, sep } from 'node:path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..', '..');
@@ -52,6 +52,25 @@ const componentFiles = readdirSync(SRC, { withFileTypes: true })
   .map((d) => resolve(SRC, d.name, `${d.name}.css`))
   .filter((f) => existsSync(f))
   .sort();
+
+// index.css is hand-maintained (a bundler resolves its @imports; it is not
+// generated), so it can silently fall behind the directories on disk — Tabs
+// shipped in dist/ and in the website while index.css never mentioned it, so a
+// bundler-based consumer got no Tabs styling at all. Nothing caught it, because
+// every other build path discovers rather than lists. This does.
+const indexCss = readFileSync(resolve(SRC, 'index.css'), 'utf8');
+const missingFromIndex = componentFiles
+  .map((f) => relative(SRC, f).split(sep)[0])
+  .filter((name) => !indexCss.includes(`./${name}/${name}.css`));
+if (missingFromIndex.length) {
+  console.error(
+    `packages/web/src/index.css is missing ${missingFromIndex.length} component stylesheet(s):\n` +
+    missingFromIndex.map((n) => `  @import "./${n}/${n}.css";`).join('\n') +
+    '\n\nAdd them, in alphabetical order. Without it a bundler-based consumer\n' +
+    'gets an unstyled component while dist/single-record.css looks fine.'
+  );
+  process.exit(1);
+}
 
 const banner = (title) => `/*!
  * DHCW Single Record Design System — ${title}

@@ -104,7 +104,7 @@
   --color-white-default: #ffffff; /** Card and panel surfaces in light mode; Text/Inverse on saturated fills */
   --color-border-subtle: #f0f4f5; /** Ultra-light border for row dividers and internal table separators. Use only on white or near-white backgrounds where Border/Default would be too prominent. Do not use as the only structural indicator on a surface. */
   --color-border-default: #d8dde0; /** Standard border for inputs, cards, and section dividers. */
-  --color-border-strong: #4c6272; /** High-contrast border for section edges, active table rows, and structural dividers that must be clearly visible. */
+  --color-border-strong: #768692; /** The boundary of a UI component — checkbox and radio at rest, switch track on hover, sub-tab pill outline. 3.75:1 on white and 3.44:1 on the page background, clearing the 3:1 of WCAG 2.2 SC 1.4.11. Was Grey/600 (6.37:1) until 2026-09-08. Not a text colour. Kept in step with sr.color.border.strong by the build — see the border-token divergence check in packages/tokens/build.js. */
   --color-border-focus: #0d8bad; /** Focus ring colour — Cyan/800 (DDR-025, amending DDR-006). Applied to all interactive elements on keyboard focus. Always paired with Border/Width/Strong (2px) and an inner gap ring. Kept in step with sr.color.border.focus by hand: this token and the sr-prefixed one are the known duplication awaiting a token-structure decision. */
   --sr-color-interactive-primary: #325083; /** Brand primary. White text on blue-800 = 7.1:1 (AAA). */
   --sr-color-interactive-primary-hover: #1e3050; /** Hover step for primary. */
@@ -126,7 +126,7 @@
   --sr-color-text-disabled: #707488; /** Disabled text. 4.6:1 on surface/background (AA). */
   --sr-color-border-subtle: #f0f4f5;
   --sr-color-border-default: #d8dde0;
-  --sr-color-border-strong: #4c6272;
+  --sr-color-border-strong: #768692; /** The boundary of a UI component — checkbox and radio at rest, switch track on hover, sub-tab pill outline. Clears the 3:1 of WCAG 2.2 SC 1.4.11 on both light surfaces: 3.75:1 on white, 3.44:1 on the page background. Was Grey/600 (6.37:1) until 2026-09-08; lightened so a control outline reads as an affordance without shouting, which matters where several sit in a row. Not a text colour — 3.75:1 is under the 4.5:1 SC 1.4.3 wants for body text. Dividers, card outlines and table rules are NOT control boundaries and stay on border/default. */
   --sr-color-border-focus: #0d8bad; /** Focus ring — Cyan/800 in both modes (DDR-025, amending DDR-006). Cyan/700 was 2.95:1 on a card and 2.71:1 on the page, under the 3:1 SC 1.4.11 requires. Cyan/800 is the only stop clearing 3:1 in both modes: darker stops fix light mode and fail dark, where surfaces are navy. */
   --sr-color-border-disabled: #9ea1af;
   --sr-color-brand-accent: #12a3c9; /** Decorative accent only. Borders, icon strokes, chart accents, tab indicators. Never use as a filled surface with text on top. */
@@ -444,19 +444,35 @@
 /* ═══ autocomplete ════════════════════════════════════════════════ */
 /**
  * DHCW Single Record — Autocomplete (searchable select / combobox)
- * A composition of the Input search field and the Select listbox popover —
- * it deliberately reuses `.sr-input__*` (field) and `.sr-select__*` (menu,
- * option) so the two read as one system. Consumes @dhcw/sr-tokens.
  *
- * Use for long, known option lists where typing to filter beats scrolling —
- * clinical code lookup, ward/clinician pickers. For a short fixed list use
- * Select; for free text use Input.
+ * A composition of the SEARCH field and the SELECT listbox popover. It owns
+ * almost no styling of its own: the field comes from `.sr-search__*` and the
+ * menu from `.sr-select__*`, so the three read as one system. Consumes
+ * @dhcw/sr-tokens. Import search.css and select.css alongside this file.
+ *
+ * Why those two and not one:
+ *   You TYPE into it, so the field is a Search field — Search is the system's
+ *   only search field (the Input set's `Type=Search` variants were removed on
+ *   2026-06-04). An earlier version of this file claimed to compose "the Input
+ *   search field", which by then did not exist.
+ *   You CHOOSE A VALUE from it, so the menu is a Select menu — the picked
+ *   option carries the brand fill that means "this is the current value".
+ *   Search's own Typeahead popover is styled differently on purpose: its rows
+ *   are results to act on, not a value that stays chosen.
+ *
+ * Autocomplete vs Search Typeahead:
+ *   Autocomplete resolves to a value from a known set and has a chevron, so
+ *   the list can be browsed without typing — clinical code lookup, ward and
+ *   clinician pickers. Typeahead looks a query up; choosing a row navigates or
+ *   fetches. For a short fixed list use Select; for free text use Input.
  *
  * Anatomy:
  *   .sr-autocomplete            — vertical stack (label / hint / control / error)
+ *   .sr-search__label / __hint  — reused from Search
  *   .sr-autocomplete__control   — positioning context for the popover
- *   .sr-input__field            — the search field (leading search icon + input)
- *   .sr-select__menu            — results listbox (reused from Select)
+ *   .sr-search__field           — the search field (leading icon, input, clear)
+ *   .sr-autocomplete__toggle    — chevron; the part Search does not have
+ *   .sr-select__menu / __option — results listbox (reused from Select)
  *   .sr-autocomplete__empty     — "no results" row
  *
  * Semantics: input is role="combobox" aria-autocomplete="list"; the results
@@ -476,30 +492,9 @@
   width: 100%;
 }
 
-/* Clear button (shown once there is a query). */
-.sr-autocomplete__clear {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 auto;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  border: none;
-  border-radius: var(--radius-sm);
-  background: transparent;
-  color: var(--sr-color-text-secondary);
-  cursor: pointer;
-}
-.sr-autocomplete__clear svg { width: 16px; height: 16px; }
-.sr-autocomplete__clear:hover { color: var(--sr-color-text-primary); }
-.sr-autocomplete__clear:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--sr-color-border-focus);
-}
-
 /* Chevron — the affordance saying this field has a list behind it, and the
-   same glyph Select uses so the two read as one kind of control. */
+   same glyph Select uses so the two read as one kind of control. This is the
+   one control Autocomplete adds to the Search field it borrows. */
 .sr-autocomplete__toggle {
   display: inline-flex;
   align-items: center;
@@ -517,7 +512,9 @@
 .sr-autocomplete__toggle svg { width: 20px; height: 20px; }
 .sr-autocomplete__toggle:hover { color: var(--sr-color-text-primary); }
 
-/* "No results" row inside the reused Select menu. */
+/* "No results" row inside the reused Select menu. Search's own empty state
+   lives in .sr-search__status-row; this one has to match the Select menu it
+   sits in, which has different padding. */
 .sr-autocomplete__empty {
   display: flex;
   align-items: center;
@@ -528,10 +525,14 @@
   letter-spacing: var(--sr-type-body-s-letter-spacing);
 }
 
-/* Bold the portion of an option label that matches the query. */
-.sr-autocomplete__match { font-weight: 700; }
-.sr-select__option:hover .sr-autocomplete__match,
-.sr-select__option.is-active .sr-autocomplete__match { color: inherit; }
+/* The matched run inside an option comes from Search (.sr-search__match). On a
+   selected or keyboard-active Select option the row is brand-filled, so the
+   bolded run must inherit the inverse text colour rather than staying dark. */
+.sr-select__option:hover .sr-search__match,
+.sr-select__option.is-active .sr-search__match,
+.sr-select__option[aria-selected='true'] .sr-search__match {
+  color: inherit;
+}
 
 /* ═══ bottom-nav ══════════════════════════════════════════════════ */
 /**
@@ -961,7 +962,8 @@
   background-color: var(--sr-color-surface-small-cards);
   /* Border/Strong, not Border/Default. An unchecked box is a UI component
      boundary under WCAG 2.2 SC 1.4.11, which requires 3:1: Grey/200 gave
-     1.37:1 on white, Grey/600 gives 6.37:1. */
+     1.37:1 on white, Border/Strong gives 3.75:1. Asserted by check:contrast,
+     so the ratio lives there rather than in this comment. */
   border: var(--border-width-2) solid var(--sr-color-border-strong);
   border-radius: var(--radius-sm);
 }
@@ -3220,6 +3222,360 @@ textarea.sr-input__control {
   white-space: nowrap;
 }
 
+/* ═══ search ══════════════════════════════════════════════════════ */
+/**
+ * DHCW Single Record — Search
+ * Reference HTML/CSS implementation, matched to the Figma "Search" set
+ * (1715:375) and "Search Suggestions" set (1716:238) on page 1701:17851.
+ * Consumes @dhcw/sr-tokens.
+ *
+ * Search is the ONLY search field in the system. The Input set's `Type=Search`
+ * variants were removed on 2026-06-04 — a search box is not a text input with a
+ * different icon, because it owns a clear affordance, a loading state, an
+ * optional submit button and (for Typeahead) a suggestions popover.
+ *
+ * Types, matching the Figma `Type` property:
+ *   Basic            — live inline filter, no submit step.
+ *   With Button      — submitted query; .sr-search__submit alongside the field.
+ *   With Icon Button — same, but a 40x40 icon-only button where space is tight.
+ *   Typeahead        — Basic plus the .sr-search__suggestions popover.
+ *
+ * Anatomy (vertical stack, gap = space-1), mirroring Input and Select:
+ *   .sr-search__label       — field label (+ required asterisk)
+ *   .sr-search__hint        — helper text (above the field)
+ *   .sr-search__row         — field + optional submit button, side by side
+ *   .sr-search__control     — positioning context for the popover
+ *   .sr-search__field       — bordered row: search icon, control, clear/spinner
+ *   .sr-search__suggestions — listbox popover (role="listbox")
+ *   .sr-search__suggestion  — one result row (role="option")
+ *   .sr-search__error       — validation message (Error state only)
+ *
+ * Semantics: for Typeahead the control is role="combobox" with aria-expanded,
+ * aria-controls and aria-activedescendant; see search.stories.js for a working
+ * keyboard reference, and Search.jsx in @dhcw/sr-react.
+ */
+
+.sr-search {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.sr-search__label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+  color: var(--sr-color-text-primary);
+}
+.sr-search__required {
+  color: var(--sr-color-status-critical);
+}
+
+.sr-search__hint {
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  color: var(--sr-color-text-secondary);
+}
+
+/* Field and submit button sit on one row, 8px apart. */
+.sr-search__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+/* Positioning context for the suggestions popover. It wraps the FIELD only, so
+   the popover aligns to the input rather than to the input plus the button. */
+.sr-search__control {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* ---------- Field ---------- */
+.sr-search__field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: 40px;
+  box-sizing: border-box;
+  padding: 0 var(--space-3); /* 12px */
+  background-color: var(--sr-color-surface-section-cards);
+  border: 1px solid var(--sr-color-border-default);
+  border-radius: var(--radius-sm);
+}
+
+/* Focus — the 1px border stays and a 3px ring is drawn OUTSIDE it, so nothing
+   in the row moves when focus lands. Same treatment as Select; DDR-006. */
+.sr-search__field:focus-within {
+  border-color: var(--sr-color-border-default);
+  box-shadow: 0 0 0 3px var(--sr-color-border-focus);
+}
+
+.sr-search__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  color: var(--sr-color-text-secondary);
+}
+.sr-search__icon svg { width: 100%; height: 100%; }
+
+.sr-search__control-input {
+  flex: 1 1 0;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: var(--sr-color-text-primary);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+}
+.sr-search__control-input::placeholder {
+  color: var(--sr-color-text-secondary);
+}
+.sr-search__control-input:focus { outline: none; }
+/* We draw our own clear button, so suppress the browser's native one — two
+   crosses in the same field is worse than none. */
+.sr-search__control-input::-webkit-search-cancel-button,
+.sr-search__control-input::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Clear (x) — present once there is a query. */
+.sr-search__clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--sr-color-text-secondary);
+  cursor: pointer;
+}
+.sr-search__clear svg { width: 20px; height: 20px; }
+.sr-search__clear:hover { color: var(--sr-color-text-primary); }
+.sr-search__clear:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sr-color-border-focus);
+}
+
+/* Spinner — replaces the clear button while a query is in flight. */
+.sr-search__spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  color: var(--sr-color-text-secondary);
+}
+.sr-search__spinner svg {
+  width: 100%;
+  height: 100%;
+  animation: sr-search-spin 1s linear infinite;
+}
+@keyframes sr-search-spin {
+  to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sr-search__spinner svg { animation-duration: 3s; }
+}
+
+/* ---------- Submit button ----------
+   Sized to the field (40px) rather than to the Button component's own metrics,
+   which is why this is not a Button instance: a Button next to a 40px field
+   would not line up. Visual language is Button/Primary. */
+.sr-search__submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-height: 40px;
+  padding: 0 var(--space-6); /* 24px */
+  border: none;
+  border-radius: var(--radius-sm);
+  background-color: var(--sr-color-interactive-primary);
+  color: var(--sr-color-text-inverse);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+  cursor: pointer;
+}
+.sr-search__submit:hover:not(:disabled) {
+  background-color: var(--sr-color-interactive-primary-hover);
+}
+.sr-search__submit:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--sr-color-border-focus);
+}
+/* Disabled until the query is valid — the Figma Default state ships this way,
+   so an empty search bar cannot be submitted. */
+.sr-search__submit:disabled {
+  background-color: var(--sr-color-interactive-disabled);
+  cursor: not-allowed;
+}
+
+/* Icon-only variant: a 40x40 square, matching the field height. Above the
+   24x24 minimum of WCAG 2.2 SC 2.5.8 (AA). */
+.sr-search__submit--icon {
+  width: 40px;
+  padding: 0;
+}
+.sr-search__submit--icon svg { width: 20px; height: 20px; }
+
+/* ---------- Suggestions popover (Typeahead) ---------- */
+.sr-search__suggestions {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  left: 0;
+  right: 0;
+  z-index: 20;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background-color: var(--sr-color-surface-small-cards);
+  border: 1px solid var(--sr-color-border-default);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--elevation-overlay);
+  max-height: 320px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.sr-search__suggestions[hidden] { display: none; }
+
+/* A result row is two lines — the thing found, then what disambiguates it.
+   Unlike a Select option (one line, a value being chosen) a suggestion is a
+   RESULT, which is why this list is styled separately rather than reusing
+   .sr-select__option. */
+.sr-search__suggestion {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  /* Figma draws 10/14; both are off the 4px grid, so this snaps to 8/12 —
+     the same left inset as a Select option, which keeps the two lists aligned
+     when they sit in the same form. */
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--sr-color-surface-small-cards);
+  cursor: pointer;
+}
+.sr-search__suggestion + .sr-search__suggestion {
+  border-top: 1px solid var(--sr-color-border-subtle);
+}
+
+.sr-search__suggestion-label {
+  font: var(--sr-type-body-m-font);
+  letter-spacing: var(--sr-type-body-m-letter-spacing);
+  color: var(--sr-color-text-primary);
+}
+.sr-search__suggestion-meta {
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  color: var(--sr-color-text-secondary);
+}
+
+/* Hover and keyboard-active share one treatment: a soft accent wash. The row
+   keeps Text/Primary rather than inverting, because inverted text would fight
+   the bolded match inside it. The active row is also carried by
+   aria-activedescendant, so this is not a colour-only cue. */
+.sr-search__suggestion:hover,
+.sr-search__suggestion.is-active {
+  background-color: var(--sr-color-surface-accent);
+}
+
+/* The matched substring, bolded in place. */
+.sr-search__match {
+  font-weight: var(--font-weight-bold);
+}
+
+/* Loading and empty rows live in the same popover. */
+.sr-search__status-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 52px;
+  padding: var(--space-4) var(--space-3);
+  color: var(--sr-color-text-secondary);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+  text-align: center;
+}
+.sr-search__status-row svg { width: 20px; height: 20px; }
+.sr-search__status-row .sr-search__spinner { color: inherit; }
+
+/* ---------- Error ---------- */
+.sr-search--error .sr-search__field {
+  border-color: var(--sr-color-status-critical);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-critical);
+}
+.sr-search--error .sr-search__field:focus-within {
+  box-shadow:
+    inset 0 0 0 1px var(--sr-color-status-critical),
+    0 0 0 3px var(--sr-color-border-focus);
+}
+/* Icon as well as colour, so the error is not carried by the border alone. */
+.sr-search__error {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  color: var(--sr-color-status-critical);
+}
+.sr-search__error-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+}
+.sr-search__error-icon svg { width: 100%; height: 100%; }
+
+/* ---------- Disabled ---------- */
+.sr-search--disabled .sr-search__field {
+  background-color: var(--sr-color-surface-background);
+  border-color: var(--sr-color-border-disabled);
+  box-shadow: none;
+}
+.sr-search--disabled .sr-search__control-input {
+  color: var(--sr-color-text-disabled);
+  cursor: not-allowed;
+}
+.sr-search--disabled .sr-search__label,
+.sr-search--disabled .sr-search__icon {
+  color: var(--sr-color-text-disabled);
+}
+
+/* Accessible label with no visual footprint — for a standalone search bar
+   whose placeholder carries the visible meaning. Every search field still
+   needs a real label; hiding it is a layout choice, not a licence to drop it.
+
+   NOTE: duplicated from input.css and table.css. Each component stylesheet in
+   this package is independently importable, so a shared utility has to live in
+   every file that uses it until there is a foundations stylesheet to hold it.
+   Three copies now — this is the point at which extracting it is overdue. */
+.sr-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 /* ═══ segmented-control ═══════════════════════════════════════════ */
 /**
  * DHCW Single Record — Segmented control
@@ -3558,7 +3914,13 @@ textarea.sr-input__control {
   width: 44px;
   height: 24px;
   border-radius: var(--radius-full);
-  background-color: var(--sr-color-border-default);
+  /* Border/Strong, not Border/Default. The thumb's POSITION is what says on or
+     off, so the thumb has to be distinguishable from the track it sits in —
+     SC 1.4.11, 3:1. On Border/Default the white thumb was 1.37:1, effectively
+     invisible, and the track itself was 1.26:1 against the page so the whole
+     control had no boundary either. Border/Strong fixes both: 3.75:1 thumb to
+     track, 3.44:1 track to page. */
+  background-color: var(--sr-color-border-strong);
   transition: background-color 0.15s ease;
 }
 .sr-switch__thumb {
@@ -3568,8 +3930,21 @@ textarea.sr-input__control {
   width: 20px;
   height: 20px;
   border-radius: var(--radius-full);
+  /* Surface/Section Cards flips with the mode — white on light, dark navy on
+     dark — which is what keeps the thumb legible against a track that also
+     flips (Border/Strong is Grey/500 light, Navy/300 dark). 3.75:1 light,
+     5.13:1 dark. A fixed white thumb would be 2.57:1 in dark mode. */
   background-color: var(--sr-color-surface-section-cards);
   transition: transform 0.15s ease;
+}
+
+/* Checked, the thumb sits on a FILLED interactive surface rather than a neutral
+   track, so it takes the colour meant for exactly that — white in both modes.
+   Leaving it on the flipping surface colour gave 2.07:1 in dark mode, where the
+   dark thumb and the dark blue track are close in luminance. 8.04:1 light,
+   6.38:1 dark. */
+.sr-switch[aria-checked="true"] .sr-switch__thumb {
+  background-color: var(--sr-color-text-on-fill);
 }
 
 .sr-switch__label {
@@ -3585,8 +3960,13 @@ textarea.sr-input__control {
   transform: translateX(20px);
 }
 
-.sr-switch:hover .sr-switch__track {
-  background-color: var(--sr-color-border-strong);
+/* Hover used to darken the track to Border/Strong. Now that Border/Strong IS
+   the rest colour that is a no-op, and the obvious replacement — previewing the
+   checked colour, as Checkbox and Radio do — would make an OFF switch look ON.
+   So hover moves to the label instead, which is the same signal Tabs and the
+   sub-tab pill already use. */
+.sr-switch:hover .sr-switch__label {
+  color: var(--sr-color-interactive-primary);
 }
 .sr-switch[aria-checked="true"]:hover .sr-switch__track {
   background-color: var(--sr-color-interactive-primary-hover);
@@ -3869,6 +4249,289 @@ td.sr-table__select {
 .sr-table__action--destructive:hover {
   background-color: var(--sr-color-status-critical-surface, var(--sr-color-surface-subtle));
   color: var(--color-red-700);
+}
+
+/* ═══ tabs ════════════════════════════════════════════════════════ */
+/**
+ * DHCW Single Record — Tabs
+ * Reference HTML/CSS implementation, matched to the Figma "Menu Tab" set
+ * (817:7219 on page 1753:21420): State=Default|Hover|Focus|Active|Disabled ×
+ * Orientation=Horizontal|Vertical. Consumes @dhcw/sr-tokens.
+ *
+ * Tabs switch the VIEW: one tablist controls one panel region, and exactly one
+ * tab is selected. Not the Segmented control — that picks a value within a view
+ * and is a group of buttons with aria-pressed. If choosing changes what is
+ * rendered below it, it is Tabs; if it filters or sets an option, it is the
+ * Segmented control.
+ *
+ * Markup follows the WAI-ARIA tabs pattern: role="tablist" > role="tab" with
+ * aria-selected and aria-controls, each pointing at a role="tabpanel". Keyboard
+ * behaviour (roving tabindex, arrow keys, Home/End) is the consumer's job —
+ * see tabs.stories.js for a working reference, and Tabs.jsx in @dhcw/sr-react.
+ */
+
+.sr-tabs {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0;
+  /* The strip carries no track line. The Figma component does not draw one, and
+     inventing a rule here would put code ahead of the design. If a track is
+     wanted, it is a Figma change first. */
+}
+
+.sr-tabs__tab {
+  /* 40px tall, 16px padding LEFT AND RIGHT ONLY, 8px gap — from the component.
+     `padding: var(--space-4)` applied 16px on all four sides, which made every
+     tab 52px tall (20px line box + 32px) rather than the specified 40px. The
+     min-height was satisfied and so nothing complained. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2); /* 8px */
+  min-height: 40px;
+  padding: 0 var(--space-4); /* 0 16px */
+  border: none;
+  background: transparent;
+  color: var(--sr-color-text-primary);
+  font: var(--sr-type-body-s-font); /* 14/20 Regular */
+  white-space: nowrap;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/**
+ * There is deliberately NO width reservation here.
+ *
+ * The selected tab is Medium with 0.3px tracking and the rest are Regular with
+ * none, so selecting a tab widens it by about 3px and nudges the tabs to its
+ * right. An earlier version tried to absorb that by rendering the label again
+ * at the selected weight in a `::after`, collapsed to zero height.
+ *
+ * That did not work. `.sr-tabs__tab` is a flex container, so the pseudo-element
+ * became a flex ITEM and sat BESIDE the label with the 8px gap between them,
+ * rather than behind it. Every tab came out roughly twice as wide as its own
+ * text — 164px for a label measuring 62px. Nothing looked broken because every
+ * tab was inflated by the same proportion, and the check it was meant to
+ * satisfy — "does the strip shift on select" — passed for the wrong reason.
+ * The bug only surfaced when the strip started wrapping and four tabs claimed
+ * four rows.
+ *
+ * Doing it properly needs the label wrapped in its own element so the two
+ * copies can be stacked in one grid cell; a bare text node cannot be placed.
+ * That is not worth it for 3px. The better fix is in the design: keep one
+ * weight and let colour and the 3px indicator carry selection, which is
+ * already raised in components/tabs/spec.md. Until then the 3px reflow stays,
+ * and it is far less harmful than what it replaced.
+ */
+
+/* Hover — soft page-background wash, brand-blue label. Unselected tabs only:
+   the selected tab is already at its strongest and has nowhere to go. */
+.sr-tabs__tab:hover:not([aria-selected='true']):not(:disabled) {
+  background-color: var(--sr-color-surface-background);
+  color: var(--sr-color-interactive-primary);
+}
+
+/* Selected — Medium label plus a 3px indicator on the leading edge.
+   The indicator is an inset shadow rather than a border so it cannot change the
+   40px height or nudge the label. */
+.sr-tabs__tab[aria-selected='true'] {
+  color: var(--sr-color-interactive-primary);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+  box-shadow: inset 0 -3px 0 var(--sr-color-interactive-primary);
+}
+
+/* Focus — 2px Border/Focus ring (DDR-025), drawn outside so it does not disturb
+   the layout. Selected AND focused keeps both: the ring is where you are, the
+   indicator is what is showing. */
+.sr-tabs__tab:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--sr-color-border-focus);
+}
+.sr-tabs__tab[aria-selected='true']:focus-visible {
+  box-shadow:
+    inset 0 -3px 0 var(--sr-color-interactive-primary),
+    0 0 0 2px var(--sr-color-border-focus);
+}
+
+.sr-tabs__tab:disabled,
+.sr-tabs__tab[aria-disabled='true'] {
+  color: var(--sr-color-text-disabled);
+  cursor: not-allowed;
+  background: transparent;
+}
+
+/* Count badge — a pill, Interactive/Primary with white text.
+   Decorative: the count must also reach the accessible name of the tab, or a
+   screen reader announces the tab without it. */
+.sr-tabs__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 20px;
+  padding: 0 var(--space-2); /* 0 8px */
+  border-radius: var(--radius-full);
+  background-color: var(--sr-color-interactive-primary);
+  color: var(--sr-color-text-on-fill);
+  font: var(--sr-type-caption-font); /* 12/16 Regular */
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+}
+
+.sr-tabs__tab:disabled .sr-tabs__badge,
+.sr-tabs__tab[aria-disabled='true'] .sr-tabs__badge {
+  background-color: var(--sr-color-interactive-disabled);
+}
+
+/* ── Level=Secondary: sub-tab pills ────────────────────────────────────────
+   The second level of a two-level tab structure (DDR-030). The outer tablist
+   selects a group; that group's PANEL contains one of these.
+
+   It is a pill, not a smaller underlined tab, because two identical strips
+   stacked are ambiguous about which row you are on. It is a BARE pill — no
+   track — because the track is what distinguishes the Segmented control:
+
+     track = filter (aria-pressed, sets an option within this view)
+     no track = navigate (role=tab, switches which view you see)
+
+   32px against the parent's 40px. A child that outweighs its parent inverts
+   the hierarchy. */
+
+.sr-tabs--secondary {
+  gap: var(--space-2); /* 8px — pills are separate controls, not a strip */
+  flex-wrap: wrap;
+  row-gap: var(--space-2);
+}
+
+.sr-tabs--secondary .sr-tabs__tab {
+  min-height: 32px;
+  padding: 0 var(--space-3); /* 0 12px */
+  box-sizing: border-box;
+  /* Border/Strong (Grey/500, 3.75:1) not Border/Default (1.37:1). The border
+     is what says "this is an option", so it is a UI component boundary under
+     WCAG 2.2 SC 1.4.11 and needs 3:1. Asserted by check:contrast. */
+  border: 1px solid var(--sr-color-border-strong);
+  border-radius: var(--radius-full);
+  box-shadow: none; /* no indicator at this level — the fill carries selection */
+  color: var(--sr-color-text-secondary);
+}
+
+/* Hover leaves the BORDER ALONE and moves only the wash and the label.
+   Taking the border to Interactive/Primary — the treatment Checkbox and Radio
+   use — would make a hovered pill identical to Button/Secondary, which is also
+   transparent with a blue outline and a blue label. Only the radius would
+   separate "switch to this view" from "do this thing". */
+.sr-tabs--secondary .sr-tabs__tab:hover:not([aria-selected='true']):not(:disabled) {
+  background-color: var(--sr-color-surface-accent);
+  color: var(--sr-color-interactive-primary);
+}
+
+.sr-tabs--secondary .sr-tabs__tab[aria-selected='true'] {
+  background-color: var(--sr-color-interactive-primary);
+  border-color: var(--sr-color-interactive-primary);
+  color: var(--sr-color-text-inverse);
+  box-shadow: none;
+}
+
+/* The ring is offset by a 2px halo in the surface colour so the cyan never sits
+   directly against the pill's own border. Same treatment as the Segmented
+   control and the Switch. */
+.sr-tabs--secondary .sr-tabs__tab:focus-visible,
+.sr-tabs--secondary .sr-tabs__tab[aria-selected='true']:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--sr-color-surface-section-cards),
+    0 0 0 4px var(--sr-color-border-focus);
+}
+
+.sr-tabs--secondary .sr-tabs__tab:disabled,
+.sr-tabs--secondary .sr-tabs__tab[aria-disabled='true'] {
+  border-color: var(--sr-color-border-disabled);
+  color: var(--sr-color-text-disabled);
+  background: transparent;
+}
+
+/* Vertical secondary stacks the pills and lets each hug its own label, rather
+   than stretching them all to the widest — a column of full-width pills reads
+   as a menu, not as a set of options. */
+.sr-tabs--secondary.sr-tabs--vertical {
+  align-items: flex-start;
+}
+.sr-tabs--secondary.sr-tabs--vertical .sr-tabs__tab[aria-selected='true'] {
+  box-shadow: none;
+}
+
+/* ── Vertical ──────────────────────────────────────────────────────────────
+   Same tab, stacked, with the indicator on the left edge. Set
+   aria-orientation="vertical" on the tablist so Up/Down become the arrow keys
+   a screen reader user is told to press. */
+
+.sr-tabs--vertical {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.sr-tabs--vertical .sr-tabs__tab {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.sr-tabs--vertical .sr-tabs__tab[aria-selected='true'] {
+  box-shadow: inset 3px 0 0 var(--sr-color-interactive-primary);
+}
+
+.sr-tabs--vertical .sr-tabs__tab[aria-selected='true']:focus-visible {
+  box-shadow:
+    inset 3px 0 0 var(--sr-color-interactive-primary),
+    0 0 0 2px var(--sr-color-border-focus);
+}
+
+/* ── Panels ───────────────────────────────────────────────────────────────
+   The panel is focusable so that a keyboard user who tabs off the tablist lands
+   in the content it controls rather than skipping past it. */
+
+.sr-tabs__panel {
+  padding: var(--space-4) 0;
+  color: var(--sr-color-text-primary);
+  font: var(--sr-type-body-m-font);
+}
+
+.sr-tabs__panel:focus-visible {
+  outline: 2px solid var(--sr-color-border-focus);
+  outline-offset: 2px;
+}
+
+.sr-tabs__panel[hidden] {
+  display: none;
+}
+
+/* ── Overflow ─────────────────────────────────────────────────────────────
+   A horizontal strip that outgrows its container WRAPS onto another row.
+
+   This used to scroll, on the argument that a wrapped tablist reads as two
+   rows of unrelated controls. That argument lost to a stronger one: a
+   horizontally scrolling strip gives no indication that anything is off-screen,
+   so it hides tabs from the very people who most need to see them. Clinicians
+   are explicit that hidden navigation costs them — it adds recall effort and
+   damages discoverability. Wrapping shows every tab at once, which is the point
+   of a tab strip. Vertical stacks are unaffected.
+
+   The row-gap is deliberate and small: 4px detaches a selected tab's 3px bottom
+   indicator from the row beneath it, so the indicator cannot read as a rule
+   over the following row, while staying tight enough that the rows still read
+   as one control. */
+
+.sr-tabs:not(.sr-tabs--vertical) {
+  flex-wrap: wrap;
+  row-gap: var(--space-1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sr-tabs__tab {
+    transition: none;
+  }
 }
 
 /* ═══ tags ════════════════════════════════════════════════════════ */

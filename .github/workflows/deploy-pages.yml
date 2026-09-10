@@ -60,16 +60,19 @@ jobs:
       - run: npm ci
       - name: Build tokens, website, Storybook, and assemble
         run: npm run build:pages
-      - name: Upload site artifact (preview / download)
+      # Pull requests only. On a push to main the site is deployed to Pages by the
+      # job below, so keeping a 3.25 MB copy of the same build as an artifact is
+      # storage spent on something already published at a URL.
+      - name: Upload site artifact (PR preview)
+        if: github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: sr-site
           path: site-dist
           if-no-files-found: error
-          # This is a preview/download convenience, not a record. The default is
-          # 90 days, which for a per-push site build is retention far beyond the
-          # few days anyone actually opens one of these.
-          retention-days: 7
+          # A preview/download convenience, not a record. Two days covers the life
+          # of a review; the 7 it used to be outlived every reason to open one.
+          retention-days: 2
 
   deploy:
     name: Deploy to GitHub Pages (org repo)

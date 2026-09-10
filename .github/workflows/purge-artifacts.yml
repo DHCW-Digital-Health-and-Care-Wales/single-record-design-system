@@ -1,0 +1,122 @@
+name: Purge Actions artifacts (manual)
+
+# Frees Actions storage by deleting build artifacts.
+#
+# Why this exists as a workflow rather than a command someone runs locally:
+# deleting an artifact needs the `actions: write` permission, which the tokens
+# handed to a checkout, to an assistant session, or to a read-only PAT do not
+# carry. A workflow running inside the repository gets it from the built-in
+# GITHUB_TOKEN by asking for it below. So this needs no gh install, no auth
+# dance and no terminal — Actions tab, Run workflow, done.
+#
+# When you need it: retention changes are NOT retroactive. Lowering
+# `retention-days` on an upload step stops the growth, but every artifact
+# already created keeps the expiry it was born with. On 2026-09-09 that was 669
+# live artifacts and 1.8 GB against a 0.5 GB quota, with every retention number
+# already corrected. This is the only way to get that back before they age out.
+#
+# Nothing here is precious. `sr-site` rebuilds on the next push; `sr-testbed-apk`
+# rebuilds from a workflow_dispatch of build-maui-testbed.yml.
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "purge" to confirm. Deleting an artifact cannot be undone.'
+        required: true
+        type: string
+      name_filter:
+        description: 'Only delete artifacts with this exact name. Leave blank for all.'
+        required: false
+        default: ''
+        type: string
+      keep_newest:
+        description: 'Keep this many of the newest artifacts (per name, if a filter is set).'
+        required: false
+        default: '0'
+        type: string
+      dry_run:
+        description: 'List what would go, delete nothing.'
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+  actions: write   # the whole point — artifact deletion needs this
+
+concurrency:
+  group: purge-artifacts
+  cancel-in-progress: false
+
+jobs:
+  purge:
+    name: Purge artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the confirmation
+        if: inputs.confirm != 'purge'
+        run: |
+          echo "::error::Type 'purge' in the confirm box to run this. Nothing was deleted."
+          exit 1
+
+      - name: Delete artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          NAME_FILTER: ${{ inputs.name_filter }}
+          KEEP_NEWEST: ${{ inputs.keep_newest }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          set -euo pipefail
+
+          # --paginate walks every page; expired artifacts are already gone and
+          # would only 404, so they are filtered out here rather than counted.
+          gh api --paginate "/repos/$REPO/actions/artifacts" \
+            --jq '.artifacts[] | select(.expired == false)
+                  | [.id, .name, .size_in_bytes, .created_at] | @tsv' \
+            > all.tsv || true
+
+          if [ ! -s all.tsv ]; then
+            echo "No live artifacts. Nothing to do."
+            exit 0
+          fi
+
+          if [ -n "$NAME_FILTER" ]; then
+            awk -F'\t' -v n="$NAME_FILTER" '$2 == n' all.tsv > filtered.tsv
+          else
+            cp all.tsv filtered.tsv
+          fi
+
+          # Newest first, so "keep the newest N" is just dropping the first N.
+          sort -t$'\t' -k4,4r filtered.tsv > sorted.tsv
+          tail -n +$((KEEP_NEWEST + 1)) sorted.tsv > doomed.tsv
+
+          count=$(wc -l < doomed.tsv | tr -d ' ')
+          bytes=$(awk -F'\t' '{s+=$3} END {print s+0}' doomed.tsv)
+          echo "Live artifacts:      $(wc -l < all.tsv | tr -d ' ')"
+          echo "Matching the filter: $(wc -l < filtered.tsv | tr -d ' ')"
+          echo "To delete:           $count  ($((bytes / 1024 / 1024)) MB)"
+          echo
+
+          awk -F'\t' '{printf "  %-20s %8.1f MB  %s\n", $2, $3/1048576, $4}' doomed.tsv | head -40
+          if [ "$count" -gt 40 ]; then echo "  … and $((count - 40)) more"; fi
+          echo
+
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "Dry run — nothing deleted. Untick 'dry_run' to do it for real."
+            exit 0
+          fi
+
+          ok=0; failed=0
+          while IFS=$'\t' read -r id name size created; do
+            if gh api -X DELETE "/repos/$REPO/actions/artifacts/$id" --silent 2>/dev/null; then
+              ok=$((ok + 1))
+            else
+              failed=$((failed + 1))
+            fi
+          done < doomed.tsv
+
+          echo "Deleted $ok, failed $failed, freed about $((bytes / 1024 / 1024)) MB."
+          echo "Storage usage on the billing page can take a few minutes to catch up."
+          [ "$failed" -eq 0 ]

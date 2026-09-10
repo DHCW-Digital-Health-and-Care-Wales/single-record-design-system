@@ -252,7 +252,7 @@ The `Single Record` Figma collection exposes these with **Light** and **Dark** m
 |---|---|---|---|---|---|
 | `sr.color.border.subtle` | `color.grey.100` | `#F0F4F5` | `color.navy.700` | `#464C64` | Row dividers, internal table separators |
 | `sr.color.border.default` | `color.grey.200` | `#D8DDE0` | `color.navy.500` | `#707488` | Standard borders — inputs, cards, dividers |
-| `sr.color.border.strong` | `color.grey.600` | `#4C6272` | `color.navy.300` | `#9EA1AF` | Active/selected rows, structural dividers |
+| `sr.color.border.strong` | `color.grey.500` | `#768692` | `color.navy.300` | `#9EA1AF` | UI component boundaries — checkbox/radio rest, switch hover track, sub-tab pills |
 | `sr.color.border.focus` | `color.focus-yellow` | `#FFEB3B` | `color.focus-yellow` | `#FFEB3B` | Focus ring — pair with 2px dark inner ring |
 
 ### Brand
@@ -1174,7 +1174,7 @@ Adopt Lucide Icons as the SR icon library (ISC licence, 24×24px grid, 2px strok
 |---|---|---|---|
 | `SR/Border/Subtle`  | `sr.color.border.subtle`  | `color.grey.100` | `color.navy.700` |
 | `SR/Border/Default` | `sr.color.border.default` | `color.grey.200` | `color.navy.500` |
-| `SR/Border/Strong`  | `sr.color.border.strong`  | `color.grey.600` | `color.navy.300` |
+| `SR/Border/Strong`  | `sr.color.border.strong`  | `color.grey.500` | `color.navy.300` |
 | `SR/Border/Focus`   | `sr.color.border.focus`   | `color.focus-yellow` | `color.focus-yellow` |
 
 ### Semantic Colour — Brand

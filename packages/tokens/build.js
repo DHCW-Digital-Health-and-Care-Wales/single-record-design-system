@@ -417,8 +417,50 @@ async function build() {
   await sdDark.buildAllPlatforms();
 
   emitFontFace();
+  checkBorderTokenParity();
 
   console.log('\nToken build complete. Outputs in packages/tokens/build/');
+}
+
+/**
+ * `foundations/tokens/border.json` and `foundations/tokens/semantic/color.json`
+ * BOTH define the border colours — one emits `--color-border-*`, the other
+ * `--sr-color-border-*`. That duplication is known and is waiting on a
+ * token-structure decision; border.json's own `focus` description says the two
+ * are "kept in step by hand".
+ *
+ * Hand-syncing does not survive contact with a real edit. Repointing
+ * border/strong from Grey/600 to Grey/500 on 2026-09-08 changed the sr- side
+ * and left the unprefixed side on the old value, in the same commit that was
+ * supposed to be a single global change. Nothing would have caught it: no
+ * component consumes the unprefixed token today, so it would have sat wrong
+ * until something did.
+ *
+ * So the build compares them and fails when they drift. This does not resolve
+ * the duplication — it just stops it lying.
+ */
+function checkBorderTokenParity() {
+  const css = readFileSync(path.resolve(__dirname, 'build', 'css', 'tokens.css'), 'utf8');
+  const read = (prefix) => Object.fromEntries(
+    [...css.matchAll(new RegExp(`^\\s*--${prefix}-([a-z]+):\\s*(#[0-9a-f]{3,8})\\s*;`, 'gim'))]
+      .map((m) => [m[1], m[2].toLowerCase()]),
+  );
+  const plain = read('color-border');
+  const sr = read('sr-color-border');
+
+  const drift = Object.keys(plain)
+    .filter((k) => k in sr && plain[k] !== sr[k])
+    .map((k) => `  border/${k}: --color-border-${k} is ${plain[k]}, --sr-color-border-${k} is ${sr[k]}`);
+
+  if (drift.length) {
+    console.error(
+      `\nBorder tokens have drifted — ${drift.length} pair(s) disagree:\n${drift.join('\n')}\n\n` +
+      'foundations/tokens/border.json and foundations/tokens/semantic/color.json\n' +
+      'define the same border colours twice. Change both, or neither.\n',
+    );
+    process.exit(1);
+  }
+  console.log(`Border tokens in step — ${Object.keys(plain).filter((k) => k in sr).length} duplicated pair(s) agree.`);
 }
 
 build().catch(err => {

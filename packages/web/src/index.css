@@ -31,10 +31,12 @@
 @import "./navigation/navigation.css";
 @import "./patient-banner/patient-banner.css";
 @import "./radio/radio.css";
+@import "./search/search.css";
 @import "./segmented-control/segmented-control.css";
 @import "./select/select.css";
 @import "./status-indicator/status-indicator.css";
 @import "./switch/switch.css";
 @import "./table/table.css";
+@import "./tabs/tabs.css";
 @import "./tags/tags.css";
 @import "./time-select/time-select.css";

@@ -18,6 +18,45 @@ this file says so and tells you what to change.
 
 ---
 
+## Unreleased
+
+**No action** to take this, but read the Border/Strong note if you use that
+token directly.
+
+**Search shipped.** The system's only search field — Basic, With Button, With
+Icon Button and Typeahead, with the full WAI-ARIA combobox keyboard model.
+`@dhcw/sr-react` → `Search`. The Input set's `Type=Search` variants were removed
+in Figma on 2026-06-04; use `Search` with its `label` / `hint` / `required`
+props rather than wrapping an Input around it. Autocomplete now composes the
+Search field and the Select listbox.
+
+**Tabs gained `Level=Secondary`**, the sub-tab pill, for the second level of a
+two-level tab structure. A tab with sub-views is a second tablist inside the
+first tab's panel — never a chevron on a tab. See DDR-030.
+
+**Tabs overflow now wraps instead of scrolling.** A scrolling strip gave no
+indication that tabs were off-screen. Two defects were fixed at the same time:
+every tab was roughly twice as wide as its label, and 52px tall rather than the
+specified 40px. If you were compensating for either, stop.
+
+**`data-label` is gone from Tabs markup.** It fed a width-reservation trick that
+did not work and has been removed. Nothing reads it now.
+
+**The Switch's off state is visible now.** Its track was `Border/Default`, so
+the white thumb was 1.37:1 against it — and the thumb's position is what tells
+you the switch is off. The track is now `Border/Strong`. Hover moved to the
+label (previewing the checked colour would make an off switch look on), and the
+checked thumb moved to `Text/On Fill` so it stays white in dark mode.
+
+**Border/Strong moved from Grey/600 `#4C6272` to Grey/500 `#768692`.** Still
+clears the 3:1 that SC 1.4.11 requires for a control boundary (3.75:1 on white,
+3.44:1 on the page), but reads as an affordance rather than shouting. It affects
+checkbox and radio rest borders, the switch hover track, the date-picker today
+ring and Tag/black. **Optional:** if you hardcoded `#4C6272` for a control
+boundary anywhere, move to the token.
+
+---
+
 ## v0.3.0 — 2026-09-07
 
 **Action needed** if you use icons by name. This release renames, retires and

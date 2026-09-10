@@ -4,7 +4,7 @@ The Single Record Design System provides the shared design language, component l
 
 This document is the primary reference for everyone working on Single Record — designers, engineers, and delivery leads.
 
-**Last reviewed:** 2026-09-04. Update this file whenever a component ships, a
+**Last reviewed:** 2026-09-08. Update this file whenever a component ships, a
 token is added, or a system-wide rule changes — not on a schedule. If it
 disagrees with `/foundations/tokens/` or `/components/`, those win and this file
 is out of date.
@@ -221,31 +221,36 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Patient banner | ✅ | ✅ | ✅ |
 | Progress indicators | ✅ | — | — |
 | Radio | ✅ (guidelines ✅) | ✅ | ✅ |
-| Search | ✅ | — | — |
+| Search | ✅ (guidelines ✅) | ✅ | ✅ |
 | Segmented control | — (guidelines ✅, with Switch) | ✅ | ✅ |
 | Select | ✅ (guidelines ✅) | ✅ | ✅ |
 | Status indicator | — | ✅ | ✅ |
 | Switch | — (guidelines ✅, with Segmented control) | ✅ | ✅ |
 | Table | ✅ | ✅ | ✅ |
+| Tabs | ✅ (guidelines ✅) | ✅ | ✅ |
+| Tabs — sub-tab pill (`Level=Secondary`) | ✅ (in the Tabs spec) | ✅ | ✅ |
 | Tags | ✅ | ✅ | ✅ |
 | Time select | — | ✅ | ✅ |
 
 **Known gaps, stated plainly:** eleven components ship code without a spec, and
-three specs (Link, Progress indicators, Search) have no code. Neither is
+two specs (Link, Progress indicators) have no code. Neither is
 satisfactory — a component without a spec has no agreed contract, and a spec
 without code cannot be consumed. Both lists are worked down as components are
 touched.
 
-**No Menu/Dropdown component, and no Tabs component.** The Case Note Tracking
-prototype's row-level action menu (Figma `47:4041`) needed a small popover
-list — send/receive/tag/merge/deactivate/delete — and its My Requests screen
-(`127:4813`) needed an All/Sent/Received tab switcher, with neither component
-in this table to reach for. Both are built locally, from tokens only, in
+**No Menu/Dropdown component.** The Case Note Tracking prototype's row-level
+action menu (Figma `47:4041`) needed a small popover list —
+send/receive/tag/merge/deactivate/delete — with nothing in this table to reach
+for. It is built locally, from tokens only, in
 `products/case-note-tracking/prototype/src/shared/RowActions.jsx`
-(`RowActionMenu`) and `MyRequests.jsx` (the tab buttons) — scoped to that
-prototype rather than promoted to `packages/web`/`packages/react`. Promote
-either once a second consumer needs the same pattern, with a spec in
-`/components/menu/` or `/components/tabs/`.
+(`RowActionMenu`) — scoped to that prototype rather than promoted to
+`packages/web`/`packages/react`. Promote it once a second consumer needs the
+same pattern, with a spec in `/components/menu/`.
+
+Tabs used to be on this list too: the same prototype's My Requests screen
+(`127:4813`) hand-rolled an All/Sent/Received switcher. Tabs shipped on
+2026-09-07, so that screen should now consume `@dhcw/sr-react` → `Tabs`
+instead of its local buttons — it is the one remaining hand-rolled copy.
 
 **Navigation, Breadcrumbs and the two Toggles now have website pages.**
 Navigation had guidelines and full code and no page at all. Switch and
@@ -308,6 +313,26 @@ in its markup — SendIT needs *Print Labels* and *Approve Summary list*. The
 Save/Mark-as-complete pair remains the default, so nothing existing changed.
 Whatever a screen passes must still keep to the pattern: exactly one primary,
 and no destructive action in persistent chrome.
+
+**A tab with sub-views is a second tablist, not a chevron.** `role="tab"`
+controls exactly one panel and cannot have children, so a tab that opened a menu
+would announce itself as a tab and then do something else. The second level is
+`Tabs Level=Secondary` — a bare pill — placed inside the first tab's panel. It
+is separated from the Segmented control by one rule: **track = filter, no track
+= navigate**. Two levels is the limit. DDR-030.
+
+**`Search` is the only search field, and `Autocomplete` composes it.** All 24
+Search variants draw the value at `Body S` (14/20); twelve were bound to
+`Body M` until 2026-09-08, which no `<input>` could have reproduced — it
+cannot change size between placeholder and value. The
+Input set's `Type=Search` variants were removed in Figma on 2026-06-04; Search
+(`1715:375`) now carries its own `Label` / `Hint` / `Required` properties, so a
+search inside a labelled form field needs no Input wrapper. Autocomplete is a
+composition of the **Search field** (you type into it) and the **Select
+listbox** (you choose a value from it) — its CSS header used to claim it
+composed "the Input search field", which by then did not exist. Search's own
+Typeahead popover is styled separately on purpose: its rows are results to act
+on, not a value that stays chosen.
 
 **`Autocomplete` can be marked required.** Every other form field in the
 system could express `required`, so a required combobox — SendIT's "Open
