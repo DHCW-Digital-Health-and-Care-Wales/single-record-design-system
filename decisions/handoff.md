@@ -68,11 +68,53 @@ were shifted right to clear the 607-wide panel; relative positions and all `y`
 values were preserved. Verified afterwards: no top-level node on any of the
 seven overlaps another.
 
-### Lesson promoted to `docs/engineering/known-issues.md`
+### Stat card shipped as a component (DDR-031)
+
+Reviewed, specified, built and published. `components/stat-card/{spec,guidelines}.md`,
+`packages/web/src/stat-card/`, `packages/react/src/stat-card/`, and a DS website
+page at `components/stat-card.html`. Figma `Guidelines/Stat Card` is `5164:60`
+and `Stat Card — Usage notes` is `5164:91`, which retires the **last** Menu Item
+copy in the file.
+
+**It is a component; a dashboard built from a row of them is a pattern.** Fixed
+anatomy, no composition, one job. It is also deliberately not interactive — no
+role, no handler, no hover — because a `div` with a click handler is neither a
+link nor a button.
+
+**Five `Type` variants are three layouts.** `Title Top`, `Title_Hint` and
+`Trend` are one layout with nothing, with a supporting line, and with a
+supporting line carrying a change; whether there is a third line is content, not
+a type of card. `Count Top` → Value first, `Single line` → Inline. `Border`
+becomes `Accent`, because it draws a 4px left bar and not a border.
+
+**The Figma set has NOT been restructured.** Renaming a property detaches live
+instances in the product files, so it needs a deliberate pass with those files
+open. The set and the code differ until then, and `spec.md` says where.
+
+**Two surfaces disagreed about the accent bar and the disagreement is resolved.**
+Figma draws one navy bar; the Case Note Tracking prototype recolours it amber
+and red per status. The rule: the accent is emphasis, and may only reinforce
+something the supporting line already says in words — colour alone is SC 1.4.1.
+The prototype passes today because its notes read "Pending Receipt" and
+"Requires attention"; the rule makes that deliberate rather than lucky.
+
+**The contrast gate caught three real defects in the new component**, all in
+dark mode, all invisible in light: `Interactive/Primary` as the label is 2.07:1
+on the dark card surface, and the status colours as bare delta text are 1.85:1
+and 1.97:1 — they are pinned to their light-mode step by design, because status
+*surfaces* stay light in dark mode. Fixed in the component, not the assertion:
+the label is `Text/Primary`, and the delta carries its own status surface as a
+small chip, which is a pair the system already asserts and already passes.
+
+### Lessons promoted to `docs/engineering/known-issues.md`
 
 Strip inline markdown only once a wrapped line is whole — emphasis that opens on
 one physical line and closes on the next survives a per-line strip. Now gated by
 `assertNoMarkdown()` inside the generator.
+
+A colour pair that passes on the page can fail on a card. Everything in a stat
+card sits on `Surface/Section Cards`, which is white in light mode and dark navy
+in dark — so "it looked fine" is a light-mode statement.
 
 ---
 

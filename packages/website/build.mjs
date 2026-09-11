@@ -494,7 +494,7 @@ const radiusSamples = radiusEntries.map(([k, px]) =>
 const SITE_COMPONENT_CSS = [
   'button', 'table', 'patient-banner', 'header', 'footer', 'bottom-nav',
   'breadcrumbs', 'switch', 'segmented-control', 'navigation', 'input',
-  'tags', 'checkbox', 'radio', 'select', 'tabs', 'search',
+  'tags', 'checkbox', 'radio', 'select', 'tabs', 'search', 'stat-card',
 ];
 const COMPONENT_CSS_LINKS = (prefix) =>
   SITE_COMPONENT_CSS.map((c) => `<link rel="stylesheet" href="${prefix}assets/${c}.css">`).join('\n');
@@ -537,6 +537,7 @@ const SECTIONS = [
       { href: 'components/radio.html', label: 'Radio' },
       { href: 'components/search.html', label: 'Search' },
       { href: 'components/select.html', label: 'Select' },
+      { href: 'components/stat-card.html', label: 'Stat card' },
       { href: 'components/tabs.html', label: 'Tabs' },
       { href: 'components/table.html', label: 'Tables' },
       { href: 'components/tags.html', label: 'Tags' },
@@ -2713,6 +2714,91 @@ document.querySelectorAll('[role="tablist"]').forEach(function (list) {
 });
 </script>`;
 
+function statCardBody() {
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'stat-card', 'guidelines.md'), 'utf8')));
+
+  const card = ({ label, value, icon, support, delta, tone, layout = 'stacked', accent = 'primary' }) => {
+    const cls = [
+      'sr-stat-card',
+      layout === 'value-first' && 'sr-stat-card--value-first',
+      layout === 'inline' && 'sr-stat-card--inline',
+      accent === 'primary' && 'sr-stat-card--accent',
+      accent === 'warning' && 'sr-stat-card--accent-warning',
+      accent === 'critical' && 'sr-stat-card--accent-critical',
+    ].filter(Boolean).join(' ');
+    const dir = tone || (typeof delta === 'string' && delta.startsWith('-') ? 'down' : 'up');
+    const head = `  <div class="sr-stat-card__head">
+    <p class="sr-stat-card__label">${label}</p>${icon && layout !== 'inline'
+      ? `\n    <span class="sr-stat-card__icon" aria-hidden="true">${iconMarkup(icon)}</span>` : ''}
+  </div>`;
+    const sup = (delta || support)
+      ? `\n  <p class="sr-stat-card__support">${delta ? `<span class="sr-stat-card__delta sr-stat-card__delta--${dir}">${delta}</span> ` : ''}${support || ''}</p>`
+      : '';
+    return `<div class="${cls}">\n${head}\n  <p class="sr-stat-card__value">${value}</p>${sup}\n</div>`;
+  };
+  const row = (cards) => `<div class="sr-stat-cards">\n${cards.map(card).join('\n')}\n</div>`;
+
+  const dashboard = row([
+    { label: 'Patients on system', value: '24', icon: 'clinical/vitals', delta: '+10%', support: 'on last month' },
+    { label: 'Total casenotes', value: '8', icon: 'nav/sort', support: 'In all sites' },
+    { label: 'In transit', value: '42', icon: 'action/send', accent: 'warning', support: 'Pending receipt' },
+    { label: 'Missing or escalated', value: '24', icon: 'status/warning', accent: 'critical', support: 'Requires attention' },
+  ]);
+
+  const layouts = row([
+    { label: 'Referrals', value: '240', icon: 'clinical/vitals', support: 'This month' },
+    { label: 'Referrals', value: '240', icon: 'clinical/vitals', layout: 'value-first' },
+    { label: 'All', value: '502', layout: 'inline' },
+  ]);
+
+  const greyscale = `<div style="filter:grayscale(1)">${row([
+    { label: 'In transit', value: '42', accent: 'warning', support: 'Pending receipt' },
+    { label: 'Missing or escalated', value: '24', accent: 'critical', support: 'Requires attention' },
+  ])}</div>`;
+
+  const snippets = {
+    HTML: '<div class="sr-stat-cards">\n  <div class="sr-stat-card sr-stat-card--accent">\n    <div class="sr-stat-card__head">\n      <p class="sr-stat-card__label">Referrals</p>\n      <span class="sr-stat-card__icon" aria-hidden="true"><!-- icon --></span>\n    </div>\n    <p class="sr-stat-card__value">240</p>\n    <p class="sr-stat-card__support">\n      <span class="sr-stat-card__delta sr-stat-card__delta--down">-5%</span> on last month\n    </p>\n  </div>\n</div>',
+    React: '<StatCards>\n  <StatCard label="Referrals" value={240} icon="clinical/vitals"\n            delta="-5%" support="on last month" />\n  <StatCard label="In transit" value={42} accent="warning"\n            support="Pending receipt" />\n  {/* layout="value-first" | "inline"; accent="none" | "primary" | "warning" | "critical" */}\n</StatCards>',
+    Blazor: '<div class="sr-stat-cards">\n  @foreach (var s in Stats)\n  {\n    <div class="sr-stat-card sr-stat-card--accent">\n      <div class="sr-stat-card__head"><p class="sr-stat-card__label">@s.Label</p></div>\n      <p class="sr-stat-card__value">@s.Value</p>\n      <p class="sr-stat-card__support">@s.Support</p>\n    </div>\n  }\n</div>',
+  };
+
+  return `
+<p class="breadcrumbs"><a href="../components/breadcrumbs.html">Components</a> / Stat card</p>
+<h1>Stat card</h1>
+<p class="lede">One number with its name on it, so staff can see the size of something before opening
+it.</p>
+
+<h2>A summary row</h2>
+<p>The shape every product has reached for so far: four cards above the work they count. The grid is
+<code>.sr-stat-cards</code>, shipped with the component so it is written once rather than per screen.</p>
+${showcase(dashboard, 'stat-card-row', snippets)}
+
+<h2>Three layouts</h2>
+<p>Stacked is the default. Value first leads with the number, for a row scanned rather than read.
+Inline puts both on one line for a strip above a table, and drops the icon — at that size the icon is
+the widest thing in the card and says the least.</p>
+<p>The Figma set enumerates five types; three of them are the same layout with nothing, with a
+supporting line, and with a supporting line carrying a change. Whether there is a third line is a
+content decision, not a type of card, so pass the text or leave it out.</p>
+${showcase(layouts, 'stat-card-layouts', snippets)}
+
+<h2>The accent bar is not a status</h2>
+<p>A 4px bar that turns amber, with nothing else changing, is meaning carried in colour alone —
+which <a href="https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html">WCAG 2.2 SC 1.4.1</a>
+rules out. The accent reinforces something the supporting line already says in words. Here is the
+same row in greyscale: it still reads.</p>
+${showcase(greyscale, 'stat-card-greyscale', snippets)}
+
+<h2>It is not a button</h2>
+<p>The card has no role, no handler, no hover and no focus ring, and it is not going to get them. If
+tapping the number should open the list behind it, put a Link under the card or build the whole tile
+as a Button — then it is a button, with a button's focus ring and a button's accessible name. A
+<code>div</code> with a click handler is neither.</p>
+
+${renderMarkdown(md)}
+`;
+}
+
 function tabsBody() {
   const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'tabs', 'guidelines.md'), 'utf8')));
 
@@ -4600,6 +4686,11 @@ addPage({
   prefix: '../', body: searchBody(), extraScript: SEARCH_SCRIPT,
 });
 
+addPage({
+  file: 'components/stat-card.html', url: 'components/stat-card.html', title: 'Stat card',
+  section: 'Components', sectionId: 'components', activeHref: 'components/stat-card.html',
+  prefix: '../', body: statCardBody(),
+});
 addPage({
   file: 'components/tabs.html', url: 'components/tabs.html', title: 'Tabs',
   section: 'Components', sectionId: 'components', activeHref: 'components/tabs.html',

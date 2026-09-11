@@ -4,7 +4,7 @@ The Single Record Design System provides the shared design language, component l
 
 This document is the primary reference for everyone working on Single Record — designers, engineers, and delivery leads.
 
-**Last reviewed:** 2026-09-08. Update this file whenever a component ships, a
+**Last reviewed:** 2026-09-11. Update this file whenever a component ships, a
 token is added, or a system-wide rule changes — not on a schedule. If it
 disagrees with `/foundations/tokens/` or `/components/`, those win and this file
 is out of date.
@@ -224,6 +224,7 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Search | ✅ (guidelines ✅) | ✅ | ✅ |
 | Segmented control | — (guidelines ✅, with Switch) | ✅ | ✅ |
 | Select | ✅ (guidelines ✅) | ✅ | ✅ |
+| Stat card | ✅ (guidelines ✅) | ✅ | ✅ |
 | Status indicator | — | ✅ | ✅ |
 | Switch | — (guidelines ✅, with Segmented control) | ✅ | ✅ |
 | Table | ✅ | ✅ | ✅ |
@@ -251,6 +252,14 @@ Tabs used to be on this list too: the same prototype's My Requests screen
 (`127:4813`) hand-rolled an All/Sent/Received switcher. Tabs shipped on
 2026-09-07, so that screen should now consume `@dhcw/sr-react` → `Tabs`
 instead of its local buttons — it is the one remaining hand-rolled copy.
+
+**The Stat card has a second hand-rolled copy, in the same prototype.** Its
+dashboard defines a local `.stat-card` in `prototype/src/app.css`, written
+before the component existed. Stat card shipped on 2026-09-11 (DDR-031), so
+that dashboard should move to `.sr-stat-card` / `StatCard` when it is next
+touched. The two differ in one way worth knowing about: the local copy puts the
+value in `Interactive/Primary` and recolours it per status, which is 2.07:1 on
+the card surface in dark mode. The shipped component does not.
 
 **Navigation, Breadcrumbs and the two Toggles now have website pages.**
 Navigation had guidelines and full code and no page at all. Switch and

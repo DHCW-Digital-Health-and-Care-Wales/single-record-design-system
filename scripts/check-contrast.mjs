@@ -128,6 +128,18 @@ const PAIRS = [
     'Table row header (table.css)'],
   ['sr-color-text-secondary', 'sr-color-surface-accent', 4.5,
     'Select option on hover (select.css)'],
+
+  // --- Stat card. Everything on it sits on Surface/Section Cards rather than
+  //     on the page, which in dark mode is a dark navy — so three pairs that
+  //     look obviously fine in light mode are not.
+  //     Asserted when written: Interactive/Primary as the label (2.07:1 dark)
+  //     and the status colours as bare delta text (1.85:1 and 1.97:1 dark).
+  //     All three failed, and the component changed rather than the assertion:
+  //     the label is Text/Primary, and the delta carries its own status surface,
+  //     which is a pair already asserted above and already passing in both
+  //     modes. Only the supporting line is a genuinely new pair. ---
+  ['sr-color-text-secondary', 'sr-color-surface-section-cards', 4.5,
+    'Stat card supporting line (stat-card.css)'],
 ];
 
 /**
