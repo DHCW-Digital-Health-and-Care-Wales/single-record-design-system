@@ -11,6 +11,71 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 ---
 
+## Checkpoint — 2026-09-11 (seven Guidelines frames; six stale usage-notes panels replaced)
+
+### Seven `Guidelines/*` frames, generated rather than transcribed
+
+Input, Tags, Select, Checkbox, Radios, Search and Tabs each now carry the same
+607-wide panel the Buttons page already had (`5023:45530`), sourced from that
+component's `guidelines.md` so the markdown stays the single source.
+
+| Frame | Page | Node |
+|---|---|---|
+| `Guidelines/Input` | Input | `5142:50` |
+| `Guidelines/Tags` | Tags | `5147:40` |
+| `Guidelines/Select` | Select | `5148:97` |
+| `Guidelines/Checkbox` | Checkbox | `5149:132` |
+| `Guidelines/Radio` | Radios | `5150:184` |
+| `Guidelines/Search` | Search | `5151:109` |
+| `Guidelines/Tabs` | Tabs | `5152:44` |
+
+**The transcription is now a script, not a careful read.** `scripts/guidelines-to-figma.mjs`
+turns a `guidelines.md` into the panel's sections — one section per `##`/`###`,
+tables flattened to bullets, Do/Don't tables split into paired bullets, and the
+Frameworks / Related / Engineering sections dropped because a designer reading
+the canvas cannot act on them. Rebuilding a panel after a markdown edit is one
+command and one `use_figma` call, which is the whole point: a hand transcription
+is a fork the moment the markdown moves.
+
+The frames were built by **cloning `Guidelines/Footer` (`4380:33550`)** rather
+than constructing nodes — the clone carries every variable binding and text
+style, so none of the colour plumbing had to be repeated. Clone, rename, resize
+the section list, set the text. That is the cheapest route for the next one too.
+
+### Six pages were carrying someone else's usage notes
+
+Input, Tags, Select, Checkbox, Radios and Search each had a `Sample Usage notes`
+frame that was a **verbatim copy of "Menu Item — Usage notes"** — wrong title,
+wrong properties, wrong icon instructions. The Stat Card page (`1711:13643`)
+still has one; it is the last.
+
+All six now carry a correct `{Name} — Usage notes` panel, rebuilt from the Tabs
+one and filled from each set's real `componentPropertyDefinitions`. They answer
+a different question from the Guidelines panel — *how do I drive this component
+in Figma* rather than *when should I use it* — and each ends with a pointer to
+the Guidelines frame and to the markdown behind it.
+
+**Note for whoever touches them next:** the usage-notes frames use raw fills,
+not variable-bound ones, so their own "Dark mode" section does not apply to
+them. Inherited from the Tabs original. Not fixed here; worth fixing when one is
+next opened.
+
+### Page layout now matches the Buttons page
+
+All seven pages were laid out with the documentation frame at `-37, 2887` and
+the component sets starting at `x = 650`, matching `1318:14904`. Component sets
+were shifted right to clear the 607-wide panel; relative positions and all `y`
+values were preserved. Verified afterwards: no top-level node on any of the
+seven overlaps another.
+
+### Lesson promoted to `docs/engineering/known-issues.md`
+
+Strip inline markdown only once a wrapped line is whole — emphasis that opens on
+one physical line and closes on the next survives a per-line strip. Now gated by
+`assertNoMarkdown()` inside the generator.
+
+---
+
 ## Checkpoint — 2026-08-13/14 (v0.2.0 shipped; MAUI compiles and publishes; two DDRs)
 
 ### State: released and merged, nothing mid-flight

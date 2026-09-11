@@ -1261,6 +1261,43 @@ emitted form and compares the absolute points each visits.
 
 ---
 
+### Strip inline markdown only once a wrapped line is whole
+
+**Symptom:** `scripts/guidelines-to-figma.mjs` turns a `guidelines.md` into the
+sections of a Figma Guidelines panel, stripping `**bold**`, backticks and links
+on the way. One bullet arrived in Figma still carrying its asterisks:
+`The Figma set should be normalised to 20px`, with a `**` at each end. Every
+other bullet in the same file was clean.
+
+**Why:** the source bullet wraps across two physical lines, and the emphasis
+opens on the first and closes on the second:
+
+```
+- Figma draws Card Radio's ring at 16px … matching Simple and Checkbox. **The Figma
+  set should be normalised to 20px** — the deviation is recorded in `radio.css`.
+```
+
+The parser stripped each physical line as it read it, then joined the
+continuation on. At strip time neither half contained a matching pair, so
+`/\*\*([^*]+)\*\*/` matched nothing and both markers survived the join. The
+same applies to a backtick span or a `[link](…)` broken over a line end.
+
+**Fix:** keep the raw text while accumulating, join the continuation lines, and
+run the inline-strip once per finished line — in the script, `pushLine()` stores
+`{ prefix, raw }` and the strip happens in a single pass at the end.
+
+**Prevented by:** `assertNoMarkdown()` in the same script. It scans every
+emitted line for `**`, a backtick, `](` or a table pipe and exits non-zero
+naming the section and the line, so the generator refuses to hand markdown
+syntax to `use_figma` at all. Verified by planting an unmatched `**` and an
+unmatched backtick — both caught, both named correctly; the real seven files
+pass. Note that re-planting the *original* defect no longer fails the check:
+the parser now joins wrapped lines before stripping, so it strips correctly.
+That is the fix working, not the gate — the gate needs markdown the parser
+genuinely cannot resolve.
+
+---
+
 ## Testing & verification
 
 ### Prove a check fails before trusting that it passes
@@ -1273,6 +1310,8 @@ Every gate in this repo was verified by planting the defect it targets:
 | `verify-xaml.mjs` | typo'd resource key, typo'd StyleClass, unclosed tag, literal colour | all four, correct line numbers |
 | `verify-xaml.mjs` comments | the exact `--` that broke CI | caught at the right line |
 | MAUI literal-colour check | a planted `#FF0000` | **initially passed** — the first version only matched named colour attributes, not `Value="…"` |
+| `guidelines-to-figma.mjs` `assertNoMarkdown()` | the original wrapped-emphasis bullet | **passed, correctly** — the parser fix resolves it, so it is no longer a defect. Re-planted as an *unmatched* `**` and an unmatched backtick: both caught, section and line named |
 
 That last row is the argument for the practice. A check nobody has seen fail is
-a check nobody knows works.
+a check nobody knows works — and the row above it is the other half of the
+lesson: planting a defect the code now handles proves the fix, not the gate.
