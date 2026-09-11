@@ -63,8 +63,22 @@ jobs:
       # Pull requests only. On a push to main the site is deployed to Pages by the
       # job below, so keeping a 3.25 MB copy of the same build as an artifact is
       # storage spent on something already published at a URL.
+      # A convenience copy must never be able to fail the build. On 2026-09-11 a
+      # PR that built perfectly went red on this step alone:
+      #
+      #   Failed to CreateArtifact: Artifact storage quota has been hit.
+      #
+      # The site and Storybook had assembled without error; the only thing that
+      # failed was storing a downloadable copy of them. That is not a reason to
+      # tell a contributor their change is broken, and with the quota full it
+      # would have been every PR in the repository, not this one.
+      #
+      # The deploy job below is NOT given this treatment: publishing the site is
+      # the actual output, and a silent failure there would leave the live site
+      # stale with a green tick.
       - name: Upload site artifact (PR preview)
         if: github.event_name == 'pull_request'
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: sr-site
