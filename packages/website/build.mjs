@@ -2816,7 +2816,7 @@ track and changes <em>which</em> view you see — it is a <code>role="tab"</code
 The unselected pill carries a 1px <code>Border/Strong</code> outline, which is what tells you it is
 an option at all, so it clears the 3:1 that WCAG 2.2 SC 1.4.11 wants for a control boundary.</p>
 
-${md}
+${renderMarkdown(md)}
 `;
 }
 
@@ -4998,6 +4998,57 @@ for (const p of pages) {
       '\nDecision records are internal. If the point matters to a reader, make it in\n'
       + 'their terms; if it does not, drop it. Guidelines markdown is stripped\n'
       + 'automatically — this is page content written in build.mjs.\n'
+    );
+    process.exit(1);
+  }
+}
+
+// ── No raw markdown on a published page ─────────────────────────────────────
+//
+// Every component page ends with its guidelines file, and every one of them is
+// supposed to go through renderMarkdown(). tabsBody() interpolated `${md}`
+// directly instead, so the Tabs page published its entire guidelines document
+// as one unbroken paragraph of markdown source — "> Switch between views …
+// --- ## When to use - **Sections of one record**, …" — from the day the page
+// was written until someone happened to scroll to the bottom of it.
+//
+// Nothing caught it because the page BUILT fine: raw markdown is valid text,
+// so there is no error to throw and no broken link to find. It is only wrong
+// to a human looking at it. This checks the rendered output for the markers
+// that cannot survive renderMarkdown(), which makes it a check on the thing
+// being shipped rather than on the source that produced it.
+//
+// Code samples legitimately contain these characters, so <pre> and <code> are
+// removed before looking.
+{
+  const MARKERS = [
+    [/(^|\n)\s*#{2,4} [A-Z]/, 'a markdown heading (## Something)'],
+    [/\|\s*-{3,}\s*\|/, 'a markdown table separator (|---|)'],
+    [/(^|\n)\s*- \*\*[A-Z]/, 'a markdown bullet with bold (- **Something**)'],
+  ];
+  const raw = [];
+  const walk = (dir) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const f = resolve(dir, entry.name);
+      if (entry.isDirectory()) { walk(f); continue; }
+      if (!f.endsWith('.html')) continue;
+      if (f.includes(`${sep}prototypes${sep}`)) continue; // inlined source
+      const prose = readFileSync(f, 'utf8')
+        .replace(/<pre[\s\S]*?<\/pre>/gi, '')
+        .replace(/<code[\s\S]*?<\/code>/gi, '')
+        .replace(/<script[\s\S]*?<\/script>/gi, '');
+      for (const [re, what] of MARKERS) {
+        if (re.test(prose)) raw.push(`${relative(DIST, f)} — ${what}`);
+      }
+    }
+  };
+  walk(DIST);
+  if (raw.length) {
+    console.error(`\n${raw.length} page(s) publishing raw markdown:\n`);
+    for (const r of raw) console.error(`  ${r}`);
+    console.error(
+      '\nA page body interpolated its guidelines file without rendering it.\n'
+      + 'Use `${renderMarkdown(md)}`, not `${md}`.\n'
     );
     process.exit(1);
   }
