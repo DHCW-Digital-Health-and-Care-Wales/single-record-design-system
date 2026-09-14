@@ -25,9 +25,23 @@ const ROOT = resolve(__dirname, '..', '..');
 const TOKENS = resolve(ROOT, 'packages', 'tokens', 'build');
 const DIST = resolve(__dirname, 'dist');
 
-// ── Intake URLs. Replace when the final forms are supplied. ───────────────────
-const REPORT_ISSUE_URL = 'https://forms.office.com/REPLACE-with-report-an-issue-form'; // Microsoft Forms
-const CONTRIBUTION_URL = 'https://dev.azure.com/REPLACE-with-azure-devops-intake';     // component / change requests
+// ── Intake URLs ───────────────────────────────────────────────────────────────
+// One Microsoft Form, two conditional paths: its first question sends the person
+// down "report an issue" or "request a component or change". Both links below
+// therefore point at the same URL — the form does the routing, so a person who
+// picks the wrong entry point is not sent back to start again.
+// Question set and intro copy: docs/feedback-form.md.
+const FEEDBACK_FORM_URL = 'https://forms.cloud.microsoft/e/ZzpYn3F8Y8';
+const REPORT_ISSUE_URL = FEEDBACK_FORM_URL;
+const CONTRIBUTION_URL = FEEDBACK_FORM_URL;
+
+// A placeholder that ships is a dead link on every page of the site, and the
+// build is the only thing that sees every page. Cheaper than remembering.
+for (const [name, url] of Object.entries({ FEEDBACK_FORM_URL, REPORT_ISSUE_URL, CONTRIBUTION_URL })) {
+  if (/REPLACE|example\.com|TODO/i.test(url) || !/^https?:\/\//.test(url)) {
+    throw new Error(`${name} is not a real URL yet: ${url}`);
+  }
+}
 const STORYBOOK_URL = 'storybook/index.html'; // reachable, not in the primary nav
 
 // ── Prototypes ────────────────────────────────────────────────────────────────
@@ -4869,7 +4883,8 @@ addPage({
   body: `
 <p class="breadcrumbs">Contributions</p>
 <h1>Contributing</h1>
-<p class="lede">Two separate channels. Pick by intent, so your request lands in the right queue.</p>
+<p class="lede">One form, two paths. Its first question asks which you are doing and sends you down
+the right set of questions, so either card below gets you to the same place.</p>
 <div class="cards">
   <a class="card" href="${REPORT_ISSUE_URL}" target="_blank" rel="noopener">${cardIcon('status/flagged')}<h3>Report an issue</h3>
     <p>Something is broken, wrong, or inaccessible on this site, in a component, or in the
@@ -4877,7 +4892,10 @@ addPage({
   <a class="card" href="${CONTRIBUTION_URL}" target="_blank" rel="noopener">${cardIcon('action/add')}<h3>Request a component or change</h3>
     <p>A new component, variant or token, or a change to one that already exists.</p></a>
 </div>
-<div class="callout"><p>Both links are placeholders until the final form addresses are supplied.</p></div>
+<div class="callout"><p><strong>Please do not put patient-identifiable information in the form.</strong>
+No names, NHS numbers or dates of birth, and redact any screenshot before you attach it. Responses
+land in a standard OneDrive, not a clinical record store. Describe the record as "a patient with two
+active alerts" rather than naming one.</p></div>
 <h2>Before you request a new component</h2>
 <ul>
   <li>Check <a href="https://design-system.service.gov.uk/components/" target="_blank" rel="noopener">GDS</a> and
