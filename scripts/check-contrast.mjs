@@ -140,6 +140,18 @@ const PAIRS = [
   //     modes. Only the supporting line is a genuinely new pair. ---
   ['sr-color-text-secondary', 'sr-color-surface-section-cards', 4.5,
     'Stat card supporting line (stat-card.css)'],
+
+  // --- Link. The default link was already asserted on the page in light only;
+  //     it holds in dark too, and it is also used on cards. Destructive is the
+  //     one that does not — see the open finding below. ---
+  ['sr-color-interactive-link', 'sr-color-surface-background', 4.5,
+    'Link on the page (link.css)'],
+  ['sr-color-interactive-link', 'sr-color-surface-section-cards', 4.5,
+    'Link on a card (link.css)'],
+  // Light only. The dark case is a real defect with no signed-off fix, so it is
+  // an OPEN FINDING below rather than an assertion that reds the build every run.
+  ['sr-color-interactive-destructive', 'sr-color-surface-background', 4.5,
+    'Destructive link on the page (link.css)', 'light'],
 ];
 
 /**
@@ -161,6 +173,19 @@ const KNOWN = [
     note: 'Yellow/500 is a fill colour, not a text colour. The warning role always '
       + 'carries a text label rather than standing alone, so the pair is never load-'
       + 'bearing. Recorded on the Icons page.',
+  },
+  {
+    fg: 'sr-color-interactive-destructive', bg: 'sr-color-surface-background', min: 4.5, mode: 'dark',
+    status: 'open',
+    note: 'A destructive LINK is red text; interactive/destructive is a fill colour '
+      + '(white sits on it) and is unchanged across modes, so on the dark page it is '
+      + '2.84:1. Light passes at 4.64:1. No red in the ramp is dark-safe as text: '
+      + 'status/critical is 2.14:1 there. Options: (a) a new semantic '
+      + 'interactive/destructive-on-dark stepping to a light red, (b) drop the '
+      + 'destructive link type and require a Button for destructive flows, which is '
+      + 'what GDS and NHS England do. Design lead decides; colour changes need '
+      + 'sign-off (CLAUDE.md). Until then the destructive link is light-mode only '
+      + 'and link.css says so.',
   },
 ];
 

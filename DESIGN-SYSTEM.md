@@ -216,7 +216,7 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Header | — (guidelines ✅) | ✅ | ✅ |
 | Input | — | ✅ | ✅ |
 | Inset text | — (Figma only) | — | — |
-| Link | ✅ | — | — |
+| Link | ✅ (guidelines ✅) | ✅ | ✅ |
 | Modal dialog | ✅ | ✅ | ✅ |
 | Navigation | — (guidelines ✅) | ✅ | ✅ |
 | Notification banner | — (Figma only) | — | — |
@@ -236,7 +236,7 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Time select | — | ✅ | ✅ |
 
 **Known gaps, stated plainly:** eleven components ship code without a spec, and
-two specs (Link, Progress indicators) have no code. Neither is
+one spec (Progress indicators) has no code. Neither is
 satisfactory — a component without a spec has no agreed contract, and a spec
 without code cannot be consumed. Both lists are worked down as components are
 touched.
@@ -247,7 +247,7 @@ kinds of thing behind one promise:
 
 | Figma page | Verdict | Next step |
 |---|---|---|
-| Link | Component | Spec corrected; build web, React and the page. **Start here** |
+| Link | Component | **Done** — spec corrected, guidelines written, web + React + page shipped |
 | Status Indicator | Style — the filled status icon family, already shipped as `.sr-status-indicator` | A section on the Icons page. Settle the fourth mark first |
 | Inset text | Component, narrowed to prose emphasis | Narrow in Figma, then spec, code, page |
 | Notification banner | Component; its two Figma sets are one component with two properties | One set in Figma, then spec, code, page |

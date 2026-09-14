@@ -1955,6 +1955,139 @@ textarea.sr-input__control {
   border-left: 1px solid var(--sr-color-border-subtle);
 }
 
+/* ═══ link ════════════════════════════════════════════════════════ */
+/**
+ * DHCW Single Record — Link
+ * Reference HTML/CSS implementation, matched to the Figma "Link" set
+ * (1636:21236) on page 1636:21000. Consumes @dhcw/sr-tokens.
+ *
+ * Navigation, not action. A link goes somewhere; a Button does something. If it
+ * changes state without changing location, it is a Button wearing a link's
+ * clothes, and a screen-reader user will be told it is a link and find it is not.
+ *
+ * Anatomy:
+ *   .sr-link             — the link itself, inline by default
+ *   .sr-link--lg/md/sm   — the three Figma sizes, for standalone links
+ *   .sr-link--destructive— leads to a destructive flow
+ *   .sr-link--icon       — carries a leading icon; switches to inline-flex
+ *   .sr-link__icon       — the 16/20px leading icon, decorative
+ *
+ * Three departures from the Figma set, each with its reason. The set is the
+ * design intent; these are what it takes to hold in both colour modes and in
+ * running prose.
+ *
+ * 1. NO PADDING ON THE BASE LINK. Figma draws each variant as a 4px-padded chip,
+ *    which is the room the focus ring needs. Padding on an inline link disturbs
+ *    the line box of the paragraph it sits in, so the ring is drawn with
+ *    `outline-offset` instead — same visual gap, no effect on layout.
+ *
+ * 2. THE BASE LINK INHERITS ITS TYPE. A link inside a sentence should be the
+ *    size of that sentence. The three size modifiers carry the Figma values and
+ *    are for standalone links, where the link is the whole line.
+ *
+ * 3. HOVER THICKENS THE UNDERLINE RATHER THAN CHANGING COLOUR. Figma's hover is
+ *    `Interactive/Primary Hover`, which is 12.09:1 in light and **1.47:1 in
+ *    dark** — a dark navy on a dark page. No existing token darkens in light and
+ *    lightens in dark, so hover cannot be a colour change without a new one
+ *    (proposed: `interactive/link-hover`; colour changes need sign-off, see
+ *    CLAUDE.md). Thickening the underline is GDS's own hover and works in both
+ *    modes with no new token.
+ */
+
+.sr-link {
+  color: var(--sr-color-interactive-link);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+/* Hover and active thicken the underline. The colour is deliberately unchanged;
+   see note 3 above. `text-decoration-thickness` does not reflow the line. */
+.sr-link:hover {
+  text-decoration-thickness: 3px;
+}
+
+/* The system's focus ring: drawn outside the element so it is never clipped and
+   never moves the text, with the same 2px offset the other components use. The
+   underline stays — removing it on focus leaves the link identifiable by the
+   ring alone, which is a colour-and-shape cue a magnifier user may be zoomed
+   past. */
+.sr-link:focus-visible {
+  outline: 2px solid var(--sr-color-border-focus);
+  outline-offset: 2px;
+}
+
+/* ---------- Type ---------- */
+/* Leads to a destructive flow — "Remove patient", "Delete draft". Pair with a
+   confirmation step; the link opens the flow, it does not perform the act.
+   DARK MODE: interactive/destructive is a FILL colour (white sits on it) and is
+   2.84:1 as text on the dark page. Recorded as an open finding in
+   scripts/check-contrast.mjs — it needs a dark-safe red before a destructive
+   link is used on a dark surface. */
+.sr-link--destructive {
+  color: var(--sr-color-interactive-destructive);
+}
+
+/* ---------- Sizes ----------
+   For standalone links. An inline link takes its size from its paragraph.
+
+   Each carries 4px of vertical padding, which is the other half of what note 1
+   above dismissed. A link inside a block of text is exempt from SC 2.5.8, but a
+   standalone one is not, and the line boxes alone are 24 / 20 / 16px — two of
+   the three under the 24px minimum. Vertical padding on an inline element grows
+   the hit area without touching the line box, so the target clears 24px at every
+   size and nothing moves. This is what Figma's 4px chip padding was for. */
+.sr-link--lg,
+.sr-link--md,
+.sr-link--sm {
+  padding: var(--space-1) 0;
+}
+.sr-link--lg {
+  font: var(--sr-type-body-m-font);
+  letter-spacing: var(--sr-type-body-m-letter-spacing);
+}
+.sr-link--md {
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+}
+.sr-link--sm {
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+}
+
+/* ---------- Leading icon ----------
+   Only applied when there is an icon, because inline-flex stops a link wrapping
+   across lines — which is fine for a standalone link and wrong inside prose. */
+.sr-link--icon {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.sr-link__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+}
+.sr-link__icon svg { width: 100%; height: 100%; }
+/* The small size takes a 16px icon, so the icon never outgrows its label. */
+.sr-link--sm .sr-link__icon { width: 16px; height: 16px; }
+
+/* ---------- Disabled ----------
+   Driven by aria-disabled rather than a class alone, so the styling cannot get
+   out of step with what assistive technology is told. A disabled link is
+   usually the wrong pattern: prefer removing the link and leaving plain text. */
+.sr-link[aria-disabled='true'] {
+  color: var(--sr-color-text-disabled);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.sr-link[aria-disabled='true']:hover {
+  text-decoration-thickness: 1px;
+}
+
 /* ═══ modal ═══════════════════════════════════════════════════════ */
 /**
  * DHCW Single Record — Modal dialog

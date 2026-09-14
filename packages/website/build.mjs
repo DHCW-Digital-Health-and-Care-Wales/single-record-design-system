@@ -508,7 +508,7 @@ const radiusSamples = radiusEntries.map(([k, px]) =>
 const SITE_COMPONENT_CSS = [
   'button', 'table', 'patient-banner', 'header', 'footer', 'bottom-nav',
   'breadcrumbs', 'switch', 'segmented-control', 'navigation', 'input',
-  'tags', 'checkbox', 'radio', 'select', 'tabs', 'search', 'stat-card',
+  'tags', 'checkbox', 'radio', 'select', 'tabs', 'search', 'stat-card', 'link',
 ];
 const COMPONENT_CSS_LINKS = (prefix) =>
   SITE_COMPONENT_CSS.map((c) => `<link rel="stylesheet" href="${prefix}assets/${c}.css">`).join('\n');
@@ -547,6 +547,7 @@ const SECTIONS = [
       { href: 'components/footer.html', label: 'Footer' },
       { href: 'components/header.html', label: 'Header' },
       { href: 'components/input.html', label: 'Input' },
+      { href: 'components/link.html', label: 'Link' },
       { href: 'components/navigation.html', label: 'Navigation' },
       { href: 'components/radio.html', label: 'Radio' },
       { href: 'components/search.html', label: 'Search' },
@@ -3046,6 +3047,99 @@ const SEARCH_CLEAR = iconMarkup('nav/clear');
 const SEARCH_SPINNER = iconMarkup('status/loading');
 const SEARCH_ERROR_ICON = iconMarkup('status/error-circle');
 
+function linkBody() {
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'link', 'guidelines.md'), 'utf8')));
+
+  const a = ({ label, size = 'inherit', type = 'default', icon = '', newTab = false, disabled = false }) => {
+    const cls = [
+      'sr-link',
+      size !== 'inherit' && `sr-link--${size}`,
+      type === 'destructive' && 'sr-link--destructive',
+      icon && 'sr-link--icon',
+    ].filter(Boolean).join(' ');
+    const attrs = disabled
+      ? ' aria-disabled="true" role="link"'
+      : ` href="#"${newTab ? ' target="_blank" rel="noopener noreferrer"' : ''}`;
+    const ic = icon ? `<span class="sr-link__icon" aria-hidden="true">${iconMarkup(icon)}</span>` : '';
+    const text = newTab ? `${label} (opens in a new tab)` : label;
+    return `<a class="${cls}"${attrs}>${ic}<span>${text}</span></a>`;
+  };
+
+  const inProse = `<p style="max-width:52ch; font:var(--sr-type-body-m-font); margin:0">The record was last
+updated by another care team. Open the ${a({ label: 'full audit history' })} to see who changed what, and
+when.</p>`;
+
+  const sizes = `<div style="display:flex; flex-direction:column; gap:12px; align-items:flex-start">
+${a({ label: 'Patient summary', size: 'lg' })}
+${a({ label: 'Patient summary', size: 'md' })}
+${a({ label: 'Patient summary', size: 'sm' })}
+</div>`;
+
+  const withIcon = `<div style="display:flex; flex-direction:column; gap:12px; align-items:flex-start">
+${a({ label: 'Download the discharge summary', size: 'lg', icon: 'action/download' })}
+${a({ label: 'Open in Welsh Clinical Portal', size: 'lg', icon: 'action/send', newTab: true })}
+</div>`;
+
+  const states = `<div style="display:flex; flex-direction:column; gap:12px; align-items:flex-start">
+${a({ label: 'Remove this patient from the list', size: 'lg', type: 'destructive' })}
+${a({ label: 'Patient summary', size: 'lg', disabled: true })}
+</div>`;
+
+  const snippets = {
+    HTML: '<!-- Inline in a sentence: no size class, so it matches the paragraph. -->\n<p>Open the <a class="sr-link" href="/audit">full audit history</a> to see who changed what.</p>\n\n<!-- Standalone, with a decorative leading icon. -->\n<a class="sr-link sr-link--lg sr-link--icon" href="/summary.pdf">\n  <span class="sr-link__icon" aria-hidden="true"><!-- icon --></span>\n  <span>Download the discharge summary</span>\n</a>\n\n<!-- New tab: say so in the text, not with the icon. -->\n<a class="sr-link" href="https://wcp" target="_blank" rel="noopener noreferrer">\n  Open in Welsh Clinical Portal (opens in a new tab)\n</a>',
+    React: '<p>Open the <Link href="/audit">full audit history</Link> to see who changed what.</p>\n\n<Link href="/summary.pdf" size="lg" icon="action/download">\n  Download the discharge summary\n</Link>\n\n{/* newTab adds target, rel and the visible "(opens in a new tab)" */}\n<Link href="https://wcp" newTab>Open in Welsh Clinical Portal</Link>\n\n{/* size: "inherit" | "lg" | "md" | "sm"; type: "default" | "destructive" */}',
+    Blazor: '<p>Open the <a class="sr-link" href="@AuditUrl">full audit history</a>.</p>\n\n<a class="sr-link sr-link--lg" href="@Url">@Label</a>',
+  };
+
+  return `
+<p class="breadcrumbs"><a href="../components/breadcrumbs.html">Components</a> / Link</p>
+<h1>Link</h1>
+<p class="lede">Text that takes someone somewhere else. A link goes somewhere; a button does
+something.</p>
+
+<h2>In a sentence</h2>
+<p>The common case, and the one to reach for. An inline link carries no size of its own, so it is the
+size of the sentence around it and wraps with it.</p>
+${showcase(inProse, 'link-prose', snippets)}
+
+<h2>Standalone, at three sizes</h2>
+<p>For a link that is the whole line: a card footer, a table cell, a footnote. Large is body copy,
+Default suits dense areas, Small is for metadata.</p>
+${showcase(sizes, 'link-sizes', snippets)}
+
+<h2>A leading icon, and new tabs</h2>
+<p>The icon is decorative and hidden from assistive technology, so it can never be the only thing
+saying what happens. That is why "opens in a new tab" is written out rather than drawn — someone who
+cannot see the tab bar change has been given no warning otherwise.</p>
+${showcase(withIcon, 'link-icon', snippets)}
+
+<h2>Hover thickens the underline</h2>
+<p>Hover over any link above. The underline goes from 1px to 3px and the colour does not move.</p>
+<p>The Figma set changes hue on hover instead. That colour is a dark navy, which reads at
+<strong>1.47:1</strong> on the dark page — invisible. No token in the system darkens in light mode
+and lightens in dark, so hover cannot be a colour change until one exists. Thickening the underline
+is the GDS treatment and works in both modes today.</p>
+
+<h2>Destructive, and disabled</h2>
+<p>A destructive link opens a flow that removes something. It never performs the act itself — pair
+it with a confirmation step.</p>
+<p><strong>It is light-mode only for now.</strong> The destructive red is a fill colour, the sort
+white text sits on, and as text on the dark page it reads at 2.84:1 against the 4.5:1 it needs. The
+contrast check records it as an open finding with the two ways out.</p>
+<p>A disabled link is usually the wrong pattern. It carries no <code>href</code>, so the browser
+leaves it out of the tab order. Prefer removing the link and leaving plain text.</p>
+${showcase(states, 'link-states', snippets)}
+
+<h2>It is not a button</h2>
+<p>If it changes state rather than location — saving, deleting, opening a dialog — it is a
+<a href="button.html">Button</a>. A screen reader announces "link" and promises navigation. A user
+told they are about to navigate, who instead deletes a record, was misled by the markup rather than
+by the label.</p>
+
+${renderMarkdown(md)}
+`;
+}
+
 function searchBody() {
   const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'search', 'guidelines.md'), 'utf8')));
 
@@ -4729,6 +4823,11 @@ addPage({
   prefix: '../', body: searchBody(), extraScript: SEARCH_SCRIPT,
 });
 
+addPage({
+  file: 'components/link.html', url: 'components/link.html', title: 'Link',
+  section: 'Components', sectionId: 'components', activeHref: 'components/link.html',
+  prefix: '../', body: linkBody(),
+});
 addPage({
   file: 'components/stat-card.html', url: 'components/stat-card.html', title: 'Stat card',
   section: 'Components', sectionId: 'components', activeHref: 'components/stat-card.html',
