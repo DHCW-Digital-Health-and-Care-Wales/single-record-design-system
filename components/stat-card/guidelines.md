@@ -46,13 +46,17 @@
   previous period. Never two of them.
 - **The number is the subject.** The value is Heading M and the label is Label
   style above it, so the card is scanned by its number and read by its label.
-- **The icon is decoration.** It repeats what the label already says, so it is
-  hidden from assistive technology. A card with no obvious icon is better than a
-  card with a vague one.
-- **The accent bar is emphasis, not status on its own.** A 4px bar that turns
-  amber is a meaning carried in colour alone, which SC 1.4.1 rules out. Use the
-  accent to reinforce something the supporting line already says in words —
-  "Pending receipt", "Requires attention" — and the card still reads correctly
+- **The icon is decoration, and it belongs to the card.** It repeats what the
+  label already says, so it is hidden from assistive technology, and it stays at
+  the top right whichever layout you choose. A card with no obvious icon is
+  better than a card with a vague one.
+- **The accent bar is off by default.** It is emphasis, so it is opt-in: give it
+  to the one card a screen is about, and leave the rest plain. A row where every
+  card has a bar has emphasised nothing.
+- **The accent bar is not a status on its own.** A 4px bar that turns amber is a
+  meaning carried in colour alone, which SC 1.4.1 rules out. Use warning and
+  critical only to reinforce something the supporting line already says in words
+  — "Pending receipt", "Requires attention" — and the card still reads correctly
   in greyscale, on a projector, and to someone who cannot separate the two.
 - **Figures are tabular.** A column of cards lines up on the digits.
 
@@ -61,16 +65,16 @@
 | Layout | Use when |
 |---|---|
 | Stacked (default) | The normal card. Label, value, optional supporting line |
-| Value first | A row read as numbers rather than as sentences |
-| Inline | A compact strip above a table, where a full card would crowd it |
+| Value first | A row read as numbers rather than as sentences. The icon stays at the top |
+| Inline | Tight space: a strip above a table, a toolbar, a phone screen. Around 40px against the stacked card's hundred, number first, no icon |
 
 ### Accent
 
 | Accent | Use when |
 |---|---|
-| Primary | The default. The row reads as one group |
-| None | The card sits among other cards that are not stats |
-| Warning · Critical | The supporting line already names the problem in words |
+| None (default) | Almost always. The card is one reading among several |
+| Primary | One card in a row leads — the queue the user came to clear, the figure the meeting is about |
+| Warning · Critical | That card needs attention, **and** the supporting line already names the problem in words |
 
 ## Do & don't
 
@@ -79,7 +83,9 @@
 | Name what the number counts — "Casenotes in transit" | Label it with a system term — "CN_TRANSIT" |
 | Keep the supporting line to one line | Wrap a sentence under the number |
 | Put the sign in the delta — "-5%" | Rely on red and green to say which way it moved |
+| Leave the accent off unless one card leads | Put a bar on every card in the row |
 | Use one accent per meaning across a screen | Give every card a different colour because the row looks flat |
+| Reach for Inline where the space is tight | Shrink a stacked card to fit a toolbar |
 | Round to what staff can act on — "1,240" | Show a precision nobody uses — "1,240.00" |
 | Say what the number is of, when it is not obvious — "In all sites" | Leave the period unstated and let people assume today |
 

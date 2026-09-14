@@ -3864,21 +3864,28 @@ textarea.sr-input__control {
  * One number, named. A dashboard made of these is a pattern; the card itself is
  * a component, which is why it lives here and the dashboard does not.
  *
- * Anatomy (vertical stack, gap = space-1):
- *   .sr-stat-card              — the card: accent bar, surface, radius, shadow
- *   .sr-stat-card__head        — label and optional icon, on one row
- *   .sr-stat-card__label       — what the number counts
- *   .sr-stat-card__icon        — decorative, 20x20, hidden from AT
- *   .sr-stat-card__value       — the number
- *   .sr-stat-card__support     — one supporting line: a period, a trend, a note
- *   .sr-stat-card__delta       — the signed change inside the supporting line
+ * Anatomy — a two-column grid, content on the left and the icon on the right:
+ *   .sr-stat-card          — the card: surface, radius, shadow, optional accent
+ *   .sr-stat-card__label   — what the number counts
+ *   .sr-stat-card__value   — the number
+ *   .sr-stat-card__support — one supporting line: a period, a note, a change
+ *   .sr-stat-card__delta   — the signed change inside the supporting line
+ *   .sr-stat-card__icon    — decorative, 20x20, hidden from AT
+ *
+ * The icon is a grid child pinned to the top of the right-hand column, NOT a
+ * sibling of the label. It used to sit inside a `__head` row with the label,
+ * which meant the value-first layout carried the icon down the card with it —
+ * the icon belongs to the card, not to whichever text happens to be first.
  *
  * Layouts, replacing the five `Type` variants the Figma set enumerates
  * (DDR-031). Figma's Title Top / Title_Hint / Trend are one layout with and
  * without a supporting line, so they collapse:
- *   (default)                — label, value, optional supporting line
+ *   (default)                  — label, value, optional supporting line
  *   .sr-stat-card--value-first — value, then label. Figma `Count Top`
  *   .sr-stat-card--inline      — value and label on one row. Figma `Single line`
+ *
+ * The accent bar is OPT-IN. The default card has no bar, matching Figma's
+ * `Border=Hidden` variants, which are the ones reached for most often.
  *
  * The card is NOT interactive. It has no hover, no focus and no role. If a
  * number should open something, put a Link under it or make the whole tile a
@@ -3887,62 +3894,54 @@ textarea.sr-input__control {
  */
 
 .sr-stat-card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--space-2);
+  row-gap: var(--space-1);
+  align-content: start;
   box-sizing: border-box;
-  padding: var(--space-4);
   background-color: var(--sr-color-surface-section-cards);
   border-radius: var(--radius-md);
   box-shadow: var(--elevation-raised);
 
-  /* The accent bar is always in the box, transparent when there is no accent.
-     Drawing it only when shown would make an accented card 4px wider than the
-     one beside it, and a row of stat cards is exactly where that shows. */
+  /* The accent bar is always in the box, transparent when there is no accent,
+     and the left padding is short by its width. An accented card and a plain
+     one are then the same size and inset their text alike, which is what lets
+     the two sit in one row without the text stepping 4px sideways. */
   border-left: 4px solid transparent;
+  padding: var(--space-4);
+  padding-left: calc(var(--space-4) - 4px);
 }
 
-/* ---------- Accent ----------
+/* ---------- Accent: opt-in emphasis ----------
    Emphasis, not status on its own. A bar that changes colour and nothing else
    carries meaning in colour alone (SC 1.4.1), so a warning or critical card
    must also say so in the supporting line — the accent reinforces the words, it
    does not replace them. See the guidelines. */
-.sr-stat-card--accent { border-left-color: var(--sr-color-interactive-primary); }
+.sr-stat-card--accent-primary { border-left-color: var(--sr-color-interactive-primary); }
 .sr-stat-card--accent-warning { border-left-color: var(--sr-color-status-warning); }
 .sr-stat-card--accent-critical { border-left-color: var(--sr-color-status-critical); }
 
-/* ---------- Head ---------- */
-.sr-stat-card__head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--space-2);
-}
+/* ---------- Content ----------
+   Rows are explicit rather than auto-placed, so a layout modifier can move the
+   value above the label without dragging the icon along with it. */
 
 /* Figma draws the label in Interactive/Primary. It is not that here, for two
    reasons: nothing on this card is interactive, and in dark mode the dark-mode
    primary lands at 2.07:1 on the dark card surface. Text/Primary is the correct
    semantic and clears 4.5:1 in both modes; the hierarchy is carried by size. */
 .sr-stat-card__label {
+  grid-column: 1;
+  grid-row: 1;
   margin: 0;
   font: var(--sr-type-label-font);
   letter-spacing: var(--sr-type-label-letter-spacing);
   color: var(--sr-color-text-primary);
 }
 
-/* Decorative. The label already names the number, so an icon that repeats it
-   adds nothing to a screen reader and is marked aria-hidden in the markup. */
-.sr-stat-card__icon {
-  display: inline-flex;
-  flex: 0 0 auto;
-  width: 20px;
-  height: 20px;
-  color: var(--sr-color-text-secondary);
-}
-.sr-stat-card__icon svg { width: 100%; height: 100%; }
-
-/* ---------- Value ---------- */
 .sr-stat-card__value {
+  grid-column: 1;
+  grid-row: 2;
   margin: 0;
   font: var(--sr-type-heading-m-font);
   letter-spacing: var(--sr-type-heading-m-letter-spacing);
@@ -3951,13 +3950,28 @@ textarea.sr-input__control {
   font-variant-numeric: tabular-nums;
 }
 
-/* ---------- Supporting line ---------- */
 .sr-stat-card__support {
+  grid-column: 1;
+  grid-row: 3;
   margin: 0;
   font: var(--sr-type-caption-font);
   letter-spacing: var(--sr-type-caption-letter-spacing);
   color: var(--sr-color-text-secondary);
 }
+
+/* Decorative. The label already names the number, so an icon that repeats it
+   adds nothing to a screen reader and is marked aria-hidden in the markup.
+   Pinned to the top of the card in every layout. */
+.sr-stat-card__icon {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: start;
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+  color: var(--sr-color-text-secondary);
+}
+.sr-stat-card__icon svg { width: 100%; height: 100%; }
 
 /* The signed change, as a small tinted chip rather than coloured text.
    Status text straight onto the card surface is a pair the token set does not
@@ -3990,35 +4004,63 @@ textarea.sr-input__control {
 
 /* ---------- Value first (Figma `Count Top`) ----------
    The number leads and the label explains it. For a row of cards scanned as
-   numbers rather than read as sentences. */
-.sr-stat-card--value-first .sr-stat-card__head { order: 2; }
-.sr-stat-card--value-first .sr-stat-card__value { order: 1; }
-.sr-stat-card--value-first .sr-stat-card__support { order: 3; }
+   numbers rather than read as sentences. Only the two text rows swap; the icon
+   keeps row 1 of column 2 and stays at the top of the card. */
+.sr-stat-card--value-first .sr-stat-card__value { grid-row: 1; }
+.sr-stat-card--value-first .sr-stat-card__label { grid-row: 2; }
 
 /* ---------- Inline (Figma `Single line`) ----------
-   Value and label on one row, for a compact strip above a table. No icon: at
-   this size the icon is the widest thing in the card and says the least. */
+   One row, and deliberately the short card: roughly 40px against the stacked
+   card's ~100px. For a strip above a table, a toolbar, or a phone screen where
+   a full card would take the space the content needs.
+
+   `align-self: start` is what keeps it short. Grid items stretch to the tallest
+   in their row by default, so an inline card sharing a row with a stacked one
+   was being pulled to the stacked card's height — short in its own markup and
+   not short on the page, which is the only place it matters. */
 .sr-stat-card--inline {
-  flex-direction: row;
+  grid-template-columns: auto auto minmax(0, 1fr);
   align-items: baseline;
-  gap: var(--space-2);
+  align-self: start;
+  column-gap: var(--space-2);
+  row-gap: 0;
   padding: var(--space-2) var(--space-3);
+  padding-left: calc(var(--space-3) - 4px);
 }
-.sr-stat-card--inline .sr-stat-card__head { display: contents; }
+/* The number leads, as the Figma variant draws it. */
 .sr-stat-card--inline .sr-stat-card__value {
+  grid-column: 1;
+  grid-row: 1;
   font: var(--sr-type-heading-s-font);
   letter-spacing: var(--sr-type-heading-s-letter-spacing);
 }
+.sr-stat-card--inline .sr-stat-card__label {
+  grid-column: 2;
+  grid-row: 1;
+  color: var(--sr-color-text-secondary);
+}
+.sr-stat-card--inline .sr-stat-card__support { grid-column: 3; grid-row: 1; }
+/* No icon at this size: it would be the widest thing in the card and say the
+   least. The React component drops it from the markup; this is the backstop for
+   hand-written HTML. */
 .sr-stat-card--inline .sr-stat-card__icon { display: none; }
 
 /* ---------- Row of cards ----------
    Provided because every use of this component so far has been a row of them,
-   and a grid written from scratch each time is a grid that drifts. Cards share
-   a height so their accent bars line up. */
+   and a grid written from scratch each time is a grid that drifts. Stacked
+   cards share a height so their accent bars line up; inline cards opt out. */
 .sr-stat-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: var(--space-4);
+}
+
+/* A strip of inline cards: they size to their content rather than sharing a
+   twelfth of the width, and wrap onto another line when the row runs out. */
+.sr-stat-cards--inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
 }
 
 /* ═══ status-indicator ════════════════════════════════════════════ */

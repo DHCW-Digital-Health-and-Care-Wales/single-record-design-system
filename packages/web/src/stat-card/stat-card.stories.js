@@ -11,35 +11,23 @@ import { iconMarkup } from '@dhcw/sr-icons/build/icons.js';
 
 const card = ({
   label, value, icon, support, delta, deltaTone,
-  layout = 'stacked', accent = 'primary',
+  layout = 'stacked', accent = 'none',
 } = {}) => {
   const tone = deltaTone || (typeof delta === 'string' && delta.trim().startsWith('-') ? 'down' : 'up');
   const cls = [
     'sr-stat-card',
     layout === 'value-first' && 'sr-stat-card--value-first',
     layout === 'inline' && 'sr-stat-card--inline',
-    accent === 'primary' && 'sr-stat-card--accent',
-    accent === 'warning' && 'sr-stat-card--accent-warning',
-    accent === 'critical' && 'sr-stat-card--accent-critical',
+    accent !== 'none' && `sr-stat-card--accent-${accent}`,
   ].filter(Boolean).join(' ');
 
   const root = document.createElement('div');
   root.className = cls;
 
-  const head = document.createElement('div');
-  head.className = 'sr-stat-card__head';
   const lab = document.createElement('p');
   lab.className = 'sr-stat-card__label';
   lab.textContent = label;
-  head.appendChild(lab);
-  if (icon && layout !== 'inline') {
-    const ic = document.createElement('span');
-    ic.className = 'sr-stat-card__icon';
-    ic.setAttribute('aria-hidden', 'true');
-    ic.innerHTML = iconMarkup(icon);
-    head.appendChild(ic);
-  }
-  root.appendChild(head);
+  root.appendChild(lab);
 
   const val = document.createElement('p');
   val.className = 'sr-stat-card__value';
@@ -59,12 +47,20 @@ const card = ({
     if (support) sup.appendChild(document.createTextNode(support));
     root.appendChild(sup);
   }
+
+  if (icon && layout !== 'inline') {
+    const ic = document.createElement('span');
+    ic.className = 'sr-stat-card__icon';
+    ic.setAttribute('aria-hidden', 'true');
+    ic.innerHTML = iconMarkup(icon);
+    root.appendChild(ic);
+  }
   return root;
 };
 
-const row = (cards) => {
+const row = (cards, { inline = false } = {}) => {
   const wrap = document.createElement('div');
-  wrap.className = 'sr-stat-cards';
+  wrap.className = inline ? 'sr-stat-cards sr-stat-cards--inline' : 'sr-stat-cards';
   cards.forEach((c) => wrap.appendChild(card(c)));
   return wrap;
 };
@@ -94,18 +90,38 @@ export default {
     support: 'This month',
     delta: '',
     layout: 'stacked',
-    accent: 'primary',
+    accent: 'none',
   },
 };
 
+/** No accent bar. The card most screens want. */
 export const Default = {};
 
 export const WithTrend = { args: { delta: '-5%', support: 'on last month' } };
 
+/** The bar is opt-in emphasis, for the one card in a row that leads. */
+export const WithAccent = { args: { accent: 'primary' } };
+
+/** The number leads. The icon stays at the top of the card, not beside the
+ *  label it has been pushed under. */
 export const ValueFirst = { args: { layout: 'value-first', support: '' } };
 
+/** The short card, ~40px. For a strip above a table or a phone screen. */
 export const Inline = {
-  args: { layout: 'inline', value: '502', label: 'All', support: '' },
+  render: () => row([
+    { label: 'All', value: '502', layout: 'inline' },
+    { label: 'Sent', value: '318', layout: 'inline' },
+    { label: 'Received', value: '184', layout: 'inline' },
+  ], { inline: true }),
+};
+
+/** Inline beside stacked: the inline card stays short rather than being pulled
+ *  to its neighbour's height. */
+export const InlineKeepsItsHeight = {
+  render: () => row([
+    { label: 'Referrals', value: '240', icon: 'clinical/vitals', support: 'This month' },
+    { label: 'All', value: '502', layout: 'inline' },
+  ]),
 };
 
 /** The shape every product has used so far: a row above the content it counts. */

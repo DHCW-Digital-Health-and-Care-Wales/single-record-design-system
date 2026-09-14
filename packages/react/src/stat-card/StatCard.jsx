@@ -22,7 +22,9 @@ import Icon from '../icon/Icon.jsx';
  *   deltaTone   'up' | 'down' | 'neutral' — which way the change reads.
  *                         Defaults to the sign of `delta`.
  *   layout      'stacked' | 'value-first' | 'inline'. Default 'stacked'.
- *   accent      'none' | 'primary' | 'warning' | 'critical'. Default 'primary'.
+ *   accent      'none' | 'primary' | 'warning' | 'critical'. Default 'none' —
+ *                         the bar is emphasis, and a row where every card is
+ *                         emphasised has emphasised nothing.
  */
 export function StatCard({
   label,
@@ -32,7 +34,7 @@ export function StatCard({
   delta,
   deltaTone,
   layout = 'stacked',
-  accent = 'primary',
+  accent = 'none',
   className = '',
   ...rest
 }) {
@@ -44,22 +46,16 @@ export function StatCard({
     'sr-stat-card',
     layout === 'value-first' && 'sr-stat-card--value-first',
     layout === 'inline' && 'sr-stat-card--inline',
-    accent === 'primary' && 'sr-stat-card--accent',
-    accent === 'warning' && 'sr-stat-card--accent-warning',
-    accent === 'critical' && 'sr-stat-card--accent-critical',
+    accent !== 'none' && `sr-stat-card--accent-${accent}`,
     className,
   ].filter(Boolean).join(' ');
 
+  // Source order is label, value, support in every layout — the grid moves the
+  // value up for `value-first` — so a screen reader always hears what the
+  // number is before it hears the number.
   return (
     <div className={classes} {...rest}>
-      <div className="sr-stat-card__head">
-        <p className="sr-stat-card__label">{label}</p>
-        {icon && layout !== 'inline' && (
-          <span className="sr-stat-card__icon" aria-hidden="true">
-            <Icon name={icon} size="md" color="inherit" />
-          </span>
-        )}
-      </div>
+      <p className="sr-stat-card__label">{label}</p>
       <p className="sr-stat-card__value">{value}</p>
       {(delta || support) && (
         <p className="sr-stat-card__support">
@@ -70,14 +66,25 @@ export function StatCard({
           {support}
         </p>
       )}
+      {icon && layout !== 'inline' && (
+        <span className="sr-stat-card__icon" aria-hidden="true">
+          <Icon name={icon} size="md" color="inherit" />
+        </span>
+      )}
     </div>
   );
 }
 
-/** A row of stat cards. Provided so the grid is written once, not per screen. */
-export function StatCards({ children, className = '', ...rest }) {
+/**
+ * A row of stat cards. Provided so the grid is written once, not per screen.
+ * `inline` switches to the wrapping strip the inline layout wants, where cards
+ * size to their content instead of sharing the width equally.
+ */
+export function StatCards({ inline = false, children, className = '', ...rest }) {
+  const classes = ['sr-stat-cards', inline && 'sr-stat-cards--inline', className]
+    .filter(Boolean).join(' ');
   return (
-    <div className={`sr-stat-cards ${className}`.trim()} {...rest}>
+    <div className={classes} {...rest}>
       {children}
     </div>
   );
