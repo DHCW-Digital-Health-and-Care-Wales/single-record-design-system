@@ -61,6 +61,23 @@ a third line is a content decision, not a type of card.
 collides with the `Border/*` colour tokens and with every other component in the
 system, where "border" means a 1px outline.
 
+**4a. `None` is the default.** The first version of this component shipped with
+`Primary` as the default, which was wrong in two ways. Figma draws
+`Border=Hidden` as half the set and the design lead reports it as the usual
+choice; and a bar that appears on every card in a row emphasises nothing. The
+accent is opt-in: it marks the one card a screen is about.
+
+**4b. The icon belongs to the card, not to the label.** It is a grid child
+pinned to the top of the right-hand column in every layout. The first version
+put it in a `__head` row beside the label, so `Count Top` / value-first carried
+the icon halfway down the card with the label it had been grouped with.
+
+**4c. Inline is the short card by contract**, roughly 40px against the stacked
+card's hundred, and it carries `align-self: start` so a grid row cannot stretch
+it to a stacked neighbour's height. It is the layout for a tight space — a strip
+above a table, a toolbar, a phone screen — and a variant that is only short in
+its own markup does not serve that.
+
 **5. The accent bar is emphasis, and may only reinforce something the supporting
 line already says in words.** An amber bar and an amber number, with no text
 saying what is wrong, is meaning carried in colour alone — WCAG 2.2 SC 1.4.1.
@@ -117,6 +134,23 @@ navy bar valid as the default, and gives a rule that does not depend on which
 file someone opened first.
 
 ---
+
+## What the first version got wrong
+
+Recorded because all three faults share a cause worth naming: each was correct
+in the markup and wrong on the page, so nothing but looking at it would have
+caught them.
+
+| Fault | Cause | Fix |
+|---|---|---|
+| The icon slid down the card in the value-first layout | It lived in a `__head` flex row with the label, and `order` moved that whole row | The icon is its own grid child, column 2 row 1, `align-self: start` |
+| The inline card was as tall as the stacked cards beside it | Grid items stretch to the tallest in their row, so the demo row pulled it up | `align-self: start` on the inline modifier, and a `--inline` strip container |
+| The unaccented card was neither shown nor mentioned | The component defaulted to `Primary`, so no example on the page had the bar off | `None` is the default; the page opens with it |
+
+The general form: a variant defined only by its own CSS is not defined. All
+three were visible the moment the page was looked at, and invisible in every
+check the repo runs, because none of them is a token, a contrast pair or a
+markdown marker. The build gate for this class is a person opening the page.
 
 ## Consequences
 
