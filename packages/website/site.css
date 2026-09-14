@@ -231,28 +231,37 @@ body {
   letter-spacing: var(--sr-type-caption-letter-spacing);
   color: var(--sr-color-text-secondary);
 }
-/* `:not(.showcase__preview *)` on every page-copy rule below is load-bearing.
+/* `:not(:where(.showcase__preview *))` on every page-copy rule below is load-bearing.
    A showcase preview holds the real component's markup, and these rules were
    reaching into it: `.content h2` (0,1,1) outranks the component's own
    `.sr-patient-banner__name { margin: 0 }` (0,1,0), so its 40px top margin
    pushed the patient's name well below the alert cards it is meant to align
    with — in every variant on the page. Excluding preview descendants is the
    fix that keeps page copy styled without the site restyling what it
-   documents. */
-.content h1:not(.showcase__preview *) { font-size: 28px; line-height: 36px; font-weight: 700; margin: 0 0 12px; }
-.content h2:not(.showcase__preview *) { font-size: 20px; line-height: 28px; font-weight: 700; margin: 40px 0 12px; }
-.content h3:not(.showcase__preview *) { font-size: 16px; line-height: 24px; font-weight: 700; margin: 28px 0 8px; }
-.content h4:not(.showcase__preview *) { font-size: 16px; line-height: 24px; font-weight: 500; margin: 20px 0 8px; }
-.content p:not(.showcase__preview *),
-.content li:not(.showcase__preview *) { font-size: 16px; line-height: 24px; }
-.content p:not(.showcase__preview *) { margin: 0 0 16px; }
-.content ul:not(.showcase__preview *) { margin: 0 0 16px; padding-left: 20px; }
-.content li:not(.showcase__preview *) { margin-bottom: 8px; }
+   documents.
+
+   It is wrapped in `:where()` so it costs no specificity. Bare
+   `:not(.showcase__preview *)` scored (0,1,0) of its own, which quietly pushed
+   every rule here to (0,2,1) and put them above the site's own component rules:
+   `.card h3` (0,1,1) lost, so every card on the site rendered its heading at
+   16px with a 28px top margin instead of the 20px and 0 its own rule asks for —
+   including the comment below saying card headings use Heading S, which had not
+   been true in a browser since this exclusion was added. `:not(:where(…))`
+   excludes exactly the same elements and adds nothing. */
+.content h1:not(:where(.showcase__preview *)) { font-size: 28px; line-height: 36px; font-weight: 700; margin: 0 0 12px; }
+.content h2:not(:where(.showcase__preview *)) { font-size: 20px; line-height: 28px; font-weight: 700; margin: 40px 0 12px; }
+.content h3:not(:where(.showcase__preview *)) { font-size: 16px; line-height: 24px; font-weight: 700; margin: 28px 0 8px; }
+.content h4:not(:where(.showcase__preview *)) { font-size: 16px; line-height: 24px; font-weight: 500; margin: 20px 0 8px; }
+.content p:not(:where(.showcase__preview *)),
+.content li:not(:where(.showcase__preview *)) { font-size: 16px; line-height: 24px; }
+.content p:not(:where(.showcase__preview *)) { margin: 0 0 16px; }
+.content ul:not(:where(.showcase__preview *)) { margin: 0 0 16px; padding-left: 20px; }
+.content li:not(:where(.showcase__preview *)) { margin-bottom: 8px; }
 .content .lede { color: var(--sr-color-text-secondary); margin-bottom: 32px; }
 /* Excluded from previews for the same reason as the headings above: a
    component's own links carry its colours. Unscoped, this painted every
    BottomNav tab blue, hiding the fact that only the current tab is blue. */
-.content a:not(.showcase__preview *) { color: var(--sr-color-interactive-link); }
+.content a:not(:where(.showcase__preview *)) { color: var(--sr-color-interactive-link); }
 .content hr { border: 0; border-top: 1px solid var(--sr-color-border-default); margin: 40px 0; }
 .content code {
   font-family: "Roboto Mono", ui-monospace, monospace;
@@ -343,7 +352,10 @@ body {
    reads as one interactive object rather than an icon beside a link. */
 .card__icon { display: block; margin: 0 0 12px; color: var(--sr-color-interactive-link); }
 .card__icon svg { width: 24px; height: 24px; }
-.card h3 { margin: 0 0 6px; font-size: 20px; line-height: 28px; font-weight: 700; color: var(--sr-color-interactive-link); }
+/* 8px top and bottom. The top margin collapses against the icon's 12px bottom,
+   so the icon sits 12px above the title rather than the 28px it had while the
+   page-copy rule was winning. */
+.card h3 { margin: 8px 0; font-size: 20px; line-height: 28px; font-weight: 700; color: var(--sr-color-interactive-link); }
 .card p { margin: 0; font-size: 14px; line-height: 20px; color: var(--sr-color-text-secondary); }
 
 /* ── bare page shell (prototype embeds only) ────────────────────────────────

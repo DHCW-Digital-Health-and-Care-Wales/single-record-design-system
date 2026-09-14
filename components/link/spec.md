@@ -1,7 +1,13 @@
 # Link
 
-**Status:** In Figma (component set `1633:320` on page `1318:14904`)
-**Last updated:** 2026-06-04
+**Status:** In Figma (component set `1636:21236` on the Link page `1636:21000`)
+**Last updated:** 2026-09-14
+
+> **Corrected 2026-09-14.** This file described 36 variants across three types
+> and cited node `1633:320` on the Buttons page. That node no longer exists, and
+> the real set has **24** variants and **no `Inverse` type**. A spec naming a
+> node that is gone is worse than no spec, because it reads as checked.
+> Classification and build order: DDR-032.
 
 ---
 
@@ -13,11 +19,11 @@ Navigates the user to another location — a page, anchor, document, or external
 
 ## Variants
 
-The component set is **Type × Size × State** = 36 variants, mirroring the Button structure.
+The component set is **Type × Size × State** = 24 variants, mirroring the Button structure.
 
 | Property | Values |
 |---|---|
-| Type | Default, Destructive, Inverse |
+| Type | Default, Destructive |
 | Size | Large, Default, Small |
 | State | Default, Hover, Focus, Disabled |
 
@@ -25,7 +31,13 @@ The component set is **Type × Size × State** = 36 variants, mirroring the Butt
 |---|---|
 | Default | Standard hyperlink, inline or standalone. The most common case. |
 | Destructive | Link that leads to a destructive flow (e.g. "Remove patient"). Pair with confirmation. |
-| Inverse | Link sitting on a dark or coloured surface — banners, dark mode, image overlays. |
+
+**There is no `Inverse` type.** An earlier version of this spec listed one, for
+links on a dark or coloured surface. Dark mode is handled by the token layer
+rather than by a variant (DDR-026): `interactive/link` has its own dark value,
+so a link on a dark surface is the same link. A link on a *saturated* fill —
+inside a filled banner, over an image — has no token and no variant today; that
+is an open question, not an omission to restore.
 
 A boolean component property **Leading icon** exposes an optional 16/20px icon slot for cases like "Download file" or "Open in new tab". No trailing icon variant — keep links visually simple.
 
@@ -51,8 +63,8 @@ A boolean component property **Leading icon** exposes an optional 16/20px icon s
 
 | State | Visual behaviour |
 |---|---|
-| Default | Underlined, `Interactive/Link` colour (Destructive: `Interactive/Destructive`, Inverse: `Text/Inverse`) |
-| Hover | Colour shifts one step (Default → `Interactive/Primary Hover`; Destructive → `Status/Critical`; Inverse → `Surface/Background`). Underline retained. |
+| Default | Underlined, `Interactive/Link` colour (Destructive: `Interactive/Destructive`) |
+| Hover | Colour shifts one step (Default → `Interactive/Primary Hover`; Destructive → `Status/Critical`). Underline retained. |
 | Focus | GDS pattern: `Border/Focus` yellow background, `Text/Primary` text, underline removed. |
 | Disabled | `Text/Disabled`, underline retained, `aria-disabled="true"`. Use sparingly — a disabled link is usually the wrong pattern. |
 
@@ -109,4 +121,4 @@ Minimum touch target: 44×44px. Apply invisible hit-area padding around standalo
 ## Related
 
 - `/components/button/spec.md` — for actions, not navigation
-- `/foundations/tokens/semantic/` — `Interactive/Link`, `Interactive/Destructive`, `Text/Inverse`, `Border/Focus`, `Text/Disabled`
+- `/foundations/tokens/semantic/` — `Interactive/Link`, `Interactive/Destructive`, `Border/Focus`, `Text/Disabled`

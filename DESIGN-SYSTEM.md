@@ -4,7 +4,7 @@ The Single Record Design System provides the shared design language, component l
 
 This document is the primary reference for everyone working on Single Record — designers, engineers, and delivery leads.
 
-**Last reviewed:** 2026-09-11. Update this file whenever a component ships, a
+**Last reviewed:** 2026-09-14. Update this file whenever a component ships, a
 token is added, or a system-wide rule changes — not on a schedule. If it
 disagrees with `/foundations/tokens/` or `/components/`, those win and this file
 is out of date.
@@ -215,9 +215,11 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Footer | — (guidelines ✅) | ✅ | ✅ |
 | Header | — (guidelines ✅) | ✅ | ✅ |
 | Input | — | ✅ | ✅ |
+| Inset text | — (Figma only) | — | — |
 | Link | ✅ | — | — |
 | Modal dialog | ✅ | ✅ | ✅ |
 | Navigation | — (guidelines ✅) | ✅ | ✅ |
+| Notification banner | — (Figma only) | — | — |
 | Patient banner | ✅ | ✅ | ✅ |
 | Progress indicators | ✅ | — | — |
 | Radio | ✅ (guidelines ✅) | ✅ | ✅ |
@@ -238,6 +240,22 @@ two specs (Link, Progress indicators) have no code. Neither is
 satisfactory — a component without a spec has no agreed contract, and a spec
 without code cannot be consumed. Both lists are worked down as components are
 touched.
+
+**Five Figma pages were classified on 2026-09-14 (DDR-032)** before being queued
+for the website, because "add them as components" would have put three different
+kinds of thing behind one promise:
+
+| Figma page | Verdict | Next step |
+|---|---|---|
+| Link | Component | Spec corrected; build web, React and the page. **Start here** |
+| Status Indicator | Style — the filled status icon family, already shipped as `.sr-status-indicator` | A section on the Icons page. Settle the fourth mark first |
+| Inset text | Component, narrowed to prose emphasis | Narrow in Figma, then spec, code, page |
+| Notification banner | Component; its two Figma sets are one component with two properties | One set in Figma, then spec, code, page |
+| Error/Warning messages | Neither — shared form-field anatomy, already rendered by six components | Fold into `components/form-fields.md`. The real gap is an **error summary**, which is a pattern |
+
+The Link spec was corrected in the same pass: it described 36 variants across
+three types and cited a Figma node that no longer exists. The real set has 24
+and no `Inverse` type.
 
 **No Menu/Dropdown component.** The Case Note Tracking prototype's row-level
 action menu (Figma `47:4041`) needed a small popover list —
