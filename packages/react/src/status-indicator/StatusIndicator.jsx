@@ -3,7 +3,8 @@ import '@dhcw/sr-web/src/status-indicator/status-indicator.css';
 
 /**
  * StatusIndicator — DHCW Single Record Design System
- * Filled status badge (Figma warnings/* group): success | error | warning.
+ * Filled status badge (Figma warnings/* group): success | error | warning,
+ * plus `none` for "no status recorded".
  * Colour is semantic and driven by status tokens. Geometry derived from
  * Lucide (ISC), not traced. See DDR-013.
  *
@@ -31,6 +32,12 @@ const GLYPHS = {
       <line x1="12" y1="9.5" x2="12" y2="14" stroke="#212b32" strokeWidth="2" strokeLinecap="round" />
       <circle cx="12" cy="17" r="1.15" fill="#212b32" />
     </>
+  ),
+  // The `action/remove` dash, which is the fourth mark on the Figma Status
+  // Indicator page. Geometry copied from the icon set rather than redrawn, so
+  // the two cannot drift: `action/remove` is `M5 12h14`.
+  none: (
+    <path d="M5 12h14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
   ),
 };
 
