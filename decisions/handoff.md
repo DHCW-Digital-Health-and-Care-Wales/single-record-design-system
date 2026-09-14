@@ -11,6 +11,61 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 ---
 
+## Checkpoint — 2026-09-14 (Link ships; DDR-032 classifies five pages; card spacing)
+
+### Link is the first of the five (DDR-032) to ship
+
+`components/link/{spec,guidelines}.md`, `packages/web/src/link/`,
+`packages/react/src/link/`, a DS website page, and Figma `Guidelines/Link`
+(`5197:20`). The stale "Menu Item — Usage notes" copy on that page was removed
+rather than rewritten — the 360-wide notes panels are being pruned from the file.
+
+**The spec was wrong in four places and is corrected.** It claimed 36 variants
+across three types including `Inverse` and cited node `1633:320`, which no longer
+exists; the set is `1636:21236` with 24 and no Inverse. It described the sizes as
+Heading XS / Label / Caption; they are Body M / Body S / Caption. It described a
+GDS yellow focus background; the set draws a `Border/Focus` stroke. And it asked
+for a 44×44 target, which is neither the WCAG 2.2 figure nor what anything drew.
+
+### Three measured findings, all from computing the pairs rather than looking
+
+| Pair | Light | Dark |
+|---|---|---|
+| `interactive/link` on the page | 6.36 | 9.14 |
+| `interactive/primary-hover` as hover text | 12.09 | **1.47** |
+| `interactive/destructive` as link text | 4.64 | **2.84** |
+
+So **hover cannot be a colour change** — no token darkens in light and lightens
+in dark. Hover thickens the underline instead, which is GDS's own treatment and
+needs no new token. And **destructive is light-mode only**, recorded as the
+system's first `open` finding in `check-contrast.mjs`, with two ways out: a new
+`interactive/destructive-on-dark`, or dropping the type and requiring a Button
+for destructive flows, which is what GDS and NHS England do.
+
+**Target size was the third.** The base link is inline with no padding, so it
+does not disturb the line box of its paragraph — but that left the standalone
+sizes at 24/20/16px line boxes, two under the 24px SC 2.5.8 minimum. Vertical
+padding on the size modifiers grows the hit area without moving the line, and
+lands on 32/28/24 — the same heights the Figma chips draw. The 4px padding in
+the set was doing this job all along.
+
+### Two more findings in the set itself, for a Figma pass
+
+- `Type=Destructive, Size=Large` is drawn in Heading XS while
+  `Type=Default, Size=Large` is Body M — same size, different weight.
+- Destructive hover binds the raw `Red/800` primitive, which has no dark value,
+  so it opts out of dark mode silently (DDR-026).
+- The set has no inline variant at all; every variant is a padded standalone
+  chip, though a link inside a sentence is the common case.
+
+### The `:where()` fix on the website's page-copy rules
+
+`:not(.showcase__preview *)` was costing (0,1,0) of specificity it never meant
+to, pushing every page-copy rule above the site's own component rules. Every
+`.card` on the site was rendering its heading at 16px with a 28px top margin
+instead of the 20px and 0 its rule asks for. `:not(:where(…))` excludes the same
+elements and adds nothing.
+
 ## Checkpoint — 2026-09-11 (seven Guidelines frames; six stale usage-notes panels replaced)
 
 ### Seven `Guidelines/*` frames, generated rather than transcribed

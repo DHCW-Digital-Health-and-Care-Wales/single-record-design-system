@@ -55,7 +55,7 @@ A boolean component property **Leading icon** exposes an optional 16/20px icon s
 
 - **Label**: Required. Sentence case. Describe the destination, not the action ("Patient summary", not "Click here").
 - **Leading icon**: Optional. Same colour as the label. 16px for Small, 20px for Default/Large.
-- **Underline**: Always on, except Focus state (which uses the GDS yellow focus pattern).
+- **Underline**: Always on, in every state including Focus.
 
 ---
 
@@ -64,23 +64,36 @@ A boolean component property **Leading icon** exposes an optional 16/20px icon s
 | State | Visual behaviour |
 |---|---|
 | Default | Underlined, `Interactive/Link` colour (Destructive: `Interactive/Destructive`) |
-| Hover | Colour shifts one step (Default → `Interactive/Primary Hover`; Destructive → `Status/Critical`). Underline retained. |
-| Focus | GDS pattern: `Border/Focus` yellow background, `Text/Primary` text, underline removed. |
+| Hover | Underline thickens 1px → 3px. **Colour does not change.** Figma shifts to `Interactive/Primary Hover`, which is 12.09:1 in light and 1.47:1 in dark — a dark navy on a dark page. No token darkens in light and lightens in dark, so hover cannot be a colour change until `interactive/link-hover` exists. Thickening is the GDS treatment and holds in both modes. |
+| Focus | A 2px `Border/Focus` ring at a 2px offset, drawn outside the text. The underline stays. **Not** the GDS yellow background: this file described one, but the Figma set draws a `Border/Focus` stroke and the rest of the system uses an outer ring (DDR-006, DDR-025). |
 | Disabled | `Text/Disabled`, underline retained, `aria-disabled="true"`. Use sparingly — a disabled link is usually the wrong pattern. |
 
 ---
 
 ## Sizing & Typography
 
-| Size | Typography token | Use |
-|---|---|---|
-| Large | `SR Typography/Desktop/Heading XS` (16/24 Medium) | Standalone links in section headers, card titles |
-| Default | `SR Typography/Desktop/Label` (14/20 Medium) | Body copy, lists, table cells |
-| Small | `SR Typography/Desktop/Caption` (12/16 Regular) | Footnotes, metadata, captions |
+| Size | Typography token | Target height | Use |
+|---|---|---|---|
+| Inherit *(base)* | none — takes the surrounding text | n/a | A link inside a sentence. The common case |
+| Large | `SR Typography/Desktop/Body M` (16/24) | 32px | A standalone link at body-copy size |
+| Default | `SR Typography/Desktop/Body S` (14/20) | 28px | Dense areas: table cells, card footers |
+| Small | `SR Typography/Desktop/Caption` (12/16) | 24px | Footnotes, metadata |
 
-Padding: `Space/1` (4px) on all sides; `Space/1` gap between icon and label. Corner radius `Radius/2` — only visible behind the Focus state's yellow background.
+> **Corrected 2026-09-14.** This table previously said Heading XS and Label. The
+> Figma set uses Body M / Body S / Caption.
 
-Minimum touch target: 44×44px. Apply invisible hit-area padding around standalone links on touch surfaces; do not enlarge the visible underline.
+**Padding.** The base link has none — vertical padding on an inline link would
+disturb the line box of the paragraph it sits in, and the focus ring is drawn
+with `outline-offset` instead. The three size modifiers carry `Space/1` (4px)
+top and bottom, which grows the hit area without moving the line: the line boxes
+alone are 24 / 20 / 16px, two of them under the 24px SC 2.5.8 minimum. With the
+padding the targets are 32 / 28 / 24px — the same heights the Figma chips draw.
+
+`Space/1` gap between icon and label. Corner radius `Radius/2`.
+
+**Target size.** A link inside a block of text is exempt from SC 2.5.8. A
+standalone link is not; every size clears 24px as above. Touch layouts should
+give more than the minimum.
 
 ---
 
@@ -88,9 +101,9 @@ Minimum touch target: 44×44px. Apply invisible hit-area padding around standalo
 
 - Link text must describe the destination on its own. Avoid "click here", "more", "read more".
 - External links: signal externality in text ("opens in a new tab") and pair with an icon if appropriate. Do not rely on icon alone.
-- Focus indicator follows GDS: 3px yellow background block sitting behind the text, with the underline removed. This is the same `Border/Focus` token used across the system.
+- Focus is a 2px `Border/Focus` ring at a 2px offset, drawn outside the text so it is never clipped and never moves the line. The underline is retained — removing it would leave the link identified by the ring alone.
 - Disabled links: prefer hiding or replacing with non-interactive text. If kept, use `aria-disabled="true"` and remove `href`.
-- Contrast: `Interactive/Link` (`Info-Blue/default`) on `Surface/Background` meets WCAG 2.2 AA. Verify against any custom surface before use.
+- Contrast: `Interactive/Link` is 6.36:1 on `Surface/Background` and 6.94:1 on `Surface/Section Cards` in light, 9.14:1 and 8.39:1 in dark. All four are asserted in `scripts/check-contrast.mjs`. Verify against any custom surface before use.
 
 ---
 
@@ -107,14 +120,17 @@ Minimum touch target: 44×44px. Apply invisible hit-area padding around standalo
 - Blazor / web: render as `<a href="…">`. Never use a link for an action that does not navigate — use Button.
 - "Opens in a new tab": include `target="_blank"` and `rel="noopener noreferrer"`, and surface the behaviour in the visible text.
 - MAUI: map to `Label` with `GestureRecognizers` + accessible name, or `HyperlinkSpan`. Apply tokens; do not hardcode colours.
-- Underline thickness is browser-default; do not override unless the design system explicitly specifies a value.
+- Underline is 1px at a 2px offset, thickening to 3px on hover. `text-decoration-thickness` does not reflow the line; changing `border-bottom` or `font-weight` on hover would.
 
 ---
 
 ## Open Work
 
 - **Visited state token**: no semantic token exists. Decision needed before adding a `Visited` variant. Tracked alongside DL-006 in `/decisions/handoff.md`.
-- **Inline-with-body-text** variant: current set treats links as standalone elements. An inline variant inheriting parent line-height may be needed once body-text patterns are formalised.
+- **Destructive is light-mode only.** `Interactive/Destructive` is a fill colour — the sort white text sits on — and is unchanged across modes, so as red text on the dark page it is 2.84:1 against the 4.5:1 it needs. No red in the ramp is dark-safe as text (`Status/Critical` is 2.14:1 there). Recorded as an open finding in `scripts/check-contrast.mjs` with two options: a new `interactive/destructive-on-dark`, or dropping the type and requiring a Button for destructive flows, which is what GDS and NHS England do.
+- **No `interactive/link-hover`.** See the Hover row above.
+- **The Figma set is inconsistent at Large.** `Type=Destructive, Size=Large` is drawn in Heading XS while `Type=Default, Size=Large` is Body M — same size, different weight, for no stated reason. Code uses Body M for both. Normalise the set.
+- **The Figma set has no inline variant.** Every variant is drawn as a padded standalone chip. Code ships the inline form as the base — it is the common case — so the set is behind the code here rather than the other way round.
 
 ---
 
