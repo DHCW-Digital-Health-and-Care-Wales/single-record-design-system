@@ -24,3 +24,4 @@ export { default as Modal } from './modal/Modal.jsx';
 export { default as PatientBanner } from './patient-banner/PatientBanner.jsx';
 export { default as Tabs } from './tabs/Tabs.jsx';
 export { default as Search } from './search/Search.jsx';
+export { default as StatCard, StatCards } from './stat-card/StatCard.jsx';

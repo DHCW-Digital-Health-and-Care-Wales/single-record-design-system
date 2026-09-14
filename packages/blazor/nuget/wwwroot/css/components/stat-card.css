@@ -1,0 +1,164 @@
+/**
+ * DHCW Single Record — Stat card
+ * Reference HTML/CSS implementation, matched to the Figma "Stat Card" set
+ * (431:11996) on page 1517:15118. Consumes @dhcw/sr-tokens.
+ *
+ * One number, named. A dashboard made of these is a pattern; the card itself is
+ * a component, which is why it lives here and the dashboard does not.
+ *
+ * Anatomy (vertical stack, gap = space-1):
+ *   .sr-stat-card              — the card: accent bar, surface, radius, shadow
+ *   .sr-stat-card__head        — label and optional icon, on one row
+ *   .sr-stat-card__label       — what the number counts
+ *   .sr-stat-card__icon        — decorative, 20x20, hidden from AT
+ *   .sr-stat-card__value       — the number
+ *   .sr-stat-card__support     — one supporting line: a period, a trend, a note
+ *   .sr-stat-card__delta       — the signed change inside the supporting line
+ *
+ * Layouts, replacing the five `Type` variants the Figma set enumerates
+ * (DDR-031). Figma's Title Top / Title_Hint / Trend are one layout with and
+ * without a supporting line, so they collapse:
+ *   (default)                — label, value, optional supporting line
+ *   .sr-stat-card--value-first — value, then label. Figma `Count Top`
+ *   .sr-stat-card--inline      — value and label on one row. Figma `Single line`
+ *
+ * The card is NOT interactive. It has no hover, no focus and no role. If a
+ * number should open something, put a Link under it or make the whole tile a
+ * Button — a div with a click handler is neither, and this component will not
+ * grow into one.
+ */
+
+.sr-stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  box-sizing: border-box;
+  padding: var(--space-4);
+  background-color: var(--sr-color-surface-section-cards);
+  border-radius: var(--radius-md);
+  box-shadow: var(--elevation-raised);
+
+  /* The accent bar is always in the box, transparent when there is no accent.
+     Drawing it only when shown would make an accented card 4px wider than the
+     one beside it, and a row of stat cards is exactly where that shows. */
+  border-left: 4px solid transparent;
+}
+
+/* ---------- Accent ----------
+   Emphasis, not status on its own. A bar that changes colour and nothing else
+   carries meaning in colour alone (SC 1.4.1), so a warning or critical card
+   must also say so in the supporting line — the accent reinforces the words, it
+   does not replace them. See the guidelines. */
+.sr-stat-card--accent { border-left-color: var(--sr-color-interactive-primary); }
+.sr-stat-card--accent-warning { border-left-color: var(--sr-color-status-warning); }
+.sr-stat-card--accent-critical { border-left-color: var(--sr-color-status-critical); }
+
+/* ---------- Head ---------- */
+.sr-stat-card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+/* Figma draws the label in Interactive/Primary. It is not that here, for two
+   reasons: nothing on this card is interactive, and in dark mode the dark-mode
+   primary lands at 2.07:1 on the dark card surface. Text/Primary is the correct
+   semantic and clears 4.5:1 in both modes; the hierarchy is carried by size. */
+.sr-stat-card__label {
+  margin: 0;
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+  color: var(--sr-color-text-primary);
+}
+
+/* Decorative. The label already names the number, so an icon that repeats it
+   adds nothing to a screen reader and is marked aria-hidden in the markup. */
+.sr-stat-card__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  color: var(--sr-color-text-secondary);
+}
+.sr-stat-card__icon svg { width: 100%; height: 100%; }
+
+/* ---------- Value ---------- */
+.sr-stat-card__value {
+  margin: 0;
+  font: var(--sr-type-heading-m-font);
+  letter-spacing: var(--sr-type-heading-m-letter-spacing);
+  color: var(--sr-color-text-primary);
+  /* A column of stat cards is read down the digits, so they have to line up. */
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Supporting line ---------- */
+.sr-stat-card__support {
+  margin: 0;
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  color: var(--sr-color-text-secondary);
+}
+
+/* The signed change, as a small tinted chip rather than coloured text.
+   Status text straight onto the card surface is a pair the token set does not
+   support: the status colours are deliberately pinned to their light-mode 700
+   steps "because status surfaces stay light in dark mode", so `status/critical`
+   on a dark card is 1.97:1. On its own status surface it is a pair the system
+   already asserts and already passes, in both modes — so the delta carries its
+   surface with it.
+
+   Colour is still the second signal, never the first: the sign is part of the
+   text, so "-5%" reads as a fall in greyscale, to a screen reader, and to
+   someone who cannot tell the red from the green. Figma draws the delta bolder;
+   it is not bolded here because the scale has no bold caption (DDR-005). */
+.sr-stat-card__delta {
+  display: inline-block;
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-sm);
+}
+.sr-stat-card__delta--up {
+  color: var(--sr-color-status-success);
+  background-color: var(--sr-color-status-success-surface);
+}
+.sr-stat-card__delta--down {
+  color: var(--sr-color-status-critical);
+  background-color: var(--sr-color-status-critical-surface);
+}
+/* A movement that is neither good nor bad — a count that simply changed. No
+   chip, because a neutral tint would be a colour that means nothing. */
+.sr-stat-card__delta--neutral { color: var(--sr-color-text-secondary); }
+
+/* ---------- Value first (Figma `Count Top`) ----------
+   The number leads and the label explains it. For a row of cards scanned as
+   numbers rather than read as sentences. */
+.sr-stat-card--value-first .sr-stat-card__head { order: 2; }
+.sr-stat-card--value-first .sr-stat-card__value { order: 1; }
+.sr-stat-card--value-first .sr-stat-card__support { order: 3; }
+
+/* ---------- Inline (Figma `Single line`) ----------
+   Value and label on one row, for a compact strip above a table. No icon: at
+   this size the icon is the widest thing in the card and says the least. */
+.sr-stat-card--inline {
+  flex-direction: row;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+}
+.sr-stat-card--inline .sr-stat-card__head { display: contents; }
+.sr-stat-card--inline .sr-stat-card__value {
+  font: var(--sr-type-heading-s-font);
+  letter-spacing: var(--sr-type-heading-s-letter-spacing);
+}
+.sr-stat-card--inline .sr-stat-card__icon { display: none; }
+
+/* ---------- Row of cards ----------
+   Provided because every use of this component so far has been a row of them,
+   and a grid written from scratch each time is a grid that drifts. Cards share
+   a height so their accent bars line up. */
+.sr-stat-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-4);
+}
