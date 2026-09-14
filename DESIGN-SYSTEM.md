@@ -248,10 +248,10 @@ kinds of thing behind one promise:
 | Figma page | Verdict | Next step |
 |---|---|---|
 | Link | Component | **Done** — spec corrected, guidelines written, web + React + page shipped |
-| Status Indicator | Style — the filled status icon family, already shipped as `.sr-status-indicator` | A section on the Icons page. Settle the fourth mark first |
+| Status Indicator | Style — the filled status icon family, already shipped as `.sr-status-indicator` | A section on the Icons page. The fourth mark is confirmed as `action/remove`; `.sr-status-indicator` needs a neutral variant using it |
 | Inset text | Component, narrowed to prose emphasis | Narrow in Figma, then spec, code, page |
-| Notification banner | Component; its two Figma sets are one component with two properties | One set in Figma, then spec, code, page |
-| Error/Warning messages | Neither — shared form-field anatomy, already rendered by six components | Fold into `components/form-fields.md`. The real gap is an **error summary**, which is a pattern |
+| Notification banner | Component; its two Figma sets are one component with two properties | One set of 8 variants plus two booleans, then spec, code, page. Steps: `docs/figma-banner-and-error-messages.md` |
+| Error/Warning messages | Neither — shared form-field anatomy, already rendered by six components | Becomes a `Form field / Message` building block; the page is retitled **Errors** and gains the **error summary**, which is a pattern. Steps: `docs/figma-banner-and-error-messages.md` |
 
 The Link spec was corrected in the same pass: it described 36 variants across
 three types and cited a Figma node that no longer exists. The real set has 24

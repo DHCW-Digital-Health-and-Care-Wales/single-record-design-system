@@ -4228,6 +4228,17 @@ textarea.sr-input__control {
 .sr-status-indicator--error { color: var(--sr-color-status-critical); }
 .sr-status-indicator--warning { color: var(--sr-color-status-warning); }
 
+/* "No status recorded" — the dash the Figma page draws as its fourth mark,
+   confirmed as the `action/remove` icon rather than a new one. It is the
+   conventional not-applicable mark in a status column, so it is muted rather
+   than coloured: there is nothing to report, and a colour would report it.
+
+   It is the one mark in the family that is a bare stroke rather than a glyph
+   knocked out of a filled shape. That is what is drawn, and it is also what a
+   dash should be — normalising it into a filled disc would make "nothing here"
+   look like a state. Text/Secondary clears 3:1 for SC 1.4.11. */
+.sr-status-indicator--none { color: var(--sr-color-text-secondary); }
+
 /* ═══ switch ══════════════════════════════════════════════════════ */
 /**
  * DHCW Single Record — Toggle switch

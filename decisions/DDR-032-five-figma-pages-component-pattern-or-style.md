@@ -204,6 +204,29 @@ Link is the one with no complication, which is why it is the one to build first.
 
 ---
 
+## Follow-up, 2026-09-14
+
+The design lead accepted all five verdicts and asked two follow-on questions.
+Both are answered in `docs/figma-banner-and-error-messages.md`, as steps to
+follow in the file rather than as principles, because both involve detaching
+instances and the order matters.
+
+- **Merging the banner's two sets** collapses to one set of eight variants plus
+  two booleans. The trick that keeps it small is making `Dismissible` and
+  `Actions` boolean component properties rather than variant axes — as variants
+  they would multiply the set to 32.
+- **Error/Warning messages is not deleted.** Its two variants become a
+  `Form field / Message` building block, and the page is retitled **Errors** to
+  hold that block plus the error summary, which the design lead asked to see
+  there.
+
+Also settled: the fourth mark on the Status Indicator page is `action/remove`,
+the existing icon, not a new one. That confirms the "it is a style, it already
+ships" reading — with one gap, since `.sr-status-indicator` has no neutral
+variant using that icon today.
+
+---
+
 ## References
 
 - DDR-013 (filled status marks are not part of the outline icon set)
