@@ -23,7 +23,7 @@
  *
  * Usage: node scripts/check-contrast.mjs
  */
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -88,8 +88,14 @@ const PAIRS = [
     'Focus ring on the page background (DDR-025)'],
   ['sr-color-border-focus', 'sr-color-surface-section-cards', 3,
     'Focus ring on a section card (DDR-025)'],
+  // Light only. In dark mode surface/small-cards is Cyan/850 and the ring is
+  // 1.23:1 on it — which is why nothing focusable is allowed on that surface
+  // (DDR-033). That rule is enforced mechanically by the usage check at the
+  // foot of this file, not by an assertion here: a pair that can never occur
+  // is not a pair worth asserting, and leaving it red would train people to
+  // ignore the output.
   ['sr-color-border-focus', 'sr-color-surface-small-cards', 3,
-    'Focus ring on a small card (DDR-025)'],
+    'Focus ring on a small card (DDR-025)', 'light'],
   ['sr-color-text-primary', 'sr-color-surface-small-cards', 4.5,
     'Body text on a small card'],
 
@@ -140,6 +146,26 @@ const PAIRS = [
   //     modes. Only the supporting line is a genuinely new pair. ---
   ['sr-color-text-secondary', 'sr-color-surface-section-cards', 4.5,
     'Stat card supporting line (stat-card.css)'],
+
+  // --- The stat card's own surface. Dark mode is Cyan/850, a mid-luminance
+  //     teal on which white is 4.87:1 and nothing dimmer reaches 4.5 — so every
+  //     line on the card is white there, and these three pairs are what say so.
+  //     text/primary is already white in dark; text/on-fill is white in both,
+  //     which is why the dark override in stat-card.css uses it. See DDR-033.
+  ['sr-color-text-primary', 'sr-color-surface-small-cards', 4.5,
+    'Stat card label and value (stat-card.css)'],
+  // Dark only: the override in stat-card.css is scoped to [data-theme="dark"],
+  // and in light mode this pair is white on white, which is not a thing the
+  // component ever renders.
+  ['sr-color-text-on-fill', 'sr-color-surface-small-cards', 4.5,
+    'Stat card supporting line on the dark teal (stat-card.css)', 'dark'],
+  // NOT asserted: small-cards against section-cards, which is 2.70:1 in dark and
+  // 1.00:1 in light. It is tempting to require 3:1 here and wrong to — SC 1.4.11
+  // covers non-text content that carries meaning, and a card surface does not:
+  // the card is delineated by its border and its elevation, which is why light
+  // mode has always been a white card on a white card. The teal is there to give
+  // dark mode the same figure/ground reading light mode gets from the page tint,
+  // not to satisfy a ratio.
 
   // --- Link. The default link was already asserted on the page in light only;
   //     it holds in dark too, and it is also used on cards. Destructive is the
@@ -254,6 +280,50 @@ if (failures.length) {
   process.exit(1);
 }
 
+/**
+ * `surface/small-cards` is text-only, and this is what enforces it.
+ *
+ * In dark mode it is Cyan/850 — a mid-luminance teal that gives a stat tile its
+ * own plane against the navy section card (DDR-033). The cost is that nothing
+ * reads on it except white: `text/secondary` is 3.56:1, the focus ring 1.23:1,
+ * `border/strong` 1.90:1, `interactive/primary` 1.31:1. Those are not fixable by
+ * picking a different stop — the surface sits in the middle of the range, so
+ * there is no room above it or below it.
+ *
+ * So the rule is a usage rule, not a ratio: only a component that puts plain
+ * text on this surface may consume it. Four stylesheets used to — checkbox and
+ * radio card variants, the search menu and the footer — all of which carry
+ * controls, borders or buttons. They are on `surface/section-cards`, which was
+ * the same value at the time, so nothing moved visually.
+ *
+ * A paragraph would not have held this. The token was re-pointed once already
+ * on aesthetic grounds, and the four stylesheets drifted onto it without anyone
+ * deciding they should.
+ */
+const SMALL_CARD_ALLOWED = new Set(['stat-card.css']);
+const SRC = resolve(ROOT, 'packages', 'web', 'src');
+const offenders = [];
+for (const dir of readdirSync(SRC, { withFileTypes: true })) {
+  if (!dir.isDirectory()) continue;
+  for (const file of readdirSync(resolve(SRC, dir.name))) {
+    if (!file.endsWith('.css') || SMALL_CARD_ALLOWED.has(file)) continue;
+    const css = readFileSync(resolve(SRC, dir.name, file), 'utf8');
+    if (css.includes('--sr-color-surface-small-cards')) offenders.push(`${dir.name}/${file}`);
+  }
+}
+if (offenders.length) {
+  console.error('\ncheck:contrast — surface/small-cards used outside the text-only set:\n');
+  for (const o of offenders) console.error(`  ${o}`);
+  console.error(
+    '\nIn dark mode that surface is Cyan/850, on which only white text reaches 4.5:1 —\n'
+    + 'every border, control outline and interactive fill is under 2:1 and cannot be\n'
+    + 'fixed by choosing a different stop. A component with controls, borders or\n'
+    + 'buttons belongs on surface/section-cards. See DDR-033.\n'
+  );
+  process.exit(1);
+}
+
 const checked = PAIRS.reduce((n, [, , , , m = 'both']) => n + (m === 'both' ? 2 : 1), 0);
 console.log(`check:contrast — ${checked} asserted pair-checks pass across both modes, `
   + `${accepted.length} accepted exception(s), ${open.length} open finding(s).`);
+console.log(`check:contrast — surface/small-cards confined to ${[...SMALL_CARD_ALLOWED].join(', ')}.`);

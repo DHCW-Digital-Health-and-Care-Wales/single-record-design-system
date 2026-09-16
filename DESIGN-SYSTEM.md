@@ -111,6 +111,14 @@ See `/foundations/tokens/colour/global.md` for the full primitive palette and `/
 **Dark mode has been reconciled against how components actually use the tokens**
 (DDR-026, 2026-09-03). It is no longer provisional.
 
+> One part of DDR-026 was reversed on 2026-09-16. It re-pointed
+> `surface/small-cards` in dark mode from Cyan/850 to Blue/900, half on the
+> grounds that the teal "turned every stat card saturated teal" — an aesthetic
+> preference recorded as a finding, over a binding the Figma file has always
+> carried. It is back to Cyan/850, and the surface is now **text-only**: nothing
+> but white reaches 4.5:1 on it, so borders, controls and links belong on
+> `surface/section-cards`. A build gate enforces that. See DDR-033.
+
 The reconciliation was done by extracting the real `(color, background-color)`
 pairs from the component stylesheets and computing every one in both modes,
 rather than by reviewing screens. Six failed in dark mode, none of them because
@@ -666,6 +674,10 @@ Design decisions that affect the system — token choices, pattern departures, s
 | DDR-027 | Icon sourcing tiers, and the rule against module icons |
 | DDR-028 | Icons carry no colour; `currentColor` only |
 | DDR-029 | One glyph, one meaning |
+| DDR-030 | Two-level tabs, and the sub-tab pill |
+| DDR-031 | Stat card is a component, and its three layouts |
+| DDR-032 | Five Figma pages: component, pattern or style |
+| DDR-033 | The dark-mode small-card surface is Cyan/850, and is text-only (supersedes part of DDR-026) |
 
 Use `DDR-000-template.md` as the starting point for new records. A DDR is required before any non-trivial structural change is made.
 

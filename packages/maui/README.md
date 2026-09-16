@@ -190,9 +190,14 @@ Not done yet, in rough order:
   MAUI's `FontAttributes` has no medium — both currently render regular.
 - **Add a `surface.header` semantic.** Header and bottom-bar chrome is neither a
   card nor the page background, and currently borrows `surface.section-cards`.
-- **Reconcile dark mode.** `surface.small-cards` is a saturated teal (`#0c7b99`)
-  in dark mode, which turns the stat cards teal beneath a navy section card. It
-  passes contrast; it is very likely not intended.
+- **`surface.small-cards` is a saturated teal in dark mode — settled, and
+  intended.** It turns a stat tile teal beneath a navy section card, which is
+  the point: it gives the tile its own plane. An earlier version of this note
+  called it "very likely not intended" and it was wrong. The surface is now
+  **text-only** — only white reaches 4.5:1 on it, and every border, control
+  outline and interactive fill is under 2:1 — so a MAUI stat tile puts white
+  labels on it and nothing else. Anything with a control goes on
+  `surface.section-cards`. See DDR-033.
 - **The Syncfusion theming layer** — `SfPdfViewer` wrapped as
   `SrDocumentViewer` against the spec, and default theming for whatever else
   survives the wrap-or-build decision.

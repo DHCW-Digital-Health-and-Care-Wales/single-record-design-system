@@ -218,7 +218,7 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  background-color: var(--sr-color-surface-small-cards);
+  background-color: var(--sr-color-surface-section-cards);
   border: 1px solid var(--sr-color-border-default);
   border-radius: var(--radius-sm);
   box-shadow: var(--elevation-overlay);
@@ -240,7 +240,7 @@
      the same left inset as a Select option, which keeps the two lists aligned
      when they sit in the same form. */
   padding: var(--space-2) var(--space-3);
-  background-color: var(--sr-color-surface-small-cards);
+  background-color: var(--sr-color-surface-section-cards);
   cursor: pointer;
 }
 .sr-search__suggestion + .sr-search__suggestion {

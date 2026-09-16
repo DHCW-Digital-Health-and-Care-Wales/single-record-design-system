@@ -146,11 +146,14 @@ Found while building the screen. None are blocking, all are real.
   must bundle `Roboto-Regular.ttf` and `Roboto-Bold.ttf` or every style in
   `Styles.xaml` silently falls back to San Francisco. This is the one thing an
   iOS build would tell you that Android cannot.
-- **`Surface/Small-cards` is `#0c7b99` in dark mode** — a saturated teal, so the
-  four stat cards turn teal while the section card below them stays navy. It
-  passes contrast (4.87:1 with white text) so it is not a defect, but it is
-  almost certainly not intended. Dark mode is provisional and unreconciled by
-  design; this is a concrete instance to settle.
+- **`Surface/Small-cards` is a saturated teal in dark mode — settled, and
+  intended.** The four stat cards turn teal while the section card below them
+  stays navy, which is what gives a tile its own plane. This note previously
+  called it "almost certainly not intended"; it was wrong, and Figma has bound
+  every Stat Card variant to that variable throughout. The surface is text-only
+  — white text is 4.87:1 on it and nothing else clears its threshold — so the
+  testbed's tiles should carry white labels and no borders or controls. See
+  DDR-033.
 - **Stat Card, Dashboard/Row cards and the week strip are Figma components with
   no spec and no DS implementation.** They are composed locally here. Two of the
   three look like system vocabulary and should probably be promoted.

@@ -15,7 +15,7 @@
   height: 60px;
   box-sizing: border-box;
   padding: var(--space-3);
-  background-color: var(--sr-color-surface-small-cards);
+  background-color: var(--sr-color-surface-section-cards);
   border-top: 1px solid var(--sr-color-border-subtle);
 }
 
