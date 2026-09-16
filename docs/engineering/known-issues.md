@@ -331,6 +331,48 @@ does not exist, which is the failure that actually happens.
 
 ---
 
+### A code window documented a component library that does not exist
+
+**Symptom:** The Blazor tab on every component page offered `<SrSelect>`,
+`<SrRadio>`, `<SrHeading>` and twenty-three others. None of them ship. A .NET
+engineer copying any of them gets a compile error naming a component nobody
+has ever written. The React tab had a smaller version of the same problem:
+`<Heading>`, `<Text>`, `<List>`, `<Divider>`, `<Label>`, `<Hint>`,
+`<Fieldset>` and `<Table.Column>` are not exported from `@dhcw/sr-react`.
+
+**Why:** Two different mistakes that look the same in a code panel.
+
+The Blazor one was a wrong mental model written down 47 times. `@dhcw/sr-blazor`
+is a **style layer**: it packs stylesheets, and a Blazor consumer writes markup
+with the `sr-*` classes exactly as an HTML consumer does. `SrButton` exists in
+`packages/blazor/src` but lives in the preview gallery, which is never packed —
+so even it was not something to tell a reader to use. The package README said
+all this correctly; the website had simply never been reconciled with it.
+
+The React one is the type scale. Typography is a style, not a component, so
+there is nothing to import: the class carries the size and the tag carries the
+document structure. Inventing `<Heading size="l" as="h2">` put a component in
+front of a rule that works better without one.
+
+**Fix:** Both tabs now show what the package actually ships. Blazor snippets are
+Razor markup with the design system classes and `@` bindings; typography
+snippets are plain elements with `sr-type-*` classes.
+
+**Prevented by:** `scripts/check-snippets.mjs`, wired into `build:site` and
+`build:pages`. It reads the built pages back, and fails if a snippet or a
+rendered preview uses an `sr-*` class that is not in the built stylesheet, a
+React component that `@dhcw/sr-react` does not export, or an `Sr…` component
+that `@dhcw/sr-blazor` does not pack. It reads the **built** CSS rather than
+the sources on purpose: a class defined in a file nobody imports is still a
+broken snippet. Comments are stripped before matching, so a snippet may warn
+"there is no `<Heading>`" without failing itself.
+
+**Also caught, on the first run:** `sr-radio--card-fill` on the Radios page.
+The class ships as `sr-radio--card-filled`, so that snippet rendered an
+unstyled radio and nothing said why.
+
+---
+
 ### Spreading `...rest` is not optional
 
 **Symptom:** A pre-filled date renders as an empty placeholder.
