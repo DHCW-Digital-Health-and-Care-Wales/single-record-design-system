@@ -1955,6 +1955,53 @@ textarea.sr-input__control {
   border-left: 1px solid var(--sr-color-border-subtle);
 }
 
+/* ═══ inset-text ══════════════════════════════════════════════════ */
+/**
+ * DHCW Single Record — Inset text
+ *
+ * A block of prose held apart from the prose around it. Author-written, always
+ * present, part of the page.
+ *
+ *   Inset text is part of the page. A banner is an event.
+ *
+ * That line is the whole boundary. A Notification banner appears because
+ * something happened — a save succeeded, a record is locked, the system goes
+ * down at 2am. Inset text was typed by whoever wrote the page and is there
+ * every time it loads. See DDR-032.
+ *
+ * Deliberately absent, because each would blur that boundary:
+ *   - no icon          — an icon reads as a status change
+ *   - no heading       — a heading makes it a section, not an aside
+ *   - no actions       — a button makes it a call to action, which IS a banner
+ *   - no status colour — a coloured bar reports something; nothing happened
+ *
+ * The Figma component (`3613:17859`) drew this in informational blue with
+ * `Status/Info` on the bar, which made it indistinguishable from the banner's
+ * Call to action variant. It has been rebound to `Surface/Subtle` and
+ * `Border/Strong`, and this file is that narrowed component.
+ */
+
+.sr-inset-text {
+  /* A neutral surface and a neutral bar: the block is set apart, not flagged.
+     Border/Strong is 3.44:1 on the page background — a visible boundary under
+     SC 1.4.11 — but it is never asked to carry meaning on its own. The
+     indentation and the surface do that, so it survives greyscale. */
+  background: var(--sr-color-surface-subtle);
+  border-left: 4px solid var(--sr-color-border-strong);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+
+  /* Type is inherited, like Link. Inset text sits inside body copy and must
+     read at whatever size that copy is set in; fixing a size here would make a
+     14px table note render at 16px. */
+  color: var(--sr-color-text-primary);
+}
+
+/* The block's own padding sets the space above the first line and below the
+   last. Without this the paragraph margins add to it and the text floats. */
+.sr-inset-text > :first-child { margin-top: 0; }
+.sr-inset-text > :last-child { margin-bottom: 0; }
+
 /* ═══ link ════════════════════════════════════════════════════════ */
 /**
  * DHCW Single Record — Link
@@ -4238,6 +4285,13 @@ textarea.sr-input__control {
    dash should be — normalising it into a filled disc would make "nothing here"
    look like a state. Text/Secondary clears 3:1 for SC 1.4.11. */
 .sr-status-indicator--none { color: var(--sr-color-text-secondary); }
+
+/* The dash comes from the outline icon set, which is drawn at 1px (DDR-013).
+   Beside three solid two-tone discs at 16px a 1px rule reads as a rendering
+   fault rather than a mark, so it takes the family's weight here. This is the
+   only place the icon set's stroke is overridden, and it is overridden in the
+   stylesheet rather than by redrawing the path — the geometry stays shared. */
+.sr-status-indicator--none svg { stroke-width: 2; }
 
 /* ═══ switch ══════════════════════════════════════════════════════ */
 /**

@@ -152,6 +152,17 @@ const PAIRS = [
   // an OPEN FINDING below rather than an assertion that reds the build every run.
   ['sr-color-interactive-destructive', 'sr-color-surface-background', 4.5,
     'Destructive link on the page (link.css)', 'light'],
+
+  // --- Inset text. The surface is the whole component, so both pairs on it are
+  //     load-bearing: the prose against it, and the bar that sets it apart.
+  //     The bar is non-text (3:1, SC 1.4.11) and is never asked to carry
+  //     meaning alone — the words do that — but it still has to be visible. ---
+  ['sr-color-text-primary', 'sr-color-surface-subtle', 4.5,
+    'Inset text prose (inset-text.css)'],
+  ['sr-color-border-strong', 'sr-color-surface-background', 3,
+    'Inset text bar against the page (inset-text.css)'],
+  ['sr-color-border-strong', 'sr-color-surface-subtle', 3,
+    'Inset text bar against its own surface (inset-text.css)'],
 ];
 
 /**

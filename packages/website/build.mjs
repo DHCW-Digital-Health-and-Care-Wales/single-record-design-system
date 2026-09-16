@@ -509,6 +509,7 @@ const SITE_COMPONENT_CSS = [
   'button', 'table', 'patient-banner', 'header', 'footer', 'bottom-nav',
   'breadcrumbs', 'switch', 'segmented-control', 'navigation', 'input',
   'tags', 'checkbox', 'radio', 'select', 'tabs', 'search', 'stat-card', 'link',
+  'inset-text',
 ];
 const COMPONENT_CSS_LINKS = (prefix) =>
   SITE_COMPONENT_CSS.map((c) => `<link rel="stylesheet" href="${prefix}assets/${c}.css">`).join('\n');
@@ -547,6 +548,7 @@ const SECTIONS = [
       { href: 'components/footer.html', label: 'Footer' },
       { href: 'components/header.html', label: 'Header' },
       { href: 'components/input.html', label: 'Input' },
+      { href: 'components/inset-text.html', label: 'Inset text' },
       { href: 'components/link.html', label: 'Link' },
       { href: 'components/navigation.html', label: 'Navigation' },
       { href: 'components/radio.html', label: 'Radio' },
@@ -3169,6 +3171,103 @@ ${renderMarkdown(md)}
 `;
 }
 
+// ─── Components: Inset text ───────────────────────────────────────────────────
+/**
+ * Inset text. The page has one job beyond showing the component: making the
+ * boundary against Notification banner impossible to miss, because that is the
+ * confusion the Figma file had (DDR-032) and it will recur every time someone
+ * reaches for "a box with a coloured edge".
+ */
+function insetTextBody() {
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'inset-text', 'guidelines.md'), 'utf8')));
+
+  const prose = (inner) => `<div style="max-width:60ch; font:var(--sr-type-body-m-font)">${inner}</div>`;
+
+  const inContext = prose(`
+<p style="margin-top:0">Medication recorded during this admission is listed below, in the order it
+was prescribed.</p>
+<div class="sr-inset-text">
+  <p>Medication stopped before admission is not shown here. Check the GP record for the
+  full prescribing history.</p>
+</div>
+<p style="margin-bottom:0">Doses are as prescribed, not as administered.</p>`);
+
+  const inheritsType = `<div style="display:flex; flex-direction:column; gap:24px">
+  <div style="font:var(--sr-type-body-m-font)">
+    <div class="sr-inset-text"><p>In a record view, at 16px body copy.</p></div>
+  </div>
+  <div style="font:var(--sr-type-body-s-font)">
+    <div class="sr-inset-text"><p>In a dense table area, at 14px — the same component.</p></div>
+  </div>
+</div>`;
+
+  const snippets = {
+    HTML: '<!-- Type is inherited, so it reads at whatever size the surrounding\n     copy is set in. There is no size modifier and no severity. -->\n<div class="sr-inset-text">\n  <p>Medication stopped before admission is not shown here.</p>\n</div>\n\n<!-- Use aside only where the content is genuinely tangential: that is\n     what the role tells a screen reader. -->\n<aside class="sr-inset-text">\n  <p>Results from before 2019 are held in the legacy system.</p>\n</aside>',
+    React: '<InsetText>\n  <p>Medication stopped before admission is not shown here.</p>\n</InsetText>\n\n{/* as: any element. Default "div". */}\n<InsetText as="aside">\n  <p>Results from before 2019 are held in the legacy system.</p>\n</InsetText>\n\n{/* There is no severity, icon, heading or actions prop. If you want one\n    of those, what you have is a notification banner. */}',
+    Blazor: '@* Stylesheet only — no component to install. *@\n<div class="sr-inset-text">\n  <p>Medication stopped before admission is not shown here.</p>\n</div>',
+    MAUI: `<!-- MAUI has no single-edge stroke, so the bar is a BoxView in a
+     two-column Grid beside the text. Not yet in Styles.xaml. -->
+<Grid ColumnDefinitions="4,*" ColumnSpacing="16"
+      BackgroundColor="{AppThemeBinding Light={StaticResource SrColorSurfaceSubtle}, Dark={StaticResource SrColorSurfaceSubtleDark}}"
+      Padding="0,12,16,12">
+    <BoxView Grid.Column="0"
+             Color="{AppThemeBinding Light={StaticResource SrColorBorderStrong}, Dark={StaticResource SrColorBorderStrongDark}}" />
+    <Label Grid.Column="1" StyleClass="BodyM"
+           Text="Medication stopped before admission is not shown here." />
+</Grid>`,
+  };
+
+  return `
+<p class="breadcrumbs"><a href="../components/breadcrumbs.html">Components</a> / Inset text</p>
+<h1>Inset text</h1>
+<p class="lede">A short block of text set apart from the text around it, so it is harder to skim
+past.</p>
+
+<h2>In a page</h2>
+<p>Inset text only makes sense with prose on both sides of it — the indentation is the whole
+signal, and there is nothing to indent from if it stands alone.</p>
+${showcase(inContext, 'inset-text', snippets)}
+
+<h2>It is part of the page. A banner is an event.</h2>
+<p>That sentence is the entire boundary, and it is worth learning because these two get confused
+constantly — both are a box with a coloured edge.</p>
+<p><strong>Inset text was typed by whoever wrote the page.</strong> It is there every time the page
+loads, it says something about the content around it, and nothing has happened.
+<strong>A notification banner appears because something happened</strong> — a save succeeded, a
+record is locked, the system goes down at 2am.</p>
+<div class="callout"><p>Inset text has <strong>no icon, no heading, no buttons and no status
+colour</strong>. Every one of those is missing on purpose. Add an icon and it reads as a status
+change; add a heading and it becomes a section; add a button and it is a call to action, which is a
+banner variant. If you find yourself wanting one, what you want is a notification banner.</p></div>
+<p>The Figma component was drawn in informational blue with the info status colour on its bar, and
+the frame beside it added a heading and two buttons — at which point it rendered the same thing as
+the banner's call-to-action variant. Two components that draw the same thing get used
+interchangeably and then drift apart. It has been narrowed to a neutral surface and a neutral bar.</p>
+
+<h2>The bar is neutral, and that is the point</h2>
+<p>A coloured bar reports that something has a status. Nothing has happened here, so there is
+nothing to report — the block is <em>set apart</em>, not <em>flagged</em>. The bar is
+<code>Border/Strong</code> at 3.44:1 on the page, which clears the 3:1 that WCAG 2.2 SC 1.4.11 wants
+for a non-text boundary without shouting.</p>
+<p>It also means the component survives greyscale: the indentation, the surface and the bar are
+three independent signals, and none of them is carrying the meaning. The words are.</p>
+
+<h2>The type is inherited</h2>
+<p>There is no size modifier. Inset text sits inside body copy and has to read at whatever size that
+copy is set in — 16px in a record view, 14px in a dense table area. Fixing a size here would render
+a note inside a table at the wrong one.</p>
+${showcase(inheritsType, 'inset-text-type', snippets)}
+
+<h2>Keep it short</h2>
+<p>Two or three sentences. Past a short paragraph the emphasis stops working, because a page where
+several blocks are emphasised has emphasised nothing. If it needs a heading to be followed, it is
+too long to be inset — make it a section.</p>
+<p>Never put two inset blocks next to each other.</p>
+
+${renderMarkdown(md)}
+`;
+}
+
 function searchBody() {
   const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'search', 'guidelines.md'), 'utf8')));
 
@@ -4876,6 +4975,11 @@ addPage({
   prefix: '../', body: searchBody(), extraScript: SEARCH_SCRIPT,
 });
 
+addPage({
+  file: 'components/inset-text.html', url: 'components/inset-text.html', title: 'Inset text',
+  section: 'Components', sectionId: 'components', activeHref: 'components/inset-text.html',
+  prefix: '../', body: insetTextBody(),
+});
 addPage({
   file: 'components/link.html', url: 'components/link.html', title: 'Link',
   section: 'Components', sectionId: 'components', activeHref: 'components/link.html',

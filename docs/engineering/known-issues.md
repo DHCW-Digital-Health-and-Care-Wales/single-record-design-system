@@ -331,6 +331,26 @@ does not exist, which is the failure that actually happens.
 
 ---
 
+### A blockquote nested in a list item kept its `>` on the way to Figma
+
+**Symptom:** A Figma Guidelines panel read "The line to hold is: > Inset text is
+part of the page." — with a literal angle bracket mid-sentence.
+
+**Why:** `guidelines-to-figma.mjs` strips the blockquote marker in a branch
+guarded by `line.startsWith('>')`. A blockquote *inside* a list item is
+indented, so it never starts with `>`; it fell through to the
+continuation-line branch, which appended it verbatim.
+
+**Fix:** strip the marker in the continuation branch too.
+
+**Prevented by:** `assertNoMarkdown()` now flags a surviving `> ` alongside
+`**`, a backtick, `](` and a table pipe. The pattern is deliberately
+space-angle-space, so guidance that mentions `<blockquote>` or any other HTML
+tag is not a false positive. Verified by removing the fix and confirming the
+script exits non-zero on the planted file, then restoring it.
+
+---
+
 ### A code window documented a component library that does not exist
 
 **Symptom:** The Blazor tab on every component page offered `<SrSelect>`,

@@ -4,7 +4,7 @@ The Single Record Design System provides the shared design language, component l
 
 This document is the primary reference for everyone working on Single Record — designers, engineers, and delivery leads.
 
-**Last reviewed:** 2026-09-14. Update this file whenever a component ships, a
+**Last reviewed:** 2026-09-16. Update this file whenever a component ships, a
 token is added, or a system-wide rule changes — not on a schedule. If it
 disagrees with `/foundations/tokens/` or `/components/`, those win and this file
 is out of date.
@@ -215,7 +215,7 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Footer | — (guidelines ✅) | ✅ | ✅ |
 | Header | — (guidelines ✅) | ✅ | ✅ |
 | Input | — | ✅ | ✅ |
-| Inset text | — (Figma only) | — | — |
+| Inset text | ✅ (guidelines ✅) | ✅ | ✅ |
 | Link | ✅ (guidelines ✅) | ✅ | ✅ |
 | Modal dialog | ✅ | ✅ | ✅ |
 | Navigation | — (guidelines ✅) | ✅ | ✅ |
@@ -248,8 +248,8 @@ kinds of thing behind one promise:
 | Figma page | Verdict | Next step |
 |---|---|---|
 | Link | Component | **Done** — spec corrected, guidelines written, web + React + page shipped |
-| Status Indicator | Style — the filled status icon family, already shipped as `.sr-status-indicator` | A section on the Icons page. The fourth mark is confirmed as `action/remove`; `.sr-status-indicator` needs a neutral variant using it |
-| Inset text | Component, narrowed to prose emphasis | Narrow in Figma, then spec, code, page |
+| Status Indicator | Style — the filled status icon family, already shipped as `.sr-status-indicator` | The neutral `none` mark ships, drawing `action/remove` from the icon set rather than a copied path. **Still to do:** its section on the Icons page |
+| Inset text | Component, narrowed to prose emphasis | **Done** — narrowed in Figma, spec + guidelines written, web + React + page shipped |
 | Notification banner | Component; its two Figma sets are one component with two properties | One set of 8 variants plus two booleans, then spec, code, page. Steps: `docs/figma-banner-and-error-messages.md` |
 | Error/Warning messages | Neither — shared form-field anatomy, already rendered by six components | Becomes a `Form field / Message` building block; the page is retitled **Errors** and gains the **error summary**, which is a pattern. Steps: `docs/figma-banner-and-error-messages.md` |
 
