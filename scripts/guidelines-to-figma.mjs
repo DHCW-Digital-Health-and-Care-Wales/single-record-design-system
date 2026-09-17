@@ -151,12 +151,19 @@ export function parseGuidelines(md) {
     }
 
     // A continuation line of the bullet above, or a paragraph of its own.
+    //
+    // The `>` is stripped here as well as in the branch above, because a
+    // blockquote nested inside a list item is INDENTED — so it never reaches
+    // that branch, and the marker rode into the panel as literal text
+    // ("The line to hold is: > Inset text is part of the page").
     const last = current.lines[current.lines.length - 1];
+    const text = line.trim().replace(/^>\s?/, '');
+    if (!text) continue;
     if (/^\s{2,}\S/.test(line) && last && last.prefix && !last.done) {
-      last.raw += ` ${line.trim()}`;
+      last.raw += ` ${text}`;
       continue;
     }
-    paragraph.push(line.trim());
+    paragraph.push(text);
   }
   flushParagraph();
   flushTable();
@@ -177,6 +184,10 @@ const LEFTOVER = [
   [/`/, 'a backtick'],
   [/\]\(/, 'a markdown link'],
   [/\|/, 'a table pipe'],
+  // A blockquote marker that survived, e.g. "The line to hold is: > …".
+  // Deliberately " > " with spaces both sides, so a mention of <blockquote>
+  // or an HTML tag in the guidance is not flagged.
+  [/\s>\s/, 'a blockquote marker (>)'],
 ];
 
 export function assertNoMarkdown({ sections }, label) {

@@ -126,7 +126,7 @@
   box-sizing: border-box;
   width: 20px;
   height: 20px;
-  background-color: var(--sr-color-surface-small-cards);
+  background-color: var(--sr-color-surface-section-cards);
   /* Border/Strong, not Border/Default — same SC 1.4.11 reasoning as Checkbox:
      Grey/200 gave 1.37:1 on white against the 3:1 the criterion requires. */
   border: var(--border-width-2) solid var(--sr-color-border-strong);
@@ -230,7 +230,7 @@
   width: 100%;
   min-height: 0;
   padding: var(--space-2) var(--space-3) var(--space-2) 40px; /* 12 pad + 20 ring + 8 gap */
-  background-color: var(--sr-color-surface-small-cards);
+  background-color: var(--sr-color-surface-section-cards);
   border: var(--border-width-default) solid var(--sr-color-border-default);
   border-radius: var(--radius-md);
 }

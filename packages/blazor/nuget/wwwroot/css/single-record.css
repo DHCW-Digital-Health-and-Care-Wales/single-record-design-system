@@ -115,7 +115,7 @@
   --sr-color-interactive-on-accent: #325083; /** Interactive text or icon sitting ON surface/accent — a current nav item, a row action. Same value as interactive/primary in light mode, so nothing changes here; it exists because dark mode needs a different answer. Primary is a FILL colour and stays saturated in dark, where an accent surface is also dark — 2.07:1. This token carries the light-on-dark counterpart instead. */
   --sr-color-interactive-on-accent-hover: #1e3050; /** Hover step for interactive/on-accent. Darker in light mode, lighter in dark — hover always moves away from the surface, and which direction that is depends on the mode. */
   --sr-color-surface-background: #f4f5f8; /** Default page/app background. */
-  --sr-color-surface-small-cards: #ffffff; /** Card and panel surfaces. */
+  --sr-color-surface-small-cards: #ffffff; /** A small card that carries TEXT ONLY and sits inside a section card — a stat tile, a count. White here, and the same white as section-cards, because light mode already separates the two planes with the page tint behind them. Dark mode is where the two diverge; see the dark description before putting anything other than text on this surface. */
   --sr-color-surface-section-cards: #ffffff; /** Primary background for card sections in modular layout. */
   --sr-color-surface-accent: #ebf5fa; /** Tinted surface — highlighted regions, callouts. */
   --sr-color-surface-subtle: #f4f5f8; /** Subtle section background — table rows, inactive tabs. */
@@ -959,7 +959,7 @@
   box-sizing: border-box;
   width: 20px;
   height: 20px;
-  background-color: var(--sr-color-surface-small-cards);
+  background-color: var(--sr-color-surface-section-cards);
   /* Border/Strong, not Border/Default. An unchecked box is a UI component
      boundary under WCAG 2.2 SC 1.4.11, which requires 3:1: Grey/200 gave
      1.37:1 on white, Border/Strong gives 3.75:1. Asserted by check:contrast,
@@ -1044,7 +1044,7 @@
   color: var(--sr-color-text-disabled);
 }
 .sr-checkbox__input:disabled + .sr-checkbox__label::before {
-  background-color: var(--sr-color-surface-small-cards);
+  background-color: var(--sr-color-surface-section-cards);
   border-color: var(--sr-color-border-disabled);
 }
 .sr-checkbox__input:disabled:checked + .sr-checkbox__label::before,
@@ -1378,7 +1378,7 @@
   height: 60px;
   box-sizing: border-box;
   padding: var(--space-3);
-  background-color: var(--sr-color-surface-small-cards);
+  background-color: var(--sr-color-surface-section-cards);
   border-top: 1px solid var(--sr-color-border-subtle);
 }
 
@@ -1954,6 +1954,53 @@ textarea.sr-input__control {
   padding-left: var(--space-2);
   border-left: 1px solid var(--sr-color-border-subtle);
 }
+
+/* ═══ inset-text ══════════════════════════════════════════════════ */
+/**
+ * DHCW Single Record — Inset text
+ *
+ * A block of prose held apart from the prose around it. Author-written, always
+ * present, part of the page.
+ *
+ *   Inset text is part of the page. A banner is an event.
+ *
+ * That line is the whole boundary. A Notification banner appears because
+ * something happened — a save succeeded, a record is locked, the system goes
+ * down at 2am. Inset text was typed by whoever wrote the page and is there
+ * every time it loads. See DDR-032.
+ *
+ * Deliberately absent, because each would blur that boundary:
+ *   - no icon          — an icon reads as a status change
+ *   - no heading       — a heading makes it a section, not an aside
+ *   - no actions       — a button makes it a call to action, which IS a banner
+ *   - no status colour — a coloured bar reports something; nothing happened
+ *
+ * The Figma component (`3613:17859`) drew this in informational blue with
+ * `Status/Info` on the bar, which made it indistinguishable from the banner's
+ * Call to action variant. It has been rebound to `Surface/Subtle` and
+ * `Border/Strong`, and this file is that narrowed component.
+ */
+
+.sr-inset-text {
+  /* A neutral surface and a neutral bar: the block is set apart, not flagged.
+     Border/Strong is 3.44:1 on the page background — a visible boundary under
+     SC 1.4.11 — but it is never asked to carry meaning on its own. The
+     indentation and the surface do that, so it survives greyscale. */
+  background: var(--sr-color-surface-subtle);
+  border-left: 4px solid var(--sr-color-border-strong);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+
+  /* Type is inherited, like Link. Inset text sits inside body copy and must
+     read at whatever size that copy is set in; fixing a size here would make a
+     14px table note render at 16px. */
+  color: var(--sr-color-text-primary);
+}
+
+/* The block's own padding sets the space above the first line and below the
+   last. Without this the paragraph margins add to it and the text floats. */
+.sr-inset-text > :first-child { margin-top: 0; }
+.sr-inset-text > :last-child { margin-bottom: 0; }
 
 /* ═══ link ════════════════════════════════════════════════════════ */
 /**
@@ -3132,7 +3179,7 @@ textarea.sr-input__control {
   box-sizing: border-box;
   width: 20px;
   height: 20px;
-  background-color: var(--sr-color-surface-small-cards);
+  background-color: var(--sr-color-surface-section-cards);
   /* Border/Strong, not Border/Default — same SC 1.4.11 reasoning as Checkbox:
      Grey/200 gave 1.37:1 on white against the 3:1 the criterion requires. */
   border: var(--border-width-2) solid var(--sr-color-border-strong);
@@ -3236,7 +3283,7 @@ textarea.sr-input__control {
   width: 100%;
   min-height: 0;
   padding: var(--space-2) var(--space-3) var(--space-2) 40px; /* 12 pad + 20 ring + 8 gap */
-  background-color: var(--sr-color-surface-small-cards);
+  background-color: var(--sr-color-surface-section-cards);
   border: var(--border-width-default) solid var(--sr-color-border-default);
   border-radius: var(--radius-md);
 }
@@ -3576,7 +3623,7 @@ textarea.sr-input__control {
   margin: 0;
   padding: 0;
   list-style: none;
-  background-color: var(--sr-color-surface-small-cards);
+  background-color: var(--sr-color-surface-section-cards);
   border: 1px solid var(--sr-color-border-default);
   border-radius: var(--radius-sm);
   box-shadow: var(--elevation-overlay);
@@ -3598,7 +3645,7 @@ textarea.sr-input__control {
      the same left inset as a Select option, which keeps the two lists aligned
      when they sit in the same form. */
   padding: var(--space-2) var(--space-3);
-  background-color: var(--sr-color-surface-small-cards);
+  background-color: var(--sr-color-surface-section-cards);
   cursor: pointer;
 }
 .sr-search__suggestion + .sr-search__suggestion {
@@ -4033,7 +4080,11 @@ textarea.sr-input__control {
   row-gap: var(--space-1);
   align-content: start;
   box-sizing: border-box;
-  background-color: var(--sr-color-surface-section-cards);
+  /* Surface/Small Cards, which is what all ten Figma variants are bound to. It
+     was section-cards here until 2026-09-16 — the same value in both modes, so
+     nothing looked wrong, but it meant the dark-mode card had no plane of its
+     own. See the dark-mode block at the foot of this file. */
+  background-color: var(--sr-color-surface-small-cards);
   border-radius: var(--radius-md);
   box-shadow: var(--elevation-raised);
 
@@ -4178,6 +4229,31 @@ textarea.sr-input__control {
    hand-written HTML. */
 .sr-stat-card--inline .sr-stat-card__icon { display: none; }
 
+/* ---------- Dark mode: everything on the card goes white ----------
+   In dark mode Surface/Small Cards is Cyan/850, the teal that makes a stat tile
+   read as its own plane against the navy section card behind it (2.70:1, where
+   the two matching left it at 1.00:1). See DDR-033.
+
+   Cyan/850 sits in the middle of the luminance range, so almost nothing reads
+   on it. White is 4.87:1 — over the 4.5:1 line, but only just, and there is no
+   headroom below it: `text/secondary` is 3.56:1, and the lightest grey that
+   still reads as grey is under the line too. The full table is in DDR-033.
+   So the secondary line cannot stay secondary *by colour* here. It takes
+   `text/on-fill`, which is white in both modes precisely for saturated fills,
+   and the hierarchy is carried by size instead — 24px value, 14px label, 12px
+   support, which is a stronger signal than the tint was anyway.
+
+   This is also why this surface is text-only. A border, a control outline or an
+   interactive fill on the teal is under 2:1 and cannot be fixed by choosing a
+   different stop, which is what keeps checkbox cards, radio cards, the search
+   menu and the footer on section-cards. */
+[data-theme="dark"] .sr-stat-card__support,
+[data-theme="dark"] .sr-stat-card__icon,
+[data-theme="dark"] .sr-stat-card__delta--neutral,
+[data-theme="dark"] .sr-stat-card--inline .sr-stat-card__label {
+  color: var(--sr-color-text-on-fill);
+}
+
 /* ---------- Row of cards ----------
    Provided because every use of this component so far has been a row of them,
    and a grid written from scratch each time is a grid that drifts. Stacked
@@ -4227,6 +4303,24 @@ textarea.sr-input__control {
 .sr-status-indicator--success { color: var(--sr-color-status-success); }
 .sr-status-indicator--error { color: var(--sr-color-status-critical); }
 .sr-status-indicator--warning { color: var(--sr-color-status-warning); }
+
+/* "No status recorded" — the dash the Figma page draws as its fourth mark,
+   confirmed as the `action/remove` icon rather than a new one. It is the
+   conventional not-applicable mark in a status column, so it is muted rather
+   than coloured: there is nothing to report, and a colour would report it.
+
+   It is the one mark in the family that is a bare stroke rather than a glyph
+   knocked out of a filled shape. That is what is drawn, and it is also what a
+   dash should be — normalising it into a filled disc would make "nothing here"
+   look like a state. Text/Secondary clears 3:1 for SC 1.4.11. */
+.sr-status-indicator--none { color: var(--sr-color-text-secondary); }
+
+/* The dash comes from the outline icon set, which is drawn at 1px (DDR-013).
+   Beside three solid two-tone discs at 16px a 1px rule reads as a rendering
+   fault rather than a mark, so it takes the family's weight here. This is the
+   only place the icon set's stroke is overridden, and it is overridden in the
+   stylesheet rather than by redrawing the path — the geometry stays shared. */
+.sr-status-indicator--none svg { stroke-width: 2; }
 
 /* ═══ switch ══════════════════════════════════════════════════════ */
 /**

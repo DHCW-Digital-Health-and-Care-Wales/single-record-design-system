@@ -15,7 +15,7 @@
       },
       "surface": {
         "background":     { "$type": "color", "$value": "{color.blue.50}",       "$description": "Default page/app background." },
-        "small-cards":    { "$type": "color", "$value": "{color.white.default}", "$description": "Card and panel surfaces." },
+        "small-cards":    { "$type": "color", "$value": "{color.white.default}", "$description": "A small card that carries TEXT ONLY and sits inside a section card — a stat tile, a count. White here, and the same white as section-cards, because light mode already separates the two planes with the page tint behind them. Dark mode is where the two diverge; see the dark description before putting anything other than text on this surface." },
         "section-cards":  { "$type": "color", "$value": "{color.white.default}", "$description": "Primary background for card sections in modular layout." },
         "accent":         { "$type": "color", "$value": "{color.cyan.100}",      "$description": "Tinted surface — highlighted regions, callouts." },
         "subtle":         { "$type": "color", "$value": "{color.blue.50}",       "$description": "Subtle section background — table rows, inactive tabs." }

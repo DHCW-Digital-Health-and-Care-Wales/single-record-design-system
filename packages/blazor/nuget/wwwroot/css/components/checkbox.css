@@ -142,7 +142,7 @@
   box-sizing: border-box;
   width: 20px;
   height: 20px;
-  background-color: var(--sr-color-surface-small-cards);
+  background-color: var(--sr-color-surface-section-cards);
   /* Border/Strong, not Border/Default. An unchecked box is a UI component
      boundary under WCAG 2.2 SC 1.4.11, which requires 3:1: Grey/200 gave
      1.37:1 on white, Border/Strong gives 3.75:1. Asserted by check:contrast,
@@ -227,7 +227,7 @@
   color: var(--sr-color-text-disabled);
 }
 .sr-checkbox__input:disabled + .sr-checkbox__label::before {
-  background-color: var(--sr-color-surface-small-cards);
+  background-color: var(--sr-color-surface-section-cards);
   border-color: var(--sr-color-border-disabled);
 }
 .sr-checkbox__input:disabled:checked + .sr-checkbox__label::before,

@@ -261,7 +261,7 @@
     <Color x:Key="SrColorInteractiveOnAccentDark">#7eb0d9</Color>
     <Color x:Key="SrColorInteractiveOnAccentHoverDark">#aecce8</Color>
     <Color x:Key="SrColorSurfaceBackgroundDark">#1b294a</Color>
-    <Color x:Key="SrColorSurfaceSmallCardsDark">#1e3050</Color>
+    <Color x:Key="SrColorSurfaceSmallCardsDark">#0c7b99</Color>
     <Color x:Key="SrColorSurfaceSectionCardsDark">#1e3050</Color>
     <Color x:Key="SrColorSurfaceAccentDark">#1e3050</Color>
     <Color x:Key="SrColorSurfaceSubtleDark">#464c64</Color>

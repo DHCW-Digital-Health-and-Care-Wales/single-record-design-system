@@ -42,7 +42,11 @@
   row-gap: var(--space-1);
   align-content: start;
   box-sizing: border-box;
-  background-color: var(--sr-color-surface-section-cards);
+  /* Surface/Small Cards, which is what all ten Figma variants are bound to. It
+     was section-cards here until 2026-09-16 — the same value in both modes, so
+     nothing looked wrong, but it meant the dark-mode card had no plane of its
+     own. See the dark-mode block at the foot of this file. */
+  background-color: var(--sr-color-surface-small-cards);
   border-radius: var(--radius-md);
   box-shadow: var(--elevation-raised);
 
@@ -186,6 +190,31 @@
    least. The React component drops it from the markup; this is the backstop for
    hand-written HTML. */
 .sr-stat-card--inline .sr-stat-card__icon { display: none; }
+
+/* ---------- Dark mode: everything on the card goes white ----------
+   In dark mode Surface/Small Cards is Cyan/850, the teal that makes a stat tile
+   read as its own plane against the navy section card behind it (2.70:1, where
+   the two matching left it at 1.00:1). See DDR-033.
+
+   Cyan/850 sits in the middle of the luminance range, so almost nothing reads
+   on it. White is 4.87:1 — over the 4.5:1 line, but only just, and there is no
+   headroom below it: `text/secondary` is 3.56:1, and the lightest grey that
+   still reads as grey is under the line too. The full table is in DDR-033.
+   So the secondary line cannot stay secondary *by colour* here. It takes
+   `text/on-fill`, which is white in both modes precisely for saturated fills,
+   and the hierarchy is carried by size instead — 24px value, 14px label, 12px
+   support, which is a stronger signal than the tint was anyway.
+
+   This is also why this surface is text-only. A border, a control outline or an
+   interactive fill on the teal is under 2:1 and cannot be fixed by choosing a
+   different stop, which is what keeps checkbox cards, radio cards, the search
+   menu and the footer on section-cards. */
+[data-theme="dark"] .sr-stat-card__support,
+[data-theme="dark"] .sr-stat-card__icon,
+[data-theme="dark"] .sr-stat-card__delta--neutral,
+[data-theme="dark"] .sr-stat-card--inline .sr-stat-card__label {
+  color: var(--sr-color-text-on-fill);
+}
 
 /* ---------- Row of cards ----------
    Provided because every use of this component so far has been a row of them,

@@ -92,7 +92,7 @@
     <Color x:Key="SrColorInteractiveOnAccent">#7eb0d9</Color>
     <Color x:Key="SrColorInteractiveOnAccentHover">#aecce8</Color>
     <Color x:Key="SrColorSurfaceBackground">#1b294a</Color>
-    <Color x:Key="SrColorSurfaceSmallCards">#1e3050</Color>
+    <Color x:Key="SrColorSurfaceSmallCards">#0c7b99</Color>
     <Color x:Key="SrColorSurfaceSectionCards">#1e3050</Color>
     <Color x:Key="SrColorSurfaceAccent">#1e3050</Color>
     <Color x:Key="SrColorSurfaceSubtle">#464c64</Color>

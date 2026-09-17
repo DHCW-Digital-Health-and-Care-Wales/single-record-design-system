@@ -11,6 +11,131 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 ---
 
+## Checkpoint — 2026-09-16 (Inset text ships; the code windows were fiction; DDR-033 restores the dark teal)
+
+### Start here if you are picking up the notification banner
+
+**The plan is written and is `docs/figma-banner-and-error-messages.md`.** Eight
+steps, in order, for merging `Notification Banner/Severity` (`2561:21695`) and
+`Notification Banner/Variants` (`2561:21735`) into one set — they are two
+properties of one component, not two components (DDR-032). Read it before
+touching either set: the order matters, because renaming a property detaches
+every instance bound to it and deleting a set orphans its instances.
+
+**Steps 3 and 7 are the design lead's, not an agent's.** Both re-point *live*
+instances sitting on real screens in `PAGES` and `PATTERNS`, and the old set
+never recorded a severity — so deciding whether a given banner was meant to be
+Warning-Inline or Error-Global is a judgement per instance. Step 1 (find and
+list every instance of both sets first) can and should be done for them before
+they start. Steps 2, 4, 5, 6 and 8 are mechanical.
+
+The same doc carries the Errors-page repurposing: error/warning messages are
+neither a component nor a pattern but shared form-field anatomy, and the real
+missing piece is an **error summary**, which is a pattern and is still unbuilt.
+
+### Inset text shipped — the third of DDR-032's five
+
+`components/inset-text/{spec,guidelines}.md`, `packages/web/src/inset-text/`,
+`packages/react/src/inset-text/`, stories, a DS website page, and Figma
+`Guidelines/Inset text` (`5287:20`). The page's generic "Sample Usage notes"
+boilerplate (menu items, badge counts, icon placeholders) was removed rather
+than rewritten, as on the Link page.
+
+Narrowed as decided: neutral `Surface/Subtle` with a 4px `Border/Strong` bar,
+and **no icon, no heading, no buttons, no status colour**. The boundary is one
+sentence and it is worth keeping in those words:
+
+> **Inset text is part of the page. A banner is an event.**
+
+### The code windows on the website documented software that does not exist
+
+The single biggest finding of this session, and it had been shipping for months.
+
+**The Blazor tab offered 26 component names across 47 references** — `SrSelect`,
+`SrRadio`, `SrHeading`, `SrTable`, `SrIcon` and the rest. **None of them ship.**
+`@dhcw/sr-blazor` packs stylesheets; a Blazor consumer writes markup with the
+`sr-*` classes exactly as an HTML consumer does, which `packages/blazor/README.md`
+has said correctly all along. Even `SrButton` lives in the preview gallery, which
+is never packed. Every Blazor snippet is now Razor markup.
+
+**The React tab invented a typography API** — `Heading`, `Text`, `List`,
+`Divider`, `Label`, `Hint`, `Fieldset`, `Table.Column`. Type is a style, not a
+component: the class carries the size and the tag carries the document
+structure.
+
+`scripts/check-snippets.mjs` now reads the built pages back and fails on a class
+absent from the built stylesheet, a React component `@dhcw/sr-react` does not
+export, or an `Sr…` component `@dhcw/sr-blazor` does not pack — snippets and
+rendered previews alike. Wired into `build:site` and `build:pages`. It found
+`sr-radio--card-fill` on its first run; the class ships as `--card-filled`.
+
+**Checked against the BUILT css, not the sources.** A class defined in a file
+nobody imports is still a broken snippet.
+
+### DDR-033 — the dark-mode small-card teal is restored, and is text-only
+
+The design lead asked where the Cyan/850 dark-mode stat-card surface had gone.
+It had gone in DDR-026, on two stated grounds of which only one was a ground:
+the focus ring at 1.23:1 was real; *"turned every stat card saturated teal under
+a navy section card"* was an aesthetic preference written down as a finding,
+over a binding the Figma file has always carried on all ten Stat Card variants.
+
+Two things were also true and unrecorded: **the web stat card never consumed the
+token at all** (it was on `section-cards`, same value, so nothing looked wrong),
+and **four stylesheets had drifted onto it** — checkbox and radio card variants,
+the search menu, the footer — none of which Figma binds there.
+
+**The constraint that actually governs it:** Cyan/850 is mid-luminance, so
+nothing reads on it but white (4.87:1). `text/secondary` 3.56:1, `border/strong`
+1.90:1, `border/default` 1.05:1, `interactive/primary` 1.31:1, focus ring
+1.23:1 — none fixable by picking a different stop, because there is no room
+above it or below it.
+
+So it is back, redefined as **text-only**. The stat card consumes it and its
+secondary lines go white via `text/on-fill` (hierarchy by size: 24/14/12). The
+four control-bearing stylesheets moved to `section-cards` — a zero-pixel change
+at the time, since both tokens held the same value.
+
+**Enforced, not just written:** `check:contrast` fails if any stylesheet outside
+the allowed set references `--sr-color-surface-small-cards`. It is a usage rule,
+so a pair-check cannot express it — and a paragraph would not have held, given
+the token was already re-pointed once on taste and four stylesheets drifted onto
+it with nobody deciding.
+
+**The lesson worth carrying:** when a decision record gives two reasons, check
+whether both are reasons. This one shipped because an aesthetic judgement was
+laundered into a finding and nobody re-read it. The MAUI README and testbed
+notes both repeated *"almost certainly not intended"* for months; both are now
+corrected.
+
+### Two smaller fixes
+
+- **`check:ds` was failing on `main`.** The status indicator's neutral dash was
+  a hand-copied path — the fourth inline SVG in a file whose other three are
+  two-tone filled marks genuinely outside the icon set. It now draws
+  `action/remove` from the set, so it cannot drift when the icon is redrawn.
+  The stylesheet gives it the family's stroke weight.
+- **`guidelines-to-figma.mjs` kept the `>`** on a blockquote nested inside a
+  list item: that branch is guarded by `startsWith('>')` and an indented
+  blockquote never starts with one. `assertNoMarkdown()` now catches a surviving
+  marker, matched as space-angle-space so `<blockquote>` is not a false positive.
+
+### Open, in the order they are worth doing
+
+1. **Notification banner** — see the top of this checkpoint.
+2. **Error summary** — a new pattern, the real gap behind the Errors page.
+3. **Status indicator's section on the Icons page** — the last DDR-032 item
+   with nothing shipped. It is a style, not a component page.
+4. **The destructive link's dark-mode colour** — an open finding in
+   `check-contrast.mjs` with two options written out. Design lead decides.
+5. **The footer in dark mode.** Figma binds it to `Surface/Small Cards`, which
+   is now the teal. Code moved it to `section-cards` because the footer carries
+   buttons, and `interactive/primary` is 1.31:1 on the teal. Either Figma is
+   re-pointed or the footer's buttons are rethought — it is a real disagreement
+   between file and code, not an oversight.
+
+---
+
 ## Checkpoint — 2026-09-14 (Link ships; DDR-032 classifies five pages; card spacing)
 
 ### Link is the first of the five (DDR-032) to ship

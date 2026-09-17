@@ -115,7 +115,7 @@
   --sr-color-interactive-on-accent: #325083; /** Interactive text or icon sitting ON surface/accent — a current nav item, a row action. Same value as interactive/primary in light mode, so nothing changes here; it exists because dark mode needs a different answer. Primary is a FILL colour and stays saturated in dark, where an accent surface is also dark — 2.07:1. This token carries the light-on-dark counterpart instead. */
   --sr-color-interactive-on-accent-hover: #1e3050; /** Hover step for interactive/on-accent. Darker in light mode, lighter in dark — hover always moves away from the surface, and which direction that is depends on the mode. */
   --sr-color-surface-background: #f4f5f8; /** Default page/app background. */
-  --sr-color-surface-small-cards: #ffffff; /** Card and panel surfaces. */
+  --sr-color-surface-small-cards: #ffffff; /** A small card that carries TEXT ONLY and sits inside a section card — a stat tile, a count. White here, and the same white as section-cards, because light mode already separates the two planes with the page tint behind them. Dark mode is where the two diverge; see the dark description before putting anything other than text on this surface. */
   --sr-color-surface-section-cards: #ffffff; /** Primary background for card sections in modular layout. */
   --sr-color-surface-accent: #ebf5fa; /** Tinted surface — highlighted regions, callouts. */
   --sr-color-surface-subtle: #f4f5f8; /** Subtle section background — table rows, inactive tabs. */

@@ -509,6 +509,7 @@ const SITE_COMPONENT_CSS = [
   'button', 'table', 'patient-banner', 'header', 'footer', 'bottom-nav',
   'breadcrumbs', 'switch', 'segmented-control', 'navigation', 'input',
   'tags', 'checkbox', 'radio', 'select', 'tabs', 'search', 'stat-card', 'link',
+  'inset-text',
 ];
 const COMPONENT_CSS_LINKS = (prefix) =>
   SITE_COMPONENT_CSS.map((c) => `<link rel="stylesheet" href="${prefix}assets/${c}.css">`).join('\n');
@@ -547,6 +548,7 @@ const SECTIONS = [
       { href: 'components/footer.html', label: 'Footer' },
       { href: 'components/header.html', label: 'Header' },
       { href: 'components/input.html', label: 'Input' },
+      { href: 'components/inset-text.html', label: 'Inset text' },
       { href: 'components/link.html', label: 'Link' },
       { href: 'components/navigation.html', label: 'Navigation' },
       { href: 'components/radio.html', label: 'Radio' },
@@ -916,20 +918,20 @@ function headerBody() {
 </header>`;
   const desktop1Snippets = {
     HTML: '<header class="sr-header">\n  <div class="sr-header__utility">…</div>\n  <div class="sr-header__main">\n    <span class="sr-header__logo">…</span>\n    <div class="sr-header__search">…</div>\n    <div class="sr-header__actions">…</div>\n  </div>\n</header>',
-    React: '<Header\n  variant="desktop"   // "desktop" | "desktop-2" | "mobile"\n  logo={<LogoLockup />}\n  initials="AB"\n  onSearch={handleSearch}\n  onReportIssue={openIssueForm}\n  onLanguageToggle={toggleWelsh}\n/>',
-    Blazor: '<SrHeader Variant="Desktop" Initials="AB" />',
+    React: '// The lockup is a brand asset, not a component: import the published\n// data URI and pass it as a node.\nimport { logoFullSrc } from \'@dhcw/sr-web/src/assets/logo.js\';\n\n<Header\n  variant="desktop"   // "desktop" | "desktop-2" | "mobile"\n  logo={<img src={logoFullSrc} alt="GIG Cymru NHS Wales" />}\n  initials="AB"\n  onSearch={handleSearch}\n  onReportIssue={openIssueForm}\n  onLanguageToggle={toggleWelsh}\n/>',
+    Blazor: '@* @dhcw/sr-blazor ships stylesheets, not components — write the markup\n   and bind your own handlers. *@\n<header class="sr-header">\n  <div class="sr-header__utility">…</div>\n  <div class="sr-header__main">\n    <span class="sr-header__logo"><img src="@LogoSrc" alt="GIG Cymru NHS Wales" /></span>\n    <div class="sr-header__search">…</div>\n    <div class="sr-header__actions">…</div>\n  </div>\n</header>',
     MAUI: '<!-- Desktop 1 pairs with a browser-width layout MAUI does not have —\n     MAUI is mobile only (phone, tablet); see foundations/grid-and-layout.md.\n     Use the mobile type below for the MAUI header instead. -->',
   };
   const barSnippets = {
     HTML: '<header class="sr-header sr-header--bar">\n  <div class="sr-header__main">\n    <div class="sr-header__search">…</div>\n    <div class="sr-header__cluster">…</div>\n  </div>\n</header>',
     React: '<Header\n  variant="desktop-2"   // "desktop" | "desktop-2" | "mobile"\n  initials="AB"\n  org="Cardiff and Vale UHB"\n  onSearch={handleSearch}\n  onLanguageToggle={toggleWelsh}\n/>',
-    Blazor: '<SrHeader Variant="Desktop2" Initials="AB" />',
+    Blazor: '@* Stylesheet only — no SrHeader component ships. *@\n<header class="sr-header sr-header--bar">\n  <div class="sr-header__main">\n    <div class="sr-header__search">…</div>\n    <div class="sr-header__cluster">…</div>\n  </div>\n</header>',
     MAUI: '<!-- Desktop 2 pairs with the sidebar Navigation, a browser-width pattern —\n     MAUI is mobile only (phone, tablet); see foundations/grid-and-layout.md.\n     Use the mobile type below for the MAUI header instead. -->',
   };
   const mobileSnippets = {
     HTML: '<header class="sr-header sr-header--mobile sr-header--centered">\n  <div class="sr-header__main">\n    <button class="sr-header__menu">…</button>\n    <span class="sr-header__logo">…</span>\n    <div class="sr-header__actions">…</div>\n  </div>\n</header>',
-    React: '<Header\n  variant="mobile"\n  showMenu\n  logo={<LogoMark />}\n  initials="AB"\n  onMenuClick={openDrawer}\n/>',
-    Blazor: '<SrHeader Variant="Mobile" ShowMenu="true" Initials="AB" />',
+    React: '// The symbol mark, for the compact bar.\nimport { logoSymbolSrc } from \'@dhcw/sr-web/src/assets/logo.js\';\n\n<Header\n  variant="mobile"\n  showMenu\n  logo={<img src={logoSymbolSrc} alt="GIG Cymru NHS Wales" />}\n  initials="AB"\n  onMenuClick={openDrawer}\n/>',
+    Blazor: '@* Stylesheet only — no SrHeader component ships. *@\n<header class="sr-header sr-header--mobile sr-header--centered">\n  <div class="sr-header__main">\n    <button type="button" class="sr-header__menu" aria-label="Open menu" @onclick="OpenDrawer">…</button>\n    <span class="sr-header__logo">…</span>\n    <div class="sr-header__actions">…</div>\n  </div>\n</header>',
     MAUI: `<Grid BackgroundColor="{AppThemeBinding Light={StaticResource SrColorSurfaceSectionCards}, Dark={StaticResource SrColorSurfaceSectionCardsDark}}"
       ColumnDefinitions="Auto,*,Auto" Padding="16,12" MinimumHeightRequest="64">
 
@@ -1001,7 +1003,7 @@ function footerBody() {
   const snippets = {
     HTML: '<footer class="sr-footer">\n  <span class="sr-footer__version">v 0.1.0.1112</span>\n  <div class="sr-footer__actions">…</div>\n</footer>',
     React: '<Footer\n  version="v 0.1.0.1112"\n  onSave={handleSave}\n  onComplete={handleComplete}\n/>',
-    Blazor: '<SrFooter Version="v 0.1.0.1112" />',
+    Blazor: '@* Stylesheet only — no SrFooter component ships. *@\n<footer class="sr-footer">\n  <span class="sr-footer__version">v 0.1.0.1112</span>\n  <div class="sr-footer__actions">\n    <button type="button" class="sr-button sr-button--secondary" @onclick="Save">Save</button>\n    <button type="button" class="sr-button sr-button--primary" @onclick="Complete">Complete</button>\n  </div>\n</footer>',
     // This is the Desktop type (Figma 3015:24776) only — Footer's Mobile type
     // (665:16526) isn't a scaled-down version of this bar, see the note below.
     // A version-and-actions strip is a browser-width pattern MAUI has no
@@ -1027,7 +1029,7 @@ ${navItems.map((n) => `  <a class="sr-bottom-nav__item" href="#"${n.current ? ' 
   const bottomNavSnippets = {
     HTML: '<nav class="sr-bottom-nav" aria-label="Primary">\n  <a class="sr-bottom-nav__item" href="/home" aria-current="page">\n    <span class="sr-bottom-nav__icon">…</span>\n    <span class="sr-bottom-nav__label">Home</span>\n  </a>\n  …\n</nav>',
     React: '<BottomNav\n  items={[\n    { icon: "nav/home", label: "Home", href: "/home" },\n    { icon: "schedule/appointment", label: "Diary", href: "/diary" },\n    …\n  ]}\n  current="Home"\n/>',
-    Blazor: '<SrBottomNav Items="@navItems" Current="Home" />',
+    Blazor: '@* Stylesheet only — no SrBottomNav component ships. *@\n<nav class="sr-bottom-nav" aria-label="Primary">\n  @foreach (var item in NavItems)\n  {\n    <a class="sr-bottom-nav__item" href="@item.Href"\n       aria-current="@(item.Label == Current ? "page" : null)">\n      <span class="sr-bottom-nav__icon">…</span>\n      <span class="sr-bottom-nav__label">@item.Label</span>\n    </a>\n  }\n</nav>',
     MAUI: `<!-- Icon above label, centred. The current destination takes
      Interactive/Primary; the rest take Text/Secondary. -->
 <Grid ColumnDefinitions="*,*,*,*,*"
@@ -1291,7 +1293,7 @@ function patientBannerBody() {
   const snippets = {
     HTML: '<section class="sr-patient-banner" aria-label="Patient: JOHN, Elvet George (Mr)">\n  <div class="sr-patient-banner__alerts">…</div>\n  <div class="sr-patient-banner__identity">…</div>\n  <div class="sr-patient-banner__actions">…</div>\n</section>\n\n<!-- Border type -->\n<section class="sr-patient-banner sr-patient-banner--border">…</section>\n<!-- Collapsed state -->\n<section class="sr-patient-banner sr-patient-banner--collapsed">…</section>',
     React: '<PatientBanner\n  patient={patient}\n  reactions={reactions}\n  warnings={3}\n  type="fill"          // "fill" | "border"\n  expanded={expanded}  // false renders the collapsed row\n  onToggle={() => setExpanded((v) => !v)}\n  onCopy={(v) => navigator.clipboard?.writeText(v)}\n  actions={<>…</>}\n/>',
-    Blazor: '<SrPatientBanner Patient="@patient" Type="Fill" Expanded="@expanded" />',
+    Blazor: '@* Stylesheet only — no SrPatientBanner component ships. The banner is a\n   composition, so the markup is what you assemble in your own component. *@\n<section class="sr-patient-banner @(Expanded ? "" : "sr-patient-banner--collapsed")"\n         aria-label="Patient: @Patient.DisplayName">\n  <div class="sr-patient-banner__alerts">…</div>\n  <div class="sr-patient-banner__identity">…</div>\n  <div class="sr-patient-banner__actions">…</div>\n</section>',
     MAUI: `<!-- A native composite, not a stock control. Surfaces, rules and status
      colours all come from the token layer. -->
 <Border BackgroundColor="{AppThemeBinding Light={StaticResource SrColorSurfaceSectionCards}, Dark={StaticResource SrColorSurfaceSectionCardsDark}}">
@@ -1364,16 +1366,20 @@ function typographyBody() {
 <h3 class="sr-type-heading-m">Repeat prescriptions</h3>
 <h4 class="sr-type-heading-s">Issued in the last 6 months</h4>
 <h5 class="sr-type-heading-xs">Dosage changes</h5>`,
-    React: `<Heading size="xl" as="h1">Patient summary</Heading>
-<Heading size="l"  as="h2">Current medication</Heading>
-<Heading size="m"  as="h3">Repeat prescriptions</Heading>
-<Heading size="s"  as="h4">Issued in the last 6 months</Heading>
-<Heading size="xs" as="h5">Dosage changes</Heading>`,
-    Blazor: `<SrHeading Size="HeadingSize.Xl" Level="1">Patient summary</SrHeading>
-<SrHeading Size="HeadingSize.L"  Level="2">Current medication</SrHeading>
-<SrHeading Size="HeadingSize.M"  Level="3">Repeat prescriptions</SrHeading>
-<SrHeading Size="HeadingSize.S"  Level="4">Issued in the last 6 months</SrHeading>
-<SrHeading Size="HeadingSize.Xs" Level="5">Dosage changes</SrHeading>`,
+    React: `{/* Type is a style layer, not a component. There is no <Heading>: the
+    class carries the size and the tag carries the document structure, so
+    the two can differ without either lying. */}
+<h1 className="sr-type-heading-xl">Patient summary</h1>
+<h2 className="sr-type-heading-l">Current medication</h2>
+<h3 className="sr-type-heading-m">Repeat prescriptions</h3>
+<h4 className="sr-type-heading-s">Issued in the last 6 months</h4>
+<h5 className="sr-type-heading-xs">Dosage changes</h5>`,
+    Blazor: `@* Same classes. @dhcw/sr-blazor ships the stylesheet, not components. *@
+<h1 class="sr-type-heading-xl">Patient summary</h1>
+<h2 class="sr-type-heading-l">Current medication</h2>
+<h3 class="sr-type-heading-m">Repeat prescriptions</h3>
+<h4 class="sr-type-heading-s">Issued in the last 6 months</h4>
+<h5 class="sr-type-heading-xs">Dosage changes</h5>`,
     MAUI: `<!-- The type scale is StyleClass, so a Label carries its role, not its size. -->
 <Label StyleClass="HeadingXl" Text="Patient summary" />
 <Label StyleClass="HeadingL"  Text="Current medication" />
@@ -1395,16 +1401,26 @@ function typographyBody() {
 <fieldset>
   <legend class="sr-type-heading-s">Contact preferences</legend>
 </fieldset>`,
-    React: `<Label htmlFor="nhs-number">NHS number</Label>
-<Hint id="nhs-number-hint">10 digits, spaced in groups of 3, 3 and 4</Hint>
+    React: `{/* Label and hint are type classes on the real elements. Input is a
+    component — it already renders its own label and hint, so reach for
+    these classes only outside a form field. */}
+<label className="sr-type-label" htmlFor="nhs-number">NHS number</label>
+<span className="sr-type-caption" id="nhs-number-hint">
+  10 digits, spaced in groups of 3, 3 and 4
+</span>
 <Input id="nhs-number" aria-describedby="nhs-number-hint" />
 
-<Fieldset legend="Contact preferences" legendSize="s" />`,
-    Blazor: `<SrLabel For="nhs-number">NHS number</SrLabel>
-<SrHint Id="nhs-number-hint">10 digits, spaced in groups of 3, 3 and 4</SrHint>
-<SrInput Id="nhs-number" DescribedBy="nhs-number-hint" />
+<fieldset>
+  <legend className="sr-type-heading-s">Contact preferences</legend>
+</fieldset>`,
+    Blazor: `@* Same classes on the native elements. *@
+<label class="sr-type-label" for="nhs-number">NHS number</label>
+<span class="sr-type-caption" id="nhs-number-hint">10 digits, spaced in groups of 3, 3 and 4</span>
+<input class="sr-input" id="nhs-number" aria-describedby="nhs-number-hint" />
 
-<SrFieldset Legend="Contact preferences" LegendSize="HeadingSize.S" />`,
+<fieldset>
+  <legend class="sr-type-heading-s">Contact preferences</legend>
+</fieldset>`,
     MAUI: `<Label StyleClass="FieldLabel" Text="NHS number" />
 <Label Text="485 777 3456" />
 <Label StyleClass="Caption" Text="Use the format 06 Dec 1974" />`,
@@ -1420,12 +1436,12 @@ views, and for supporting text and form values.</div>
     HTML: `<p class="sr-type-body-m">Long-form reading and clinical notes.</p>
 <p class="sr-type-body-s">Primary content in tables and data-dense views.</p>
 <p class="sr-type-caption">Last updated 06 Dec 2024 at 14:22</p>`,
-    React: `<Text size="m">Long-form reading and clinical notes.</Text>
-<Text size="s">Primary content in tables and data-dense views.</Text>
-<Text size="caption">Last updated 06 Dec 2024 at 14:22</Text>`,
-    Blazor: `<SrText Size="TextSize.M">Long-form reading and clinical notes.</SrText>
-<SrText Size="TextSize.S">Primary content in tables and data-dense views.</SrText>
-<SrText Size="TextSize.Caption">Last updated 06 Dec 2024 at 14:22</SrText>`,
+    React: `<p className="sr-type-body-m">Long-form reading and clinical notes.</p>
+<p className="sr-type-body-s">Primary content in tables and data-dense views.</p>
+<p className="sr-type-caption">Last updated 06 Dec 2024 at 14:22</p>`,
+    Blazor: `<p class="sr-type-body-m">Long-form reading and clinical notes.</p>
+<p class="sr-type-body-s">Primary content in tables and data-dense views.</p>
+<p class="sr-type-caption">Last updated 06 Dec 2024 at 14:22</p>`,
     MAUI: `<Label Text="Long-form reading and clinical notes." StyleClass="BodyM" />
 <Label Text="Primary content in tables and data-dense views." StyleClass="BodyS" />
 <Label Text="Last updated 06 Dec 2024 at 14:22" StyleClass="Caption" />`,
@@ -1438,10 +1454,14 @@ views, and for supporting text and form values.</div>
 
 <!-- Wrong: never hardcode type values on a component. -->
 <h2 style="font-size: 21px; font-weight: 600">Allergies and adverse reactions</h2>`,
-    React: `{/* The heading level and the visual size are separate props. */}
-<Heading as="h2" size="s">Allergies and adverse reactions</Heading>`,
-    Blazor: `@* The heading level and the visual size are separate parameters. *@
-<SrHeading Level="2" Size="HeadingSize.S">Allergies and adverse reactions</SrHeading>`,
+    React: `{/* The heading level is the tag; the visual size is the class. Keeping
+    them separate is the whole point — never drop to h3 to look smaller. */}
+<h2 className="sr-type-heading-s">Allergies and adverse reactions</h2>
+
+{/* Wrong: never hardcode type values on a component. */}
+<h2 style={{ fontSize: 21, fontWeight: 600 }}>Allergies and adverse reactions</h2>`,
+    Blazor: `@* The heading level is the tag; the visual size is the class. *@
+<h2 class="sr-type-heading-s">Allergies and adverse reactions</h2>`,
     MAUI: `<!-- Correct: a heading that needs to look smaller takes a smaller class. -->
 <Label Text="Allergies and adverse reactions" StyleClass="HeadingS" />
 
@@ -1458,12 +1478,13 @@ views, and for supporting text and form values.</div>
 <a href="https://www.nhs.uk/" target="_blank" rel="noopener">
   NHS.UK guidance (opens in a new tab)
 </a>`,
-    React: `<Text size="m">
+    React: `<p className="sr-type-body-m">
   Review the <Link href="/medication">current medication list</Link> before prescribing.
-</Text>`,
-    Blazor: `<SrText Size="TextSize.M">
-  Review the <SrLink Href="/medication">current medication list</SrLink> before prescribing.
-</SrText>`,
+</p>`,
+    Blazor: `@* Link is a class too — no SrLink component ships. *@
+<p class="sr-type-body-m">
+  Review the <a class="sr-link" href="/medication">current medication list</a> before prescribing.
+</p>`,
     MAUI: `<!-- MAUI has no link control. A Label with the link colour, an underline and
      a tap gesture is the equivalent. Keep the underline: colour alone is not a
      reliable signal (WCAG 1.4.1). -->
@@ -1520,10 +1541,20 @@ views, and for supporting text and form values.</div>
   <li>Confirm the patient identity</li>
   <li>Check for recorded allergies</li>
 </ol>`,
-    React: `<List size="m" items={medications} />
-<List as="ol" size="m" items={steps} />`,
-    Blazor: `<SrList Size="TextSize.M" Items="@medications" />
-<SrList Ordered Size="TextSize.M" Items="@steps" />`,
+    React: `<ul className="sr-type-body-m">
+  {medications.map((m) => <li key={m.id}>{m.label}</li>)}
+</ul>
+
+<ol className="sr-type-body-m">
+  {steps.map((s) => <li key={s.id}>{s.label}</li>)}
+</ol>`,
+    Blazor: `<ul class="sr-type-body-m">
+  @foreach (var m in Medications) { <li>@m.Label</li> }
+</ul>
+
+<ol class="sr-type-body-m">
+  @foreach (var s in Steps) { <li>@s.Label</li> }
+</ol>`,
     MAUI: `<!-- A list is layout in MAUI, not a text style. Bind the collection and let
      the item template carry the body class. -->
 <VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Medications}">
@@ -1647,8 +1678,8 @@ against the page.</p>
 better, and too many rules make a screen look busier than it is.</p>
 ${showcase(breakSpecimen, 'type-section-break', {
     HTML: `<hr>\n\n<!-- Where the break is structural but should not be seen,\n     use spacing instead of a visible rule. -->\n<div style="margin-block: var(--space-6)"></div>`,
-    React: `<Divider />\n<Divider visible={false} />`,
-    Blazor: `<SrDivider />\n<SrDivider Visible="false" />`,
+    React: `{/* A rule is an <hr>. There is no Divider component, and there does not\n    need to be — the stylesheet already styles the element. */}\n<hr />\n\n{/* Structural break that should not be seen: spacing, not a rule. */}\n<div style={{ marginBlock: 'var(--space-6)' }} />`,
+    Blazor: `<hr />\n\n@* Structural break that should not be seen: spacing, not a rule. *@\n<div style="margin-block: var(--space-6)"></div>`,
     MAUI: `<!-- The same Divider class every separator in the system uses. -->
 <BoxView StyleClass="Divider" />
 
@@ -1667,8 +1698,8 @@ compare magnitudes down the column. Right-align the column heading to match the 
 it. Never centre body text or table content.</p>
 ${showcase(alignSpecimen, 'type-alignment', {
     HTML: `<!-- Text columns: left aligned, which is the default. -->\n<td class="sr-table__cell">Atorvastatin 20mg</td>\n\n<!-- Numeric columns: right aligned, heading matches the values. -->\n<th scope="col" class="sr-table__cell--numeric">Dose (mg)</th>\n<td class="sr-table__cell sr-table__cell--numeric">20</td>`,
-    React: `<Table.Column field="medication" />\n<Table.Column field="dose" align="right" />`,
-    Blazor: `<SrTableColumn Field="medication" />\n<SrTableColumn Field="dose" Align="Align.Right" />`,
+    React: `{/* Alignment is a property of the column, not a separate element:\n    \`numeric\` right-aligns the values and the heading together. */}\n<Table\n  columns={[\n    { key: 'medication', header: 'Medication' },\n    { key: 'dose', header: 'Dose (mg)', numeric: true },\n  ]}\n  rows={rows}\n/>`,
+    Blazor: `@* Stylesheet only — the modifier is what right-aligns the column. *@\n<th scope="col" class="sr-table__cell sr-table__cell--numeric">Dose (mg)</th>\n<td class="sr-table__cell sr-table__cell--numeric">@row.Dose</td>`,
     MAUI: `<!-- Text columns are left aligned, which is the default. -->
 <Label Text="Atorvastatin 20mg" StyleClass="BodyS" />
 
@@ -1790,8 +1821,8 @@ A component that asks for "the primary interactive colour" keeps working when th
 A component that asks for "Blue 800" does not.</p>
 ${codePanel('colour-usage', {
     HTML: `/* Correct: ask for the role. */\n.sr-panel {\n  background: var(--sr-color-surface-section-cards);\n  border: 1px solid var(--sr-color-border-default);\n  color: var(--sr-color-text-primary);\n}\n\n/* Wrong: a primitive, and a raw hex. */\n.sr-panel {\n  background: var(--color-blue-50);\n  border: 1px solid #d8dde0;\n}`,
-    React: `<Panel\n  surface="section-cards"\n  border="default"\n/>\n\n// Token values are never passed as props; the component\n// resolves them from the semantic layer.`,
-    Blazor: `<SrPanel Surface="Surface.SectionCards" Border="Border.Default" />\n\n@* app.css consumes the published token stylesheet: *@\n@* @import "@dhcw/sr-tokens/build/css/tokens.css"; *@`,
+    React: `/* Panel.module.css — a token is a CSS custom property in React too.\n   Colour never travels as a prop; the stylesheet resolves the role. */\n.panel {\n  background: var(--sr-color-surface-section-cards);\n  border: 1px solid var(--sr-color-border-default);\n  color: var(--sr-color-text-primary);\n}\n\n// Panel.jsx\nimport styles from './Panel.module.css';\n\nexport function Panel({ children }) {\n  return <div className={styles.panel}>{children}</div>;\n}`,
+    Blazor: `@* Panel.razor.css — isolated CSS over the same custom properties. The\n   published token stylesheet is referenced once in the host page:\n   _content/DHCW.SingleRecord.Blazor/css/single-record.css *@\n.panel {\n  background: var(--sr-color-surface-section-cards);\n  border: 1px solid var(--sr-color-border-default);\n  color: var(--sr-color-text-primary);\n}`,
     MAUI: `<!-- Native MAUI XAML. The same semantic names, as XAML resources -->\n<!-- from Tokens.xaml. Never a literal colour, and never a primitive. -->\n<Setter Property="BackgroundColor" Value="{StaticResource SrColorSurfaceSectionCards}" />\n<Setter Property="Stroke" Value="{StaticResource SrColorBorderDefault}" />\n<Setter Property="TextColor" Value="{StaticResource SrColorTextPrimary}" />`,
   })}
 
@@ -2047,7 +2078,7 @@ function tableBody() {
   const snippets = {
     HTML: '<div class="sr-table-wrap">\n  <table class="sr-table">\n    <thead class="sr-table__head">…</thead>\n    <tbody>\n      <tr class="sr-table__row sr-table__row--selected">…</tr>\n    </tbody>\n  </table>\n</div>',
     React: '<Table\n  columns={columns}\n  rows={rows}\n  selectable\n  selectedIds={selectedIds}\n  onSelectionChange={setSelectedIds}\n/>',
-    Blazor: '<SrTable Items="@patients" SelectedId="@activePatientId" />',
+    Blazor: '@* Stylesheet only — no SrTable component ships. *@\n<div class="sr-table-wrap">\n  <table class="sr-table">\n    <thead class="sr-table__head">…</thead>\n    <tbody>\n      @foreach (var p in Patients)\n      {\n        <tr class="sr-table__row @(p.Id == ActivePatientId ? "sr-table__row--selected" : "")">…</tr>\n      }\n    </tbody>\n  </table>\n</div>',
     MAUI: `<!-- CollectionView, not a table control. The header is a Grid above it using
      the same column definitions, so the columns line up. -->
 <Grid RowDefinitions="Auto,*">
@@ -2125,7 +2156,7 @@ ${trail.map((c, i) => (i === trail.length - 1
   const multiSnippets = {
     HTML: '<nav aria-label="Breadcrumb">\n  <ol class="sr-breadcrumbs">\n    <li class="sr-breadcrumbs__item">\n      <a class="sr-breadcrumbs__link" href="/">Home</a>\n      <span class="sr-breadcrumbs__separator" aria-hidden="true">/</span>\n    </li>\n    …\n    <li class="sr-breadcrumbs__item">\n      <span class="sr-breadcrumbs__current" aria-current="page">Case note volume 3</span>\n    </li>\n  </ol>\n</nav>',
     React: '<Breadcrumbs\n  items={[\n    { label: "Home", href: "/" },\n    { label: "Patient search", href: "/search" },\n    { label: "JOHN, Elvet George", href: "/patients/1" },\n    { label: "Case note volume 3" },\n  ]}\n/>',
-    Blazor: '<SrBreadcrumbs Items="@trail" />',
+    Blazor: '@* Stylesheet only — no SrBreadcrumbs component ships. *@\n<nav aria-label="Breadcrumb">\n  <ol class="sr-breadcrumbs">\n    @foreach (var crumb in Trail.SkipLast(1))\n    {\n      <li class="sr-breadcrumbs__item">\n        <a class="sr-breadcrumbs__link" href="@crumb.Href">@crumb.Label</a>\n        <span class="sr-breadcrumbs__separator" aria-hidden="true">/</span>\n      </li>\n    }\n    <li class="sr-breadcrumbs__item">\n      <span class="sr-breadcrumbs__current" aria-current="page">@Trail.Last().Label</span>\n    </li>\n  </ol>\n</nav>',
     MAUI: `<!-- FlexLayout so a long trail wraps rather than truncating. -->
 <FlexLayout Wrap="Wrap" AlignItems="Center">
     <Label Text="Home" StyleClass="Caption" TextDecorations="Underline" TextColor="{AppThemeBinding Light={StaticResource SrColorInteractiveLink}, Dark={StaticResource SrColorInteractiveLinkDark}}" />
@@ -2142,7 +2173,7 @@ ${trail.map((c, i) => (i === trail.length - 1
   const backSnippets = {
     HTML: '<nav aria-label="Breadcrumb">\n  <ol class="sr-breadcrumbs sr-breadcrumbs--back">\n    <li class="sr-breadcrumbs__item">\n      <span class="sr-breadcrumbs__back-icon">…</span>\n      <a class="sr-breadcrumbs__link" href="/patients/1">Back to JOHN, Elvet George</a>\n    </li>\n  </ol>\n</nav>',
     React: '<Breadcrumbs type="back" items={trail} />\n\n// Same items array as the multilevel type — the component takes\n// the item before the current page and names it.',
-    Blazor: '<SrBreadcrumbs Items="@trail" Type="Back" />',
+    Blazor: '@* Stylesheet only — no SrBreadcrumbs component ships. *@\n<nav aria-label="Breadcrumb">\n  <ol class="sr-breadcrumbs sr-breadcrumbs--back">\n    <li class="sr-breadcrumbs__item">\n      <span class="sr-breadcrumbs__back-icon">…</span>\n      <a class="sr-breadcrumbs__link" href="@Parent.Href">Back to @Parent.Label</a>\n    </li>\n  </ol>\n</nav>',
     MAUI: `<!-- The Back type is one destination, not a trail. 44px minimum target. -->
 <HorizontalStackLayout Spacing="8" MinimumHeightRequest="44">
     <Path Data="{StaticResource SrIconNavBack}"
@@ -2204,7 +2235,7 @@ ${sw('Off, unavailable', false, true)}
   const snippets = {
     HTML: '<button type="button" role="switch" aria-checked="true" class="sr-switch">\n  <span class="sr-switch__track"><span class="sr-switch__thumb"></span></span>\n  <span class="sr-switch__label">Show archived requests</span>\n</button>',
     React: '<Switch\n  label="Show archived requests"\n  checked={showArchived}\n  onChange={setShowArchived}\n/>',
-    Blazor: '<SrSwitch Label="Show archived requests" @bind-Checked="showArchived" />',
+    Blazor: '@* Stylesheet only — no SrSwitch component ships. role="switch" and\n   aria-checked are what make it a switch to assistive technology. *@\n<button type="button" role="switch" aria-checked="@ShowArchived"\n        class="sr-switch" @onclick="() => ShowArchived = !ShowArchived">\n  <span class="sr-switch__track"><span class="sr-switch__thumb"></span></span>\n  <span class="sr-switch__label">Show archived requests</span>\n</button>',
     MAUI: '<!-- The thumb position carries the state as well as the colour, so it\n     survives greyscale and low-vision viewing. -->\n<HorizontalStackLayout Spacing="8">\n  <Switch IsToggled="{Binding ShowArchived}" />\n  <Label Text="Show archived requests" VerticalOptions="Center" />\n</HorizontalStackLayout>',
   };
   // Type: Segmented control (Figma 2752:40 segment block, 2770:55996 two-option
@@ -2224,7 +2255,7 @@ ${seg(['Quick search', 'Advanced'], 0, true)}
   const segSnippets = {
     HTML: '<div class="sr-segmented" role="group" aria-label="Search mode">\n  <button type="button" class="sr-segmented__option" aria-pressed="true">Quick search</button>\n  <button type="button" class="sr-segmented__option" aria-pressed="false">Advanced</button>\n</div>',
     React: '<SegmentedControl\n  ariaLabel="Search mode"\n  options={["Quick search", "Advanced"]}\n  value={mode}\n  onChange={setMode}\n/>',
-    Blazor: '<SrSegmentedControl Options="@modes" @bind-Value="mode" />',
+    Blazor: '@* Stylesheet only — no SrSegmentedControl component ships. *@\n<div class="sr-segmented" role="group" aria-label="Search mode">\n  @foreach (var option in Modes)\n  {\n    <button type="button" class="sr-segmented__option"\n            aria-pressed="@(option == Mode)" @onclick="() => Mode = option">@option</button>\n  }\n</div>',
     MAUI: `<!-- No stock segmented control. Two buttons in a bordered row: the selected
      one takes the accent surface, and both hold a 44px target. -->
 <Border Padding="2" StrokeThickness="1" Stroke="{AppThemeBinding Light={StaticResource SrColorBorderDefault}, Dark={StaticResource SrColorBorderDefaultDark}}">
@@ -2398,7 +2429,7 @@ function checkboxBody() {
   const stateSnippets = {
     HTML: '<!-- Rest, hover and focus come from the stylesheet. Only these four\n     need markup. Indeterminate is the exception: it is a DOM property,\n     not an attribute, so it cannot be set in HTML alone. -->\n<div class="sr-checkbox">\n  <input class="sr-checkbox__input" type="checkbox" id="c1" checked>\n  <label class="sr-checkbox__label" for="c1">Checked</label>\n</div>\n\n<div class="sr-checkbox sr-checkbox--error">\n  <input class="sr-checkbox__input" type="checkbox" id="c2">\n  <label class="sr-checkbox__label" for="c2">Error</label>\n</div>\n\n<div class="sr-checkbox">\n  <input class="sr-checkbox__input" type="checkbox" id="c3" disabled>\n  <label class="sr-checkbox__label" for="c3">Disabled</label>\n</div>\n\n<script>\n  // Indeterminate, set the only way it can be set.\n  document.getElementById(\'c4\').indeterminate = true;\n<\/script>',
     React: '<Checkbox label="Unchecked" />\n<Checkbox label="Checked" defaultChecked />\n<Checkbox label="Indeterminate" indeterminate />\n<Checkbox label="Error" error />\n<Checkbox label="Disabled" disabled />\n<Checkbox label="Disabled, checked" defaultChecked disabled />',
-    Blazor: '<SrCheckbox Label="Unchecked" />\n<SrCheckbox Label="Checked" Checked="true" />\n<SrCheckbox Label="Indeterminate" Indeterminate="true" />\n<SrCheckbox Label="Error" Error="true" />\n<SrCheckbox Label="Disabled" Disabled="true" />',
+    Blazor: '@* Stylesheet only — no SrCheckbox component ships. Indeterminate is a DOM\n   property, so it still needs a JS interop call after render. *@\n<div class="sr-checkbox">\n  <input class="sr-checkbox__input" type="checkbox" id="c1" @bind="Checked" />\n  <label class="sr-checkbox__label" for="c1">Checked</label>\n</div>\n\n<div class="sr-checkbox sr-checkbox--error">\n  <input class="sr-checkbox__input" type="checkbox" id="c2" />\n  <label class="sr-checkbox__label" for="c2">Error</label>\n</div>\n\n<div class="sr-checkbox">\n  <input class="sr-checkbox__input" type="checkbox" id="c3" disabled />\n  <label class="sr-checkbox__label" for="c3">Disabled</label>\n</div>',
     MAUI: `<!-- MAUI's CheckBox has no indeterminate state and no error state of its
      own: a group-level error message carries the error, and a tri-state
      parent needs a custom control. Colour is the token, not a literal. -->
@@ -2423,7 +2454,7 @@ function checkboxBody() {
   const snippets = {
     HTML: '<fieldset class="sr-checkbox-group">\n  <legend class="sr-checkbox-group__legend">Case note types</legend>\n  <p class="sr-checkbox-group__hint">Select all that apply.</p>\n  <div class="sr-checkbox-group__options">\n    <div class="sr-checkbox">\n      <input class="sr-checkbox__input" type="checkbox" id="n1" name="notes" checked>\n      <label class="sr-checkbox__label" for="n1">General notes</label>\n    </div>\n  </div>\n</fieldset>',
     React: '<CheckboxGroup legend="Case note types" hint="Select all that apply.">\n  <Checkbox label="General notes" name="notes" defaultChecked />\n  <Checkbox label="Nursing notes" name="notes" />\n</CheckboxGroup>',
-    Blazor: '<SrCheckboxGroup Legend="Case note types" Hint="Select all that apply.">\n  <SrCheckbox Label="General notes" @bind-Checked="general" />\n</SrCheckboxGroup>',
+    Blazor: '@* Stylesheet only — no SrCheckboxGroup component ships. fieldset/legend is\n   what groups the options for a screen reader; keep it. *@\n<fieldset class="sr-checkbox-group">\n  <legend class="sr-checkbox-group__legend">Case note types</legend>\n  <p class="sr-checkbox-group__hint">Select all that apply.</p>\n  <div class="sr-checkbox-group__options">\n    <div class="sr-checkbox">\n      <input class="sr-checkbox__input" type="checkbox" id="n1" name="notes" @bind="General" />\n      <label class="sr-checkbox__label" for="n1">General notes</label>\n    </div>\n  </div>\n</fieldset>',
     MAUI: `<!-- The tick is not the only cue: the box fills too. -->
 <VerticalStackLayout Spacing="12">
     <Label Text="Case note types" StyleClass="FieldLabel" />
@@ -2535,7 +2566,7 @@ function radioBody() {
   const snippets = {
     HTML: '<fieldset class="sr-radio-group">\n  <legend class="sr-radio-group__legend">Priority</legend>\n  <div class="sr-radio-group__options">\n    <div class="sr-radio">\n      <input class="sr-radio__input" type="radio" id="p1" name="pri" checked>\n      <label class="sr-radio__label" for="p1">Routine</label>\n    </div>\n  </div>\n</fieldset>',
     React: '<RadioGroup legend="Priority" hint="How soon the patient should be seen.">\n  <Radio label="Routine" name="pri" defaultChecked />\n  <Radio label="Urgent" name="pri" />\n</RadioGroup>',
-    Blazor: '<SrRadioGroup Legend="Priority">\n  <SrRadio Label="Routine" Name="pri" Value="routine" />\n</SrRadioGroup>',
+    Blazor: '@* Stylesheet only — no SrRadioGroup component ships. In Blazor use\n   InputRadioGroup for the binding and keep these classes on the markup. *@\n<fieldset class="sr-radio-group">\n  <legend class="sr-radio-group__legend">Priority</legend>\n  <div class="sr-radio-group__options">\n    <div class="sr-radio">\n      <input class="sr-radio__input" type="radio" id="p1" name="pri" value="routine" />\n      <label class="sr-radio__label" for="p1">Routine</label>\n    </div>\n  </div>\n</fieldset>',
     MAUI: `<!-- RadioButton's GroupName is what makes the
      options one choice, exactly as \`name\` does on the web. -->
 <VerticalStackLayout Spacing="8">
@@ -2548,7 +2579,7 @@ function radioBody() {
   const stateSnippets = {
     HTML: '<!-- Rest, hover and focus come from the stylesheet. `name` is what binds\n     the options into one choice, so it is present in every state. -->\n<div class="sr-radio">\n  <input class="sr-radio__input" type="radio" id="r1" name="s">\n  <label class="sr-radio__label" for="r1">Unselected</label>\n</div>\n\n<div class="sr-radio">\n  <input class="sr-radio__input" type="radio" id="r2" name="s" checked>\n  <label class="sr-radio__label" for="r2">Selected</label>\n</div>\n\n<div class="sr-radio sr-radio--error">\n  <input class="sr-radio__input" type="radio" id="r3" name="s">\n  <label class="sr-radio__label" for="r3">Error</label>\n</div>\n\n<div class="sr-radio">\n  <input class="sr-radio__input" type="radio" id="r4" name="s" disabled>\n  <label class="sr-radio__label" for="r4">Disabled</label>\n</div>',
     React: '<Radio label="Unselected" name="s" />\n<Radio label="Selected" name="s" defaultChecked />\n<Radio label="Error" name="s" error />\n<Radio label="Disabled" name="s" disabled />\n<Radio label="Disabled, selected" name="s" defaultChecked disabled />',
-    Blazor: '<SrRadio Label="Unselected" Name="s" Value="a" />\n<SrRadio Label="Selected" Name="s" Value="b" Checked="true" />\n<SrRadio Label="Error" Name="s" Value="c" Error="true" />\n<SrRadio Label="Disabled" Name="s" Value="d" Disabled="true" />',
+    Blazor: '@* Stylesheet only — no SrRadio component ships. *@\n<div class="sr-radio">\n  <input class="sr-radio__input" type="radio" id="s1" name="s" value="a" />\n  <label class="sr-radio__label" for="s1">Unselected</label>\n</div>\n\n<div class="sr-radio sr-radio--error">\n  <input class="sr-radio__input" type="radio" id="s3" name="s" value="c" />\n  <label class="sr-radio__label" for="s3">Error</label>\n</div>\n\n<div class="sr-radio">\n  <input class="sr-radio__input" type="radio" id="s4" name="s" value="d" disabled />\n  <label class="sr-radio__label" for="s4">Disabled</label>\n</div>',
     MAUI: `<!-- GroupName does the work \`name\` does on the web. There is no error
      state on RadioButton itself; the group's message carries it. -->
 <VerticalStackLayout Spacing="8">
@@ -2559,9 +2590,9 @@ function radioBody() {
   };
 
   const cardFilledSnippets = {
-    HTML: '<div class="sr-radio sr-radio--card sr-radio--card-fill">\n  <input class="sr-radio__input" type="radio" id="cf1" name="pathway" checked>\n  <label class="sr-radio__label" for="cf1">\n    <span class="sr-radio__title">Two-week wait</span>\n    <span class="sr-radio__description">Seen within 14 days of referral</span>\n  </label>\n</div>',
+    HTML: '<div class="sr-radio sr-radio--card sr-radio--card-filled">\n  <input class="sr-radio__input" type="radio" id="cf1" name="pathway" checked>\n  <label class="sr-radio__label" for="cf1">\n    <span class="sr-radio__title">Two-week wait</span>\n    <span class="sr-radio__description">Seen within 14 days of referral</span>\n  </label>\n</div>',
     React: '<Radio\n  type="card"\n  label="Two-week wait"\n  description="Seen within 14 days of referral"\n  name="pathway"\n  defaultChecked\n/>',
-    Blazor: '<SrRadio Type="Card" Label="Two-week wait"\n         Description="Seen within 14 days of referral" Name="pathway" Checked="true" />',
+    Blazor: '@* Stylesheet only — no SrRadio component ships. *@\n<div class="sr-radio sr-radio--card sr-radio--card-filled">\n  <input class="sr-radio__input" type="radio" id="cf1" name="pathway" checked />\n  <label class="sr-radio__label" for="cf1">\n    <span class="sr-radio__title">Two-week wait</span>\n    <span class="sr-radio__description">Seen within 14 days of referral</span>\n  </label>\n</div>',
     MAUI: `<!-- Selection fills the card, so the label and description invert with it.
      Bind the Border fill and the text colour together or the text is lost. -->
 <Border Padding="12,8" StrokeThickness="1"
@@ -2581,7 +2612,7 @@ function radioBody() {
   const cardIconSnippets = {
     HTML: '<!-- The icon renders AFTER the label in the DOM. An element between the\n     input and the label breaks the `:checked +` adjacency the styling needs. -->\n<div class="sr-radio sr-radio--card sr-radio--card-icon">\n  <input class="sr-radio__input" type="radio" id="ci1" name="kind" checked>\n  <label class="sr-radio__label" for="ci1">\n    <span class="sr-radio__title">Diagnosis</span>\n    <span class="sr-radio__description">Coded condition on the problem list</span>\n  </label>\n  <span class="sr-radio__icon" aria-hidden="true"><!-- Icon: clinical/result --></span>\n</div>',
     React: '<Radio\n  type="card-icon"\n  icon="clinical/result"\n  label="Diagnosis"\n  description="Coded condition on the problem list"\n  name="kind"\n  defaultChecked\n/>',
-    Blazor: '<SrRadio Type="CardIcon" Icon="clinical/result" Label="Diagnosis"\n         Description="Coded condition on the problem list" Name="kind" Checked="true" />',
+    Blazor: '@* Stylesheet only — no SrRadio component ships. The icon must follow the\n   label in the DOM: an element between input and label breaks the\n   `:checked +` adjacency the styling relies on. *@\n<div class="sr-radio sr-radio--card sr-radio--card-filled sr-radio--card-icon">\n  <input class="sr-radio__input" type="radio" id="ci1" name="kind" checked />\n  <label class="sr-radio__label" for="ci1">\n    <span class="sr-radio__title">Diagnosis</span>\n    <span class="sr-radio__description">Coded condition on the problem list</span>\n  </label>\n  <span class="sr-radio__icon" aria-hidden="true">@* Icon: clinical/result *@</span>\n</div>',
     MAUI: `<!-- The icon is decorative: the label still carries the name, so the
      option is identifiable to someone who has not seen the mark before. -->
 <Border Padding="12,8" StrokeThickness="1"
@@ -2605,7 +2636,7 @@ function radioBody() {
   const cardSnippets = {
     HTML: '<div class="sr-radio sr-radio--card sr-radio--card-outline">\n  <input class="sr-radio__input" type="radio" id="pw1" name="pathway">\n  <label class="sr-radio__label" for="pw1">\n    <span class="sr-radio__title">Two-week wait</span>\n    <span class="sr-radio__description">Seen within 14 days of referral</span>\n  </label>\n</div>',
     React: '<Radio\n  type="card-radio"\n  label="Two-week wait"\n  description="Seen within 14 days of referral"\n  name="pathway"\n/>',
-    Blazor: '<SrRadio Type="CardRadio" Label="Two-week wait"\n         Description="Seen within 14 days of referral" Name="pathway" />',
+    Blazor: '@* Stylesheet only — no SrRadio component ships. *@\n<div class="sr-radio sr-radio--card sr-radio--card-outline">\n  <input class="sr-radio__input" type="radio" id="pw1" name="pathway" />\n  <label class="sr-radio__label" for="pw1">\n    <span class="sr-radio__title">Two-week wait</span>\n    <span class="sr-radio__description">Seen within 14 days of referral</span>\n  </label>\n</div>',
     MAUI: `<!-- A card is a Border wrapping the RadioButton's content; the border
      colour carries selection, so it is not colour alone once the dot is there. -->
 <Border Padding="12,8" StrokeThickness="1"
@@ -2900,7 +2931,7 @@ ${items.map((it, i) => {
 
   const snippets = {
     HTML: '<div class="sr-tabs" role="tablist" aria-label="Patient record">\n  <button type="button" class="sr-tabs__tab" role="tab" id="t-0"\n          aria-selected="true" aria-controls="p-0" tabindex="0">Summary</button>\n  <button type="button" class="sr-tabs__tab" role="tab" id="t-1"\n          aria-selected="false" aria-controls="p-1" tabindex="-1">Results</button>\n</div>\n<div class="sr-tabs__panel" role="tabpanel" id="p-0" aria-labelledby="t-0" tabindex="0">…</div>\n<div class="sr-tabs__panel" role="tabpanel" id="p-1" aria-labelledby="t-1" tabindex="0" hidden>…</div>\n\n<!-- Arrow keys, Home/End and the roving tabindex are yours to wire up. -->',
-    React: '<Tabs\n  ariaLabel="Patient record"\n  {/* level="secondary" for sub-tabs, inside a parent tab\'s panel */}\n  tabs={[\n    { id: \'summary\', label: \'Summary\', panel: <Summary /> },\n    { id: \'results\', label: \'Results\', count: 20, panel: <Results /> },\n    { id: \'imaging\', label: \'Imaging\', disabled: true, panel: null },\n  ]}\n  onChange={(id) => track(id)}\n/>',
+    React: '// Summary and Results are your own panel components — Tabs renders\n// whatever node you hand it. Pass level="secondary" for sub-tabs, inside\n// a parent tab\'s panel.\n<Tabs\n  ariaLabel="Patient record"\n  tabs={[\n    { id: \'summary\', label: \'Summary\', panel: <Summary /> },\n    { id: \'results\', label: \'Results\', count: 20, panel: <Results /> },\n    { id: \'imaging\', label: \'Imaging\', disabled: true, panel: null },\n  ]}\n  onChange={(id) => track(id)}\n/>',
     Blazor: '<div class="sr-tabs" role="tablist" aria-label="Patient record">\n  @foreach (var (t, i) in Tabs.Select((t, i) => (t, i)))\n  {\n    <button type="button" class="sr-tabs__tab" role="tab"\n            aria-selected="@(i == Selected)" tabindex="@(i == Selected ? 0 : -1)"\n            @onclick="() => Select(i)">@t.Label</button>\n  }\n</div>',
     MAUI: '<!-- The design system layer ships no tab strip for MAUI. Use the platform\n     tabbed shell and take the SR tokens: SrIconSizeMd, SrColorInteractivePrimary,\n     and the 3px selected indicator. -->',
   };
@@ -3140,6 +3171,103 @@ ${renderMarkdown(md)}
 `;
 }
 
+// ─── Components: Inset text ───────────────────────────────────────────────────
+/**
+ * Inset text. The page has one job beyond showing the component: making the
+ * boundary against Notification banner impossible to miss, because that is the
+ * confusion the Figma file had (DDR-032) and it will recur every time someone
+ * reaches for "a box with a coloured edge".
+ */
+function insetTextBody() {
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'inset-text', 'guidelines.md'), 'utf8')));
+
+  const prose = (inner) => `<div style="max-width:60ch; font:var(--sr-type-body-m-font)">${inner}</div>`;
+
+  const inContext = prose(`
+<p style="margin-top:0">Medication recorded during this admission is listed below, in the order it
+was prescribed.</p>
+<div class="sr-inset-text">
+  <p>Medication stopped before admission is not shown here. Check the GP record for the
+  full prescribing history.</p>
+</div>
+<p style="margin-bottom:0">Doses are as prescribed, not as administered.</p>`);
+
+  const inheritsType = `<div style="display:flex; flex-direction:column; gap:24px">
+  <div style="font:var(--sr-type-body-m-font)">
+    <div class="sr-inset-text"><p>In a record view, at 16px body copy.</p></div>
+  </div>
+  <div style="font:var(--sr-type-body-s-font)">
+    <div class="sr-inset-text"><p>In a dense table area, at 14px — the same component.</p></div>
+  </div>
+</div>`;
+
+  const snippets = {
+    HTML: '<!-- Type is inherited, so it reads at whatever size the surrounding\n     copy is set in. There is no size modifier and no severity. -->\n<div class="sr-inset-text">\n  <p>Medication stopped before admission is not shown here.</p>\n</div>\n\n<!-- Use aside only where the content is genuinely tangential: that is\n     what the role tells a screen reader. -->\n<aside class="sr-inset-text">\n  <p>Results from before 2019 are held in the legacy system.</p>\n</aside>',
+    React: '<InsetText>\n  <p>Medication stopped before admission is not shown here.</p>\n</InsetText>\n\n{/* as: any element. Default "div". */}\n<InsetText as="aside">\n  <p>Results from before 2019 are held in the legacy system.</p>\n</InsetText>\n\n{/* There is no severity, icon, heading or actions prop. If you want one\n    of those, what you have is a notification banner. */}',
+    Blazor: '@* Stylesheet only — no component to install. *@\n<div class="sr-inset-text">\n  <p>Medication stopped before admission is not shown here.</p>\n</div>',
+    MAUI: `<!-- MAUI has no single-edge stroke, so the bar is a BoxView in a
+     two-column Grid beside the text. Not yet in Styles.xaml. -->
+<Grid ColumnDefinitions="4,*" ColumnSpacing="16"
+      BackgroundColor="{AppThemeBinding Light={StaticResource SrColorSurfaceSubtle}, Dark={StaticResource SrColorSurfaceSubtleDark}}"
+      Padding="0,12,16,12">
+    <BoxView Grid.Column="0"
+             Color="{AppThemeBinding Light={StaticResource SrColorBorderStrong}, Dark={StaticResource SrColorBorderStrongDark}}" />
+    <Label Grid.Column="1" StyleClass="BodyM"
+           Text="Medication stopped before admission is not shown here." />
+</Grid>`,
+  };
+
+  return `
+<p class="breadcrumbs"><a href="../components/breadcrumbs.html">Components</a> / Inset text</p>
+<h1>Inset text</h1>
+<p class="lede">A short block of text set apart from the text around it, so it is harder to skim
+past.</p>
+
+<h2>In a page</h2>
+<p>Inset text only makes sense with prose on both sides of it — the indentation is the whole
+signal, and there is nothing to indent from if it stands alone.</p>
+${showcase(inContext, 'inset-text', snippets)}
+
+<h2>It is part of the page. A banner is an event.</h2>
+<p>That sentence is the entire boundary, and it is worth learning because these two get confused
+constantly — both are a box with a coloured edge.</p>
+<p><strong>Inset text was typed by whoever wrote the page.</strong> It is there every time the page
+loads, it says something about the content around it, and nothing has happened.
+<strong>A notification banner appears because something happened</strong> — a save succeeded, a
+record is locked, the system goes down at 2am.</p>
+<div class="callout"><p>Inset text has <strong>no icon, no heading, no buttons and no status
+colour</strong>. Every one of those is missing on purpose. Add an icon and it reads as a status
+change; add a heading and it becomes a section; add a button and it is a call to action, which is a
+banner variant. If you find yourself wanting one, what you want is a notification banner.</p></div>
+<p>The Figma component was drawn in informational blue with the info status colour on its bar, and
+the frame beside it added a heading and two buttons — at which point it rendered the same thing as
+the banner's call-to-action variant. Two components that draw the same thing get used
+interchangeably and then drift apart. It has been narrowed to a neutral surface and a neutral bar.</p>
+
+<h2>The bar is neutral, and that is the point</h2>
+<p>A coloured bar reports that something has a status. Nothing has happened here, so there is
+nothing to report — the block is <em>set apart</em>, not <em>flagged</em>. The bar is
+<code>Border/Strong</code> at 3.44:1 on the page, which clears the 3:1 that WCAG 2.2 SC 1.4.11 wants
+for a non-text boundary without shouting.</p>
+<p>It also means the component survives greyscale: the indentation, the surface and the bar are
+three independent signals, and none of them is carrying the meaning. The words are.</p>
+
+<h2>The type is inherited</h2>
+<p>There is no size modifier. Inset text sits inside body copy and has to read at whatever size that
+copy is set in — 16px in a record view, 14px in a dense table area. Fixing a size here would render
+a note inside a table at the wrong one.</p>
+${showcase(inheritsType, 'inset-text-type', snippets)}
+
+<h2>Keep it short</h2>
+<p>Two or three sentences. Past a short paragraph the emphasis stops working, because a page where
+several blocks are emphasised has emphasised nothing. If it needs a heading to be followed, it is
+too long to be inset — make it a section.</p>
+<p>Never put two inset blocks next to each other.</p>
+
+${renderMarkdown(md)}
+`;
+}
+
 function searchBody() {
   const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'search', 'guidelines.md'), 'utf8')));
 
@@ -3200,7 +3328,7 @@ ${suggestions.length ? suggestions.map((s, i) => `          <li class="sr-search
   const snippets = {
     HTML: '<div class="sr-search">\n  <label class="sr-visually-hidden" for="q">Search patients</label>\n  <div class="sr-search__row">\n    <div class="sr-search__control">\n      <div class="sr-search__field">\n        <span class="sr-search__icon"><!-- nav/search --></span>\n        <input type="search" class="sr-search__control-input" id="q"\n               placeholder="Search patients" autocomplete="off">\n        <button type="button" class="sr-search__clear" aria-label="Clear search">\n          <!-- nav/clear -->\n        </button>\n      </div>\n    </div>\n    <button type="submit" class="sr-search__submit" disabled>Search</button>\n  </div>\n</div>\n\n<!-- Typeahead adds role="combobox" + a role="listbox" popover. The arrow keys,\n     Home/End, Enter and Esc are yours to wire up. -->',
     React: "<Search\n  type=\"typeahead\"\n  label=\"Find a clinician\"\n  placeholder=\"Search clinicians\"\n  suggestions={results}\n  filter={false}            {/* the service already filtered */}\n  loading={isFetching}\n  onChange={(q) => debouncedLookup(q)}\n  onSelect={(opt) => open(opt.value)}\n/>",
-    Blazor: '<div class="sr-search">\n  <label class="sr-visually-hidden" for="q">@Label</label>\n  <div class="sr-search__row">\n    <div class="sr-search__control">\n      <div class="sr-search__field">\n        <span class="sr-search__icon"><SrIcon Name="nav/search" /></span>\n        <input type="search" class="sr-search__control-input" id="q"\n               @bind="Query" @bind:event="oninput" placeholder="@Placeholder" />\n      </div>\n    </div>\n    <button type="submit" class="sr-search__submit" disabled="@(string.IsNullOrEmpty(Query))">Search</button>\n  </div>\n</div>',
+    Blazor: '<div class="sr-search">\n  <label class="sr-visually-hidden" for="q">@Label</label>\n  <div class="sr-search__row">\n    <div class="sr-search__control">\n      <div class="sr-search__field">\n        <span class="sr-search__icon">…</span>\n        <input type="search" class="sr-search__control-input" id="q"\n               @bind="Query" @bind:event="oninput" placeholder="@Placeholder" />\n      </div>\n    </div>\n    <button type="submit" class="sr-search__submit" disabled="@(string.IsNullOrEmpty(Query))">Search</button>\n  </div>\n</div>',
     MAUI: '<!-- No native combobox on MAUI. Compose an Entry with a CollectionView and\n     wire the semantics by hand; take the SR tokens for the field:\n     SrColorSurfaceSectionCards, SrColorBorderDefault, SrRadiusSm,\n     SrColorBorderFocus for the focus ring. Not yet built - see the spec. -->',
   };
 
@@ -3306,7 +3434,7 @@ ${trigger({ id: 'sel-d', label: 'Disabled', value: 'Aneurin ward', disabled: tru
   const stateSnippets = {
     HTML: '<!-- data-placeholder="true" is what keeps "Select a ward" in secondary\n     text. Remove it when a real value is set, or the value renders as\n     though it were still a placeholder. -->\n<div class="sr-select">\n  <label class="sr-select__label" for="s1">Placeholder</label>\n  <div class="sr-select__control">\n    <button type="button" class="sr-select__trigger" id="s1" aria-haspopup="listbox" aria-expanded="false" data-placeholder="true">\n      <span class="sr-select__value">Select a ward</span>\n    </button>\n  </div>\n</div>\n\n<div class="sr-select sr-select--error">\n  <label class="sr-select__label" for="s2">Error <span class="sr-select__required">*</span></label>\n  <div class="sr-select__control">\n    <button type="button" class="sr-select__trigger" id="s2" aria-haspopup="listbox" aria-expanded="false" aria-describedby="s2-err" data-placeholder="true">\n      <span class="sr-select__value">Select a ward</span>\n    </button>\n  </div>\n  <p class="sr-select__error" id="s2-err">Select a ward to continue</p>\n</div>\n\n<div class="sr-select">\n  <label class="sr-select__label" for="s3">Disabled</label>\n  <div class="sr-select__control">\n    <button type="button" class="sr-select__trigger" id="s3" disabled>\n      <span class="sr-select__value">Aneurin ward</span>\n    </button>\n  </div>\n</div>',
     React: '<Select label="Placeholder" placeholder="Select a ward" options={wards} />\n<Select label="With a value" options={wards} defaultValue="tawe" />\n<Select\n  label="Error"\n  options={wards}\n  required\n  error="Select a ward to continue"\n/>\n<Select label="Disabled" options={wards} defaultValue="aneurin" disabled />',
-    Blazor: '<SrSelect Label="Placeholder" Placeholder="Select a ward" Options="@wards" />\n<SrSelect Label="With a value" Options="@wards" @bind-Value="ward" />\n<SrSelect Label="Error" Options="@wards" Required="true"\n          Error="Select a ward to continue" />\n<SrSelect Label="Disabled" Options="@wards" Disabled="true" />',
+    Blazor: '@* Stylesheet only — no SrSelect component ships. Select is a custom\n   listbox, so the open/close and keyboard behaviour is yours to write. *@\n<div class="sr-select sr-select--error">\n  <label class="sr-select__label" for="s2">Error <span class="sr-select__required">*</span></label>\n  <div class="sr-select__control">\n    <button type="button" class="sr-select__trigger" id="s2"\n            aria-haspopup="listbox" aria-expanded="@IsOpen"\n            aria-describedby="s2-err" data-placeholder="@(Ward is null)"\n            @onclick="Toggle">\n      <span class="sr-select__value">@(Ward?.Name ?? "Select a ward")</span>\n    </button>\n  </div>\n  <p class="sr-select__error" id="s2-err">Select a ward to continue</p>\n</div>',
     MAUI: `<!-- Picker has no error state of its own: the message is a sibling Label,
      and the field Border takes the critical stroke. Title is never the label.
      The status colours carry no AppThemeBinding because they hold the same
@@ -3325,7 +3453,7 @@ ${trigger({ id: 'sel-d', label: 'Disabled', value: 'Aneurin ward', disabled: tru
   const snippets = {
     HTML: '<div class="sr-select">\n  <label class="sr-select__label" for="ward">Ward</label>\n  <div class="sr-select__control">\n    <button type="button" class="sr-select__trigger" id="ward" aria-haspopup="listbox" aria-expanded="false" data-placeholder="true">\n      <span class="sr-select__value">Select a ward</span>\n    </button>\n    <div class="sr-select__menu" role="listbox" hidden>\n      <div class="sr-select__option" role="option" aria-selected="false">Aneurin ward</div>\n    </div>\n  </div>\n</div>',
     React: '<Select\n  label="Ward"\n  hint="The ward the patient is being admitted to."\n  placeholder="Select a ward"\n  options={wards}\n  value={ward}\n  onChange={setWard}\n/>',
-    Blazor: '<SrSelect Label="Ward" Placeholder="Select a ward"\n          Options="@wards" @bind-Value="ward" />',
+    Blazor: '@* Stylesheet only — no SrSelect component ships. *@\n<div class="sr-select">\n  <label class="sr-select__label" for="ward">Ward</label>\n  <div class="sr-select__control">\n    <button type="button" class="sr-select__trigger" id="ward"\n            aria-haspopup="listbox" aria-expanded="@IsOpen"\n            data-placeholder="@(Ward is null)" @onclick="Toggle">\n      <span class="sr-select__value">@(Ward?.Name ?? "Select a ward")</span>\n    </button>\n    <div class="sr-select__menu" role="listbox" hidden="@(!IsOpen)">\n      @foreach (var w in Wards)\n      {\n        <div class="sr-select__option" role="option"\n             aria-selected="@(w == Ward)" @onclick="() => Choose(w)">@w.Name</div>\n      }\n    </div>\n  </div>\n</div>',
     MAUI: `<!-- Picker is the native equivalent; the label stays a separate Label so
      the field stack matches Input, and Title is never the label. -->
 <VerticalStackLayout Spacing="4">
@@ -3754,7 +3882,7 @@ ${SECTIONS_NAV.map((s) => `    <div class="sr-nav__section">
   const snippets = {
     HTML: '<nav class="sr-nav" aria-label="Primary">\n  <div class="sr-nav__header">…</div>\n  <div class="sr-nav__body">\n    <div class="sr-nav__section">\n      <span class="sr-nav__section-label">Patients</span>\n      <div class="sr-nav__list">\n        <button class="sr-nav__item" aria-label="Patient Search">…</button>\n      </div>\n    </div>\n  </div>\n  <div class="sr-nav__footer">…</div>\n</nav>\n\n<!-- Collapsed states -->\n<nav class="sr-nav sr-nav--rail">…</nav>       <!-- 108px, labels kept -->\n<nav class="sr-nav sr-nav--collapsed">…</nav>  <!-- 48px, icon only -->',
     React: '<Navigation\n  type="sectioned"          // "sectioned" | "linear"\n  collapsed={navState}      // false (220px) | "rail" (108px) | "icon" (48px)\n  sections={sections}\n  footerItems={footerItems}\n  current="Dashboard"\n  onCollapseToggle={cycleNavState}\n/>',
-    Blazor: '<SrNavigation Sections="@sections" State="Expanded" Current="Dashboard" />',
+    Blazor: '@* Stylesheet only — no SrNavigation component ships. A parent with children\n   is a button with aria-expanded; a leaf is a link. *@\n<nav class="sr-nav" aria-label="Primary">\n  <div class="sr-nav__header">…</div>\n  <div class="sr-nav__body">\n    @foreach (var section in Sections)\n    {\n      <div class="sr-nav__section">\n        <span class="sr-nav__section-label">@section.Label</span>\n        <div class="sr-nav__list">\n          @foreach (var item in section.Items)\n          {\n            <a class="sr-nav__item" href="@item.Href"\n               aria-current="@(item.Label == Current ? "page" : null)">@item.Label</a>\n          }\n        </div>\n      </div>\n    }\n  </div>\n  <div class="sr-nav__footer">…</div>\n</nav>',
     MAUI: '<!-- No MAUI equivalent. A 248px persistent rail is a browser-width\n     pattern; MAUI is mobile only (phone, tablet). Mobile primary\n     navigation is BottomNav — see the Footer page, Type: Mobile. -->',
   };
   return `
@@ -3947,7 +4075,13 @@ function iconsBody() {
 
 <Icon name="clinical/vitals" size="md" color="default" />
 <span>Observations</span>`,
-    Blazor: `<SrIcon Name="clinical/vitals" Size="IconSize.Md" Color="IconColor.Default" />
+    Blazor: `@* Stylesheet only — no SrIcon component ships. Reference the sprite that
+   comes with the NuGet package; the sr-icon wrapper carries size and colour. *@
+<span class="sr-icon sr-icon--md sr-icon--default">
+  <svg aria-hidden="true" focusable="false">
+    <use href="_content/DHCW.SingleRecord.Blazor/css/sprite.svg#icon-clinical-vitals"></use>
+  </svg>
+</span>
 <span>Observations</span>`,
     MAUI: `<!-- Icons ship as geometry in Icons.xaml, so the stroke is a token and
      follows the theme. Leave Fill unset: these are outlines, and filling them
@@ -3980,16 +4114,25 @@ function iconsBody() {
 <Button variant="secondary" aria-label="Print summary">
   <Icon name="action/print" size="sm" color="inherit" />
 </Button>`,
-    Blazor: `@* Decorative: the button text is the accessible name. *@
-<SrButton Variant="ButtonVariant.Secondary">
-  <SrIcon Name="action/print" Size="IconSize.Sm" Color="IconColor.Inherit" />
+    Blazor: `@* Stylesheet only — no SrButton or SrIcon component ships.
+   Decorative: the button text is the accessible name. *@
+<button type="button" class="sr-button sr-button--secondary">
+  <span class="sr-icon sr-icon--sm sr-icon--inherit">
+    <svg aria-hidden="true" focusable="false">
+      <use href="_content/DHCW.SingleRecord.Blazor/css/sprite.svg#icon-action-print"></use>
+    </svg>
+  </span>
   Print summary
-</SrButton>
+</button>
 
 @* Meaningful: name the control, not the icon. *@
-<SrButton Variant="ButtonVariant.Secondary" AriaLabel="Print summary">
-  <SrIcon Name="action/print" Size="IconSize.Sm" Color="IconColor.Inherit" />
-</SrButton>`,
+<button type="button" class="sr-button sr-button--secondary" aria-label="Print summary">
+  <span class="sr-icon sr-icon--sm sr-icon--inherit">
+    <svg aria-hidden="true" focusable="false">
+      <use href="_content/DHCW.SingleRecord.Blazor/css/sprite.svg#icon-action-print"></use>
+    </svg>
+  </span>
+</button>`,
     MAUI: `<!-- Decorative: the visible label carries the meaning, so the icon is kept
      out of the accessibility tree. -->
 <HorizontalStackLayout Spacing="8">
@@ -4018,14 +4161,20 @@ function iconsBody() {
 
 <!-- Wrong: a bare red icon leaves the meaning to colour and shape alone. -->
 <span class="sr-icon sr-icon--sm sr-icon--critical"><svg aria-hidden="true"></svg></span>`,
-    React: `<Text size="s">
+    React: `{/* The type scale is a class, not a component — there is no <Text>. */}
+<p className="sr-type-body-s">
   <Icon name="status/warning" size="sm" color="critical" />
   Allergy: penicillin
-</Text>`,
-    Blazor: `<SrText Size="TextSize.S">
-  <SrIcon Name="status/warning" Size="IconSize.Sm" Color="IconColor.Critical" />
+</p>`,
+    Blazor: `@* Stylesheet only — no SrText or SrIcon component ships. *@
+<p class="sr-type-body-s">
+  <span class="sr-icon sr-icon--sm sr-icon--critical">
+    <svg aria-hidden="true" focusable="false">
+      <use href="_content/DHCW.SingleRecord.Blazor/css/sprite.svg#icon-status-warning"></use>
+    </svg>
+  </span>
   Allergy: penicillin
-</SrText>`,
+</p>`,
     MAUI: `<!-- A status icon takes the status token and is always paired with text.
      Colour is never the only signal (WCAG 1.4.1). -->
 <HorizontalStackLayout Spacing="8">
@@ -4369,7 +4518,7 @@ Two ways to place one, and neither needs a build step:</p>
 ${codePanel('get-files-icon', {
   HTML: '<!-- With the sprite: no JavaScript at all. -->\n<span class="sr-icon sr-icon--sm">\n  <svg><use href="/assets/sprite.svg#icon-nav-search"></use></svg>\n</span>',
   React: 'import Icon from "@dhcw/sr-react/icon";\n\n<Icon name="nav/search" size="sm" />',
-  Blazor: '<SrIcon Name="nav/search" Size="IconSize.Sm" />',
+  Blazor: '@* Same sprite, served from the NuGet package\'s static web assets. *@\n<span class="sr-icon sr-icon--sm">\n  <svg aria-hidden="true" focusable="false">\n    <use href="_content/DHCW.SingleRecord.Blazor/css/sprite.svg#icon-nav-search"></use>\n  </svg>\n</span>',
   MAUI: `<!-- Icons.xaml is merged once in App.xaml; after that any icon is a key. -->
 <Path Data="{StaticResource SrIconNavSearch}"
       Aspect="Uniform" HeightRequest="16" WidthRequest="16"
@@ -4391,8 +4540,11 @@ loose script you have to wire up:</p>
   <li><strong>React</strong> — the components in <code>packages/react</code>. JSX source, which any
   React setup compiles as part of its own build; there is no pre-built browser file, and one is only
   needed by a project with no build step at all.</li>
-  <li><strong>Blazor / .NET</strong> — the Razor Class Library in <code>packages/blazor</code>, which
-  MAUI renders too.</li>
+  <li><strong>Blazor / .NET</strong> — nothing to wire up, because there are no Blazor components.
+  <code>DHCW.SingleRecord.Blazor</code> ships stylesheets; you write the markup with the
+  <code>sr-*</code> classes and bind your own handlers, exactly as the Blazor tab in every code
+  window on this site shows. MAUI does not render it either — MAUI is native XAML, with its own
+  token and style layer.</li>
 </ul>
 
 <h2>How to install it</h2>
@@ -4823,6 +4975,11 @@ addPage({
   prefix: '../', body: searchBody(), extraScript: SEARCH_SCRIPT,
 });
 
+addPage({
+  file: 'components/inset-text.html', url: 'components/inset-text.html', title: 'Inset text',
+  section: 'Components', sectionId: 'components', activeHref: 'components/inset-text.html',
+  prefix: '../', body: insetTextBody(),
+});
 addPage({
   file: 'components/link.html', url: 'components/link.html', title: 'Link',
   section: 'Components', sectionId: 'components', activeHref: 'components/link.html',

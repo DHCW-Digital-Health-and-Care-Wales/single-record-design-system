@@ -1,4 +1,5 @@
 import React from 'react';
+import { iconMarkup } from '@dhcw/sr-icons/build/icons.js';
 import '@dhcw/sr-web/src/status-indicator/status-indicator.css';
 
 /**
@@ -33,13 +34,19 @@ const GLYPHS = {
       <circle cx="12" cy="17" r="1.15" fill="#212b32" />
     </>
   ),
-  // The `action/remove` dash, which is the fourth mark on the Figma Status
-  // Indicator page. Geometry copied from the icon set rather than redrawn, so
-  // the two cannot drift: `action/remove` is `M5 12h14`.
-  none: (
-    <path d="M5 12h14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-  ),
 };
+
+/**
+ * The fourth mark on the Figma Status Indicator page is the `action/remove`
+ * dash, and it is the one member of this family that IS in the outline icon
+ * set. So it is pulled from the set rather than hand-inlined beside the three
+ * that are not — a copied path drifts the moment the icon is redrawn, and the
+ * design-system check is right to flag a fourth inline SVG here.
+ *
+ * The stylesheet gives it the family's stroke weight; a 1px dash beside three
+ * solid discs reads as a rendering fault at 16px.
+ */
+const NONE_MARKUP = { __html: iconMarkup('action/remove') };
 
 export default function StatusIndicator({ status = 'success', size = 'md', label, className, ...rest }) {
   const classes = [
@@ -52,6 +59,18 @@ export default function StatusIndicator({ status = 'success', size = 'md', label
     .join(' ');
 
   const a11y = label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': true };
+
+  if (status === 'none') {
+    return (
+      <span
+        className={classes}
+        {...a11y}
+        // eslint-disable-next-line react/no-danger -- trusted, build-time-generated SVG source
+        dangerouslySetInnerHTML={NONE_MARKUP}
+        {...rest}
+      />
+    );
+  }
 
   return (
     <span className={classes} {...a11y} {...rest}>
