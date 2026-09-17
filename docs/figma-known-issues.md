@@ -222,6 +222,40 @@ The `NONE` → `resize` → `HEIGHT` round trip is what forces the recalculation
 
 ---
 
+### `ComponentNode.instances` over-reports: it includes orphaned subtrees
+
+**Symptom:** After merging the two Notification Banner sets, a page-by-page sweep of
+all 61 pages found **6** live instances of `Notification Banner/Variants`. Reading
+`variant.instances.length` on the same set in the same session reported **15**. Nine
+instances existed that no sweep could find.
+
+**Why:** The nine were real `InstanceNode`s with `removed === false`, but walking
+`.parent` from each one terminated at a `FRAME` named `Screen Content` whose own
+`parent` was `null` — a subtree detached from the document tree. `.instances`
+returns those; anything reachable on the canvas always chains up to a `PAGE`.
+
+**Fix:** Do not gate destructive work on `.instances.length`. Count only instances
+that resolve to a page:
+
+```js
+function pageOf(node) {
+  let p = node;
+  while (p && p.type !== 'PAGE') p = p.parent;
+  return p;               // null => orphaned, not on the canvas
+}
+const live = variant.instances.filter(i => pageOf(i) !== null);
+```
+
+The corollary matters for the banner merge specifically: step 8 of
+`docs/figma-banner-and-error-messages.md` says to delete the old set "once step 7
+reports zero instances". `.instances` will never read zero for that set. The gate is
+zero *page-reachable* instances.
+
+**Prevented by:** Nothing mechanical — this is Plugin API behaviour, not repo
+content, so no build check can reach it. The guard is the snippet above.
+
+**Status:** Workaround only. 2026-09-17.
+
 ## Assets & Export
 
 ### `figma.com` egress is blocked, but vector artwork can still be lifted via `fillGeometry`

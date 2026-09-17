@@ -72,30 +72,98 @@ Worth writing on the set, because it is the one distinction that earns a variant
 The order matters because renaming a property detaches every instance bound to
 it, and deleting a set leaves its instances orphaned.
 
-1. **Find the instances first.** Before touching either set, search the file for
-   instances of both and list the frames they sit in. Anything in `PAGES` or
-   `PATTERNS` is a real screen someone is working from.
-2. **Keep `Notification Banner/Severity` (`2561:21695`) as the survivor.** It has
-   the richer artwork and the axis with more values. Rename it to
-   `Notification Banner`.
-3. **Merge Critical into Error.** Re-point any instance using Critical at Error,
-   then delete the Critical variant. Five becomes four.
-4. **Add the `Placement` property.** Set the existing four to `Placement=Inline`,
-   then duplicate them and adjust the copies to `Placement=Global`: square the
-   corners, take the horizontal margin off, and let the fill run edge to edge.
-   Four becomes eight.
-5. **Add `Dismissible` as a boolean** bound to the close button's visibility, on
-   all eight. Default off.
-6. **Add `Actions` as a boolean** bound to the action row's visibility, on all
-   eight. Default off.
-7. **Swap the orphans.** Re-point every instance of
-   `Notification Banner/Variants` at the merged set, choosing the severity and
-   placement that matches what it was drawing.
-8. **Delete `Notification Banner/Variants` (`2561:21735`)** once step 7 reports
-   zero instances.
+**Steps 1–6 were done on 2026-09-17.** What remains is 7 and 8, and step 7 is
+much smaller than this plan assumed — see the inventory below.
 
-Steps 3 and 7 are the ones that lose work if rushed. Do the search in step 1
-before anything else.
+| # | Step | State |
+|---|---|---|
+| 1 | Find the instances first | **Done** — 6 live instances, all on one page. Inventory below. |
+| 2 | Rename `Notification Banner/Severity` to `Notification Banner` | **Done** |
+| 3 | Merge Critical into Error | **Done** — zero instances used Critical, so nothing was re-pointed. Five became four. |
+| 4 | Add `Placement` | **Done** — four became eight. Global variants have square corners. |
+| 5 | Add `Dismissible` boolean | **Done** — `Dismissible#5340:0`, default off |
+| 6 | Add `Actions` boolean | **Done** — `Actions#5340:9`, default off |
+| 7 | Swap the orphans | **Open** — 6 instances, recommendation per instance below |
+| 8 | Delete `Notification Banner/Variants` (`2561:21735`) | **Open** — blocked on 7 |
+
+The merged set is `2561:21695`, still on the Notification banner page
+(`2561:21736`), with eight variants:
+
+```
+Severity = Information | Success | Warning | Error
+Placement = Inline | Global
+Dismissible = boolean (default off)
+Actions     = boolean (default off)
+```
+
+Both booleans were verified by spawning an instance of all eight variants,
+toggling each on, and confirming the Close and Actions layers became visible in
+every one. The temporary frame was deleted afterwards.
+
+#### One thing had to be normalised first
+
+The five original Severity variants were not built alike. Information and Success
+had a `Close` layer and no `Actions` row; Warning, Error and Critical had an
+`Actions` row and no `Close`. A boolean bound to a layer that does not exist
+cannot be bound at all, so every variant now carries both layers before the
+booleans were added. The two new Actions rows were cloned from Error's and then
+re-pointed off the red they were cloned with — `Status/Info` for Information,
+`Status/Success` for Success.
+
+### Step 1's output — every instance of either set
+
+Swept all 61 pages of the file. **Six live instances, all on `Adaptations UEC`**
+(`1363:23684`). Nothing in `PAGES`, `PATTERNS` or any component page uses either
+set. None is nested inside another instance, so all six are directly re-pointable.
+
+> Reading `variant.instances.length` reports **15**, not 6. The other nine sit in
+> orphaned subtrees whose root frame has a `null` parent — they are not on the
+> canvas and no sweep can reach them. So step 8's "once step 7 reports zero
+> instances" means zero *page-reachable* instances; `.instances` will never read
+> zero. Recorded in `docs/figma-known-issues.md`.
+
+#### The old set never recorded a severity — but the instances did
+
+This plan assumed choosing a severity per instance would be a judgement call.
+It is not, or barely. Every live instance **overrides the fill and stroke** to a
+status token, and that override is the severity the designer meant:
+
+| Instance | Frame | Fill / stroke override | Message | Recommended |
+|---|---|---|---|---|
+| `2942:9469` | `MacBook Air - 12` | `Info Blue/50` / `Status/Info` | "Total previous attendances is a combined count…" | Information · Inline |
+| `4242:31587` | `Modal` | `Status/Critical` | "Clinical Reminder: NEWS Score > 3 — Suspect SEPSIS…" | Error · Inline |
+| `4242:31937` | `Modal` | `Status/Critical` | same message | Error · Inline |
+| `4562:22833` | `Modal` | `Status/Critical` | same message | Error · Inline |
+| `4562:25111` | `Modal` | `Status/Critical` | same message | Error · Inline |
+| `4562:25792` | `Modal` | `Status/Critical` | same message | Error · Inline |
+
+All six were `Type=Inline`, none had a visible close button or action row, so
+`Placement=Inline`, `Dismissible=off`, `Actions=off` throughout.
+
+Two things are still genuinely yours:
+
+1. **The five sepsis banners are the case Critical existed for.** They are a
+   patient-safety alert, and collapsing them to Error is exactly the collapse
+   DDR-032 argued for — a safety alert that must outrank an error needs more
+   than a darker red. Mapping them to Error is the decision this merge implies,
+   but it is the one instance where the merge changes meaning on a live screen,
+   so it should be your call rather than a script's.
+2. **`2942:9469` binds its fill to `Info Blue/50`**, a global token, where every
+   other banner binds to a `Status/… Surface` semantic. Worth fixing to
+   `Status/Info Surface` while you are in there.
+
+There is also a **seventh** banner on that page, `4562:22747`, which is already
+an instance of the surviving set (`Severity=Information`, "Form guidance") and
+needs nothing.
+
+### A naming mismatch this merge exposes
+
+The variant is called `Severity=Error`; the tokens it binds to are
+`Status/Critical` and `Status/Critical Surface`. There is no `Status/Error`
+variable in the file. After the Critical/Error collapse the axis value and the
+token name disagree on the same colour. Renaming the variable is a token change
+with its own blast radius, so it is left as a flagged decision rather than done
+here.
 
 ### What ships in code
 

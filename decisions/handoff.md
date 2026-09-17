@@ -11,6 +11,80 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 ---
 
+## Checkpoint — 2026-09-17 (The banner sets are one set; the instances recorded their severity after all)
+
+### Where the notification banner merge now stands
+
+`docs/figma-banner-and-error-messages.md` is still the doc to open, and its step
+table now records state. **Steps 1 to 6 are done.** `Notification Banner`
+(`2561:21695`) is one set of eight variants with two variant axes and two
+booleans:
+
+```
+Severity = Information | Success | Warning | Error     (Critical merged into Error)
+Placement = Inline | Global                            (Global = square corners)
+Dismissible = boolean, default off
+Actions     = boolean, default off
+```
+
+Verified by instancing all eight, toggling both booleans on, and confirming the
+Close and Actions layers appeared in every one. The temp frame was removed.
+
+**Steps 7 and 8 are still the design lead's, but step 7 shrank.** The plan
+assumed picking a severity per instance would be judgement, because the old
+`Variants` set never recorded one. It turns out every live instance *overrode its
+fill and stroke to a status token*, and that override is the severity. The
+recommendation table is in the plan doc.
+
+### Step 1's finding: six instances, one page
+
+Swept all 61 pages. Six live instances of `Notification Banner/Variants`, **all
+on `Adaptations UEC`**, none nested inside another instance. Nothing in `PAGES`,
+`PATTERNS` or any component page touches either set — the "live instances sitting
+on real screens" the plan warned about are one page's worth.
+
+Five of the six are the same message: *"Clinical Reminder: NEWS Score > 3 —
+Suspect SEPSIS"*, all bound to `Status/Critical`. **That is the one place this
+merge changes meaning on a real screen** — they are the patient-safety case
+Critical existed for, and DDR-032's argument says they become Error. It is the
+decision worth making deliberately rather than scripting.
+
+### Two things the merge exposed
+
+- **`ComponentNode.instances` over-reports.** It said 15 where the sweep found 6.
+  The other nine are in orphaned subtrees whose root frame has a `null` parent —
+  not on the canvas, unreachable by any sweep. Step 8's "zero instances" gate has
+  to mean zero *page-reachable* instances or it can never be satisfied. Filed in
+  `docs/figma-known-issues.md` with the filter snippet.
+- **`Severity=Error` binds to `Status/Critical`.** There is no `Status/Error`
+  variable. After the collapse the axis value and the token name disagree about
+  the same colour. Left flagged, not renamed — a variable rename has its own
+  blast radius.
+
+### The five variants were not built alike
+
+Information and Success had a `Close` and no `Actions`; Warning, Error and
+Critical had `Actions` and no `Close`. A boolean cannot bind to a layer that is
+not there, so both layers were added everywhere before steps 5 and 6. The cloned
+Actions rows carried Error's red and were re-pointed to `Status/Info` and
+`Status/Success`. Worth knowing before adding a boolean to any other set in this
+file: **check the anatomy is uniform first, or the property binds to four of
+eight variants and nobody notices.**
+
+### Still open, in the order they are worth doing
+
+1. **Banner steps 7 and 8** — six instances, table in the plan doc.
+2. **The banner in code** — `.sr-notification-banner`, now that the set is one.
+3. **Error summary** — a new pattern, the real gap behind the Errors page.
+4. **Status indicator's section on the Icons page** — last DDR-032 item with
+   nothing shipped.
+5. **The destructive link's dark-mode colour** — open finding in
+   `check-contrast.mjs`, two options written out.
+6. **The footer in dark mode** — a real Figma-vs-code disagreement, not an
+   oversight. See the 2026-09-16 checkpoint.
+
+---
+
 ## Checkpoint — 2026-09-16 (Inset text ships; the code windows were fiction; DDR-033 restores the dark teal)
 
 ### Start here if you are picking up the notification banner
