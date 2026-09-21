@@ -11,6 +11,70 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 ---
 
+## Checkpoint — 2026-09-21c (DDR-034 implemented; status.error ships)
+
+All four decisions from DDR-034 are now done in the file and the repo.
+
+### `status.critical` → `status.error`, with an alias
+
+`status.error` / `status.error-surface` are canonical in both modes.
+`status.critical` / `status.critical-surface` remain as aliases resolving to
+them, so `--sr-color-status-critical` still emits and no consumer of
+`@dhcw/sr-tokens` breaks. Aliases go at the next major.
+
+109 references across 33 hand-written files moved. Generated output — Blazor
+`wwwroot` CSS, MAUI `Colors.xaml`/`Icons.xaml`, `packages/tokens/build` —
+regenerates off the JSON and was rebuilt. Figma's variables renamed; bindings
+verified unchanged. `check:contrast` asserts the pair under the new name and
+**was verified by planting `color.red.200` and confirming a non-zero exit**.
+
+Two things deliberately left alone: `StatCard`'s `accent="critical"` prop, which
+is component API not a token, and `sr.icon.color.critical`, a namespace DDR-034
+did not rule on.
+
+### The `Dialog` set is gone, losslessly
+
+Its ten variants were **detached into pattern frames** before the delete, so all
+the example copy survives — "Override clinical alert?", the result summary rows,
+the processing state. Their nested Button and Icon instances stayed instances,
+which is exactly what "composed from existing components" is supposed to mean.
+Zero instances re-verified on a full page load first.
+
+**Still open, and not mechanical:** re-basing those frames onto `Modal`
+instances with content in its slot. The Confirmation patterns are drawn at
+400px; `Modal` offers Small 380 and Medium 480. Picking a size per pattern — or
+adding one — is a design call, so they are detached copies for now.
+
+### The rest
+
+- **`Warning Messages` → `Form field / Message`**, page retitled **Errors**, and
+  described as a building block that must never be placed alone. All 15
+  instances on the Checkbox, Radios and Select pages verified intact. **Not
+  deleted** — those three pages draw their own error state with it.
+- **`Notification Icon` → `Header / Notification bell`**, moved to the Header
+  page where all 4 of its instances already were. The Notifications page is now
+  empty and named `[EMPTY — delete]` — **a page delete is left for a human**.
+- **Both the Modal and Dialogs headings** said `NOTIFICATION BANNERS`. Fixed.
+- **`components/modal/spec.md`** moved off "In development"; it ships in web and
+  React.
+- **`patterns/dialogs/result-dialog.md`** written — DDR-008 named two patterns
+  and only confirmation had ever been documented.
+
+### Open, in the order they are worth doing
+
+1. **The notification banner in code** — `.sr-notification-banner`. The set is
+   stable and the naming is settled.
+2. **Error summary** — a new pattern, still the real gap behind the Errors page.
+3. **Re-base the dialog pattern frames onto `Modal`** (size decision first).
+4. **Unify the two code badges** — `.sr-nav__item-badge` and `.sr-tabs__badge`
+   are one mark implemented twice, and `.sr-header__notification` has none.
+5. **Delete the empty Notifications page.**
+6. **Status indicator's section on the Icons page** — last DDR-032 item with
+   nothing shipped.
+7. **The destructive link's dark-mode colour**, and **the footer in dark mode**.
+
+---
+
 ## Checkpoint — 2026-09-21b (DDR-034: Modal, Notifications, Error/Warning messages)
 
 Three more pages classified, same test as DDR-032, plus a second test that

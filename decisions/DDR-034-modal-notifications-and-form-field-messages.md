@@ -2,7 +2,7 @@
 
 **Date:** 2026-09-21
 **Author:** Design lead (with AI-assisted session)
-**Status:** Accepted
+**Status:** Accepted — implemented 2026-09-21
 **Follows:** DDR-008 (modal dialog), DDR-032 (five Figma pages)
 
 ---
@@ -169,6 +169,32 @@ stylesheet for a naming tidy-up, which is not a trade worth making silently.
 
 Figma's `Status/Critical` and `Status/Critical Surface` variables are renamed to
 match, which costs nothing — variable renames do not detach bindings.
+
+---
+
+## Implementation — done 2026-09-21
+
+| Change | Outcome |
+|---|---|
+| `Dialog` (`2612:3330`) deleted | Its 10 variants were first detached into **pattern frames** on the Dialogs page, grouped Confirmation and Result, so no artwork or example copy was lost. Their nested Button and Icon instances survive as instances — which is what "composed from existing components" means. Instance count re-verified at 0 on a full page load before the delete |
+| Dialogs page heading | `NOTIFICATION BANNERS` → `DIALOGS` |
+| Modal page heading | `NOTIFICATION BANNERS` → `MODAL` |
+| `Modal` (`3807:36855`) | Given a description stating it is the DDR-008 base, and that intent/layout/state must never become variants on it |
+| `Warning Messages` → `Form field / Message` | Renamed, described as a building block, page retitled **Errors**. All 15 doc-page instances verified intact |
+| `Notification Icon` → `Header / Notification bell` | Moved to the Header page, where all 4 of its instances already live; verified intact. The Notifications page is now empty and flagged `[EMPTY — delete]` |
+| `status.critical` → `status.error` | Shipped with a deprecated alias; see §4 |
+| `components/modal/spec.md` | Moved off "In development" — it ships in both web and React |
+| `patterns/dialogs/result-dialog.md` | Written; DDR-008 named two patterns and only confirmation existed |
+
+**Not done, and not mechanical:** re-basing the ten pattern frames onto `Modal`
+instances with content in its slot. The Confirmation patterns are drawn at
+400px; `Modal` offers Small 380 and Medium 480. Choosing a size per pattern, or
+adding one, is a design decision rather than a conversion, so the frames are
+detached copies for now and the re-basing is open work.
+
+The stale `Sample Usage notes` frame on the Notifications page was removed
+rather than rewritten — it described a Menu Item, not a bell, and was the same
+boilerplate already pruned from the Link and Inset text pages.
 
 ---
 
