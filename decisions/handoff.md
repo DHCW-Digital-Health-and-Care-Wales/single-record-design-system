@@ -58,8 +58,24 @@ But it is load-bearing — **249 occurrences across 57 files**, and
 `--sr-color-status-critical` is public API of `@dhcw/sr-tokens` v0.3.0. So:
 add `status.error` as canonical, keep `status.critical` as a **deprecated
 alias** emitting both custom properties, migrate internal usage, drop the alias
-at the next major. Figma's variables rename to match — variable renames do not
-detach bindings. **Not yet implemented.**
+at the next major.
+
+**Done on 2026-09-21.** `status.error` / `status.error-surface` are canonical in
+both light and dark; `status.critical` / `status.critical-surface` remain as
+aliases that resolve to them, so `--sr-color-status-critical` still emits and no
+consumer breaks. 109 internal references across 33 hand-written files moved to
+the new name; Blazor CSS, MAUI `Colors.xaml` and the token build output
+regenerated off it. Figma's `Status/Critical` and `Status/Critical Surface`
+variables were renamed to `Status/Error` and `Status/Error Surface` — bindings
+verified unchanged before and after.
+
+`check:contrast` now asserts the pair under the new name, and **the gate was
+verified by planting `color.red.200` and confirming a non-zero exit** (1.57:1
+against the 4.5:1 it needs) before restoring.
+
+Two things deliberately NOT renamed: `StatCard`'s `accent="critical"` prop,
+which is component API and not a token, and `sr.icon.color.critical`, which is a
+separate namespace DDR-034 did not rule on.
 
 ---
 

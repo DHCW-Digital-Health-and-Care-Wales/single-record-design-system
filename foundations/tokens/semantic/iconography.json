@@ -51,7 +51,7 @@
         },
         "critical": {
           "$type": "color",
-          "$value": "{sr.color.status.critical}",
+          "$value": "{sr.color.status.error}",
           "$description": "Critical / error state icon"
         },
         "warning": {

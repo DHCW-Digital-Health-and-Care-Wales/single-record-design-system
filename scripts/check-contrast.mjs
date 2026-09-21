@@ -100,8 +100,8 @@ const PAIRS = [
     'Body text on a small card'],
 
   // --- Status text on its own surface. SC 1.4.3 normal text, 4.5:1. ---
-  ['sr-color-status-critical', 'sr-color-status-critical-surface', 4.5,
-    'Critical text on the critical surface'],
+  ['sr-color-status-error', 'sr-color-status-error-surface', 4.5,
+    'Error text on the error surface'],
   ['sr-color-status-success', 'sr-color-status-success-surface', 4.5,
     'Success text on the success surface'],
   ['sr-color-status-info', 'sr-color-status-info-surface', 4.5,
@@ -217,7 +217,7 @@ const KNOWN = [
     note: 'A destructive LINK is red text; interactive/destructive is a fill colour '
       + '(white sits on it) and is unchanged across modes, so on the dark page it is '
       + '2.84:1. Light passes at 4.64:1. No red in the ramp is dark-safe as text: '
-      + 'status/critical is 2.14:1 there. Options: (a) a new semantic '
+      + 'status/error is 2.14:1 there. Options: (a) a new semantic '
       + 'interactive/destructive-on-dark stepping to a light red, (b) drop the '
       + 'destructive link type and require a Button for destructive flows, which is '
       + 'what GDS and NHS England do. Design lead decides; colour changes need '

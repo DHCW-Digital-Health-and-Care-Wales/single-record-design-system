@@ -23,7 +23,7 @@ The set carries three boolean properties so a single instance can be used both a
 |---|---|---|
 | `Label` | `false` | Shows a "Field label" row above the input. Style: `Label` (14/20 Medium). |
 | `Hint` | `false` | Shows a hint row between the label and the input. Style: `Caption` (12/16 Regular), `Text/Secondary`. |
-| `Required` | `false` | When `Label=true`, adds a `*` in `Status/Critical` after the label text. Decorative — pair with `aria-required` in code. |
+| `Required` | `false` | When `Label=true`, adds a `*` in `Status/Error` after the label text. Decorative — pair with `aria-required` in code. |
 
 These work alongside the existing `Type` and `State` variants. The `Error` state still renders its own inline error message at the bottom of the field.
 
@@ -122,7 +122,7 @@ Dock it directly under a Typeahead Search instance. Width defaults to 360 — re
 | Filled | Value shown in `Text/Primary`, clear (×) trailing affordance present. |
 | Loading | Spinner replaces clear. Border unchanged from prior state. |
 | Disabled | Background `Surface/Background`, border `Border/Disabled`, text `Text/Disabled`. `aria-disabled="true"`. |
-| Error | Border `Status/Critical`. Inline message below using `Caption` style in `Status/Critical`. |
+| Error | Border `Status/Error`. Inline message below using `Caption` style in `Status/Error`. |
 
 For With Button / With Icon Button: the adjacent button uses `Interactive/Disabled` until input is valid (matches the Default state in the component) and switches to `Interactive/Primary` thereafter.
 

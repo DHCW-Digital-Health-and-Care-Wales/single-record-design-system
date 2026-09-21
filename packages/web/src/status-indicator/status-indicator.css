@@ -26,7 +26,7 @@
 .sr-status-indicator--lg { width: 24px; height: 24px; }
 
 .sr-status-indicator--success { color: var(--sr-color-status-success); }
-.sr-status-indicator--error { color: var(--sr-color-status-critical); }
+.sr-status-indicator--error { color: var(--sr-color-status-error); }
 .sr-status-indicator--warning { color: var(--sr-color-status-warning); }
 
 /* "No status recorded" — the dash the Figma page draws as its fourth mark,

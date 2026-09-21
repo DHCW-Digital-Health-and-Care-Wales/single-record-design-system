@@ -66,7 +66,7 @@ export const Status = {
       ['--sr-color-status-info-surface', 'Status / Info Surface'],
       ['--sr-color-status-success-surface', 'Status / Success Surface'],
       ['--sr-color-status-warning-surface', 'Status / Warning Surface'],
-      ['--sr-color-status-critical-surface', 'Status / Critical Surface'],
+      ['--sr-color-status-error-surface', 'Status / Critical Surface'],
     ]),
 };
 

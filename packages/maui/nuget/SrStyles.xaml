@@ -87,7 +87,7 @@
 
     <Style TargetType="Label" Class="Error">
         <Setter Property="FontSize" Value="12" />
-        <Setter Property="TextColor" Value="{StaticResource SrColorStatusCritical}" />
+        <Setter Property="TextColor" Value="{StaticResource SrColorStatusError}" />
     </Style>
     <!--#endregion-->
 
@@ -128,9 +128,9 @@
         a saturated fill behind body text is where contrast goes wrong.
     -->
     <Style x:Key="CardCritical" TargetType="Border">
-        <Setter Property="Stroke" Value="{StaticResource SrColorStatusCritical}" />
+        <Setter Property="Stroke" Value="{StaticResource SrColorStatusError}" />
         <Setter Property="StrokeThickness" Value="2" />
-        <Setter Property="BackgroundColor" Value="{StaticResource SrColorStatusCriticalSurface}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource SrColorStatusErrorSurface}" />
     </Style>
     <Style x:Key="CardWarning" TargetType="Border">
         <Setter Property="Stroke" Value="{StaticResource SrColorStatusWarning}" />
@@ -362,7 +362,7 @@
 
     <!-- Same box, invalid. Paired with an Error label beneath, never colour alone. -->
     <Style x:Key="FieldBoxError" TargetType="Border" BasedOn="{StaticResource FieldBox}">
-        <Setter Property="Stroke" Value="{StaticResource SrColorStatusCritical}" />
+        <Setter Property="Stroke" Value="{StaticResource SrColorStatusError}" />
         <Setter Property="StrokeThickness" Value="2" />
     </Style>
 
@@ -445,13 +445,13 @@
 
     <!--
         Status tags. Text on a tinted surface, never on the saturated status
-        colour itself: Status/Critical behind white text is the contrast failure
+        colour itself: Status/Error behind white text is the contrast failure
         this system exists to prevent.
     -->
     <Style x:Key="TagCritical" TargetType="Border">
         <Setter Property="Padding" Value="8,4" />
         <Setter Property="StrokeThickness" Value="0" />
-        <Setter Property="BackgroundColor" Value="{StaticResource SrColorStatusCriticalSurface}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource SrColorStatusErrorSurface}" />
         <Setter Property="StrokeShape">
             <Setter.Value><RoundRectangle CornerRadius="4" /></Setter.Value>
         </Setter>
@@ -466,7 +466,7 @@
         <Setter Property="BackgroundColor" Value="{StaticResource SrColorStatusInfoSurface}" />
     </Style>
 
-    <Style TargetType="Label" Class="TagTextCritical"><Setter Property="FontSize" Value="12" /><Setter Property="TextColor" Value="{StaticResource SrColorStatusCritical}" /></Style>
+    <Style TargetType="Label" Class="TagTextCritical"><Setter Property="FontSize" Value="12" /><Setter Property="TextColor" Value="{StaticResource SrColorStatusError}" /></Style>
     <Style TargetType="Label" Class="TagTextWarning"><Setter Property="FontSize" Value="12" /><Setter Property="TextColor" Value="{StaticResource SrColorStatusWarning}" /></Style>
     <Style TargetType="Label" Class="TagTextSuccess"><Setter Property="FontSize" Value="12" /><Setter Property="TextColor" Value="{StaticResource SrColorStatusSuccess}" /></Style>
     <Style TargetType="Label" Class="TagTextInfo"><Setter Property="FontSize" Value="12" /><Setter Property="TextColor" Value="{StaticResource SrColorStatusInfo}" /></Style>

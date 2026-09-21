@@ -24,7 +24,7 @@ Three variants (Figma **Tags/status** `399:7984`, **Tags/filter** `3229:71674`,
 |---|---|---|
 | Blue | `Status/Info Surface` | `Status/Info` |
 | Green | `Status/Success Surface` | `Status/Success` (Green/700) |
-| Red | `Status/Critical Surface` | `Status/Critical` (Red/700) |
+| Red | `Status/Error Surface` | `Status/Error` (Red/700) |
 | Yellow | `Status/Warning Surface` | `Yellow/700` |
 | Grey | `Surface/Background` | `Text/Secondary` |
 | Outline | transparent | `Border/Strong` border, `Text/Primary` text |
@@ -37,7 +37,7 @@ Transparent fill, coloured border + text, and a 16px `nav/close` button.
 |---|---|
 | Blue | `Status/Info` |
 | Green | `Status/Success` |
-| Red | `Status/Critical` |
+| Red | `Status/Error` |
 | Yellow | `Yellow/700` |
 | Black | `Border/Strong` border, `Text/Primary` text |
 
@@ -53,7 +53,7 @@ for the single primary total on a screen.
 | Blue | `Status/Info Surface` | `Status/Info` | `Status/Info` |
 | Green | `Status/Success Surface` | `Status/Success` | `Status/Success` |
 | Yellow | `Status/Warning Surface` | `Yellow/700` | `Yellow/700` |
-| Red | `Status/Critical Surface` | `Status/Critical` | `Status/Critical` |
+| Red | `Status/Error Surface` | `Status/Error` | `Status/Error` |
 | Grey | `Surface/Background` | `Text/Secondary` | `Text/Secondary` |
 | Outline | transparent | `Border/Default` | `Text/Secondary` |
 

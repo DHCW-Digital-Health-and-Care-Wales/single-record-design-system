@@ -72,8 +72,8 @@ Used in banners, badges, row highlights, and clinical alert states. Dark mode ke
 
 | Token | Light | Dark | Meaning |
 |---|---|---|---|
-| `sr.color.status.critical`         | `red.700`       | `red.700`       | Failed, invalid, critical |
-| `sr.color.status.critical-surface` | `red.50`       | `red.50`       | Critical background |
+| `sr.color.status.critical`         | `sr.color.status.error`       | `sr.color.status.error`       | Failed, invalid, critical |
+| `sr.color.status.critical-surface` | `sr.color.status.error-surface`       | `sr.color.status.error-surface`       | Critical background |
 | `sr.color.status.success`          | `green.700`     | `green.700`     | Completed, confirmed |
 | `sr.color.status.success-surface`  | `green.50`     | `green.50`     | Success background |
 | `sr.color.status.warning`          | `yellow.500`    | `yellow.500`    | Requires attention |

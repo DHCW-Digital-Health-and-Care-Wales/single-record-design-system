@@ -51,7 +51,7 @@
 /* ---------- Type colours (border + text — shared by both variants) ---------- */
 .sr-tag--blue   { border-color: var(--sr-color-status-info);     color: var(--sr-color-status-info); }
 .sr-tag--green  { border-color: var(--sr-color-status-success);  color: var(--sr-color-status-success); }
-.sr-tag--red    { border-color: var(--sr-color-status-critical); color: var(--sr-color-status-critical); }
+.sr-tag--red    { border-color: var(--sr-color-status-error); color: var(--sr-color-status-error); }
 .sr-tag--yellow { border-color: var(--color-yellow-700);         color: var(--color-yellow-700); }
 .sr-tag--grey   { border-color: var(--sr-color-text-secondary);  color: var(--sr-color-text-secondary); }
 .sr-tag--outline,
@@ -60,7 +60,7 @@
 /* ---------- Status variant: soft surface fill ---------- */
 .sr-tag--status.sr-tag--blue   { background-color: var(--sr-color-status-info-surface); }
 .sr-tag--status.sr-tag--green  { background-color: var(--sr-color-status-success-surface); }
-.sr-tag--status.sr-tag--red    { background-color: var(--sr-color-status-critical-surface); }
+.sr-tag--status.sr-tag--red    { background-color: var(--sr-color-status-error-surface); }
 .sr-tag--status.sr-tag--yellow { background-color: var(--sr-color-status-warning-surface); }
 .sr-tag--status.sr-tag--grey   { background-color: var(--sr-color-surface-background); }
 .sr-tag--status.sr-tag--outline { background-color: transparent; }
@@ -87,7 +87,7 @@
 }
 .sr-tag--count.sr-tag--blue   { background-color: var(--sr-color-status-info-surface); }
 .sr-tag--count.sr-tag--green  { background-color: var(--sr-color-status-success-surface); }
-.sr-tag--count.sr-tag--red    { background-color: var(--sr-color-status-critical-surface); }
+.sr-tag--count.sr-tag--red    { background-color: var(--sr-color-status-error-surface); }
 .sr-tag--count.sr-tag--yellow { background-color: var(--sr-color-status-warning-surface); }
 .sr-tag--count.sr-tag--grey   { background-color: var(--sr-color-surface-background); }
 .sr-tag--count.sr-tag--outline {

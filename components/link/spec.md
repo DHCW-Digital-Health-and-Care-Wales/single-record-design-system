@@ -127,7 +127,7 @@ give more than the minimum.
 ## Open Work
 
 - **Visited state token**: no semantic token exists. Decision needed before adding a `Visited` variant. Tracked alongside DL-006 in `/decisions/handoff.md`.
-- **Destructive is light-mode only.** `Interactive/Destructive` is a fill colour — the sort white text sits on — and is unchanged across modes, so as red text on the dark page it is 2.84:1 against the 4.5:1 it needs. No red in the ramp is dark-safe as text (`Status/Critical` is 2.14:1 there). Recorded as an open finding in `scripts/check-contrast.mjs` with two options: a new `interactive/destructive-on-dark`, or dropping the type and requiring a Button for destructive flows, which is what GDS and NHS England do.
+- **Destructive is light-mode only.** `Interactive/Destructive` is a fill colour — the sort white text sits on — and is unchanged across modes, so as red text on the dark page it is 2.84:1 against the 4.5:1 it needs. No red in the ramp is dark-safe as text (`Status/Error` is 2.14:1 there). Recorded as an open finding in `scripts/check-contrast.mjs` with two options: a new `interactive/destructive-on-dark`, or dropping the type and requiring a Button for destructive flows, which is what GDS and NHS England do.
 - **No `interactive/link-hover`.** See the Hover row above.
 - **The Figma set is inconsistent at Large.** `Type=Destructive, Size=Large` is drawn in Heading XS while `Type=Default, Size=Large` is Body M — same size, different weight, for no stated reason. Code uses Body M for both. Normalise the set.
 - **The Figma set has no inline variant.** Every variant is drawn as a padded standalone chip. Code ships the inline form as the base — it is the common case — so the set is behind the code here rather than the other way round.

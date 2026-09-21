@@ -31,7 +31,7 @@
   color: var(--sr-color-text-primary);
 }
 .sr-date-input__required {
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error);
 }
 
 .sr-date-input__hint {
@@ -87,13 +87,13 @@
 
 /* ---------- Error ---------- */
 .sr-date-input--error .sr-date-input__field {
-  border-color: var(--sr-color-status-critical);
-  box-shadow: inset 0 0 0 1px var(--sr-color-status-critical);
+  border-color: var(--sr-color-status-error);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-error);
 }
 .sr-date-input__error {
   font: var(--sr-type-caption-font);
   letter-spacing: var(--sr-type-caption-letter-spacing);
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error);
 }
 
 /* ---------- Disabled ---------- */

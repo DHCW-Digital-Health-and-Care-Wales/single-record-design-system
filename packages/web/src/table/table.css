@@ -252,6 +252,6 @@ td.sr-table__select {
   color: var(--sr-color-interactive-destructive);
 }
 .sr-table__action--destructive:hover {
-  background-color: var(--sr-color-status-critical-surface, var(--sr-color-surface-subtle));
+  background-color: var(--sr-color-status-error-surface, var(--sr-color-surface-subtle));
   color: var(--color-red-700);
 }

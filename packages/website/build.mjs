@@ -1778,7 +1778,7 @@ function semanticTable(prefix, rows) {
 
 function colourBody() {
   const statusRows = [
-    ['sr-color-status-critical', 'sr-color-status-critical-surface', 'Critical'],
+    ['sr-color-status-error', 'sr-color-status-error-surface', 'Critical'],
     ['sr-color-status-success', 'sr-color-status-success-surface', 'Success'],
     ['sr-color-status-warning', 'sr-color-status-warning-surface', 'Warning'],
     ['sr-color-status-info', 'sr-color-status-info-surface', 'Information'],
@@ -3438,11 +3438,11 @@ ${trigger({ id: 'sel-d', label: 'Disabled', value: 'Aneurin ward', disabled: tru
     MAUI: `<!-- Picker has no error state of its own: the message is a sibling Label,
      and the field Border takes the critical stroke. Title is never the label.
      The status colours carry no AppThemeBinding because they hold the same
-     value in both modes, so there is no SrColorStatusCriticalDark to bind. -->
+     value in both modes, so there is no SrColorStatusErrorDark to bind. -->
 <VerticalStackLayout Spacing="4">
     <Label Text="Ward" StyleClass="FieldLabel" />
     <Border Style="{StaticResource FieldBox}"
-            Stroke="{StaticResource SrColorStatusCritical}">
+            Stroke="{StaticResource SrColorStatusError}">
         <Picker ItemsSource="{Binding Wards}" SelectedItem="{Binding Ward}"
                 SemanticProperties.Description="Ward" />
     </Border>
@@ -4056,7 +4056,7 @@ function iconsBody() {
     <thead><tr><th>Class</th><th>Colour token</th><th>Use for</th></tr></thead>
     <tbody>${colourRoles.map(([role, use]) => {
       const token = { default: 'sr.color.text.primary', subtle: 'sr.color.text.secondary',
-        interactive: 'sr.color.interactive.primary', critical: 'sr.color.status.critical',
+        interactive: 'sr.color.interactive.primary', critical: 'sr.color.status.error',
         warning: 'sr.color.status.warning', success: 'sr.color.status.success',
         info: 'sr.color.status.info' }[role];
       return `<tr><td><code>sr-icon--${role}</code></td><td><code>${token}</code></td><td>${use}</td></tr>`;

@@ -703,7 +703,7 @@ body.bare { margin: 0; }
 .bucket { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 15px; }
 .bucket--exact { background: var(--sr-color-status-success-surface); color: var(--sr-color-status-success); }
 .bucket--close { background: var(--sr-color-status-warning-surface); color: var(--sr-color-text-primary); }
-.bucket--none { background: var(--sr-color-status-critical-surface); color: var(--sr-color-status-critical); }
+.bucket--none { background: var(--sr-color-status-error-surface); color: var(--sr-color-status-error); }
 
 /* ── footer ───────────────────────────────────────────────────────────────── */
 /* No top margin. The sidebar column runs the full height of `.layout`, so 48px

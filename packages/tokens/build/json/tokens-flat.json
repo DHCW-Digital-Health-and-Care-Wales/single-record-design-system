@@ -104,6 +104,8 @@
   "sr-color-border-focus": "#0d8bad",
   "sr-color-border-disabled": "#9ea1af",
   "sr-color-brand-accent": "#12a3c9",
+  "sr-color-status-error": "#b32014",
+  "sr-color-status-error-surface": "#fef3f2",
   "sr-color-status-critical": "#b32014",
   "sr-color-status-critical-surface": "#fef3f2",
   "sr-color-status-success": "#006630",

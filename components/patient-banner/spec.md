@@ -42,9 +42,9 @@ in addition to standard design sign-off.
 | Date of birth | `d Mmm yyyy (NNy)` | **Yes** |
 | CRN | As recorded, with a copy button | No |
 | Address / Postcode | As recorded | No |
-| Date of death | `d Mmm yyyy`, in `Status/Critical` | No |
+| Date of death | `d Mmm yyyy`, in `Status/Error` | No |
 | Sex | As recorded, not abbreviated | No |
-| Adverse reactions | Substance: reaction, reaction in `Status/Critical` | As a count pill |
+| Adverse reactions | Substance: reaction, reaction in `Status/Error` | As a count pill |
 | Warnings | "N warnings recorded" | As a count pill |
 
 **Name, NHS number and DOB are never hidden.** Collapsing removes secondary

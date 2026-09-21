@@ -131,6 +131,6 @@
 }
 .sr-button--destructive:disabled,
 .sr-button--destructive[aria-disabled="true"] {
-  background-color: var(--sr-color-status-critical-surface);
+  background-color: var(--sr-color-status-error-surface);
   color: var(--sr-color-interactive-destructive);
 }

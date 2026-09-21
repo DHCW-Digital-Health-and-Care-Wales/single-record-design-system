@@ -104,7 +104,7 @@ body {
   box-shadow: var(--elevation-raised);
 }
 .stat-card--warning { border-left-color: var(--color-yellow-500); }
-.stat-card--critical { border-left-color: var(--sr-color-status-critical); }
+.stat-card--critical { border-left-color: var(--sr-color-status-error); }
 
 .stat-card__head {
   display: flex;
@@ -125,7 +125,7 @@ body {
   color: var(--sr-color-interactive-primary);
 }
 .stat-card--warning .stat-card__value { color: var(--color-yellow-700); }
-.stat-card--critical .stat-card__value { color: var(--sr-color-status-critical); }
+.stat-card--critical .stat-card__value { color: var(--sr-color-status-error); }
 .stat-card__note {
   margin: 0;
   font: var(--sr-type-caption-font);
@@ -134,7 +134,7 @@ body {
 }
 .stat-card__note--success { color: var(--sr-color-status-success); }
 .stat-card__note--warning { color: var(--color-yellow-700); }
-.stat-card__note--critical { color: var(--sr-color-status-critical); }
+.stat-card__note--critical { color: var(--sr-color-status-error); }
 
 .quick-actions {
   display: grid;
@@ -253,7 +253,7 @@ body {
   padding: var(--space-3) var(--space-4);
   min-height: 64px;
   box-sizing: border-box;
-  border-left: 3px solid var(--sr-color-status-critical);
+  border-left: 3px solid var(--sr-color-status-error);
   background: var(--color-red-50);
   border-radius: var(--radius-sm);
 }
@@ -534,7 +534,7 @@ body {
   outline: none;
   box-shadow: inset 0 0 0 3px var(--sr-color-border-focus);
 }
-.row-menu__item--destructive { color: var(--sr-color-status-critical); }
+.row-menu__item--destructive { color: var(--sr-color-status-error); }
 
 /* ---------- Modal form fields (Create / Send / Receive / Tag) ---------- */
 .modal-banner {
@@ -613,7 +613,7 @@ body {
   border: 0;
   border-radius: var(--radius-sm);
   background: transparent;
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error);
   cursor: pointer;
 }
 .modal-additional-info__delete:hover { background-color: var(--sr-color-surface-subtle); }
@@ -635,8 +635,8 @@ body {
   width: 32px;
   height: 32px;
   border-radius: var(--radius-full);
-  background: var(--sr-color-status-critical-surface);
-  color: var(--sr-color-status-critical);
+  background: var(--sr-color-status-error-surface);
+  color: var(--sr-color-status-error);
 }
 
 /* ---------- My Requests (Figma 127:4813) ---------- */
@@ -944,7 +944,7 @@ body {
   gap: var(--space-3);
 }
 
-.send-remove { color: var(--sr-color-status-critical); }
+.send-remove { color: var(--sr-color-status-error); }
 
 /* ---------- Approve-and-send modal (Figma 279:22906) ---------- */
 .send-banner {
@@ -1023,7 +1023,7 @@ body {
   margin-right: auto;
   font: var(--sr-type-body-s-font);
   letter-spacing: var(--sr-type-body-s-letter-spacing);
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error);
 }
 
 /* Below Desktop the two panels stop being side by side: the summary table

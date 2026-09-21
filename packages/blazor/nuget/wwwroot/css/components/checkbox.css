@@ -48,7 +48,7 @@
   color: var(--sr-color-text-primary);
 }
 .sr-checkbox-group__required {
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error);
 }
 
 .sr-checkbox-group__hint {
@@ -63,7 +63,7 @@
   gap: var(--space-1);
   font: var(--sr-type-caption-font);
   letter-spacing: var(--sr-type-caption-letter-spacing);
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error);
 }
 .sr-checkbox-group__error-icon {
   display: inline-flex;
@@ -75,7 +75,7 @@
 
 /* Error group gains the inset rule, matching the Figma error variants. */
 .sr-checkbox-group--error {
-  border-left: var(--border-width-2) solid var(--sr-color-status-critical);
+  border-left: var(--border-width-2) solid var(--sr-color-status-error);
   padding-left: var(--space-3);
 }
 

@@ -38,8 +38,10 @@
         "accent": { "$type": "color", "$value": "{color.cyan.700}", "$description": "Decorative accent only. Borders, icon strokes, chart accents, tab indicators. Never use as a filled surface with text on top." }
       },
       "status": {
-        "critical":         { "$type": "color", "$value": "{color.red.700}", "$description": "Red/700 (#B32014) — raised from Red/600 for AA contrast on light status surfaces and text." },
-        "critical-surface": { "$type": "color", "$value": "{color.red.50}", "$description": "Red/50 (#FEF3F2) — lightened from Red/100 so Status/Critical text on it reaches 6.16:1 (was 5.19:1)." },
+        "error":            { "$type": "color", "$value": "{color.red.700}", "$description": "Red/700 (#B32014) — raised from Red/600 for AA contrast on light status surfaces and text. Canonical name since DDR-034: this is what an invalid form field uses, and a mistyped NHS number is not a critical event." },
+        "error-surface":    { "$type": "color", "$value": "{color.red.50}", "$description": "Red/50 (#FEF3F2) — lightened from Red/100 so Status/Error text on it reaches 6.16:1 (was 5.19:1)." },
+        "critical":         { "$type": "color", "$value": "{sr.color.status.error}", "$description": "DEPRECATED (DDR-034) — alias of status.error, kept so --sr-color-status-critical keeps working for existing consumers. Removed at the next major. Use status.error." },
+        "critical-surface": { "$type": "color", "$value": "{sr.color.status.error-surface}", "$description": "DEPRECATED (DDR-034) — alias of status.error-surface. Removed at the next major. Use status.error-surface." },
         "success":          { "$type": "color", "$value": "{color.green.700}", "$description": "Green/700 (#006630) — raised from Green/600 for AA contrast on light status surfaces and text." },
         "success-surface":  { "$type": "color", "$value": "{color.green.50}", "$description": "Green/50 (#F0FAF4) — lightened from Green/100 so Status/Success text on it reaches 6.69:1 (was 5.92:1)." },
         "warning":          { "$type": "color", "$value": "{color.yellow.500}" },

@@ -71,7 +71,7 @@ Icons use `currentColor` and inherit from CSS context. Eight semantic colour rol
 | `sr.icon.color.subtle` | `sr.color.text.secondary` | Subdued / secondary icons |
 | `sr.icon.color.inverse` | `sr.color.text.inverse` | Icons on dark or coloured surfaces |
 | `sr.icon.color.interactive` | `sr.color.interactive.primary` | Clickable / hoverable icons |
-| `sr.icon.color.critical` | `sr.color.status.critical` | Critical / error state |
+| `sr.icon.color.critical` | `sr.color.status.error` | Critical / error state |
 | `sr.icon.color.warning` | `sr.color.status.warning` | Warning state |
 | `sr.icon.color.success` | `sr.color.status.success` | Success / confirmed state |
 | `sr.icon.color.info` | `sr.color.status.info` | Informational |

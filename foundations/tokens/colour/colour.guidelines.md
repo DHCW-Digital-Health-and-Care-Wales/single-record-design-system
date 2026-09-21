@@ -22,7 +22,7 @@
 ## Token tiers
 
 - **Primitives** are the raw palette; reference them only from semantic tokens.
-- **Semantic (Single Record)** tokens carry meaning: `Interactive/Primary`, `Text/Default`, `Status/Critical`.
+- **Semantic (Single Record)** tokens carry meaning: `Interactive/Primary`, `Text/Default`, `Status/Error`.
 - **Component** tokens inherit from semantic where a part needs its own value.
 
 ## Contrast (AA)

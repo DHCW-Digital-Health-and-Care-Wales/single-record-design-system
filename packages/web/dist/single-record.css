@@ -130,8 +130,10 @@
   --sr-color-border-focus: #0d8bad; /** Focus ring — Cyan/800 in both modes (DDR-025, amending DDR-006). Cyan/700 was 2.95:1 on a card and 2.71:1 on the page, under the 3:1 SC 1.4.11 requires. Cyan/800 is the only stop clearing 3:1 in both modes: darker stops fix light mode and fail dark, where surfaces are navy. */
   --sr-color-border-disabled: #9ea1af;
   --sr-color-brand-accent: #12a3c9; /** Decorative accent only. Borders, icon strokes, chart accents, tab indicators. Never use as a filled surface with text on top. */
-  --sr-color-status-critical: #b32014; /** Red/700 (#B32014) — raised from Red/600 for AA contrast on light status surfaces and text. */
-  --sr-color-status-critical-surface: #fef3f2; /** Red/50 (#FEF3F2) — lightened from Red/100 so Status/Critical text on it reaches 6.16:1 (was 5.19:1). */
+  --sr-color-status-error: #b32014; /** Red/700 (#B32014) — raised from Red/600 for AA contrast on light status surfaces and text. Canonical name since DDR-034: this is what an invalid form field uses, and a mistyped NHS number is not a critical event. */
+  --sr-color-status-error-surface: #fef3f2; /** Red/50 (#FEF3F2) — lightened from Red/100 so Status/Error text on it reaches 6.16:1 (was 5.19:1). */
+  --sr-color-status-critical: #b32014; /** DEPRECATED (DDR-034) — alias of status.error, kept so --sr-color-status-critical keeps working for existing consumers. Removed at the next major. Use status.error. */
+  --sr-color-status-critical-surface: #fef3f2; /** DEPRECATED (DDR-034) — alias of status.error-surface. Removed at the next major. Use status.error-surface. */
   --sr-color-status-success: #006630; /** Green/700 (#006630) — raised from Green/600 for AA contrast on light status surfaces and text. */
   --sr-color-status-success-surface: #f0faf4; /** Green/50 (#F0FAF4) — lightened from Green/100 so Status/Success text on it reaches 6.69:1 (was 5.92:1). */
   --sr-color-status-warning: #f8ca4d;
@@ -436,7 +438,7 @@
 .sr-icon--subtle      { color: var(--sr-color-text-secondary); }
 .sr-icon--inverse     { color: var(--sr-color-text-inverse); }
 .sr-icon--interactive { color: var(--sr-color-interactive-primary); }
-.sr-icon--critical    { color: var(--sr-color-status-critical); }
+.sr-icon--critical    { color: var(--sr-color-status-error); }
 .sr-icon--warning     { color: var(--sr-color-status-warning); }
 .sr-icon--success     { color: var(--sr-color-status-success); }
 .sr-icon--info        { color: var(--sr-color-status-info); }
@@ -810,7 +812,7 @@
 }
 .sr-button--destructive:disabled,
 .sr-button--destructive[aria-disabled="true"] {
-  background-color: var(--sr-color-status-critical-surface);
+  background-color: var(--sr-color-status-error-surface);
   color: var(--sr-color-interactive-destructive);
 }
 
@@ -865,7 +867,7 @@
   color: var(--sr-color-text-primary);
 }
 .sr-checkbox-group__required {
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error);
 }
 
 .sr-checkbox-group__hint {
@@ -880,7 +882,7 @@
   gap: var(--space-1);
   font: var(--sr-type-caption-font);
   letter-spacing: var(--sr-type-caption-letter-spacing);
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error);
 }
 .sr-checkbox-group__error-icon {
   display: inline-flex;
@@ -892,7 +894,7 @@
 
 /* Error group gains the inset rule, matching the Figma error variants. */
 .sr-checkbox-group--error {
-  border-left: var(--border-width-2) solid var(--sr-color-status-critical);
+  border-left: var(--border-width-2) solid var(--sr-color-status-error);
   padding-left: var(--space-3);
 }
 
@@ -1095,7 +1097,7 @@
   color: var(--sr-color-text-primary);
 }
 .sr-date-input__required {
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error);
 }
 
 .sr-date-input__hint {
@@ -1151,13 +1153,13 @@
 
 /* ---------- Error ---------- */
 .sr-date-input--error .sr-date-input__field {
-  border-color: var(--sr-color-status-critical);
-  box-shadow: inset 0 0 0 1px var(--sr-color-status-critical);
+  border-color: var(--sr-color-status-error);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-error);
 }
 .sr-date-input__error {
   font: var(--sr-type-caption-font);
   letter-spacing: var(--sr-type-caption-letter-spacing);
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error);
 }
 
 /* ---------- Disabled ---------- */
@@ -1211,8 +1213,8 @@
   box-shadow: inset 0 0 0 1px var(--sr-color-border-focus);
 }
 .sr-datepicker--error .sr-datepicker__field {
-  border-color: var(--sr-color-status-critical);
-  box-shadow: inset 0 0 0 1px var(--sr-color-status-critical);
+  border-color: var(--sr-color-status-error);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-error);
 }
 .sr-datepicker__input {
   flex: 1 1 0;
@@ -1808,7 +1810,7 @@
   color: var(--sr-color-text-primary);
 }
 .sr-input__required {
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error);
 }
 
 .sr-input__hint {
@@ -1898,13 +1900,13 @@ textarea.sr-input__control {
 
 /* ---------- Error ---------- */
 .sr-input--error .sr-input__field {
-  border-color: var(--sr-color-status-critical);
-  box-shadow: inset 0 0 0 1px var(--sr-color-status-critical);
+  border-color: var(--sr-color-status-error);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-error);
 }
 .sr-input__error {
   font: var(--sr-type-caption-font);
   letter-spacing: var(--sr-type-caption-letter-spacing);
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error);
 }
 
 /* ---------- Disabled ---------- */
@@ -2805,7 +2807,7 @@ textarea.sr-input__control {
 }
 /* The reaction itself is the clinically significant part — emphasised. */
 .sr-patient-banner__alert-value {
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error);
 }
 
 /* Reactions card */
@@ -2813,7 +2815,7 @@ textarea.sr-input__control {
   background-color: var(--color-red-50);
 }
 .sr-patient-banner__alert--reactions .sr-patient-banner__alert-text {
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error);
 }
 
 /* Warnings card */
@@ -2827,7 +2829,7 @@ textarea.sr-input__control {
 /* Type=Border — white card, coloured rule instead of a tint. */
 .sr-patient-banner--border .sr-patient-banner__alert {
   background-color: var(--sr-color-surface-section-cards);
-  border-color: var(--sr-color-status-critical);
+  border-color: var(--sr-color-status-error);
 }
 
 /* ---------- Identity ---------- */
@@ -2861,8 +2863,8 @@ textarea.sr-input__control {
   align-items: center;
   padding: 0 var(--space-2);
   border-radius: var(--radius-full);
-  background-color: var(--sr-color-status-critical-surface);
-  color: var(--sr-color-status-critical);
+  background-color: var(--sr-color-status-error-surface);
+  color: var(--sr-color-status-error);
   font: var(--sr-type-body-s-font);
   letter-spacing: var(--sr-type-body-s-letter-spacing);
   white-space: nowrap;
@@ -2926,7 +2928,7 @@ textarea.sr-input__control {
 /* Deceased date is the one demographic that carries clinical weight. */
 .sr-patient-banner__field--deceased dt,
 .sr-patient-banner__field--deceased dd {
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error);
 }
 
 .sr-patient-banner__copy {
@@ -2999,7 +3001,7 @@ textarea.sr-input__control {
   letter-spacing: var(--sr-type-body-s-letter-spacing);
   white-space: nowrap;
 }
-.sr-patient-banner__pill--reactions { color: var(--sr-color-status-critical); }
+.sr-patient-banner__pill--reactions { color: var(--sr-color-status-error); }
 .sr-patient-banner__pill--warnings { color: var(--color-yellow-700); }
 
 /* Collapsing changes how much detail is shown, not which type the banner is.
@@ -3452,7 +3454,7 @@ textarea.sr-input__control {
   color: var(--sr-color-text-primary);
 }
 .sr-search__required {
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error);
 }
 
 .sr-search__hint {
@@ -3695,12 +3697,12 @@ textarea.sr-input__control {
 
 /* ---------- Error ---------- */
 .sr-search--error .sr-search__field {
-  border-color: var(--sr-color-status-critical);
-  box-shadow: inset 0 0 0 1px var(--sr-color-status-critical);
+  border-color: var(--sr-color-status-error);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-error);
 }
 .sr-search--error .sr-search__field:focus-within {
   box-shadow:
-    inset 0 0 0 1px var(--sr-color-status-critical),
+    inset 0 0 0 1px var(--sr-color-status-error),
     0 0 0 3px var(--sr-color-border-focus);
 }
 /* Icon as well as colour, so the error is not carried by the border alone. */
@@ -3710,7 +3712,7 @@ textarea.sr-input__control {
   gap: var(--space-1);
   font: var(--sr-type-caption-font);
   letter-spacing: var(--sr-type-caption-letter-spacing);
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error);
 }
 .sr-search__error-icon {
   display: inline-flex;
@@ -3850,7 +3852,7 @@ textarea.sr-input__control {
  * States (from Figma building blocks):
  *   Default  — white fill, 1px Border/Default.
  *   Focus/open — 3px Border/Focus (Cyan/700) outer ring.
- *   Error    — Status/Critical border.
+ *   Error    — Status/Error border.
  *   Disabled — Surface/Background fill, Border/Disabled, Text/Disabled.
  */
 
@@ -3871,7 +3873,7 @@ textarea.sr-input__control {
   color: var(--sr-color-text-primary);
 }
 .sr-select__required {
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error);
 }
 
 .sr-select__hint {
@@ -3997,12 +3999,12 @@ textarea.sr-input__control {
 
 /* ---------- Error ---------- */
 .sr-select--error .sr-select__trigger {
-  border-color: var(--sr-color-status-critical);
-  box-shadow: inset 0 0 0 1px var(--sr-color-status-critical);
+  border-color: var(--sr-color-status-error);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-error);
 }
 .sr-select--error .sr-select__trigger:focus-visible,
 .sr-select--error .sr-select__trigger[aria-expanded="true"] {
-  box-shadow: inset 0 0 0 1px var(--sr-color-status-critical), 0 0 0 3px var(--sr-color-border-focus);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-error), 0 0 0 3px var(--sr-color-border-focus);
 }
 .sr-select__error {
   display: inline-flex;
@@ -4010,7 +4012,7 @@ textarea.sr-input__control {
   gap: var(--space-1);
   font: var(--sr-type-caption-font);
   letter-spacing: var(--sr-type-caption-letter-spacing);
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error);
 }
 .sr-select__error-icon {
   display: inline-flex;
@@ -4104,7 +4106,7 @@ textarea.sr-input__control {
    does not replace them. See the guidelines. */
 .sr-stat-card--accent-primary { border-left-color: var(--sr-color-interactive-primary); }
 .sr-stat-card--accent-warning { border-left-color: var(--sr-color-status-warning); }
-.sr-stat-card--accent-critical { border-left-color: var(--sr-color-status-critical); }
+.sr-stat-card--accent-critical { border-left-color: var(--sr-color-status-error); }
 
 /* ---------- Content ----------
    Rows are explicit rather than auto-placed, so a layout modifier can move the
@@ -4179,8 +4181,8 @@ textarea.sr-input__control {
   background-color: var(--sr-color-status-success-surface);
 }
 .sr-stat-card__delta--down {
-  color: var(--sr-color-status-critical);
-  background-color: var(--sr-color-status-critical-surface);
+  color: var(--sr-color-status-error);
+  background-color: var(--sr-color-status-error-surface);
 }
 /* A movement that is neither good nor bad — a count that simply changed. No
    chip, because a neutral tint would be a colour that means nothing. */
@@ -4301,7 +4303,7 @@ textarea.sr-input__control {
 .sr-status-indicator--lg { width: 24px; height: 24px; }
 
 .sr-status-indicator--success { color: var(--sr-color-status-success); }
-.sr-status-indicator--error { color: var(--sr-color-status-critical); }
+.sr-status-indicator--error { color: var(--sr-color-status-error); }
 .sr-status-indicator--warning { color: var(--sr-color-status-warning); }
 
 /* "No status recorded" — the dash the Figma page draws as its fourth mark,
@@ -4682,7 +4684,7 @@ td.sr-table__select {
   color: var(--sr-color-interactive-destructive);
 }
 .sr-table__action--destructive:hover {
-  background-color: var(--sr-color-status-critical-surface, var(--sr-color-surface-subtle));
+  background-color: var(--sr-color-status-error-surface, var(--sr-color-surface-subtle));
   color: var(--color-red-700);
 }
 
@@ -5023,7 +5025,7 @@ td.sr-table__select {
 /* ---------- Type colours (border + text — shared by both variants) ---------- */
 .sr-tag--blue   { border-color: var(--sr-color-status-info);     color: var(--sr-color-status-info); }
 .sr-tag--green  { border-color: var(--sr-color-status-success);  color: var(--sr-color-status-success); }
-.sr-tag--red    { border-color: var(--sr-color-status-critical); color: var(--sr-color-status-critical); }
+.sr-tag--red    { border-color: var(--sr-color-status-error); color: var(--sr-color-status-error); }
 .sr-tag--yellow { border-color: var(--color-yellow-700);         color: var(--color-yellow-700); }
 .sr-tag--grey   { border-color: var(--sr-color-text-secondary);  color: var(--sr-color-text-secondary); }
 .sr-tag--outline,
@@ -5032,7 +5034,7 @@ td.sr-table__select {
 /* ---------- Status variant: soft surface fill ---------- */
 .sr-tag--status.sr-tag--blue   { background-color: var(--sr-color-status-info-surface); }
 .sr-tag--status.sr-tag--green  { background-color: var(--sr-color-status-success-surface); }
-.sr-tag--status.sr-tag--red    { background-color: var(--sr-color-status-critical-surface); }
+.sr-tag--status.sr-tag--red    { background-color: var(--sr-color-status-error-surface); }
 .sr-tag--status.sr-tag--yellow { background-color: var(--sr-color-status-warning-surface); }
 .sr-tag--status.sr-tag--grey   { background-color: var(--sr-color-surface-background); }
 .sr-tag--status.sr-tag--outline { background-color: transparent; }
@@ -5059,7 +5061,7 @@ td.sr-table__select {
 }
 .sr-tag--count.sr-tag--blue   { background-color: var(--sr-color-status-info-surface); }
 .sr-tag--count.sr-tag--green  { background-color: var(--sr-color-status-success-surface); }
-.sr-tag--count.sr-tag--red    { background-color: var(--sr-color-status-critical-surface); }
+.sr-tag--count.sr-tag--red    { background-color: var(--sr-color-status-error-surface); }
 .sr-tag--count.sr-tag--yellow { background-color: var(--sr-color-status-warning-surface); }
 .sr-tag--count.sr-tag--grey   { background-color: var(--sr-color-surface-background); }
 .sr-tag--count.sr-tag--outline {
@@ -5150,8 +5152,8 @@ td.sr-table__select {
   box-shadow: inset 0 0 0 1px var(--sr-color-border-focus);
 }
 .sr-time-select--error .sr-time-select__control {
-  border-color: var(--sr-color-status-critical);
-  box-shadow: inset 0 0 0 1px var(--sr-color-status-critical);
+  border-color: var(--sr-color-status-error);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-error);
 }
 .sr-time-select__control:disabled {
   background-color: var(--sr-color-surface-subtle);

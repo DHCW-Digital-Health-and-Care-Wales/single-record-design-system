@@ -48,7 +48,7 @@ Variants: `State` × `Last`.
 |---|---|---|
 | Done | Filled `Status/Success` circle, white `Icon/action/check` (16px) | `Status/Success` line to next step |
 | Current | Filled `Interactive/Primary` circle, white number, soft outer halo (`spread: 4`, 20% Primary) | `Border/Default` line |
-| Error | Filled `Status/Critical` circle, white `Icon/status/warning` (16px). Optional sub-text in `Status/Critical` (e.g. "2 fields missing"). | `Border/Default` line |
+| Error | Filled `Status/Error` circle, white `Icon/status/warning` (16px). Optional sub-text in `Status/Error` (e.g. "2 fields missing"). | `Border/Default` line |
 | Upcoming | White circle, 2px `Border/Default` ring, grey number | `Border/Default` line |
 
 `Last=True` hides the trailing connector — use for the final step.
@@ -89,7 +89,7 @@ Variants: `State` (Complete · Current · Alert · Pending) × `Last` (True/Fals
 |---|---|
 | Complete | Filled `Status/Success` |
 | Current | Filled `Interactive/Primary` |
-| Alert | Filled `Status/Critical`, title also coloured |
+| Alert | Filled `Status/Error`, title also coloured |
 | Pending | White fill, 1.5px `Border/Default` ring |
 
 Each item: leading 56px time column (`Caption`, `Text/Secondary`), 2px connector line, dot, then body with title + description + optional rounded tag.
@@ -97,7 +97,7 @@ Each item: leading 56px time column (`Caption`, `Text/Secondary`), 2px connector
 Tag surfaces:
 - Complete → `Status/Success Surface` / `Status/Success`
 - Current → `Surface/Subtle` / `Interactive/Primary`
-- Alert → `Status/Critical Surface` / `Status/Critical`
+- Alert → `Status/Error Surface` / `Status/Error`
 
 ---
 
@@ -118,7 +118,7 @@ Both new icons are Lucide-derived, 24×24, stroke 2, bound to `Text/Primary`. Re
 - **Progress Bar**: `role="progressbar"` with `aria-valuemin`, `aria-valuemax`, `aria-valuenow`. Indeterminate omits `aria-valuenow` and sets `aria-busy="true"`.
 - **Segmented**: announce as "Section 3 of 5 complete" via `aria-label` on the wrapping element.
 - **Timeline**: `<ol>` with timestamps as `<time datetime="…">`. Alert items: pair the red dot with `Icon/status/warning` text and a descriptive `aria-label`.
-- All status colours used here meet WCAG 1.4.11 against `Surface/Small Cards` (white): `Status/Success` 4.7:1, `Status/Critical` 4.9:1, `Interactive/Primary` 7.5:1.
+- All status colours used here meet WCAG 1.4.11 against `Surface/Small Cards` (white): `Status/Success` 4.7:1, `Status/Error` 4.9:1, `Interactive/Primary` 7.5:1.
 
 ---
 
@@ -135,4 +135,4 @@ Both new icons are Lucide-derived, 24×24, stroke 2, bound to `Text/Primary`. Re
 
 - `/decisions/DDR-006-focus-ring-cyan.md` — focus colour
 - `/components/button/spec.md` — for actions inside a stepped form (Next / Back / Submit)
-- `/foundations/tokens/semantic/color.json` — `Status/Success`, `Status/Critical`, `Interactive/Primary` consumed across all variants
+- `/foundations/tokens/semantic/color.json` — `Status/Success`, `Status/Error`, `Interactive/Primary` consumed across all variants
