@@ -11,6 +11,58 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 ---
 
+## Checkpoint — 2026-09-21b (DDR-034: Modal, Notifications, Error/Warning messages)
+
+Three more pages classified, same test as DDR-032, plus a second test that
+decided all three: **where are the instances?**
+
+| Set | Instances | Verdict |
+|---|---|---|
+| `Modal` `3807:36855` | 1 | **Component** — DDR-008 already said so |
+| `Dialog` `2612:3330` | **0** | **Delete** — it is DDR-008's pattern list built as a variant matrix, the exact thing that DDR rejected |
+| `Notification Icon` `817:7235` | 4, all `Badge=None` | **Misnamed.** The unit is a **Badge**, not "Notifications" |
+| `Warning Messages` `1517:13667` | 15, all `Type=Error`, **all on DS doc pages** | **Neither** — confirmed. Stays as `Form field / Message` |
+
+**The usage test earned its place.** "Is it in use?" was answered three times by
+counting instances rather than reasoning about it. `Dialog` looked like a real
+component and had never been placed once. `Warning Messages` looked in use and
+is only ever the artwork the Checkbox/Radio/Select pages draw their own error
+state with — not on a single product screen. Neither fact was visible from the
+canvas.
+
+### What follows, none of it done yet
+
+- **Delete `Dialog`; rebuild the Dialogs page as pattern frames** from `Modal`
+  instances using its `Modal Content` slot. Zero instances, so it is a safe
+  delete — but re-run the page-reachable count first, per 2026-09-21.
+- **Both the Modal and Dialogs pages are titled `NOTIFICATION BANNERS`** —
+  copy-paste leftovers on two live pages.
+- **`patterns/dialogs/` has only `confirmation-dialog.md`.** DDR-008 names two
+  patterns; Result has no write-up.
+- **`components/modal/spec.md` says "In development"** while `Modal` ships in
+  `packages/web/src/modal/`.
+- **Rename the Notifications page** and fold its content into Header/Icons.
+  Do not publish a Notifications component page. If a notification centre is
+  ever wanted it is a **pattern**, and nothing for it exists.
+- **Unify the two code badges.** `.sr-nav__item-badge` and `.sr-tabs__badge` are
+  independent implementations of one mark, and `.sr-header__notification` has no
+  badge at all. Shipping the Figma set as-is would make a third.
+
+### `Status/Critical` → `Status/Error`, additively
+
+The open item from the banner merge, now decided in DDR-034 §4. The **token** is
+the misnamed one: `status.critical` is what six form components use for an
+ordinary invalid field, and a mistyped NHS number is not a critical event.
+
+But it is load-bearing — **249 occurrences across 57 files**, and
+`--sr-color-status-critical` is public API of `@dhcw/sr-tokens` v0.3.0. So:
+add `status.error` as canonical, keep `status.critical` as a **deprecated
+alias** emitting both custom properties, migrate internal usage, drop the alias
+at the next major. Figma's variables rename to match — variable renames do not
+detach bindings. **Not yet implemented.**
+
+---
+
 ## Checkpoint — 2026-09-21 (The banner merge is finished — and the 2026-09-17 instance count was wrong)
 
 ### Correction to the checkpoint below

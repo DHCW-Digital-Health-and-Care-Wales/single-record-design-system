@@ -260,6 +260,8 @@ kinds of thing behind one promise:
 | Inset text | Component, narrowed to prose emphasis | **Done** — narrowed in Figma, spec + guidelines written, web + React + page shipped |
 | Notification banner | Component; its two Figma sets are one component with two properties | **Figma done** — one set of 8 variants (`Severity` × `Placement`) plus `Title`, `Dismissible` and `Actions` booleans; all 15 instances re-pointed and the old set deleted. Remaining: spec, code, page — settle the `Placement` value naming first. Steps: `docs/figma-banner-and-error-messages.md` |
 | Error/Warning messages | Neither — shared form-field anatomy, already rendered by six components | Becomes a `Form field / Message` building block; the page is retitled **Errors** and gains the **error summary**, which is a pattern. Steps: `docs/figma-banner-and-error-messages.md` |
+| Modal | Component — DDR-008 already decided this | Keep `Modal` (`3807:36855`). **Delete the `Dialog` set** (`2612:3330`): 10 variants encoding DDR-008's pattern list as a variant matrix, 0 instances. Rebuild Dialogs as pattern frames. DDR-034 |
+| Notifications | **Misnamed; not a component** | Page holds only `Notification Icon` (Badge None/Dot/Count), 4 instances all `Badge=None`. The reusable unit is a **Badge** — already implemented twice in code (`.sr-nav__item-badge`, `.sr-tabs__badge`). Rename the page; no Components page. DDR-034 |
 
 The Link spec was corrected in the same pass: it described 36 variants across
 three types and cited a Figma node that no longer exists. The real set has 24
