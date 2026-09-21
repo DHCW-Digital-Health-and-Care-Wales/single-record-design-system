@@ -11,6 +11,93 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 ---
 
+## Checkpoint — 2026-09-21 (The banner merge is finished — and the 2026-09-17 instance count was wrong)
+
+### Correction to the checkpoint below
+
+The 2026-09-17 entry says six live instances and nine "orphaned subtrees". **The
+nine were live screens.** They sit inside a `Screen Content` SLOT (`462:6196`) on
+a `Page Template` component, which a `page.loadAsync()` sweep does not reach, and
+on a page that is not fully loaded `.parent` stops at `null` — which is what made
+them look off-canvas. Four of them are on `Single Record App`.
+
+Nothing was lost, because the delete script recounted instead of trusting the
+write-up and aborted. **That is the lesson worth keeping: put the guard in the
+destructive script, not in the plan.** A plan that says "check first" is a
+paragraph; a script that throws is a gate. Both failure modes are now in
+`docs/figma-known-issues.md`.
+
+### The merge is complete
+
+All eight steps of `docs/figma-banner-and-error-messages.md` are done.
+`Notification Banner` (`2561:21695`) is the only banner set in the file;
+`Notification Banner/Variants` is deleted.
+
+```
+Severity    = Information | Success | Warning | Error   (variant)
+Placement   = Inline | Global                           (variant)
+Title       = boolean, default ON
+Dismissible = boolean, default off
+Actions     = boolean, default off
+```
+
+All 15 instances were re-pointed with their text preserved. Severity came from
+each instance's own fill/stroke override, not from guesswork:
+
+| Message | n | Mapped to |
+|---|---|---|
+| "Clinical Reminder: NEWS Score > 3 — Suspect SEPSIS…" | 5 | **Error** · Inline |
+| "Total previous attendances…" | 4 | Information · Inline |
+| "Investigations recorded here have not been operationally requested…" | 4 | Warning · Inline |
+| "Barcode scanning…" | 2 | Information · Inline · Dismissible on |
+
+The sepsis mapping was the design lead's explicit call. Their icon changed from a
+warning triangle to the error circle, which is the collapse doing its job.
+
+### `Title` had to be added, and that is a finding
+
+The plan specified two booleans. A third was needed: the old set had **no title
+layer**, and all 15 live banners are title-less. Without `Title` the merge would
+have forced a heading onto fifteen real screens. **When merging two sets, the
+union of their anatomy is the component — a layer one set lacks is a property,
+not an omission to paper over.** The same applied to `Close` and `Actions`, which
+existed on only some variants and had to be normalised across all eight before
+the booleans could bind.
+
+### Two things the swap broke
+
+- **Four banners silently lost their text.** They had never overridden the body —
+  they rendered the *old component's default*, which does not survive a swap.
+  Caught by diffing rendered text before and after; restored with styled runs so
+  the bold lead-ins survived. Filed in known-issues.
+- **One fill was on `Info Blue/50`**, a global token, where the rest use
+  `Status/… Surface`. Re-pointed.
+
+Accepted cosmetic change: the sepsis banner wraps to two lines at 651px, because
+the merged set has 16px horizontal padding against the old 12px. Both parent
+modals were screenshotted; neither breaks.
+
+### Two decisions left open
+
+1. **`Placement = Inline | Global` is a mismatched pair.** `Inline` describes how
+   it sits, `Global` how much it covers. `Inline`/`Full-width` or `Local`/`Global`
+   would be consistent. Cheap now, expensive once it ships in three frameworks.
+2. **`Severity=Error` binds to `Status/Critical`.** No `Status/Error` variable
+   exists. Axis value and token name disagree about the same colour.
+
+### Open, in the order they are worth doing
+
+1. **The banner in code** — `.sr-notification-banner`, now that the set is one
+   and stable. Settle the `Placement` naming first.
+2. **Error summary** — a new pattern, the real gap behind the Errors page.
+3. **Status indicator's section on the Icons page** — last DDR-032 item with
+   nothing shipped.
+4. **The destructive link's dark-mode colour** — open finding in
+   `check-contrast.mjs`, two options written out.
+5. **The footer in dark mode** — a real Figma-vs-code disagreement.
+
+---
+
 ## Checkpoint — 2026-09-17 (The banner sets are one set; the instances recorded their severity after all)
 
 ### Where the notification banner merge now stands

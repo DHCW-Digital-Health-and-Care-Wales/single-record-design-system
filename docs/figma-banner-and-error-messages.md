@@ -67,103 +67,110 @@ Worth writing on the set, because it is the one distinction that earns a variant
 | Margins | Sits in the flow, with space above and below | None; it is chrome |
 | Applies to | One thing on the page | The whole page, or the whole system |
 
-### Steps, in order
+### Steps, in order — all eight are done
 
-The order matters because renaming a property detaches every instance bound to
-it, and deleting a set leaves its instances orphaned.
+The merge completed on 2026-09-21. `Notification Banner` (`2561:21695`) is the
+only banner component set in the file; `Notification Banner/Variants`
+(`2561:21735`) has been deleted.
 
-**Steps 1–6 were done on 2026-09-17.** What remains is 7 and 8, and step 7 is
-much smaller than this plan assumed — see the inventory below.
-
-| # | Step | State |
+| # | Step | Outcome |
 |---|---|---|
-| 1 | Find the instances first | **Done** — 6 live instances, all on one page. Inventory below. |
-| 2 | Rename `Notification Banner/Severity` to `Notification Banner` | **Done** |
-| 3 | Merge Critical into Error | **Done** — zero instances used Critical, so nothing was re-pointed. Five became four. |
-| 4 | Add `Placement` | **Done** — four became eight. Global variants have square corners. |
-| 5 | Add `Dismissible` boolean | **Done** — `Dismissible#5340:0`, default off |
-| 6 | Add `Actions` boolean | **Done** — `Actions#5340:9`, default off |
-| 7 | Swap the orphans | **Open** — 6 instances, recommendation per instance below |
-| 8 | Delete `Notification Banner/Variants` (`2561:21735`) | **Open** — blocked on 7 |
+| 1 | Find the instances first | 15 instances, on 2 pages — see below |
+| 2 | Rename the survivor to `Notification Banner` | Done |
+| 3 | Merge Critical into Error | Done — no instance used Critical |
+| 4 | Add `Placement` | Done — four variants became eight |
+| 5 | Add `Dismissible` boolean | `Dismissible#5340:0`, default off |
+| 6 | Add `Actions` boolean | `Actions#5340:9`, default off |
+| 7 | Swap the orphans | Done — all 15 re-pointed, text preserved |
+| 8 | Delete `Notification Banner/Variants` | Done |
 
-The merged set is `2561:21695`, still on the Notification banner page
-(`2561:21736`), with eight variants:
+### The set as it now stands
 
 ```
-Severity = Information | Success | Warning | Error
-Placement = Inline | Global
-Dismissible = boolean (default off)
-Actions     = boolean (default off)
+Severity    = Information | Success | Warning | Error   (variant)
+Placement   = Inline | Global                           (variant)
+Title       = boolean, default ON
+Dismissible = boolean, default off
+Actions     = boolean, default off
 ```
 
-Both booleans were verified by spawning an instance of all eight variants,
-toggling each on, and confirming the Close and Actions layers became visible in
-every one. The temporary frame was deleted afterwards.
+**`Title` was not in the original plan.** It had to be added: the old `Variants`
+set had no title layer at all, and **every one of the 15 live banners is
+title-less**. Without the boolean, the merge would have forced a title onto
+fifteen real screens or left fifteen hand-hidden layers behind. A title-less
+banner is a supported state, so it is a property.
 
-#### One thing had to be normalised first
+Two other shapes had to be normalised before the booleans could bind. The five
+original Severity variants were not built alike — Information and Success had a
+`Close` and no `Actions` row, the other three the reverse. A boolean cannot bind
+to a layer that is not there, so both layers now exist on all eight variants. The
+two cloned Actions rows carried Error's red and were re-pointed to `Status/Info`
+and `Status/Success`.
 
-The five original Severity variants were not built alike. Information and Success
-had a `Close` layer and no `Actions` row; Warning, Error and Critical had an
-`Actions` row and no `Close`. A boolean bound to a layer that does not exist
-cannot be bound at all, so every variant now carries both layers before the
-booleans were added. The two new Actions rows were cloned from Error's and then
-re-pointed off the red they were cloned with — `Status/Info` for Information,
-`Status/Success` for Success.
+### Step 1's output — where the 15 instances were
 
-### Step 1's output — every instance of either set
+| Page | Count | Held in |
+|---|---|---|
+| `Adaptations UEC` (`1363:23684`) | 10 | 6 direct, 4 in the `Screen Content` slot |
+| `Single Record App` (`5:3226`) | 5 | all in the `Screen Content` slot |
 
-Swept all 61 pages of the file. **Six live instances, all on `Adaptations UEC`**
-(`1363:23684`). Nothing in `PAGES`, `PATTERNS` or any component page uses either
-set. None is nested inside another instance, so all six are directly re-pointable.
+> **The first sweep of this file reported 6, and it was wrong.** Nine instances
+> sit inside a `Screen Content` **SLOT** on a `Page Template` component, which a
+> `page.loadAsync()` sweep does not reach — and on a page that is not fully
+> loaded, walking `.parent` stops at `null`, which made them look like orphaned
+> off-canvas nodes. They were live screens. Sweep with `setCurrentPageAsync()`
+> when the result gates a delete. Both failure modes are in
+> `docs/figma-known-issues.md`.
 
-> Reading `variant.instances.length` reports **15**, not 6. The other nine sit in
-> orphaned subtrees whose root frame has a `null` parent — they are not on the
-> canvas and no sweep can reach them. So step 8's "once step 7 reports zero
-> instances" means zero *page-reachable* instances; `.instances` will never read
-> zero. Recorded in `docs/figma-known-issues.md`.
+### The severity each instance was meant to have
 
-#### The old set never recorded a severity — but the instances did
+The old set never recorded a severity, but every instance **overrode its fill and
+stroke to a status token**, and that override is the answer:
 
-This plan assumed choosing a severity per instance would be a judgement call.
-It is not, or barely. Every live instance **overrides the fill and stroke** to a
-status token, and that override is the severity the designer meant:
+| Message | Instances | Token evidence | Mapped to |
+|---|---|---|---|
+| "Clinical Reminder: NEWS Score > 3 — Suspect SEPSIS…" | 5 | `Status/Critical` | **Error** · Inline |
+| "Total previous attendances is a combined count…" | 4 | `Status/Info` | Information · Inline |
+| "Investigations recorded here have not been operationally requested…" | 4 | `Status/Warning` | Warning · Inline |
+| "Barcode scanning: Scan a wristband or notes label…" | 2 | `Status/Info`, was `Inline Dismissible` | Information · Inline · **Dismissible on** |
 
-| Instance | Frame | Fill / stroke override | Message | Recommended |
-|---|---|---|---|---|
-| `2942:9469` | `MacBook Air - 12` | `Info Blue/50` / `Status/Info` | "Total previous attendances is a combined count…" | Information · Inline |
-| `4242:31587` | `Modal` | `Status/Critical` | "Clinical Reminder: NEWS Score > 3 — Suspect SEPSIS…" | Error · Inline |
-| `4242:31937` | `Modal` | `Status/Critical` | same message | Error · Inline |
-| `4562:22833` | `Modal` | `Status/Critical` | same message | Error · Inline |
-| `4562:25111` | `Modal` | `Status/Critical` | same message | Error · Inline |
-| `4562:25792` | `Modal` | `Status/Critical` | same message | Error · Inline |
+All 15 have `Title` off and `Actions` off.
 
-All six were `Type=Inline`, none had a visible close button or action row, so
-`Placement=Inline`, `Dismissible=off`, `Actions=off` throughout.
+**The sepsis mapping is the one that changes meaning**, and it was made on the
+design lead's explicit instruction. Those five were the patient-safety case
+Critical existed for; DDR-032's argument is that a safety alert needing to
+outrank an error must differ by more than a shade, and until that is designed
+they are Errors. Their icon changed from a warning triangle to the error circle
+as a result, which is the merge doing its job.
 
-Two things are still genuinely yours:
+### Two things the swap broke and how they were fixed
 
-1. **The five sepsis banners are the case Critical existed for.** They are a
-   patient-safety alert, and collapsing them to Error is exactly the collapse
-   DDR-032 argued for — a safety alert that must outrank an error needs more
-   than a darker red. Mapping them to Error is the decision this merge implies,
-   but it is the one instance where the merge changes meaning on a live screen,
-   so it should be your call rather than a script's.
-2. **`2942:9469` binds its fill to `Info Blue/50`**, a global token, where every
-   other banner binds to a `Status/… Surface` semantic. Worth fixing to
-   `Status/Info Surface` while you are in there.
+- **Four banners silently lost their text.** They had never overridden the body —
+  they were rendering the *old component's default string*, which does not
+  survive a swap. Caught by comparing rendered text before and after, and
+  rewritten with their styled runs re-applied so bold lead-ins survived.
+- **One banner's fill was on a global token.** `Info Blue/50` rather than
+  `Status/Info Surface`; re-pointed to the semantic token.
 
-There is also a **seventh** banner on that page, `4562:22747`, which is already
-an instance of the surviving set (`Severity=Information`, "Form guidance") and
-needs nothing.
+One cosmetic consequence, accepted: the sepsis banner now wraps to two lines at
+651px. The merged set's horizontal padding is 16px against the old set's 12px, and
+that string was one line only by a few pixels. Both parent modals were checked and
+neither layout breaks.
 
-### A naming mismatch this merge exposes
+### A naming question left open
 
-The variant is called `Severity=Error`; the tokens it binds to are
-`Status/Critical` and `Status/Critical Surface`. There is no `Status/Error`
-variable in the file. After the Critical/Error collapse the axis value and the
-token name disagree on the same colour. Renaming the variable is a token change
-with its own blast radius, so it is left as a flagged decision rather than done
-here.
+`Placement = Inline | Global` keeps the words the old set used, but the two values
+are not opposites: `Inline` describes how the banner sits, `Global` describes how
+much it covers. `Inline`/`Full-width` or `Local`/`Global` would each be a
+consistent pair. Cheap to change now, expensive once
+`.sr-notification-banner--global` ships in three frameworks.
+
+### The `Severity=Error` / `Status/Critical` mismatch
+
+The variant is called Error; the tokens it binds to are `Status/Critical` and
+`Status/Critical Surface`. There is no `Status/Error` variable in the file. After
+the collapse the axis value and the token name disagree about the same colour.
+Left flagged — a variable rename has its own blast radius.
 
 ### What ships in code
 

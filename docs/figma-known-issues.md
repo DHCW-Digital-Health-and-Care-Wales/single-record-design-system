@@ -222,39 +222,75 @@ The `NONE` → `resize` → `HEIGHT` round trip is what forces the recalculation
 
 ---
 
-### `ComponentNode.instances` over-reports: it includes orphaned subtrees
+### A `loadAsync()` page sweep silently misses instances held in a SLOT
 
-**Symptom:** After merging the two Notification Banner sets, a page-by-page sweep of
-all 61 pages found **6** live instances of `Notification Banner/Variants`. Reading
-`variant.instances.length` on the same set in the same session reported **15**. Nine
-instances existed that no sweep could find.
+**Symptom:** Swept all 61 pages for instances of `Notification Banner/Variants`
+using `page.loadAsync()` + `findAllWithCriteria({ types: ['INSTANCE'] })`. Found
+**6**. The real number was **15**. The nine missed ones sat on two of the pages
+the sweep had just walked, including `Single Record App` — live screens.
 
-**Why:** The nine were real `InstanceNode`s with `removed === false`, but walking
-`.parent` from each one terminated at a `FRAME` named `Screen Content` whose own
-`parent` was `null` — a subtree detached from the document tree. `.instances`
-returns those; anything reachable on the canvas always chains up to a `PAGE`.
+**Why:** Two compounding causes.
 
-**Fix:** Do not gate destructive work on `.instances.length`. Count only instances
-that resolve to a page:
+1. The nine live inside a `Screen Content` **SLOT** (`462:6196`) on a
+   `Page Template` component. A page loaded with `loadAsync()` does not expose
+   slot-plugged content to `findAllWithCriteria`; a page made current with
+   `setCurrentPageAsync()` does.
+2. When a page is not fully loaded, walking `.parent` from a node inside it
+   terminates at `null` instead of reaching the `PAGE`. That made the nine look
+   like orphaned, off-canvas subtrees — **a wrong conclusion that was written up
+   and committed before the delete step caught it.**
+
+`ComponentNode.instances` does return all fifteen, but it is not a substitute:
+the same call returned 9 page-reachable in one script and 2 in the next,
+depending only on which pages happened to be loaded.
+
+**Fix:** For any sweep whose result gates a destructive edit, make each page
+current — do not use `loadAsync()`:
 
 ```js
-function pageOf(node) {
-  let p = node;
-  while (p && p.type !== 'PAGE') p = p.parent;
-  return p;               // null => orphaned, not on the canvas
-}
-const live = variant.instances.filter(i => pageOf(i) !== null);
+// one use_figma call per page; setCurrentPageAsync at most once per call
+const page = await figma.getNodeByIdAsync(PAGE_ID);
+await figma.setCurrentPageAsync(page);
+const hits = page.findAllWithCriteria({ types: ['INSTANCE'] });
 ```
 
-The corollary matters for the banner merge specifically: step 8 of
-`docs/figma-banner-and-error-messages.md` says to delete the old set "once step 7
-reports zero instances". `.instances` will never read zero for that set. The gate is
-zero *page-reachable* instances.
+And never trust a `null` page ancestor as proof a node is off-canvas unless that
+node's page is loaded.
 
 **Prevented by:** Nothing mechanical — this is Plugin API behaviour, not repo
-content, so no build check can reach it. The guard is the snippet above.
+content. What actually caught it was an **abort guard in the delete script**: it
+recounted page-reachable instances itself and threw rather than deleting. Write
+the guard into the destructive script, not into the plan.
 
-**Status:** Workaround only. 2026-09-17.
+**Status:** Workaround only. 2026-09-21.
+
+### Swapping a component replaces default text that looked like content
+
+**Symptom:** After `swapComponent()` onto the merged banner set, four live
+banners reading *"Investigations recorded here have not been operationally
+requested via Welsh Clinical Portal."* silently became *"You have unsaved changes
+on this form."*
+
+**Why:** Those instances had never overridden their body text — they were
+rendering the **old component's default string**. An override survives a swap
+because it is instance data; a default does not, because it belongs to the main
+component being swapped away.
+
+**Fix:** Capture the rendered text (and its styled runs) *before* the swap,
+compare after, and rewrite when they differ:
+
+```js
+const before = body.characters;
+const segs = body.getStyledTextSegments(['fontName']);   // keep bold lead-ins
+src.swapComponent(target);
+if (body.characters !== before) {
+  for (const s of segs) await figma.loadFontAsync(s.fontName);
+  body.characters = before;
+  for (const s of segs) body.setRangeFontName(s.start, s.end, s.fontName);
+}
+```
+
+**Status:** Workaround only. 2026-09-21.
 
 ## Assets & Export
 
