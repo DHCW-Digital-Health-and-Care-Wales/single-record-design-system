@@ -204,9 +204,97 @@ export function assertNoMarkdown({ sections }, label) {
   }
 }
 
+/**
+ * Emit the complete `use_figma` script that BUILDS the panel, not just its data.
+ *
+ * The JSON alone was only half the job: the builder still had to be hand-written
+ * each time, and on its first hand-written run every text node collapsed to a
+ * near-zero-width thread. That is the documented `textAutoResize` trap — a TEXT
+ * node defaults to WIDTH_AND_HEIGHT, which IGNORES `layoutSizingHorizontal =
+ * 'FILL'`. The order below is the one that works, and baking it in here is why
+ * the next panel cannot repeat the mistake:
+ *
+ *     textAutoResize = 'NONE'  →  FIXED + resize(width)  →  'HEIGHT'  →  'FILL'
+ *
+ * Styling matches the existing Guidelines/* frames (header #1b294a, headings
+ * #325083 Roboto Medium 16/24, body #212b32 Roboto Regular 14/20, 575px column).
+ */
+export function figmaScript({ title, sections }, { pageId, replaceNodeId } = {}) {
+  const data = JSON.stringify({ title, sections });
+  return `const DATA = ${data};
+const PAGE_ID = ${JSON.stringify(pageId || 'SET-ME')};
+const REPLACE_NODE_ID = ${JSON.stringify(replaceNodeId || null)};
+
+const page = await figma.getNodeByIdAsync(PAGE_ID);
+await figma.setCurrentPageAsync(page);
+const MED = { family: 'Roboto', style: 'Medium' };
+const REG = { family: 'Roboto', style: 'Regular' };
+await figma.loadFontAsync(MED); await figma.loadFontAsync(REG);
+const rgb = (h) => ({ r: parseInt(h.slice(1,3),16)/255, g: parseInt(h.slice(3,5),16)/255, b: parseInt(h.slice(5,7),16)/255 });
+
+const frame = figma.createAutoLayout('VERTICAL', { name: 'Guidelines/' + DATA.title });
+page.appendChild(frame);
+frame.itemSpacing = 0; frame.cornerRadius = 4;
+frame.fills = [{ type: 'SOLID', color: rgb('#ffffff') }];
+frame.layoutSizingHorizontal = 'FIXED';
+frame.resize(607, 100);
+
+const hdr = figma.createAutoLayout('VERTICAL', { name: 'hdr' });
+frame.appendChild(hdr);
+hdr.layoutSizingHorizontal = 'FILL';
+hdr.paddingTop = 12; hdr.paddingBottom = 12; hdr.paddingLeft = 16; hdr.paddingRight = 16;
+hdr.cornerRadius = 4;
+hdr.fills = [{ type: 'SOLID', color: rgb('#1b294a') }];
+const ht = figma.createText();
+hdr.appendChild(ht);
+ht.fontName = MED; ht.fontSize = 16; ht.lineHeight = { unit: 'PIXELS', value: 24 };
+ht.characters = DATA.title + ' \u2014 Guidelines';
+ht.fills = [{ type: 'SOLID', color: rgb('#ffffff') }];
+
+const body = figma.createAutoLayout('VERTICAL', { name: 'body' });
+frame.appendChild(body);
+body.layoutSizingHorizontal = 'FILL';
+body.paddingTop = 16; body.paddingBottom = 16; body.paddingLeft = 16; body.paddingRight = 16;
+body.itemSpacing = 11;
+body.fills = [];
+
+/** The sizing order that stops a wrapping TEXT collapsing to a thread. */
+function addText(parent, chars, font, size, lh, colour) {
+  const t = figma.createText();
+  parent.appendChild(t);
+  t.fontName = font; t.fontSize = size; t.lineHeight = { unit: 'PIXELS', value: lh };
+  t.characters = chars;
+  t.fills = [{ type: 'SOLID', color: rgb(colour) }];
+  t.textAutoResize = 'NONE';
+  t.layoutSizingHorizontal = 'FIXED';
+  t.resize(575, lh);
+  t.textAutoResize = 'HEIGHT';
+  t.layoutSizingHorizontal = 'FILL';
+  return t;
+}
+
+for (const s of DATA.sections) {
+  addText(body, s.heading, MED, 16, 24, '#325083');
+  addText(body, s.lines.join('\n'), REG, 14, 20, '#212b32');
+  const rule = figma.createRectangle();
+  body.appendChild(rule);
+  rule.resize(575, 1);
+  rule.layoutSizingHorizontal = 'FILL';
+  rule.fills = [{ type: 'SOLID', color: rgb('#d8dde0') }];
+}
+
+if (REPLACE_NODE_ID) {
+  const stale = await figma.getNodeByIdAsync(REPLACE_NODE_ID);
+  if (stale) { frame.x = stale.x; frame.y = stale.y; stale.remove(); }
+}
+await frame.screenshot({ scale: 0.8 });
+return { createdNodeIds: [frame.id], replaced: REPLACE_NODE_ID,
+  widths: frame.findAllWithCriteria({ types: ['TEXT'] }).map(t => Math.round(t.width)) };`;
+}
+
 const [, , file, ...flags] = process.argv;
 if (!file) {
-  console.error('usage: guidelines-to-figma.mjs <path/to/guidelines.md> [--pretty]');
+  console.error('usage: guidelines-to-figma.mjs <path/to/guidelines.md> [--pretty] [--figma-script] [--page=<id>] [--replace=<id>]');
   process.exit(2);
 }
 const out = parseGuidelines(readFileSync(file, 'utf8'));
@@ -216,4 +304,10 @@ try {
   console.error(err.message);
   process.exit(1);
 }
-process.stdout.write(JSON.stringify(out, null, flags.includes('--pretty') ? 2 : 0) + '\n');
+if (flags.includes('--figma-script')) {
+  const pageId = (flags.find((f) => f.startsWith('--page=')) || '').split('=')[1];
+  const replaceNodeId = (flags.find((f) => f.startsWith('--replace=')) || '').split('=')[1];
+  process.stdout.write(figmaScript(out, { pageId, replaceNodeId }) + '\n');
+} else {
+  process.stdout.write(JSON.stringify(out, null, flags.includes('--pretty') ? 2 : 0) + '\n');
+}

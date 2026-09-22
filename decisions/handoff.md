@@ -11,6 +11,97 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 ---
 
+## Checkpoint — 2026-09-22 (Avatar ships; the banner ships; usage notes are generated, not transcribed)
+
+### Avatar — and a WCAG failure in the Figma component
+
+`components/avatar/{spec,guidelines}.md`, `packages/web/src/avatar/`,
+`packages/react/src/avatar/`, stories, and `Guidelines/Avatar` in Figma.
+18 variants, 12 live instances across four pages — a component in real use.
+
+**The Figma component failed contrast.** Initials were `Cyan/700` with
+`Text/Inverse`: white on Cyan/700 is **2.95:1**, against the 4.5:1 SC 1.4.3
+wants for 14px text. `Text/Inverse` was also the wrong token — it is relative to
+the MODE and flips to near-black in dark, while an avatar fill stays saturated
+in both, which that token's own description warns about. Now
+`interactive/primary` + `text/on-fill` at **8.04:1**.
+
+**The header had it right all along**, so this was Figma drifting from code
+rather than the reverse. Two more bindings were raw hex: the presence dot was
+`#007f3b` — `Green/600`, the value `status/success` was raised *away from* — and
+the placeholder circles were a raw `Blue/200`.
+
+**`Text/On Fill` did not exist as a Figma variable at all.** The code token has
+shipped for months with no design-side counterpart. Created.
+
+### Notification banner ships, and the design has a latent dark-mode bug
+
+`.sr-notification-banner` + `NotificationBanner`, matching the merged set.
+Severity picks the announcement: error/warning `role="alert"`,
+information/success `role="status"`.
+
+**Writing it surfaced a bug Figma also has.** Status *surfaces* stay light in
+dark mode; `text/primary` flips to white; so neutral body text on a status
+surface is **1.04–1.10:1** in dark. **No neutral semantic token stays dark in
+both modes** — `text/primary` and `text/inverse` are exact opposites and
+`text/secondary` flips too. Title and body therefore take the severity colour
+and differ by weight, which is what `tags.css` already does. Warning takes
+`Yellow/700`, whose token description literally reads *"Warning banner/pill text
+colour"*.
+
+Figma draws the body as `Text/Primary`, so the bug is latent there. The file is
+light-mode only, so nobody had seen it. **`check:contrast` caught it on the
+first run of the new pairs** — not a review.
+
+### Usage notes are now generated end to end
+
+The `Sample Usage notes` frames across the file are all the same stale **"Menu
+Item — Usage notes"** boilerplate — state variants, badge counts, leading icons
+— on pages that have none of those things. Avatar's and the banner's have been
+replaced with real `Guidelines/*` panels built from their `guidelines.md`.
+
+**The first hand-written builder collapsed every text node to a 1px thread** —
+a TEXT node defaults to `WIDTH_AND_HEIGHT`, which ignores `FILL`. Rather than
+write the fix down, `guidelines-to-figma.mjs --figma-script` now emits the
+**whole builder** with the sizing order baked into its `addText()` helper. It
+used to emit only the panel JSON, leaving the builder to be hand-written every
+time — which is precisely how it got hand-written wrongly. Filed in
+`docs/figma-known-issues.md`.
+
+```
+node scripts/guidelines-to-figma.mjs components/<name>/guidelines.md \
+  --figma-script --page=<pageId> --replace=<staleNodeId>
+```
+
+### Code coverage of the pages worked on
+
+| Page | Spec | Guidelines | Web | React | Figma panel |
+|---|---|---|---|---|---|
+| Avatar | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Notification banner | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Inset text | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Link | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Modal | ✅ | — | ✅ | ✅ | — |
+| Status indicator | — (a style, DDR-032) | — | ✅ | ✅ | — |
+| Form field / Message | — (a building block) | in `form-fields.md` | in 6 components | in 6 components | — |
+
+### Open, in the order they are worth doing
+
+1. **Website pages for Avatar and Notification banner** — both have guidelines
+   and code but no `components/*.html` page yet.
+2. **Modal guidelines** — it has a spec and ships, but no guidelines file, so it
+   has no Figma panel and no website guidance.
+3. **Error summary** — still the real gap behind the Errors page.
+4. **The remaining stale "Menu Item" usage-notes frames.** Every page that has
+   one needs a `guidelines.md` first — the panel is generated from it.
+5. **Re-base the dialog pattern frames onto `Modal`** (size decision first).
+6. **Unify `.sr-nav__item-badge` and `.sr-tabs__badge`** behind one Badge.
+7. **Delete the empty Notifications page.**
+8. **Status indicator's section on the Icons page**, the destructive link's
+   dark-mode colour, and the footer in dark mode.
+
+---
+
 ## Checkpoint — 2026-09-21c (DDR-034 implemented; status.error ships)
 
 All four decisions from DDR-034 are now done in the file and the repo.
