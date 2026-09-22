@@ -100,6 +100,13 @@ const PAIRS = [
     'Body text on a small card'],
 
   // --- Status text on its own surface. SC 1.4.3 normal text, 4.5:1. ---
+  // --- Avatar. The Figma component used Cyan/700 + text/inverse (2.95:1) until
+  //     2026-09-22; these two pairs are why it cannot go back. ---
+  ['sr-color-text-on-fill', 'sr-color-interactive-primary', 4.5,
+    'Avatar initials on the avatar fill (avatar.css)'],
+  ['sr-color-text-secondary', 'sr-color-surface-subtle', 4.5,
+    'Avatar generic mark on its neutral placeholder (avatar.css)'],
+
   ['sr-color-status-error', 'sr-color-status-error-surface', 4.5,
     'Error text on the error surface'],
   ['sr-color-status-success', 'sr-color-status-success-surface', 4.5,

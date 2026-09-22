@@ -4,7 +4,7 @@ The Single Record Design System provides the shared design language, component l
 
 This document is the primary reference for everyone working on Single Record — designers, engineers, and delivery leads.
 
-**Last reviewed:** 2026-09-21. Update this file whenever a component ships, a
+**Last reviewed:** 2026-09-22. Update this file whenever a component ships, a
 token is added, or a system-wide rule changes — not on a schedule. If it
 disagrees with `/foundations/tokens/` or `/components/`, those win and this file
 is out of date.
@@ -227,6 +227,7 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Link | ✅ (guidelines ✅) | ✅ | ✅ |
 | Modal dialog | ✅ | ✅ | ✅ |
 | Navigation | — (guidelines ✅) | ✅ | ✅ |
+| Avatar | ✅ | ✅ | ✅ |
 | Notification banner | — (Figma only; sets merged 2026-09-21) | — | — |
 | Patient banner | ✅ | ✅ | ✅ |
 | Progress indicators | ✅ | — | — |

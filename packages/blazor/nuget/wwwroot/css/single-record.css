@@ -536,6 +536,130 @@
   color: inherit;
 }
 
+/* ═══ avatar ══════════════════════════════════════════════════════ */
+/**
+ * DHCW Single Record — Avatar
+ *
+ * A person, as a circle: their initials, their photo, or a generic mark when
+ * neither is available.
+ *
+ * An avatar identifies a PERSON. It is not a status light, not a badge, and not
+ * a patient identifier — a patient is identified by the patient banner, which
+ * carries the NHS number and the details that make identification safe. A face
+ * in a circle is not safe identification.
+ *
+ * Contrast, because this is where the Figma component was wrong:
+ *   The initials avatar was drawn with a `Cyan/700` fill and `Text/Inverse`
+ *   text. White on Cyan/700 is 2.95:1 — below the 4.5:1 SC 1.4.3 requires for
+ *   14px text. `Text/Inverse` was also the wrong token: it is relative to the
+ *   MODE and flips to near-black in dark, while an avatar fill stays saturated
+ *   in both. Its own token description says not to use it on a saturated fill.
+ *
+ *   This file uses `interactive/primary` with `text/on-fill` — 8.04:1, and
+ *   stable across modes. The header has always done it this way; Figma was
+ *   rebound to match on 2026-09-22.
+ *
+ * Sizes follow the Figma set: SM 32, MD 40, LG 48.
+ */
+
+.sr-avatar {
+  position: relative;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background-color: var(--sr-color-interactive-primary);
+  overflow: visible;
+  /* An avatar is decorative next to a visible name; where it stands alone the
+   * accessible name comes from the element's own aria-label. */
+  user-select: none;
+}
+
+/* ---------- Size ---------- */
+.sr-avatar--md { width: 40px; height: 40px; }
+.sr-avatar--lg { width: 48px; height: 48px; }
+
+/* ---------- Initials ----------
+ * text/on-fill is white in BOTH modes, because the fill it sits on is
+ * saturated in both. Do not swap this for text/inverse. */
+.sr-avatar__initials {
+  color: var(--sr-color-text-on-fill);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+  text-transform: uppercase;
+}
+.sr-avatar--md .sr-avatar__initials,
+.sr-avatar--lg .sr-avatar__initials {
+  font: var(--sr-type-body-m-font);
+  letter-spacing: var(--sr-type-body-m-letter-spacing);
+}
+
+/* ---------- Image ----------
+ * The circle keeps its fill behind the image so a slow or broken load shows a
+ * shape rather than a hole. */
+.sr-avatar__image {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  display: block;
+}
+
+/* ---------- Icon / unknown person ----------
+ * A neutral placeholder, not the brand fill: a generic mark on brand navy reads
+ * as a real person who happens to have no photo. Grey says "we don't know who
+ * this is", which is the truth. */
+.sr-avatar--icon {
+  background-color: var(--sr-color-surface-subtle);
+  box-shadow: inset 0 0 0 1px var(--sr-color-border-default);
+}
+.sr-avatar--icon .sr-avatar__icon {
+  width: 60%;
+  height: 60%;
+  color: var(--sr-color-text-secondary);
+}
+
+/* ---------- Status dot ----------
+ * Presence only, and never the only carrier of that meaning — see the
+ * guidelines. The ring is the surface it sits on, so the dot reads as a
+ * cut-out rather than a floating blob. */
+.sr-avatar__status {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background-color: var(--sr-color-status-success);
+  border: 1.5px solid var(--sr-color-surface-section-cards);
+}
+.sr-avatar--md .sr-avatar__status { width: 10px; height: 10px; }
+.sr-avatar--lg .sr-avatar__status { width: 12px; height: 12px; border-width: 2px; }
+
+/* ---------- Group ----------
+ * Overlapping avatars for "these people". The overlap is a negative margin, and
+ * each avatar carries a ring in the surface colour so the stack reads as
+ * separate circles rather than one blob. */
+.sr-avatar-group {
+  display: inline-flex;
+  align-items: center;
+}
+.sr-avatar-group .sr-avatar {
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards);
+}
+.sr-avatar-group .sr-avatar + .sr-avatar {
+  margin-left: -8px;
+}
+.sr-avatar-group__overflow {
+  margin-left: var(--spacing-2);
+  color: var(--sr-color-text-secondary);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+}
+
 /* ═══ bottom-nav ══════════════════════════════════════════════════ */
 /**
  * DHCW Single Record — Bottom navigation (mobile)
