@@ -2832,6 +2832,166 @@ textarea.sr-input__control {
   border-top: 1px solid var(--sr-color-border-default);
 }
 
+/* ═══ notification-banner ═════════════════════════════════════════ */
+/**
+ * DHCW Single Record — Notification banner
+ *
+ * Reports that something HAPPENED. That is the whole boundary against its
+ * neighbours:
+ *
+ *   Inset text is part of the page. A banner is an event.
+ *
+ * Matches the merged Figma `Notification Banner` set (2561:21695) as settled by
+ * DDR-032 and the 2026-09-21 merge: two variant axes and three booleans.
+ *
+ *   Severity    Information | Success | Warning | Error
+ *   Placement   Inline | Global
+ *   Title       optional  (every live banner in the file has none)
+ *   Dismissible optional
+ *   Actions     optional
+ *
+ * Placement is the axis that earns a variant, and the corners follow from it
+ * rather than being a separate choice: Inline sits IN the content column and
+ * takes the same radius as everything else there; Global spans the viewport
+ * edge to edge, where a radius would leave four notches against the browser
+ * chrome.
+ *
+ * Severity uses the four status/* pairs. Note that status/error is the token
+ * formerly called status/critical (DDR-034) — there is no fifth "critical"
+ * severity, because a patient-safety alert that must outrank an error needs
+ * more than a darker red, and that is its own decision.
+ */
+
+.sr-notification-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-3);
+  padding: var(--spacing-3) var(--spacing-4);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  background-color: var(--sr-color-status-info-surface);
+  border-color: var(--sr-color-status-info);
+}
+
+/* ---------- Severity ---------- */
+.sr-notification-banner--information {
+  background-color: var(--sr-color-status-info-surface);
+  border-color: var(--sr-color-status-info);
+}
+.sr-notification-banner--success {
+  background-color: var(--sr-color-status-success-surface);
+  border-color: var(--sr-color-status-success);
+}
+.sr-notification-banner--warning {
+  background-color: var(--sr-color-status-warning-surface);
+  border-color: var(--sr-color-status-warning);
+}
+.sr-notification-banner--error {
+  background-color: var(--sr-color-status-error-surface);
+  border-color: var(--sr-color-status-error);
+}
+
+/* ---------- Placement ----------
+ * Square, full-bleed, no radius — it meets the viewport edges. The border
+ * narrows to the bottom rule only, because a box outline on something that
+ * runs edge to edge reads as a seam. */
+.sr-notification-banner--global {
+  border-radius: 0;
+  border-width: 0 0 1px 0;
+}
+
+/* ---------- Icon ---------- */
+.sr-notification-banner__icon {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+}
+.sr-notification-banner--information .sr-notification-banner__icon { color: var(--sr-color-status-info); }
+.sr-notification-banner--success     .sr-notification-banner__icon { color: var(--sr-color-status-success); }
+.sr-notification-banner--warning     .sr-notification-banner__icon { color: var(--sr-color-status-warning); }
+.sr-notification-banner--error       .sr-notification-banner__icon { color: var(--sr-color-status-error); }
+
+/* ---------- Content ---------- */
+.sr-notification-banner__content {
+  flex: 1 1 auto;
+  min-width: 0;                 /* a grid/flex child defaults to min-width:auto
+                                 * and will refuse to wrap long text */
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+/* Title and body share the severity's text colour and differ by weight.
+ *
+ * This is NOT a style choice — it is forced, and the reason is worth keeping.
+ * The status SURFACES stay light in dark mode (banners switch to light fills
+ * for legibility against the bright status colour), but `text/primary` flips
+ * to white. Neutral dark text on a status surface is therefore 1.04–1.10:1 in
+ * dark mode, and no neutral semantic token stays dark in both modes.
+ *
+ * The mode-stable colours are the status colours themselves, so the text takes
+ * them — the same answer `tags.css` reached for its status variant.
+ *
+ * Figma draws the banner body as `Text/Primary`, which has this bug latent in
+ * it; the file is light-mode only, so nobody had seen it. Caught by
+ * check:contrast on the first run of these pairs. */
+.sr-notification-banner__title {
+  margin: 0;
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+}
+
+.sr-notification-banner__body {
+  margin: 0;
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+}
+
+.sr-notification-banner--information .sr-notification-banner__title,
+.sr-notification-banner--information .sr-notification-banner__body { color: var(--sr-color-status-info); }
+.sr-notification-banner--success .sr-notification-banner__title,
+.sr-notification-banner--success .sr-notification-banner__body { color: var(--sr-color-status-success); }
+.sr-notification-banner--error .sr-notification-banner__title,
+.sr-notification-banner--error .sr-notification-banner__body { color: var(--sr-color-status-error); }
+/* Warning takes Yellow/700, not `status/warning`. Status/Warning is Yellow/500,
+ * a FILL colour at 1.49:1 on its own surface — it must never carry text.
+ * Yellow/700's own token description reads "Warning banner/pill text colour":
+ * it exists for exactly this. */
+.sr-notification-banner--warning .sr-notification-banner__title,
+.sr-notification-banner--warning .sr-notification-banner__body { color: var(--color-yellow-700); }
+
+/* ---------- Actions ---------- */
+.sr-notification-banner__actions {
+  display: flex;
+  gap: var(--spacing-3);
+  padding-top: var(--spacing-1);
+}
+
+/* ---------- Dismiss ---------- */
+.sr-notification-banner__dismiss {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;            /* the severity colour, for the same
+                                mode-stability reason as the body */
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+.sr-notification-banner__dismiss:focus-visible {
+  outline: 2px solid var(--sr-color-border-focus);
+  outline-offset: 2px;
+}
+.sr-notification-banner__dismiss svg {
+  width: 16px;
+  height: 16px;
+}
+
 /* ═══ patient-banner ══════════════════════════════════════════════ */
 /**
  * DHCW Single Record — Patient banner

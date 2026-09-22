@@ -100,6 +100,18 @@ const PAIRS = [
     'Body text on a small card'],
 
   // --- Status text on its own surface. SC 1.4.3 normal text, 4.5:1. ---
+  // --- Notification banner. The status/* on status/*-surface pairs already
+  //     asserted above cover its information, success and error text. Warning
+  //     needs its own pair because status/warning is a FILL colour (1.49:1,
+  //     the accepted exception below) and the text takes Yellow/700 instead.
+  //
+  //     Body text here is the severity colour rather than text/primary, and
+  //     that is forced: status surfaces stay LIGHT in dark mode while
+  //     text/primary flips to white, which these pairs caught at 1.04-1.10:1
+  //     on their first run. ---
+  ['color-yellow-700', 'sr-color-status-warning-surface', 4.5,
+    'Banner title and body on the warning surface (notification-banner.css)'],
+
   // --- Avatar. The Figma component used Cyan/700 + text/inverse (2.95:1) until
   //     2026-09-22; these two pairs are why it cannot go back. ---
   ['sr-color-text-on-fill', 'sr-color-interactive-primary', 4.5,

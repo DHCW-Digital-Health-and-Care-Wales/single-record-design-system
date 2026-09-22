@@ -228,7 +228,7 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Modal dialog | ✅ | ✅ | ✅ |
 | Navigation | — (guidelines ✅) | ✅ | ✅ |
 | Avatar | ✅ | ✅ | ✅ |
-| Notification banner | — (Figma only; sets merged 2026-09-21) | — | — |
+| Notification banner | ✅ | ✅ | ✅ |
 | Patient banner | ✅ | ✅ | ✅ |
 | Progress indicators | ✅ | — | — |
 | Radio | ✅ (guidelines ✅) | ✅ | ✅ |
