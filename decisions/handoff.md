@@ -11,6 +11,63 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 ---
 
+## Checkpoint — 2026-09-23 (Modal guidelines; Avatar and Banner on the website)
+
+Three things shipped, and one gate turned out to have a hole in it.
+
+- **`components/modal/guidelines.md`** — DDR-008 named two dialog patterns and
+  the base component had a spec but no guidelines, so it had neither a Figma
+  panel nor website guidance. Its `Guidelines/Modal dialog` panel is generated
+  and has replaced the stale Menu Item boilerplate on that page.
+- **`components/avatar.html`** — leads with the rule that matters clinically
+  (an avatar identifies a colleague, never a patient) and documents the 2.95:1
+  correction so it stops being folklore.
+- **`components/notification-banner.html`** — holds its two boundaries: against
+  inset text, which is the page rather than an event, and against the error
+  summary, which is interactive and moves focus.
+
+Both are in the side nav and in `SITE_COMPONENT_CSS`, so their previews are
+styled. Site builds at 35 pages; `npm run check` green.
+
+### The React snippet gate could not see past a JSX prop
+
+`checkReactSnippet` found the end of an opening tag with `indexOf('>')`. A prop
+holding a JSX element — `icon={<Icon name="…" />}` — ends that scan at the
+**nested** element's bracket.
+
+The false positive (reporting `name` as a banner prop) was the visible half.
+**The invisible half was worse: every attribute after the nested element was
+never scanned**, so a genuinely wrong prop there passed silently. Fixed with
+`openingTagEnd()`, which tracks quotes and brace depth, plus
+`blankBraceExpressions()`, which blanks the contents of each `{…}` before the
+attribute regex runs — finding the tag end alone is not enough, because a
+space-prefixed `name=` inside the braces still matches.
+
+**Verified by planting `bogusprop="x"` after the nested element** — the position
+the old scan could never reach — and confirming a non-zero exit. Filed in
+`docs/engineering/known-issues.md`.
+
+The internal-reference gate separately caught a `DDR-032` citation written into
+public page copy. Decision records are internal; the point is now made in the
+reader's terms.
+
+### Open, in the order they are worth doing
+
+1. **Error summary** — a new pattern, still the real gap behind the Errors page,
+   and now the largest single hole in the system.
+2. **The remaining stale "Menu Item" usage-notes frames.** Each page needs a
+   `guidelines.md` first — the panel is generated from it, so the markdown is
+   the work and the panel is one command:
+   `node scripts/guidelines-to-figma.mjs components/<name>/guidelines.md --figma-script --page=<id> --replace=<id>`
+3. **Re-base the dialog pattern frames onto `Modal`** (pick a size per pattern
+   first — they are drawn at 400px and Modal offers 380/480).
+4. **Unify `.sr-nav__item-badge` and `.sr-tabs__badge`** behind one Badge.
+5. **Delete the empty Notifications page.**
+6. **Status indicator's section on the Icons page**, the destructive link's
+   dark-mode colour, and the footer in dark mode.
+
+---
+
 ## Checkpoint — 2026-09-22 (Avatar ships; the banner ships; usage notes are generated, not transcribed)
 
 ### Avatar — and a WCAG failure in the Figma component
