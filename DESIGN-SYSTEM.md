@@ -228,6 +228,7 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Modal dialog | ✅ | ✅ | ✅ |
 | Navigation | — (guidelines ✅) | ✅ | ✅ |
 | Avatar | ✅ | ✅ | ✅ |
+| Error summary (pattern) | ✅ | ✅ | ✅ |
 | Notification banner | ✅ | ✅ | ✅ |
 | Patient banner | ✅ | ✅ | ✅ |
 | Progress indicators | ✅ | — | — |
@@ -260,7 +261,7 @@ kinds of thing behind one promise:
 | Status Indicator | Style — the filled status icon family, already shipped as `.sr-status-indicator` | The neutral `none` mark ships, drawing `action/remove` from the icon set rather than a copied path. **Still to do:** its section on the Icons page |
 | Inset text | Component, narrowed to prose emphasis | **Done** — narrowed in Figma, spec + guidelines written, web + React + page shipped |
 | Notification banner | Component; its two Figma sets are one component with two properties | **Figma done** — one set of 8 variants (`Severity` × `Placement`) plus `Title`, `Dismissible` and `Actions` booleans; all 15 instances re-pointed and the old set deleted. Remaining: spec, code, page — settle the `Placement` value naming first. Steps: `docs/figma-banner-and-error-messages.md` |
-| Error/Warning messages | Neither — shared form-field anatomy, already rendered by six components | **Renamed** `Form field / Message`, page retitled **Errors**, all 15 doc-page instances intact. Not deleted — three component pages draw their error state with it. Open: the **error summary** pattern. DDR-034 |
+| Error/Warning messages | Neither — shared form-field anatomy, already rendered by six components | **Done** — renamed `Form field / Message`, page retitled **Errors**, all 15 doc-page instances intact. The **error summary** pattern now ships alongside it. DDR-034 |
 | Modal | Component — DDR-008 already decided this | **Done** — `Dialog` (`2612:3330`) deleted after its 10 variants were detached into pattern frames; Modal and Dialogs page headings corrected; `patterns/dialogs/result-dialog.md` written. Open: re-basing the frames onto `Modal` instances. DDR-034 |
 | Notifications | **Misnamed; not a component** | **Done** — set renamed `Header / Notification bell` and moved to the Header page; the Notifications page is empty and flagged for deletion. Open: unify `.sr-nav__item-badge` and `.sr-tabs__badge` behind one Badge style. DDR-034 |
 

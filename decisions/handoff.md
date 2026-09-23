@@ -11,6 +11,82 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 ---
 
+## Checkpoint — 2026-09-23b (Error summary ships; a gate for undefined custom properties)
+
+### The error summary
+
+`patterns/error-summary/guidelines.md`, `.sr-error-summary`, `ErrorSummary`,
+stories, a Patterns page on the website, a drawn frame on the Errors page and a
+`Guidelines/Error summary` panel. It was the largest remaining hole: GDS and NHS
+England both require it past a couple of fields and nothing here provided one.
+
+**The behaviour is the pattern**, so the component owns it — focus on
+appearance and again whenever the set of errors changes, links that move focus
+*into* the field, and a fallback to the first focusable descendant where a field
+cannot take focus itself.
+
+**It is deliberately untinted**, and the good reason is not the obvious one.
+Status surfaces stay light in dark mode, which is what forces banner text onto
+the severity colour. The summary sits on the page surface, which flips with the
+mode, so its heading and links use ordinary text and link colours and are
+correct in both. Links take `interactive/link` rather than the error red,
+because `status/error` is 2.14:1 on the dark page. The border and icon step up
+to `Red/400` under `[data-theme="dark"]` — the `Yellow/700` move from
+`tags.css` — because **no dark-safe red semantic token exists**, which remains
+the open finding it shares with the destructive link.
+
+### A bug shipped the day before, and the gate that now catches it
+
+The notification banner used `var(--spacing-3)` and `var(--spacing-4)`. **Those
+do not exist** — the scale is `--space-N`, and `--spacing-*` is a different,
+sparser set (`--spacing-component-md`). **The banner rendered with no padding
+and no gap**, and every gate passed: `check:ds` looks for literals, `check:type`
+at typography, `check:contrast` resolves colours, `check:snippets` resolves
+classes. An undefined custom property makes the declaration invalid and the
+browser drops it silently.
+
+`scripts/check-css-vars.mjs` (`npm run check:css-vars`, wired into
+`npm run check`) now requires every `var(--x)` in the component stylesheets to
+resolve; `var(--x, 8px)` passes, because a fallback is deliberate. Verified by
+restoring the broken declaration and confirming a non-zero exit naming both.
+
+**The lesson worth keeping:** a token name that is *nearly* right is worse than
+one that is obviously wrong, because it reads correctly in review. Two scales
+whose names differ by two letters will keep producing this.
+
+### `form-validation.md` described components that do not exist
+
+It called the summary an `alert-banner` — which is the exact confusion the
+pattern exists to prevent — and the inline message an `inline-error` component.
+Neither exists. It also put the inline message *above* the control with a red
+left border and a `color.text.error` token; the shipped fields render it after
+the control, with a border plus inset shadow, on `status/error`. Corrected, with
+the error recorded in place rather than quietly overwritten.
+
+### A classification worth revisiting
+
+DDR-032 ruled the error summary a **pattern** because it composes Link, the
+field-message anatomy and focus management. By that test the modal (Button +
+Icon) and the banner (Icon + Button) are patterns too, and both are components.
+It has one fixed anatomy, it is instantiated on its own, and its behaviour has
+to be identical everywhere or it is wrong — which is what a component
+guarantees and a pattern does not. It ships under `patterns/` as ruled; the
+code is a single implementation either way, so re-ruling it is cheap.
+
+### Open, in the order they are worth doing
+
+1. **The remaining stale "Menu Item" usage-notes frames** — each needs a
+   `guidelines.md` first; the panel is then one command.
+2. **Re-base the dialog pattern frames onto `Modal`** (pick a size per pattern).
+3. **Unify `.sr-nav__item-badge` and `.sr-tabs__badge`** behind one Badge.
+4. **A dark-safe red.** Three separate pieces of work have now hit it: the
+   destructive link, the banner, and the error summary's border. It is one
+   colour decision and it would close all three.
+5. **Delete the empty Notifications page.**
+6. **Status indicator's section on the Icons page**, and the footer in dark mode.
+
+---
+
 ## Checkpoint — 2026-09-23 (Modal guidelines; Avatar and Banner on the website)
 
 Three things shipped, and one gate turned out to have a hole in it.
