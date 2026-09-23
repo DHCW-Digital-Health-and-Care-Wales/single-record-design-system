@@ -406,6 +406,40 @@ does not, that branch is broken for every prop you did not explicitly name.
 
 ---
 
+### A JSX prop holding an element hid every prop after it from the snippet gate
+
+**Symptom:** The React snippet
+`<NotificationBanner severity="error" icon={<Icon name="status/error-circle" />}>`
+was reported as `NotificationBanner has no prop "name"`. `name` is a prop of the
+nested `Icon`, not of the banner.
+
+**Why:** `checkReactSnippet` found the end of the opening tag with
+`code.indexOf('>', open.index)`. With a JSX element inside a prop expression,
+the first `>` belongs to the **nested** element, so the attribute slice both
+stopped early and swept in the nested element's attributes. Its own comment
+claimed "children and nested JSX are ignored", which was true only for children.
+
+The false positive was the visible half. The invisible half was worse: **every
+attribute after the nested element was never scanned at all**, so a genuinely
+wrong prop there passed silently.
+
+**Fix:** Two changes in `packages/website/build.mjs`.
+
+1. `openingTagEnd()` walks the tag tracking quote state and `{}` depth, and
+   returns the first `>` at depth zero.
+2. `blankBraceExpressions()` blanks the *contents* of every balanced `{…}`
+   before the attribute regex runs, so `icon={…}` is still seen as a prop while
+   what is inside it is not.
+
+Finding the tag end is not sufficient on its own — a space-prefixed `name=`
+inside the braces still matches the attribute pattern.
+
+**Prevented by:** The gate itself, once corrected. Verified by planting
+`bogusprop="x"` *after* the nested element and confirming a non-zero exit — the
+position the old scan could never reach.
+
+**Status:** Resolved. 2026-09-23.
+
 ## Packaging and install
 
 ### `--tag next` does not spare a package's FIRST publish from becoming `latest`
