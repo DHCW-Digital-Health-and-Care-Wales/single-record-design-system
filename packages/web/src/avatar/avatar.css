@@ -115,7 +115,7 @@
   margin-left: -8px;
 }
 .sr-avatar-group__overflow {
-  margin-left: var(--spacing-2);
+  margin-left: var(--space-2);
   color: var(--sr-color-text-secondary);
   font: var(--sr-type-body-s-font);
   letter-spacing: var(--sr-type-body-s-letter-spacing);

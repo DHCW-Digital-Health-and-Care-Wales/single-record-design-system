@@ -440,6 +440,43 @@ position the old scan could never reach.
 
 **Status:** Resolved. 2026-09-23.
 
+### An undefined custom property drops the declaration, silently
+
+**Symptom:** `.sr-notification-banner` shipped with
+`padding: var(--spacing-3) var(--spacing-4)` and `gap: var(--spacing-3)`. The
+banner rendered with **no padding and no gap**. Every check passed and the site
+built clean.
+
+**Why:** The spacing scale is `--space-N`. `--spacing-*` also exists, but it is
+a different, sparser set — `--spacing-component-md`, `--spacing-form-field-gap`
+— and `--spacing-3` is not in it. An undefined custom property makes the whole
+declaration invalid at computed-value time: the browser drops it and reports
+nothing.
+
+None of the existing gates could see it:
+
+| Gate | Why it missed |
+|---|---|
+| `check:ds` | Looks for literal values, and `var()` is not a literal |
+| `check:type` | Typography declarations only |
+| `check:contrast` | Resolves colours; these were spacing |
+| `check:snippets` | Resolves CLASSES against the built CSS, not properties |
+
+**Fix:** `scripts/check-css-vars.mjs` (`npm run check:css-vars`, wired into
+`npm run check`). Every `var(--x)` in `packages/web/src/**/*.css` must resolve
+to a property defined in the built token CSS or in the stylesheets themselves.
+`var(--x, 8px)` passes — a fallback is a deliberate choice.
+
+**Prevented by:** that check, verified by restoring the original
+`var(--spacing-3) var(--spacing-4)` and confirming a non-zero exit naming both.
+
+**The wider lesson:** a token *name* that is nearly right is worse than one that
+is obviously wrong, because it reads correctly in review. Two scales whose names
+differ by two letters — `--space-N` and `--spacing-component-N` — will keep
+producing this until something mechanical checks it.
+
+**Status:** Resolved. 2026-09-23.
+
 ## Packaging and install
 
 ### `--tag next` does not spare a package's FIRST publish from becoming `latest`

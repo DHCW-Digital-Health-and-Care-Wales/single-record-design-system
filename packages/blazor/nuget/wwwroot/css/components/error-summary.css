@@ -1,0 +1,110 @@
+/**
+ * DHCW Single Record — Error summary
+ *
+ * The box at the top of a form that lists every error, each one a link that
+ * moves focus into the field it names.
+ *
+ * It is NOT a notification banner, and the styling says so deliberately.
+ *
+ *   A banner reports an EVENT. The summary reports the STATE of the form in
+ *   front of you, and it is interactive.
+ *
+ * Two consequences follow from that, and both are load-bearing:
+ *
+ * 1. No tinted surface. Every banner severity is a status tint; the summary
+ *    sits on the page's own surface with a heavy status border instead, so the
+ *    two are not mistakable at a glance.
+ *
+ * 2. Because the surface is the PAGE surface, it flips with the mode — and so
+ *    `text/primary` is correct here, where it is wrong on a banner. (Status
+ *    surfaces stay light in dark mode, which is why the banner's text takes the
+ *    severity colour instead. See notification-banner.css.)
+ *
+ * The links take `interactive/link` rather than `status.error` for the same
+ * reason: `status.error` is a dark red, fine on a light status tint but 2.14:1
+ * on the dark page. `interactive/link` is specified for links on the page and
+ * clears AA in both modes. The error-ness is carried by the heading, the icon
+ * and the border — never by the link colour alone.
+ */
+
+.sr-error-summary {
+  border: var(--border-width-2) solid var(--sr-color-status-error);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+/* The summary takes focus when it appears, so it needs a visible ring — a
+ * programmatic focus with no ring leaves a sighted keyboard user with no idea
+ * where they are. */
+.sr-error-summary:focus-visible {
+  outline: var(--border-width-2) solid var(--sr-color-border-focus);
+  outline-offset: 2px;
+}
+
+.sr-error-summary__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.sr-error-summary__icon {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  color: var(--sr-color-status-error);
+}
+
+.sr-error-summary__title {
+  margin: 0;
+  color: var(--sr-color-text-primary);
+  font: var(--sr-type-heading-xs-font);
+  letter-spacing: var(--sr-type-heading-xs-letter-spacing);
+}
+
+.sr-error-summary__body {
+  margin: var(--space-3) 0 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sr-error-summary__item + .sr-error-summary__item {
+  margin-top: var(--space-2);
+}
+
+/* A real link, styled like every other link in the system. Underlined at rest,
+ * because a list of coloured words with no underline is a list of coloured
+ * words. */
+.sr-error-summary__link {
+  color: var(--sr-color-interactive-link);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.sr-error-summary__link:hover {
+  text-decoration-thickness: 2px;
+}
+.sr-error-summary__link:focus-visible {
+  outline: var(--border-width-2) solid var(--sr-color-border-focus);
+  outline-offset: 2px;
+}
+
+/* ---------- Dark mode ----------
+ * `status/error` is Red/700 — correct on a light surface and 2.14:1 on the dark
+ * page, which is under the 3:1 SC 1.4.11 wants for a non-text boundary. The
+ * system has no dark-safe red semantic token; that is a known open finding,
+ * shared with the destructive link.
+ *
+ * Rather than ride that finding, the boundary and the mark step up the ramp in
+ * dark only — the same move `tags.css` makes with Yellow/700, and scoped with
+ * [data-theme="dark"] as `stat-card.css` does.
+ *
+ * The heading and the links do NOT need an override: they sit on the page
+ * surface, which flips with the mode, so text/primary and interactive/link are
+ * already correct in both. That is the whole reason this pattern is not tinted.
+ */
+[data-theme="dark"] .sr-error-summary {
+  border-color: var(--color-red-400);
+}
+[data-theme="dark"] .sr-error-summary__icon {
+  color: var(--color-red-400);
+}

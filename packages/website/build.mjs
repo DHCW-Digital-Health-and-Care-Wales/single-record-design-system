@@ -509,7 +509,7 @@ const SITE_COMPONENT_CSS = [
   'button', 'table', 'patient-banner', 'header', 'footer', 'bottom-nav',
   'breadcrumbs', 'switch', 'segmented-control', 'navigation', 'input',
   'tags', 'checkbox', 'radio', 'select', 'tabs', 'search', 'stat-card', 'link',
-  'inset-text', 'avatar', 'notification-banner',
+  'inset-text', 'avatar', 'notification-banner', 'error-summary',
 ];
 const COMPONENT_CSS_LINKS = (prefix) =>
   SITE_COMPONENT_CSS.map((c) => `<link rel="stylesheet" href="${prefix}assets/${c}.css">`).join('\n');
@@ -567,8 +567,9 @@ const SECTIONS = [
     // Patterns behaves like Components: the nav entry opens the first pattern
     // directly. No overview page — with one pattern it was a card pointing at
     // the only sibling in the sidebar.
-    id: 'patterns', label: 'Patterns', href: 'patterns/patient-banner.html',
+    id: 'patterns', label: 'Patterns', href: 'patterns/error-summary.html',
     side: [
+      { href: 'patterns/error-summary.html', label: 'Error summary' },
       { href: 'patterns/patient-banner.html', label: 'Patient Banner' },
     ],
   },
@@ -3225,6 +3226,107 @@ ${renderMarkdown(md)}
 
 // ─── Components: Inset text ───────────────────────────────────────────────────
 /**
+ * Error summary. The page has to do two things the markdown cannot: show the
+ * summary next to the inline message it must match word for word, and make the
+ * boundary against Notification banner explicit. Both are the confusions that
+ * made this pattern worth building.
+ */
+function errorSummaryBody() {
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'patterns', 'error-summary', 'guidelines.md'), 'utf8')));
+
+  const summary = `<div class="sr-error-summary" role="alert" tabindex="-1">
+  <div class="sr-error-summary__header">
+    <span class="sr-error-summary__icon" aria-hidden="true"><svg style="width:100%;height:100%"><use href="../assets/sprite.svg#icon-status-error-circle"></use></svg></span>
+    <h2 class="sr-error-summary__title">There is a problem</h2>
+  </div>
+  <ul class="sr-error-summary__body">
+    <li class="sr-error-summary__item">
+      <a class="sr-error-summary__link" href="#demo-nhs">Enter the patient's NHS number</a>
+    </li>
+    <li class="sr-error-summary__item">
+      <a class="sr-error-summary__link" href="#demo-dob">Date of birth must be a real date</a>
+    </li>
+  </ul>
+</div>`;
+
+  const withForm = `<div style="max-width:52ch">
+  ${summary}
+  <div class="sr-input sr-input--error" style="margin-bottom:24px">
+    <label class="sr-input__label" for="demo-nhs">NHS number</label>
+    <div class="sr-input__field"><input id="demo-nhs" aria-invalid="true" aria-describedby="demo-nhs-error"></div>
+    <span class="sr-input__error" id="demo-nhs-error">Enter the patient's NHS number</span>
+  </div>
+  <div class="sr-input sr-input--error">
+    <label class="sr-input__label" for="demo-dob">Date of birth</label>
+    <div class="sr-input__field"><input id="demo-dob" aria-invalid="true" aria-describedby="demo-dob-error"></div>
+    <span class="sr-input__error" id="demo-dob-error">Date of birth must be a real date</span>
+  </div>
+</div>`;
+
+  const snippets = {
+    HTML: '<div class="sr-error-summary" role="alert" tabindex="-1">\n  <div class="sr-error-summary__header">\n    <span class="sr-error-summary__icon" aria-hidden="true"><!-- status/error-circle --></span>\n    <h2 class="sr-error-summary__title">There is a problem</h2>\n  </div>\n  <ul class="sr-error-summary__body">\n    <li class="sr-error-summary__item">\n      <!-- href is the FIELD id, not the error text id -->\n      <a class="sr-error-summary__link" href="#nhs-number">Enter the patient\'s NHS number</a>\n    </li>\n  </ul>\n</div>\n\n<!-- Focus it programmatically when it appears; the box alone does nothing. -->',
+    React: '{/* Renders nothing when errors is empty, so mount it unconditionally\n    and let it appear on a failed submit. */}\n<ErrorSummary\n  errors={[\n    { id: \'nhs-number\', message: "Enter the patient\'s NHS number" },\n    { id: \'dob\', message: \'Date of birth must be a real date\' },\n  ]}\n/>\n\n{/* errors must be in FIELD order, and each id is the FIELD\'s id.\n    The component focuses itself, and re-focuses whenever the set of\n    errors changes — a second failed submit is a new problem. */}',
+    Blazor: '@* Stylesheet only — no component to install. The focus behaviour is\n   yours to wire up: focus the container when it renders. *@\n<div class="sr-error-summary" role="alert" tabindex="-1" @ref="summaryRef">\n  ...\n</div>',
+  };
+
+  return `
+<p class="breadcrumbs"><a href="../patterns/patient-banner.html">Patterns</a> / Error summary</p>
+<h1>Error summary</h1>
+<p class="lede">The box at the top of a form listing every error, each one a link that moves focus
+into the field it names.</p>
+
+<div class="callout"><p><strong>The behaviour is the pattern.</strong> A hand-rolled version always
+renders the right box and then misses one of four things: taking focus when it appears, linking to
+the field rather than scrolling to it, matching the inline wording exactly, or listing the errors in
+field order. Each omission is the difference between a form someone can recover from and one they
+cannot.</p></div>
+
+<h2>With the form it describes</h2>
+<p>The summary and the inline messages are two layers of the same thing and always appear together.
+Read the wording across them: <strong>the same problem is worded identically in both places</strong>.
+Two wordings for one problem is two problems, and the person reading is mid-task.</p>
+${showcase(withForm, 'error-summary-with-form', snippets)}
+
+<h2>It is not a notification banner</h2>
+<p>Both are a box with a status colour near the top of the page, which is why they get confused.</p>
+<p><strong>A banner reports an event</strong> — a save failed, a record is locked.
+<strong>The summary reports the state of the form in front of you</strong>, and unlike a banner it is
+<em>interactive</em>: every item is a link, and it takes focus when it appears.</p>
+
+<h2>Why it is not tinted</h2>
+<p>Every banner severity is a status tint, so an untinted box is the quickest way to tell the two
+apart. But the better reason is technical.</p>
+<p>Status surfaces stay light in dark mode — that is what keeps a banner legible against a bright
+status colour — which is why banner text has to take the severity colour rather than the ordinary
+text colour. <strong>The summary sits on the page's own surface, which flips with the mode</strong>,
+so its heading and links use ordinary text and link colours and are correct in both. Tinting it
+would import the banner's problem for nothing.</p>
+<p>The links are <code>interactive/link</code>, not the error red, for the same reason:
+<code>status/error</code> is 2.14:1 on the dark page. The error-ness is carried by the heading, the
+icon and the border — never by the link colour alone.</p>
+
+<h2>Each item is the fix, not the fault</h2>
+<p>"Enter the patient's NHS number", not "NHS number is required" and never "Invalid input". And say
+<em>which</em> field, because the item is read out of context — "Date of birth must be a real date"
+beats "Must be a real date".</p>
+<p>The heading names the situation rather than counting: <strong>"There is a problem"</strong>. A
+count is wrong the moment one error is fixed.</p>
+
+<h2>Focus is the part that matters</h2>
+<p>The summary is focused programmatically when it appears, so a screen-reader user hears the problem
+instead of being left at the submit button they just pressed — and again on every later failed submit
+where the errors have changed, because that is a new problem to announce.</p>
+<p>Each link moves focus <em>into</em> the field, not merely to it. Where a field cannot take focus
+itself — a fieldset of radios, a date input of three boxes — focus goes to its first focusable
+control.</p>
+<p>A programmatic focus needs a visible ring. Moving a sighted keyboard user somewhere with no
+indicator has lost them, not helped them.</p>
+
+${renderMarkdown(md)}
+`;
+}
+
+/**
  * Avatar. The page carries one rule harder than the rest: an avatar identifies
  * a COLLEAGUE, never a patient. Everything else here is sizing and fallbacks;
  * that one is a patient-safety boundary.
@@ -5233,6 +5335,11 @@ addPage({
   prefix: '../', body: searchBody(), extraScript: SEARCH_SCRIPT,
 });
 
+addPage({
+  file: 'patterns/error-summary.html', url: 'patterns/error-summary.html', title: 'Error summary',
+  section: 'Patterns', sectionId: 'patterns', activeHref: 'patterns/error-summary.html',
+  prefix: '../', body: errorSummaryBody(),
+});
 addPage({
   file: 'components/avatar.html', url: 'components/avatar.html', title: 'Avatar',
   section: 'Components', sectionId: 'components', activeHref: 'components/avatar.html',

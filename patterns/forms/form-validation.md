@@ -1,7 +1,7 @@
 # Pattern: Form Validation
 
-**Status:** Planned
-**Last updated:** 2026-03
+**Status:** In review — the error summary now ships; see [error-summary](../error-summary/guidelines.md)
+**Last updated:** 2026-09
 
 ---
 
@@ -23,19 +23,30 @@ Displayed at the top of the form, immediately after a failed submission attempt.
 
 **Behaviour:**
 - Appears above the form heading (not within the form body)
-- Contains a heading: "There is a problem" (or "There are X problems")
+- Contains a heading: "There is a problem". **Not a count** — a number is wrong
+  the moment one error is fixed
 - Lists every error as a link — clicking jumps to the relevant field
-- Focus moves to the error summary on page load/re-render after failed submission
+- Focus moves to the error summary when it appears, and again on every
+  subsequent failed submit where the set of errors has changed
+- Errors are listed in the order the FIELDS appear, not the order validation
+  found them
 
-**Components used:** `alert-banner` (error variant), ordered list of anchor links
+**What it is built from:** `.sr-error-summary` / `ErrorSummary`, plus a list of
+real links. It is **not** a notification banner — see
+[error-summary](../error-summary/guidelines.md) for the boundary and why the
+surface is untinted.
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│ ✕  There is a problem                                   │
-│    • Date of birth must be in the past                  │
-│    • NHS number must be 10 digits                       │
+│ (!)  There is a problem                                 │
+│      Enter the patient's NHS number      ← a real link  │
+│      Date of birth must be a real date   ← a real link  │
 └─────────────────────────────────────────────────────────┘
 ```
+
+> This document described the summary as an `alert-banner` and the inline
+> message as an `inline-error` component. **Neither exists**, and the first is
+> the confusion this pattern exists to prevent. Corrected 2026-09.
 
 ---
 
@@ -44,10 +55,13 @@ Displayed at the top of the form, immediately after a failed submission attempt.
 Displayed between the label (and hint, if present) and the input field.
 
 **Behaviour:**
-- Shown immediately below the label/hint, above the input
-- Red left border on the field container
-- Error text in `color.text.error`, prefixed with visually hidden "Error:" for screen readers
-- Associated with the field via `aria-describedby`
+- Rendered **after** the control, as the field's last element — this is what
+  `Input`, `Select`, `Checkbox`, `Radio`, `Search` and `Date input` all do
+- The field carries `.sr-input--error`, which sets a `status/error` border plus
+  an inset 1px shadow. There is no red *left* border
+- Error text is `.sr-input__error`, caption size, `status/error`
+- Associated with the field via `aria-describedby`, with `aria-invalid` on the
+  control
 
 ```
 Label text
@@ -56,7 +70,10 @@ Error: Date of birth must be in the past
 [ Day  ] [ Month ] [ Year ]
 ```
 
-**Component used:** `inline-error`
+**What renders it:** each field component's own `__error` element. There is no
+separate inline-error component, and deliberately so — a standalone one could
+render the message without attaching it to a field, and the attachment is the
+part that matters (DDR-032).
 
 ---
 
@@ -95,8 +112,8 @@ Do not validate empty required fields on blur — only on submission. This preve
 
 ## Related
 
-- `/components/inline-error/spec.md`
-- `/components/alert-banner/spec.md`
-- `/patterns/forms/form-layout.md`
+- [`patterns/error-summary/guidelines.md`](../error-summary/guidelines.md)
+- [`components/form-fields.md`](../../components/form-fields.md)
+- [`components/notification-banner/guidelines.md`](../../components/notification-banner/guidelines.md) — for an event, not a validation error
 - GDS: [Error summary](https://design-system.service.gov.uk/components/error-summary/)
 - GDS: [Error message](https://design-system.service.gov.uk/components/error-message/)

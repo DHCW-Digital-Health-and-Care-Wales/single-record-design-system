@@ -100,6 +100,21 @@ const PAIRS = [
     'Body text on a small card'],
 
   // --- Status text on its own surface. SC 1.4.3 normal text, 4.5:1. ---
+  // --- Error summary. It sits on the PAGE surface, not a status tint, which
+  //     is why text/primary is right here and wrong on a banner. The links
+  //     take interactive/link rather than status.error precisely because
+  //     status.error is 2.14:1 on the dark page. ---
+  ['sr-color-text-primary', 'sr-color-surface-background', 4.5,
+    'Error summary heading on the page (error-summary.css)'],
+  ['sr-color-interactive-link', 'sr-color-surface-background', 4.5,
+    'Error summary links on the page (error-summary.css)'],
+  ['sr-color-status-error', 'sr-color-surface-background', 3,
+    'Error summary border and icon against the page (error-summary.css)', 'light'],
+  // Dark only: the [data-theme="dark"] override in error-summary.css steps up
+  // the red ramp, because no dark-safe red SEMANTIC token exists yet.
+  ['color-red-400', 'sr-color-surface-background', 3,
+    'Error summary border and icon against the dark page (error-summary.css)', 'dark'],
+
   // --- Notification banner. The status/* on status/*-surface pairs already
   //     asserted above cover its information, success and error text. Warning
   //     needs its own pair because status/warning is a FILL colour (1.49:1,
