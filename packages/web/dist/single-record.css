@@ -130,8 +130,11 @@
   --sr-color-border-focus: #0d8bad; /** Focus ring — Cyan/800 in both modes (DDR-025, amending DDR-006). Cyan/700 was 2.95:1 on a card and 2.71:1 on the page, under the 3:1 SC 1.4.11 requires. Cyan/800 is the only stop clearing 3:1 in both modes: darker stops fix light mode and fail dark, where surfaces are navy. */
   --sr-color-border-disabled: #9ea1af;
   --sr-color-brand-accent: #12a3c9; /** Decorative accent only. Borders, icon strokes, chart accents, tab indicators. Never use as a filled surface with text on top. */
-  --sr-color-status-critical: #b32014; /** Red/700 (#B32014) — raised from Red/600 for AA contrast on light status surfaces and text. */
-  --sr-color-status-critical-surface: #fef3f2; /** Red/50 (#FEF3F2) — lightened from Red/100 so Status/Critical text on it reaches 6.16:1 (was 5.19:1). */
+  --sr-color-status-error: #b32014; /** Red/700 (#B32014). The error colour FOR USE ON status.error-surface — a banner, a tag, a pill. That surface stays light in both modes, so this stops at Red/700 in both. On a surface that flips with the mode, use status.error-on-page (DDR-035). */
+  --sr-color-status-error-on-page: #b32014; /** The error colour for use on the app's OWN surfaces — the page, a card, a form control — which flip with the mode. Red/700 here, Red/300 in dark. Field error text, invalid control borders, the error summary and the destructive link all use this. Red/700 on the dark page is 2.14:1 (DDR-035). */
+  --sr-color-status-error-surface: #fef3f2; /** Red/50 (#FEF3F2) — lightened from Red/100 so Status/Error text on it reaches 6.16:1 (was 5.19:1). */
+  --sr-color-status-critical: #b32014; /** DEPRECATED (DDR-034) — alias of status.error, kept so --sr-color-status-critical keeps working for existing consumers. Removed at the next major. Use status.error. */
+  --sr-color-status-critical-surface: #fef3f2; /** DEPRECATED (DDR-034) — alias of status.error-surface. Removed at the next major. Use status.error-surface. */
   --sr-color-status-success: #006630; /** Green/700 (#006630) — raised from Green/600 for AA contrast on light status surfaces and text. */
   --sr-color-status-success-surface: #f0faf4; /** Green/50 (#F0FAF4) — lightened from Green/100 so Status/Success text on it reaches 6.69:1 (was 5.92:1). */
   --sr-color-status-warning: #f8ca4d;
@@ -436,7 +439,7 @@
 .sr-icon--subtle      { color: var(--sr-color-text-secondary); }
 .sr-icon--inverse     { color: var(--sr-color-text-inverse); }
 .sr-icon--interactive { color: var(--sr-color-interactive-primary); }
-.sr-icon--critical    { color: var(--sr-color-status-critical); }
+.sr-icon--critical    { color: var(--sr-color-status-error); }
 .sr-icon--warning     { color: var(--sr-color-status-warning); }
 .sr-icon--success     { color: var(--sr-color-status-success); }
 .sr-icon--info        { color: var(--sr-color-status-info); }
@@ -532,6 +535,130 @@
 .sr-select__option.is-active .sr-search__match,
 .sr-select__option[aria-selected='true'] .sr-search__match {
   color: inherit;
+}
+
+/* ═══ avatar ══════════════════════════════════════════════════════ */
+/**
+ * DHCW Single Record — Avatar
+ *
+ * A person, as a circle: their initials, their photo, or a generic mark when
+ * neither is available.
+ *
+ * An avatar identifies a PERSON. It is not a status light, not a badge, and not
+ * a patient identifier — a patient is identified by the patient banner, which
+ * carries the NHS number and the details that make identification safe. A face
+ * in a circle is not safe identification.
+ *
+ * Contrast, because this is where the Figma component was wrong:
+ *   The initials avatar was drawn with a `Cyan/700` fill and `Text/Inverse`
+ *   text. White on Cyan/700 is 2.95:1 — below the 4.5:1 SC 1.4.3 requires for
+ *   14px text. `Text/Inverse` was also the wrong token: it is relative to the
+ *   MODE and flips to near-black in dark, while an avatar fill stays saturated
+ *   in both. Its own token description says not to use it on a saturated fill.
+ *
+ *   This file uses `interactive/primary` with `text/on-fill` — 8.04:1, and
+ *   stable across modes. The header has always done it this way; Figma was
+ *   rebound to match on 2026-09-22.
+ *
+ * Sizes follow the Figma set: SM 32, MD 40, LG 48.
+ */
+
+.sr-avatar {
+  position: relative;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background-color: var(--sr-color-interactive-primary);
+  overflow: visible;
+  /* An avatar is decorative next to a visible name; where it stands alone the
+   * accessible name comes from the element's own aria-label. */
+  user-select: none;
+}
+
+/* ---------- Size ---------- */
+.sr-avatar--md { width: 40px; height: 40px; }
+.sr-avatar--lg { width: 48px; height: 48px; }
+
+/* ---------- Initials ----------
+ * text/on-fill is white in BOTH modes, because the fill it sits on is
+ * saturated in both. Do not swap this for text/inverse. */
+.sr-avatar__initials {
+  color: var(--sr-color-text-on-fill);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+  text-transform: uppercase;
+}
+.sr-avatar--md .sr-avatar__initials,
+.sr-avatar--lg .sr-avatar__initials {
+  font: var(--sr-type-body-m-font);
+  letter-spacing: var(--sr-type-body-m-letter-spacing);
+}
+
+/* ---------- Image ----------
+ * The circle keeps its fill behind the image so a slow or broken load shows a
+ * shape rather than a hole. */
+.sr-avatar__image {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  display: block;
+}
+
+/* ---------- Icon / unknown person ----------
+ * A neutral placeholder, not the brand fill: a generic mark on brand navy reads
+ * as a real person who happens to have no photo. Grey says "we don't know who
+ * this is", which is the truth. */
+.sr-avatar--icon {
+  background-color: var(--sr-color-surface-subtle);
+  box-shadow: inset 0 0 0 1px var(--sr-color-border-default);
+}
+.sr-avatar--icon .sr-avatar__icon {
+  width: 60%;
+  height: 60%;
+  color: var(--sr-color-text-secondary);
+}
+
+/* ---------- Status dot ----------
+ * Presence only, and never the only carrier of that meaning — see the
+ * guidelines. The ring is the surface it sits on, so the dot reads as a
+ * cut-out rather than a floating blob. */
+.sr-avatar__status {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background-color: var(--sr-color-status-success);
+  border: 1.5px solid var(--sr-color-surface-section-cards);
+}
+.sr-avatar--md .sr-avatar__status { width: 10px; height: 10px; }
+.sr-avatar--lg .sr-avatar__status { width: 12px; height: 12px; border-width: 2px; }
+
+/* ---------- Group ----------
+ * Overlapping avatars for "these people". The overlap is a negative margin, and
+ * each avatar carries a ring in the surface colour so the stack reads as
+ * separate circles rather than one blob. */
+.sr-avatar-group {
+  display: inline-flex;
+  align-items: center;
+}
+.sr-avatar-group .sr-avatar {
+  box-shadow: 0 0 0 2px var(--sr-color-surface-section-cards);
+}
+.sr-avatar-group .sr-avatar + .sr-avatar {
+  margin-left: -8px;
+}
+.sr-avatar-group__overflow {
+  margin-left: var(--space-2);
+  color: var(--sr-color-text-secondary);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
 }
 
 /* ═══ bottom-nav ══════════════════════════════════════════════════ */
@@ -810,7 +937,7 @@
 }
 .sr-button--destructive:disabled,
 .sr-button--destructive[aria-disabled="true"] {
-  background-color: var(--sr-color-status-critical-surface);
+  background-color: var(--sr-color-status-error-surface);
   color: var(--sr-color-interactive-destructive);
 }
 
@@ -865,7 +992,7 @@
   color: var(--sr-color-text-primary);
 }
 .sr-checkbox-group__required {
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error-on-page);
 }
 
 .sr-checkbox-group__hint {
@@ -880,7 +1007,7 @@
   gap: var(--space-1);
   font: var(--sr-type-caption-font);
   letter-spacing: var(--sr-type-caption-letter-spacing);
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error-on-page);
 }
 .sr-checkbox-group__error-icon {
   display: inline-flex;
@@ -892,7 +1019,7 @@
 
 /* Error group gains the inset rule, matching the Figma error variants. */
 .sr-checkbox-group--error {
-  border-left: var(--border-width-2) solid var(--sr-color-status-critical);
+  border-left: var(--border-width-2) solid var(--sr-color-status-error-on-page);
   padding-left: var(--space-3);
 }
 
@@ -1095,7 +1222,7 @@
   color: var(--sr-color-text-primary);
 }
 .sr-date-input__required {
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error-on-page);
 }
 
 .sr-date-input__hint {
@@ -1151,13 +1278,13 @@
 
 /* ---------- Error ---------- */
 .sr-date-input--error .sr-date-input__field {
-  border-color: var(--sr-color-status-critical);
-  box-shadow: inset 0 0 0 1px var(--sr-color-status-critical);
+  border-color: var(--sr-color-status-error-on-page);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-error-on-page);
 }
 .sr-date-input__error {
   font: var(--sr-type-caption-font);
   letter-spacing: var(--sr-type-caption-letter-spacing);
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error-on-page);
 }
 
 /* ---------- Disabled ---------- */
@@ -1211,8 +1338,8 @@
   box-shadow: inset 0 0 0 1px var(--sr-color-border-focus);
 }
 .sr-datepicker--error .sr-datepicker__field {
-  border-color: var(--sr-color-status-critical);
-  box-shadow: inset 0 0 0 1px var(--sr-color-status-critical);
+  border-color: var(--sr-color-status-error-on-page);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-error-on-page);
 }
 .sr-datepicker__input {
   flex: 1 1 0;
@@ -1358,6 +1485,100 @@
 .sr-datepicker__day:disabled {
   color: var(--sr-color-text-disabled);
   cursor: not-allowed;
+}
+
+/* ═══ error-summary ═══════════════════════════════════════════════ */
+/**
+ * DHCW Single Record — Error summary
+ *
+ * The box at the top of a form that lists every error, each one a link that
+ * moves focus into the field it names.
+ *
+ * It is NOT a notification banner, and the styling says so deliberately.
+ *
+ *   A banner reports an EVENT. The summary reports the STATE of the form in
+ *   front of you, and it is interactive.
+ *
+ * Two consequences follow from that, and both are load-bearing:
+ *
+ * 1. No tinted surface. Every banner severity is a status tint; the summary
+ *    sits on the page's own surface with a heavy status border instead, so the
+ *    two are not mistakable at a glance.
+ *
+ * 2. Because the surface is the PAGE surface, it flips with the mode — and so
+ *    `text/primary` is correct here, where it is wrong on a banner. (Status
+ *    surfaces stay light in dark mode, which is why the banner's text takes the
+ *    severity colour instead. See notification-banner.css.)
+ *
+ * The links take `interactive/link` rather than an error red: they are links,
+ * and the error-ness is carried by the heading, the icon and the border. Never
+ * by the link colour alone.
+ *
+ * The border and icon use `status/error-on-page`, which is Red/700 in light and
+ * Red/300 in dark (DDR-035). This file used to carry a [data-theme="dark"]
+ * override stepping up the ramp by hand; the token does it now, and every other
+ * error mark on a mode-flipping surface moved with it.
+ */
+
+.sr-error-summary {
+  border: var(--border-width-2) solid var(--sr-color-status-error-on-page);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+/* The summary takes focus when it appears, so it needs a visible ring — a
+ * programmatic focus with no ring leaves a sighted keyboard user with no idea
+ * where they are. */
+.sr-error-summary:focus-visible {
+  outline: var(--border-width-2) solid var(--sr-color-border-focus);
+  outline-offset: 2px;
+}
+
+.sr-error-summary__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.sr-error-summary__icon {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  color: var(--sr-color-status-error-on-page);
+}
+
+.sr-error-summary__title {
+  margin: 0;
+  color: var(--sr-color-text-primary);
+  font: var(--sr-type-heading-xs-font);
+  letter-spacing: var(--sr-type-heading-xs-letter-spacing);
+}
+
+.sr-error-summary__body {
+  margin: var(--space-3) 0 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sr-error-summary__item + .sr-error-summary__item {
+  margin-top: var(--space-2);
+}
+
+/* A real link, styled like every other link in the system. Underlined at rest,
+ * because a list of coloured words with no underline is a list of coloured
+ * words. */
+.sr-error-summary__link {
+  color: var(--sr-color-interactive-link);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.sr-error-summary__link:hover {
+  text-decoration-thickness: 2px;
+}
+.sr-error-summary__link:focus-visible {
+  outline: var(--border-width-2) solid var(--sr-color-border-focus);
+  outline-offset: 2px;
 }
 
 /* ═══ footer ══════════════════════════════════════════════════════ */
@@ -1808,7 +2029,7 @@
   color: var(--sr-color-text-primary);
 }
 .sr-input__required {
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error-on-page);
 }
 
 .sr-input__hint {
@@ -1898,13 +2119,13 @@ textarea.sr-input__control {
 
 /* ---------- Error ---------- */
 .sr-input--error .sr-input__field {
-  border-color: var(--sr-color-status-critical);
-  box-shadow: inset 0 0 0 1px var(--sr-color-status-critical);
+  border-color: var(--sr-color-status-error-on-page);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-error-on-page);
 }
 .sr-input__error {
   font: var(--sr-type-caption-font);
   letter-spacing: var(--sr-type-caption-letter-spacing);
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error-on-page);
 }
 
 /* ---------- Disabled ---------- */
@@ -2069,12 +2290,14 @@ textarea.sr-input__control {
 /* ---------- Type ---------- */
 /* Leads to a destructive flow — "Remove patient", "Delete draft". Pair with a
    confirmation step; the link opens the flow, it does not perform the act.
-   DARK MODE: interactive/destructive is a FILL colour (white sits on it) and is
-   2.84:1 as text on the dark page. Recorded as an open finding in
-   scripts/check-contrast.mjs — it needs a dark-safe red before a destructive
-   link is used on a dark surface. */
+
+   It takes status/error-on-page, not interactive/destructive. The latter is a
+   FILL colour — white sits on it — and was 2.84:1 as text on the dark page, an
+   open finding from 2026-09 that this closes. A destructive LINK is red text on
+   the app's own surface, which is exactly what the on-page token is for
+   (DDR-035). */
 .sr-link--destructive {
-  color: var(--sr-color-interactive-destructive);
+  color: var(--sr-color-status-error-on-page);
 }
 
 /* ---------- Sizes ----------
@@ -2706,6 +2929,166 @@ textarea.sr-input__control {
   border-top: 1px solid var(--sr-color-border-default);
 }
 
+/* ═══ notification-banner ═════════════════════════════════════════ */
+/**
+ * DHCW Single Record — Notification banner
+ *
+ * Reports that something HAPPENED. That is the whole boundary against its
+ * neighbours:
+ *
+ *   Inset text is part of the page. A banner is an event.
+ *
+ * Matches the merged Figma `Notification Banner` set (2561:21695) as settled by
+ * DDR-032 and the 2026-09-21 merge: two variant axes and three booleans.
+ *
+ *   Severity    Information | Success | Warning | Error
+ *   Placement   Inline | Global
+ *   Title       optional  (every live banner in the file has none)
+ *   Dismissible optional
+ *   Actions     optional
+ *
+ * Placement is the axis that earns a variant, and the corners follow from it
+ * rather than being a separate choice: Inline sits IN the content column and
+ * takes the same radius as everything else there; Global spans the viewport
+ * edge to edge, where a radius would leave four notches against the browser
+ * chrome.
+ *
+ * Severity uses the four status/* pairs. Note that status/error is the token
+ * formerly called status/critical (DDR-034) — there is no fifth "critical"
+ * severity, because a patient-safety alert that must outrank an error needs
+ * more than a darker red, and that is its own decision.
+ */
+
+.sr-notification-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  background-color: var(--sr-color-status-info-surface);
+  border-color: var(--sr-color-status-info);
+}
+
+/* ---------- Severity ---------- */
+.sr-notification-banner--information {
+  background-color: var(--sr-color-status-info-surface);
+  border-color: var(--sr-color-status-info);
+}
+.sr-notification-banner--success {
+  background-color: var(--sr-color-status-success-surface);
+  border-color: var(--sr-color-status-success);
+}
+.sr-notification-banner--warning {
+  background-color: var(--sr-color-status-warning-surface);
+  border-color: var(--sr-color-status-warning);
+}
+.sr-notification-banner--error {
+  background-color: var(--sr-color-status-error-surface);
+  border-color: var(--sr-color-status-error);
+}
+
+/* ---------- Placement ----------
+ * Square, full-bleed, no radius — it meets the viewport edges. The border
+ * narrows to the bottom rule only, because a box outline on something that
+ * runs edge to edge reads as a seam. */
+.sr-notification-banner--global {
+  border-radius: 0;
+  border-width: 0 0 1px 0;
+}
+
+/* ---------- Icon ---------- */
+.sr-notification-banner__icon {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+}
+.sr-notification-banner--information .sr-notification-banner__icon { color: var(--sr-color-status-info); }
+.sr-notification-banner--success     .sr-notification-banner__icon { color: var(--sr-color-status-success); }
+.sr-notification-banner--warning     .sr-notification-banner__icon { color: var(--sr-color-status-warning); }
+.sr-notification-banner--error       .sr-notification-banner__icon { color: var(--sr-color-status-error); }
+
+/* ---------- Content ---------- */
+.sr-notification-banner__content {
+  flex: 1 1 auto;
+  min-width: 0;                 /* a grid/flex child defaults to min-width:auto
+                                 * and will refuse to wrap long text */
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* Title and body share the severity's text colour and differ by weight.
+ *
+ * This is NOT a style choice — it is forced, and the reason is worth keeping.
+ * The status SURFACES stay light in dark mode (banners switch to light fills
+ * for legibility against the bright status colour), but `text/primary` flips
+ * to white. Neutral dark text on a status surface is therefore 1.04–1.10:1 in
+ * dark mode, and no neutral semantic token stays dark in both modes.
+ *
+ * The mode-stable colours are the status colours themselves, so the text takes
+ * them — the same answer `tags.css` reached for its status variant.
+ *
+ * Figma draws the banner body as `Text/Primary`, which has this bug latent in
+ * it; the file is light-mode only, so nobody had seen it. Caught by
+ * check:contrast on the first run of these pairs. */
+.sr-notification-banner__title {
+  margin: 0;
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+}
+
+.sr-notification-banner__body {
+  margin: 0;
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+}
+
+.sr-notification-banner--information .sr-notification-banner__title,
+.sr-notification-banner--information .sr-notification-banner__body { color: var(--sr-color-status-info); }
+.sr-notification-banner--success .sr-notification-banner__title,
+.sr-notification-banner--success .sr-notification-banner__body { color: var(--sr-color-status-success); }
+.sr-notification-banner--error .sr-notification-banner__title,
+.sr-notification-banner--error .sr-notification-banner__body { color: var(--sr-color-status-error); }
+/* Warning takes Yellow/700, not `status/warning`. Status/Warning is Yellow/500,
+ * a FILL colour at 1.49:1 on its own surface — it must never carry text.
+ * Yellow/700's own token description reads "Warning banner/pill text colour":
+ * it exists for exactly this. */
+.sr-notification-banner--warning .sr-notification-banner__title,
+.sr-notification-banner--warning .sr-notification-banner__body { color: var(--color-yellow-700); }
+
+/* ---------- Actions ---------- */
+.sr-notification-banner__actions {
+  display: flex;
+  gap: var(--space-3);
+  padding-top: var(--space-1);
+}
+
+/* ---------- Dismiss ---------- */
+.sr-notification-banner__dismiss {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;            /* the severity colour, for the same
+                                mode-stability reason as the body */
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+.sr-notification-banner__dismiss:focus-visible {
+  outline: 2px solid var(--sr-color-border-focus);
+  outline-offset: 2px;
+}
+.sr-notification-banner__dismiss svg {
+  width: 16px;
+  height: 16px;
+}
+
 /* ═══ patient-banner ══════════════════════════════════════════════ */
 /**
  * DHCW Single Record — Patient banner
@@ -2805,7 +3188,7 @@ textarea.sr-input__control {
 }
 /* The reaction itself is the clinically significant part — emphasised. */
 .sr-patient-banner__alert-value {
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error-on-page);
 }
 
 /* Reactions card */
@@ -2813,7 +3196,7 @@ textarea.sr-input__control {
   background-color: var(--color-red-50);
 }
 .sr-patient-banner__alert--reactions .sr-patient-banner__alert-text {
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error-on-page);
 }
 
 /* Warnings card */
@@ -2827,7 +3210,7 @@ textarea.sr-input__control {
 /* Type=Border — white card, coloured rule instead of a tint. */
 .sr-patient-banner--border .sr-patient-banner__alert {
   background-color: var(--sr-color-surface-section-cards);
-  border-color: var(--sr-color-status-critical);
+  border-color: var(--sr-color-status-error-on-page);
 }
 
 /* ---------- Identity ---------- */
@@ -2861,8 +3244,8 @@ textarea.sr-input__control {
   align-items: center;
   padding: 0 var(--space-2);
   border-radius: var(--radius-full);
-  background-color: var(--sr-color-status-critical-surface);
-  color: var(--sr-color-status-critical);
+  background-color: var(--sr-color-status-error-surface);
+  color: var(--sr-color-status-error);
   font: var(--sr-type-body-s-font);
   letter-spacing: var(--sr-type-body-s-letter-spacing);
   white-space: nowrap;
@@ -2926,7 +3309,7 @@ textarea.sr-input__control {
 /* Deceased date is the one demographic that carries clinical weight. */
 .sr-patient-banner__field--deceased dt,
 .sr-patient-banner__field--deceased dd {
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error-on-page);
 }
 
 .sr-patient-banner__copy {
@@ -2999,7 +3382,7 @@ textarea.sr-input__control {
   letter-spacing: var(--sr-type-body-s-letter-spacing);
   white-space: nowrap;
 }
-.sr-patient-banner__pill--reactions { color: var(--sr-color-status-critical); }
+.sr-patient-banner__pill--reactions { color: var(--sr-color-status-error-on-page); }
 .sr-patient-banner__pill--warnings { color: var(--color-yellow-700); }
 
 /* Collapsing changes how much detail is shown, not which type the banner is.
@@ -3452,7 +3835,7 @@ textarea.sr-input__control {
   color: var(--sr-color-text-primary);
 }
 .sr-search__required {
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error-on-page);
 }
 
 .sr-search__hint {
@@ -3695,12 +4078,12 @@ textarea.sr-input__control {
 
 /* ---------- Error ---------- */
 .sr-search--error .sr-search__field {
-  border-color: var(--sr-color-status-critical);
-  box-shadow: inset 0 0 0 1px var(--sr-color-status-critical);
+  border-color: var(--sr-color-status-error-on-page);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-error-on-page);
 }
 .sr-search--error .sr-search__field:focus-within {
   box-shadow:
-    inset 0 0 0 1px var(--sr-color-status-critical),
+    inset 0 0 0 1px var(--sr-color-status-error-on-page),
     0 0 0 3px var(--sr-color-border-focus);
 }
 /* Icon as well as colour, so the error is not carried by the border alone. */
@@ -3710,7 +4093,7 @@ textarea.sr-input__control {
   gap: var(--space-1);
   font: var(--sr-type-caption-font);
   letter-spacing: var(--sr-type-caption-letter-spacing);
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error-on-page);
 }
 .sr-search__error-icon {
   display: inline-flex;
@@ -3850,7 +4233,7 @@ textarea.sr-input__control {
  * States (from Figma building blocks):
  *   Default  — white fill, 1px Border/Default.
  *   Focus/open — 3px Border/Focus (Cyan/700) outer ring.
- *   Error    — Status/Critical border.
+ *   Error    — Status/Error border.
  *   Disabled — Surface/Background fill, Border/Disabled, Text/Disabled.
  */
 
@@ -3871,7 +4254,7 @@ textarea.sr-input__control {
   color: var(--sr-color-text-primary);
 }
 .sr-select__required {
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error-on-page);
 }
 
 .sr-select__hint {
@@ -3997,12 +4380,12 @@ textarea.sr-input__control {
 
 /* ---------- Error ---------- */
 .sr-select--error .sr-select__trigger {
-  border-color: var(--sr-color-status-critical);
-  box-shadow: inset 0 0 0 1px var(--sr-color-status-critical);
+  border-color: var(--sr-color-status-error-on-page);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-error-on-page);
 }
 .sr-select--error .sr-select__trigger:focus-visible,
 .sr-select--error .sr-select__trigger[aria-expanded="true"] {
-  box-shadow: inset 0 0 0 1px var(--sr-color-status-critical), 0 0 0 3px var(--sr-color-border-focus);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-error-on-page), 0 0 0 3px var(--sr-color-border-focus);
 }
 .sr-select__error {
   display: inline-flex;
@@ -4010,7 +4393,7 @@ textarea.sr-input__control {
   gap: var(--space-1);
   font: var(--sr-type-caption-font);
   letter-spacing: var(--sr-type-caption-letter-spacing);
-  color: var(--sr-color-status-critical);
+  color: var(--sr-color-status-error-on-page);
 }
 .sr-select__error-icon {
   display: inline-flex;
@@ -4104,7 +4487,7 @@ textarea.sr-input__control {
    does not replace them. See the guidelines. */
 .sr-stat-card--accent-primary { border-left-color: var(--sr-color-interactive-primary); }
 .sr-stat-card--accent-warning { border-left-color: var(--sr-color-status-warning); }
-.sr-stat-card--accent-critical { border-left-color: var(--sr-color-status-critical); }
+.sr-stat-card--accent-critical { border-left-color: var(--sr-color-status-error-on-page); }
 
 /* ---------- Content ----------
    Rows are explicit rather than auto-placed, so a layout modifier can move the
@@ -4179,8 +4562,8 @@ textarea.sr-input__control {
   background-color: var(--sr-color-status-success-surface);
 }
 .sr-stat-card__delta--down {
-  color: var(--sr-color-status-critical);
-  background-color: var(--sr-color-status-critical-surface);
+  color: var(--sr-color-status-error);
+  background-color: var(--sr-color-status-error-surface);
 }
 /* A movement that is neither good nor bad — a count that simply changed. No
    chip, because a neutral tint would be a colour that means nothing. */
@@ -4301,7 +4684,7 @@ textarea.sr-input__control {
 .sr-status-indicator--lg { width: 24px; height: 24px; }
 
 .sr-status-indicator--success { color: var(--sr-color-status-success); }
-.sr-status-indicator--error { color: var(--sr-color-status-critical); }
+.sr-status-indicator--error { color: var(--sr-color-status-error-on-page); }
 .sr-status-indicator--warning { color: var(--sr-color-status-warning); }
 
 /* "No status recorded" — the dash the Figma page draws as its fourth mark,
@@ -4682,7 +5065,7 @@ td.sr-table__select {
   color: var(--sr-color-interactive-destructive);
 }
 .sr-table__action--destructive:hover {
-  background-color: var(--sr-color-status-critical-surface, var(--sr-color-surface-subtle));
+  background-color: var(--sr-color-status-error-surface, var(--sr-color-surface-subtle));
   color: var(--color-red-700);
 }
 
@@ -5023,7 +5406,7 @@ td.sr-table__select {
 /* ---------- Type colours (border + text — shared by both variants) ---------- */
 .sr-tag--blue   { border-color: var(--sr-color-status-info);     color: var(--sr-color-status-info); }
 .sr-tag--green  { border-color: var(--sr-color-status-success);  color: var(--sr-color-status-success); }
-.sr-tag--red    { border-color: var(--sr-color-status-critical); color: var(--sr-color-status-critical); }
+.sr-tag--red    { border-color: var(--sr-color-status-error); color: var(--sr-color-status-error); }
 .sr-tag--yellow { border-color: var(--color-yellow-700);         color: var(--color-yellow-700); }
 .sr-tag--grey   { border-color: var(--sr-color-text-secondary);  color: var(--sr-color-text-secondary); }
 .sr-tag--outline,
@@ -5032,7 +5415,7 @@ td.sr-table__select {
 /* ---------- Status variant: soft surface fill ---------- */
 .sr-tag--status.sr-tag--blue   { background-color: var(--sr-color-status-info-surface); }
 .sr-tag--status.sr-tag--green  { background-color: var(--sr-color-status-success-surface); }
-.sr-tag--status.sr-tag--red    { background-color: var(--sr-color-status-critical-surface); }
+.sr-tag--status.sr-tag--red    { background-color: var(--sr-color-status-error-surface); }
 .sr-tag--status.sr-tag--yellow { background-color: var(--sr-color-status-warning-surface); }
 .sr-tag--status.sr-tag--grey   { background-color: var(--sr-color-surface-background); }
 .sr-tag--status.sr-tag--outline { background-color: transparent; }
@@ -5059,7 +5442,7 @@ td.sr-table__select {
 }
 .sr-tag--count.sr-tag--blue   { background-color: var(--sr-color-status-info-surface); }
 .sr-tag--count.sr-tag--green  { background-color: var(--sr-color-status-success-surface); }
-.sr-tag--count.sr-tag--red    { background-color: var(--sr-color-status-critical-surface); }
+.sr-tag--count.sr-tag--red    { background-color: var(--sr-color-status-error-surface); }
 .sr-tag--count.sr-tag--yellow { background-color: var(--sr-color-status-warning-surface); }
 .sr-tag--count.sr-tag--grey   { background-color: var(--sr-color-surface-background); }
 .sr-tag--count.sr-tag--outline {
@@ -5150,8 +5533,8 @@ td.sr-table__select {
   box-shadow: inset 0 0 0 1px var(--sr-color-border-focus);
 }
 .sr-time-select--error .sr-time-select__control {
-  border-color: var(--sr-color-status-critical);
-  box-shadow: inset 0 0 0 1px var(--sr-color-status-critical);
+  border-color: var(--sr-color-status-error-on-page);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-error-on-page);
 }
 .sr-time-select__control:disabled {
   background-color: var(--sr-color-surface-subtle);

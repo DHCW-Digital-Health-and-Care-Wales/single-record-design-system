@@ -44,10 +44,10 @@ Hint text                      ← optional helper (Caption)
 ```
 
 - **Legend**: the group name. `Label` 14/20 Medium. Rendered as a real `<legend>`.
-- **Required marker**: inline `*` in `Status/Critical`, on the legend only — never
+- **Required marker**: inline `*` in `Status/Error`, on the legend only — never
   on individual options. Decorative; pair with `aria-required`.
 - **Hint**: `Caption` 12/16, `Text/Secondary`.
-- **Error message**: `Caption` 12/16, `Status/Critical`, preceded by a 16px
+- **Error message**: `Caption` 12/16, `Status/Error`, preceded by a 16px
   `Icon/status/error-circle`.
 - **Box**: 20×20, 2px border, `radius-sm`. Draws the tick or the indeterminate dash.
 - **Label**: `Body S` 14/20 Regular, `Text/Primary`. Clickable — it extends the target.

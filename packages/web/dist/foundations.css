@@ -130,8 +130,11 @@
   --sr-color-border-focus: #0d8bad; /** Focus ring — Cyan/800 in both modes (DDR-025, amending DDR-006). Cyan/700 was 2.95:1 on a card and 2.71:1 on the page, under the 3:1 SC 1.4.11 requires. Cyan/800 is the only stop clearing 3:1 in both modes: darker stops fix light mode and fail dark, where surfaces are navy. */
   --sr-color-border-disabled: #9ea1af;
   --sr-color-brand-accent: #12a3c9; /** Decorative accent only. Borders, icon strokes, chart accents, tab indicators. Never use as a filled surface with text on top. */
-  --sr-color-status-critical: #b32014; /** Red/700 (#B32014) — raised from Red/600 for AA contrast on light status surfaces and text. */
-  --sr-color-status-critical-surface: #fef3f2; /** Red/50 (#FEF3F2) — lightened from Red/100 so Status/Critical text on it reaches 6.16:1 (was 5.19:1). */
+  --sr-color-status-error: #b32014; /** Red/700 (#B32014). The error colour FOR USE ON status.error-surface — a banner, a tag, a pill. That surface stays light in both modes, so this stops at Red/700 in both. On a surface that flips with the mode, use status.error-on-page (DDR-035). */
+  --sr-color-status-error-on-page: #b32014; /** The error colour for use on the app's OWN surfaces — the page, a card, a form control — which flip with the mode. Red/700 here, Red/300 in dark. Field error text, invalid control borders, the error summary and the destructive link all use this. Red/700 on the dark page is 2.14:1 (DDR-035). */
+  --sr-color-status-error-surface: #fef3f2; /** Red/50 (#FEF3F2) — lightened from Red/100 so Status/Error text on it reaches 6.16:1 (was 5.19:1). */
+  --sr-color-status-critical: #b32014; /** DEPRECATED (DDR-034) — alias of status.error, kept so --sr-color-status-critical keeps working for existing consumers. Removed at the next major. Use status.error. */
+  --sr-color-status-critical-surface: #fef3f2; /** DEPRECATED (DDR-034) — alias of status.error-surface. Removed at the next major. Use status.error-surface. */
   --sr-color-status-success: #006630; /** Green/700 (#006630) — raised from Green/600 for AA contrast on light status surfaces and text. */
   --sr-color-status-success-surface: #f0faf4; /** Green/50 (#F0FAF4) — lightened from Green/100 so Status/Success text on it reaches 6.69:1 (was 5.92:1). */
   --sr-color-status-warning: #f8ca4d;

@@ -24,7 +24,7 @@
     "build:site": "npm run build:logo && npm run build -w @dhcw/sr-tokens && npm run build -w @dhcw/sr-icons && npm run build -w @dhcw/sr-web && npm run build -w @dhcw/sr-website && npm run check:snippets",
     "build:tokens": "npm run build -w @dhcw/sr-tokens && node scripts/sync-token-docs.mjs",
     "build:web": "npm run build:logo && npm run build -w @dhcw/sr-tokens && npm run build -w @dhcw/sr-icons && npm run build -w @dhcw/sr-web",
-    "check": "npm run check:versions && npm run check:workflows && npm run check:type && npm run check:ds && npm run check:contrast && npm run check:icons && npm run build:maui && npm run build:blazor",
+    "check": "npm run check:versions && npm run check:workflows && npm run check:type && npm run check:ds && npm run check:css-vars && npm run check:contrast && npm run check:icons && npm run build:maui && npm run build:blazor",
     "check:contrast": "node scripts/check-contrast.mjs",
     "check:docs": "node scripts/sync-token-docs.mjs --check",
     "check:ds": "node scripts/check-design-system.mjs --baseline",
@@ -37,7 +37,8 @@
     "pack:maui": "npm run build:maui && dotnet pack packages/maui/nuget/DHCW.SingleRecord.Maui.csproj -c Release -o dist/nuget",
     "storybook": "npm run storybook -w @dhcw/sr-storybook",
     "sync:docs": "node scripts/sync-token-docs.mjs",
-    "sync:icons": "node scripts/sync-icon-docs.mjs"
+    "sync:icons": "node scripts/sync-icon-docs.mjs",
+    "check:css-vars": "node scripts/check-css-vars.mjs"
   },
   "devDependencies": {
     "lucide-static": "1.41.0"

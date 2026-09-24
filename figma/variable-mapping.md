@@ -145,8 +145,8 @@ All semantic variables alias primitives — no raw hex values.
 ### Status
 | Figma Variable | Token | Light alias | Dark alias |
 |---|---|---|---|
-| `SR/Status/Critical` | `sr.color.status.critical` | `color.red.600` | `color.red.100` |
-| `SR/Status/Critical Surface` | `sr.color.status.critical-surface` | `color.red.100` | `color.blue.900` |
+| `SR/Status/Error` | `sr.color.status.error` | `color.red.600` | `color.red.100` |
+| `SR/Status/Error Surface` | `sr.color.status.error-surface` | `color.red.100` | `color.blue.900` |
 | `SR/Status/Success` | `sr.color.status.success` | `color.green.600` | `color.green.100` |
 | `SR/Status/Success Surface` | `sr.color.status.success-surface` | `color.green.100` | `color.navy.900` |
 | `SR/Status/Warning` | `sr.color.status.warning` | `color.yellow.500` | `color.yellow.500` |

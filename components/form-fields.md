@@ -28,7 +28,7 @@ Every form field now exposes a boolean component property:
 
 | Component set | Property | Default | Behaviour |
 |---|---|---|---|
-| Input | `Required` | `false` | Inline asterisk (`*` in `Status/Critical`) immediately after the label text. |
+| Input | `Required` | `false` | Inline asterisk (`*` in `Status/Error`) immediately after the label text. |
 | Select | `Required` | `false` | As above. |
 | Search | `Required` | `false` | Inline `*` after the label (when `Label=true`). |
 | Checkbox | `Required` | `false` | Inline `*` after the **group legend** (shown only when `Legend=Shown`). |

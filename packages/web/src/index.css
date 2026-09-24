@@ -27,6 +27,9 @@
 @import "./footer/footer.css";
 @import "./header/header.css";
 @import "./input/input.css";
+@import "./avatar/avatar.css";
+@import "./error-summary/error-summary.css";
+@import "./notification-banner/notification-banner.css";
 @import "./inset-text/inset-text.css";
 @import "./link/link.css";
 @import "./modal/modal.css";

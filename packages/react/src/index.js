@@ -27,3 +27,6 @@ export { default as Search } from './search/Search.jsx';
 export { default as StatCard, StatCards } from './stat-card/StatCard.jsx';
 export { default as Link } from './link/Link.jsx';
 export { default as InsetText } from './inset-text/InsetText.jsx';
+export { default as Avatar, AvatarGroup, initialsFrom } from './avatar/Avatar.jsx';
+export { default as NotificationBanner } from './notification-banner/NotificationBanner.jsx';
+export { default as ErrorSummary } from './error-summary/ErrorSummary.jsx';

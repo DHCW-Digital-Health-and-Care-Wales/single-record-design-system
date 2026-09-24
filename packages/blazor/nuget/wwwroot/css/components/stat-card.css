@@ -66,7 +66,7 @@
    does not replace them. See the guidelines. */
 .sr-stat-card--accent-primary { border-left-color: var(--sr-color-interactive-primary); }
 .sr-stat-card--accent-warning { border-left-color: var(--sr-color-status-warning); }
-.sr-stat-card--accent-critical { border-left-color: var(--sr-color-status-critical); }
+.sr-stat-card--accent-critical { border-left-color: var(--sr-color-status-error-on-page); }
 
 /* ---------- Content ----------
    Rows are explicit rather than auto-placed, so a layout modifier can move the
@@ -141,8 +141,8 @@
   background-color: var(--sr-color-status-success-surface);
 }
 .sr-stat-card__delta--down {
-  color: var(--sr-color-status-critical);
-  background-color: var(--sr-color-status-critical-surface);
+  color: var(--sr-color-status-error);
+  background-color: var(--sr-color-status-error-surface);
 }
 /* A movement that is neither good nor bad — a count that simply changed. No
    chip, because a neutral tint would be a colour that means nothing. */

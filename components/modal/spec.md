@@ -1,7 +1,7 @@
 # Modal dialog
 
-**Status:** In development
-**Last updated:** 2026-07
+**Status:** Shipped — `.sr-modal` in `@dhcw/sr-web`, `Modal` in `@dhcw/sr-react`
+**Last updated:** 2026-09-21
 
 ---
 
@@ -13,7 +13,13 @@ user responds — confirming a destructive action, approving a batch, resolving 
 conflict.
 
 Per **DDR-008** this is the **single base component**. Confirmation and Result
-dialogs are *composed patterns* built on it, not separate components.
+dialogs are *composed patterns* built on it, not separate components — see
+`patterns/dialogs/`.
+
+**Do not add intent, layout or state as variants here.** A matrix over
+intent × layout × action-count × state is exactly what DDR-008 declined to
+build, and a `Dialog` component set that did so was deleted on 2026-09-21 with
+zero instances to its name (DDR-034).
 
 Do not use a modal for information the user can act on later — use a
 [notification banner](../../packages/web/src/) inline, or a toast. Modals steal

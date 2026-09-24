@@ -1,0 +1,93 @@
+/**
+ * DHCW Single Record — Error summary
+ *
+ * The box at the top of a form that lists every error, each one a link that
+ * moves focus into the field it names.
+ *
+ * It is NOT a notification banner, and the styling says so deliberately.
+ *
+ *   A banner reports an EVENT. The summary reports the STATE of the form in
+ *   front of you, and it is interactive.
+ *
+ * Two consequences follow from that, and both are load-bearing:
+ *
+ * 1. No tinted surface. Every banner severity is a status tint; the summary
+ *    sits on the page's own surface with a heavy status border instead, so the
+ *    two are not mistakable at a glance.
+ *
+ * 2. Because the surface is the PAGE surface, it flips with the mode — and so
+ *    `text/primary` is correct here, where it is wrong on a banner. (Status
+ *    surfaces stay light in dark mode, which is why the banner's text takes the
+ *    severity colour instead. See notification-banner.css.)
+ *
+ * The links take `interactive/link` rather than an error red: they are links,
+ * and the error-ness is carried by the heading, the icon and the border. Never
+ * by the link colour alone.
+ *
+ * The border and icon use `status/error-on-page`, which is Red/700 in light and
+ * Red/300 in dark (DDR-035). This file used to carry a [data-theme="dark"]
+ * override stepping up the ramp by hand; the token does it now, and every other
+ * error mark on a mode-flipping surface moved with it.
+ */
+
+.sr-error-summary {
+  border: var(--border-width-2) solid var(--sr-color-status-error-on-page);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+/* The summary takes focus when it appears, so it needs a visible ring — a
+ * programmatic focus with no ring leaves a sighted keyboard user with no idea
+ * where they are. */
+.sr-error-summary:focus-visible {
+  outline: var(--border-width-2) solid var(--sr-color-border-focus);
+  outline-offset: 2px;
+}
+
+.sr-error-summary__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.sr-error-summary__icon {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  color: var(--sr-color-status-error-on-page);
+}
+
+.sr-error-summary__title {
+  margin: 0;
+  color: var(--sr-color-text-primary);
+  font: var(--sr-type-heading-xs-font);
+  letter-spacing: var(--sr-type-heading-xs-letter-spacing);
+}
+
+.sr-error-summary__body {
+  margin: var(--space-3) 0 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sr-error-summary__item + .sr-error-summary__item {
+  margin-top: var(--space-2);
+}
+
+/* A real link, styled like every other link in the system. Underlined at rest,
+ * because a list of coloured words with no underline is a list of coloured
+ * words. */
+.sr-error-summary__link {
+  color: var(--sr-color-interactive-link);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.sr-error-summary__link:hover {
+  text-decoration-thickness: 2px;
+}
+.sr-error-summary__link:focus-visible {
+  outline: var(--border-width-2) solid var(--sr-color-border-focus);
+  outline-offset: 2px;
+}
+

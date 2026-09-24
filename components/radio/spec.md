@@ -56,7 +56,7 @@ Hint text                      ← optional helper (Caption)
 ```
 
 - **Legend**: `Label` 14/20 Medium, a real `<legend>`.
-- **Required marker**: inline `*` in `Status/Critical`, on the legend only.
+- **Required marker**: inline `*` in `Status/Error`, on the legend only.
   Decorative; pair with `aria-required`.
 - **Ring**: 20×20, 2px border, `radius-full`. Draws a 10px dot when selected.
 - **Label**: `Body S` 14/20 Regular, `Text/Primary`. Clickable.

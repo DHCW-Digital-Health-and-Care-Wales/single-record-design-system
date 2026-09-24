@@ -11,6 +11,726 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 ---
 
+## Start here — next session
+
+1. **The remaining stale "Menu Item" usage-notes frames.** Every component page
+   that still has one is showing guidance for a Menu Item — state variants,
+   badge counts, leading icons — on a page with none of those. Each needs a
+   `guidelines.md` first; the markdown is the work, the panel is one command:
+   ```
+   node scripts/guidelines-to-figma.mjs components/<name>/guidelines.md \
+     --figma-script --page=<pageId> --replace=<staleNodeId>
+   ```
+2. **Re-base the dialog pattern frames onto `Modal`.** Pick a size per pattern
+   first — they are drawn at 400px and `Modal` offers Small 380 / Medium 480.
+   That size decision is the blocker; the rest is mechanical.
+3. **Unify `.sr-nav__item-badge` and `.sr-tabs__badge`** behind one Badge. Two
+   implementations of one mark, and `.sr-header__notification` has none.
+4. **Delete the empty Notifications page** in Figma (named `[EMPTY — delete]`).
+5. **A theme switcher**, if mobile proceeds — it is a component decision, not
+   three icons. Web and mobile will otherwise disagree about what "System"
+   means.
+6. **Match score**, if it is still wanted — it is a component, and what it
+   communicates has to be settled before anything is drawn.
+7. Status indicator's section on the Icons page; the footer in dark mode.
+
+**Before any destructive Figma edit, re-count instances yourself.** Twice this
+session a count from a previous step was wrong, and both times the guard in the
+delete script — not the plan — is what caught it.
+
+---
+
+## Session round-up — 2026-09-16 → 2026-09-24
+
+Read the dated checkpoints below for detail. This is the shape of it.
+
+### Shipped
+
+| | |
+|---|---|
+| **Notification banner** | The two Figma sets merged into one (8 variants, 3 booleans), all 15 instances re-pointed, old set deleted — then built: `.sr-notification-banner`, `NotificationBanner`, spec, guidelines, website page, Figma panel |
+| **Avatar** | Component, spec, guidelines, web + React + stories, website page, Figma panel — and a **2.95:1 WCAG failure in the Figma component fixed** |
+| **Error summary** | `.sr-error-summary`, `ErrorSummary`, guidelines, website page, Figma frame + panel. Reclassified pattern → **component** (DDR-035) |
+| **Modal** | Guidelines written, spec moved off "In development", `Dialog` set deleted and rebuilt as pattern frames, Result dialog pattern written |
+| **DDR-034** | Modal / Notifications / Error-Warning classified; the bell moved to Header; `Form field / Message` renamed |
+| **DDR-035** | `status.error-on-page` — a dark-safe error red — and the error-summary reclassification |
+| **Icons** | `theme/` group added (light, dark, system); `schedule/overnight` removed; 5 of 8 mobile requests met from the existing set |
+
+### Four gates added, each because something real got through
+
+| Gate | Caught |
+|---|---|
+| `check:css-vars` | `var(--spacing-3)` does not exist — **the notification banner shipped with no padding and no gap** |
+| Avatar + banner + summary contrast pairs | 2.95:1 initials, 1.04:1 dark-mode banner text, 2.14:1 form errors |
+| `guidelines-to-figma --figma-script` | Emits the whole panel builder, so the collapsed-text-node bug cannot recur |
+| React snippet tag scanner | A prop holding JSX hid **every attribute after it** from the check |
+
+**Every one was verified by planting the defect and confirming a non-zero exit.**
+That is the habit worth keeping: a gate nobody has seen fail is a gate nobody
+has tested.
+
+### The through-line
+
+Most of this session's findings were **not** design decisions — they were
+things that had been shipping wrong and that nothing looked at:
+
+- 26 Blazor components documented that do not exist (previous session, same shape)
+- A banner with no padding, because a token name was *nearly* right
+- Every field error in the system at 2.14:1 in dark mode
+- An avatar failing AA since it was drawn
+- A `Dialog` set contradicting its own DDR, with zero instances
+- `form-validation.md` citing two components that never existed
+
+The pattern: **the design system's own documentation and design file were
+asserting things nobody had checked.** The gates now check them. Where a check
+could not be mechanised, the entry says so.
+
+### Where the checks stand
+
+`npm run check` green. `check:contrast`: **77 pairs, 0 open findings** — the
+first time this session, after DDR-035 closed the destructive link. Website
+builds at 36 pages. 144 icons, 12 domains, 29 web components.
+
+---
+
+## Checkpoint — 2026-09-24b (Theme icons imported; two of the eight requests already existed)
+
+The MAUI developer sent eight hand-written XAML path strings. **Two already ship**
+and three more were dropped, so three were imported.
+
+| He asked for | Outcome |
+|---|---|
+| `SrIconStatusAlert` | **Already ships** as `SrIconStatusWarning` — character-for-character identical |
+| `SrIconScheduleUrgent` | **Already ships** as `SrIconScheduleAppointment` — same Lucide `calendar-clock`, his is a slightly-off hand redraw |
+| `SrIconNavChevronsDown` / `Up` | **Dropped** — the existing single `nav/chevron-down` / `-up` serve the need |
+| `SrIconStatusMatchScore` | **Parked** — a filled full-bleed triangle is not an icon in this set. If it is needed it is a component, and what it communicates has to be settled first |
+| `SrIconThemeLight` / `Dark` / `System` | **Imported** as a new `theme/` group — `theme/dark` is the plain moon |
+
+`schedule/urgent` is a particularly good one to know about: the generator's own
+notes record that it **was** `schedule/urgent`, then briefly `schedule/priority`,
+and was renamed because both read as severity and collide with clinical urgency
+(`status/critical`). He has independently re-proposed a name the set already
+rejected for a reason.
+
+### The `theme/` group, and the duplicate the gate caught
+
+Three icons, and the group exists because light, dark and follow-the-OS are the
+options of one control and only mean anything together.
+
+**`theme/dark` is the plain Lucide `moon`, and `schedule/overnight` is gone.**
+
+`check:icons` first rejected the plain moon, because `schedule/overnight` held
+it and DDR-029 allows a shared glyph only when both readings are the same
+object. `moon-star` was used instead. The design lead then pointed out the
+simpler resolution: **`schedule/overnight` had no use at all.** Checked before
+removing — no component, no prototype, no website page, and its only Figma
+instance was the icon preview grid documenting the set. Removed, so `theme/dark`
+takes the plain moon, which is the mark every user already recognises.
+
+If an overnight-stay icon is ever needed, **`moon-star` is free and is the
+better fit**: the star reads as "nights", not "night mode".
+
+> Worth keeping: the gate was right that a collision existed, and wrong about
+> which side should move. A check can tell you two things collide; only a person
+> can tell you which one nobody was using.
+
+`check:icons` also caught `DESIGN-SYSTEM.md` asserting "142 icons" and suggested
+the better fix itself: point at `foundations/iconography/catalogue.md`, which is
+generated and cannot drift. Done — the hardcoded counts in the MAUI sections went
+too.
+
+The three exist in the Figma file as well, as components on the Icons page, so
+design and code are in step.
+
+### Still open for the mobile work
+
+- **A theme switcher is not just three icons.** Dark mode here is opt-in via
+  `data-theme` and there is no switcher component or guidance. If mobile is
+  building one, web and mobile will otherwise end up with different models of
+  what "System" means.
+- **Match score** — needs a definition before it can be anything.
+
+---
+
+## Checkpoint — 2026-09-24 (DDR-035: a dark-safe error red; error summary is a component)
+
+### The dark-safe red was a form-wide failure, not three workarounds
+
+Three pieces of work had each recorded their own workaround for the same wall.
+Looking properly, the problem was much wider: **every inline field error and
+every invalid control border in the system** — Input, Select, Search, Date
+input, Date picker, Time select, Checkbox — used `status.error` on a surface
+that flips with the mode. That is **2.14:1 on the dark page and 1.97:1 on a dark
+card**. No gate caught it because no pair asserted it.
+
+`status.error-on-page` — **Red/700 light, Red/300 dark** — is the fix.
+`status.error` keeps its real role: the colour for use *on* `status.error-surface`,
+which stays light in both modes.
+
+**Red/400 is the trap.** It looks like the obvious answer and misses AA text on
+both dark surfaces (4.31 / 3.95 against 4.5). Red/300 clears both (6.07 / 5.57).
+The hand-rolled `[data-theme="dark"]` override in `error-summary.css` had used
+Red/400 for a 3:1 *border* — correct there, and wrong the moment anyone reused
+it for text. That override is gone; the token does the work.
+
+`status.error` was deliberately **not** made mode-aware. `status.info`,
+`status.success` and `status.warning` are all "the colour for the matching
+`-surface`" and all mode-stable for the same reason; making one of four behave
+differently is a trap, not a fix.
+
+**34 declarations across 11 stylesheets** migrated line by line, not by pattern
+— tint-backed uses (banner, tags, the pills on `status.error-surface`) stayed
+put. Four new assertions cover error text and control borders, page and card,
+both modes, verified by re-pointing the dark value back at Red/700.
+
+**`check:contrast` now reports zero open findings**, for the first time. The
+destructive link moved off `interactive/destructive` — a FILL colour, white sits
+on it, 2.84:1 as text on the dark page — onto the new token.
+
+`Status/Error On Page` also exists as a Figma variable now, with both modes set.
+
+### The error summary is a component
+
+Reclassified from DDR-032's pattern ruling. By that ruling's own test the modal
+(Button + Icon) and the banner (Icon + Button) are patterns too, and both are
+components. It has **one fixed anatomy, it is instantiated on its own, and its
+behaviour must be identical everywhere or it is wrong** — a component
+guarantees that; a reassembled pattern is one that quietly drops the focus
+management. Now `components/error-summary/` and on the Components nav. The
+*usage* guidance stays a pattern in `patterns/forms/form-validation.md`.
+
+### Open, in the order they are worth doing
+
+1. **Icons for the mobile app.** The request is to map what the mobile
+   developer needs onto the existing 142-icon set and only add where genuinely
+   necessary. Needs his SVGs and the list of uses — see the note to the design
+   lead.
+2. **The remaining stale "Menu Item" usage-notes frames** — each needs a
+   `guidelines.md` first; the panel is then one command.
+3. **Re-base the dialog pattern frames onto `Modal`** (pick a size per pattern).
+4. **Unify `.sr-nav__item-badge` and `.sr-tabs__badge`** behind one Badge.
+5. **Delete the empty Notifications page.**
+6. **Status indicator's section on the Icons page**, and the footer in dark mode.
+
+---
+
+## Checkpoint — 2026-09-23b (Error summary ships; a gate for undefined custom properties)
+
+### The error summary
+
+`patterns/error-summary/guidelines.md`, `.sr-error-summary`, `ErrorSummary`,
+stories, a Patterns page on the website, a drawn frame on the Errors page and a
+`Guidelines/Error summary` panel. It was the largest remaining hole: GDS and NHS
+England both require it past a couple of fields and nothing here provided one.
+
+**The behaviour is the pattern**, so the component owns it — focus on
+appearance and again whenever the set of errors changes, links that move focus
+*into* the field, and a fallback to the first focusable descendant where a field
+cannot take focus itself.
+
+**It is deliberately untinted**, and the good reason is not the obvious one.
+Status surfaces stay light in dark mode, which is what forces banner text onto
+the severity colour. The summary sits on the page surface, which flips with the
+mode, so its heading and links use ordinary text and link colours and are
+correct in both. Links take `interactive/link` rather than the error red,
+because `status/error` is 2.14:1 on the dark page. The border and icon step up
+to `Red/400` under `[data-theme="dark"]` — the `Yellow/700` move from
+`tags.css` — because **no dark-safe red semantic token exists**, which remains
+the open finding it shares with the destructive link.
+
+### A bug shipped the day before, and the gate that now catches it
+
+The notification banner used `var(--spacing-3)` and `var(--spacing-4)`. **Those
+do not exist** — the scale is `--space-N`, and `--spacing-*` is a different,
+sparser set (`--spacing-component-md`). **The banner rendered with no padding
+and no gap**, and every gate passed: `check:ds` looks for literals, `check:type`
+at typography, `check:contrast` resolves colours, `check:snippets` resolves
+classes. An undefined custom property makes the declaration invalid and the
+browser drops it silently.
+
+`scripts/check-css-vars.mjs` (`npm run check:css-vars`, wired into
+`npm run check`) now requires every `var(--x)` in the component stylesheets to
+resolve; `var(--x, 8px)` passes, because a fallback is deliberate. Verified by
+restoring the broken declaration and confirming a non-zero exit naming both.
+
+**The lesson worth keeping:** a token name that is *nearly* right is worse than
+one that is obviously wrong, because it reads correctly in review. Two scales
+whose names differ by two letters will keep producing this.
+
+### `form-validation.md` described components that do not exist
+
+It called the summary an `alert-banner` — which is the exact confusion the
+pattern exists to prevent — and the inline message an `inline-error` component.
+Neither exists. It also put the inline message *above* the control with a red
+left border and a `color.text.error` token; the shipped fields render it after
+the control, with a border plus inset shadow, on `status/error`. Corrected, with
+the error recorded in place rather than quietly overwritten.
+
+### A classification worth revisiting
+
+DDR-032 ruled the error summary a **pattern** because it composes Link, the
+field-message anatomy and focus management. By that test the modal (Button +
+Icon) and the banner (Icon + Button) are patterns too, and both are components.
+It has one fixed anatomy, it is instantiated on its own, and its behaviour has
+to be identical everywhere or it is wrong — which is what a component
+guarantees and a pattern does not. It ships under `patterns/` as ruled; the
+code is a single implementation either way, so re-ruling it is cheap.
+
+### Open, in the order they are worth doing
+
+1. **The remaining stale "Menu Item" usage-notes frames** — each needs a
+   `guidelines.md` first; the panel is then one command.
+2. **Re-base the dialog pattern frames onto `Modal`** (pick a size per pattern).
+3. **Unify `.sr-nav__item-badge` and `.sr-tabs__badge`** behind one Badge.
+4. **A dark-safe red.** Three separate pieces of work have now hit it: the
+   destructive link, the banner, and the error summary's border. It is one
+   colour decision and it would close all three.
+5. **Delete the empty Notifications page.**
+6. **Status indicator's section on the Icons page**, and the footer in dark mode.
+
+---
+
+## Checkpoint — 2026-09-23 (Modal guidelines; Avatar and Banner on the website)
+
+Three things shipped, and one gate turned out to have a hole in it.
+
+- **`components/modal/guidelines.md`** — DDR-008 named two dialog patterns and
+  the base component had a spec but no guidelines, so it had neither a Figma
+  panel nor website guidance. Its `Guidelines/Modal dialog` panel is generated
+  and has replaced the stale Menu Item boilerplate on that page.
+- **`components/avatar.html`** — leads with the rule that matters clinically
+  (an avatar identifies a colleague, never a patient) and documents the 2.95:1
+  correction so it stops being folklore.
+- **`components/notification-banner.html`** — holds its two boundaries: against
+  inset text, which is the page rather than an event, and against the error
+  summary, which is interactive and moves focus.
+
+Both are in the side nav and in `SITE_COMPONENT_CSS`, so their previews are
+styled. Site builds at 35 pages; `npm run check` green.
+
+### The React snippet gate could not see past a JSX prop
+
+`checkReactSnippet` found the end of an opening tag with `indexOf('>')`. A prop
+holding a JSX element — `icon={<Icon name="…" />}` — ends that scan at the
+**nested** element's bracket.
+
+The false positive (reporting `name` as a banner prop) was the visible half.
+**The invisible half was worse: every attribute after the nested element was
+never scanned**, so a genuinely wrong prop there passed silently. Fixed with
+`openingTagEnd()`, which tracks quotes and brace depth, plus
+`blankBraceExpressions()`, which blanks the contents of each `{…}` before the
+attribute regex runs — finding the tag end alone is not enough, because a
+space-prefixed `name=` inside the braces still matches.
+
+**Verified by planting `bogusprop="x"` after the nested element** — the position
+the old scan could never reach — and confirming a non-zero exit. Filed in
+`docs/engineering/known-issues.md`.
+
+The internal-reference gate separately caught a `DDR-032` citation written into
+public page copy. Decision records are internal; the point is now made in the
+reader's terms.
+
+### Open, in the order they are worth doing
+
+1. **Error summary** — a new pattern, still the real gap behind the Errors page,
+   and now the largest single hole in the system.
+2. **The remaining stale "Menu Item" usage-notes frames.** Each page needs a
+   `guidelines.md` first — the panel is generated from it, so the markdown is
+   the work and the panel is one command:
+   `node scripts/guidelines-to-figma.mjs components/<name>/guidelines.md --figma-script --page=<id> --replace=<id>`
+3. **Re-base the dialog pattern frames onto `Modal`** (pick a size per pattern
+   first — they are drawn at 400px and Modal offers 380/480).
+4. **Unify `.sr-nav__item-badge` and `.sr-tabs__badge`** behind one Badge.
+5. **Delete the empty Notifications page.**
+6. **Status indicator's section on the Icons page**, the destructive link's
+   dark-mode colour, and the footer in dark mode.
+
+---
+
+## Checkpoint — 2026-09-22 (Avatar ships; the banner ships; usage notes are generated, not transcribed)
+
+### Avatar — and a WCAG failure in the Figma component
+
+`components/avatar/{spec,guidelines}.md`, `packages/web/src/avatar/`,
+`packages/react/src/avatar/`, stories, and `Guidelines/Avatar` in Figma.
+18 variants, 12 live instances across four pages — a component in real use.
+
+**The Figma component failed contrast.** Initials were `Cyan/700` with
+`Text/Inverse`: white on Cyan/700 is **2.95:1**, against the 4.5:1 SC 1.4.3
+wants for 14px text. `Text/Inverse` was also the wrong token — it is relative to
+the MODE and flips to near-black in dark, while an avatar fill stays saturated
+in both, which that token's own description warns about. Now
+`interactive/primary` + `text/on-fill` at **8.04:1**.
+
+**The header had it right all along**, so this was Figma drifting from code
+rather than the reverse. Two more bindings were raw hex: the presence dot was
+`#007f3b` — `Green/600`, the value `status/success` was raised *away from* — and
+the placeholder circles were a raw `Blue/200`.
+
+**`Text/On Fill` did not exist as a Figma variable at all.** The code token has
+shipped for months with no design-side counterpart. Created.
+
+### Notification banner ships, and the design has a latent dark-mode bug
+
+`.sr-notification-banner` + `NotificationBanner`, matching the merged set.
+Severity picks the announcement: error/warning `role="alert"`,
+information/success `role="status"`.
+
+**Writing it surfaced a bug Figma also has.** Status *surfaces* stay light in
+dark mode; `text/primary` flips to white; so neutral body text on a status
+surface is **1.04–1.10:1** in dark. **No neutral semantic token stays dark in
+both modes** — `text/primary` and `text/inverse` are exact opposites and
+`text/secondary` flips too. Title and body therefore take the severity colour
+and differ by weight, which is what `tags.css` already does. Warning takes
+`Yellow/700`, whose token description literally reads *"Warning banner/pill text
+colour"*.
+
+Figma draws the body as `Text/Primary`, so the bug is latent there. The file is
+light-mode only, so nobody had seen it. **`check:contrast` caught it on the
+first run of the new pairs** — not a review.
+
+### Usage notes are now generated end to end
+
+The `Sample Usage notes` frames across the file are all the same stale **"Menu
+Item — Usage notes"** boilerplate — state variants, badge counts, leading icons
+— on pages that have none of those things. Avatar's and the banner's have been
+replaced with real `Guidelines/*` panels built from their `guidelines.md`.
+
+**The first hand-written builder collapsed every text node to a 1px thread** —
+a TEXT node defaults to `WIDTH_AND_HEIGHT`, which ignores `FILL`. Rather than
+write the fix down, `guidelines-to-figma.mjs --figma-script` now emits the
+**whole builder** with the sizing order baked into its `addText()` helper. It
+used to emit only the panel JSON, leaving the builder to be hand-written every
+time — which is precisely how it got hand-written wrongly. Filed in
+`docs/figma-known-issues.md`.
+
+```
+node scripts/guidelines-to-figma.mjs components/<name>/guidelines.md \
+  --figma-script --page=<pageId> --replace=<staleNodeId>
+```
+
+### Code coverage of the pages worked on
+
+| Page | Spec | Guidelines | Web | React | Figma panel |
+|---|---|---|---|---|---|
+| Avatar | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Notification banner | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Inset text | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Link | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Modal | ✅ | — | ✅ | ✅ | — |
+| Status indicator | — (a style, DDR-032) | — | ✅ | ✅ | — |
+| Form field / Message | — (a building block) | in `form-fields.md` | in 6 components | in 6 components | — |
+
+### Open, in the order they are worth doing
+
+1. **Website pages for Avatar and Notification banner** — both have guidelines
+   and code but no `components/*.html` page yet.
+2. **Modal guidelines** — it has a spec and ships, but no guidelines file, so it
+   has no Figma panel and no website guidance.
+3. **Error summary** — still the real gap behind the Errors page.
+4. **The remaining stale "Menu Item" usage-notes frames.** Every page that has
+   one needs a `guidelines.md` first — the panel is generated from it.
+5. **Re-base the dialog pattern frames onto `Modal`** (size decision first).
+6. **Unify `.sr-nav__item-badge` and `.sr-tabs__badge`** behind one Badge.
+7. **Delete the empty Notifications page.**
+8. **Status indicator's section on the Icons page**, the destructive link's
+   dark-mode colour, and the footer in dark mode.
+
+---
+
+## Checkpoint — 2026-09-21c (DDR-034 implemented; status.error ships)
+
+All four decisions from DDR-034 are now done in the file and the repo.
+
+### `status.critical` → `status.error`, with an alias
+
+`status.error` / `status.error-surface` are canonical in both modes.
+`status.critical` / `status.critical-surface` remain as aliases resolving to
+them, so `--sr-color-status-critical` still emits and no consumer of
+`@dhcw/sr-tokens` breaks. Aliases go at the next major.
+
+109 references across 33 hand-written files moved. Generated output — Blazor
+`wwwroot` CSS, MAUI `Colors.xaml`/`Icons.xaml`, `packages/tokens/build` —
+regenerates off the JSON and was rebuilt. Figma's variables renamed; bindings
+verified unchanged. `check:contrast` asserts the pair under the new name and
+**was verified by planting `color.red.200` and confirming a non-zero exit**.
+
+Two things deliberately left alone: `StatCard`'s `accent="critical"` prop, which
+is component API not a token, and `sr.icon.color.critical`, a namespace DDR-034
+did not rule on.
+
+### The `Dialog` set is gone, losslessly
+
+Its ten variants were **detached into pattern frames** before the delete, so all
+the example copy survives — "Override clinical alert?", the result summary rows,
+the processing state. Their nested Button and Icon instances stayed instances,
+which is exactly what "composed from existing components" is supposed to mean.
+Zero instances re-verified on a full page load first.
+
+**Still open, and not mechanical:** re-basing those frames onto `Modal`
+instances with content in its slot. The Confirmation patterns are drawn at
+400px; `Modal` offers Small 380 and Medium 480. Picking a size per pattern — or
+adding one — is a design call, so they are detached copies for now.
+
+### The rest
+
+- **`Warning Messages` → `Form field / Message`**, page retitled **Errors**, and
+  described as a building block that must never be placed alone. All 15
+  instances on the Checkbox, Radios and Select pages verified intact. **Not
+  deleted** — those three pages draw their own error state with it.
+- **`Notification Icon` → `Header / Notification bell`**, moved to the Header
+  page where all 4 of its instances already were. The Notifications page is now
+  empty and named `[EMPTY — delete]` — **a page delete is left for a human**.
+- **Both the Modal and Dialogs headings** said `NOTIFICATION BANNERS`. Fixed.
+- **`components/modal/spec.md`** moved off "In development"; it ships in web and
+  React.
+- **`patterns/dialogs/result-dialog.md`** written — DDR-008 named two patterns
+  and only confirmation had ever been documented.
+
+### Open, in the order they are worth doing
+
+1. **The notification banner in code** — `.sr-notification-banner`. The set is
+   stable and the naming is settled.
+2. **Error summary** — a new pattern, still the real gap behind the Errors page.
+3. **Re-base the dialog pattern frames onto `Modal`** (size decision first).
+4. **Unify the two code badges** — `.sr-nav__item-badge` and `.sr-tabs__badge`
+   are one mark implemented twice, and `.sr-header__notification` has none.
+5. **Delete the empty Notifications page.**
+6. **Status indicator's section on the Icons page** — last DDR-032 item with
+   nothing shipped.
+7. **The destructive link's dark-mode colour**, and **the footer in dark mode**.
+
+---
+
+## Checkpoint — 2026-09-21b (DDR-034: Modal, Notifications, Error/Warning messages)
+
+Three more pages classified, same test as DDR-032, plus a second test that
+decided all three: **where are the instances?**
+
+| Set | Instances | Verdict |
+|---|---|---|
+| `Modal` `3807:36855` | 1 | **Component** — DDR-008 already said so |
+| `Dialog` `2612:3330` | **0** | **Delete** — it is DDR-008's pattern list built as a variant matrix, the exact thing that DDR rejected |
+| `Notification Icon` `817:7235` | 4, all `Badge=None` | **Misnamed.** The unit is a **Badge**, not "Notifications" |
+| `Warning Messages` `1517:13667` | 15, all `Type=Error`, **all on DS doc pages** | **Neither** — confirmed. Stays as `Form field / Message` |
+
+**The usage test earned its place.** "Is it in use?" was answered three times by
+counting instances rather than reasoning about it. `Dialog` looked like a real
+component and had never been placed once. `Warning Messages` looked in use and
+is only ever the artwork the Checkbox/Radio/Select pages draw their own error
+state with — not on a single product screen. Neither fact was visible from the
+canvas.
+
+### What follows, none of it done yet
+
+- **Delete `Dialog`; rebuild the Dialogs page as pattern frames** from `Modal`
+  instances using its `Modal Content` slot. Zero instances, so it is a safe
+  delete — but re-run the page-reachable count first, per 2026-09-21.
+- **Both the Modal and Dialogs pages are titled `NOTIFICATION BANNERS`** —
+  copy-paste leftovers on two live pages.
+- **`patterns/dialogs/` has only `confirmation-dialog.md`.** DDR-008 names two
+  patterns; Result has no write-up.
+- **`components/modal/spec.md` says "In development"** while `Modal` ships in
+  `packages/web/src/modal/`.
+- **Rename the Notifications page** and fold its content into Header/Icons.
+  Do not publish a Notifications component page. If a notification centre is
+  ever wanted it is a **pattern**, and nothing for it exists.
+- **Unify the two code badges.** `.sr-nav__item-badge` and `.sr-tabs__badge` are
+  independent implementations of one mark, and `.sr-header__notification` has no
+  badge at all. Shipping the Figma set as-is would make a third.
+
+### `Status/Critical` → `Status/Error`, additively
+
+The open item from the banner merge, now decided in DDR-034 §4. The **token** is
+the misnamed one: `status.critical` is what six form components use for an
+ordinary invalid field, and a mistyped NHS number is not a critical event.
+
+But it is load-bearing — **249 occurrences across 57 files**, and
+`--sr-color-status-critical` is public API of `@dhcw/sr-tokens` v0.3.0. So:
+add `status.error` as canonical, keep `status.critical` as a **deprecated
+alias** emitting both custom properties, migrate internal usage, drop the alias
+at the next major.
+
+**Done on 2026-09-21.** `status.error` / `status.error-surface` are canonical in
+both light and dark; `status.critical` / `status.critical-surface` remain as
+aliases that resolve to them, so `--sr-color-status-critical` still emits and no
+consumer breaks. 109 internal references across 33 hand-written files moved to
+the new name; Blazor CSS, MAUI `Colors.xaml` and the token build output
+regenerated off it. Figma's `Status/Critical` and `Status/Critical Surface`
+variables were renamed to `Status/Error` and `Status/Error Surface` — bindings
+verified unchanged before and after.
+
+`check:contrast` now asserts the pair under the new name, and **the gate was
+verified by planting `color.red.200` and confirming a non-zero exit** (1.57:1
+against the 4.5:1 it needs) before restoring.
+
+Two things deliberately NOT renamed: `StatCard`'s `accent="critical"` prop,
+which is component API and not a token, and `sr.icon.color.critical`, which is a
+separate namespace DDR-034 did not rule on.
+
+---
+
+## Checkpoint — 2026-09-21 (The banner merge is finished — and the 2026-09-17 instance count was wrong)
+
+### Correction to the checkpoint below
+
+The 2026-09-17 entry says six live instances and nine "orphaned subtrees". **The
+nine were live screens.** They sit inside a `Screen Content` SLOT (`462:6196`) on
+a `Page Template` component, which a `page.loadAsync()` sweep does not reach, and
+on a page that is not fully loaded `.parent` stops at `null` — which is what made
+them look off-canvas. Four of them are on `Single Record App`.
+
+Nothing was lost, because the delete script recounted instead of trusting the
+write-up and aborted. **That is the lesson worth keeping: put the guard in the
+destructive script, not in the plan.** A plan that says "check first" is a
+paragraph; a script that throws is a gate. Both failure modes are now in
+`docs/figma-known-issues.md`.
+
+### The merge is complete
+
+All eight steps of `docs/figma-banner-and-error-messages.md` are done.
+`Notification Banner` (`2561:21695`) is the only banner set in the file;
+`Notification Banner/Variants` is deleted.
+
+```
+Severity    = Information | Success | Warning | Error   (variant)
+Placement   = Inline | Global                           (variant)
+Title       = boolean, default ON
+Dismissible = boolean, default off
+Actions     = boolean, default off
+```
+
+All 15 instances were re-pointed with their text preserved. Severity came from
+each instance's own fill/stroke override, not from guesswork:
+
+| Message | n | Mapped to |
+|---|---|---|
+| "Clinical Reminder: NEWS Score > 3 — Suspect SEPSIS…" | 5 | **Error** · Inline |
+| "Total previous attendances…" | 4 | Information · Inline |
+| "Investigations recorded here have not been operationally requested…" | 4 | Warning · Inline |
+| "Barcode scanning…" | 2 | Information · Inline · Dismissible on |
+
+The sepsis mapping was the design lead's explicit call. Their icon changed from a
+warning triangle to the error circle, which is the collapse doing its job.
+
+### `Title` had to be added, and that is a finding
+
+The plan specified two booleans. A third was needed: the old set had **no title
+layer**, and all 15 live banners are title-less. Without `Title` the merge would
+have forced a heading onto fifteen real screens. **When merging two sets, the
+union of their anatomy is the component — a layer one set lacks is a property,
+not an omission to paper over.** The same applied to `Close` and `Actions`, which
+existed on only some variants and had to be normalised across all eight before
+the booleans could bind.
+
+### Two things the swap broke
+
+- **Four banners silently lost their text.** They had never overridden the body —
+  they rendered the *old component's default*, which does not survive a swap.
+  Caught by diffing rendered text before and after; restored with styled runs so
+  the bold lead-ins survived. Filed in known-issues.
+- **One fill was on `Info Blue/50`**, a global token, where the rest use
+  `Status/… Surface`. Re-pointed.
+
+Accepted cosmetic change: the sepsis banner wraps to two lines at 651px, because
+the merged set has 16px horizontal padding against the old 12px. Both parent
+modals were screenshotted; neither breaks.
+
+### Two decisions left open
+
+1. **`Placement = Inline | Global` is a mismatched pair.** `Inline` describes how
+   it sits, `Global` how much it covers. `Inline`/`Full-width` or `Local`/`Global`
+   would be consistent. Cheap now, expensive once it ships in three frameworks.
+2. **`Severity=Error` binds to `Status/Critical`.** No `Status/Error` variable
+   exists. Axis value and token name disagree about the same colour.
+
+### Open, in the order they are worth doing
+
+1. **The banner in code** — `.sr-notification-banner`, now that the set is one
+   and stable. Settle the `Placement` naming first.
+2. **Error summary** — a new pattern, the real gap behind the Errors page.
+3. **Status indicator's section on the Icons page** — last DDR-032 item with
+   nothing shipped.
+4. **The destructive link's dark-mode colour** — open finding in
+   `check-contrast.mjs`, two options written out.
+5. **The footer in dark mode** — a real Figma-vs-code disagreement.
+
+---
+
+## Checkpoint — 2026-09-17 (The banner sets are one set; the instances recorded their severity after all)
+
+### Where the notification banner merge now stands
+
+`docs/figma-banner-and-error-messages.md` is still the doc to open, and its step
+table now records state. **Steps 1 to 6 are done.** `Notification Banner`
+(`2561:21695`) is one set of eight variants with two variant axes and two
+booleans:
+
+```
+Severity = Information | Success | Warning | Error     (Critical merged into Error)
+Placement = Inline | Global                            (Global = square corners)
+Dismissible = boolean, default off
+Actions     = boolean, default off
+```
+
+Verified by instancing all eight, toggling both booleans on, and confirming the
+Close and Actions layers appeared in every one. The temp frame was removed.
+
+**Steps 7 and 8 are still the design lead's, but step 7 shrank.** The plan
+assumed picking a severity per instance would be judgement, because the old
+`Variants` set never recorded one. It turns out every live instance *overrode its
+fill and stroke to a status token*, and that override is the severity. The
+recommendation table is in the plan doc.
+
+### Step 1's finding: six instances, one page
+
+Swept all 61 pages. Six live instances of `Notification Banner/Variants`, **all
+on `Adaptations UEC`**, none nested inside another instance. Nothing in `PAGES`,
+`PATTERNS` or any component page touches either set — the "live instances sitting
+on real screens" the plan warned about are one page's worth.
+
+Five of the six are the same message: *"Clinical Reminder: NEWS Score > 3 —
+Suspect SEPSIS"*, all bound to `Status/Critical`. **That is the one place this
+merge changes meaning on a real screen** — they are the patient-safety case
+Critical existed for, and DDR-032's argument says they become Error. It is the
+decision worth making deliberately rather than scripting.
+
+### Two things the merge exposed
+
+- **`ComponentNode.instances` over-reports.** It said 15 where the sweep found 6.
+  The other nine are in orphaned subtrees whose root frame has a `null` parent —
+  not on the canvas, unreachable by any sweep. Step 8's "zero instances" gate has
+  to mean zero *page-reachable* instances or it can never be satisfied. Filed in
+  `docs/figma-known-issues.md` with the filter snippet.
+- **`Severity=Error` binds to `Status/Critical`.** There is no `Status/Error`
+  variable. After the collapse the axis value and the token name disagree about
+  the same colour. Left flagged, not renamed — a variable rename has its own
+  blast radius.
+
+### The five variants were not built alike
+
+Information and Success had a `Close` and no `Actions`; Warning, Error and
+Critical had `Actions` and no `Close`. A boolean cannot bind to a layer that is
+not there, so both layers were added everywhere before steps 5 and 6. The cloned
+Actions rows carried Error's red and were re-pointed to `Status/Info` and
+`Status/Success`. Worth knowing before adding a boolean to any other set in this
+file: **check the anatomy is uniform first, or the property binds to four of
+eight variants and nobody notices.**
+
+### Still open, in the order they are worth doing
+
+1. **Banner steps 7 and 8** — six instances, table in the plan doc.
+2. **The banner in code** — `.sr-notification-banner`, now that the set is one.
+3. **Error summary** — a new pattern, the real gap behind the Errors page.
+4. **Status indicator's section on the Icons page** — last DDR-032 item with
+   nothing shipped.
+5. **The destructive link's dark-mode colour** — open finding in
+   `check-contrast.mjs`, two options written out.
+6. **The footer in dark mode** — a real Figma-vs-code disagreement, not an
+   oversight. See the 2026-09-16 checkpoint.
+
+---
+
 ## Checkpoint — 2026-09-16 (Inset text ships; the code windows were fiction; DDR-033 restores the dark teal)
 
 ### Start here if you are picking up the notification banner

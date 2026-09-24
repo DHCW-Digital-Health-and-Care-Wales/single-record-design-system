@@ -39,7 +39,7 @@ Hint text            ← .sr-select__hint
 | Placeholder | Value text in `Text/Secondary` until a choice is made |
 | Focus / Open | 3px `Border/Focus` (Cyan/700) outer ring; chevron rotates 180° when open |
 | Option hover / active / selected | `Interactive/Primary` fill, `Text/Inverse` text |
-| Error | `Status/Critical` border + `.sr-select--error`; message with `status/error-circle` icon |
+| Error | `Status/Error` border + `.sr-select--error`; message with `status/error-circle` icon |
 | Disabled | `Surface/Background` fill, `Border/Disabled`, `Text/Disabled`, `aria-disabled` |
 
 ---

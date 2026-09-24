@@ -78,9 +78,17 @@ Adding an SVG straight into `svg/` without a generator entry is what produced fo
 
 <!-- BEGIN GENERATED CATALOGUE — edit fetch-icons.mjs, then run npm run sync:icons -->
 
-**142 SR aliases across 11 domains.**
+**144 SR aliases across 12 domains.**
 
 Every row below is generated from the `ICONS` array in `fetch-icons.mjs`. Do not edit this section by hand — add the icon to the generator, run `npm run sync:icons`, and the table follows.
+
+### theme (3)
+
+| SR alias | Lucide glyph | Component name | Notes |
+|---|---|---|---|
+| theme/light | sun | ThemeLight |  |
+| theme/dark | moon | ThemeDark | the plain moon, which is the universal dark-mode mark. It was free once schedule/overnight was removed — see the Removed note at the top of this file |
+| theme/system | monitor | ThemeSystem | follow the OS setting — a screen, not a cog, because it is about the device rather than preferences |
 
 ### Navigation & UI chrome (21)
 
@@ -197,7 +205,7 @@ Every row below is generated from the `ICONS` array in `fetch-icons.mjs`. Do not
 | clinical/assessment | clipboard-pen | ClinicalAssessment | broad clinical judgement; deliberately not merged into clinical/vitals |
 | clinical/attendance | door-open | ClinicalAttendance | urgent and emergency care arrival; distinct from clinical/admission (taken onto a ward) |
 
-### Scheduling & appointments (11)
+### Scheduling & appointments (10)
 
 | SR alias | Lucide glyph | Component name | Notes |
 |---|---|---|---|
@@ -208,7 +216,6 @@ Every row below is generated from the `ICONS` array in `fetch-icons.mjs`. Do not
 | schedule/ward-round | route | ScheduleWardRound |  |
 | schedule/waiting-list | list-ordered | ScheduleWaitingList |  |
 | schedule/duration | timer | ScheduleDuration |  |
-| schedule/overnight | moon | ScheduleOvernight |  |
 | schedule/appointment | calendar-clock | ScheduleAppointment | A booked event: a calendar carrying a time. Was schedule/urgent, briefly schedule/priority — both read as severity, which collides with clinical urgency (status/critical) |
 | schedule/calendar | calendar | ScheduleCalendar | the calendar surface itself; schedule/appointment is a booked event |
 | schedule/events | calendar-days | ScheduleEvents |  |

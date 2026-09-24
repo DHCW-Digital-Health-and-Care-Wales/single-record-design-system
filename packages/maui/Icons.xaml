@@ -4,7 +4,7 @@
     Source of truth: foundations/iconography/svg/ — the same SVGs the web
     icon set is built from, so the two cannot drift.
 
-    142 icons, each a 24x24 geometry drawn with stroke-width 1 and
+    144 icons, each a 24x24 geometry drawn with stroke-width 1 and
     round caps and joins. The geometry carries no colour: set Stroke from a
     token so the icon follows the theme.
 
@@ -168,7 +168,6 @@
     <x:String x:Key="SrIconScheduleCancelAppointment">M 8 2 v 3 M 16 2 v 3 M 5,3 H 19 A 2,2 0 0,1 21,5 V 19 A 2,2 0 0,1 19,21 H 5 A 2,2 0 0,1 3,19 V 5 A 2,2 0 0,1 5,3 Z M 3 9 h 18 M 14 13 l -4 4 M 10 13 l 4 4</x:String>
     <x:String x:Key="SrIconScheduleDuration">M 10,2 L 14,2 M 12,14 L 15,11 M 4,14 a 8,8 0 1,0 16,0 a 8,8 0 1,0 -16,0 Z</x:String>
     <x:String x:Key="SrIconScheduleEvents">M 8 2 v 3 M 16 2 v 3 M 5,3 H 19 A 2,2 0 0,1 21,5 V 19 A 2,2 0 0,1 19,21 H 5 A 2,2 0 0,1 3,19 V 5 A 2,2 0 0,1 5,3 Z M 3 9 h 18 M 8 13 h .01 M 12 13 h .01 M 16 13 h .01 M 8 17 h .01 M 12 17 h .01 M 16 17 h .01</x:String>
-    <x:String x:Key="SrIconScheduleOvernight">M 20.985 12.486 a 9 9 0 1 1 -9.473 -9.472 c .405 -.022 .617 .46 .402 .803 a 6 6 0 0 0 8.268 8.268 c .344 -.215 .825 -.004 .803 .401</x:String>
     <x:String x:Key="SrIconScheduleRecurring">M 17 2 l 4 4 l -4 4 M 3 11 v -1 a 4 4 0 0 1 4 -4 h 14 M 7 22 l -4 -4 l 4 -4 M 21 13 v 1 a 4 4 0 0 1 -4 4 H 3</x:String>
     <x:String x:Key="SrIconScheduleTime">M 2,12 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0 Z M 12 6 v 6 h 4</x:String>
     <x:String x:Key="SrIconScheduleWaitingList">M 11 5 h 10 M 11 12 h 10 M 11 19 h 10 M 4 4 h 1 v 5 M 4 9 h 2 M 6.5 20 H 3.4 c 0 -1 2.6 -1.925 2.6 -3.5 a 1.5 1.5 0 0 0 -2.6 -1.02</x:String>
@@ -183,5 +182,10 @@
     <x:String x:Key="SrIconStatusPending">M 2,12 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0 Z M 12 6 v 6 l 4 2</x:String>
     <x:String x:Key="SrIconStatusSuccess">M 2,12 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0 Z M 16 9 l -5.5 5.5 L 8 12</x:String>
     <x:String x:Key="SrIconStatusWarning">M 21.73 18 l -8 -14 a 2 2 0 0 0 -3.48 0 l -8 14 A 2 2 0 0 0 4 21 h 16 a 2 2 0 0 0 1.73 -3 M 12 9 v 4 M 12 17 h .01</x:String>
+
+    <!-- ── theme ───────────────────────────────────────────────────────── -->
+    <x:String x:Key="SrIconThemeDark">M 20.985 12.486 a 9 9 0 1 1 -9.473 -9.472 c .405 -.022 .617 .46 .402 .803 a 6 6 0 0 0 8.268 8.268 c .344 -.215 .825 -.004 .803 .401</x:String>
+    <x:String x:Key="SrIconThemeLight">M 8,12 a 4,4 0 1,0 8,0 a 4,4 0 1,0 -8,0 Z M 12 2 v 2 M 12 20 v 2 M 4.93 4.93 l 1.41 1.41 M 17.66 17.66 l 1.41 1.41 M 2 12 h 2 M 20 12 h 2 M 6.34 17.66 l -1.41 1.41 M 19.07 4.93 l -1.41 1.41</x:String>
+    <x:String x:Key="SrIconThemeSystem">M 4,3 H 20 A 2,2 0 0,1 22,5 V 15 A 2,2 0 0,1 20,17 H 4 A 2,2 0 0,1 2,15 V 5 A 2,2 0 0,1 4,3 Z M 8,21 L 16,21 M 12,17 L 12,21</x:String>
 
 </ResourceDictionary>

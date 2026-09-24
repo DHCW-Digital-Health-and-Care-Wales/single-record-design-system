@@ -29,7 +29,7 @@
 .sr-icon--subtle      { color: var(--sr-color-text-secondary); }
 .sr-icon--inverse     { color: var(--sr-color-text-inverse); }
 .sr-icon--interactive { color: var(--sr-color-interactive-primary); }
-.sr-icon--critical    { color: var(--sr-color-status-critical); }
+.sr-icon--critical    { color: var(--sr-color-status-error); }
 .sr-icon--warning     { color: var(--sr-color-status-warning); }
 .sr-icon--success     { color: var(--sr-color-status-success); }
 .sr-icon--info        { color: var(--sr-color-status-info); }

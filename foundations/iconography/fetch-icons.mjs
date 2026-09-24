@@ -24,6 +24,14 @@
  *   - aria-hidden     → true
  *   - focusable       → false
  *
+ * Removed:
+ *   schedule/overnight — held Lucide `moon` and had no consumer: no component,
+ *     no prototype, no website page, and its only Figma instance was the icon
+ *     preview grid documenting the set. Removed 2026-09-24 so `theme/dark`
+ *     could take the plain moon, which is the universal dark-mode mark. If an
+ *     overnight-stay icon is ever needed, `moon-star` is free and is the better
+ *     fit for it — the star reads as "nights", not "night mode".
+ *
  * Substitutions (original Lucide name no longer exists):
  *   nav/filter      — filter       → list-filter   (renamed in Lucide)
  *   clinical/consent — file-check-2 → file-pen      (not found; file-pen = consent/signed document)
@@ -176,7 +184,6 @@ const ICONS = [
   { domain: 'schedule', name: 'ward-round',         lucide: 'route' },
   { domain: 'schedule', name: 'waiting-list',       lucide: 'list-ordered' },
   { domain: 'schedule', name: 'duration',           lucide: 'timer' },
-  { domain: 'schedule', name: 'overnight',          lucide: 'moon' },
   { domain: 'schedule', name: 'appointment',        lucide: 'calendar-clock', note: 'A booked event: a calendar carrying a time. Was schedule/urgent, briefly schedule/priority — both read as severity, which collides with clinical urgency (status/critical)' },
   { domain: 'schedule', name: 'calendar',           lucide: 'calendar', note: 'the calendar surface itself; schedule/appointment is a booked event' },
   { domain: 'schedule', name: 'events',             lucide: 'calendar-days' },
@@ -237,6 +244,17 @@ const ICONS = [
   { domain: 'device', name: 'video',       lucide: 'video' },
   { domain: 'device', name: 'torch-on',    lucide: 'flashlight' },
   { domain: 'device', name: 'torch-off',   lucide: 'flashlight-off' },
+
+  // Theme (3)
+  // A group of exactly three, and that is the point: the options of one
+  // control. A theme switcher offers light, dark and follow-the-OS, and the
+  // three only mean anything next to each other — which is why they are not
+  // scattered across action/ and device/. Requested by the MAUI app, 2026-09.
+  { domain: 'theme', name: 'light',        lucide: 'sun' },
+  { domain: 'theme', name: 'dark',         lucide: 'moon',
+    note: 'the plain moon, which is the universal dark-mode mark. It was free once schedule/overnight was removed — see the Removed note at the top of this file' },
+  { domain: 'theme', name: 'system',       lucide: 'monitor',
+    note: 'follow the OS setting — a screen, not a cog, because it is about the device rather than preferences' },
 ];
 
 // ── SVG normalisation ─────────────────────────────────────────────────────────

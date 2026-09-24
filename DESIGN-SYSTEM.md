@@ -4,7 +4,7 @@ The Single Record Design System provides the shared design language, component l
 
 This document is the primary reference for everyone working on Single Record — designers, engineers, and delivery leads.
 
-**Last reviewed:** 2026-09-16. Update this file whenever a component ships, a
+**Last reviewed:** 2026-09-24. Update this file whenever a component ships, a
 token is added, or a system-wide rule changes — not on a schedule. If it
 disagrees with `/foundations/tokens/` or `/components/`, those win and this file
 is out of date.
@@ -227,7 +227,9 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Link | ✅ (guidelines ✅) | ✅ | ✅ |
 | Modal dialog | ✅ | ✅ | ✅ |
 | Navigation | — (guidelines ✅) | ✅ | ✅ |
-| Notification banner | — (Figma only) | — | — |
+| Avatar | ✅ | ✅ | ✅ |
+| Error summary | ✅ | ✅ | ✅ |
+| Notification banner | ✅ | ✅ | ✅ |
 | Patient banner | ✅ | ✅ | ✅ |
 | Progress indicators | ✅ | — | — |
 | Radio | ✅ (guidelines ✅) | ✅ | ✅ |
@@ -258,8 +260,10 @@ kinds of thing behind one promise:
 | Link | Component | **Done** — spec corrected, guidelines written, web + React + page shipped |
 | Status Indicator | Style — the filled status icon family, already shipped as `.sr-status-indicator` | The neutral `none` mark ships, drawing `action/remove` from the icon set rather than a copied path. **Still to do:** its section on the Icons page |
 | Inset text | Component, narrowed to prose emphasis | **Done** — narrowed in Figma, spec + guidelines written, web + React + page shipped |
-| Notification banner | Component; its two Figma sets are one component with two properties | One set of 8 variants plus two booleans, then spec, code, page. Steps: `docs/figma-banner-and-error-messages.md` |
-| Error/Warning messages | Neither — shared form-field anatomy, already rendered by six components | Becomes a `Form field / Message` building block; the page is retitled **Errors** and gains the **error summary**, which is a pattern. Steps: `docs/figma-banner-and-error-messages.md` |
+| Notification banner | Component; its two Figma sets are one component with two properties | **Figma done** — one set of 8 variants (`Severity` × `Placement`) plus `Title`, `Dismissible` and `Actions` booleans; all 15 instances re-pointed and the old set deleted. Remaining: spec, code, page — settle the `Placement` value naming first. Steps: `docs/figma-banner-and-error-messages.md` |
+| Error/Warning messages | Neither — shared form-field anatomy, already rendered by six components | **Done** — renamed `Form field / Message`, page retitled **Errors**, all 15 doc-page instances intact. The **error summary** pattern now ships alongside it. DDR-034 |
+| Modal | Component — DDR-008 already decided this | **Done** — `Dialog` (`2612:3330`) deleted after its 10 variants were detached into pattern frames; Modal and Dialogs page headings corrected; `patterns/dialogs/result-dialog.md` written. Open: re-basing the frames onto `Modal` instances. DDR-034 |
+| Notifications | **Misnamed; not a component** | **Done** — set renamed `Header / Notification bell` and moved to the Header page; the Notifications page is empty and flagged for deletion. Open: unify `.sr-nav__item-badge` and `.sr-tabs__badge` behind one Badge style. DDR-034 |
 
 The Link spec was corrected in the same pass: it described 36 variants across
 three types and cited a Figma node that no longer exists. The real set has 24
@@ -578,8 +582,11 @@ The gate checks **both light and dark modes**, which is not thoroughness for its
 
 ## Iconography
 
-**142 icons across 11 domains**, from Lucide (ISC), on a 24 × 24 grid at **1px
-stroke** (DDR-023 — Lucide ships 2px; do not restore it). Every icon is
+**12 domains**, from Lucide (ISC), on a 24 × 24 grid at **1px stroke**
+(DDR-023 — Lucide ships 2px; do not restore it). The count and the full list
+live in [`foundations/iconography/catalogue.md`](foundations/iconography/catalogue.md),
+which is generated from the set and therefore cannot drift — a number written
+here can, and did. Every icon is
 `currentColor` with no baked fill, so one asset serves both modes.
 
 The catalogue is **generated**, not maintained. `foundations/iconography/fetch-icons.mjs`
@@ -736,7 +743,7 @@ The design system is **implementation-agnostic at the design level**. Tokens are
 
 **MAUI is native XAML, not Blazor Hybrid (DDR-021).** What the design system
 ships for it is a token and style layer, not a parallel component library:
-`Colors.xaml` (210 resources, generated from the tokens), `Icons.xaml` (142 icons
+`Colors.xaml` (generated from the tokens), `Icons.xaml` (every icon in the set
 as XAML path geometry, generated from the same SVGs as the web icon set), and a
 hand-authored `Styles.xaml` of implicit styles, keyed intent styles and the
 `StyleClass` type scale. All in `packages/maui`.
@@ -750,7 +757,7 @@ until `Roboto-Medium.ttf` is bundled.
 
 `packages/maui/testbed` is a MAUI app that puts the layer on a real device, with
 a diagnostics page covering theme flipping, font scale, every stock control and
-all 142 icons. Nothing in the MAUI layer has been compiled yet — it is verified
+every icon in the set. Nothing in the MAUI layer has been compiled yet — it is verified
 statically (resource resolution, icon geometry against source, no literal
 colours) and that gap is named in `packages/maui/README.md`.
 

@@ -222,6 +222,115 @@ The `NONE` → `resize` → `HEIGHT` round trip is what forces the recalculation
 
 ---
 
+### A `loadAsync()` page sweep silently misses instances held in a SLOT
+
+**Symptom:** Swept all 61 pages for instances of `Notification Banner/Variants`
+using `page.loadAsync()` + `findAllWithCriteria({ types: ['INSTANCE'] })`. Found
+**6**. The real number was **15**. The nine missed ones sat on two of the pages
+the sweep had just walked, including `Single Record App` — live screens.
+
+**Why:** Two compounding causes.
+
+1. The nine live inside a `Screen Content` **SLOT** (`462:6196`) on a
+   `Page Template` component. A page loaded with `loadAsync()` does not expose
+   slot-plugged content to `findAllWithCriteria`; a page made current with
+   `setCurrentPageAsync()` does.
+2. When a page is not fully loaded, walking `.parent` from a node inside it
+   terminates at `null` instead of reaching the `PAGE`. That made the nine look
+   like orphaned, off-canvas subtrees — **a wrong conclusion that was written up
+   and committed before the delete step caught it.**
+
+`ComponentNode.instances` does return all fifteen, but it is not a substitute:
+the same call returned 9 page-reachable in one script and 2 in the next,
+depending only on which pages happened to be loaded.
+
+**Fix:** For any sweep whose result gates a destructive edit, make each page
+current — do not use `loadAsync()`:
+
+```js
+// one use_figma call per page; setCurrentPageAsync at most once per call
+const page = await figma.getNodeByIdAsync(PAGE_ID);
+await figma.setCurrentPageAsync(page);
+const hits = page.findAllWithCriteria({ types: ['INSTANCE'] });
+```
+
+And never trust a `null` page ancestor as proof a node is off-canvas unless that
+node's page is loaded.
+
+**Prevented by:** Nothing mechanical — this is Plugin API behaviour, not repo
+content. What actually caught it was an **abort guard in the delete script**: it
+recounted page-reachable instances itself and threw rather than deleting. Write
+the guard into the destructive script, not into the plan.
+
+**Status:** Workaround only. 2026-09-21.
+
+### Swapping a component replaces default text that looked like content
+
+**Symptom:** After `swapComponent()` onto the merged banner set, four live
+banners reading *"Investigations recorded here have not been operationally
+requested via Welsh Clinical Portal."* silently became *"You have unsaved changes
+on this form."*
+
+**Why:** Those instances had never overridden their body text — they were
+rendering the **old component's default string**. An override survives a swap
+because it is instance data; a default does not, because it belongs to the main
+component being swapped away.
+
+**Fix:** Capture the rendered text (and its styled runs) *before* the swap,
+compare after, and rewrite when they differ:
+
+```js
+const before = body.characters;
+const segs = body.getStyledTextSegments(['fontName']);   // keep bold lead-ins
+src.swapComponent(target);
+if (body.characters !== before) {
+  for (const s of segs) await figma.loadFontAsync(s.fontName);
+  body.characters = before;
+  for (const s of segs) body.setRangeFontName(s.start, s.end, s.fontName);
+}
+```
+
+**Status:** Workaround only. 2026-09-21.
+
+### A wrapping TEXT node collapses to a thread unless sized in the right order
+
+**Symptom:** Built a `Guidelines/*` panel with `use_figma`. Every body text node
+rendered as a 1–2px wide vertical thread hundreds of pixels tall. The frame was
+607px, the auto-layout was correct, and `layoutSizingHorizontal = 'FILL'` had
+been set on each text node.
+
+**Why:** A TEXT node defaults to `textAutoResize = 'WIDTH_AND_HEIGHT'`, and in
+that mode it **ignores `FILL`** — it sizes itself to its content instead, which
+for a `\n`-joined bullet block means one very tall, very narrow column. Setting
+`textAutoResize = 'HEIGHT'` *after* `FILL` does not recover it either; the node
+has already taken its width.
+
+**Fix:** Four steps, in this order, on every wrapping text node:
+
+```js
+t.textAutoResize = 'NONE';
+t.layoutSizingHorizontal = 'FIXED';
+t.resize(575, lineHeight);   // a real width first
+t.textAutoResize = 'HEIGHT';
+t.layoutSizingHorizontal = 'FILL';
+```
+
+The parent frame must also be `FIXED` at a real width before any child can
+`FILL` to something meaningful.
+
+**Prevented by:** `scripts/guidelines-to-figma.mjs --figma-script` now emits the
+**whole builder**, not just the panel JSON, with this order baked into its
+`addText()` helper. Previously the script returned data and the builder was
+hand-written each time — which is exactly how this was hand-written wrongly on
+its first run. Generating the builder removes the opportunity.
+
+```
+node scripts/guidelines-to-figma.mjs components/<name>/guidelines.md \
+  --figma-script --page=<pageId> --replace=<staleNodeId>
+```
+
+**Status:** Resolved. 2026-09-22.
+
 ## Assets & Export
 
 ### `figma.com` egress is blocked, but vector artwork can still be lifted via `fillGeometry`

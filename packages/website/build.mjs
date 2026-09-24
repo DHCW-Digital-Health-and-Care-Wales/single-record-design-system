@@ -509,7 +509,7 @@ const SITE_COMPONENT_CSS = [
   'button', 'table', 'patient-banner', 'header', 'footer', 'bottom-nav',
   'breadcrumbs', 'switch', 'segmented-control', 'navigation', 'input',
   'tags', 'checkbox', 'radio', 'select', 'tabs', 'search', 'stat-card', 'link',
-  'inset-text',
+  'inset-text', 'avatar', 'notification-banner', 'error-summary',
 ];
 const COMPONENT_CSS_LINKS = (prefix) =>
   SITE_COMPONENT_CSS.map((c) => `<link rel="stylesheet" href="${prefix}assets/${c}.css">`).join('\n');
@@ -542,15 +542,18 @@ const SECTIONS = [
     // built in" stops being findable; the section link opens the first one.
     id: 'components', label: 'Components', href: 'components/breadcrumbs.html',
     side: [
+      { href: 'components/avatar.html', label: 'Avatar' },
       { href: 'components/breadcrumbs.html', label: 'Breadcrumbs' },
       { href: 'components/button.html', label: 'Buttons' },
       { href: 'components/checkbox.html', label: 'Checkbox' },
+      { href: 'components/error-summary.html', label: 'Error summary' },
       { href: 'components/footer.html', label: 'Footer' },
       { href: 'components/header.html', label: 'Header' },
       { href: 'components/input.html', label: 'Input' },
       { href: 'components/inset-text.html', label: 'Inset text' },
       { href: 'components/link.html', label: 'Link' },
       { href: 'components/navigation.html', label: 'Navigation' },
+      { href: 'components/notification-banner.html', label: 'Notification banner' },
       { href: 'components/radio.html', label: 'Radio' },
       { href: 'components/search.html', label: 'Search' },
       { href: 'components/select.html', label: 'Select' },
@@ -790,6 +793,46 @@ function checkMauiSnippet(panelId, code) {
 }
 
 const snippetProblems = [];
+/** Replace the inside of each balanced `{…}` with spaces, keeping length. */
+function blankBraceExpressions(tag) {
+  const out = tag.split('');
+  let depth = 0;
+  let quote = null;
+  for (let i = 0; i < out.length; i += 1) {
+    const ch = out[i];
+    if (quote) {
+      if (ch === quote) quote = null;
+      else if (depth > 0) out[i] = ' ';
+      continue;
+    }
+    if (ch === '"' || ch === "'" || ch === '`') {
+      if (depth > 0) out[i] = ' ';
+      else quote = ch;
+      continue;
+    }
+    if (ch === '{') { depth += 1; continue; }
+    if (ch === '}') { depth -= 1; continue; }
+    if (depth > 0) out[i] = ' ';
+  }
+  return out.join('');
+}
+
+function openingTagEnd(code, from) {
+  let depth = 0;
+  let quote = null;
+  for (let i = from; i < code.length; i += 1) {
+    const ch = code[i];
+    if (quote) {
+      if (ch === quote) quote = null;
+      continue;
+    }
+    if (ch === '"' || ch === "'" || ch === '`') { quote = ch; continue; }
+    if (ch === '{') { depth += 1; continue; }
+    if (ch === '}') { depth -= 1; continue; }
+    if (ch === '>' && depth === 0) return i;
+  }
+  return code.length;
+}
 function checkReactSnippet(panelId, code) {
   const open = /^\s*<([A-Z]\w*)([\s>])/.exec(code.replace(/^(\s*\/\/[^\n]*\n)+/, ''));
   if (!open) return;
@@ -797,8 +840,18 @@ function checkReactSnippet(panelId, code) {
   const known = reactPropsOf(name);
   if (!known) return; // not one of ours, or an unparseable signature
   // Attributes on the opening tag only, so children and nested JSX are ignored.
-  const tagEnd = code.indexOf('>', open.index);
-  const attrs = code.slice(open.index, tagEnd === -1 ? code.length : tagEnd);
+  //
+  // `indexOf('>')` is not enough: a prop can hold a JSX element, and
+  // `icon={<Icon name="…" />}` puts a `>` and a foreign `name=` INSIDE the
+  // opening tag. That made the scan stop early and report the nested element's
+  // props as the outer component's. Walk the tag instead, tracking quotes and
+  // brace depth, and stop at the first `>` that is genuinely at depth zero.
+  const tagEnd = openingTagEnd(code, open.index);
+  // Blank the CONTENTS of every `{…}` expression before scanning attribute
+  // names. Finding the right tag end is only half of it: `icon={<Icon
+  // name="…" />}` still leaves a space-prefixed `name=` inside the slice, and
+  // the attribute regex cannot tell that from a real prop.
+  const attrs = blankBraceExpressions(code.slice(open.index, tagEnd));
   for (const m of attrs.matchAll(/(?:^|\s)([a-z]\w*)\s*(?:=|\s*\/?>|$)/g)) {
     const prop = m[1];
     if (!known.has(prop) && !prop.startsWith('aria') && !prop.startsWith('data')) {
@@ -1778,7 +1831,7 @@ function semanticTable(prefix, rows) {
 
 function colourBody() {
   const statusRows = [
-    ['sr-color-status-critical', 'sr-color-status-critical-surface', 'Critical'],
+    ['sr-color-status-error', 'sr-color-status-error-surface', 'Critical'],
     ['sr-color-status-success', 'sr-color-status-success-surface', 'Success'],
     ['sr-color-status-warning', 'sr-color-status-warning-surface', 'Warning'],
     ['sr-color-status-info', 'sr-color-status-info-surface', 'Information'],
@@ -3173,6 +3226,313 @@ ${renderMarkdown(md)}
 
 // ─── Components: Inset text ───────────────────────────────────────────────────
 /**
+ * Error summary. The page has to do two things the markdown cannot: show the
+ * summary next to the inline message it must match word for word, and make the
+ * boundary against Notification banner explicit. Both are the confusions that
+ * made this pattern worth building.
+ */
+function errorSummaryBody() {
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'error-summary', 'guidelines.md'), 'utf8')));
+
+  const summary = `<div class="sr-error-summary" role="alert" tabindex="-1">
+  <div class="sr-error-summary__header">
+    <span class="sr-error-summary__icon" aria-hidden="true"><svg style="width:100%;height:100%"><use href="../assets/sprite.svg#icon-status-error-circle"></use></svg></span>
+    <h2 class="sr-error-summary__title">There is a problem</h2>
+  </div>
+  <ul class="sr-error-summary__body">
+    <li class="sr-error-summary__item">
+      <a class="sr-error-summary__link" href="#demo-nhs">Enter the patient's NHS number</a>
+    </li>
+    <li class="sr-error-summary__item">
+      <a class="sr-error-summary__link" href="#demo-dob">Date of birth must be a real date</a>
+    </li>
+  </ul>
+</div>`;
+
+  const withForm = `<div style="max-width:52ch">
+  ${summary}
+  <div class="sr-input sr-input--error" style="margin-bottom:24px">
+    <label class="sr-input__label" for="demo-nhs">NHS number</label>
+    <div class="sr-input__field"><input id="demo-nhs" aria-invalid="true" aria-describedby="demo-nhs-error"></div>
+    <span class="sr-input__error" id="demo-nhs-error">Enter the patient's NHS number</span>
+  </div>
+  <div class="sr-input sr-input--error">
+    <label class="sr-input__label" for="demo-dob">Date of birth</label>
+    <div class="sr-input__field"><input id="demo-dob" aria-invalid="true" aria-describedby="demo-dob-error"></div>
+    <span class="sr-input__error" id="demo-dob-error">Date of birth must be a real date</span>
+  </div>
+</div>`;
+
+  const snippets = {
+    HTML: '<div class="sr-error-summary" role="alert" tabindex="-1">\n  <div class="sr-error-summary__header">\n    <span class="sr-error-summary__icon" aria-hidden="true"><!-- status/error-circle --></span>\n    <h2 class="sr-error-summary__title">There is a problem</h2>\n  </div>\n  <ul class="sr-error-summary__body">\n    <li class="sr-error-summary__item">\n      <!-- href is the FIELD id, not the error text id -->\n      <a class="sr-error-summary__link" href="#nhs-number">Enter the patient\'s NHS number</a>\n    </li>\n  </ul>\n</div>\n\n<!-- Focus it programmatically when it appears; the box alone does nothing. -->',
+    React: '{/* Renders nothing when errors is empty, so mount it unconditionally\n    and let it appear on a failed submit. */}\n<ErrorSummary\n  errors={[\n    { id: \'nhs-number\', message: "Enter the patient\'s NHS number" },\n    { id: \'dob\', message: \'Date of birth must be a real date\' },\n  ]}\n/>\n\n{/* errors must be in FIELD order, and each id is the FIELD\'s id.\n    The component focuses itself, and re-focuses whenever the set of\n    errors changes — a second failed submit is a new problem. */}',
+    Blazor: '@* Stylesheet only — no component to install. The focus behaviour is\n   yours to wire up: focus the container when it renders. *@\n<div class="sr-error-summary" role="alert" tabindex="-1" @ref="summaryRef">\n  ...\n</div>',
+  };
+
+  return `
+<p class="breadcrumbs"><a href="../components/breadcrumbs.html">Components</a> / Error summary</p>
+<h1>Error summary</h1>
+<p class="lede">The box at the top of a form listing every error, each one a link that moves focus
+into the field it names.</p>
+
+<div class="callout"><p><strong>The behaviour is the pattern.</strong> A hand-rolled version always
+renders the right box and then misses one of four things: taking focus when it appears, linking to
+the field rather than scrolling to it, matching the inline wording exactly, or listing the errors in
+field order. Each omission is the difference between a form someone can recover from and one they
+cannot.</p></div>
+
+<h2>With the form it describes</h2>
+<p>The summary and the inline messages are two layers of the same thing and always appear together.
+Read the wording across them: <strong>the same problem is worded identically in both places</strong>.
+Two wordings for one problem is two problems, and the person reading is mid-task.</p>
+${showcase(withForm, 'error-summary-with-form', snippets)}
+
+<h2>It is not a notification banner</h2>
+<p>Both are a box with a status colour near the top of the page, which is why they get confused.</p>
+<p><strong>A banner reports an event</strong> — a save failed, a record is locked.
+<strong>The summary reports the state of the form in front of you</strong>, and unlike a banner it is
+<em>interactive</em>: every item is a link, and it takes focus when it appears.</p>
+
+<h2>Why it is not tinted</h2>
+<p>Every banner severity is a status tint, so an untinted box is the quickest way to tell the two
+apart. But the better reason is technical.</p>
+<p>Status surfaces stay light in dark mode — that is what keeps a banner legible against a bright
+status colour — which is why banner text has to take the severity colour rather than the ordinary
+text colour. <strong>The summary sits on the page's own surface, which flips with the mode</strong>,
+so its heading and links use ordinary text and link colours and are correct in both. Tinting it
+would import the banner's problem for nothing.</p>
+<p>The links are <code>interactive/link</code>, not the error red, for the same reason:
+<code>status/error</code> is 2.14:1 on the dark page. The error-ness is carried by the heading, the
+icon and the border — never by the link colour alone.</p>
+
+<h2>Each item is the fix, not the fault</h2>
+<p>"Enter the patient's NHS number", not "NHS number is required" and never "Invalid input". And say
+<em>which</em> field, because the item is read out of context — "Date of birth must be a real date"
+beats "Must be a real date".</p>
+<p>The heading names the situation rather than counting: <strong>"There is a problem"</strong>. A
+count is wrong the moment one error is fixed.</p>
+
+<h2>Focus is the part that matters</h2>
+<p>The summary is focused programmatically when it appears, so a screen-reader user hears the problem
+instead of being left at the submit button they just pressed — and again on every later failed submit
+where the errors have changed, because that is a new problem to announce.</p>
+<p>Each link moves focus <em>into</em> the field, not merely to it. Where a field cannot take focus
+itself — a fieldset of radios, a date input of three boxes — focus goes to its first focusable
+control.</p>
+<p>A programmatic focus needs a visible ring. Moving a sighted keyboard user somewhere with no
+indicator has lost them, not helped them.</p>
+
+${renderMarkdown(md)}
+`;
+}
+
+/**
+ * Avatar. The page carries one rule harder than the rest: an avatar identifies
+ * a COLLEAGUE, never a patient. Everything else here is sizing and fallbacks;
+ * that one is a patient-safety boundary.
+ *
+ * It also documents the contrast correction, because the Figma component
+ * shipped at 2.95:1 for months and the page is where that stops being folklore.
+ */
+function avatarBody() {
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'avatar', 'guidelines.md'), 'utf8')));
+
+  const av = (cls, inner, label) =>
+    `<span class="sr-avatar${cls}" role="img" aria-label="${label}">${inner}</span>`;
+  const initials = (t) => `<span class="sr-avatar__initials">${t}</span>`;
+  const dot = '<span class="sr-avatar__status"></span>';
+
+  const row = (inner) =>
+    `<div style="display:flex; align-items:center; gap:24px">${inner}</div>`;
+
+  const sizes = row(
+    av('', initials('AB'), 'Anwen Bowen') +
+    av(' sr-avatar--md', initials('AB'), 'Anwen Bowen') +
+    av(' sr-avatar--lg', initials('AB'), 'Anwen Bowen'));
+
+  const withStatus = row(
+    av('', initials('AB') + dot, 'Anwen Bowen, active') +
+    av(' sr-avatar--md', initials('CD') + dot, 'Carys Davies, active') +
+    av(' sr-avatar--lg', initials('EF') + dot, 'Elin Foulkes, active'));
+
+  const besideName = `<div style="display:flex; align-items:center; gap:8px; font:var(--sr-type-body-m-font)">
+  <span class="sr-avatar" aria-hidden="true">${initials('AB')}</span>
+  <span>Dr Anwen Bowen</span>
+</div>`;
+
+  const group = `<span class="sr-avatar-group">
+  <span class="sr-avatar" aria-hidden="true">${initials('AB')}</span>
+  <span class="sr-avatar" aria-hidden="true">${initials('CD')}</span>
+  <span class="sr-avatar" aria-hidden="true">${initials('EF')}</span>
+  <span class="sr-avatar-group__overflow">+4</span>
+</span>`;
+
+  const snippets = {
+    HTML: '<!-- Beside a visible name the avatar repeats it, so hide it. -->\n<span class="sr-avatar" aria-hidden="true">\n  <span class="sr-avatar__initials">AB</span>\n</span>\n<span>Dr Anwen Bowen</span>\n\n<!-- Standing alone it must name the person itself. -->\n<span class="sr-avatar sr-avatar--md" role="img"\n      aria-label="Dr Anwen Bowen, active">\n  <span class="sr-avatar__initials">AB</span>\n  <span class="sr-avatar__status"></span>\n</span>',
+    React: '<Avatar name="Dr Anwen Bowen" decorative />\n\n<Avatar name="Dr Anwen Bowen" size="md" status="active" />\n\n{/* A photo falls back to initials if it fails to load. */}\n<Avatar name="Dr Anwen Bowen" src={photoUrl} size="lg" />\n\n<AvatarGroup max={3}>\n  {team.map((p) => <Avatar key={p.id} name={p.name} decorative />)}\n</AvatarGroup>',
+    Blazor: '@* Stylesheet only — no component to install. *@\n<span class="sr-avatar" aria-hidden="true">\n  <span class="sr-avatar__initials">AB</span>\n</span>',
+  };
+
+  return `
+<p class="breadcrumbs"><a href="../components/breadcrumbs.html">Components</a> / Avatar</p>
+<h1>Avatar</h1>
+<p class="lede">A person, as a circle — their initials, their photo, or a generic mark when
+neither is available.</p>
+
+<div class="callout"><p><strong>An avatar identifies a colleague. It never identifies a
+patient.</strong> A patient is identified by the
+<a href="../components/patient-banner.html">patient banner</a>, which carries the NHS number, date
+of birth and the details that make identification safe. A face in a circle is not safe
+identification, and initials collide constantly — two A. Bowens on one ward is an ordinary
+Tuesday.</p></div>
+
+<h2>Three sizes</h2>
+<p>SM 32 for rows and dense lists, MD 40 for headers and cards, LG 48 for a profile. Below 32px a
+photo is unrecognisable, which is why initials carry more meaning at small sizes than a face
+does.</p>
+${showcase(sizes, 'avatar-sizes', snippets)}
+
+<h2>Presence, and only presence</h2>
+<p>The dot means signed in and available now. It is never a clinical or workflow state — those are
+a <a href="../components/tags.html">tag</a> or a status indicator. And because colour alone fails
+SC 1.4.1, the dot's meaning belongs in the accessible name, not just in the green.</p>
+${showcase(withStatus, 'avatar-status', snippets)}
+
+<h2>Beside a name, it is decorative</h2>
+<p>This is the part that is most often got wrong. When the person's name is already on screen, an
+avatar that announces itself makes a screen reader read the name twice — once as the image label,
+once as the text. Hide it.</p>
+<p>Standing alone — the account control in the header, say — it is the only thing naming the
+person, and it needs a real accessible name.</p>
+${showcase(besideName, 'avatar-beside-name', snippets)}
+
+<h2>Groups</h2>
+<p>Overlapping avatars for "these people" — a care team on a ward view. The overflow count is real
+information: "+4" means four more people, so it is text, not a decorative badge.</p>
+${showcase(group, 'avatar-group', snippets)}
+
+<h2>The contrast correction</h2>
+<p>The Figma component drew the initials avatar with a <code>Cyan/700</code> fill and
+<code>Text/Inverse</code> text. White on Cyan/700 is <strong>2.95:1</strong>, against the 4.5:1 that
+SC 1.4.3 requires for 14px text — it had been failing for months.</p>
+<p><code>Text/Inverse</code> was the wrong token as well. It is relative to the <em>mode</em> and
+flips to near-black in dark, while an avatar fill stays saturated in both; its own token description
+says not to use it on a saturated fill. The avatar now uses
+<code>interactive/primary</code> with <code>text/on-fill</code>, which is
+<strong>8.04:1</strong> and stable across modes.</p>
+<p>The header had always done it this way, so this was Figma drifting from code rather than the
+reverse. <code>check:contrast</code> now asserts the pair, and the check was verified by planting
+the original colour back and confirming it fails.</p>
+
+<h2>The generic mark is grey, not brand navy</h2>
+<p>A generic person mark on the brand fill reads as a real person who happens to have no photo.
+Grey says the system does not know who this is, which is the truth.</p>
+
+${renderMarkdown(md)}
+`;
+}
+
+/**
+ * Notification banner. The page exists to hold two boundaries: against inset
+ * text (which is the page, not an event) and against the error summary (which
+ * is interactive and moves focus). Both were confused in the Figma file.
+ */
+function notificationBannerBody() {
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'notification-banner', 'guidelines.md'), 'utf8')));
+
+  const banner = (sev, body, { title = null, global = false } = {}) => `
+<div class="sr-notification-banner sr-notification-banner--${sev}${global ? ' sr-notification-banner--global' : ''}"
+     role="${sev === 'error' || sev === 'warning' ? 'alert' : 'status'}">
+  <div class="sr-notification-banner__content">
+    ${title ? `<p class="sr-notification-banner__title">${title}</p>` : ''}
+    <p class="sr-notification-banner__body">${body}</p>
+  </div>
+</div>`;
+
+  const stack = (inner) =>
+    `<div style="display:flex; flex-direction:column; gap:16px; width:100%">${inner}</div>`;
+
+  const severities = stack(
+    banner('information', 'This record was last updated by another user 4 minutes ago. Refresh to see the latest changes.') +
+    banner('success', 'Attendance record saved successfully.') +
+    banner('warning', 'You have unsaved changes on this form. Save before leaving or your changes will be lost.') +
+    banner('error', 'The record could not be saved due to a connection problem. Your changes are preserved — try again.'));
+
+  const placement = stack(
+    banner('information', 'Inline — in the content column, with a radius, about one thing on the page.') +
+    banner('information', 'Global — full width under the header, square corners, about the whole page or system.', { global: true }));
+
+  const snippets = {
+    HTML: '<div class="sr-notification-banner sr-notification-banner--error" role="alert">\n  <span class="sr-notification-banner__icon" aria-hidden="true"><!-- icon --></span>\n  <div class="sr-notification-banner__content">\n    <p class="sr-notification-banner__body">\n      The record could not be saved due to a connection problem.\n      Your changes are preserved — try again.\n    </p>\n  </div>\n</div>\n\n<!-- Global: full width under the header, square corners. -->\n<div class="sr-notification-banner sr-notification-banner--information\n            sr-notification-banner--global" role="status">\n  <div class="sr-notification-banner__content">\n    <p class="sr-notification-banner__body">This is a read-only view.</p>\n  </div>\n</div>',
+    React: '<NotificationBanner severity="error" icon={<Icon name="status/error-circle" />}>\n  The record could not be saved due to a connection problem.\n</NotificationBanner>\n\n{/* placement="global" for a page- or system-wide message. */}\n<NotificationBanner severity="information" placement="global" onDismiss={close}>\n  This is a read-only view.\n</NotificationBanner>\n\n{/* severity picks the role: error/warning => alert,\n    information/success => status. Override with role if you must. */}',
+    Blazor: '@* Stylesheet only — no component to install. *@\n<div class="sr-notification-banner sr-notification-banner--success" role="status">\n  <div class="sr-notification-banner__content">\n    <p class="sr-notification-banner__body">Attendance record saved successfully.</p>\n  </div>\n</div>',
+  };
+
+  return `
+<p class="breadcrumbs"><a href="../components/breadcrumbs.html">Components</a> / Notification banner</p>
+<h1>Notification banner</h1>
+<p class="lede">Tells the reader that something happened — a save succeeded, a record is locked, the
+service goes down at 2am.</p>
+
+<h2>Four severities</h2>
+<p>Matching the four <code>status/*</code> token pairs. There is no fifth, and in particular there
+is <strong>no severity above Error</strong>: a patient-safety alert that must outrank an error needs
+more than a darker red — a different icon, a different weight, an interaction that cannot be
+dismissed — and that is its own decision. A <code>Critical</code> severity that differed from Error
+by one shade was merged into it, because a shade is not a safety mechanism.</p>
+${showcase(severities, 'banner-severity', snippets)}
+
+<h2>Inline and Global</h2>
+<p>The distinction is <strong>what the banner is about</strong>, not how it looks. Inline is about
+one thing on the page — this form, this table, this record. Global is about the whole page or the
+whole system.</p>
+<p>The corners follow from that rather than being a separate choice. Inline sits <em>in</em> the
+content column and takes the same radius as everything else there; Global spans the viewport edge to
+edge, where a radius would leave four notches against the browser chrome.</p>
+<p>The test when placing one: <em>could the reader act on this without leaving the page?</em> "You
+have unsaved changes on this form" is Inline. "The record service is unavailable" is Global.</p>
+${showcase(placement, 'banner-placement', snippets)}
+
+<h2>It is an event. Inset text is the page.</h2>
+<p>These two get confused constantly, because both are a box with a coloured edge.
+<strong>A banner appears because something happened.</strong>
+<strong><a href="../components/inset-text.html">Inset text</a> was typed by whoever wrote the
+page</strong> and is there every time it loads.</p>
+<p>It is also not an <em>error summary</em>. A summary reports the state of the form in front of
+you, lists every error in field order, and each item is a real link that moves focus into the field
+it names. A banner does none of that — it is not interactive in that way.</p>
+
+<h2>Severity picks the announcement</h2>
+<p>Error and Warning use <code>role="alert"</code> and interrupt. Information and Success use
+<code>role="status"</code> and wait for a pause. An error that waits is an error the reader acts on
+too late; a success that interrupts is rude.</p>
+<div class="callout"><p><strong>A banner rendered on page load is not reliably announced.</strong> A
+live region has to exist <em>before</em> its content arrives, so a message that matters on load
+belongs in the page's heading structure or the error summary as well — not only in a banner.</p></div>
+
+<h2>Title, dismiss and actions are all optional</h2>
+<p>All three are off by default, and a banner with none of them — an icon and one line — is the
+common case. Every live banner in the Figma file is title-less.</p>
+<p><strong>Never make a banner dismissible when it is the only record of the problem.</strong> If
+dismissing it loses the information, it is not dismissible. And actions belong in a banner only when
+they resolve the event it reports — Retry, Refresh, Request access — never general navigation.</p>
+
+<h2>Why the text is the severity colour</h2>
+<p>It looks like a style choice and is not. The status <em>surfaces</em> stay light in dark mode, so
+banners remain legible against the bright status colour — but <code>text/primary</code> flips to
+white, which puts neutral body text at <strong>1.04–1.10:1</strong> on a status surface. No neutral
+semantic token stays dark in both modes.</p>
+<p>So the title and body take the severity's own colour and differ by weight, which is what
+<a href="../components/tags.html">tags</a> already does. Warning is the exception within the
+exception: <code>Status/Warning</code> is Yellow/500, a fill colour at 1.49:1 on its own surface
+that must never carry text, so warning text uses <code>Yellow/700</code> — whose token description
+reads "Warning banner/pill text colour". It exists for this.</p>
+
+${renderMarkdown(md)}
+`;
+}
+
+/**
  * Inset text. The page has one job beyond showing the component: making the
  * boundary against Notification banner impossible to miss, because that is the
  * confusion the Figma file had (DDR-032) and it will recur every time someone
@@ -3438,11 +3798,11 @@ ${trigger({ id: 'sel-d', label: 'Disabled', value: 'Aneurin ward', disabled: tru
     MAUI: `<!-- Picker has no error state of its own: the message is a sibling Label,
      and the field Border takes the critical stroke. Title is never the label.
      The status colours carry no AppThemeBinding because they hold the same
-     value in both modes, so there is no SrColorStatusCriticalDark to bind. -->
+     value in both modes, so there is no SrColorStatusErrorDark to bind. -->
 <VerticalStackLayout Spacing="4">
     <Label Text="Ward" StyleClass="FieldLabel" />
     <Border Style="{StaticResource FieldBox}"
-            Stroke="{StaticResource SrColorStatusCritical}">
+            Stroke="{StaticResource SrColorStatusError}">
         <Picker ItemsSource="{Binding Wards}" SelectedItem="{Binding Ward}"
                 SemanticProperties.Description="Ward" />
     </Border>
@@ -4056,7 +4416,7 @@ function iconsBody() {
     <thead><tr><th>Class</th><th>Colour token</th><th>Use for</th></tr></thead>
     <tbody>${colourRoles.map(([role, use]) => {
       const token = { default: 'sr.color.text.primary', subtle: 'sr.color.text.secondary',
-        interactive: 'sr.color.interactive.primary', critical: 'sr.color.status.critical',
+        interactive: 'sr.color.interactive.primary', critical: 'sr.color.status.error',
         warning: 'sr.color.status.warning', success: 'sr.color.status.success',
         info: 'sr.color.status.info' }[role];
       return `<tr><td><code>sr-icon--${role}</code></td><td><code>${token}</code></td><td>${use}</td></tr>`;
@@ -4975,6 +5335,22 @@ addPage({
   prefix: '../', body: searchBody(), extraScript: SEARCH_SCRIPT,
 });
 
+addPage({
+  file: 'components/error-summary.html', url: 'components/error-summary.html', title: 'Error summary',
+  section: 'Components', sectionId: 'components', activeHref: 'components/error-summary.html',
+  prefix: '../', body: errorSummaryBody(),
+});
+addPage({
+  file: 'components/avatar.html', url: 'components/avatar.html', title: 'Avatar',
+  section: 'Components', sectionId: 'components', activeHref: 'components/avatar.html',
+  prefix: '../', body: avatarBody(),
+});
+addPage({
+  file: 'components/notification-banner.html', url: 'components/notification-banner.html',
+  title: 'Notification banner',
+  section: 'Components', sectionId: 'components', activeHref: 'components/notification-banner.html',
+  prefix: '../', body: notificationBannerBody(),
+});
 addPage({
   file: 'components/inset-text.html', url: 'components/inset-text.html', title: 'Inset text',
   section: 'Components', sectionId: 'components', activeHref: 'components/inset-text.html',

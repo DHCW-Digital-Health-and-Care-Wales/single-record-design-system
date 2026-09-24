@@ -267,8 +267,8 @@ The `Single Record` Figma collection exposes these with **Light** and **Dark** m
 
 | Token | Light | Light hex | Dark | Dark hex | Meaning |
 |---|---|---|---|---|---|
-| `sr.color.status.critical` | `color.red.600` | `#D5281B` | `color.red.100` | `#FCDBD9` | Failed, invalid, critical |
-| `sr.color.status.critical-surface` | `color.red.100` | `#FCDBD9` | `color.blue.900` | `#1E3050` | Critical background |
+| `sr.color.status.error` | `color.red.600` | `#D5281B` | `color.red.100` | `#FCDBD9` | Failed, invalid, critical |
+| `sr.color.status.error-surface` | `color.red.100` | `#FCDBD9` | `color.blue.900` | `#1E3050` | Critical background |
 | `sr.color.status.success` | `color.green.600` | `#007F3B` | `color.green.100` | `#D9EFE5` | Completed, confirmed |
 | `sr.color.status.success-surface` | `color.green.100` | `#D9EFE5` | `color.navy.900` | `#1B294A` | Success background |
 | `sr.color.status.warning` | `color.yellow.500` | `#F8CA4D` | `color.yellow.500` | `#F8CA4D` | Requires attention |
@@ -660,7 +660,7 @@ A 24px target satisfies AA only if no other target is within 24px. A 32px button
 | `sr.icon.color.subtle`      | `sr.color.text.secondary`       | Subdued / secondary icons |
 | `sr.icon.color.inverse`     | `sr.color.text.inverse`         | Icons on dark/coloured surfaces |
 | `sr.icon.color.interactive` | `sr.color.interactive.primary`  | Clickable icons |
-| `sr.icon.color.critical`    | `sr.color.status.critical`      | Critical / error |
+| `sr.icon.color.critical`    | `sr.color.status.error`      | Critical / error |
 | `sr.icon.color.warning`     | `sr.color.status.warning`       | Warning |
 | `sr.icon.color.success`     | `sr.color.status.success`       | Success |
 | `sr.icon.color.info`        | `sr.color.status.info`          | Informational |
@@ -989,7 +989,7 @@ Error: Date of birth must be in the past
 
 - Shown between the label/hint and the input
 - Red left border on the field container
-- Text in `sr.color.status.critical`, prefixed with visually-hidden "Error:" for screen readers
+- Text in `sr.color.status.error`, prefixed with visually-hidden "Error:" for screen readers
 - Associated with field via `aria-describedby`
 
 ### When to Validate
@@ -1187,8 +1187,8 @@ Adopt Lucide Icons as the SR icon library (ISC licence, 24×24px grid, 2px strok
 
 | Figma Variable | Token | Light alias | Dark alias |
 |---|---|---|---|
-| `SR/Status/Critical` | `sr.color.status.critical` | `color.red.600` | `color.red.100` |
-| `SR/Status/Critical Surface` | `sr.color.status.critical-surface` | `color.red.100` | `color.blue.900` |
+| `SR/Status/Error` | `sr.color.status.error` | `color.red.600` | `color.red.100` |
+| `SR/Status/Error Surface` | `sr.color.status.error-surface` | `color.red.100` | `color.blue.900` |
 | `SR/Status/Success` | `sr.color.status.success` | `color.green.600` | `color.green.100` |
 | `SR/Status/Success Surface` | `sr.color.status.success-surface` | `color.green.100` | `color.navy.900` |
 | `SR/Status/Warning` | `sr.color.status.warning` | `color.yellow.500` | `color.yellow.500` |
