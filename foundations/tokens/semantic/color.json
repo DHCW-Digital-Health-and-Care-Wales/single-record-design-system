@@ -38,7 +38,8 @@
         "accent": { "$type": "color", "$value": "{color.cyan.700}", "$description": "Decorative accent only. Borders, icon strokes, chart accents, tab indicators. Never use as a filled surface with text on top." }
       },
       "status": {
-        "error":            { "$type": "color", "$value": "{color.red.700}", "$description": "Red/700 (#B32014) — raised from Red/600 for AA contrast on light status surfaces and text. Canonical name since DDR-034: this is what an invalid form field uses, and a mistyped NHS number is not a critical event." },
+        "error":            { "$type": "color", "$value": "{color.red.700}", "$description": "Red/700 (#B32014). The error colour FOR USE ON status.error-surface — a banner, a tag, a pill. That surface stays light in both modes, so this stops at Red/700 in both. On a surface that flips with the mode, use status.error-on-page (DDR-035)." },
+        "error-on-page":    { "$type": "color", "$value": "{color.red.700}", "$description": "The error colour for use on the app's OWN surfaces — the page, a card, a form control — which flip with the mode. Red/700 here, Red/300 in dark. Field error text, invalid control borders, the error summary and the destructive link all use this. Red/700 on the dark page is 2.14:1 (DDR-035)." },
         "error-surface":    { "$type": "color", "$value": "{color.red.50}", "$description": "Red/50 (#FEF3F2) — lightened from Red/100 so Status/Error text on it reaches 6.16:1 (was 5.19:1)." },
         "critical":         { "$type": "color", "$value": "{sr.color.status.error}", "$description": "DEPRECATED (DDR-034) — alias of status.error, kept so --sr-color-status-critical keeps working for existing consumers. Removed at the next major. Use status.error." },
         "critical-surface": { "$type": "color", "$value": "{sr.color.status.error-surface}", "$description": "DEPRECATED (DDR-034) — alias of status.error-surface. Removed at the next major. Use status.error-surface." },

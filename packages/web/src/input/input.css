@@ -35,7 +35,7 @@
   color: var(--sr-color-text-primary);
 }
 .sr-input__required {
-  color: var(--sr-color-status-error);
+  color: var(--sr-color-status-error-on-page);
 }
 
 .sr-input__hint {
@@ -125,13 +125,13 @@ textarea.sr-input__control {
 
 /* ---------- Error ---------- */
 .sr-input--error .sr-input__field {
-  border-color: var(--sr-color-status-error);
-  box-shadow: inset 0 0 0 1px var(--sr-color-status-error);
+  border-color: var(--sr-color-status-error-on-page);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-error-on-page);
 }
 .sr-input__error {
   font: var(--sr-type-caption-font);
   letter-spacing: var(--sr-type-caption-letter-spacing);
-  color: var(--sr-color-status-error);
+  color: var(--sr-color-status-error-on-page);
 }
 
 /* ---------- Disabled ---------- */

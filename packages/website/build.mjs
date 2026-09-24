@@ -546,6 +546,7 @@ const SECTIONS = [
       { href: 'components/breadcrumbs.html', label: 'Breadcrumbs' },
       { href: 'components/button.html', label: 'Buttons' },
       { href: 'components/checkbox.html', label: 'Checkbox' },
+      { href: 'components/error-summary.html', label: 'Error summary' },
       { href: 'components/footer.html', label: 'Footer' },
       { href: 'components/header.html', label: 'Header' },
       { href: 'components/input.html', label: 'Input' },
@@ -567,9 +568,8 @@ const SECTIONS = [
     // Patterns behaves like Components: the nav entry opens the first pattern
     // directly. No overview page — with one pattern it was a card pointing at
     // the only sibling in the sidebar.
-    id: 'patterns', label: 'Patterns', href: 'patterns/error-summary.html',
+    id: 'patterns', label: 'Patterns', href: 'patterns/patient-banner.html',
     side: [
-      { href: 'patterns/error-summary.html', label: 'Error summary' },
       { href: 'patterns/patient-banner.html', label: 'Patient Banner' },
     ],
   },
@@ -3232,7 +3232,7 @@ ${renderMarkdown(md)}
  * made this pattern worth building.
  */
 function errorSummaryBody() {
-  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'patterns', 'error-summary', 'guidelines.md'), 'utf8')));
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'error-summary', 'guidelines.md'), 'utf8')));
 
   const summary = `<div class="sr-error-summary" role="alert" tabindex="-1">
   <div class="sr-error-summary__header">
@@ -3270,7 +3270,7 @@ function errorSummaryBody() {
   };
 
   return `
-<p class="breadcrumbs"><a href="../patterns/patient-banner.html">Patterns</a> / Error summary</p>
+<p class="breadcrumbs"><a href="../components/breadcrumbs.html">Components</a> / Error summary</p>
 <h1>Error summary</h1>
 <p class="lede">The box at the top of a form listing every error, each one a link that moves focus
 into the field it names.</p>
@@ -5336,8 +5336,8 @@ addPage({
 });
 
 addPage({
-  file: 'patterns/error-summary.html', url: 'patterns/error-summary.html', title: 'Error summary',
-  section: 'Patterns', sectionId: 'patterns', activeHref: 'patterns/error-summary.html',
+  file: 'components/error-summary.html', url: 'components/error-summary.html', title: 'Error summary',
+  section: 'Components', sectionId: 'components', activeHref: 'components/error-summary.html',
   prefix: '../', body: errorSummaryBody(),
 });
 addPage({

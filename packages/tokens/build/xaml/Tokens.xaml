@@ -108,6 +108,7 @@
     <Color x:Key="SrColorBorderDisabled">#9ea1af</Color>
     <Color x:Key="SrColorBrandAccent">#12a3c9</Color>
     <Color x:Key="SrColorStatusError">#b32014</Color>
+    <Color x:Key="SrColorStatusErrorOnPage">#b32014</Color>
     <Color x:Key="SrColorStatusErrorSurface">#fef3f2</Color>
     <Color x:Key="SrColorStatusCritical">#b32014</Color>
     <Color x:Key="SrColorStatusCriticalSurface">#fef3f2</Color>

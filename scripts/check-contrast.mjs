@@ -108,12 +108,20 @@ const PAIRS = [
     'Error summary heading on the page (error-summary.css)'],
   ['sr-color-interactive-link', 'sr-color-surface-background', 4.5,
     'Error summary links on the page (error-summary.css)'],
-  ['sr-color-status-error', 'sr-color-surface-background', 3,
-    'Error summary border and icon against the page (error-summary.css)', 'light'],
-  // Dark only: the [data-theme="dark"] override in error-summary.css steps up
-  // the red ramp, because no dark-safe red SEMANTIC token exists yet.
-  ['color-red-400', 'sr-color-surface-background', 3,
-    'Error summary border and icon against the dark page (error-summary.css)', 'dark'],
+  ['sr-color-status-error-on-page', 'sr-color-surface-background', 3,
+    'Error summary border and icon against the page (error-summary.css)'],
+
+  // --- status/error-on-page, in BOTH modes. This is the token DDR-035 added,
+  //     and these four pairs are the reason it exists: every one of them was
+  //     failing in dark mode on status/error (2.14:1 / 1.97:1) before it. ---
+  ['sr-color-status-error-on-page', 'sr-color-surface-background', 4.5,
+    'Field error text on the page (input, select, search, date, checkbox)'],
+  ['sr-color-status-error-on-page', 'sr-color-surface-section-cards', 4.5,
+    'Field error text on a card (input, select, search, date, checkbox)'],
+  ['sr-color-status-error-on-page', 'sr-color-surface-background', 3,
+    'Invalid control border on the page (input.css, select.css, search.css)'],
+  ['sr-color-status-error-on-page', 'sr-color-surface-section-cards', 3,
+    'Invalid control border on a card (input.css, select.css, search.css)'],
 
   // --- Notification banner. The status/* on status/*-surface pairs already
   //     asserted above cover its information, success and error text. Warning
@@ -210,8 +218,11 @@ const PAIRS = [
     'Link on a card (link.css)'],
   // Light only. The dark case is a real defect with no signed-off fix, so it is
   // an OPEN FINDING below rather than an assertion that reds the build every run.
-  ['sr-color-interactive-destructive', 'sr-color-surface-background', 4.5,
-    'Destructive link on the page (link.css)', 'light'],
+  // Closed by DDR-035: the destructive link moved off interactive/destructive
+  // (a FILL colour, 2.84:1 as text on the dark page) onto status/error-on-page,
+  // so it is now an ordinary assertion in both modes rather than an open finding.
+  ['sr-color-status-error-on-page', 'sr-color-surface-background', 4.5,
+    'Destructive link on the page (link.css)'],
 
   // --- Inset text. The surface is the whole component, so both pairs on it are
   //     load-bearing: the prose against it, and the bar that sets it apart.
@@ -245,19 +256,7 @@ const KNOWN = [
       + 'carries a text label rather than standing alone, so the pair is never load-'
       + 'bearing. Recorded on the Icons page.',
   },
-  {
-    fg: 'sr-color-interactive-destructive', bg: 'sr-color-surface-background', min: 4.5, mode: 'dark',
-    status: 'open',
-    note: 'A destructive LINK is red text; interactive/destructive is a fill colour '
-      + '(white sits on it) and is unchanged across modes, so on the dark page it is '
-      + '2.84:1. Light passes at 4.64:1. No red in the ramp is dark-safe as text: '
-      + 'status/error is 2.14:1 there. Options: (a) a new semantic '
-      + 'interactive/destructive-on-dark stepping to a light red, (b) drop the '
-      + 'destructive link type and require a Button for destructive flows, which is '
-      + 'what GDS and NHS England do. Design lead decides; colour changes need '
-      + 'sign-off (CLAUDE.md). Until then the destructive link is light-mode only '
-      + 'and link.css says so.',
-  },
+  
 ];
 
 function value(name, mode) {

@@ -130,7 +130,8 @@
   --sr-color-border-focus: #0d8bad; /** Focus ring — Cyan/800 in both modes (DDR-025, amending DDR-006). Cyan/700 was 2.95:1 on a card and 2.71:1 on the page, under the 3:1 SC 1.4.11 requires. Cyan/800 is the only stop clearing 3:1 in both modes: darker stops fix light mode and fail dark, where surfaces are navy. */
   --sr-color-border-disabled: #9ea1af;
   --sr-color-brand-accent: #12a3c9; /** Decorative accent only. Borders, icon strokes, chart accents, tab indicators. Never use as a filled surface with text on top. */
-  --sr-color-status-error: #b32014; /** Red/700 (#B32014) — raised from Red/600 for AA contrast on light status surfaces and text. Canonical name since DDR-034: this is what an invalid form field uses, and a mistyped NHS number is not a critical event. */
+  --sr-color-status-error: #b32014; /** Red/700 (#B32014). The error colour FOR USE ON status.error-surface — a banner, a tag, a pill. That surface stays light in both modes, so this stops at Red/700 in both. On a surface that flips with the mode, use status.error-on-page (DDR-035). */
+  --sr-color-status-error-on-page: #b32014; /** The error colour for use on the app's OWN surfaces — the page, a card, a form control — which flip with the mode. Red/700 here, Red/300 in dark. Field error text, invalid control borders, the error summary and the destructive link all use this. Red/700 on the dark page is 2.14:1 (DDR-035). */
   --sr-color-status-error-surface: #fef3f2; /** Red/50 (#FEF3F2) — lightened from Red/100 so Status/Error text on it reaches 6.16:1 (was 5.19:1). */
   --sr-color-status-critical: #b32014; /** DEPRECATED (DDR-034) — alias of status.error, kept so --sr-color-status-critical keeps working for existing consumers. Removed at the next major. Use status.error. */
   --sr-color-status-critical-surface: #fef3f2; /** DEPRECATED (DDR-034) — alias of status.error-surface. Removed at the next major. Use status.error-surface. */
@@ -991,7 +992,7 @@
   color: var(--sr-color-text-primary);
 }
 .sr-checkbox-group__required {
-  color: var(--sr-color-status-error);
+  color: var(--sr-color-status-error-on-page);
 }
 
 .sr-checkbox-group__hint {
@@ -1006,7 +1007,7 @@
   gap: var(--space-1);
   font: var(--sr-type-caption-font);
   letter-spacing: var(--sr-type-caption-letter-spacing);
-  color: var(--sr-color-status-error);
+  color: var(--sr-color-status-error-on-page);
 }
 .sr-checkbox-group__error-icon {
   display: inline-flex;
@@ -1018,7 +1019,7 @@
 
 /* Error group gains the inset rule, matching the Figma error variants. */
 .sr-checkbox-group--error {
-  border-left: var(--border-width-2) solid var(--sr-color-status-error);
+  border-left: var(--border-width-2) solid var(--sr-color-status-error-on-page);
   padding-left: var(--space-3);
 }
 
@@ -1221,7 +1222,7 @@
   color: var(--sr-color-text-primary);
 }
 .sr-date-input__required {
-  color: var(--sr-color-status-error);
+  color: var(--sr-color-status-error-on-page);
 }
 
 .sr-date-input__hint {
@@ -1277,13 +1278,13 @@
 
 /* ---------- Error ---------- */
 .sr-date-input--error .sr-date-input__field {
-  border-color: var(--sr-color-status-error);
-  box-shadow: inset 0 0 0 1px var(--sr-color-status-error);
+  border-color: var(--sr-color-status-error-on-page);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-error-on-page);
 }
 .sr-date-input__error {
   font: var(--sr-type-caption-font);
   letter-spacing: var(--sr-type-caption-letter-spacing);
-  color: var(--sr-color-status-error);
+  color: var(--sr-color-status-error-on-page);
 }
 
 /* ---------- Disabled ---------- */
@@ -1337,8 +1338,8 @@
   box-shadow: inset 0 0 0 1px var(--sr-color-border-focus);
 }
 .sr-datepicker--error .sr-datepicker__field {
-  border-color: var(--sr-color-status-error);
-  box-shadow: inset 0 0 0 1px var(--sr-color-status-error);
+  border-color: var(--sr-color-status-error-on-page);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-error-on-page);
 }
 .sr-datepicker__input {
   flex: 1 1 0;
@@ -1509,15 +1510,18 @@
  *    surfaces stay light in dark mode, which is why the banner's text takes the
  *    severity colour instead. See notification-banner.css.)
  *
- * The links take `interactive/link` rather than `status.error` for the same
- * reason: `status.error` is a dark red, fine on a light status tint but 2.14:1
- * on the dark page. `interactive/link` is specified for links on the page and
- * clears AA in both modes. The error-ness is carried by the heading, the icon
- * and the border — never by the link colour alone.
+ * The links take `interactive/link` rather than an error red: they are links,
+ * and the error-ness is carried by the heading, the icon and the border. Never
+ * by the link colour alone.
+ *
+ * The border and icon use `status/error-on-page`, which is Red/700 in light and
+ * Red/300 in dark (DDR-035). This file used to carry a [data-theme="dark"]
+ * override stepping up the ramp by hand; the token does it now, and every other
+ * error mark on a mode-flipping surface moved with it.
  */
 
 .sr-error-summary {
-  border: var(--border-width-2) solid var(--sr-color-status-error);
+  border: var(--border-width-2) solid var(--sr-color-status-error-on-page);
   border-radius: var(--radius-md);
   padding: var(--space-4);
   margin-bottom: var(--space-6);
@@ -1541,7 +1545,7 @@
   flex: 0 0 auto;
   width: 24px;
   height: 24px;
-  color: var(--sr-color-status-error);
+  color: var(--sr-color-status-error-on-page);
 }
 
 .sr-error-summary__title {
@@ -1575,27 +1579,6 @@
 .sr-error-summary__link:focus-visible {
   outline: var(--border-width-2) solid var(--sr-color-border-focus);
   outline-offset: 2px;
-}
-
-/* ---------- Dark mode ----------
- * `status/error` is Red/700 — correct on a light surface and 2.14:1 on the dark
- * page, which is under the 3:1 SC 1.4.11 wants for a non-text boundary. The
- * system has no dark-safe red semantic token; that is a known open finding,
- * shared with the destructive link.
- *
- * Rather than ride that finding, the boundary and the mark step up the ramp in
- * dark only — the same move `tags.css` makes with Yellow/700, and scoped with
- * [data-theme="dark"] as `stat-card.css` does.
- *
- * The heading and the links do NOT need an override: they sit on the page
- * surface, which flips with the mode, so text/primary and interactive/link are
- * already correct in both. That is the whole reason this pattern is not tinted.
- */
-[data-theme="dark"] .sr-error-summary {
-  border-color: var(--color-red-400);
-}
-[data-theme="dark"] .sr-error-summary__icon {
-  color: var(--color-red-400);
 }
 
 /* ═══ footer ══════════════════════════════════════════════════════ */
@@ -2046,7 +2029,7 @@
   color: var(--sr-color-text-primary);
 }
 .sr-input__required {
-  color: var(--sr-color-status-error);
+  color: var(--sr-color-status-error-on-page);
 }
 
 .sr-input__hint {
@@ -2136,13 +2119,13 @@ textarea.sr-input__control {
 
 /* ---------- Error ---------- */
 .sr-input--error .sr-input__field {
-  border-color: var(--sr-color-status-error);
-  box-shadow: inset 0 0 0 1px var(--sr-color-status-error);
+  border-color: var(--sr-color-status-error-on-page);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-error-on-page);
 }
 .sr-input__error {
   font: var(--sr-type-caption-font);
   letter-spacing: var(--sr-type-caption-letter-spacing);
-  color: var(--sr-color-status-error);
+  color: var(--sr-color-status-error-on-page);
 }
 
 /* ---------- Disabled ---------- */
@@ -2307,12 +2290,14 @@ textarea.sr-input__control {
 /* ---------- Type ---------- */
 /* Leads to a destructive flow — "Remove patient", "Delete draft". Pair with a
    confirmation step; the link opens the flow, it does not perform the act.
-   DARK MODE: interactive/destructive is a FILL colour (white sits on it) and is
-   2.84:1 as text on the dark page. Recorded as an open finding in
-   scripts/check-contrast.mjs — it needs a dark-safe red before a destructive
-   link is used on a dark surface. */
+
+   It takes status/error-on-page, not interactive/destructive. The latter is a
+   FILL colour — white sits on it — and was 2.84:1 as text on the dark page, an
+   open finding from 2026-09 that this closes. A destructive LINK is red text on
+   the app's own surface, which is exactly what the on-page token is for
+   (DDR-035). */
 .sr-link--destructive {
-  color: var(--sr-color-interactive-destructive);
+  color: var(--sr-color-status-error-on-page);
 }
 
 /* ---------- Sizes ----------
@@ -3203,7 +3188,7 @@ textarea.sr-input__control {
 }
 /* The reaction itself is the clinically significant part — emphasised. */
 .sr-patient-banner__alert-value {
-  color: var(--sr-color-status-error);
+  color: var(--sr-color-status-error-on-page);
 }
 
 /* Reactions card */
@@ -3211,7 +3196,7 @@ textarea.sr-input__control {
   background-color: var(--color-red-50);
 }
 .sr-patient-banner__alert--reactions .sr-patient-banner__alert-text {
-  color: var(--sr-color-status-error);
+  color: var(--sr-color-status-error-on-page);
 }
 
 /* Warnings card */
@@ -3225,7 +3210,7 @@ textarea.sr-input__control {
 /* Type=Border — white card, coloured rule instead of a tint. */
 .sr-patient-banner--border .sr-patient-banner__alert {
   background-color: var(--sr-color-surface-section-cards);
-  border-color: var(--sr-color-status-error);
+  border-color: var(--sr-color-status-error-on-page);
 }
 
 /* ---------- Identity ---------- */
@@ -3324,7 +3309,7 @@ textarea.sr-input__control {
 /* Deceased date is the one demographic that carries clinical weight. */
 .sr-patient-banner__field--deceased dt,
 .sr-patient-banner__field--deceased dd {
-  color: var(--sr-color-status-error);
+  color: var(--sr-color-status-error-on-page);
 }
 
 .sr-patient-banner__copy {
@@ -3397,7 +3382,7 @@ textarea.sr-input__control {
   letter-spacing: var(--sr-type-body-s-letter-spacing);
   white-space: nowrap;
 }
-.sr-patient-banner__pill--reactions { color: var(--sr-color-status-error); }
+.sr-patient-banner__pill--reactions { color: var(--sr-color-status-error-on-page); }
 .sr-patient-banner__pill--warnings { color: var(--color-yellow-700); }
 
 /* Collapsing changes how much detail is shown, not which type the banner is.
@@ -3850,7 +3835,7 @@ textarea.sr-input__control {
   color: var(--sr-color-text-primary);
 }
 .sr-search__required {
-  color: var(--sr-color-status-error);
+  color: var(--sr-color-status-error-on-page);
 }
 
 .sr-search__hint {
@@ -4093,12 +4078,12 @@ textarea.sr-input__control {
 
 /* ---------- Error ---------- */
 .sr-search--error .sr-search__field {
-  border-color: var(--sr-color-status-error);
-  box-shadow: inset 0 0 0 1px var(--sr-color-status-error);
+  border-color: var(--sr-color-status-error-on-page);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-error-on-page);
 }
 .sr-search--error .sr-search__field:focus-within {
   box-shadow:
-    inset 0 0 0 1px var(--sr-color-status-error),
+    inset 0 0 0 1px var(--sr-color-status-error-on-page),
     0 0 0 3px var(--sr-color-border-focus);
 }
 /* Icon as well as colour, so the error is not carried by the border alone. */
@@ -4108,7 +4093,7 @@ textarea.sr-input__control {
   gap: var(--space-1);
   font: var(--sr-type-caption-font);
   letter-spacing: var(--sr-type-caption-letter-spacing);
-  color: var(--sr-color-status-error);
+  color: var(--sr-color-status-error-on-page);
 }
 .sr-search__error-icon {
   display: inline-flex;
@@ -4269,7 +4254,7 @@ textarea.sr-input__control {
   color: var(--sr-color-text-primary);
 }
 .sr-select__required {
-  color: var(--sr-color-status-error);
+  color: var(--sr-color-status-error-on-page);
 }
 
 .sr-select__hint {
@@ -4395,12 +4380,12 @@ textarea.sr-input__control {
 
 /* ---------- Error ---------- */
 .sr-select--error .sr-select__trigger {
-  border-color: var(--sr-color-status-error);
-  box-shadow: inset 0 0 0 1px var(--sr-color-status-error);
+  border-color: var(--sr-color-status-error-on-page);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-error-on-page);
 }
 .sr-select--error .sr-select__trigger:focus-visible,
 .sr-select--error .sr-select__trigger[aria-expanded="true"] {
-  box-shadow: inset 0 0 0 1px var(--sr-color-status-error), 0 0 0 3px var(--sr-color-border-focus);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-error-on-page), 0 0 0 3px var(--sr-color-border-focus);
 }
 .sr-select__error {
   display: inline-flex;
@@ -4408,7 +4393,7 @@ textarea.sr-input__control {
   gap: var(--space-1);
   font: var(--sr-type-caption-font);
   letter-spacing: var(--sr-type-caption-letter-spacing);
-  color: var(--sr-color-status-error);
+  color: var(--sr-color-status-error-on-page);
 }
 .sr-select__error-icon {
   display: inline-flex;
@@ -4502,7 +4487,7 @@ textarea.sr-input__control {
    does not replace them. See the guidelines. */
 .sr-stat-card--accent-primary { border-left-color: var(--sr-color-interactive-primary); }
 .sr-stat-card--accent-warning { border-left-color: var(--sr-color-status-warning); }
-.sr-stat-card--accent-critical { border-left-color: var(--sr-color-status-error); }
+.sr-stat-card--accent-critical { border-left-color: var(--sr-color-status-error-on-page); }
 
 /* ---------- Content ----------
    Rows are explicit rather than auto-placed, so a layout modifier can move the
@@ -4699,7 +4684,7 @@ textarea.sr-input__control {
 .sr-status-indicator--lg { width: 24px; height: 24px; }
 
 .sr-status-indicator--success { color: var(--sr-color-status-success); }
-.sr-status-indicator--error { color: var(--sr-color-status-error); }
+.sr-status-indicator--error { color: var(--sr-color-status-error-on-page); }
 .sr-status-indicator--warning { color: var(--sr-color-status-warning); }
 
 /* "No status recorded" — the dash the Figma page draws as its fourth mark,
@@ -5548,8 +5533,8 @@ td.sr-table__select {
   box-shadow: inset 0 0 0 1px var(--sr-color-border-focus);
 }
 .sr-time-select--error .sr-time-select__control {
-  border-color: var(--sr-color-status-error);
-  box-shadow: inset 0 0 0 1px var(--sr-color-status-error);
+  border-color: var(--sr-color-status-error-on-page);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-error-on-page);
 }
 .sr-time-select__control:disabled {
   background-color: var(--sr-color-surface-subtle);

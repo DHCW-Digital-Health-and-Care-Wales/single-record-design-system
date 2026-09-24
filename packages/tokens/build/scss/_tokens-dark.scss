@@ -106,7 +106,8 @@ $sr-color-border-strong: #9ea1af; // High-contrast borders on dark surfaces.
 $sr-color-border-focus: #0d8bad; // Focus ring — Cyan/800 in both modes (DDR-025, amending DDR-006). Same primitive as light mode. Dark mode is why the stop is 800 and not darker: on navy.900 Cyan/800 is 3.63:1 while Cyan/850 is 2.95:1.
 $sr-color-border-disabled: #9ea1af;
 $sr-color-brand-accent: #12a3c9; // Same primitive as light mode — cyan-700 used purely for visual interest, not as a surface requiring text.
-$sr-color-status-error: #b32014; // Red/700 — matched to light mode; status surfaces stay light in dark mode, so the darker red keeps AA contrast.
+$sr-color-status-error: #b32014; // Red/700 — matched to light mode, because status.error-surface stays light in dark mode and the darker red is what reads on it.
+$sr-color-status-error-on-page: #f48b85; // Red/300 (#F48B85) — the dark-mode step for error on the app's own surfaces. 6.07:1 on the page and 5.57:1 on a card, against Red/700's 2.14:1 and 1.97:1. Red/400 was measured too and misses AA text at 4.31:1 / 3.95:1 (DDR-035).
 $sr-color-status-error-surface: #fef3f2; // Light status surface kept across modes — banners switch to light fills in dark mode for legibility against the bright status colour. Tracks light mode's move from Red/100 to Red/50.
 $sr-color-status-critical: #b32014; // DEPRECATED (DDR-034) — alias of status.error. Removed at the next major.
 $sr-color-status-critical-surface: #fef3f2; // DEPRECATED (DDR-034) — alias of status.error-surface. Removed at the next major.

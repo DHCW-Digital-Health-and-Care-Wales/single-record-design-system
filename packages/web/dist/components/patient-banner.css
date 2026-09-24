@@ -96,7 +96,7 @@
 }
 /* The reaction itself is the clinically significant part — emphasised. */
 .sr-patient-banner__alert-value {
-  color: var(--sr-color-status-error);
+  color: var(--sr-color-status-error-on-page);
 }
 
 /* Reactions card */
@@ -104,7 +104,7 @@
   background-color: var(--color-red-50);
 }
 .sr-patient-banner__alert--reactions .sr-patient-banner__alert-text {
-  color: var(--sr-color-status-error);
+  color: var(--sr-color-status-error-on-page);
 }
 
 /* Warnings card */
@@ -118,7 +118,7 @@
 /* Type=Border — white card, coloured rule instead of a tint. */
 .sr-patient-banner--border .sr-patient-banner__alert {
   background-color: var(--sr-color-surface-section-cards);
-  border-color: var(--sr-color-status-error);
+  border-color: var(--sr-color-status-error-on-page);
 }
 
 /* ---------- Identity ---------- */
@@ -217,7 +217,7 @@
 /* Deceased date is the one demographic that carries clinical weight. */
 .sr-patient-banner__field--deceased dt,
 .sr-patient-banner__field--deceased dd {
-  color: var(--sr-color-status-error);
+  color: var(--sr-color-status-error-on-page);
 }
 
 .sr-patient-banner__copy {
@@ -290,7 +290,7 @@
   letter-spacing: var(--sr-type-body-s-letter-spacing);
   white-space: nowrap;
 }
-.sr-patient-banner__pill--reactions { color: var(--sr-color-status-error); }
+.sr-patient-banner__pill--reactions { color: var(--sr-color-status-error-on-page); }
 .sr-patient-banner__pill--warnings { color: var(--color-yellow-700); }
 
 /* Collapsing changes how much detail is shown, not which type the banner is.

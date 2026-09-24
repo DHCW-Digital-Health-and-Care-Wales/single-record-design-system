@@ -5,14 +5,32 @@
 
 | | |
 |---|---|
-| **Type** | Pattern |
-| **Status** | In review |
+| **Type** | Component |
+| **Status** | In review — reclassified from Pattern to Component, DDR-035 |
 | **Reference** | `packages/web/src/error-summary/error-summary.css` · `packages/react/src/error-summary/ErrorSummary.jsx` |
 | **Figma** | Errors page (`1438:2087`) |
 | **Related standards** | GDS "Error summary" · NHS England "Error summary" · WCAG 2.2 AA (SC 3.3.1, 2.4.3, 1.4.11) |
 | **Last updated** | 2026-09 |
 
 ---
+
+## Why this is a component
+
+DDR-032 first called it a pattern, because it composes Link, the form-field
+message anatomy and focus management. By that test the
+[modal](../modal/guidelines.md) is a pattern too — it composes Button and Icon
+— and so is the [notification banner](../notification-banner/guidelines.md).
+Both are components.
+
+What actually separates the two here: **it has one fixed anatomy, it is
+instantiated on its own, and its behaviour has to be identical everywhere or it
+is wrong.** A component guarantees that; a pattern is a shape you reassemble,
+and a reassembled error summary is one that quietly drops the focus management.
+Reclassified in DDR-035.
+
+The *usage* guidance — when to validate, how the two layers work together —
+stays a pattern, in
+[form validation](../../patterns/forms/form-validation.md).
 
 ## When to use
 
@@ -31,7 +49,7 @@
   view — a summary above it is just a second copy.
 - **For anything that is not a validation error.** A save that failed because
   the connection dropped is an event, and events are a
-  [notification banner](../../components/notification-banner/guidelines.md).
+  [notification banner](../notification-banner/guidelines.md).
 
 ## It is not a notification banner
 
@@ -99,10 +117,10 @@ box and then misses one of these:
 
 ## Related
 
-- [Form validation](../forms/form-validation.md) — the two-layer rule this sits in
-- [Form fields](../../components/form-fields.md) — the inline message anatomy
-- [Notification banner](../../components/notification-banner/guidelines.md) — for an event
-- [Link](../../components/link/guidelines.md) — what each item is
+- [Form validation](../../patterns/forms/form-validation.md) — the two-layer rule this sits in
+- [Form fields](../form-fields.md) — the inline message anatomy
+- [Notification banner](../notification-banner/guidelines.md) — for an event
+- [Link](../link/guidelines.md) — what each item is
 
 ## Engineering
 

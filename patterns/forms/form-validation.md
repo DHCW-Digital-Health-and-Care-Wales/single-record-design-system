@@ -1,6 +1,6 @@
 # Pattern: Form Validation
 
-**Status:** In review — the error summary now ships; see [error-summary](../error-summary/guidelines.md)
+**Status:** In review — the error summary now ships; see [error summary](../../components/error-summary/guidelines.md)
 **Last updated:** 2026-09
 
 ---
@@ -33,7 +33,7 @@ Displayed at the top of the form, immediately after a failed submission attempt.
 
 **What it is built from:** `.sr-error-summary` / `ErrorSummary`, plus a list of
 real links. It is **not** a notification banner — see
-[error-summary](../error-summary/guidelines.md) for the boundary and why the
+[error summary](../../components/error-summary/guidelines.md) for the boundary and why the
 surface is untinted.
 
 ```
@@ -112,7 +112,7 @@ Do not validate empty required fields on blur — only on submission. This preve
 
 ## Related
 
-- [`patterns/error-summary/guidelines.md`](../error-summary/guidelines.md)
+- [`components/error-summary/guidelines.md`](../../components/error-summary/guidelines.md)
 - [`components/form-fields.md`](../../components/form-fields.md)
 - [`components/notification-banner/guidelines.md`](../../components/notification-banner/guidelines.md) — for an event, not a validation error
 - GDS: [Error summary](https://design-system.service.gov.uk/components/error-summary/)

@@ -20,15 +20,18 @@
  *    surfaces stay light in dark mode, which is why the banner's text takes the
  *    severity colour instead. See notification-banner.css.)
  *
- * The links take `interactive/link` rather than `status.error` for the same
- * reason: `status.error` is a dark red, fine on a light status tint but 2.14:1
- * on the dark page. `interactive/link` is specified for links on the page and
- * clears AA in both modes. The error-ness is carried by the heading, the icon
- * and the border — never by the link colour alone.
+ * The links take `interactive/link` rather than an error red: they are links,
+ * and the error-ness is carried by the heading, the icon and the border. Never
+ * by the link colour alone.
+ *
+ * The border and icon use `status/error-on-page`, which is Red/700 in light and
+ * Red/300 in dark (DDR-035). This file used to carry a [data-theme="dark"]
+ * override stepping up the ramp by hand; the token does it now, and every other
+ * error mark on a mode-flipping surface moved with it.
  */
 
 .sr-error-summary {
-  border: var(--border-width-2) solid var(--sr-color-status-error);
+  border: var(--border-width-2) solid var(--sr-color-status-error-on-page);
   border-radius: var(--radius-md);
   padding: var(--space-4);
   margin-bottom: var(--space-6);
@@ -52,7 +55,7 @@
   flex: 0 0 auto;
   width: 24px;
   height: 24px;
-  color: var(--sr-color-status-error);
+  color: var(--sr-color-status-error-on-page);
 }
 
 .sr-error-summary__title {
@@ -88,23 +91,3 @@
   outline-offset: 2px;
 }
 
-/* ---------- Dark mode ----------
- * `status/error` is Red/700 — correct on a light surface and 2.14:1 on the dark
- * page, which is under the 3:1 SC 1.4.11 wants for a non-text boundary. The
- * system has no dark-safe red semantic token; that is a known open finding,
- * shared with the destructive link.
- *
- * Rather than ride that finding, the boundary and the mark step up the ramp in
- * dark only — the same move `tags.css` makes with Yellow/700, and scoped with
- * [data-theme="dark"] as `stat-card.css` does.
- *
- * The heading and the links do NOT need an override: they sit on the page
- * surface, which flips with the mode, so text/primary and interactive/link are
- * already correct in both. That is the whole reason this pattern is not tinted.
- */
-[data-theme="dark"] .sr-error-summary {
-  border-color: var(--color-red-400);
-}
-[data-theme="dark"] .sr-error-summary__icon {
-  color: var(--color-red-400);
-}

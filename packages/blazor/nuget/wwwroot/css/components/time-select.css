@@ -38,8 +38,8 @@
   box-shadow: inset 0 0 0 1px var(--sr-color-border-focus);
 }
 .sr-time-select--error .sr-time-select__control {
-  border-color: var(--sr-color-status-error);
-  box-shadow: inset 0 0 0 1px var(--sr-color-status-error);
+  border-color: var(--sr-color-status-error-on-page);
+  box-shadow: inset 0 0 0 1px var(--sr-color-status-error-on-page);
 }
 .sr-time-select__control:disabled {
   background-color: var(--sr-color-surface-subtle);

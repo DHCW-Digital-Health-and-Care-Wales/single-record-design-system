@@ -64,12 +64,14 @@
 /* ---------- Type ---------- */
 /* Leads to a destructive flow — "Remove patient", "Delete draft". Pair with a
    confirmation step; the link opens the flow, it does not perform the act.
-   DARK MODE: interactive/destructive is a FILL colour (white sits on it) and is
-   2.84:1 as text on the dark page. Recorded as an open finding in
-   scripts/check-contrast.mjs — it needs a dark-safe red before a destructive
-   link is used on a dark surface. */
+
+   It takes status/error-on-page, not interactive/destructive. The latter is a
+   FILL colour — white sits on it — and was 2.84:1 as text on the dark page, an
+   open finding from 2026-09 that this closes. A destructive LINK is red text on
+   the app's own surface, which is exactly what the on-page token is for
+   (DDR-035). */
 .sr-link--destructive {
-  color: var(--sr-color-interactive-destructive);
+  color: var(--sr-color-status-error-on-page);
 }
 
 /* ---------- Sizes ----------

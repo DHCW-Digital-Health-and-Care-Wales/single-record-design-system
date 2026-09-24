@@ -66,7 +66,7 @@
    does not replace them. See the guidelines. */
 .sr-stat-card--accent-primary { border-left-color: var(--sr-color-interactive-primary); }
 .sr-stat-card--accent-warning { border-left-color: var(--sr-color-status-warning); }
-.sr-stat-card--accent-critical { border-left-color: var(--sr-color-status-error); }
+.sr-stat-card--accent-critical { border-left-color: var(--sr-color-status-error-on-page); }
 
 /* ---------- Content ----------
    Rows are explicit rather than auto-placed, so a layout modifier can move the
