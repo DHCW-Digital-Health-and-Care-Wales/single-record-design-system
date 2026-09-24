@@ -22,7 +22,7 @@ and three more were dropped, so three were imported.
 | `SrIconScheduleUrgent` | **Already ships** as `SrIconScheduleAppointment` — same Lucide `calendar-clock`, his is a slightly-off hand redraw |
 | `SrIconNavChevronsDown` / `Up` | **Dropped** — the existing single `nav/chevron-down` / `-up` serve the need |
 | `SrIconStatusMatchScore` | **Parked** — a filled full-bleed triangle is not an icon in this set. If it is needed it is a component, and what it communicates has to be settled first |
-| `SrIconThemeLight` / `Dark` / `System` | **Imported** as a new `theme/` group |
+| `SrIconThemeLight` / `Dark` / `System` | **Imported** as a new `theme/` group — `theme/dark` is the plain moon |
 
 `schedule/urgent` is a particularly good one to know about: the generator's own
 notes record that it **was** `schedule/urgent`, then briefly `schedule/priority`,
@@ -35,11 +35,22 @@ rejected for a reason.
 Three icons, and the group exists because light, dark and follow-the-OS are the
 options of one control and only mean anything together.
 
-**`theme/dark` is Lucide `moon-star`, not `moon`.** `check:icons` rejected the
-plain moon: `schedule/overnight` already holds it, and DDR-029 allows a shared
-glyph only when both readings are the same object — a clinical overnight stay
-and a dark colour theme are not. `moon-star` still reads as a moon, so the
-switcher keeps the universal convention.
+**`theme/dark` is the plain Lucide `moon`, and `schedule/overnight` is gone.**
+
+`check:icons` first rejected the plain moon, because `schedule/overnight` held
+it and DDR-029 allows a shared glyph only when both readings are the same
+object. `moon-star` was used instead. The design lead then pointed out the
+simpler resolution: **`schedule/overnight` had no use at all.** Checked before
+removing — no component, no prototype, no website page, and its only Figma
+instance was the icon preview grid documenting the set. Removed, so `theme/dark`
+takes the plain moon, which is the mark every user already recognises.
+
+If an overnight-stay icon is ever needed, **`moon-star` is free and is the
+better fit**: the star reads as "nights", not "night mode".
+
+> Worth keeping: the gate was right that a collision existed, and wrong about
+> which side should move. A check can tell you two things collide; only a person
+> can tell you which one nobody was using.
 
 `check:icons` also caught `DESIGN-SYSTEM.md` asserting "142 icons" and suggested
 the better fix itself: point at `foundations/iconography/catalogue.md`, which is
