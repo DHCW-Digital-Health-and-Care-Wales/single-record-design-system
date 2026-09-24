@@ -11,6 +11,54 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 ---
 
+## Checkpoint — 2026-09-24b (Theme icons imported; two of the eight requests already existed)
+
+The MAUI developer sent eight hand-written XAML path strings. **Two already ship**
+and three more were dropped, so three were imported.
+
+| He asked for | Outcome |
+|---|---|
+| `SrIconStatusAlert` | **Already ships** as `SrIconStatusWarning` — character-for-character identical |
+| `SrIconScheduleUrgent` | **Already ships** as `SrIconScheduleAppointment` — same Lucide `calendar-clock`, his is a slightly-off hand redraw |
+| `SrIconNavChevronsDown` / `Up` | **Dropped** — the existing single `nav/chevron-down` / `-up` serve the need |
+| `SrIconStatusMatchScore` | **Parked** — a filled full-bleed triangle is not an icon in this set. If it is needed it is a component, and what it communicates has to be settled first |
+| `SrIconThemeLight` / `Dark` / `System` | **Imported** as a new `theme/` group |
+
+`schedule/urgent` is a particularly good one to know about: the generator's own
+notes record that it **was** `schedule/urgent`, then briefly `schedule/priority`,
+and was renamed because both read as severity and collide with clinical urgency
+(`status/critical`). He has independently re-proposed a name the set already
+rejected for a reason.
+
+### The `theme/` group, and the duplicate the gate caught
+
+Three icons, and the group exists because light, dark and follow-the-OS are the
+options of one control and only mean anything together.
+
+**`theme/dark` is Lucide `moon-star`, not `moon`.** `check:icons` rejected the
+plain moon: `schedule/overnight` already holds it, and DDR-029 allows a shared
+glyph only when both readings are the same object — a clinical overnight stay
+and a dark colour theme are not. `moon-star` still reads as a moon, so the
+switcher keeps the universal convention.
+
+`check:icons` also caught `DESIGN-SYSTEM.md` asserting "142 icons" and suggested
+the better fix itself: point at `foundations/iconography/catalogue.md`, which is
+generated and cannot drift. Done — the hardcoded counts in the MAUI sections went
+too.
+
+The three exist in the Figma file as well, as components on the Icons page, so
+design and code are in step.
+
+### Still open for the mobile work
+
+- **A theme switcher is not just three icons.** Dark mode here is opt-in via
+  `data-theme` and there is no switcher component or guidance. If mobile is
+  building one, web and mobile will otherwise end up with different models of
+  what "System" means.
+- **Match score** — needs a definition before it can be anything.
+
+---
+
 ## Checkpoint — 2026-09-24 (DDR-035: a dark-safe error red; error summary is a component)
 
 ### The dark-safe red was a form-wide failure, not three workarounds

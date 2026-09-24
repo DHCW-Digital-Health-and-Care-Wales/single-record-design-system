@@ -4,7 +4,7 @@
     Source of truth: foundations/iconography/svg/ — the same SVGs the web
     icon set is built from, so the two cannot drift.
 
-    142 icons, each a 24x24 geometry drawn with stroke-width 1 and
+    145 icons, each a 24x24 geometry drawn with stroke-width 1 and
     round caps and joins. The geometry carries no colour: set Stroke from a
     token so the icon follows the theme.
 
@@ -183,5 +183,10 @@
     <x:String x:Key="SrIconStatusPending">M 2,12 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0 Z M 12 6 v 6 l 4 2</x:String>
     <x:String x:Key="SrIconStatusSuccess">M 2,12 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0 Z M 16 9 l -5.5 5.5 L 8 12</x:String>
     <x:String x:Key="SrIconStatusWarning">M 21.73 18 l -8 -14 a 2 2 0 0 0 -3.48 0 l -8 14 A 2 2 0 0 0 4 21 h 16 a 2 2 0 0 0 1.73 -3 M 12 9 v 4 M 12 17 h .01</x:String>
+
+    <!-- ── theme ───────────────────────────────────────────────────────── -->
+    <x:String x:Key="SrIconThemeDark">M 18 5 h 4 M 20 3 v 4 M 20.985 12.486 a 9 9 0 1 1 -9.473 -9.472 c .405 -.022 .617 .46 .402 .803 a 6 6 0 0 0 8.268 8.268 c .344 -.215 .825 -.004 .803 .401</x:String>
+    <x:String x:Key="SrIconThemeLight">M 8,12 a 4,4 0 1,0 8,0 a 4,4 0 1,0 -8,0 Z M 12 2 v 2 M 12 20 v 2 M 4.93 4.93 l 1.41 1.41 M 17.66 17.66 l 1.41 1.41 M 2 12 h 2 M 20 12 h 2 M 6.34 17.66 l -1.41 1.41 M 19.07 4.93 l -1.41 1.41</x:String>
+    <x:String x:Key="SrIconThemeSystem">M 4,3 H 20 A 2,2 0 0,1 22,5 V 15 A 2,2 0 0,1 20,17 H 4 A 2,2 0 0,1 2,15 V 5 A 2,2 0 0,1 4,3 Z M 8,21 L 16,21 M 12,17 L 12,21</x:String>
 
 </ResourceDictionary>

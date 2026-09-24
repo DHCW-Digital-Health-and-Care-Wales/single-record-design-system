@@ -237,6 +237,17 @@ const ICONS = [
   { domain: 'device', name: 'video',       lucide: 'video' },
   { domain: 'device', name: 'torch-on',    lucide: 'flashlight' },
   { domain: 'device', name: 'torch-off',   lucide: 'flashlight-off' },
+
+  // Theme (3)
+  // A group of exactly three, and that is the point: the options of one
+  // control. A theme switcher offers light, dark and follow-the-OS, and the
+  // three only mean anything next to each other — which is why they are not
+  // scattered across action/ and device/. Requested by the MAUI app, 2026-09.
+  { domain: 'theme', name: 'light',        lucide: 'sun' },
+  { domain: 'theme', name: 'dark',         lucide: 'moon-star',
+    note: 'moon-star, not moon — schedule/overnight already holds the plain moon, and an overnight stay and a dark theme are not the same object (DDR-029). Still reads as a moon, so the switcher keeps the convention' },
+  { domain: 'theme', name: 'system',       lucide: 'monitor',
+    note: 'follow the OS setting — a screen, not a cog, because it is about the device rather than preferences' },
 ];
 
 // ── SVG normalisation ─────────────────────────────────────────────────────────

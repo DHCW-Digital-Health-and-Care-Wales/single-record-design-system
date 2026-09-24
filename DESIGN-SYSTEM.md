@@ -582,8 +582,11 @@ The gate checks **both light and dark modes**, which is not thoroughness for its
 
 ## Iconography
 
-**142 icons across 11 domains**, from Lucide (ISC), on a 24 × 24 grid at **1px
-stroke** (DDR-023 — Lucide ships 2px; do not restore it). Every icon is
+**12 domains**, from Lucide (ISC), on a 24 × 24 grid at **1px stroke**
+(DDR-023 — Lucide ships 2px; do not restore it). The count and the full list
+live in [`foundations/iconography/catalogue.md`](foundations/iconography/catalogue.md),
+which is generated from the set and therefore cannot drift — a number written
+here can, and did. Every icon is
 `currentColor` with no baked fill, so one asset serves both modes.
 
 The catalogue is **generated**, not maintained. `foundations/iconography/fetch-icons.mjs`
@@ -740,7 +743,7 @@ The design system is **implementation-agnostic at the design level**. Tokens are
 
 **MAUI is native XAML, not Blazor Hybrid (DDR-021).** What the design system
 ships for it is a token and style layer, not a parallel component library:
-`Colors.xaml` (210 resources, generated from the tokens), `Icons.xaml` (142 icons
+`Colors.xaml` (generated from the tokens), `Icons.xaml` (every icon in the set
 as XAML path geometry, generated from the same SVGs as the web icon set), and a
 hand-authored `Styles.xaml` of implicit styles, keyed intent styles and the
 `StyleClass` type scale. All in `packages/maui`.
@@ -754,7 +757,7 @@ until `Roboto-Medium.ttf` is bundled.
 
 `packages/maui/testbed` is a MAUI app that puts the layer on a real device, with
 a diagnostics page covering theme flipping, font scale, every stock control and
-all 142 icons. Nothing in the MAUI layer has been compiled yet — it is verified
+every icon in the set. Nothing in the MAUI layer has been compiled yet — it is verified
 statically (resource resolution, icon geometry against source, no literal
 colours) and that gap is named in `packages/maui/README.md`.
 
