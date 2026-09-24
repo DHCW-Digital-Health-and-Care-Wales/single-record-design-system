@@ -11,6 +11,88 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 ---
 
+## Start here — next session
+
+1. **The remaining stale "Menu Item" usage-notes frames.** Every component page
+   that still has one is showing guidance for a Menu Item — state variants,
+   badge counts, leading icons — on a page with none of those. Each needs a
+   `guidelines.md` first; the markdown is the work, the panel is one command:
+   ```
+   node scripts/guidelines-to-figma.mjs components/<name>/guidelines.md \
+     --figma-script --page=<pageId> --replace=<staleNodeId>
+   ```
+2. **Re-base the dialog pattern frames onto `Modal`.** Pick a size per pattern
+   first — they are drawn at 400px and `Modal` offers Small 380 / Medium 480.
+   That size decision is the blocker; the rest is mechanical.
+3. **Unify `.sr-nav__item-badge` and `.sr-tabs__badge`** behind one Badge. Two
+   implementations of one mark, and `.sr-header__notification` has none.
+4. **Delete the empty Notifications page** in Figma (named `[EMPTY — delete]`).
+5. **A theme switcher**, if mobile proceeds — it is a component decision, not
+   three icons. Web and mobile will otherwise disagree about what "System"
+   means.
+6. **Match score**, if it is still wanted — it is a component, and what it
+   communicates has to be settled before anything is drawn.
+7. Status indicator's section on the Icons page; the footer in dark mode.
+
+**Before any destructive Figma edit, re-count instances yourself.** Twice this
+session a count from a previous step was wrong, and both times the guard in the
+delete script — not the plan — is what caught it.
+
+---
+
+## Session round-up — 2026-09-16 → 2026-09-24
+
+Read the dated checkpoints below for detail. This is the shape of it.
+
+### Shipped
+
+| | |
+|---|---|
+| **Notification banner** | The two Figma sets merged into one (8 variants, 3 booleans), all 15 instances re-pointed, old set deleted — then built: `.sr-notification-banner`, `NotificationBanner`, spec, guidelines, website page, Figma panel |
+| **Avatar** | Component, spec, guidelines, web + React + stories, website page, Figma panel — and a **2.95:1 WCAG failure in the Figma component fixed** |
+| **Error summary** | `.sr-error-summary`, `ErrorSummary`, guidelines, website page, Figma frame + panel. Reclassified pattern → **component** (DDR-035) |
+| **Modal** | Guidelines written, spec moved off "In development", `Dialog` set deleted and rebuilt as pattern frames, Result dialog pattern written |
+| **DDR-034** | Modal / Notifications / Error-Warning classified; the bell moved to Header; `Form field / Message` renamed |
+| **DDR-035** | `status.error-on-page` — a dark-safe error red — and the error-summary reclassification |
+| **Icons** | `theme/` group added (light, dark, system); `schedule/overnight` removed; 5 of 8 mobile requests met from the existing set |
+
+### Four gates added, each because something real got through
+
+| Gate | Caught |
+|---|---|
+| `check:css-vars` | `var(--spacing-3)` does not exist — **the notification banner shipped with no padding and no gap** |
+| Avatar + banner + summary contrast pairs | 2.95:1 initials, 1.04:1 dark-mode banner text, 2.14:1 form errors |
+| `guidelines-to-figma --figma-script` | Emits the whole panel builder, so the collapsed-text-node bug cannot recur |
+| React snippet tag scanner | A prop holding JSX hid **every attribute after it** from the check |
+
+**Every one was verified by planting the defect and confirming a non-zero exit.**
+That is the habit worth keeping: a gate nobody has seen fail is a gate nobody
+has tested.
+
+### The through-line
+
+Most of this session's findings were **not** design decisions — they were
+things that had been shipping wrong and that nothing looked at:
+
+- 26 Blazor components documented that do not exist (previous session, same shape)
+- A banner with no padding, because a token name was *nearly* right
+- Every field error in the system at 2.14:1 in dark mode
+- An avatar failing AA since it was drawn
+- A `Dialog` set contradicting its own DDR, with zero instances
+- `form-validation.md` citing two components that never existed
+
+The pattern: **the design system's own documentation and design file were
+asserting things nobody had checked.** The gates now check them. Where a check
+could not be mechanised, the entry says so.
+
+### Where the checks stand
+
+`npm run check` green. `check:contrast`: **77 pairs, 0 open findings** — the
+first time this session, after DDR-035 closed the destructive link. Website
+builds at 36 pages. 144 icons, 12 domains, 29 web components.
+
+---
+
 ## Checkpoint — 2026-09-24b (Theme icons imported; two of the eight requests already existed)
 
 The MAUI developer sent eight hand-written XAML path strings. **Two already ship**
