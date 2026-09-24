@@ -11,6 +11,68 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 ---
 
+## Checkpoint — 2026-09-24 (DDR-035: a dark-safe error red; error summary is a component)
+
+### The dark-safe red was a form-wide failure, not three workarounds
+
+Three pieces of work had each recorded their own workaround for the same wall.
+Looking properly, the problem was much wider: **every inline field error and
+every invalid control border in the system** — Input, Select, Search, Date
+input, Date picker, Time select, Checkbox — used `status.error` on a surface
+that flips with the mode. That is **2.14:1 on the dark page and 1.97:1 on a dark
+card**. No gate caught it because no pair asserted it.
+
+`status.error-on-page` — **Red/700 light, Red/300 dark** — is the fix.
+`status.error` keeps its real role: the colour for use *on* `status.error-surface`,
+which stays light in both modes.
+
+**Red/400 is the trap.** It looks like the obvious answer and misses AA text on
+both dark surfaces (4.31 / 3.95 against 4.5). Red/300 clears both (6.07 / 5.57).
+The hand-rolled `[data-theme="dark"]` override in `error-summary.css` had used
+Red/400 for a 3:1 *border* — correct there, and wrong the moment anyone reused
+it for text. That override is gone; the token does the work.
+
+`status.error` was deliberately **not** made mode-aware. `status.info`,
+`status.success` and `status.warning` are all "the colour for the matching
+`-surface`" and all mode-stable for the same reason; making one of four behave
+differently is a trap, not a fix.
+
+**34 declarations across 11 stylesheets** migrated line by line, not by pattern
+— tint-backed uses (banner, tags, the pills on `status.error-surface`) stayed
+put. Four new assertions cover error text and control borders, page and card,
+both modes, verified by re-pointing the dark value back at Red/700.
+
+**`check:contrast` now reports zero open findings**, for the first time. The
+destructive link moved off `interactive/destructive` — a FILL colour, white sits
+on it, 2.84:1 as text on the dark page — onto the new token.
+
+`Status/Error On Page` also exists as a Figma variable now, with both modes set.
+
+### The error summary is a component
+
+Reclassified from DDR-032's pattern ruling. By that ruling's own test the modal
+(Button + Icon) and the banner (Icon + Button) are patterns too, and both are
+components. It has **one fixed anatomy, it is instantiated on its own, and its
+behaviour must be identical everywhere or it is wrong** — a component
+guarantees that; a reassembled pattern is one that quietly drops the focus
+management. Now `components/error-summary/` and on the Components nav. The
+*usage* guidance stays a pattern in `patterns/forms/form-validation.md`.
+
+### Open, in the order they are worth doing
+
+1. **Icons for the mobile app.** The request is to map what the mobile
+   developer needs onto the existing 142-icon set and only add where genuinely
+   necessary. Needs his SVGs and the list of uses — see the note to the design
+   lead.
+2. **The remaining stale "Menu Item" usage-notes frames** — each needs a
+   `guidelines.md` first; the panel is then one command.
+3. **Re-base the dialog pattern frames onto `Modal`** (pick a size per pattern).
+4. **Unify `.sr-nav__item-badge` and `.sr-tabs__badge`** behind one Badge.
+5. **Delete the empty Notifications page.**
+6. **Status indicator's section on the Icons page**, and the footer in dark mode.
+
+---
+
 ## Checkpoint — 2026-09-23b (Error summary ships; a gate for undefined custom properties)
 
 ### The error summary
