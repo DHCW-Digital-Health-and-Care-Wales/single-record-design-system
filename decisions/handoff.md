@@ -21,18 +21,20 @@ before writing MAUI, so a finding filed only here is a finding lost.
    node scripts/guidelines-to-figma.mjs components/<name>/guidelines.md \
      --figma-script --page=<pageId> --replace=<staleNodeId>
    ```
-2. **Re-base the dialog pattern frames onto `Modal`.** Pick a size per pattern
-   first — they are drawn at 400px and `Modal` offers Small 380 / Medium 480.
-   That size decision is the blocker; the rest is mechanical.
-3. **Unify `.sr-nav__item-badge` and `.sr-tabs__badge`** behind one Badge. Two
-   implementations of one mark, and `.sr-header__notification` has none.
-4. **Delete the empty Notifications page** in Figma (named `[EMPTY — delete]`).
-5. **A theme switcher**, if mobile proceeds — it is a component decision, not
-   three icons. Web and mobile will otherwise disagree about what "System"
-   means.
-6. **Match score**, if it is still wanted — it is a component, and what it
-   communicates has to be settled before anything is drawn.
-7. Status indicator's section on the Icons page; the footer in dark mode.
+2. **Re-base the dialog pattern frames onto `Modal` — Small (380).** Size
+   decided 2026-09-25: the 400px frames move to `Modal` Small. Next after item 1.
+3. **Badge** — awaiting clarification with the design lead before any work.
+   `.sr-nav__item-badge` and `.sr-tabs__badge` are the same count pill written
+   twice (they differ only in `text-inverse` vs `text-on-fill`), with no Badge
+   component or spec; `.sr-header__notification` is the bell button, which
+   has no count.
+4. **Match score** — pending. What it communicates has to be settled before
+   anything is drawn.
+5. Status indicator's section on the Icons page (DDR-032 — settle the neutral
+   dash first); the footer in dark mode (2026-09-16 checkpoint).
+
+Done or dropped 2026-09-25: the empty Notifications page is deleted; the theme
+switcher is not needed.
 
 **Before any destructive Figma edit, re-count instances yourself.** Twice this
 session a count from a previous step was wrong, and both times the guard in the
