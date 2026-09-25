@@ -181,7 +181,7 @@
   border: none;
   border-radius: var(--radius-sm);
   background-color: var(--sr-color-interactive-primary);
-  color: var(--sr-color-text-inverse);
+  color: var(--sr-color-text-on-fill);
   font: var(--sr-type-label-font);
   letter-spacing: var(--sr-type-label-letter-spacing);
   cursor: pointer;

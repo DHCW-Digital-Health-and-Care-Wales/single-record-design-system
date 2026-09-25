@@ -509,7 +509,7 @@ const SITE_COMPONENT_CSS = [
   'button', 'table', 'patient-banner', 'header', 'footer', 'bottom-nav',
   'breadcrumbs', 'switch', 'segmented-control', 'navigation', 'input',
   'tags', 'checkbox', 'radio', 'select', 'tabs', 'search', 'stat-card', 'link',
-  'inset-text', 'avatar', 'notification-banner', 'error-summary',
+  'inset-text', 'avatar', 'badge', 'notification-banner', 'error-summary',
 ];
 const COMPONENT_CSS_LINKS = (prefix) =>
   SITE_COMPONENT_CSS.map((c) => `<link rel="stylesheet" href="${prefix}assets/${c}.css">`).join('\n');
@@ -543,6 +543,7 @@ const SECTIONS = [
     id: 'components', label: 'Components', href: 'components/breadcrumbs.html',
     side: [
       { href: 'components/avatar.html', label: 'Avatar' },
+      { href: 'components/badge.html', label: 'Badge' },
       { href: 'components/breadcrumbs.html', label: 'Breadcrumbs' },
       { href: 'components/button.html', label: 'Buttons' },
       { href: 'components/checkbox.html', label: 'Checkbox' },
@@ -2936,7 +2937,7 @@ function tabsBody() {
 ${items.map((it, i) => {
   const on = i === selected;
   const name = it.count !== undefined ? ` aria-label="${it.label}, ${it.count} items"` : '';
-  return `  <button type="button" class="sr-tabs__tab" role="tab" id="${id}-tab-${i}" aria-selected="${on}" aria-controls="${id}-panel-${i}" tabindex="${on ? 0 : -1}"${it.disabled ? ' disabled aria-disabled="true"' : ''}${name}>${it.label}${it.count !== undefined ? `<span class="sr-tabs__badge" aria-hidden="true">${it.count}</span>` : ''}</button>`;
+  return `  <button type="button" class="sr-tabs__tab" role="tab" id="${id}-tab-${i}" aria-selected="${on}" aria-controls="${id}-panel-${i}" tabindex="${on ? 0 : -1}"${it.disabled ? ' disabled aria-disabled="true"' : ''}${name}>${it.label}${it.count !== undefined ? `<span class="sr-badge" aria-hidden="true">${it.count}</span>` : ''}</button>`;
 }).join('\n')}
 </div>`;
     const panels = items.map((it, i) => `<div class="sr-tabs__panel" role="tabpanel" id="${id}-panel-${i}" aria-labelledby="${id}-tab-${i}" tabindex="0"${i === selected ? '' : ' hidden'}>${it.panel || (it.label + ' content.')}</div>`).join('\n');
@@ -3427,6 +3428,54 @@ the original colour back and confirming it fails.</p>
 <h2>The generic mark is grey, not brand navy</h2>
 <p>A generic person mark on the brand fill reads as a real person who happens to have no photo.
 Grey says the system does not know who this is, which is the truth.</p>
+
+${renderMarkdown(md)}
+`;
+}
+
+/**
+ * Badge. One count pill, shared by navigation and tabs since 2026-09-25. The
+ * page holds two rules: a badge is a quantity, never a status; and the count
+ * lives in the host's accessible name, because the badge is aria-hidden.
+ */
+function badgeBody() {
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'badge', 'guidelines.md'), 'utf8')));
+
+  const inTabs = `<div class="sr-tabs" role="tablist" aria-label="Patient record">
+  <button type="button" class="sr-tabs__tab" role="tab" aria-selected="true" tabindex="0" aria-label="Results, 3 items">Results<span class="sr-badge" aria-hidden="true">3</span></button>
+  <button type="button" class="sr-tabs__tab" role="tab" aria-selected="false" tabindex="-1" aria-label="Referrals, 20 items">Referrals<span class="sr-badge" aria-hidden="true">20</span></button>
+  <button type="button" class="sr-tabs__tab" role="tab" aria-selected="false" tabindex="-1" disabled aria-disabled="true" aria-label="Letters, 4 items">Letters<span class="sr-badge" aria-hidden="true">4</span></button>
+</div>`;
+
+  const snippets = {
+    HTML: '<!-- The badge is hidden; the count goes in the host\'s name. -->\n<button type="button" class="sr-tabs__tab" role="tab"\n        aria-label="Referrals, 20 items">\n  Referrals<span class="sr-badge" aria-hidden="true">20</span>\n</button>',
+    React: '{/* Navigation and Tabs render the badge and name the count for you. */}\n<Tabs tabs={[{ id: \'referrals\', label: \'Referrals\', count: 20 }]} />\n\n{/* Anywhere else: */}\n<Badge>20</Badge>',
+    Blazor: '@* Stylesheet only — no component to install. *@\n<button type="button" class="sr-tabs__tab" role="tab"\n        aria-label="Referrals, @Count items">\n  Referrals<span class="sr-badge" aria-hidden="true">@Count</span>\n</button>',
+  };
+
+  return `
+<p class="breadcrumbs"><a href="../components/breadcrumbs.html">Components</a> / Badge</p>
+<h1>Badge</h1>
+<p class="lede">A count, as a small pill beside a label — how many referrals, how many results.</p>
+
+<div class="callout"><p><strong>A badge is a number, never a status.</strong> "Urgent" or
+"Overdue" is a <a href="../components/tags.html">tag</a>. Something that needs attention now is a
+<a href="../components/notification-banner.html">notification banner</a>.</p></div>
+
+<h2>In tabs and navigation</h2>
+<p>The same badge in both. A disabled tab greys it; the collapsed navigation hides it.</p>
+${showcase(inTabs, 'badge-tabs', snippets)}
+
+<h2>The count is in the name</h2>
+<p>The badge is hidden from screen readers, so the tab or menu item has to say the number itself:
+"Referrals, 20 items". Until 2026-09-25 the navigation item's <code>aria-label</code> replaced its
+content, so its count was never announced at all.</p>
+
+<h2>The contrast correction</h2>
+<p>The navigation badge used <code>text/inverse</code>, which turns near-black in dark mode while
+the blue fill does not change: <strong>2.26:1</strong>, against the 4.5:1 SC 1.4.3 requires. Six
+other controls had the same mistake. All now use <code>text/on-fill</code> (6.38:1 in dark), and
+<code>check:on-fill</code> fails the build if it comes back.</p>
 
 ${renderMarkdown(md)}
 `;
@@ -4214,12 +4263,12 @@ function navigationBody() {
     { icon: 'nav/settings', label: 'Settings' },
     { icon: 'nav/log-out', label: 'Log Out' },
   ];
-  const navItem = (it) => `<button type="button" class="sr-nav__item" aria-label="${it.label}"${
+  const navItem = (it) => `<button type="button" class="sr-nav__item" aria-label="${it.badge ? `${it.label}, ${it.badge} items` : it.label}"${
     it.current ? ' aria-current="page"' : ''}${it.children ? ' aria-expanded="false"' : ''}>
   <span class="sr-nav__item-main">
     <span class="sr-nav__item-icon">${iconMarkup(it.icon)}</span>
     <span class="sr-nav__item-label">${it.label}</span>
-    ${it.badge ? `<span class="sr-nav__item-badge">${it.badge}</span>` : ''}
+    ${it.badge ? `<span class="sr-badge" aria-hidden="true">${it.badge}</span>` : ''}
   </span>
   ${it.children ? `<span class="sr-nav__item-chevron">${iconMarkup('nav/chevron-down')}</span>` : ''}
 </button>`;
@@ -5344,6 +5393,11 @@ addPage({
   file: 'components/avatar.html', url: 'components/avatar.html', title: 'Avatar',
   section: 'Components', sectionId: 'components', activeHref: 'components/avatar.html',
   prefix: '../', body: avatarBody(),
+});
+addPage({
+  file: 'components/badge.html', url: 'components/badge.html', title: 'Badge',
+  section: 'Components', sectionId: 'components', activeHref: 'components/badge.html',
+  prefix: '../', body: badgeBody(),
 });
 addPage({
   file: 'components/notification-banner.html', url: 'components/notification-banner.html',

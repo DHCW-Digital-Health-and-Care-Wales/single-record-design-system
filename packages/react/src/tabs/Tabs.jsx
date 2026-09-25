@@ -1,5 +1,6 @@
 import React, { useId, useRef, useState } from 'react';
 import '@dhcw/sr-web/src/tabs/tabs.css';
+import { Badge } from '../badge/Badge.jsx';
 
 /**
  * Tabs — DHCW Single Record Design System
@@ -116,7 +117,7 @@ export default function Tabs({
             >
               {t.label}
               {t.count !== undefined && (
-                <span className="sr-tabs__badge" aria-hidden="true">{t.count}</span>
+                <Badge>{t.count}</Badge>
               )}
             </button>
           );

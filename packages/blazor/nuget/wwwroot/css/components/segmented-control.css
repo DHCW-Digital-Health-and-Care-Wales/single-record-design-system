@@ -46,7 +46,7 @@
 /* Selected — brand blue fill, inverse text, subtle lift. */
 .sr-segmented__option[aria-pressed="true"] {
   background-color: var(--sr-color-interactive-primary);
-  color: var(--sr-color-text-inverse);
+  color: var(--sr-color-text-on-fill);
 }
 
 /* Focus — Cyan/700 ring outside the segment (DDR-006). */

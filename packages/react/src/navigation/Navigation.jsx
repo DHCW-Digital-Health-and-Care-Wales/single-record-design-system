@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import '@dhcw/sr-web/src/navigation/navigation.css';
 import Icon from '../icon/Icon.jsx';
+import { Badge } from '../badge/Badge.jsx';
 
 /**
  * Navigation / Sidebar — DHCW Single Record Design System
@@ -53,7 +54,9 @@ function NavItem({ icon, label, href, badge, children, current, onSelect }) {
         type={Tag === 'button' ? 'button' : undefined}
         href={Tag === 'a' ? href : undefined}
         className="sr-nav__item"
-        aria-label={label}
+        // The badge is aria-hidden, so its count has to be in the name here —
+        // an aria-label replaces the content, and it used to drop the count.
+        aria-label={badge ? `${label}, ${badge} items` : label}
         aria-current={isCurrent ? 'page' : undefined}
         aria-expanded={hasChildren ? open : undefined}
         onClick={handleClick}
@@ -61,7 +64,7 @@ function NavItem({ icon, label, href, badge, children, current, onSelect }) {
         <span className="sr-nav__item-main">
           <Icon name={icon} size="xs" color="inherit" className="sr-nav__item-icon" />
           <span className="sr-nav__item-label">{label}</span>
-          {badge && <span className="sr-nav__item-badge">{badge}</span>}
+          {badge && <Badge>{badge}</Badge>}
         </span>
         {hasChildren && (
           <Icon

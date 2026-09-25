@@ -98,7 +98,7 @@
 .sr-tag--count.sr-tag--dark-blue {
   background-color: var(--sr-color-interactive-primary);
   border-color: var(--sr-color-interactive-primary);
-  color: var(--sr-color-text-inverse);
+  color: var(--sr-color-text-on-fill);
 }
 
 /* A count that runs to three digits stops being a circle rather than

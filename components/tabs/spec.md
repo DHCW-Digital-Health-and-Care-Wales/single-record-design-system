@@ -75,7 +75,7 @@ changes *which* view you see (`role="tab"` bound to a panel).
 |---|---|---|
 | Tablist | `.sr-tabs` (`.sr-tabs--vertical`) | `role="tablist"`; `aria-orientation="vertical"` when vertical |
 | Tab | `.sr-tabs__tab` | `role="tab"`, `aria-selected`, `aria-controls` |
-| Count badge | `.sr-tabs__badge` | Pill, decorative (`aria-hidden`) |
+| Count badge | `.sr-badge` ([Badge](../badge/spec.md)) | Pill, decorative (`aria-hidden`) |
 | Panel | `.sr-tabs__panel` | `role="tabpanel"`, `aria-labelledby`, `tabIndex={0}` |
 
 The strip carries **no track line**. The Figma component does not draw one; if a

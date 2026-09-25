@@ -23,9 +23,10 @@ before writing MAUI, so a finding filed only here is a finding lost.
    ```
 2. **Re-base the dialog pattern frames onto `Modal` — Small (380).** Size
    decided 2026-09-25: the 400px frames move to `Modal` Small. Next after item 1.
-3. **Badge — in progress 2026-09-25.** Decided: one Badge component with a
-   spec, replacing `.sr-nav__item-badge` and `.sr-tabs__badge`. The header
-   bell gets **no** count.
+3. **Badge — code shipped 2026-09-25; Figma component still to do.** Figma
+   draws the pill inside the nav item block (`665:21099`) and the tab set
+   (`817:7219`). Needs a `Badge` component, a page for it, and both hosts
+   re-pointed. The header bell has **no** count, by decision.
 4. **Match score** — pending. What it communicates has to be settled before
    anything is drawn.
 5. **Status indicator — neutral dash.** Figma's `Status indicator/neutral`
@@ -35,6 +36,10 @@ before writing MAUI, so a finding filed only here is a finding lost.
    Design lead is checking the original intent before code gains a `neutral`
    variant (and its accessible label) and the Icons-page section proceeds.
 
+**New finding, not fixed:** the selected **primary** tab's label is
+`interactive/primary` text on the dark page — **~2.2:1** in dark mode. Needs a
+token decision (the link colour is one candidate), so it was left alone.
+
 Done or dropped 2026-09-25: the empty Notifications page is deleted; the theme
 switcher is not needed; **the footer in dark mode is resolved** — Figma now
 binds it to `section-cards`, matching code (changed by the design lead, not
@@ -43,6 +48,25 @@ re-verified in the file by this session).
 **Before any destructive Figma edit, re-count instances yourself.** Twice this
 session a count from a previous step was wrong, and both times the guard in the
 delete script — not the plan — is what caught it.
+
+---
+
+## Checkpoint — 2026-09-25 (Badge is one component; seven dark-mode text failures fixed)
+
+- **Badge shipped in code**: `.sr-badge`, `Badge` (React), spec, guidelines,
+  story, website page. Replaces `.sr-nav__item-badge` and `.sr-tabs__badge`.
+  The badge owns the look; navigation and tabs own placement and hiding.
+- **Nav counts were never announced.** The nav item's `aria-label` replaced its
+  content. The label now carries the count ("Referrals, 20 items") in React,
+  the story and the website.
+- **Seven rules put `text/inverse` on `interactive/primary`**: 2.26:1 in dark.
+  Nav badge, selected date-picker day, search submit, pressed segmented option,
+  selected select option, selected secondary tab, dark-blue count tag. All now
+  `text/on-fill`. **New gate `check:on-fill`**, verified by planting the defect
+  back into `badge.css`. `check:contrast` could not catch this: it checks token
+  pairs, not which token the CSS uses. Filed in `known-issues.md`.
+- `npm run check` green (79 contrast pairs, 0 open); `build:site` and
+  `check:snippets` green. Dark mode confirmed with a screenshot.
 
 ---
 

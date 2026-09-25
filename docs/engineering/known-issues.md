@@ -477,6 +477,36 @@ producing this until something mechanical checks it.
 
 **Status:** Resolved. 2026-09-23.
 
+### `text/inverse` on a saturated fill fails in dark mode
+
+**Symptom:** the navigation count badge, the selected date-picker day, the
+search submit button, the pressed segmented-control option, the selected select
+option, the selected secondary tab and the dark-blue count tag all rendered
+their text at **2.26:1** in dark mode. `check:contrast` passed.
+
+**Why:** `text/inverse` is relative to the *mode*: white in light, `#212b32` in
+dark. A saturated fill such as `interactive/primary` does not flip (`#0d62a3`
+in dark), so near-black lands on mid-blue. The token for text on a saturated
+fill is `text/on-fill`, which is white in both modes (6.38:1). The token
+descriptions say so, and the Figma avatar made the same mistake (2.95:1,
+2026-09-22).
+
+`check:contrast` could not see it. It asserts **token pairs**, and the pair
+`text/on-fill` on `interactive/primary` is fine. What was wrong was which token
+the CSS picked.
+
+**Fix:** all seven rules moved to `text/on-fill` (2026-09-25).
+
+**Prevented by:** `scripts/check-on-fill.mjs` (`npm run check:on-fill`, wired
+into `npm run check`). It fails any declaration block that paints a saturated
+fill (`interactive/primary`, `interactive/destructive`, a status fill that is
+not `-surface`) and sets `color: var(--sr-color-text-inverse)`. Verified by
+planting `text/inverse` back into `badge.css` and confirming a non-zero exit.
+It reads one block at a time, so a fill and a text colour set in *different*
+rules for the same element will get past it.
+
+**Status:** Resolved. 2026-09-25.
+
 ## Packaging and install
 
 ### `--tag next` does not spare a package's FIRST publish from becoming `latest`
