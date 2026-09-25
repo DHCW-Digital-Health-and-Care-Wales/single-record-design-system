@@ -23,18 +23,22 @@ before writing MAUI, so a finding filed only here is a finding lost.
    ```
 2. **Re-base the dialog pattern frames onto `Modal` — Small (380).** Size
    decided 2026-09-25: the 400px frames move to `Modal` Small. Next after item 1.
-3. **Badge** — awaiting clarification with the design lead before any work.
-   `.sr-nav__item-badge` and `.sr-tabs__badge` are the same count pill written
-   twice (they differ only in `text-inverse` vs `text-on-fill`), with no Badge
-   component or spec; `.sr-header__notification` is the bell button, which
-   has no count.
+3. **Badge — in progress 2026-09-25.** Decided: one Badge component with a
+   spec, replacing `.sr-nav__item-badge` and `.sr-tabs__badge`. The header
+   bell gets **no** count.
 4. **Match score** — pending. What it communicates has to be settled before
    anything is drawn.
-5. Status indicator's section on the Icons page (DDR-032 — settle the neutral
-   dash first); the footer in dark mode (2026-09-16 checkpoint).
+5. **Status indicator — neutral dash.** Figma's `Status indicator/neutral`
+   (`2000:4542`) has 6 instances, all in the Status column of a "Test results"
+   table (two copies, frames `3229:57126` and `3971:22553`): alone on a row with
+   nothing flagged, and trailing the other marks. Reads as "no result flagged".
+   Design lead is checking the original intent before code gains a `neutral`
+   variant (and its accessible label) and the Icons-page section proceeds.
 
 Done or dropped 2026-09-25: the empty Notifications page is deleted; the theme
-switcher is not needed.
+switcher is not needed; **the footer in dark mode is resolved** — Figma now
+binds it to `section-cards`, matching code (changed by the design lead, not
+re-verified in the file by this session).
 
 **Before any destructive Figma edit, re-count instances yourself.** Twice this
 session a count from a previous step was wrong, and both times the guard in the
