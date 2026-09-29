@@ -13,6 +13,12 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 ## Start here — next session
 
+> **Branch state (2026-09-29):** 3 commits on `claude/tender-thompson-rbqxq7`
+> are **not on `main`** — the Badge component, the `check:on-fill` gate with
+> seven dark-mode text fixes, and handoff updates. No PR was opened. Open one
+> (or merge) before starting new work, or start the new branch from this one.
+> `npm run check` and `build:site` were green on `ceeb65f`.
+
 1. **The remaining stale "Menu Item" usage-notes frames.** Every component page
    that still has one is showing guidance for a Menu Item — state variants,
    badge counts, leading icons — on a page with none of those. Each needs a
@@ -35,6 +41,12 @@ before writing MAUI, so a finding filed only here is a finding lost.
    nothing flagged, and trailing the other marks. Reads as "no result flagged".
    Design lead is checking the original intent before code gains a `neutral`
    variant (and its accessible label) and the Icons-page section proceeds.
+6. **Patient search — Advanced variant has content errors** (Figma
+   `2845:8594`, page `3037:25472`). Surname and Forename placeholders are
+   swapped; "Forename Searching Methods" lists See and treat / Rapid
+   assessment / Triage (copied triage options); date of birth placeholder is
+   `dd-mm-yy` (two-digit year). Fix before it is shown to clinicians. The
+   page's usage-notes frame (`3037:25474`) is also a stale Menu Item panel.
 
 **New finding, not fixed:** the selected **primary** tab's label is
 `interactive/primary` text on the dark page — **~2.2:1** in dark mode. Needs a
@@ -48,6 +60,24 @@ re-verified in the file by this session).
 **Before any destructive Figma edit, re-count instances yourself.** Twice this
 session a count from a previous step was wrong, and both times the guard in the
 delete script — not the plan — is what caught it.
+
+---
+
+## Checkpoint — 2026-09-29 (Clinical assurance deck — Figma only)
+
+- **Deck 4: Clinical Assurance & Patient Safety Product Clinic** — 18 slides
+  (1280×720, `CA-S1`…`CA-S18`, speaker notes beneath each) on the
+  Presentation slides page `3303:585`, below Deck 3. Built with `use_figma`;
+  **no repo files**. Uses live instances of Patient Banner, Patient search
+  (Quick only), icons and status indicators.
+- **Deck edits belong to the original deck session**, not code sessions. That
+  session changes slides only — never code or GitHub.
+- Eight `Image · <name>` frames were left for the design lead to fill by hand:
+  `mcp.figma.com` upload was refused by the environment network policy
+  (now allow-listed for new sessions).
+- Sources used: `docs/reference/dhcw-ui-standards-v1.3.md` p.20 (banner) and
+  p.39–41 (icons) — one "!" glyph with five meanings, colour-only "R" tiles and
+  match triangles, WCP roundel used as an icon.
 
 ---
 
