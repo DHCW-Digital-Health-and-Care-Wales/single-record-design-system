@@ -889,6 +889,29 @@ past its share.
 
 ---
 
+### The error status indicator turns pink in dark mode — wrong under a white glyph
+
+**Symptom:** reuse `.sr-status-indicator--error` as a filled marker (a
+stepper's error step) and, in dark mode, the white exclamation sits on a pale
+pink disc at about 2.4:1.
+
+**Why:** the indicator colours its disc with `status/error-on-page`, which is
+Red/300 in dark mode (DDR-035). That is right for a small glyph on the page,
+where the red itself is the mark. It is wrong once the disc becomes a *fill*
+with a white glyph knocked out of it — the glyph is now the text, and the disc
+its background.
+
+**Fix:** where the indicator is a filled marker, hold the disc on
+`status/error` (Red/700 in both modes). `progress-indicators.css` does this with
+`.sr-stepper__marker .sr-status-indicator--error`.
+
+**Prevented by:** `check:contrast` asserts `text/on-fill` on `status/error` in
+both modes, so the token pair cannot regress. It cannot see which token a
+given rule picks, so a new host that forgets the override will get past it —
+the same limit `check:on-fill` has. Not mechanised further.
+
+---
+
 ## Build & CI
 
 ### A `::after` inside a flex container is a flex ITEM, not a layer behind it

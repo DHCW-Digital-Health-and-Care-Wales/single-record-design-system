@@ -31,3 +31,6 @@ export { default as Avatar, AvatarGroup, initialsFrom } from './avatar/Avatar.js
 export { default as NotificationBanner } from './notification-banner/NotificationBanner.jsx';
 export { default as ErrorSummary } from './error-summary/ErrorSummary.jsx';
 export { default as Badge } from './badge/Badge.jsx';
+export { default as ProgressBar } from './progress-indicators/ProgressBar.jsx';
+export { default as Stepper } from './progress-indicators/Stepper.jsx';
+export { default as Timeline } from './progress-indicators/Timeline.jsx';

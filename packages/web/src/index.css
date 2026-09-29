@@ -36,6 +36,7 @@
 @import "./modal/modal.css";
 @import "./navigation/navigation.css";
 @import "./patient-banner/patient-banner.css";
+@import "./progress-indicators/progress-indicators.css";
 @import "./radio/radio.css";
 @import "./search/search.css";
 @import "./segmented-control/segmented-control.css";

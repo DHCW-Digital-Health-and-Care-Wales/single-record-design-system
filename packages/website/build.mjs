@@ -510,6 +510,7 @@ const SITE_COMPONENT_CSS = [
   'breadcrumbs', 'switch', 'segmented-control', 'navigation', 'input',
   'tags', 'checkbox', 'radio', 'select', 'tabs', 'search', 'stat-card', 'link',
   'inset-text', 'avatar', 'badge', 'notification-banner', 'error-summary',
+  'status-indicator', 'progress-indicators',
 ];
 const COMPONENT_CSS_LINKS = (prefix) =>
   SITE_COMPONENT_CSS.map((c) => `<link rel="stylesheet" href="${prefix}assets/${c}.css">`).join('\n');
@@ -555,6 +556,7 @@ const SECTIONS = [
       { href: 'components/link.html', label: 'Link' },
       { href: 'components/navigation.html', label: 'Navigation' },
       { href: 'components/notification-banner.html', label: 'Notification banner' },
+      { href: 'components/progress-indicators.html', label: 'Progress indicators' },
       { href: 'components/radio.html', label: 'Radio' },
       { href: 'components/search.html', label: 'Search' },
       { href: 'components/select.html', label: 'Select' },
@@ -3482,6 +3484,179 @@ ${renderMarkdown(md)}
 }
 
 /**
+ * Progress indicators. Three components on one Figma page: the bar (one task),
+ * the stepper (a fixed sequence — horizontal, vertical, and the compact strip
+ * that sits under a tab bar) and the timeline (what has happened).
+ *
+ * The Done and Error markers are the shared Status indicator. Its two glyphs
+ * are inlined here because the site is static HTML; the source of truth is
+ * packages/react/src/status-indicator/StatusIndicator.jsx.
+ */
+const SI_SUCCESS = '<svg viewBox="0 0 24 24" width="100%" height="100%" focusable="false"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M8 12.5l2.6 2.6 5.4-6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const SI_ERROR = '<svg viewBox="0 0 24 24" width="100%" height="100%" focusable="false"><circle cx="12" cy="12" r="10" fill="currentColor"/><line x1="12" y1="7" x2="12" y2="13" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="16.5" r="1.15" fill="#fff"/></svg>';
+
+function progressIndicatorsBody() {
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'progress-indicators', 'guidelines.md'), 'utf8')));
+
+  const SPOKEN = { done: 'completed', error: 'has errors', upcoming: 'not started' };
+  const marker = (state, n, size) => {
+    if (state === 'done') return `<span class="sr-stepper__marker" aria-hidden="true"><span class="sr-status-indicator sr-status-indicator--success sr-status-indicator--${size}">${SI_SUCCESS}</span></span>`;
+    if (state === 'error') return `<span class="sr-stepper__marker" aria-hidden="true"><span class="sr-status-indicator sr-status-indicator--error sr-status-indicator--${size}">${SI_ERROR}</span></span>`;
+    return `<span class="sr-stepper__marker" aria-hidden="true">${size === 'sm' ? '' : n}</span>`;
+  };
+  const label = (s) => `${s.href ? `<a class="sr-stepper__link" href="${s.href}">` : ''}${s.label}${SPOKEN[s.state] ? `<span class="sr-visually-hidden">, ${SPOKEN[s.state]}</span>` : ''}${s.href ? '</a>' : ''}`;
+  const hint = (s) => (s.state === 'error' && s.hint ? `<span class="sr-stepper__hint">${s.hint}</span>` : '');
+  const stepper = (steps, layout, name) => `<ol class="sr-stepper${layout === 'horizontal' ? '' : ` sr-stepper--${layout}`}" aria-label="${name}">
+${steps.map((s, i) => {
+    const cur = s.state === 'current' ? ' aria-current="step"' : '';
+    const m = marker(s.state, i + 1, layout === 'compact' ? 'sm' : 'lg');
+    const inner = layout === 'vertical'
+      ? `<span class="sr-stepper__marker-column">${m}</span><span class="sr-stepper__body"><span class="sr-stepper__label">${label(s)}</span>${s.description ? `<span class="sr-stepper__description">${s.description}</span>` : ''}${hint(s)}</span>`
+      : `${m}<span class="sr-stepper__label">${label(s)}${hint(s)}</span>`;
+    return `  <li class="sr-stepper__step sr-stepper__step--${s.state}"${cur}>${inner}</li>`;
+  }).join('\n')}
+</ol>`;
+
+  const bars = `<div style="display:grid; gap: var(--space-6); max-width: 540px;">
+<div class="sr-progress" style="--sr-progress-value: 65%;">
+  <span class="sr-progress__caption" id="pi-form">Form completion</span>
+  <div class="sr-progress__track" role="progressbar" aria-labelledby="pi-form" aria-valuemin="0" aria-valuemax="100" aria-valuenow="65"><span class="sr-progress__fill"></span></div>
+  <span class="sr-progress__value" aria-hidden="true">65%</span>
+</div>
+<div class="sr-progress">
+  <div class="sr-progress__segments" role="progressbar" aria-label="Referral form" aria-valuemin="0" aria-valuemax="5" aria-valuenow="3" aria-valuetext="3 of 5 sections complete">
+    <span class="sr-progress__segment sr-progress__segment--done"></span><span class="sr-progress__segment sr-progress__segment--done"></span><span class="sr-progress__segment sr-progress__segment--done"></span><span class="sr-progress__segment sr-progress__segment--current"></span><span class="sr-progress__segment"></span>
+  </div>
+  <span class="sr-progress__value" aria-hidden="true">3/5</span>
+</div>
+<div class="sr-progress sr-progress--indeterminate" aria-busy="true">
+  <span class="sr-progress__caption" id="pi-save">Saving record</span>
+  <div class="sr-progress__track" role="progressbar" aria-labelledby="pi-save"><span class="sr-progress__fill"></span></div>
+</div>
+</div>`;
+
+  const flow = [
+    { label: 'Patient', state: 'done', href: '#' },
+    { label: 'Triage', state: 'current' },
+    { label: 'Clinical assessment', state: 'upcoming' },
+    { label: 'Review and submit', state: 'upcoming' },
+  ];
+  const flowError = [
+    { label: 'Patient', state: 'done', href: '#' },
+    { label: 'Attendance', state: 'error', hint: '2 fields missing' },
+    { label: 'Triage', state: 'current' },
+    { label: 'Review and submit', state: 'upcoming' },
+  ];
+  const vertical = [
+    { label: 'Patient identified', state: 'done', description: 'Record matched and confirmed' },
+    { label: 'Attendance recorded', state: 'done', description: 'Arrival and reason captured' },
+    { label: 'Triage in progress', state: 'current', description: 'Initial assessment being recorded' },
+    { label: 'Clinical assessment', state: 'upcoming', description: 'Not started' },
+    { label: 'Review and submission', state: 'upcoming', description: 'Not started' },
+  ];
+  const compact = [
+    { label: 'Patient', state: 'done' },
+    { label: 'Triage', state: 'current' },
+    { label: 'Clinical assessment', state: 'upcoming' },
+  ];
+
+  const tlItem = (it) => `  <li class="sr-timeline__item sr-timeline__item--${it.state}">
+    <time class="sr-timeline__time" datetime="${it.datetime}">${it.time}</time>
+    <span class="sr-timeline__dot" aria-hidden="true"></span>
+    <div class="sr-timeline__body">
+      <p class="sr-timeline__title">${it.state === 'alert' ? '<span class="sr-visually-hidden">Alert: </span>' : ''}${it.title}</p>
+      <p class="sr-timeline__description">${it.description}</p>${it.tag ? `
+      <span class="sr-tag sr-tag--status sr-tag--${it.tagType} sr-tag--small"><span>${it.tag}</span></span>` : ''}
+    </div>
+  </li>`;
+  const timeline = `<ol class="sr-timeline" aria-label="Referral history" style="max-width: 480px;">
+${[
+    { state: 'complete', datetime: '2024-04-08T15:30', time: '08-Apr-2024\n15:30', title: 'Referral sent', description: 'Sent to cardiology, Cardiff and Vale UHB', tag: 'Complete', tagType: 'green' },
+    { state: 'alert', datetime: '2024-04-08T16:05', time: '08-Apr-2024\n16:05', title: 'Referral returned', description: 'NHS number did not match the record', tag: 'Action needed', tagType: 'red' },
+    { state: 'current', datetime: '2024-04-09T09:10', time: 'Now', title: 'Clinical assessment in progress', description: 'Under review by attending clinician', tag: 'In progress', tagType: 'blue' },
+    { state: 'pending', datetime: '2024-04-09', time: '—', title: 'Discharge', description: 'Pending clinical outcome' },
+  ].map(tlItem).join('\n')}
+</ol>`;
+
+  const barSnippets = {
+    HTML: '<div class="sr-progress" style="--sr-progress-value: 65%;">\n  <span class="sr-progress__caption" id="form-progress">Form completion</span>\n  <div class="sr-progress__track" role="progressbar" aria-labelledby="form-progress"\n       aria-valuemin="0" aria-valuemax="100" aria-valuenow="65">\n    <span class="sr-progress__fill"></span>\n  </div>\n  <span class="sr-progress__value" aria-hidden="true">65%</span>\n</div>',
+    React: '<ProgressBar caption="Form completion" value={65} />\n<ProgressBar variant="segmented" label="Referral form" completed={3} total={5} />\n<ProgressBar variant="indeterminate" caption="Saving record" />',
+    Blazor: '@* Stylesheet only — no component to install. *@\n<div class="sr-progress" style="--sr-progress-value: @(Percent)%;">\n  <span class="sr-progress__caption" id="form-progress">Form completion</span>\n  <div class="sr-progress__track" role="progressbar" aria-labelledby="form-progress"\n       aria-valuemin="0" aria-valuemax="100" aria-valuenow="@Percent">\n    <span class="sr-progress__fill"></span>\n  </div>\n  <span class="sr-progress__value" aria-hidden="true">@(Percent)%</span>\n</div>',
+  };
+  const stepperSnippets = {
+    HTML: '<ol class="sr-stepper" aria-label="Referral progress">\n  <li class="sr-stepper__step sr-stepper__step--done">\n    <span class="sr-stepper__marker" aria-hidden="true"><!-- success status indicator --></span>\n    <span class="sr-stepper__label"><a class="sr-stepper__link" href="/patient">Patient<span class="sr-visually-hidden">, completed</span></a></span>\n  </li>\n  <li class="sr-stepper__step sr-stepper__step--current" aria-current="step">\n    <span class="sr-stepper__marker" aria-hidden="true">2</span>\n    <span class="sr-stepper__label">Triage</span>\n  </li>\n  <li class="sr-stepper__step sr-stepper__step--upcoming">\n    <span class="sr-stepper__marker" aria-hidden="true">3</span>\n    <span class="sr-stepper__label">Clinical assessment<span class="sr-visually-hidden">, not started</span></span>\n  </li>\n</ol>',
+    React: '<Stepper\n  ariaLabel="Referral progress"\n  steps={[\n    { label: \'Patient\', state: \'done\', href: \'/patient\' },\n    { label: \'Triage\', state: \'current\' },\n    { label: \'Clinical assessment\', state: \'upcoming\' },\n  ]}\n/>',
+    Blazor: '@* Stylesheet only — write the list and set the state class per step. *@\n<ol class="sr-stepper" aria-label="Referral progress">\n  @foreach (var (step, i) in Steps.Select((s, i) => (s, i)))\n  {\n    @* StateClass returns sr-stepper__step--done | --current | --error | --upcoming *@\n    <li class="sr-stepper__step @StateClass(step)"\n        aria-current="@(step.State == "current" ? "step" : null)">\n      <span class="sr-stepper__marker" aria-hidden="true">@(i + 1)</span>\n      <span class="sr-stepper__label">@step.Label</span>\n    </li>\n  }\n</ol>',
+  };
+  const errorSnippets = {
+    HTML: '<li class="sr-stepper__step sr-stepper__step--error">\n  <span class="sr-stepper__marker" aria-hidden="true"><!-- error status indicator --></span>\n  <span class="sr-stepper__label">Attendance<span class="sr-visually-hidden">, has errors</span>\n    <span class="sr-stepper__hint">2 fields missing</span>\n  </span>\n</li>',
+    React: '<Stepper\n  steps={[\n    { label: \'Patient\', state: \'done\' },\n    { label: \'Attendance\', state: \'error\', hint: \'2 fields missing\' },\n    { label: \'Triage\', state: \'current\' },\n  ]}\n/>',
+    Blazor: '<li class="sr-stepper__step sr-stepper__step--error">\n  <span class="sr-stepper__marker" aria-hidden="true">…</span>\n  <span class="sr-stepper__label">Attendance<span class="sr-visually-hidden">, has errors</span>\n    <span class="sr-stepper__hint">@MissingCount fields missing</span>\n  </span>\n</li>',
+  };
+  const verticalSnippets = {
+    HTML: '<ol class="sr-stepper sr-stepper--vertical" aria-label="Attendance progress">\n  <li class="sr-stepper__step sr-stepper__step--current" aria-current="step">\n    <span class="sr-stepper__marker-column"><span class="sr-stepper__marker" aria-hidden="true">3</span></span>\n    <span class="sr-stepper__body">\n      <span class="sr-stepper__label">Triage in progress</span>\n      <span class="sr-stepper__description">Initial assessment being recorded</span>\n    </span>\n  </li>\n</ol>',
+    React: '<Stepper\n  layout="vertical"\n  ariaLabel="Attendance progress"\n  steps={[\n    { label: \'Patient identified\', state: \'done\', description: \'Record matched and confirmed\' },\n    { label: \'Triage in progress\', state: \'current\', description: \'Initial assessment being recorded\' },\n  ]}\n/>',
+    Blazor: '<ol class="sr-stepper sr-stepper--vertical" aria-label="Attendance progress">\n  <li class="sr-stepper__step sr-stepper__step--current" aria-current="step">\n    <span class="sr-stepper__marker-column"><span class="sr-stepper__marker" aria-hidden="true">3</span></span>\n    <span class="sr-stepper__body">\n      <span class="sr-stepper__label">@Step.Title</span>\n      <span class="sr-stepper__description">@Step.Description</span>\n    </span>\n  </li>\n</ol>',
+  };
+  const compactSnippets = {
+    HTML: '<!-- A list of steps, not a tablist. -->\n<ol class="sr-stepper sr-stepper--compact" aria-label="Referral progress">\n  <li class="sr-stepper__step sr-stepper__step--current" aria-current="step">\n    <span class="sr-stepper__marker" aria-hidden="true"></span>\n    <span class="sr-stepper__label">Triage</span>\n  </li>\n</ol>',
+    React: '<Stepper layout="compact" ariaLabel="Referral progress" steps={steps} />',
+    Blazor: '<ol class="sr-stepper sr-stepper--compact" aria-label="Referral progress">\n  <li class="sr-stepper__step sr-stepper__step--current" aria-current="step">\n    <span class="sr-stepper__marker" aria-hidden="true"></span>\n    <span class="sr-stepper__label">Triage</span>\n  </li>\n</ol>',
+  };
+  const timelineSnippets = {
+    HTML: '<ol class="sr-timeline" aria-label="Referral history">\n  <li class="sr-timeline__item sr-timeline__item--complete">\n    <time class="sr-timeline__time" datetime="2024-04-08T15:30">08-Apr-2024\n15:30</time>\n    <span class="sr-timeline__dot" aria-hidden="true"></span>\n    <div class="sr-timeline__body">\n      <p class="sr-timeline__title">Referral sent</p>\n      <p class="sr-timeline__description">Sent to cardiology</p>\n      <span class="sr-tag sr-tag--status sr-tag--green sr-tag--small"><span>Complete</span></span>\n    </div>\n  </li>\n</ol>',
+    React: '<Timeline\n  ariaLabel="Referral history"\n  items={[\n    { state: \'complete\', time: \'08-Apr-2024\\n15:30\', datetime: \'2024-04-08T15:30\',\n      title: \'Referral sent\', description: \'Sent to cardiology\', tag: \'Complete\' },\n    { state: \'current\', time: \'Now\', datetime: \'2024-04-09T09:10\',\n      title: \'Clinical assessment in progress\', tag: \'In progress\' },\n  ]}\n/>',
+    Blazor: '<ol class="sr-timeline" aria-label="Referral history">\n  @foreach (var e in Events)\n  {\n    @* StateClass returns sr-timeline__item--complete | --current | --alert | --pending *@\n    <li class="sr-timeline__item @StateClass(e)">\n      <time class="sr-timeline__time" datetime="@e.At.ToString("s")">@e.At.ToString("dd-MMM-yyyy\'\\n\'HH:mm")</time>\n      <span class="sr-timeline__dot" aria-hidden="true"></span>\n      <div class="sr-timeline__body">\n        <p class="sr-timeline__title">@e.Title</p>\n        <p class="sr-timeline__description">@e.Description</p>\n      </div>\n    </li>\n  }\n</ol>',
+  };
+
+  const card = (inner) => `<div style="background: var(--sr-color-surface-section-cards); padding: var(--space-6);">${inner}</div>`;
+
+  return `
+<p class="breadcrumbs"><a href="../components/breadcrumbs.html">Components</a> / Progress indicators</p>
+<h1>Progress indicators</h1>
+<p class="lede">Show how far through something the user is: one task finishing, a set of stages,
+or what has already happened to a record.</p>
+
+<div class="callout"><p><strong>Pick by what you are showing.</strong> One task finishing is a
+progress bar. Stages worked through in order are a stepper. Events that have already happened are
+a timeline. None of them switches views — that is <a href="../components/tabs.html">tabs</a>.</p></div>
+
+<h2>Progress bar</h2>
+<p>Determinate when you know the percentage, segmented when the task is a number of sections, and
+indeterminate when you cannot say how long it will take. Every determinate and segmented bar shows
+its number: done and current segments differ by colour alone.</p>
+${showcase(card(bars), 'progress-bar', barSnippets)}
+
+<h2>Stepper</h2>
+<p>An ordered list of stages with exactly one current. A done stage may link back so the user can
+change an answer. The tick and the numbers are hidden from screen readers; each stage's state is read
+after its label instead.</p>
+${showcase(card(stepper(flow, 'horizontal', 'Referral progress')), 'progress-stepper', stepperSnippets)}
+
+<h3>A stage with errors</h3>
+<p>The marker turns red and the stage says why, in a few words, under its label. The words are
+required — a red marker alone is colour carrying meaning.</p>
+${showcase(card(stepper(flowError, 'horizontal', 'Attendance progress')), 'progress-stepper-error', errorSnippets)}
+
+<h3>Vertical</h3>
+<p>For a narrow side panel, or when each stage needs a line of description.</p>
+${showcase(card(stepper(vertical, 'vertical', 'Attendance progress')), 'progress-stepper-vertical', verticalSnippets)}
+
+<h3>Compact, under a tab bar</h3>
+<p>The same stepper at the weight of a tab strip. It looks like tabs and is not tabs: it is a list of
+stages, not a set of views, so it is not built as a tablist and a real tab never gains a tick.</p>
+${showcase(card(stepper(compact, 'compact', 'Referral progress')), 'progress-stepper-compact', compactSnippets)}
+
+<h2>Timeline</h2>
+<p>What has happened, oldest first, each with its time. It is read-only. Use "Now" for the item in
+progress and "—" for one that has not happened yet.</p>
+${showcase(card(timeline), 'progress-timeline', timelineSnippets)}
+
+${renderMarkdown(md)}
+`;
+}
+
+/**
  * Notification banner. The page exists to hold two boundaries: against inset
  * text (which is the page, not an event) and against the error summary (which
  * is interactive and moves focus). Both were confused in the Figma file.
@@ -5398,6 +5573,12 @@ addPage({
   file: 'components/badge.html', url: 'components/badge.html', title: 'Badge',
   section: 'Components', sectionId: 'components', activeHref: 'components/badge.html',
   prefix: '../', body: badgeBody(),
+});
+addPage({
+  file: 'components/progress-indicators.html', url: 'components/progress-indicators.html',
+  title: 'Progress indicators',
+  section: 'Components', sectionId: 'components', activeHref: 'components/progress-indicators.html',
+  prefix: '../', body: progressIndicatorsBody(),
 });
 addPage({
   file: 'components/notification-banner.html', url: 'components/notification-banner.html',

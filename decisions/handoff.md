@@ -51,9 +51,22 @@ before writing MAUI, so a finding filed only here is a finding lost.
    `dd-mm-yy` (two-digit year). Fix before it is shown to clinicians. The
    page's usage-notes frame (`3037:25474`) is also a stale Menu Item panel.
 
+7. **Progress indicators — Figma tidy-up** (page `1736:12775`; code shipped
+   2026-09-29, see the checkpoint below). The `Progress/Stepper` set
+   (`1746:92`) has a `State=Progress` value that means Done at `First` and
+   Upcoming at `Middle`; rename. The samples number step 2 as "3", repeat
+   "Patient identified", and duplicate the horizontal frame. Pending timeline
+   ring should move to `Border/Strong`. Rename `Progress/Tab` so it does not
+   read as a Tabs variant (DDR-036, **Proposed** — design lead to confirm).
+   The usage-notes frame `1736:12850` is a stale Menu Item panel (item 1);
+   `components/progress-indicators/guidelines.md` now exists for it.
+
 **New finding, not fixed:** the selected **primary** tab's label is
 `interactive/primary` text on the dark page — **~2.2:1** in dark mode. Needs a
 token decision (the link colour is one candidate), so it was left alone.
+**It now affects two components:** the current step's label in the stepper has
+the same pair (2.07:1 on a dark card), and the progress bar's fill against its
+track is 1.38:1 in dark. `check:contrast` reports all of it under OPEN FINDINGS.
 
 Done or dropped 2026-09-25: the empty Notifications page is deleted; the theme
 switcher is not needed; **the footer in dark mode is resolved** — Figma now
@@ -63,6 +76,33 @@ re-verified in the file by this session).
 **Before any destructive Figma edit, re-count instances yourself.** Twice this
 session a count from a previous step was wrong, and both times the guard in the
 delete script — not the plan — is what caught it.
+
+---
+
+## Checkpoint — 2026-09-29 (Progress indicators in code)
+
+- **Shipped:** `progress-indicators.css` (`.sr-progress`, `.sr-stepper` with
+  `--vertical` / `--compact`, `.sr-timeline`); React `ProgressBar`, `Stepper`,
+  `Timeline`; web stories; website page `components/progress-indicators.html`;
+  `guidelines.md`; spec updated with a "Code" section. No MAUI styles.
+- **Built from the composed samples** (`5529:44147`), not the building blocks,
+  which carry Figma-variable plumbing (`Progress/Indicators`, `Progress/Bars`,
+  `Progress`) that has no code equivalent and needs none.
+- **Stepper Tab is not a Tabs variant** — DDR-036 (Proposed). It is
+  `Stepper layout="compact"`. Tabs spec cross-references it.
+- **Done / error markers reuse the Status indicator**, as Figma instances it.
+  The error disc is held on `status/error` in both modes, because the shared
+  indicator's `error-on-page` goes pink in dark and fails under a white glyph.
+- **Departures from Figma** are tabled in the spec (Text/On Fill on the current
+  marker, Caption for the 10px hint, the shared Tag in the timeline,
+  Border/Strong for the pending ring).
+- **Contrast:** eight pairs asserted; two dark-mode open findings added (see
+  "New finding" above). Pending-ring assertion verified by planting
+  Border/Default and confirming the gate fails.
+- **Gates that caught things this session:** the internal-reference check (a DDR
+  number on a public page), `check:snippets` (Blazor state classes interpolated
+  as `--@State`; two modifier classes with no CSS), `check:type`
+  (`font-size: 0` to hide a number — the markup now omits it instead).
 
 ---
 

@@ -1,13 +1,14 @@
 # Progress Indicators
 
-**Status:** In Figma — 5 component sets on page `1736:12775`
-**Last updated:** 2026-06-04
+**Status:** Built (web, React) 2026-09-29. Figma — 5 component sets on page `1736:12775`; composed samples in section `5529:44147`.
+**Last updated:** 2026-09-29
+**Guidelines:** [guidelines.md](guidelines.md)
 
 | Component | Node | Purpose |
 |---|---|---|
 | Progress Bar | `1746:37`   | Single-process completion |
 | Stepper Step | `1746:92`   | Atomic step for horizontal numbered stepper |
-| Stepper Tab  | `1746:106`  | Compact tab variant for stepper-in-tabbar |
+| Stepper Tab  | `1746:106`  | Compact stepper for a flow under a tab bar — **not a Tabs variant** (DDR-036) |
 | Vertical Step | `1747:76`  | Atomic step for vertical stepper |
 | Timeline Item | `1747:149` | Chronological clinical event |
 
@@ -65,6 +66,11 @@ Place 6 instances side-by-side in a horizontal autolayout with equal `layoutGrow
 
 Variants: **Done · Current · Upcoming**
 
+**It is a stepper, not a tab (DDR-036).** It looks like a tab strip and is built
+as an `<ol>` with `aria-current="step"`, never as `role="tablist"`. A tab
+switches views and carries no completion state; a stepper reports position in
+a sequence. In code it is `Stepper layout="compact"` / `.sr-stepper--compact`.
+
 Compact: padding 12 / 18, 1px bottom border `Border/Default`. Current adds a 3px bottom border in `Interactive/Primary`. Marker is 16px — green filled check for Done, ringed number for Current/Upcoming.
 
 Use when the stepper has to sit inside or alongside a tab bar — keeps visual weight low.
@@ -105,10 +111,13 @@ Tag surfaces:
 
 | Where | Icon | Node |
 |---|---|---|
-| Done step / tab tick | `Icon/action/check` | `1745:24` (imported this commit) |
-| Error step | `Icon/status/warning` | `1745:29` (imported this commit) |
+| Done step / tab tick | `Status indicator/success` (disc + `Icon/action/check`) | `2000:4287` |
+| Error step | `Status indicator/error` (disc + exclamation) | via `Progress/Indicators` `2000:4687` |
 
-Both new icons are Lucide-derived, 24×24, stroke 2, bound to `Text/Primary`. Recoloured per use via semantic variables (`Text/Inverse` inside coloured circles, etc.).
+Figma instances the shared Status indicator for both — the earlier note naming
+`Icon/status/warning` for the error step is out of date. Code does the same:
+`StatusIndicator` in React, `.sr-status-indicator` in HTML, sized by the
+marker.
 
 ---
 
@@ -122,17 +131,61 @@ Both new icons are Lucide-derived, 24×24, stroke 2, bound to `Text/Primary`. Re
 
 ---
 
+## Code
+
+| | |
+|---|---|
+| CSS | `packages/web/src/progress-indicators/progress-indicators.css` — `.sr-progress`, `.sr-stepper` (`--vertical`, `--compact`), `.sr-timeline` |
+| React | `ProgressBar`, `Stepper`, `Timeline` from `@dhcw/sr-react` |
+| Blazor | Stylesheet only — write the markup with the classes |
+| MAUI | **Not built.** No XAML styles yet |
+| Website | `components/progress-indicators.html` |
+
+### Where code departs from Figma, and why
+
+| Figma | Code | Why |
+|---|---|---|
+| Current marker number is `Text/Inverse` | `Text/On Fill` | Inverse is near-black in dark mode on a fill that stays blue (known-issues) |
+| Error hint is 10px | `Caption` (12/16) | 10px is below the type scale |
+| Timeline tag is a bespoke 10px pill | The shared `Tag` (status, small) | Reuse; 10px is below the type scale |
+| Pending timeline ring is `Border/Default` (1.37:1) | `Border/Strong` (3.75:1) | It is the only mark on that row's line — SC 1.4.11. Figma should follow |
+| Error disc is `Status/Error` | Held on `Status/Error` in both modes | The shared indicator uses `error-on-page`, which is pink in dark mode and fails under a white glyph |
+| `Last=True` / `Position` property | none | The first and last steps drop their connector half by position (`:first-child` / `:last-child`) |
+
+### Known gaps
+
+- **Dark mode, current step label:** `Interactive/Primary` on a dark card is
+  **2.07:1**. Same finding as the selected primary tab; waiting on one token
+  decision. Tracked as an open finding by `check:contrast`.
+- **Dark mode, bar fill against track:** **1.38:1**. The number beside the bar
+  carries the value, but the bar barely reads. Same decision.
+- **Done vs current segment:** 1.13:1 in both modes — hue only. By design the
+  "3/5" text carries it, which is why the value is not optional.
+- **Figma variant names (`1746:92`):** the set is now `State` × `Position`
+  (First / Middle / Last), not `State` × `Last` as described above, and it has
+  a `State=Progress` value that means Done at `Position=First` (`1746:38`,
+  green tick) and Upcoming at `Middle` (`4634:70963`, grey ring). There is no
+  `Done, First` or `Upcoming, Middle`. Rename before anyone builds from the
+  property names.
+- **Figma samples (`5529:44147`):** the horizontal stepper numbers its second
+  step "3" and repeats "3" on the third; the vertical sample repeats "Patient
+  identified"; the two horizontal samples are identical. The page's usage-notes
+  frame (`1736:12850`) is a stale Menu Item panel.
+
 ## Engineering Notes
 
 - Indeterminate progress bar: CSS animation in implementation; the Figma component is a single static frame showing the moving fill at one moment.
 - Stepper "current" halo is implemented as a drop-shadow with `spread: 4` and 20% Primary — re-create with `box-shadow: 0 0 0 4px rgba(<primary>, 0.2)` in CSS.
-- Stepper Tab underline uses individual side stroke weights (`strokeBottomWeight: 3`, others 0) — CSS `border-bottom: 3px solid` equivalent.
+- Stepper Tab underline uses individual side stroke weights (`strokeBottomWeight: 3`, others 0). Code draws it as an inset `box-shadow`, as Tabs does, so the 44px height does not change.
+- Connector halves: each horizontal step draws the line to its left (`::before`, the step's own colour) and to its right (`::after`, green only when done). That is what makes Done → Current read green then blue.
 - Timeline times: pass through `<time>` with ISO `datetime` for assistive tech, even when display value is "Now" or "—".
 
 ---
 
 ## Related
 
-- `/decisions/DDR-006-focus-ring-cyan.md` — focus colour
+- `/decisions/DDR-036-stepper-tab-is-a-stepper.md` — why the Stepper Tab is not a Tabs variant
+- `/components/tabs/spec.md` — the component it resembles
+- `/decisions/DDR-025-focus-ring-cyan-800.md` — focus colour
 - `/components/button/spec.md` — for actions inside a stepped form (Next / Back / Submit)
 - `/foundations/tokens/semantic/color.json` — `Status/Success`, `Status/Error`, `Interactive/Primary` consumed across all variants
