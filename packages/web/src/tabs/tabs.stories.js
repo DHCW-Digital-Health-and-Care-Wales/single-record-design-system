@@ -1,4 +1,5 @@
 import './tabs.css';
+import '../badge/badge.css';
 import '@dhcw/sr-tokens/build/css/tokens.css';
 
 /**
@@ -53,7 +54,7 @@ const render = ({ tabs, selectedIndex = 0, orientation = 'horizontal', level = '
 
     if (tab.count !== undefined) {
       const badge = document.createElement('span');
-      badge.className = 'sr-tabs__badge';
+      badge.className = 'sr-badge';
       badge.textContent = String(tab.count);
       // The badge is decorative; the count belongs in the accessible name too,
       // or a screen reader hears "Results" and never learns there are 20.

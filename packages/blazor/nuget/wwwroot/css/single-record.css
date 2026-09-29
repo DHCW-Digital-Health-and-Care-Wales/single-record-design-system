@@ -661,6 +661,59 @@
   letter-spacing: var(--sr-type-body-s-letter-spacing);
 }
 
+/* ═══ badge ═══════════════════════════════════════════════════════ */
+/**
+ * DHCW Single Record — Badge
+ *
+ * A count, as a pill: "20 referrals", "3 results". One look, used by every
+ * component that shows a count — the navigation item and the tab today.
+ *
+ * Before 2026-09-25 this was drawn twice, as `.sr-nav__item-badge` and
+ * `.sr-tabs__badge`. They matched in every value except the text token, and
+ * the navigation one had the wrong token: `text/inverse` flips to near-black
+ * (#212b32) in dark mode while the fill stays saturated (#0d62a3) — 2.26:1,
+ * against the 4.5:1 SC 1.4.3 needs. The badge uses `text/on-fill`,
+ * which is white in both modes. `check:on-fill` stops the wrong token coming
+ * back; `check:contrast` asserts the pair.
+ *
+ * The badge owns how the count LOOKS. The host owns where it sits and when it
+ * is hidden (the navigation rail drops it; tabs.css greys it on a disabled
+ * tab).
+ *
+ * It is decorative. The count must reach the host's accessible name — a tab
+ * or nav item announces "Referrals, 20 items" — so the badge itself is
+ * `aria-hidden`. A badge nothing names is a number a screen reader never
+ * hears.
+ *
+ * A badge is a QUANTITY. It is not a status (that is a tag or a status
+ * indicator) and not an alert (that is a notification banner).
+ */
+
+.sr-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  min-width: 32px;
+  height: 20px;
+  padding: 0 var(--space-2); /* 0 8px */
+  border-radius: var(--radius-full);
+  background-color: var(--sr-color-interactive-primary);
+  color: var(--sr-color-text-on-fill);
+  font: var(--sr-type-caption-font); /* 12/16 Regular */
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Forced colours: the fill is dropped, so draw the pill's edge instead. */
+@media (forced-colors: active) {
+  .sr-badge {
+    border: 1px solid CanvasText;
+  }
+}
+
 /* ═══ bottom-nav ══════════════════════════════════════════════════ */
 /**
  * DHCW Single Record — Bottom navigation (mobile)
@@ -1480,7 +1533,7 @@
 }
 .sr-datepicker__day[aria-selected="true"] {
   background-color: var(--sr-color-interactive-primary);
-  color: var(--sr-color-text-inverse);
+  color: var(--sr-color-text-on-fill);
 }
 .sr-datepicker__day:disabled {
   color: var(--sr-color-text-disabled);
@@ -2603,7 +2656,7 @@ textarea.sr-input__control {
   width: 108px;
 }
 .sr-nav--rail .sr-nav__section-label,
-.sr-nav--rail .sr-nav__item-badge,
+.sr-nav--rail .sr-badge,
 .sr-nav--rail .sr-nav__item-chevron,
 .sr-nav--rail .sr-nav__submenu {
   display: none;
@@ -2788,21 +2841,6 @@ textarea.sr-input__control {
   white-space: nowrap;
 }
 
-.sr-nav__item-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 auto;
-  min-width: 32px;
-  height: 20px;
-  padding: 0 var(--space-2);
-  border-radius: var(--radius-full);
-  background-color: var(--sr-color-interactive-primary);
-  color: var(--sr-color-text-inverse);
-  font: var(--sr-type-caption-font);
-  letter-spacing: var(--sr-type-caption-letter-spacing);
-  text-align: center;
-}
 
 .sr-nav__item-chevron {
   display: inline-flex;
@@ -2859,7 +2897,7 @@ textarea.sr-input__control {
   display: none;
 }
 
-.sr-nav--collapsed .sr-nav__item-badge,
+.sr-nav--collapsed .sr-badge,
 .sr-nav--collapsed .sr-nav__item-chevron {
   display: none;
 }
@@ -3969,7 +4007,7 @@ textarea.sr-input__control {
   border: none;
   border-radius: var(--radius-sm);
   background-color: var(--sr-color-interactive-primary);
-  color: var(--sr-color-text-inverse);
+  color: var(--sr-color-text-on-fill);
   font: var(--sr-type-label-font);
   letter-spacing: var(--sr-type-label-letter-spacing);
   cursor: pointer;
@@ -4188,7 +4226,7 @@ textarea.sr-input__control {
 /* Selected — brand blue fill, inverse text, subtle lift. */
 .sr-segmented__option[aria-pressed="true"] {
   background-color: var(--sr-color-interactive-primary);
-  color: var(--sr-color-text-inverse);
+  color: var(--sr-color-text-on-fill);
 }
 
 /* Focus — Cyan/700 ring outside the segment (DDR-006). */
@@ -4370,7 +4408,7 @@ textarea.sr-input__control {
 .sr-select__option.is-active,
 .sr-select__option[aria-selected="true"] {
   background-color: var(--sr-color-interactive-primary);
-  color: var(--sr-color-text-inverse);
+  color: var(--sr-color-text-on-fill);
 }
 .sr-select__option[aria-disabled="true"] {
   color: var(--sr-color-text-disabled);
@@ -5181,25 +5219,10 @@ td.sr-table__select {
   background: transparent;
 }
 
-/* Count badge — a pill, Interactive/Primary with white text.
-   Decorative: the count must also reach the accessible name of the tab, or a
-   screen reader announces the tab without it. */
-.sr-tabs__badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 32px;
-  height: 20px;
-  padding: 0 var(--space-2); /* 0 8px */
-  border-radius: var(--radius-full);
-  background-color: var(--sr-color-interactive-primary);
-  color: var(--sr-color-text-on-fill);
-  font: var(--sr-type-caption-font); /* 12/16 Regular */
-  letter-spacing: var(--sr-type-caption-letter-spacing);
-}
-
-.sr-tabs__tab:disabled .sr-tabs__badge,
-.sr-tabs__tab[aria-disabled='true'] .sr-tabs__badge {
+/* Count badge — the shared Badge (badge.css). A disabled tab greys it: disabled
+   controls are exempt from SC 1.4.3, and the grey says "not available". */
+.sr-tabs__tab:disabled .sr-badge,
+.sr-tabs__tab[aria-disabled='true'] .sr-badge {
   background-color: var(--sr-color-interactive-disabled);
 }
 
@@ -5249,7 +5272,7 @@ td.sr-table__select {
 .sr-tabs--secondary .sr-tabs__tab[aria-selected='true'] {
   background-color: var(--sr-color-interactive-primary);
   border-color: var(--sr-color-interactive-primary);
-  color: var(--sr-color-text-inverse);
+  color: var(--sr-color-text-on-fill);
   box-shadow: none;
 }
 
@@ -5453,7 +5476,7 @@ td.sr-table__select {
 .sr-tag--count.sr-tag--dark-blue {
   background-color: var(--sr-color-interactive-primary);
   border-color: var(--sr-color-interactive-primary);
-  color: var(--sr-color-text-inverse);
+  color: var(--sr-color-text-on-fill);
 }
 
 /* A count that runs to three digits stops being a circle rather than

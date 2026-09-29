@@ -152,7 +152,7 @@
 .sr-select__option.is-active,
 .sr-select__option[aria-selected="true"] {
   background-color: var(--sr-color-interactive-primary);
-  color: var(--sr-color-text-inverse);
+  color: var(--sr-color-text-on-fill);
 }
 .sr-select__option[aria-disabled="true"] {
   color: var(--sr-color-text-disabled);

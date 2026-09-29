@@ -142,6 +142,11 @@ const PAIRS = [
   ['sr-color-text-secondary', 'sr-color-surface-subtle', 4.5,
     'Avatar generic mark on its neutral placeholder (avatar.css)'],
 
+  // --- Badge. The navigation badge used text/inverse, which flips to #212b32
+  //     in dark on a fill that does not flip — 2.26:1 until 2026-09-25. ---
+  ['sr-color-text-on-fill', 'sr-color-interactive-primary', 4.5,
+    'Badge count on the badge fill (badge.css)'],
+
   ['sr-color-status-error', 'sr-color-status-error-surface', 4.5,
     'Error text on the error surface'],
   ['sr-color-status-success', 'sr-color-status-success-surface', 4.5,

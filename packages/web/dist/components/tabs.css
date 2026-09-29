@@ -109,25 +109,10 @@
   background: transparent;
 }
 
-/* Count badge — a pill, Interactive/Primary with white text.
-   Decorative: the count must also reach the accessible name of the tab, or a
-   screen reader announces the tab without it. */
-.sr-tabs__badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 32px;
-  height: 20px;
-  padding: 0 var(--space-2); /* 0 8px */
-  border-radius: var(--radius-full);
-  background-color: var(--sr-color-interactive-primary);
-  color: var(--sr-color-text-on-fill);
-  font: var(--sr-type-caption-font); /* 12/16 Regular */
-  letter-spacing: var(--sr-type-caption-letter-spacing);
-}
-
-.sr-tabs__tab:disabled .sr-tabs__badge,
-.sr-tabs__tab[aria-disabled='true'] .sr-tabs__badge {
+/* Count badge — the shared Badge (badge.css). A disabled tab greys it: disabled
+   controls are exempt from SC 1.4.3, and the grey says "not available". */
+.sr-tabs__tab:disabled .sr-badge,
+.sr-tabs__tab[aria-disabled='true'] .sr-badge {
   background-color: var(--sr-color-interactive-disabled);
 }
 
@@ -177,7 +162,7 @@
 .sr-tabs--secondary .sr-tabs__tab[aria-selected='true'] {
   background-color: var(--sr-color-interactive-primary);
   border-color: var(--sr-color-interactive-primary);
-  color: var(--sr-color-text-inverse);
+  color: var(--sr-color-text-on-fill);
   box-shadow: none;
 }
 

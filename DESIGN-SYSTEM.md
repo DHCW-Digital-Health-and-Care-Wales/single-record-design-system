@@ -4,7 +4,7 @@ The Single Record Design System provides the shared design language, component l
 
 This document is the primary reference for everyone working on Single Record — designers, engineers, and delivery leads.
 
-**Last reviewed:** 2026-09-24. Update this file whenever a component ships, a
+**Last reviewed:** 2026-09-25. Update this file whenever a component ships, a
 token is added, or a system-wide rule changes — not on a schedule. If it
 disagrees with `/foundations/tokens/` or `/components/`, those win and this file
 is out of date.
@@ -228,6 +228,7 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Modal dialog | ✅ | ✅ | ✅ |
 | Navigation | — (guidelines ✅) | ✅ | ✅ |
 | Avatar | ✅ | ✅ | ✅ |
+| Badge | ✅ (guidelines ✅; no Figma component yet) | ✅ | ✅ |
 | Error summary | ✅ | ✅ | ✅ |
 | Notification banner | ✅ | ✅ | ✅ |
 | Patient banner | ✅ | ✅ | ✅ |
@@ -263,7 +264,7 @@ kinds of thing behind one promise:
 | Notification banner | Component; its two Figma sets are one component with two properties | **Figma done** — one set of 8 variants (`Severity` × `Placement`) plus `Title`, `Dismissible` and `Actions` booleans; all 15 instances re-pointed and the old set deleted. Remaining: spec, code, page — settle the `Placement` value naming first. Steps: `docs/figma-banner-and-error-messages.md` |
 | Error/Warning messages | Neither — shared form-field anatomy, already rendered by six components | **Done** — renamed `Form field / Message`, page retitled **Errors**, all 15 doc-page instances intact. The **error summary** pattern now ships alongside it. DDR-034 |
 | Modal | Component — DDR-008 already decided this | **Done** — `Dialog` (`2612:3330`) deleted after its 10 variants were detached into pattern frames; Modal and Dialogs page headings corrected; `patterns/dialogs/result-dialog.md` written. Open: re-basing the frames onto `Modal` instances. DDR-034 |
-| Notifications | **Misnamed; not a component** | **Done** — set renamed `Header / Notification bell` and moved to the Header page; the Notifications page is empty and flagged for deletion. Open: unify `.sr-nav__item-badge` and `.sr-tabs__badge` behind one Badge style. DDR-034 |
+| Notifications | **Misnamed; not a component** | **Done** — set renamed `Header / Notification bell` and moved to the Header page; the Notifications page is empty and flagged for deletion. Badge unified 2026-09-25: `.sr-badge` replaces `.sr-nav__item-badge` and `.sr-tabs__badge`; the bell has no count, by decision. DDR-034 |
 
 The Link spec was corrected in the same pass: it described 36 variants across
 three types and cited a Figma node that no longer exists. The real set has 24

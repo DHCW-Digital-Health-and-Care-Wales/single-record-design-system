@@ -13,6 +13,15 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 ## Start here — next session
 
+> **State (2026-09-29):** `main` carries everything — Badge, the
+> `check:on-fill` gate and its seven dark-mode text fixes are merged. Start a
+> fresh branch from `main`. `npm run check` and `build:site` were green.
+>
+> **The deck session is presentation-only.** The session that built Deck 4
+> (clinical assurance slides, Figma page `3303:585`) is kept for slide edits
+> in Figma only: **no code changes, no commits, no pushes, no PRs** from it.
+> Figma-to-code work happens in new sessions like this one.
+
 1. **The remaining stale "Menu Item" usage-notes frames.** Every component page
    that still has one is showing guidance for a Menu Item — state variants,
    badge counts, leading icons — on a page with none of those. Each needs a
@@ -21,22 +30,76 @@ before writing MAUI, so a finding filed only here is a finding lost.
    node scripts/guidelines-to-figma.mjs components/<name>/guidelines.md \
      --figma-script --page=<pageId> --replace=<staleNodeId>
    ```
-2. **Re-base the dialog pattern frames onto `Modal`.** Pick a size per pattern
-   first — they are drawn at 400px and `Modal` offers Small 380 / Medium 480.
-   That size decision is the blocker; the rest is mechanical.
-3. **Unify `.sr-nav__item-badge` and `.sr-tabs__badge`** behind one Badge. Two
-   implementations of one mark, and `.sr-header__notification` has none.
-4. **Delete the empty Notifications page** in Figma (named `[EMPTY — delete]`).
-5. **A theme switcher**, if mobile proceeds — it is a component decision, not
-   three icons. Web and mobile will otherwise disagree about what "System"
-   means.
-6. **Match score**, if it is still wanted — it is a component, and what it
-   communicates has to be settled before anything is drawn.
-7. Status indicator's section on the Icons page; the footer in dark mode.
+2. **Re-base the dialog pattern frames onto `Modal` — Small (380).** Size
+   decided 2026-09-25: the 400px frames move to `Modal` Small. Next after item 1.
+3. **Badge — code shipped 2026-09-25; Figma component still to do.** Figma
+   draws the pill inside the nav item block (`665:21099`) and the tab set
+   (`817:7219`). Needs a `Badge` component, a page for it, and both hosts
+   re-pointed. The header bell has **no** count, by decision.
+4. **Match score** — pending. What it communicates has to be settled before
+   anything is drawn.
+5. **Status indicator — neutral dash.** Figma's `Status indicator/neutral`
+   (`2000:4542`) has 6 instances, all in the Status column of a "Test results"
+   table (two copies, frames `3229:57126` and `3971:22553`): alone on a row with
+   nothing flagged, and trailing the other marks. Reads as "no result flagged".
+   Design lead is checking the original intent before code gains a `neutral`
+   variant (and its accessible label) and the Icons-page section proceeds.
+6. **Patient search — Advanced variant has content errors** (Figma
+   `2845:8594`, page `3037:25472`). Surname and Forename placeholders are
+   swapped; "Forename Searching Methods" lists See and treat / Rapid
+   assessment / Triage (copied triage options); date of birth placeholder is
+   `dd-mm-yy` (two-digit year). Fix before it is shown to clinicians. The
+   page's usage-notes frame (`3037:25474`) is also a stale Menu Item panel.
+
+**New finding, not fixed:** the selected **primary** tab's label is
+`interactive/primary` text on the dark page — **~2.2:1** in dark mode. Needs a
+token decision (the link colour is one candidate), so it was left alone.
+
+Done or dropped 2026-09-25: the empty Notifications page is deleted; the theme
+switcher is not needed; **the footer in dark mode is resolved** — Figma now
+binds it to `section-cards`, matching code (changed by the design lead, not
+re-verified in the file by this session).
 
 **Before any destructive Figma edit, re-count instances yourself.** Twice this
 session a count from a previous step was wrong, and both times the guard in the
 delete script — not the plan — is what caught it.
+
+---
+
+## Checkpoint — 2026-09-29 (Clinical assurance deck — Figma only)
+
+- **Deck 4: Clinical Assurance & Patient Safety Product Clinic** — 18 slides
+  (1280×720, `CA-S1`…`CA-S18`, speaker notes beneath each) on the
+  Presentation slides page `3303:585`, below Deck 3. Built with `use_figma`;
+  **no repo files**. Uses live instances of Patient Banner, Patient search
+  (Quick only), icons and status indicators.
+- **Deck edits belong to the original deck session**, not code sessions. That
+  session changes slides only — never code or GitHub.
+- Eight `Image · <name>` frames were left for the design lead to fill by hand:
+  `mcp.figma.com` upload was refused by the environment network policy
+  (now allow-listed for new sessions).
+- Sources used: `docs/reference/dhcw-ui-standards-v1.3.md` p.20 (banner) and
+  p.39–41 (icons) — one "!" glyph with five meanings, colour-only "R" tiles and
+  match triangles, WCP roundel used as an icon.
+
+---
+
+## Checkpoint — 2026-09-25 (Badge is one component; seven dark-mode text failures fixed)
+
+- **Badge shipped in code**: `.sr-badge`, `Badge` (React), spec, guidelines,
+  story, website page. Replaces `.sr-nav__item-badge` and `.sr-tabs__badge`.
+  The badge owns the look; navigation and tabs own placement and hiding.
+- **Nav counts were never announced.** The nav item's `aria-label` replaced its
+  content. The label now carries the count ("Referrals, 20 items") in React,
+  the story and the website.
+- **Seven rules put `text/inverse` on `interactive/primary`**: 2.26:1 in dark.
+  Nav badge, selected date-picker day, search submit, pressed segmented option,
+  selected select option, selected secondary tab, dark-blue count tag. All now
+  `text/on-fill`. **New gate `check:on-fill`**, verified by planting the defect
+  back into `badge.css`. `check:contrast` could not catch this: it checks token
+  pairs, not which token the CSS uses. Filed in `known-issues.md`.
+- `npm run check` green (79 contrast pairs, 0 open); `build:site` and
+  `check:snippets` green. Dark mode confirmed with a screenshot.
 
 ---
 

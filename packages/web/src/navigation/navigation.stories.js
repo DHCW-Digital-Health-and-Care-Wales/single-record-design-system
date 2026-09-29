@@ -1,4 +1,5 @@
 import './navigation.css';
+import '../badge/badge.css';
 import '@dhcw/sr-tokens/build/css/tokens.css';
 import { iconMarkup } from '@dhcw/sr-icons/build/icons.js';
 import { logoFullSrc } from '../assets/logo.js';
@@ -92,7 +93,8 @@ const buildItem = ({ icon, label, badge, children }, { current }) => {
   // Accessible name is always present so the icon-only collapsed state is not
   // an unlabelled button (WCAG 2.2 — button-name). When expanded it matches
   // the visible label text.
-  item.setAttribute('aria-label', label);
+  // The badge is aria-hidden, so its count goes into the name as well.
+  item.setAttribute('aria-label', badge ? `${label}, ${badge} items` : label);
   if (current === label) item.setAttribute('aria-current', 'page');
   if (hasChildren) item.setAttribute('aria-expanded', 'false');
 
@@ -105,8 +107,9 @@ const buildItem = ({ icon, label, badge, children }, { current }) => {
   main.appendChild(labelEl);
   if (badge) {
     const badgeEl = document.createElement('span');
-    badgeEl.className = 'sr-nav__item-badge';
+    badgeEl.className = 'sr-badge';
     badgeEl.textContent = badge;
+    badgeEl.setAttribute('aria-hidden', 'true');
     main.appendChild(badgeEl);
   }
   item.appendChild(main);

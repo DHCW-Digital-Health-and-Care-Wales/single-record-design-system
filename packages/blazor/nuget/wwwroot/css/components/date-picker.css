@@ -181,7 +181,7 @@
 }
 .sr-datepicker__day[aria-selected="true"] {
   background-color: var(--sr-color-interactive-primary);
-  color: var(--sr-color-text-inverse);
+  color: var(--sr-color-text-on-fill);
 }
 .sr-datepicker__day:disabled {
   color: var(--sr-color-text-disabled);

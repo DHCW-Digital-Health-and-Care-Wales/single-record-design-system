@@ -28,6 +28,7 @@
 @import "./header/header.css";
 @import "./input/input.css";
 @import "./avatar/avatar.css";
+@import "./badge/badge.css";
 @import "./error-summary/error-summary.css";
 @import "./notification-banner/notification-banner.css";
 @import "./inset-text/inset-text.css";
