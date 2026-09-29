@@ -13,11 +13,14 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 ## Start here — next session
 
-> **Branch state (2026-09-29):** 3 commits on `claude/tender-thompson-rbqxq7`
-> are **not on `main`** — the Badge component, the `check:on-fill` gate with
-> seven dark-mode text fixes, and handoff updates. No PR was opened. Open one
-> (or merge) before starting new work, or start the new branch from this one.
-> `npm run check` and `build:site` were green on `ceeb65f`.
+> **State (2026-09-29):** `main` carries everything — Badge, the
+> `check:on-fill` gate and its seven dark-mode text fixes are merged. Start a
+> fresh branch from `main`. `npm run check` and `build:site` were green.
+>
+> **The deck session is presentation-only.** The session that built Deck 4
+> (clinical assurance slides, Figma page `3303:585`) is kept for slide edits
+> in Figma only: **no code changes, no commits, no pushes, no PRs** from it.
+> Figma-to-code work happens in new sessions like this one.
 
 1. **The remaining stale "Menu Item" usage-notes frames.** Every component page
    that still has one is showing guidance for a Menu Item — state variants,
