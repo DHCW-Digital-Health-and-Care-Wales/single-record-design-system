@@ -3471,6 +3471,550 @@ textarea.sr-input__control {
   /* Actions is already row/wrap/auto-width from the 1439px tier above. */
 }
 
+/* ═══ progress-indicators ═════════════════════════════════════════ */
+/**
+ * DHCW Single Record — Progress indicators
+ * Reference HTML/CSS implementation of the Figma "Progress indicators" page
+ * (1736:12775). Three components share this file because they share a marker
+ * vocabulary and one page:
+ *
+ *   .sr-progress   Progress/Bar       (1746:37)  determinate · segmented · indeterminate
+ *   .sr-stepper    Progress/Stepper   (1746:92)  horizontal
+ *                  Progress/Vertical Step (1747:76)  .sr-stepper--vertical
+ *                  Progress/Tab       (1746:106) .sr-stepper--compact  (DDR-036)
+ *   .sr-timeline   Progress/Timeline  (1747:149)
+ *
+ * A stepper says where the user is in a fixed sequence. A timeline says what
+ * has already happened. A progress bar says how much of ONE task is done.
+ * They are not interchangeable — see components/progress-indicators/spec.md.
+ *
+ * Consumes @dhcw/sr-tokens. The Done and Error step markers are the shared
+ * Status indicator (status-indicator.css), exactly as Figma instances them —
+ * this file sizes and places it, and does not redraw it.
+ */
+
+/* ── Progress bar ──────────────────────────────────────────────────────────
+   Caption · track · value, in one 24px row with 14px gaps. The caption is
+   120px wide in Figma so bars in a stack line up; that is a layout choice,
+   not a rule, so it is a custom property. */
+
+.sr-progress {
+  --sr-progress-value: 0%;
+  --sr-progress-caption-width: 120px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 24px;
+  width: 100%;
+}
+
+.sr-progress__caption {
+  flex: 0 0 var(--sr-progress-caption-width);
+  color: var(--sr-color-text-secondary);
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+}
+
+/* The track carries role="progressbar". It is 8px tall with a 4px radius —
+   the fill is the same height and radius, so it reads as one bar. */
+.sr-progress__track {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 8px;
+  border-radius: var(--radius-4);
+  background-color: var(--sr-color-border-default);
+  overflow: hidden;
+}
+
+.sr-progress__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--sr-progress-value);
+  border-radius: var(--radius-4);
+  background-color: var(--sr-color-interactive-primary);
+}
+
+/* The number, as text. It is what makes the bar's meaning available to
+   someone who cannot tell the fill from the track, so it is not optional for
+   determinate and segmented bars. It is aria-hidden in markup because the
+   progressbar already announces the value. */
+.sr-progress__value {
+  flex: 0 0 auto;
+  min-width: 40px;
+  text-align: right;
+  color: var(--sr-color-text-primary);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Segmented — N of M sections. Each section is its own 8px pill with a 4px
+   gap. Done sections are Status/Success, the current one Interactive/Primary,
+   the rest Border/Default. Done and current are 1.13:1 apart, so hue is all
+   that separates them: the "3/5" beside the bar is what carries the meaning,
+   and it is required. */
+.sr-progress__segments {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sr-progress__segment {
+  flex: 1 1 0;
+  height: 8px;
+  border-radius: var(--radius-4);
+  background-color: var(--sr-color-border-default);
+}
+.sr-progress__segment--done    { background-color: var(--sr-color-status-success); }
+.sr-progress__segment--current { background-color: var(--sr-color-interactive-primary); }
+
+/* Indeterminate — the duration is unknown. Figma is a still of the moving
+   fill (120px of a 480px track, 80px in); the implementation moves it. */
+.sr-progress--indeterminate .sr-progress__fill {
+  width: 25%;
+  animation: sr-progress-indeterminate 1.6s ease-in-out infinite;
+}
+
+@keyframes sr-progress-indeterminate {
+  from { left: -25%; }
+  to   { left: 100%; }
+}
+
+/* Reduced motion: a fill that never stops moving is exactly what the setting
+   is for. Hold it still at the position Figma draws; the caption ("Saving
+   record") still says that something is happening. */
+@media (prefers-reduced-motion: reduce) {
+  .sr-progress--indeterminate .sr-progress__fill {
+    animation: none;
+    left: 16.67%;
+  }
+}
+
+/* ── Stepper — shared ──────────────────────────────────────────────────────
+   An <ol>, one <li> per step, aria-current="step" on the current one. The
+   marker is decorative (aria-hidden): the step's state is in visually hidden
+   text beside the label, because a green tick is not an accessible name. */
+
+.sr-stepper {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sr-stepper__step {
+  position: relative;
+  display: flex;
+  min-width: 0;
+}
+
+.sr-stepper__marker {
+  position: relative;
+  z-index: 1; /* above the connector that runs through the marker row */
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--sr-stepper-marker-size);
+  height: var(--sr-stepper-marker-size);
+  border-radius: var(--radius-full);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+}
+
+/* Upcoming — a ring and a grey number. The ring is Border/Default: it is not
+   a control boundary (SC 1.4.11) because the number inside it is what
+   identifies the step, and the number is Text/Secondary. */
+.sr-stepper__step--upcoming .sr-stepper__marker {
+  border: 2px solid var(--sr-color-border-default);
+  background-color: var(--sr-color-surface-section-cards);
+  color: var(--sr-color-text-secondary);
+}
+
+/* Current — filled brand blue, white number, and a 4px halo of the same blue
+   at 20%. Text/On Fill, not Text/Inverse: Inverse turns near-black in dark
+   mode while this fill stays blue (known-issues: "text/inverse on a saturated
+   fill"). Figma binds Text/Inverse here; the code does not copy it. */
+.sr-stepper__step--current .sr-stepper__marker {
+  background-color: var(--sr-color-interactive-primary);
+  color: var(--sr-color-text-on-fill);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--sr-color-interactive-primary) 20%, transparent);
+}
+
+/* Done and Error hold a Status indicator, which draws its own disc. The
+   marker only sizes it. */
+.sr-stepper__marker .sr-status-indicator {
+  width: 100%;
+  height: 100%;
+}
+
+/* The shared error indicator uses Status/Error on Page, which is Red/300 in
+   dark mode (DDR-035) — right for a glyph on the page, wrong for a disc with
+   a WHITE glyph knocked out of it (about 2.4:1). A filled marker is a fill,
+   so it stays on Red/700 in both modes. */
+.sr-stepper__marker .sr-status-indicator--error {
+  color: var(--sr-color-status-error);
+}
+
+.sr-stepper__label {
+  color: var(--sr-color-text-primary);
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+}
+
+.sr-stepper__step--upcoming .sr-stepper__label {
+  color: var(--sr-color-text-secondary);
+}
+.sr-stepper__step--current .sr-stepper__label {
+  color: var(--sr-color-interactive-primary);
+}
+
+/* Dark mode: the current label goes white, like every other label. Blue on a
+   dark card is 2.07:1; the filled marker and the halo still mark the step as
+   current, and aria-current says so. Decided by the design lead 2026-09-30.
+   Figma has no variable that is blue in light and white in dark, so the Figma
+   dark mode still shows blue — see the spec's departures table. */
+[data-theme="dark"] .sr-stepper__step--current .sr-stepper__label {
+  color: var(--sr-color-text-primary);
+}
+.sr-stepper__step--error .sr-stepper__label,
+.sr-stepper__step--error .sr-stepper__hint {
+  color: var(--sr-color-status-error-on-page);
+}
+
+/* Hint — the short reason under an Error step ("2 fields missing"). Figma
+   sets it at 10px, below the type scale; it is Caption here. It is what makes
+   the error state readable without colour, so it is required on Error. */
+.sr-stepper__hint {
+  display: block;
+  color: var(--sr-color-text-secondary);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+}
+
+/* A step may be a link back to a section already visited. The label carries
+   the link; the marker does not, so there is one focus stop per step. */
+.sr-stepper__link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  border-radius: var(--radius-2);
+}
+.sr-stepper__link:hover {
+  text-decoration-thickness: 2px;
+}
+.sr-stepper__link:focus-visible {
+  outline: 2px solid var(--sr-color-border-focus);
+  outline-offset: 2px;
+}
+
+/* ── Stepper — horizontal (Progress/Stepper) ───────────────────────────────
+   Steps share the width equally. A 40px marker sits centred over a centred
+   label, and a 2px connector runs through the middle of the marker row.
+
+   Each step draws the two HALVES of the connector either side of its own
+   marker — ::before towards the previous step, ::after towards the next —
+   which is how Figma builds it and what lets the colour change mid-line:
+   Done → Current reads green then blue. The first step has no ::before and
+   the last no ::after, so there is no Last property to set. */
+
+.sr-stepper:not(.sr-stepper--vertical):not(.sr-stepper--compact) {
+  --sr-stepper-marker-size: 40px;
+  align-items: flex-start;
+}
+
+.sr-stepper:not(.sr-stepper--vertical):not(.sr-stepper--compact) .sr-stepper__step {
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-2);
+  text-align: center;
+}
+
+.sr-stepper:not(.sr-stepper--vertical):not(.sr-stepper--compact) .sr-stepper__step::before,
+.sr-stepper:not(.sr-stepper--vertical):not(.sr-stepper--compact) .sr-stepper__step::after {
+  content: '';
+  position: absolute;
+  top: 19px; /* (40 − 2) / 2 */
+  width: 50%;
+  height: 2px;
+  background-color: var(--sr-color-border-default);
+}
+.sr-stepper:not(.sr-stepper--vertical):not(.sr-stepper--compact) .sr-stepper__step::before { left: 0; }
+.sr-stepper:not(.sr-stepper--vertical):not(.sr-stepper--compact) .sr-stepper__step::after  { right: 0; }
+.sr-stepper:not(.sr-stepper--vertical):not(.sr-stepper--compact) .sr-stepper__step:first-child::before,
+.sr-stepper:not(.sr-stepper--vertical):not(.sr-stepper--compact) .sr-stepper__step:last-child::after {
+  content: none;
+}
+
+/* Incoming half takes the step's own colour; outgoing half is green only
+   when this step is done. */
+.sr-stepper:not(.sr-stepper--vertical):not(.sr-stepper--compact) .sr-stepper__step--done::before,
+.sr-stepper:not(.sr-stepper--vertical):not(.sr-stepper--compact) .sr-stepper__step--done::after {
+  background-color: var(--sr-color-status-success);
+}
+.sr-stepper:not(.sr-stepper--vertical):not(.sr-stepper--compact) .sr-stepper__step--current::before {
+  background-color: var(--sr-color-interactive-primary);
+}
+.sr-stepper:not(.sr-stepper--vertical):not(.sr-stepper--compact) .sr-stepper__step--error::before {
+  background-color: var(--sr-color-status-error);
+}
+
+/* ── Stepper — vertical (Progress/Vertical Step) ───────────────────────────
+   A 32px marker column (24px marker) and a body of title + description. The
+   connector runs from under the marker to the next step; it is green below a
+   done step and grey otherwise. */
+
+.sr-stepper--vertical {
+  --sr-stepper-marker-size: 24px;
+  flex-direction: column;
+}
+
+.sr-stepper--vertical .sr-stepper__step {
+  gap: var(--space-2);
+  padding: var(--space-2) 0 var(--space-4);
+}
+
+.sr-stepper--vertical .sr-stepper__marker-column {
+  display: flex;
+  flex: 0 0 32px;
+  justify-content: center;
+}
+
+.sr-stepper--vertical .sr-stepper__step::after {
+  content: '';
+  position: absolute;
+  top: calc(var(--space-2) + 24px);
+  bottom: calc(-1 * var(--space-2)); /* through the next step's top padding, to its marker */
+  left: 15px; /* centre of the 32px column, less half the 2px line */
+  width: 2px;
+  background-color: var(--sr-color-border-default);
+}
+.sr-stepper--vertical .sr-stepper__step:last-child::after {
+  content: none;
+}
+.sr-stepper--vertical .sr-stepper__step--done::after {
+  background-color: var(--sr-color-status-success);
+}
+
+.sr-stepper--vertical .sr-stepper__body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sr-stepper--vertical .sr-stepper__description {
+  color: var(--sr-color-text-secondary);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+}
+
+/* In a vertical stepper the title of every non-current step is Text/Primary,
+   including upcoming ones — the description ("Not started") says the rest. */
+.sr-stepper--vertical .sr-stepper__step--upcoming .sr-stepper__label {
+  color: var(--sr-color-text-primary);
+}
+
+/* ── Stepper — compact (Progress/Tab) ──────────────────────────────────────
+   The stepper at the weight of a tab strip, for a flow that sits under a tab
+   bar. It LOOKS like tabs and is not Tabs: it is an <ol> of steps, not a
+   role="tablist", because it reports progress through a sequence rather than
+   switching between views. DDR-036.
+
+   44px tall, 12px padding, a 16px marker and a 4px gap. Every step has a 1px
+   Border/Default rule under it; the current step replaces it with 3px of
+   Interactive/Primary. */
+
+.sr-stepper--compact {
+  --sr-stepper-marker-size: 16px;
+  flex-wrap: wrap;
+}
+
+.sr-stepper--compact .sr-stepper__step {
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 44px;
+  padding: var(--space-3);
+  box-sizing: border-box;
+  box-shadow: inset 0 -1px 0 var(--sr-color-border-default);
+}
+
+.sr-stepper--compact .sr-stepper__step--current {
+  box-shadow: inset 0 -3px 0 var(--sr-color-interactive-primary);
+}
+
+/* The compact marker is a bare 1.5px ring with no number — the step number
+   would not fit at 16px, so the markup leaves the marker empty. Current rings
+   in blue; upcoming in grey. */
+.sr-stepper--compact .sr-stepper__marker {
+  border-width: 1.5px;
+  box-shadow: none;
+}
+.sr-stepper--compact .sr-stepper__step--current .sr-stepper__marker {
+  border: 1.5px solid var(--sr-color-interactive-primary);
+  background-color: transparent;
+}
+.sr-stepper--compact .sr-stepper__step--upcoming .sr-stepper__marker {
+  border-width: 1.5px;
+  background-color: transparent;
+}
+
+.sr-stepper--compact .sr-stepper__label {
+  font: var(--sr-type-body-s-font);
+  letter-spacing: var(--sr-type-body-s-letter-spacing);
+  white-space: nowrap;
+}
+.sr-stepper--compact .sr-stepper__step--current .sr-stepper__label {
+  font: var(--sr-type-label-font);
+  letter-spacing: var(--sr-type-label-letter-spacing);
+}
+
+/* ── Timeline (Progress/Timeline) ──────────────────────────────────────────
+   What has happened, oldest first. Each item is a time column (80px, right
+   aligned), a 16px dot on a 2px grey line, and a body: title, description
+   and an optional status tag. The tag is the shared Tag (tags.css) — Figma
+   draws a bespoke 10px pill, which is below the type scale. */
+
+.sr-timeline {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sr-timeline__item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 80px 16px minmax(0, 1fr);
+  column-gap: var(--space-3);
+  padding-bottom: var(--space-5);
+}
+
+.sr-timeline__item:last-child {
+  padding-bottom: 0;
+}
+
+/* The line runs from under the dot to the next item's dot. */
+.sr-timeline__item::after {
+  content: '';
+  position: absolute;
+  top: 22px; /* dot top (4px) + 16px + 2px clearance */
+  bottom: 2px;
+  left: calc(80px + var(--space-3) + 7px);
+  width: 2px;
+  background-color: var(--sr-color-border-default);
+}
+.sr-timeline__item:last-child::after {
+  content: none;
+}
+
+.sr-timeline__time {
+  color: var(--sr-color-text-secondary);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+  text-align: right;
+  padding-top: var(--space-1);
+  white-space: pre-line; /* "08-Apr-2024\n15:30" sets date over time, as Figma does */
+}
+
+.sr-timeline__dot {
+  box-sizing: border-box;
+  width: 16px;
+  height: 16px;
+  margin-top: var(--space-1);
+  border-radius: var(--radius-full);
+}
+.sr-timeline__item--complete .sr-timeline__dot { background-color: var(--sr-color-status-success); }
+.sr-timeline__item--current .sr-timeline__dot { background-color: var(--sr-color-interactive-primary); }
+.sr-timeline__item--alert .sr-timeline__dot   { background-color: var(--sr-color-status-error-on-page); }
+
+/* Pending is a ring. Figma draws it in Border/Default (1.37:1 on white),
+   which leaves an empty dot close to invisible; the ring is the only mark on
+   that row's line, so it takes Border/Strong (3.75:1) for SC 1.4.11. */
+.sr-timeline__item--pending .sr-timeline__dot {
+  border: 1.5px solid var(--sr-color-border-strong);
+  background-color: var(--sr-color-surface-section-cards);
+}
+
+.sr-timeline__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+}
+
+.sr-timeline__title {
+  margin: 0;
+  color: var(--sr-color-text-primary);
+  font: var(--sr-type-heading-xs-font);
+  letter-spacing: var(--sr-type-heading-xs-letter-spacing);
+}
+.sr-timeline__item--alert .sr-timeline__title {
+  color: var(--sr-color-status-error-on-page);
+}
+.sr-timeline__item--pending .sr-timeline__title {
+  color: var(--sr-color-text-secondary);
+}
+
+.sr-timeline__description {
+  margin: 0;
+  color: var(--sr-color-text-secondary);
+  font: var(--sr-type-caption-font);
+  letter-spacing: var(--sr-type-caption-letter-spacing);
+}
+
+.sr-timeline__body .sr-tag {
+  margin-top: 2px;
+}
+
+/* Visually hidden — each step's state ("completed", "has errors") is spoken,
+   not drawn. Duplicated from input.css / table.css for the reason given
+   there: each component stylesheet is independently importable. */
+.sr-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ── Forced colours ────────────────────────────────────────────────────────
+   Fills are dropped, so give every mark an edge the system colours can draw,
+   and keep the current step and fill distinguishable. */
+@media (forced-colors: active) {
+  .sr-progress__track,
+  .sr-progress__segment,
+  .sr-timeline__dot {
+    border: 1px solid CanvasText;
+  }
+  .sr-progress__fill,
+  .sr-progress__segment--done,
+  .sr-progress__segment--current {
+    background-color: Highlight;
+  }
+  .sr-stepper__marker {
+    border: 2px solid CanvasText;
+  }
+  .sr-stepper__step--current .sr-stepper__marker {
+    background-color: Highlight;
+    color: HighlightText;
+  }
+}
+
 /* ═══ radio ═══════════════════════════════════════════════════════ */
 /**
  * DHCW Single Record — Radio

@@ -4,7 +4,7 @@ The Single Record Design System provides the shared design language, component l
 
 This document is the primary reference for everyone working on Single Record — designers, engineers, and delivery leads.
 
-**Last reviewed:** 2026-09-25. Update this file whenever a component ships, a
+**Last reviewed:** 2026-09-30. Update this file whenever a component ships, a
 token is added, or a system-wide rule changes — not on a schedule. If it
 disagrees with `/foundations/tokens/` or `/components/`, those win and this file
 is out of date.
@@ -232,7 +232,7 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Error summary | ✅ | ✅ | ✅ |
 | Notification banner | ✅ | ✅ | ✅ |
 | Patient banner | ✅ | ✅ | ✅ |
-| Progress indicators | ✅ | — | — |
+| Progress indicators — bar, stepper (horizontal, vertical, compact), timeline | ✅ (guidelines ✅) | ✅ | ✅ |
 | Radio | ✅ (guidelines ✅) | ✅ | ✅ |
 | Search | ✅ (guidelines ✅) | ✅ | ✅ |
 | Segmented control | — (guidelines ✅, with Switch) | ✅ | ✅ |
@@ -246,10 +246,10 @@ reference HTML/CSS in `packages/web/src/` — the layer Blazor and MAUI also con
 | Tags | ✅ | ✅ | ✅ |
 | Time select | — | ✅ | ✅ |
 
-**Known gaps, stated plainly:** eleven components ship code without a spec, and
-one spec (Progress indicators) has no code. Neither is
-satisfactory — a component without a spec has no agreed contract, and a spec
-without code cannot be consumed. Both lists are worked down as components are
+**Known gaps, stated plainly:** eleven components ship code without a spec.
+Every spec now has code — Progress indicators, the last spec without it, shipped
+2026-09-29 (no MAUI styles yet). A component without a spec has no agreed
+contract, and a spec without code cannot be consumed. Both lists are worked down as components are
 touched.
 
 **Five Figma pages were classified on 2026-09-14 (DDR-032)** before being queued
@@ -686,6 +686,7 @@ Design decisions that affect the system — token choices, pattern departures, s
 | DDR-031 | Stat card is a component, and its three layouts |
 | DDR-032 | Five Figma pages: component, pattern or style |
 | DDR-033 | The dark-mode small-card surface is Cyan/850, and is text-only (supersedes part of DDR-026) |
+| DDR-036 | The Stepper Tab is a stepper, not a Tabs variant |
 
 Use `DDR-000-template.md` as the starting point for new records. A DDR is required before any non-trivial structural change is made.
 

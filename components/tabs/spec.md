@@ -17,6 +17,10 @@ on screen, use the Segmented control. The two look different on purpose and are
 not interchangeable: Tabs are `role="tab"` bound to panels; the Segmented
 control is a group of buttons with `aria-pressed`.
 
+**Tabs vs the compact stepper.** A strip where each item shows done / current /
+upcoming is a stepper, not tabs — `Stepper layout="compact"` in Progress
+indicators. A tab never carries a tick (DDR-036).
+
 **Tabs vs Navigation.** Tabs move between views of *the same record*. Moving
 between areas of the product is Navigation, and must change the URL.
 

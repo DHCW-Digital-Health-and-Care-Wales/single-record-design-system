@@ -889,6 +889,29 @@ past its share.
 
 ---
 
+### The error status indicator turns pink in dark mode — wrong under a white glyph
+
+**Symptom:** reuse `.sr-status-indicator--error` as a filled marker (a
+stepper's error step) and, in dark mode, the white exclamation sits on a pale
+pink disc at about 2.4:1.
+
+**Why:** the indicator colours its disc with `status/error-on-page`, which is
+Red/300 in dark mode (DDR-035). That is right for a small glyph on the page,
+where the red itself is the mark. It is wrong once the disc becomes a *fill*
+with a white glyph knocked out of it — the glyph is now the text, and the disc
+its background.
+
+**Fix:** where the indicator is a filled marker, hold the disc on
+`status/error` (Red/700 in both modes). `progress-indicators.css` does this with
+`.sr-stepper__marker .sr-status-indicator--error`.
+
+**Prevented by:** `check:contrast` asserts `text/on-fill` on `status/error` in
+both modes, so the token pair cannot regress. It cannot see which token a
+given rule picks, so a new host that forgets the override will get past it —
+the same limit `check:on-fill` has. Not mechanised further.
+
+---
+
 ## Build & CI
 
 ### A `::after` inside a flex container is a flex ITEM, not a layer behind it
@@ -1458,6 +1481,26 @@ pass. Note that re-planting the *original* defect no longer fails the check:
 the parser now joins wrapped lines before stripping, so it strips correctly.
 That is the fix working, not the gate — the gate needs markdown the parser
 genuinely cannot resolve.
+
+---
+
+### `guidelines-to-figma.mjs --figma-script` emitted a script that could not parse
+
+**Symptom:** the generated `use_figma` script contained
+`s.lines.join('` followed by a line break and `')`. Figma rejects it with
+"Invalid or unexpected token", so no panel is built.
+
+**Why:** the script is a template literal inside the generator. An escape
+written in it is resolved by the *generator*, not by the script it prints, so
+`'\n'` became a real newline inside a single-quoted string. It needs `'\\n'`.
+Nothing ran the output, so every `--figma-script` panel since the flag was
+added would have failed the same way.
+
+**Fix:** `'\\n'` in the template (2026-09-30).
+
+**Prevented by:** the generator compiles its own output as an async function
+body — how `use_figma` runs it — and exits non-zero if it does not parse.
+Verified by planting the single backslash back and confirming exit 1.
 
 ---
 
