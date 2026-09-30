@@ -497,17 +497,18 @@ body.bare { margin: 0; }
   background: var(--sr-color-surface-small-cards);
 }
 
-/* Opt-in full bleed, for a component that misrepresents itself at column width.
-   The Patient Banner is the case this exists for: it is drawn at 1280px and its
-   demographics grid drops to one column below roughly 1230px of banner width,
-   which is narrower than the content column but wider than the bleed. */
-.showcase--bleed {
-  margin-left: calc(var(--content-gutter) * -1);
-  margin-right: calc(var(--content-gutter) * -1);
-  border-left: 0;
-  border-right: 0;
-  border-radius: 0;
-}
+/* A showcase never leaves the content column. There used to be an opt-in
+   full-bleed modifier for the Patient Banner, which pulled the preview AND its
+   code panel out to the sidebar edge so the demographics grid kept two
+   columns. It was the one page where samples and code did not line up with the
+   headings and prose, and measuring showed it did not even buy what it was for:
+   the grid dropped to one column at a 1180px viewport with or without it.
+
+   What the banner actually needs is the preview's inner padding back. `--wide`
+   halves it, which keeps two columns from 1280px up — the same result the
+   bleed gave, inside the column. Below that the banner behaves as it would in
+   any container that width, which is the honest thing to show. */
+.showcase--wide .showcase__preview { padding: 16px; }
 .showcase__preview { padding: 32px; }
 .showcase__preview > :first-child { margin-top: 0; }
 .showcase__preview > :last-child { margin-bottom: 0; }

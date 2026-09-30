@@ -912,6 +912,29 @@ the same limit `check:on-fill` has. Not mechanised further.
 
 ---
 
+### The Patient Banner page broke the site's column alignment — removed 2026-09-30
+
+**Symptom:** on Patterns › Patient Banner, the samples and the code panel ran
+out to the left sidebar while the headings and prose kept their 40px gutter.
+Every other page lines them up.
+
+**Why:** the showcases there used an opt-in full-bleed modifier
+(`.showcase--bleed`, negative margins of the page gutter), kept after the
+site-wide fix because the banner's demographics grid needs about 464px to
+hold two columns. Measured across viewports, the bleed did not guarantee that
+either: at 1180px the grid was one column with or without it.
+
+**Fix:** the modifier is gone. `showcase(…, { wide: true })` /
+`.showcase--wide` keeps the showcase in the column and trims the preview's
+inner padding from 32px to 16px, which keeps two columns from 1280px up — the
+same result the bleed gave.
+
+**Prevented by:** not mechanised. There is no longer a way to leave the column
+short of writing a negative margin into `site.css`, and the comment there says
+why not to.
+
+---
+
 ## Build & CI
 
 ### A `::after` inside a flex container is a flex ITEM, not a layer behind it

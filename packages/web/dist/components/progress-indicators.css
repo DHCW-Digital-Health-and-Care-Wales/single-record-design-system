@@ -197,18 +197,12 @@
 .sr-stepper__step--upcoming .sr-stepper__label {
   color: var(--sr-color-text-secondary);
 }
+/* Text/Selected: brand blue in light, white in dark (blue is 2.07:1 on a dark
+   card). The filled marker still marks the step as current. */
 .sr-stepper__step--current .sr-stepper__label {
-  color: var(--sr-color-interactive-primary);
+  color: var(--sr-color-text-selected);
 }
 
-/* Dark mode: the current label goes white, like every other label. Blue on a
-   dark card is 2.07:1; the filled marker and the halo still mark the step as
-   current, and aria-current says so. Decided by the design lead 2026-09-30.
-   Figma has no variable that is blue in light and white in dark, so the Figma
-   dark mode still shows blue — see the spec's departures table. */
-[data-theme="dark"] .sr-stepper__step--current .sr-stepper__label {
-  color: var(--sr-color-text-primary);
-}
 .sr-stepper__step--error .sr-stepper__label,
 .sr-stepper__step--error .sr-stepper__hint {
   color: var(--sr-color-status-error-on-page);

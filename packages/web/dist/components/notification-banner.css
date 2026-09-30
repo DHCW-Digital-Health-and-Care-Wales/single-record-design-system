@@ -65,15 +65,28 @@
   border-width: 0 0 1px 0;
 }
 
-/* ---------- Icon ---------- */
+/* ---------- Icon ----------
+   Required, not decoration: with the wording it is what stops severity being
+   colour alone (SC 1.4.1). One per severity — status/info, status/success,
+   status/warning, status/error-circle. The svg fills the 20px box whether it
+   arrives bare (plain HTML) or wrapped in an .sr-icon (React). */
 .sr-notification-banner__icon {
+  display: inline-flex;
   flex: 0 0 auto;
   width: 20px;
   height: 20px;
+  line-height: 0;
+}
+.sr-notification-banner__icon svg,
+.sr-notification-banner__icon .sr-icon {
+  width: 100%;
+  height: 100%;
 }
 .sr-notification-banner--information .sr-notification-banner__icon { color: var(--sr-color-status-info); }
 .sr-notification-banner--success     .sr-notification-banner__icon { color: var(--sr-color-status-success); }
-.sr-notification-banner--warning     .sr-notification-banner__icon { color: var(--sr-color-status-warning); }
+/* Warning takes Yellow/700, as its text does: Status/Warning (Yellow/500) is a
+   fill colour at 1.49:1 on its own surface, which left the triangle faint. */
+.sr-notification-banner--warning     .sr-notification-banner__icon { color: var(--color-yellow-700); }
 .sr-notification-banner--error       .sr-notification-banner__icon { color: var(--sr-color-status-error); }
 
 /* ---------- Content ---------- */

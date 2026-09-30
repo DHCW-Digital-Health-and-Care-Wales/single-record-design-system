@@ -28,7 +28,8 @@
         "secondary": { "$type": "color", "$value": "{color.grey.200}",      "$description": "Secondary text on dark." },
         "inverse":   { "$type": "color", "$value": "{color.grey.900}",      "$description": "Text on light elements within a dark-mode interface. It flips with the mode by design — which is why a saturated fill, which does not flip, must use text/on-fill instead." },
         "on-fill":   { "$type": "color", "$value": "{color.white.default}", "$description": "White, same as light mode, and deliberately NOT flipped. A primary or destructive button is saturated in both modes, so its label stays white: 6.38:1 on interactive/primary and 5.06:1 on interactive/destructive here." },
-        "disabled":  { "$type": "color", "$value": "{color.navy.300}",      "$description": "Disabled text on dark surfaces." }
+        "disabled":  { "$type": "color", "$value": "{color.navy.300}",      "$description": "Disabled text on dark surfaces." },
+        "selected":  { "$type": "color", "$value": "{color.white.default}", "$description": "White in dark mode. interactive/primary (Info-blue/600) is 2.07:1 on a dark card, so the selected tab and current step labels go white like every other label; weight, the indicator or the filled marker carry the selection." }
       },
 
       "border": {

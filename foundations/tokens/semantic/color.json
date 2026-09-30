@@ -25,7 +25,8 @@
         "secondary": { "$type": "color", "$value": "{color.grey.600}",     "$description": "Supporting text. 7.2:1 on surface/background (AAA)." },
         "inverse":   { "$type": "color", "$value": "{color.white.default}","$description": "Text on a surface whose lightness is the OPPOSITE of the current mode: dark text in light mode's terms. It therefore flips between modes — white here, near-black in dark. Do not use it on a saturated brand fill; that is text/on-fill." },
         "on-fill":   { "$type": "color", "$value": "{color.white.default}","$description": "Text on a saturated interactive or status fill — a primary button, a destructive button, a filled badge. White in BOTH modes, because those fills stay saturated in both. This is the distinction text/inverse cannot make: inverse is relative to the mode, this is absolute." },
-        "disabled":  { "$type": "color", "$value": "{color.navy.500}",     "$description": "Disabled text. 4.6:1 on surface/background (AA)." }
+        "disabled":  { "$type": "color", "$value": "{color.navy.500}",     "$description": "Disabled text. 4.6:1 on surface/background (AA)." },
+        "selected":  { "$type": "color", "$value": "{color.blue.800}",     "$description": "The label of the selected or current item in a set: the selected tab, the current step in a stepper. Brand blue here (same value as interactive/primary, 8.04:1 on a card). White in dark mode, where the blue would be 2.07:1 on a dark card — weight, the indicator or the filled marker carry the selection there. Not for links (interactive/link) or buttons." }
       },
       "border": {
         "subtle":   { "$type": "color", "$value": "{color.grey.100}" },
