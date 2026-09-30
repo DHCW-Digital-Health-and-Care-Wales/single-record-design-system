@@ -1,6 +1,6 @@
 {
   "name": "@dhcw/sr-icons",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "SVG icon library for the DHCW Single Record Design System — generated from foundations/iconography/svg (Lucide-derived, DDR-003).",
   "license": "MIT",
   "type": "module",
