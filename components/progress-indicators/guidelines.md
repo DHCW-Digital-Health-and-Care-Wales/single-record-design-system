@@ -85,9 +85,9 @@
 - **Timeline times are machine-readable** dates, even when the screen says
   "Now".
 - **Alert items are announced as alerts**, not only coloured red.
-- **Known dark-mode gap.** The current step's blue label is about 2.1:1 on a
-  dark card, below the 4.5:1 text needs. Tabs have the same problem. It is
-  waiting on a token decision and tracked by `check:contrast`.
+- **In dark mode the current label is white**, like the others. Blue would be
+  about 2.1:1 on a dark card. The filled marker still shows which step is
+  current.
 
 ## Content
 

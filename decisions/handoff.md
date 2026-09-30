@@ -51,22 +51,17 @@ before writing MAUI, so a finding filed only here is a finding lost.
    `dd-mm-yy` (two-digit year). Fix before it is shown to clinicians. The
    page's usage-notes frame (`3037:25474`) is also a stale Menu Item panel.
 
-7. **Progress indicators — Figma tidy-up** (page `1736:12775`; code shipped
-   2026-09-29, see the checkpoint below). The `Progress/Stepper` set
-   (`1746:92`) has a `State=Progress` value that means Done at `First` and
-   Upcoming at `Middle`; rename. The samples number step 2 as "3", repeat
-   "Patient identified", and duplicate the horizontal frame. Pending timeline
-   ring should move to `Border/Strong`. Rename `Progress/Tab` so it does not
-   read as a Tabs variant (DDR-036, **Proposed** — design lead to confirm).
-   The usage-notes frame `1736:12850` is a stale Menu Item panel (item 1);
-   `components/progress-indicators/guidelines.md` now exists for it.
+7. ~~Progress indicators — Figma tidy-up~~ **Done 2026-09-30** (checkpoint
+   below). Remaining Figma difference: the timeline tag is still a bespoke
+   10px pill; code uses the shared Tag.
 
 **New finding, not fixed:** the selected **primary** tab's label is
 `interactive/primary` text on the dark page — **~2.2:1** in dark mode. Needs a
 token decision (the link colour is one candidate), so it was left alone.
-**It now affects two components:** the current step's label in the stepper has
-the same pair (2.07:1 on a dark card), and the progress bar's fill against its
-track is 1.38:1 in dark. `check:contrast` reports all of it under OPEN FINDINGS.
+**The stepper had the same pair and was resolved 2026-09-30:** its current
+label goes white in dark mode (design lead's call), and the same answer would
+suit this tab. The progress bar's fill against its track (1.38:1 in dark) was
+accepted as is — the number beside the bar carries the value.
 
 Done or dropped 2026-09-25: the empty Notifications page is deleted; the theme
 switcher is not needed; **the footer in dark mode is resolved** — Figma now
@@ -76,6 +71,36 @@ re-verified in the file by this session).
 **Before any destructive Figma edit, re-count instances yourself.** Twice this
 session a count from a previous step was wrong, and both times the guard in the
 delete script — not the plan — is what caught it.
+
+---
+
+## Checkpoint — 2026-09-30 (Progress indicators — dark label, Figma tidy-up)
+
+- **Code:** the current step's label is `text/primary` (white) in dark mode.
+  Asserted by `check:contrast`. The bar-fill-on-track pair moved from open
+  finding to accepted exception. The Tabs pair is still open.
+- **Figma, page `1736:12775`:**
+  - `Progress/Stepper` (`1746:92`): the three `State=Progress` variants renamed
+    to `Done, First` (`1746:38`), `Upcoming, Middle` (`4634:70963`) and
+    `Upcoming, Last` (`1746:87`). State is now Done · Current · Error · Upcoming.
+    Description updated. 9 instances followed automatically.
+  - Current marker number (`2000:4684`) bound to `Text/On Fill`, not
+    `Text/Inverse`.
+  - Pending timeline ring (`2000:4688`) moved to `Border/Strong`.
+  - Error hint on the three Error variants set to the Caption text style (was
+    10px).
+  - `Progress/Tab` renamed **`Progress/Stepper Compact`** (DDR-036, now
+    Accepted).
+  - Samples: step 2 numbered "2"; the duplicate vertical step is now
+    "Attendance recorded"; the duplicate horizontal frame (`5529:43873`) is now
+    the error example (Patient ✓ · Attendance ! · Triage · Review and submit).
+  - The stale Menu Item usage panel `1736:12850` replaced by
+    `Guidelines/Progress indicators` (`5539:210`), generated from
+    `guidelines.md`.
+- **Found and fixed:** `guidelines-to-figma.mjs --figma-script` emitted a script
+  that could not parse (a `'\n'` inside the generator's template literal became a
+  real newline). The generator now compiles its output before printing it.
+  Known-issues has the entry.
 
 ---
 

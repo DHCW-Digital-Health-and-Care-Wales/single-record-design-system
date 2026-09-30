@@ -1,14 +1,14 @@
 # Progress Indicators
 
 **Status:** Built (web, React) 2026-09-29. Figma — 5 component sets on page `1736:12775`; composed samples in section `5529:44147`.
-**Last updated:** 2026-09-29
+**Last updated:** 2026-09-30
 **Guidelines:** [guidelines.md](guidelines.md)
 
 | Component | Node | Purpose |
 |---|---|---|
 | Progress Bar | `1746:37`   | Single-process completion |
 | Stepper Step | `1746:92`   | Atomic step for horizontal numbered stepper |
-| Stepper Tab  | `1746:106`  | Compact stepper for a flow under a tab bar — **not a Tabs variant** (DDR-036) |
+| Stepper Compact (was Stepper Tab) | `1746:106`  | Compact stepper for a flow under a tab bar — **not a Tabs variant** (DDR-036) |
 | Vertical Step | `1747:76`  | Atomic step for vertical stepper |
 | Timeline Item | `1747:149` | Chronological clinical event |
 
@@ -43,7 +43,7 @@ Track: 8px tall, `Border/Default`, `Radius/4`. Fill: `Interactive/Primary`. Opti
 
 ## Stepper Step (horizontal)
 
-Variants: `State` × `Last`.
+Variants: `State` (Done · Current · Error · Upcoming) × `Position` (First · Middle · Last).
 
 | State | Marker | Connector |
 |---|---|---|
@@ -52,13 +52,13 @@ Variants: `State` × `Last`.
 | Error | Filled `Status/Error` circle, white `Icon/status/warning` (16px). Optional sub-text in `Status/Error` (e.g. "2 fields missing"). | `Border/Default` line |
 | Upcoming | White circle, 2px `Border/Default` ring, grey number | `Border/Default` line |
 
-`Last=True` hides the trailing connector — use for the final step.
+`Position=First` has no connector on the left; `Position=Last` none on the right.
 
-Label is `Caption`. `Current` and `Error` use Medium weight + matching colour.
+Label is `Label` (14/20 Medium). `Current` is `Interactive/Primary` (white in dark mode, in code); `Error` is `Status/Error`. The error hint is `Caption`.
 
 ### Composition example
 
-Place 6 instances side-by-side in a horizontal autolayout with equal `layoutGrow=1`. The connector inside each step bridges to the next; setting `Last=True` on the final instance suppresses its connector.
+Place 6 instances side-by-side in a horizontal autolayout with equal `layoutGrow=1`. The connector inside each step bridges to the next; set `Position=First` on the first instance, `Middle` on the rest and `Last` on the final one, so the ends have no connector.
 
 ---
 
@@ -96,7 +96,7 @@ Variants: `State` (Complete · Current · Alert · Pending) × `Last` (True/Fals
 | Complete | Filled `Status/Success` |
 | Current | Filled `Interactive/Primary` |
 | Alert | Filled `Status/Error`, title also coloured |
-| Pending | White fill, 1.5px `Border/Default` ring |
+| Pending | White fill, 1.5px `Border/Strong` ring |
 
 Each item: leading 56px time column (`Caption`, `Text/Secondary`), 2px connector line, dot, then body with title + description + optional rounded tag.
 
@@ -143,34 +143,26 @@ marker.
 
 ### Where code departs from Figma, and why
 
+Figma was brought into line on 2026-09-30 for the current-marker number
+(now `Text/On Fill`), the error hint (now `Caption`) and the pending timeline
+ring (now `Border/Strong`). What still differs:
+
 | Figma | Code | Why |
 |---|---|---|
-| Current marker number is `Text/Inverse` | `Text/On Fill` | Inverse is near-black in dark mode on a fill that stays blue (known-issues) |
-| Error hint is 10px | `Caption` (12/16) | 10px is below the type scale |
+| Current step label is `Interactive/Primary` in both modes | `Text/Primary` in dark mode (white) | Blue is 2.07:1 on a dark card. Figma has no variable that is blue in light and white in dark, so its dark mode still shows blue. Decided by the design lead 2026-09-30 |
 | Timeline tag is a bespoke 10px pill | The shared `Tag` (status, small) | Reuse; 10px is below the type scale |
-| Pending timeline ring is `Border/Default` (1.37:1) | `Border/Strong` (3.75:1) | It is the only mark on that row's line — SC 1.4.11. Figma should follow |
-| Error disc is `Status/Error` | Held on `Status/Error` in both modes | The shared indicator uses `error-on-page`, which is pink in dark mode and fails under a white glyph |
-| `Last=True` / `Position` property | none | The first and last steps drop their connector half by position (`:first-child` / `:last-child`) |
+| Error disc is `Status/Error` | Held on `Status/Error` in both modes | Same as Figma. Noted because the shared indicator's own CSS uses `error-on-page`, which is pink in dark and fails under a white glyph |
+| `Position` property (First / Middle / Last) | none | The first and last steps drop their connector half by position (`:first-child` / `:last-child`) |
 
 ### Known gaps
 
-- **Dark mode, current step label:** `Interactive/Primary` on a dark card is
-  **2.07:1**. Same finding as the selected primary tab; waiting on one token
-  decision. Tracked as an open finding by `check:contrast`.
 - **Dark mode, bar fill against track:** **1.38:1**. The number beside the bar
-  carries the value, but the bar barely reads. Same decision.
+  carries the value, so this is accepted (design lead, 2026-09-30) and recorded
+  as an accepted exception in `check:contrast`.
 - **Done vs current segment:** 1.13:1 in both modes — hue only. By design the
   "3/5" text carries it, which is why the value is not optional.
-- **Figma variant names (`1746:92`):** the set is now `State` × `Position`
-  (First / Middle / Last), not `State` × `Last` as described above, and it has
-  a `State=Progress` value that means Done at `Position=First` (`1746:38`,
-  green tick) and Upcoming at `Middle` (`4634:70963`, grey ring). There is no
-  `Done, First` or `Upcoming, Middle`. Rename before anyone builds from the
-  property names.
-- **Figma samples (`5529:44147`):** the horizontal stepper numbers its second
-  step "3" and repeats "3" on the third; the vertical sample repeats "Patient
-  identified"; the two horizontal samples are identical. The page's usage-notes
-  frame (`1736:12850`) is a stale Menu Item panel.
+- **The selected primary tab** still has the blue-on-dark label (2.07:1). The
+  stepper's answer — white in dark — would suit it too; not changed here.
 
 ## Engineering Notes
 

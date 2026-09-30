@@ -275,7 +275,7 @@ function addText(parent, chars, font, size, lh, colour) {
 
 for (const s of DATA.sections) {
   addText(body, s.heading, MED, 16, 24, '#325083');
-  addText(body, s.lines.join('\n'), REG, 14, 20, '#212b32');
+  addText(body, s.lines.join('\\n'), REG, 14, 20, '#212b32');
   const rule = figma.createRectangle();
   body.appendChild(rule);
   rule.resize(575, 1);
@@ -307,7 +307,20 @@ try {
 if (flags.includes('--figma-script')) {
   const pageId = (flags.find((f) => f.startsWith('--page=')) || '').split('=')[1];
   const replaceNodeId = (flags.find((f) => f.startsWith('--replace=')) || '').split('=')[1];
-  process.stdout.write(figmaScript(out, { pageId, replaceNodeId }) + '\n');
+  const script = figmaScript(out, { pageId, replaceNodeId });
+  // Parse the script before printing it. use_figma runs it as the body of an
+  // async function, so compile it the same way. An escape written inside the
+  // template literal above is resolved by THIS file, not by the script — a
+  // bare '\n' there once emitted a literal newline inside a string, and every
+  // generated panel failed to parse in Figma.
+  const AsyncFunction = Object.getPrototypeOf(async () => {}).constructor;
+  try {
+    new AsyncFunction('figma', script);
+  } catch (err) {
+    console.error(`guidelines-to-figma: the generated script does not parse — ${err.message}`);
+    process.exit(1);
+  }
+  process.stdout.write(script + '\n');
 } else {
   process.stdout.write(JSON.stringify(out, null, flags.includes('--pretty') ? 2 : 0) + '\n');
 }

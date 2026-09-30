@@ -2,7 +2,7 @@
 
 **Date:** 2026-09-29
 **Author:** AI-assisted session, for the design lead
-**Status:** Proposed — built this way; design lead to confirm
+**Status:** Accepted — design lead, 2026-09-30
 **Relates to:** DDR-030 (two-level tabs), `components/tabs/spec.md`, `components/progress-indicators/spec.md`
 
 ---
@@ -59,8 +59,8 @@ Raise it as its own decision with a real screen; do not extend this one.
 
 ## Consequences
 
-- `Progress/Tab` in Figma should be renamed so it does not read as a Tabs
-  variant — `Progress/Stepper compact` or similar. Not done here.
+- `Progress/Tab` in Figma was renamed **`Progress/Stepper Compact`** on
+  2026-09-30, with a description that says it is not Tabs.
 - A tab never carries a tick. If one appears in a design, it is a stepper.
 - The compact marker has no number (it would not fit at 16px), so the step
   number is not shown; the label and the visually hidden state carry it.

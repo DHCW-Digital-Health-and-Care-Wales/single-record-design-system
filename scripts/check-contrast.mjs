@@ -255,9 +255,12 @@ const PAIRS = [
     'Upcoming step number and label, bar caption, timeline time'],
   ['sr-color-border-strong', 'sr-color-surface-section-cards', 3,
     'Pending timeline ring (SC 1.4.11)'],
-  // Light only: in dark this is the open finding below, shared with Tabs.
+  // Light only. In dark the current step label is text/primary (asserted
+  // below); the selected primary tab is still the open finding.
   ['sr-color-interactive-primary', 'sr-color-surface-section-cards', 4.5,
     'Current step label, and the selected primary tab label', 'light'],
+  ['sr-color-text-primary', 'sr-color-surface-section-cards', 4.5,
+    'Current step label in dark mode (progress-indicators.css)', 'dark'],
   ['sr-color-interactive-primary', 'sr-color-border-default', 3,
     'Progress bar fill against its track (SC 1.4.11)', 'light'],
 ];
@@ -285,16 +288,16 @@ const KNOWN = [
   {
     fg: 'sr-color-interactive-primary', bg: 'sr-color-surface-section-cards', min: 4.5, mode: 'dark',
     status: 'open',
-    note: 'Blue label on a dark card: the selected primary tab (tabs.css) and the current '
-      + 'step (progress-indicators.css). Needs a token decision — interactive/link is one '
-      + 'candidate (8.39:1). Design lead decides; logged in decisions/handoff.md.',
+    note: 'Blue label on a dark card: the selected primary tab (tabs.css). The stepper\'s '
+      + 'current label had the same pair and went white in dark on 2026-09-30; the same '
+      + 'answer would suit Tabs. Design lead decides; logged in decisions/handoff.md.',
   },
   {
     fg: 'sr-color-interactive-primary', bg: 'sr-color-border-default', min: 3, mode: 'dark',
-    status: 'open',
+    status: 'accepted',
     note: 'Progress bar fill against its track in dark mode. The percentage beside the bar '
       + 'carries the value as text, so nothing is lost, but the bar itself barely reads. '
-      + 'Same token decision as the line above; the track could also move.',
+      + 'Left as is by the design lead, 2026-09-30.',
   },
   
 ];

@@ -1484,6 +1484,26 @@ genuinely cannot resolve.
 
 ---
 
+### `guidelines-to-figma.mjs --figma-script` emitted a script that could not parse
+
+**Symptom:** the generated `use_figma` script contained
+`s.lines.join('` followed by a line break and `')`. Figma rejects it with
+"Invalid or unexpected token", so no panel is built.
+
+**Why:** the script is a template literal inside the generator. An escape
+written in it is resolved by the *generator*, not by the script it prints, so
+`'\n'` became a real newline inside a single-quoted string. It needs `'\\n'`.
+Nothing ran the output, so every `--figma-script` panel since the flag was
+added would have failed the same way.
+
+**Fix:** `'\\n'` in the template (2026-09-30).
+
+**Prevented by:** the generator compiles its own output as an async function
+body — how `use_figma` runs it — and exits non-zero if it does not parse.
+Verified by planting the single backslash back and confirming exit 1.
+
+---
+
 ## Testing & verification
 
 ### Prove a check fails before trusting that it passes
