@@ -255,12 +255,11 @@ const PAIRS = [
     'Upcoming step number and label, bar caption, timeline time'],
   ['sr-color-border-strong', 'sr-color-surface-section-cards', 3,
     'Pending timeline ring (SC 1.4.11)'],
-  // Light only. In dark the current step label is text/primary (asserted
-  // below); the selected primary tab is still the open finding.
+  // Light only. In dark both labels are text/primary (asserted below).
   ['sr-color-interactive-primary', 'sr-color-surface-section-cards', 4.5,
     'Current step label, and the selected primary tab label', 'light'],
   ['sr-color-text-primary', 'sr-color-surface-section-cards', 4.5,
-    'Current step label in dark mode (progress-indicators.css)', 'dark'],
+    'Current step label and selected primary tab label in dark mode', 'dark'],
   ['sr-color-interactive-primary', 'sr-color-border-default', 3,
     'Progress bar fill against its track (SC 1.4.11)', 'light'],
 ];
@@ -284,13 +283,6 @@ const KNOWN = [
     note: 'Yellow/500 is a fill colour, not a text colour. The warning role always '
       + 'carries a text label rather than standing alone, so the pair is never load-'
       + 'bearing. Recorded on the Icons page.',
-  },
-  {
-    fg: 'sr-color-interactive-primary', bg: 'sr-color-surface-section-cards', min: 4.5, mode: 'dark',
-    status: 'open',
-    note: 'Blue label on a dark card: the selected primary tab (tabs.css). The stepper\'s '
-      + 'current label had the same pair and went white in dark on 2026-09-30; the same '
-      + 'answer would suit Tabs. Design lead decides; logged in decisions/handoff.md.',
   },
   {
     fg: 'sr-color-interactive-primary', bg: 'sr-color-border-default', min: 3, mode: 'dark',

@@ -129,7 +129,7 @@ line — is the common case. Every live banner in the Figma file is title-less.
 ```
 
 ```jsx
-<NotificationBanner severity="error" icon={<Icon name="status/error-circle" />}>
+<NotificationBanner severity="error">
   The record could not be saved due to a connection problem.
 </NotificationBanner>
 

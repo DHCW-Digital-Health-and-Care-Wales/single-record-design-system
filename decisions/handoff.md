@@ -58,9 +58,8 @@ before writing MAUI, so a finding filed only here is a finding lost.
 **New finding, not fixed:** the selected **primary** tab's label is
 `interactive/primary` text on the dark page — **~2.2:1** in dark mode. Needs a
 token decision (the link colour is one candidate), so it was left alone.
-**The stepper had the same pair and was resolved 2026-09-30:** its current
-label goes white in dark mode (design lead's call), and the same answer would
-suit this tab. The progress bar's fill against its track (1.38:1 in dark) was
+**Resolved 2026-09-30:** the selected primary tab and the stepper's current
+step both go white in dark mode (design lead's call). The progress bar's fill against its track (1.38:1 in dark) was
 accepted as is — the number beside the bar carries the value.
 
 Done or dropped 2026-09-25: the empty Notifications page is deleted; the theme
@@ -71,6 +70,24 @@ re-verified in the file by this session).
 **Before any destructive Figma edit, re-count instances yourself.** Twice this
 session a count from a previous step was wrong, and both times the guard in the
 delete script — not the plan — is what caught it.
+
+---
+
+## Checkpoint — 2026-09-30 (Tabs dark label, banner icons)
+
+- **Tabs:** the selected primary tab's label is `text/primary` (white) in dark
+  mode, as the stepper's is. `check:contrast` now has no open findings.
+  Still blue in dark: the hover label on an unselected tab, and the 3px
+  selected indicator (2.07:1, under the 3:1 a state indicator wants). Not
+  changed — raise with the design lead.
+- **Notification banner:** the website previews had no icons, although the
+  spec makes the icon required (severity must not be colour alone). They now
+  show one per severity, and React `NotificationBanner` draws it from
+  `severity` when `icon` is not passed.
+- **Figma defect, not fixed:** the Error variants of `Notification Banner`
+  (`2561:21695`) use `Icon/status/info`. Code uses `status/error-circle`.
+- **Inset text is neutral by design** (no icon, no status colour) — its page
+  says so; not a gap.
 
 ---
 

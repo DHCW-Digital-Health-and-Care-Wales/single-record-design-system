@@ -89,6 +89,16 @@
   box-shadow: inset 0 -3px 0 var(--sr-color-interactive-primary);
 }
 
+/* Dark mode: the selected label goes white (Text/Primary), like every other
+   label. Interactive/Primary on a dark card is 2.07:1, under the 4.5:1 SC
+   1.4.3 wants. Medium weight and the 3px indicator still mark the selection.
+   Same answer as the stepper's current step (progress-indicators.css),
+   decided by the design lead 2026-09-30. Primary level only: a selected
+   secondary pill is on-fill text on a blue fill, which is fine. */
+[data-theme="dark"] .sr-tabs:not(.sr-tabs--secondary) .sr-tabs__tab[aria-selected='true'] {
+  color: var(--sr-color-text-primary);
+}
+
 /* Focus — 2px Border/Focus ring (DDR-025), drawn outside so it does not disturb
    the layout. Selected AND focused keeps both: the ring is where you are, the
    indicator is what is showing. */

@@ -3035,11 +3035,22 @@ textarea.sr-input__control {
   border-width: 0 0 1px 0;
 }
 
-/* ---------- Icon ---------- */
+/* ---------- Icon ----------
+   Required, not decoration: with the wording it is what stops severity being
+   colour alone (SC 1.4.1). One per severity — status/info, status/success,
+   status/warning, status/error-circle. The svg fills the 20px box whether it
+   arrives bare (plain HTML) or wrapped in an .sr-icon (React). */
 .sr-notification-banner__icon {
+  display: inline-flex;
   flex: 0 0 auto;
   width: 20px;
   height: 20px;
+  line-height: 0;
+}
+.sr-notification-banner__icon svg,
+.sr-notification-banner__icon .sr-icon {
+  width: 100%;
+  height: 100%;
 }
 .sr-notification-banner--information .sr-notification-banner__icon { color: var(--sr-color-status-info); }
 .sr-notification-banner--success     .sr-notification-banner__icon { color: var(--sr-color-status-success); }
@@ -5741,6 +5752,16 @@ td.sr-table__select {
   font: var(--sr-type-label-font);
   letter-spacing: var(--sr-type-label-letter-spacing);
   box-shadow: inset 0 -3px 0 var(--sr-color-interactive-primary);
+}
+
+/* Dark mode: the selected label goes white (Text/Primary), like every other
+   label. Interactive/Primary on a dark card is 2.07:1, under the 4.5:1 SC
+   1.4.3 wants. Medium weight and the 3px indicator still mark the selection.
+   Same answer as the stepper's current step (progress-indicators.css),
+   decided by the design lead 2026-09-30. Primary level only: a selected
+   secondary pill is on-fill text on a blue fill, which is fine. */
+[data-theme="dark"] .sr-tabs:not(.sr-tabs--secondary) .sr-tabs__tab[aria-selected='true'] {
+  color: var(--sr-color-text-primary);
 }
 
 /* Focus — 2px Border/Focus ring (DDR-025), drawn outside so it does not disturb

@@ -3664,9 +3664,13 @@ ${renderMarkdown(md)}
 function notificationBannerBody() {
   const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'components', 'notification-banner', 'guidelines.md'), 'utf8')));
 
+  // Every banner carries its severity icon: with the wording, it is what keeps
+  // severity from being colour alone. Until 2026-09-30 these previews had none.
+  const SEVERITY_ICON = { information: 'status/info', success: 'status/success', warning: 'status/warning', error: 'status/error-circle' };
   const banner = (sev, body, { title = null, global = false } = {}) => `
 <div class="sr-notification-banner sr-notification-banner--${sev}${global ? ' sr-notification-banner--global' : ''}"
      role="${sev === 'error' || sev === 'warning' ? 'alert' : 'status'}">
+  <span class="sr-notification-banner__icon" aria-hidden="true">${iconMarkup(SEVERITY_ICON[sev])}</span>
   <div class="sr-notification-banner__content">
     ${title ? `<p class="sr-notification-banner__title">${title}</p>` : ''}
     <p class="sr-notification-banner__body">${body}</p>
@@ -3687,9 +3691,9 @@ function notificationBannerBody() {
     banner('information', 'Global — full width under the header, square corners, about the whole page or system.', { global: true }));
 
   const snippets = {
-    HTML: '<div class="sr-notification-banner sr-notification-banner--error" role="alert">\n  <span class="sr-notification-banner__icon" aria-hidden="true"><!-- icon --></span>\n  <div class="sr-notification-banner__content">\n    <p class="sr-notification-banner__body">\n      The record could not be saved due to a connection problem.\n      Your changes are preserved — try again.\n    </p>\n  </div>\n</div>\n\n<!-- Global: full width under the header, square corners. -->\n<div class="sr-notification-banner sr-notification-banner--information\n            sr-notification-banner--global" role="status">\n  <div class="sr-notification-banner__content">\n    <p class="sr-notification-banner__body">This is a read-only view.</p>\n  </div>\n</div>',
-    React: '<NotificationBanner severity="error" icon={<Icon name="status/error-circle" />}>\n  The record could not be saved due to a connection problem.\n</NotificationBanner>\n\n{/* placement="global" for a page- or system-wide message. */}\n<NotificationBanner severity="information" placement="global" onDismiss={close}>\n  This is a read-only view.\n</NotificationBanner>\n\n{/* severity picks the role: error/warning => alert,\n    information/success => status. Override with role if you must. */}',
-    Blazor: '@* Stylesheet only — no component to install. *@\n<div class="sr-notification-banner sr-notification-banner--success" role="status">\n  <div class="sr-notification-banner__content">\n    <p class="sr-notification-banner__body">Attendance record saved successfully.</p>\n  </div>\n</div>',
+    HTML: '<!-- Icon per severity: status/info, status/success, status/warning,\n     status/error-circle. Required: it keeps severity from being colour alone. -->\n<div class="sr-notification-banner sr-notification-banner--error" role="alert">\n  <span class="sr-notification-banner__icon" aria-hidden="true"><!-- status/error-circle --></span>\n  <div class="sr-notification-banner__content">\n    <p class="sr-notification-banner__body">\n      The record could not be saved due to a connection problem.\n      Your changes are preserved — try again.\n    </p>\n  </div>\n</div>\n\n<!-- Global: full width under the header, square corners. -->\n<div class="sr-notification-banner sr-notification-banner--information\n            sr-notification-banner--global" role="status">\n  <span class="sr-notification-banner__icon" aria-hidden="true"><!-- status/info --></span>\n  <div class="sr-notification-banner__content">\n    <p class="sr-notification-banner__body">This is a read-only view.</p>\n  </div>\n</div>',
+    React: '{/* The severity icon is drawn for you. */}\n<NotificationBanner severity="error">\n  The record could not be saved due to a connection problem.\n</NotificationBanner>\n\n{/* placement="global" for a page- or system-wide message. */}\n<NotificationBanner severity="information" placement="global" onDismiss={close}>\n  This is a read-only view.\n</NotificationBanner>\n\n{/* severity picks the role: error/warning => alert,\n    information/success => status. Override with role if you must. */}',
+    Blazor: '@* Stylesheet only — no component to install. *@\n<div class="sr-notification-banner sr-notification-banner--success" role="status">\n  <span class="sr-notification-banner__icon" aria-hidden="true"><!-- status/success --></span>\n  <div class="sr-notification-banner__content">\n    <p class="sr-notification-banner__body">Attendance record saved successfully.</p>\n  </div>\n</div>',
   };
 
   return `
