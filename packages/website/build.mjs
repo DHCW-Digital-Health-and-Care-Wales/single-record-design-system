@@ -899,12 +899,13 @@ function codePanel(id, snippets) {
 /**
  * White preview area with the dark code panel attached beneath it.
  *
- * Aligned with the content column by default, like every other block on the
- * page. Pass `{ bleed: true }` only where column width would misrepresent the
- * component — see `.showcase--bleed` in site.css.
+ * Always aligned with the content column, like every other block on the page.
+ * Pass `{ wide: true }` for a component that needs every pixel of the column —
+ * it trims the preview's inner padding; it never leaves the column. See
+ * `.showcase--wide` in site.css.
  */
-function showcase(previewHtml, id, snippets, { bleed = false } = {}) {
-  return `<section class="showcase${bleed ? ' showcase--bleed' : ''}">
+function showcase(previewHtml, id, snippets, { wide = false } = {}) {
+  return `<section class="showcase${wide ? ' showcase--wide' : ''}">
   <div class="showcase__preview">${previewHtml}</div>
   ${codePanel(id, snippets)}
 </section>`;
@@ -1379,13 +1380,13 @@ expanded and a collapsed state.</p>
 <h2>Type: Fill</h2>
 <p class="muted">The alert cards are tinted. This is the default — the tint carries further in
 peripheral vision on a busy screen.</p>
-${showcase(pbExpanded('fill'), 'pb-fill', snippets, { bleed: true })}
-<div class="showcase showcase--bleed"><div class="showcase__preview">${pbCollapsed('fill')}</div></div>
+${showcase(pbExpanded('fill'), 'pb-fill', snippets, { wide: true })}
+<div class="showcase showcase--wide"><div class="showcase__preview">${pbCollapsed('fill')}</div></div>
 <h2>Type: Border</h2>
 <p class="muted">The alert cards stay white with a coloured rule. Use where the screen is already
 colour-heavy, or where the view is likely to be printed.</p>
-<div class="showcase showcase--bleed"><div class="showcase__preview">${pbExpanded('border')}</div></div>
-<div class="showcase showcase--bleed"><div class="showcase__preview">${pbCollapsed('border')}</div></div>
+<div class="showcase showcase--wide"><div class="showcase__preview">${pbExpanded('border')}</div></div>
+<div class="showcase showcase--wide"><div class="showcase__preview">${pbCollapsed('border')}</div></div>
 <p class="muted"><strong>Both types are live.</strong> Neither has been retired, and this page will say
 so plainly if one ever is. Pick one per product and stay with it — switching between screens makes
 the alert cards look like they mean different things.</p>
