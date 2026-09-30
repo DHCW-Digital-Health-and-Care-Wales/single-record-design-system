@@ -18,10 +18,61 @@ this file says so and tells you what to change.
 
 ---
 
-## Unreleased
+## v0.4.0 — 2026-09-30
 
-**No action** to take this, but read the Border/Strong note if you use that
-token directly.
+**Action needed** if you write the markup yourself (HTML, Blazor) and use a
+navigation or tab count badge, or if you use the `schedule/overnight` icon.
+React users: **no action**.
+
+```
+npm install @dhcw/sr-tokens@0.4.0 @dhcw/sr-icons@0.4.0 @dhcw/sr-web@0.4.0 @dhcw/sr-react@0.4.0
+```
+
+### Action needed
+
+**One badge class.** `.sr-nav__item-badge` and `.sr-tabs__badge` are gone;
+both hosts use `.sr-badge`. Rename the class, and keep the count in the host's
+accessible name (`aria-label="Referrals, 20 items"`) — the badge is
+`aria-hidden`. The old navigation badge was also near-black on blue in dark
+mode (2.26:1); the new one is white in both.
+
+**`schedule/overnight` removed.** It was unused in every product we know of.
+There is no like-for-like replacement: the moon glyph now means "dark theme"
+(`theme/dark`), and one glyph has one meaning. Ask the design lead if you need
+an overnight mark.
+
+### New components
+
+| Component | React | Notes |
+|---|---|---|
+| Progress indicators | `ProgressBar`, `Stepper`, `Timeline` | Bar (percentage, sections, unknown wait), stepper (horizontal, vertical, compact), timeline |
+| Badge | `Badge` | A count beside a label. Navigation and Tabs use it |
+| Notification banner | `NotificationBanner` | Four severities, inline or global. Draws its severity icon for you |
+| Error summary | `ErrorSummary` | Lists form errors; each links to its field |
+| Avatar | `Avatar`, `AvatarGroup` | Initials, with the "+4" overflow |
+| Inset text | `InsetText` | Neutral emphasis inside prose — not a status |
+| Link | `Link` | Three sizes, with an icon, and destructive |
+| Stat card | `StatCard`, `StatCards` | Stacked, value-first and inline |
+
+### New tokens
+
+- **`text/selected`** — the label of the selected or current item. Brand blue
+  in light, white in dark. The selected tab and the current step use it.
+- **`status/error-on-page`** — error red for the app's own surfaces (field
+  errors, the error summary, destructive links). Red/300 in dark, where
+  Red/700 was 2.14:1.
+- **Theme icons** — `theme/light`, `theme/dark`, `theme/system`.
+
+### Changed
+
+- **`status.critical` is now `status.error`.** `--sr-color-status-critical`
+  still resolves as a deprecated alias. **Optional:** rename it.
+- **Dark mode text on blue fills.** Seven controls used `text/inverse` on a
+  saturated fill — near-black on blue in dark mode. All now use `text/on-fill`.
+- **The dark-mode small-card surface** is Cyan/850 again, for text only.
+- **Selected tab label** is white in dark mode (was 2.07:1).
+
+### Also in this release (from the September 8 work)
 
 **Search shipped.** The system's only search field — Basic, With Button, With
 Icon Button and Typeahead, with the full WAI-ARIA combobox keyboard model.
