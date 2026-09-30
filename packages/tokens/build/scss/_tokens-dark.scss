@@ -100,6 +100,7 @@ $sr-color-text-secondary: #d8dde0; // Secondary text on dark.
 $sr-color-text-inverse: #212b32; // Text on light elements within a dark-mode interface. It flips with the mode by design — which is why a saturated fill, which does not flip, must use text/on-fill instead.
 $sr-color-text-on-fill: #ffffff; // White, same as light mode, and deliberately NOT flipped. A primary or destructive button is saturated in both modes, so its label stays white: 6.38:1 on interactive/primary and 5.06:1 on interactive/destructive here.
 $sr-color-text-disabled: #9ea1af; // Disabled text on dark surfaces.
+$sr-color-text-selected: #ffffff; // White in dark mode. interactive/primary (Info-blue/600) is 2.07:1 on a dark card, so the selected tab and current step labels go white like every other label; weight, the indicator or the filled marker carry the selection.
 $sr-color-border-subtle: #464c64; // Subtle dividers on dark surfaces.
 $sr-color-border-default: #707488; // Standard borders on dark surfaces.
 $sr-color-border-strong: #9ea1af; // High-contrast borders on dark surfaces.

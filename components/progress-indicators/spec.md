@@ -54,7 +54,7 @@ Variants: `State` (Done · Current · Error · Upcoming) × `Position` (First ·
 
 `Position=First` has no connector on the left; `Position=Last` none on the right.
 
-Label is `Label` (14/20 Medium). `Current` is `Interactive/Primary` (white in dark mode, in code); `Error` is `Status/Error`. The error hint is `Caption`.
+Label is `Label` (14/20 Medium). `Current` is `Text/Selected` (blue in light, white in dark); `Error` is `Status/Error`. The error hint is `Caption`.
 
 ### Composition example
 
@@ -143,13 +143,13 @@ marker.
 
 ### Where code departs from Figma, and why
 
-Figma was brought into line on 2026-09-30 for the current-marker number
+The current step label is `Text/Selected` in Figma and code — blue in light,
+white in dark. Figma was brought into line on 2026-09-30 for the current-marker number
 (now `Text/On Fill`), the error hint (now `Caption`) and the pending timeline
 ring (now `Border/Strong`). What still differs:
 
 | Figma | Code | Why |
 |---|---|---|
-| Current step label is `Interactive/Primary` in both modes | `Text/Primary` in dark mode (white) | Blue is 2.07:1 on a dark card. Figma has no variable that is blue in light and white in dark, so its dark mode still shows blue. Decided by the design lead 2026-09-30 |
 | Timeline tag is a bespoke 10px pill | The shared `Tag` (status, small) | Reuse; 10px is below the type scale |
 | Error disc is `Status/Error` | Held on `Status/Error` in both modes | Same as Figma. Noted because the shared indicator's own CSS uses `error-on-page`, which is pink in dark and fails under a white glyph |
 | `Position` property (First / Middle / Last) | none | The first and last steps drop their connector half by position (`:first-child` / `:last-child`) |
@@ -161,8 +161,6 @@ ring (now `Border/Strong`). What still differs:
   as an accepted exception in `check:contrast`.
 - **Done vs current segment:** 1.13:1 in both modes — hue only. By design the
   "3/5" text carries it, which is why the value is not optional.
-- **The selected primary tab** still has the blue-on-dark label (2.07:1). The
-  stepper's answer — white in dark — would suit it too; not changed here.
 
 ## Engineering Notes
 

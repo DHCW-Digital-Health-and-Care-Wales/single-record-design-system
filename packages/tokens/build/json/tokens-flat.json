@@ -98,6 +98,7 @@
   "sr-color-text-inverse": "#ffffff",
   "sr-color-text-on-fill": "#ffffff",
   "sr-color-text-disabled": "#707488",
+  "sr-color-text-selected": "#325083",
   "sr-color-border-subtle": "#f0f4f5",
   "sr-color-border-default": "#d8dde0",
   "sr-color-border-strong": "#768692",

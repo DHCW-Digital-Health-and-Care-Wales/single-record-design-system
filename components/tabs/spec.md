@@ -97,7 +97,7 @@ indication that anything is off-screen. Every tab stays visible.
 | Default | `Text/Primary`, 14/20 Regular | — | transparent |
 | Hover | `Interactive/Primary`, Regular | — | `Surface/Background` |
 | Focus | unchanged | — | 2px `Border/Focus` ring outside (DDR-025) |
-| Selected | `Interactive/Primary`, 14/20 **Medium** — `Text/Primary` (white) in dark mode, where the blue is 2.07:1 | 3px `Interactive/Primary` — bottom edge (horizontal), left edge (vertical) | transparent |
+| Selected | `Text/Selected`, 14/20 **Medium** — brand blue in light, white in dark, where the blue would be 2.07:1 | 3px `Interactive/Primary` — bottom edge (horizontal), left edge (vertical) | transparent |
 | Disabled | `Text/Disabled`, Regular | — | transparent |
 
 Hover applies to unselected tabs only. Focus and Selected can occur together

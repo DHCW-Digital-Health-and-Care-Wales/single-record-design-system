@@ -567,11 +567,12 @@ The gate checks **both light and dark modes**, which is not thoroughness for its
 
 **No open findings stand today.** The dark-mode reconciliation (DDR-026) closed the last two. 36 pairs are asserted across both modes; the one remaining exception is the warning role, a fill colour that always carries a text label.
 
-**Three tokens exist because dark mode needs a different answer to light mode**, and the old tokens had no way to give one (DDR-026):
+**Four tokens exist because dark mode needs a different answer to light mode**, and the old tokens had no way to give one (DDR-026):
 
 | Token | For |
 |---|---|
 | `text/on-fill` | Text on a saturated interactive or status fill. White in **both** modes — unlike `text/inverse`, which flips with the mode by design. |
+| `text/selected` | The label of the selected or current item — a selected tab, the current step. Brand blue in light, **white in dark**, where the blue is 2.07:1 on a dark card. Added 2026-09-30; Figma `Text/Selected`. |
 | `interactive/on-accent` | Interactive text sitting on `surface/accent`. `interactive/primary` is a fill colour and stays dark in dark mode, where the accent surface is also dark. |
 | `interactive/on-accent-hover` | Its hover step. Darker in light, lighter in dark — hover moves away from the surface, and which way that is depends on the mode. |
 

@@ -124,6 +124,7 @@
   --sr-color-text-inverse: #ffffff; /** Text on a surface whose lightness is the OPPOSITE of the current mode: dark text in light mode's terms. It therefore flips between modes — white here, near-black in dark. Do not use it on a saturated brand fill; that is text/on-fill. */
   --sr-color-text-on-fill: #ffffff; /** Text on a saturated interactive or status fill — a primary button, a destructive button, a filled badge. White in BOTH modes, because those fills stay saturated in both. This is the distinction text/inverse cannot make: inverse is relative to the mode, this is absolute. */
   --sr-color-text-disabled: #707488; /** Disabled text. 4.6:1 on surface/background (AA). */
+  --sr-color-text-selected: #325083; /** The label of the selected or current item in a set: the selected tab, the current step in a stepper. Brand blue here (same value as interactive/primary, 8.04:1 on a card). White in dark mode, where the blue would be 2.07:1 on a dark card — weight, the indicator or the filled marker carry the selection there. Not for links (interactive/link) or buttons. */
   --sr-color-border-subtle: #f0f4f5;
   --sr-color-border-default: #d8dde0;
   --sr-color-border-strong: #768692; /** The boundary of a UI component — checkbox and radio at rest, switch track on hover, sub-tab pill outline. Clears the 3:1 of WCAG 2.2 SC 1.4.11 on both light surfaces: 3.75:1 on white, 3.44:1 on the page background. Was Grey/600 (6.37:1) until 2026-09-08; lightened so a control outline reads as an affordance without shouting, which matters where several sit in a row. Not a text colour — 3.75:1 is under the 4.5:1 SC 1.4.3 wants for body text. Dividers, card outlines and table rules are NOT control boundaries and stay on border/default. */
@@ -3054,7 +3055,9 @@ textarea.sr-input__control {
 }
 .sr-notification-banner--information .sr-notification-banner__icon { color: var(--sr-color-status-info); }
 .sr-notification-banner--success     .sr-notification-banner__icon { color: var(--sr-color-status-success); }
-.sr-notification-banner--warning     .sr-notification-banner__icon { color: var(--sr-color-status-warning); }
+/* Warning takes Yellow/700, as its text does: Status/Warning (Yellow/500) is a
+   fill colour at 1.49:1 on its own surface, which left the triangle faint. */
+.sr-notification-banner--warning     .sr-notification-banner__icon { color: var(--color-yellow-700); }
 .sr-notification-banner--error       .sr-notification-banner__icon { color: var(--sr-color-status-error); }
 
 /* ---------- Content ---------- */
@@ -3682,18 +3685,12 @@ textarea.sr-input__control {
 .sr-stepper__step--upcoming .sr-stepper__label {
   color: var(--sr-color-text-secondary);
 }
+/* Text/Selected: brand blue in light, white in dark (blue is 2.07:1 on a dark
+   card). The filled marker still marks the step as current. */
 .sr-stepper__step--current .sr-stepper__label {
-  color: var(--sr-color-interactive-primary);
+  color: var(--sr-color-text-selected);
 }
 
-/* Dark mode: the current label goes white, like every other label. Blue on a
-   dark card is 2.07:1; the filled marker and the halo still mark the step as
-   current, and aria-current says so. Decided by the design lead 2026-09-30.
-   Figma has no variable that is blue in light and white in dark, so the Figma
-   dark mode still shows blue — see the spec's departures table. */
-[data-theme="dark"] .sr-stepper__step--current .sr-stepper__label {
-  color: var(--sr-color-text-primary);
-}
 .sr-stepper__step--error .sr-stepper__label,
 .sr-stepper__step--error .sr-stepper__hint {
   color: var(--sr-color-status-error-on-page);
@@ -5748,20 +5745,12 @@ td.sr-table__select {
    The indicator is an inset shadow rather than a border so it cannot change the
    40px height or nudge the label. */
 .sr-tabs__tab[aria-selected='true'] {
-  color: var(--sr-color-interactive-primary);
+  /* Text/Selected: brand blue in light, white in dark — Interactive/Primary
+     is 2.07:1 on a dark card. Weight and the indicator carry the selection. */
+  color: var(--sr-color-text-selected);
   font: var(--sr-type-label-font);
   letter-spacing: var(--sr-type-label-letter-spacing);
   box-shadow: inset 0 -3px 0 var(--sr-color-interactive-primary);
-}
-
-/* Dark mode: the selected label goes white (Text/Primary), like every other
-   label. Interactive/Primary on a dark card is 2.07:1, under the 4.5:1 SC
-   1.4.3 wants. Medium weight and the 3px indicator still mark the selection.
-   Same answer as the stepper's current step (progress-indicators.css),
-   decided by the design lead 2026-09-30. Primary level only: a selected
-   secondary pill is on-fill text on a blue fill, which is fine. */
-[data-theme="dark"] .sr-tabs:not(.sr-tabs--secondary) .sr-tabs__tab[aria-selected='true'] {
-  color: var(--sr-color-text-primary);
 }
 
 /* Focus — 2px Border/Focus ring (DDR-025), drawn outside so it does not disturb

@@ -48,7 +48,7 @@ and a patient-safety alert that must outrank an error needs more than a shade.
 | Part | Class |
 |---|---|
 | Root | `.sr-notification-banner` |
-| Severity icon (required) | `.sr-notification-banner__icon` — `status/info`, `status/success`, `status/warning`, `status/error-circle`. React draws it from `severity`. Figma's Error variants use `status/info`; code does not follow that (DDR-029) |
+| Severity icon (required) | `.sr-notification-banner__icon` — `status/info`, `status/success`, `status/warning`, `status/error-circle`. React draws it from `severity`. Coloured by severity: `status.info`, `status.success`, `color.yellow-700` (as warning text — Yellow/500 was 1.49:1), `status.error`. Figma matches since 2026-09-30 |
 | Content column | `.sr-notification-banner__content` |
 | Title | `.sr-notification-banner__title` |
 | Body | `.sr-notification-banner__body` |

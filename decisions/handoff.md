@@ -73,6 +73,25 @@ delete script — not the plan — is what caught it.
 
 ---
 
+## Checkpoint — 2026-09-30 (Text/Selected token, banner icons in Figma)
+
+- **New semantic token `text/selected`** (Figma `Text/Selected`,
+  `VariableID:5545:20`): Blue/800 in light, White in dark. For the label of
+  the selected or current item. Code: `--sr-color-text-selected`, also in
+  `Tokens.xaml`. Tabs and the stepper use it instead of the two dark-mode
+  overrides added earlier today.
+- **Figma rebound to it:** Menu Tab `Level=Primary, State=Active` (both
+  orientations), `Progress/Stepper` Current (3), `Progress/Vertical Step`
+  Current (2), `Progress/Stepper Compact` Current. Hover labels and secondary
+  pills unchanged. 4 Active-tab instances on the `Website` page override the
+  label to Info Blue/300 (code-panel tabs on navy) — deliberate, left.
+- **Notification Banner (`2561:21695`):** Error variants swapped to
+  `Icon/status/error-circle`, bound to Status/Error. Success icons were bound
+  to Text/Primary (white on the pale green in dark mode) — now Status/Success.
+  Warning was already Yellow/700 in Figma; code now matches (5.68:1).
+
+---
+
 ## Checkpoint — 2026-09-30 (Tabs dark label, banner icons)
 
 - **Tabs:** the selected primary tab's label is `text/primary` (white) in dark
@@ -84,8 +103,8 @@ delete script — not the plan — is what caught it.
   spec makes the icon required (severity must not be colour alone). They now
   show one per severity, and React `NotificationBanner` draws it from
   `severity` when `icon` is not passed.
-- **Figma defect, not fixed:** the Error variants of `Notification Banner`
-  (`2561:21695`) use `Icon/status/info`. Code uses `status/error-circle`.
+- ~~Figma defect: Error banners used `Icon/status/info`~~ — fixed later the
+  same day (checkpoint above).
 - **Inset text is neutral by design** (no icon, no status colour) — its page
   says so; not a gap.
 

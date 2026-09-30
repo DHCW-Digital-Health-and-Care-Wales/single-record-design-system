@@ -84,7 +84,9 @@
 }
 .sr-notification-banner--information .sr-notification-banner__icon { color: var(--sr-color-status-info); }
 .sr-notification-banner--success     .sr-notification-banner__icon { color: var(--sr-color-status-success); }
-.sr-notification-banner--warning     .sr-notification-banner__icon { color: var(--sr-color-status-warning); }
+/* Warning takes Yellow/700, as its text does: Status/Warning (Yellow/500) is a
+   fill colour at 1.49:1 on its own surface, which left the triangle faint. */
+.sr-notification-banner--warning     .sr-notification-banner__icon { color: var(--color-yellow-700); }
 .sr-notification-banner--error       .sr-notification-banner__icon { color: var(--sr-color-status-error); }
 
 /* ---------- Content ---------- */
