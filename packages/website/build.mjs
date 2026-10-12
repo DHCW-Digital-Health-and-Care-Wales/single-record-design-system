@@ -5042,6 +5042,30 @@ resource dictionaries generated from the same source as the web stylesheet. Nati
 in progress, so a MAUI tab currently either shows real XAML or says plainly that it does not exist
 yet.</p>
 
+<h2>Using with Bootstrap</h2>
+<p>You can load <code>@dhcw/sr-web</code> on a page that already uses Bootstrap. The two do not
+collide by design:</p>
+<ul>
+  <li><strong>Classes are prefixed.</strong> Every component class starts <code>sr-</code>, so none
+  match a Bootstrap class.</li>
+  <li><strong>No element resets.</strong> The stylesheet styles classes only. It does not restyle
+  <code>body</code>, headings, buttons or form elements on their own, so Bootstrap's Reboot stays in
+  charge of everything outside a design system component.</li>
+  <li><strong>Custom properties do not overlap.</strong> Bootstrap's start <code>--bs-</code>; ours
+  start <code>--sr-</code>, <code>--color-</code>, <code>--space-</code> or <code>--radius-</code>.</li>
+</ul>
+<p>Two things to know:</p>
+<ul>
+  <li>Do not mix the two on one element: an <code>sr-button</code> with Bootstrap's
+  <code>btn</code> class gets both sets of rules. Use one system per component.</li>
+  <li>Reboot still applies to the plain elements inside our components (for example a
+  <code>p</code> or <code>label</code>). Where a component sets a property it wins, because a class
+  outranks an element selector; where it does not, you see Bootstrap's value. If something inside a
+  component looks off next to the examples on this site, that is the first place to look, and please
+  <a href="${REPORT_ISSUE_URL}" target="_blank" rel="noopener">report it</a>.</li>
+</ul>
+<p>This has been checked against the stylesheet, not yet tested in a browser alongside Bootstrap.</p>
+
 <h2>If something is missing or wrong</h2>
 <p>Use <a href="${REPORT_ISSUE_URL}" target="_blank" rel="noopener">Report an issue</a> for anything
 broken, incorrect or inaccessible. Use

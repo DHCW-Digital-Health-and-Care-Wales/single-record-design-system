@@ -64,12 +64,11 @@ before writing MAUI, so a finding filed only here is a finding lost.
 8. **Tabs in dark mode:** the hover label and the 3px selected indicator are
    still `Interactive/Primary` (about 2.1:1 on a dark card). Needs a call from
    the design lead.
-9. **Release workflow gap:** `release-packages.yml` does not check that the
-   tag matches the package version, which let a run start on stale `main`
-   (2026-09-30). Add that check.
-10. **Bootstrap:** a team wants to use `@dhcw/sr-web` with Bootstrap. It
-    coexists (prefixed classes, no element resets). A "Using with Bootstrap"
-    note on the How to use page was offered, not written.
+9. ~~Release workflow gap~~ **Done 2026-10-12:** `release-packages.yml` now
+   fails first if the tag is not `v<version>` (known-issues entry added).
+10. ~~Bootstrap~~ **Done 2026-10-12:** "Using with Bootstrap" section on the
+    How to use page. Checked against the stylesheet (only `sr-` classes, no
+    element resets); not yet tested in a browser alongside Bootstrap.
 
 **New finding, not fixed:** the selected **primary** tab's label is
 `interactive/primary` text on the dark page — **~2.2:1** in dark mode. Needs a
