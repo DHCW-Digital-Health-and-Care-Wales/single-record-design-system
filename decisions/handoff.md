@@ -13,14 +13,22 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 ## Start here — next session
 
-> **State (2026-09-29):** `main` carries everything — Badge, the
-> `check:on-fill` gate and its seven dark-mode text fixes are merged. Start a
-> fresh branch from `main`. `npm run check` and `build:site` were green.
+> **State (2026-10-12):** `main` carries everything, including **v0.4.0**
+> (published to npm 2026-09-30: tokens, icons, web, react). Start a fresh
+> branch from `main`. `npm run check` and `build:site` were green.
+>
+> **Releasing:** merging updates the website by itself (the org mirror rebuilds
+> hourly). npm and NuGet do **not**: run *Release packages* (tick
+> `publish_npm`) and *Publish NuGet* by hand in the DHCW org repo's Actions,
+> with the tag, **after** the merge has reached the mirror. Bump versions and
+> the CHANGELOG first (see the 0.4.0 commit). NuGet 0.4.0 not confirmed run.
 >
 > **The deck session is presentation-only.** The session that built Deck 4
 > (clinical assurance slides, Figma page `3303:585`) is kept for slide edits
 > in Figma only: **no code changes, no commits, no pushes, no PRs** from it.
 > Figma-to-code work happens in new sessions like this one.
+>
+> **Slide copy rule (design lead, 2026-10-09):** no em dashes in slide text.
 
 1. **The remaining stale "Menu Item" usage-notes frames.** Every component page
    that still has one is showing guidance for a Menu Item — state variants,
@@ -51,9 +59,17 @@ before writing MAUI, so a finding filed only here is a finding lost.
    `dd-mm-yy` (two-digit year). Fix before it is shown to clinicians. The
    page's usage-notes frame (`3037:25474`) is also a stale Menu Item panel.
 
-7. ~~Progress indicators — Figma tidy-up~~ **Done 2026-09-30** (checkpoint
-   below). Remaining Figma difference: the timeline tag is still a bespoke
-   10px pill; code uses the shared Tag.
+7. **Progress timeline tag in Figma** is still a bespoke 10px pill; code uses
+   the shared Tag. Swap to `Tags/status` small.
+8. **Tabs in dark mode:** the hover label and the 3px selected indicator are
+   still `Interactive/Primary` (about 2.1:1 on a dark card). Needs a call from
+   the design lead.
+9. **Release workflow gap:** `release-packages.yml` does not check that the
+   tag matches the package version, which let a run start on stale `main`
+   (2026-09-30). Add that check.
+10. **Bootstrap:** a team wants to use `@dhcw/sr-web` with Bootstrap. It
+    coexists (prefixed classes, no element resets). A "Using with Bootstrap"
+    note on the How to use page was offered, not written.
 
 **New finding, not fixed:** the selected **primary** tab's label is
 `interactive/primary` text on the dark page — **~2.2:1** in dark mode. Needs a
@@ -70,6 +86,20 @@ re-verified in the file by this session).
 **Before any destructive Figma edit, re-count instances yourself.** Twice this
 session a count from a previous step was wrong, and both times the guard in the
 delete script — not the plan — is what caught it.
+
+---
+
+## Checkpoint — 2026-10-12 (v0.4.0 released; slides; Patient Banner page)
+
+- **v0.4.0** on npm (`latest`) for tokens, icons, web, react. Changelog lists
+  the breaking changes: `.sr-badge` replaces the nav/tab badge classes, and
+  `schedule/overnight` is gone.
+- **Website:** the Patient Banner pattern page no longer bleeds to the
+  sidebar; `.showcase--wide` (16px preview padding) replaced `--bleed`.
+- **Slides (Figma only, no repo files):** `5637:5240` UX audit findings (seven
+  numbered cards), `5637:12347` competitive analysis ("Old habits, new
+  standards"; vendor names left off on purpose), `5641:12516` standards and
+  guidance ("Built on recognised standards").
 
 ---
 
