@@ -4,7 +4,7 @@ The Single Record Design System provides the shared design language, component l
 
 This document is the primary reference for everyone working on Single Record — designers, engineers, and delivery leads.
 
-**Last reviewed:** 2026-09-30. Update this file whenever a component ships, a
+**Last reviewed:** 2026-10-19. Update this file whenever a component ships, a
 token is added, or a system-wide rule changes — not on a schedule. If it
 disagrees with `/foundations/tokens/` or `/components/`, those win and this file
 is out of date.
@@ -503,11 +503,13 @@ Patterns live in `/patterns/`. Each pattern follows the template in `/docs/templ
 
 | Pattern | Guidelines | DS website page | Notes |
 |---|---|---|---|
-| Patient banner | ✅ `components/patient-banner/guidelines.md` | ✅ `patterns/patient-banner.html` | Two types (`Fill`, `Border`) and two states (`Expanded`, `Collapsed`) — **all four are live**. Fill vs Border has not been user-tested; keeping both is provisional. |
+| Patient banner | ✅ `components/patient-banner/guidelines.md` | ✅ `patterns/patient-banner.html` | Two types (`Fill`, `Border`) and two states (`Expanded`, `Collapsed`) — **all four are live**. Fill vs Border has not been user-tested; keeping both is provisional. Its third action is now **View patient record** (was "Open WCP record"), which opens the patient's demographics from any screen showing the banner. |
+| Dialogs | ✅ `patterns/dialogs/guidelines.md` | ✅ `patterns/dialogs.html` | Confirmation (standard, destructive, unsaved changes, session expiring, high stakes, processing) and Result (success, summary, error), built on Modal. No live preview on the page yet. |
+| Patient search | ✅ `patterns/patient-search/guidelines.md` | ✅ `patterns/patient-search.html` | Quick and Advanced search, wristband scan and the confirm-the-patient step. No code component; composed from Search, Input, Date input, Radios. The web Advanced variant in Figma still has known content errors. |
 
-**Known gap:** forms, search and sign-off flows are named in the pattern
-intro but have no guidelines file and no website page. Only the patient
-banner is documented.
+**Known gap:** forms and sign-off flows are named in the pattern intro but
+have no guidelines file and no website page. The Dialogs and Patient search
+pages have guidance but no live preview yet.
 
 ---
 

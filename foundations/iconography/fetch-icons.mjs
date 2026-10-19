@@ -98,6 +98,7 @@ const ICONS = [
   { domain: 'action', name: 'remove',   lucide: 'minus' },
   { domain: 'action', name: 'edit',     lucide: 'pencil' },
   { domain: 'action', name: 'delete',   lucide: 'trash-2' },
+  { domain: 'action', name: 'backspace', lucide: 'delete', note: 'Lucide `delete` is the backspace key (left-pointing tag with an x). For on-screen keypads, e.g. PIN entry. Not action/delete, which is the bin (trash-2) for removing records' },
   { domain: 'action', name: 'save',     lucide: 'save' },
   { domain: 'action', name: 'download', lucide: 'download' },
   { domain: 'action', name: 'upload',   lucide: 'upload' },

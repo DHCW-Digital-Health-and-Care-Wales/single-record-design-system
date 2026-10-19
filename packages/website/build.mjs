@@ -573,7 +573,9 @@ const SECTIONS = [
     // the only sibling in the sidebar.
     id: 'patterns', label: 'Patterns', href: 'patterns/patient-banner.html',
     side: [
+      { href: 'patterns/dialogs.html', label: 'Dialogs' },
       { href: 'patterns/patient-banner.html', label: 'Patient Banner' },
+      { href: 'patterns/patient-search.html', label: 'Patient Search' },
     ],
   },
   {
@@ -1321,7 +1323,7 @@ ${pbAlerts()}
   </div>
   <div class="sr-patient-banner__actions">
     <button type="button" class="sr-button sr-button--primary sr-button--small">Change Patient</button>
-    <button type="button" class="sr-button sr-button--secondary sr-button--small">Open WCP record</button>
+    <button type="button" class="sr-button sr-button--secondary sr-button--small">View patient record</button>
     <button type="button" class="sr-button sr-button--secondary sr-button--small">Print Patient label</button>
   </div>
 </section>`;
@@ -5640,6 +5642,26 @@ addPage({
   title: 'Patient Banner', section: 'Patterns',
   sectionId: 'patterns', activeHref: 'patterns/patient-banner.html', prefix: '../',
   body: patientBannerBody(),
+});
+function patternGuidelinesBody(title, lede, dir) {
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'patterns', dir, 'guidelines.md'), 'utf8')));
+  return `
+<p class="breadcrumbs">Patterns</p>
+<h1>${title}</h1>
+<p class="lede">${lede}</p>
+${renderMarkdown(md)}`;
+}
+addPage({
+  file: 'patterns/dialogs.html', url: 'patterns/dialogs.html',
+  title: 'Dialogs', section: 'Patterns',
+  sectionId: 'patterns', activeHref: 'patterns/dialogs.html', prefix: '../',
+  body: patternGuidelinesBody('Dialogs', 'Confirmation dialogs stop the user before an action that matters. Result dialogs say how an action went and what to do next. Both are built on Modal.', 'dialogs'),
+});
+addPage({
+  file: 'patterns/patient-search.html', url: 'patterns/patient-search.html',
+  title: 'Patient Search', section: 'Patterns',
+  sectionId: 'patterns', activeHref: 'patterns/patient-search.html', prefix: '../',
+  body: patternGuidelinesBody('Patient Search', 'How staff find the right patient: by NHS number or case number, by name and date of birth, or by scanning the wristband. Every route ends with the user confirming who the patient is.', 'patient-search'),
 });
 // ─── Prototypes ───────────────────────────────────────────────────────────────
 addPage({

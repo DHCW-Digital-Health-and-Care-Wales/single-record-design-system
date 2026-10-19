@@ -78,7 +78,7 @@ Adding an SVG straight into `svg/` without a generator entry is what produced fo
 
 <!-- BEGIN GENERATED CATALOGUE — edit fetch-icons.mjs, then run npm run sync:icons -->
 
-**144 SR aliases across 12 domains.**
+**145 SR aliases across 12 domains.**
 
 Every row below is generated from the `ICONS` array in `fetch-icons.mjs`. Do not edit this section by hand — add the icon to the generator, run `npm run sync:icons`, and the table follows.
 
@@ -116,7 +116,7 @@ Every row below is generated from the `ICONS` array in `fetch-icons.mjs`. Do not
 | nav/support | circle-help | NavSupport |  |
 | nav/feedback | message-square-text | NavFeedback |  |
 
-### Actions & editing (29)
+### Actions & editing (30)
 
 | SR alias | Lucide glyph | Component name | Notes |
 |---|---|---|---|
@@ -124,6 +124,7 @@ Every row below is generated from the `ICONS` array in `fetch-icons.mjs`. Do not
 | action/remove | minus | ActionRemove |  |
 | action/edit | pencil | ActionEdit |  |
 | action/delete | trash-2 | ActionDelete |  |
+| action/backspace | delete | ActionBackspace | Lucide `delete` is the backspace key (left-pointing tag with an x). For on-screen keypads, e.g. PIN entry. Not action/delete, which is the bin (trash-2) for removing records |
 | action/save | save | ActionSave |  |
 | action/download | download | ActionDownload |  |
 | action/upload | upload | ActionUpload |  |

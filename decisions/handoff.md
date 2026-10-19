@@ -88,6 +88,19 @@ delete script — not the plan — is what caught it.
 
 ---
 
+## Checkpoint — 2026-10-19 (mobile adaptations in Figma; icon, patterns, banner action in code)
+
+**Code (branch `claude/ds-handoff-continuation-4l37r1`):**
+- `action/backspace` icon (Lucide `delete`) for on-screen keypads. 145 icons. Needs adding to the Figma Icons page as `Icon/action/backspace`.
+- Patient banner action renamed **View patient record** (Figma has "View Patient record"; code uses sentence case — fix the capital P in Figma).
+- `patterns/patient-search/guidelines.md`, `patterns/dialogs/guidelines.md`, and website pages for both. No live previews yet.
+
+**Figma (Adaptations Mobile page `5443:23237`), drafts for the mobile app:** home (DS) and a "what needs me now" home concept (`5838:2943`); patient search entry, invalid, results, advanced (full length), advanced results with collapsed criteria; indicators sheet; scan flow (permission, camera torch off/on, not recognised, confirm patient, more than one match); documents with count, filter, end of list, filter sheet, filtered, no matches, no documents, loading, could not load; Tests merged sort-and-filter sheet and filters applied. New local components: `Patient card / Mobile` (`5769:1365`) and `Bottom sheet / Mobile` (`5777:2062`). Both need `spec.md` and `guidelines.md` once indicator meanings and content rules are settled.
+
+**Open:** clinical indicator meanings (design lead investigating); content rules session with WISB/DSCN (session pack is a Claude Doc); "Containing" vs "Starts with"; Local health board vs All Wales scope; Bottom sheet needs a content slot.
+
+---
+
 ## Checkpoint — 2026-10-12 (v0.4.0 released; slides; Patient Banner page)
 
 - **v0.4.0** on npm (`latest`) for tokens, icons, web, react. Changelog lists

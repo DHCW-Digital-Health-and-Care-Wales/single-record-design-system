@@ -79,7 +79,7 @@ Collapsed:
 - **`.sr-patient-banner`**: white card, `radius-lg`, `sr.elevation.raised`.
 - **`.sr-patient-banner__alert`**: reactions (Red/50) and warnings (Yellow/100) cards, each with an edit button.
 - **`.sr-patient-banner__identity`**: name row, flag, toggle, and a two-column demographics list.
-- **`.sr-patient-banner__actions`**: Change patient (primary), Open WCP record, Print patient label.
+- **`.sr-patient-banner__actions`**: Change patient (primary), View patient record, Print patient label. **View patient record** opens the patient's demographics page in the patient context from any screen that shows the banner (changed from "Open WCP record", Oct 2026).
 
 Demographics are **two independent columns**, not row-paired, so a field never
 jumps column when an optional one (date of death) is absent.

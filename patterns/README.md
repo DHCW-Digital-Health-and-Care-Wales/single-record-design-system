@@ -43,15 +43,14 @@ A pattern is not a component — it describes how components work together to so
 |---|---|---|
 | `step-by-step` | Planned | Multi-step task / wizard |
 | `task-list` | Planned | GDS task list — incomplete multi-part journeys |
-| `search-and-filter` | Planned | Patient / record search with filter controls |
+| `patient-search` | In review | `patient-search/guidelines.md`: quick, advanced, wristband scan, confirm the patient |
+| `search-and-filter` | Planned | Record list sort and filter (mobile: one bottom sheet) |
 | `contextual-navigation` | Planned | In-record section navigation |
 
 ### Dialogs and confirmations
 | Pattern | Status | Notes |
 |---|---|---|
-| `confirmation-dialog` | Planned | Required before destructive or irreversible actions |
-| `exit-warning` | Planned | Unsaved changes warning on navigation |
-| `session-timeout-warning` | Planned | Warn before auto-logout in clinical context |
+| `dialogs` | In review | `dialogs/guidelines.md`: confirmation (incl. unsaved changes, session expiring, high stakes) and result dialogs |
 
 ### Feedback and status
 | Pattern | Status | Notes |
