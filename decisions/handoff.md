@@ -91,7 +91,7 @@ delete script — not the plan — is what caught it.
 ## Checkpoint — 2026-10-19 (mobile adaptations in Figma; icon, patterns, banner action in code)
 
 **Code (branch `claude/ds-handoff-continuation-4l37r1`):**
-- `action/backspace` icon (Lucide `delete`) for on-screen keypads. 145 icons. Needs adding to the Figma Icons page as `Icon/action/backspace`.
+- `action/backspace` icon (Lucide `delete`) for on-screen keypads. 145 icons. Added to the Figma Icons page as `Icon/action/backspace` (`5864:474`).
 - Patient banner action renamed **View patient record** (Figma has "View Patient record"; code uses sentence case — fix the capital P in Figma).
 - `patterns/patient-search/guidelines.md`, `patterns/dialogs/guidelines.md`, and website pages for both. No live previews yet.
 
