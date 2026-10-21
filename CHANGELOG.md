@@ -18,6 +18,16 @@ this file says so and tells you what to change.
 
 ---
 
+## Unreleased
+
+**No action** for code, unless you copied the patient banner example.
+
+- **New icon `action/backspace`** (Lucide `delete`): the backspace key, for on-screen keypads such as PIN entry. Not a replacement for `action/delete`, which stays the bin.
+- **Patient banner:** the third action is now **View patient record** (was "Open WCP record"). It opens the patient's demographics from any screen showing the banner. Update the label if you copied the example markup.
+- **Patterns:** new Dialogs and Patient search pages on the website, from new `guidelines.md` files.
+
+---
+
 ## v0.4.0 — 2026-09-30
 
 **Action needed** if you write the markup yourself (HTML, Blazor) and use a

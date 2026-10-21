@@ -23,7 +23,7 @@
 
 - On list or search screens covering many patients — the banner names one patient and would be actively misleading. Identify patients in the row instead.
 - As a page heading. The banner answers "who is this?", not "what screen am I on?" — both are needed, and the banner does not replace an `h1`.
-- To carry task actions. The action stack is for patient-level actions only (change patient, open record, print label). Screen-level actions belong in the screen.
+- To carry task actions. The action stack is for patient-level actions only (change patient, view patient record, print label). Screen-level actions belong in the screen.
 
 ## How it works
 

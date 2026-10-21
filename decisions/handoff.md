@@ -64,12 +64,11 @@ before writing MAUI, so a finding filed only here is a finding lost.
 8. **Tabs in dark mode:** the hover label and the 3px selected indicator are
    still `Interactive/Primary` (about 2.1:1 on a dark card). Needs a call from
    the design lead.
-9. **Release workflow gap:** `release-packages.yml` does not check that the
-   tag matches the package version, which let a run start on stale `main`
-   (2026-09-30). Add that check.
-10. **Bootstrap:** a team wants to use `@dhcw/sr-web` with Bootstrap. It
-    coexists (prefixed classes, no element resets). A "Using with Bootstrap"
-    note on the How to use page was offered, not written.
+9. ~~Release workflow gap~~ **Done 2026-10-12:** `release-packages.yml` now
+   fails first if the tag is not `v<version>` (known-issues entry added).
+10. ~~Bootstrap~~ **Done 2026-10-12:** "Using with Bootstrap" section on the
+    How to use page. Checked against the stylesheet (only `sr-` classes, no
+    element resets); not yet tested in a browser alongside Bootstrap.
 
 **New finding, not fixed:** the selected **primary** tab's label is
 `interactive/primary` text on the dark page — **~2.2:1** in dark mode. Needs a
@@ -86,6 +85,19 @@ re-verified in the file by this session).
 **Before any destructive Figma edit, re-count instances yourself.** Twice this
 session a count from a previous step was wrong, and both times the guard in the
 delete script — not the plan — is what caught it.
+
+---
+
+## Checkpoint — 2026-10-19 (mobile adaptations in Figma; icon, patterns, banner action in code)
+
+**Code (branch `claude/ds-handoff-continuation-4l37r1`):**
+- `action/backspace` icon (Lucide `delete`) for on-screen keypads. 145 icons. Added to the Figma Icons page as `Icon/action/backspace` (`5864:474`).
+- Patient banner action renamed **View patient record** (Figma has "View Patient record"; code uses sentence case — fix the capital P in Figma).
+- `patterns/patient-search/guidelines.md`, `patterns/dialogs/guidelines.md`, and website pages for both. No live previews yet.
+
+**Figma (Adaptations Mobile page `5443:23237`), drafts for the mobile app:** home (DS) and a "what needs me now" home concept (`5838:2943`); patient search entry, invalid, results, advanced (full length), advanced results with collapsed criteria; indicators sheet; scan flow (permission, camera torch off/on, not recognised, confirm patient, more than one match); documents with count, filter, end of list, filter sheet, filtered, no matches, no documents, loading, could not load; Tests merged sort-and-filter sheet and filters applied. New local components: `Patient card / Mobile` (`5769:1365`) and `Bottom sheet / Mobile` (`5777:2062`). Both need `spec.md` and `guidelines.md` once indicator meanings and content rules are settled.
+
+**Open:** clinical indicator meanings (design lead investigating); content rules session with WISB/DSCN (session pack is a Claude Doc); "Containing" vs "Starts with"; Local health board vs All Wales scope; Bottom sheet needs a content slot.
 
 ---
 

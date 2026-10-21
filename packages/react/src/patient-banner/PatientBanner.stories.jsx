@@ -51,7 +51,7 @@ function Demo({ type = 'fill', startExpanded = true, deceased = true, noAlerts =
                 Change Patient
               </Button>
               <Button type="secondary" size="small" leadingIcon={<Icon name="clinical/record" size="xs" color="inherit" />}>
-                Open WCP record
+                View patient record
               </Button>
               <Button type="secondary" size="small" leadingIcon={<Icon name="action/print" size="xs" color="inherit" />}>
                 Print Patient label
@@ -62,7 +62,7 @@ function Demo({ type = 'fill', startExpanded = true, deceased = true, noAlerts =
               <Button type="primary" size="small" aria-label="Change patient">
                 <Icon name="action/refresh" size="xs" color="inherit" />
               </Button>
-              <Button type="secondary" size="small" aria-label="Open WCP record">
+              <Button type="secondary" size="small" aria-label="View patient record">
                 <Icon name="clinical/record" size="xs" color="inherit" />
               </Button>
               <Button type="secondary" size="small" aria-label="Print patient label">

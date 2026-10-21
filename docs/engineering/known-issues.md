@@ -1329,6 +1329,25 @@ different question, and not the one that stops a burned version.
 
 ---
 
+### A release run can start on a mirror that has not received the version bump
+
+**Symptom:** on 2026-09-30 *Release packages* was dispatched with tag `v0.4.0`
+before the merge carrying the bump had reached the org mirror, so it started on
+stale `main` with nothing to stop it.
+
+**Why:** the mirror syncs `main` hourly, and the workflow read the version from
+`package.json` without comparing it to the tag a person typed. `publish-nuget.yml`
+already had that check; the npm workflow did not.
+
+**Fix:** wait for the mirror, then run again.
+
+**Prevented by:** the first step of `release-packages.yml`, *Check the tag matches
+the package version*, fails before any build when the tag is not
+`v<packages/tokens version>`. Verified both ways locally: `v0.4.0` passes on 0.4.0,
+`v0.3.9` fails.
+
+---
+
 ### Fixing a broken generator can overwrite good artwork with a bad entry
 
 **Symptom:** `action/scan` — a framed barcode scanner, in use in Figma

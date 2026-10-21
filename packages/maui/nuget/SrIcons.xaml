@@ -4,7 +4,7 @@
     Source of truth: foundations/iconography/svg/ — the same SVGs the web
     icon set is built from, so the two cannot drift.
 
-    144 icons, each a 24x24 geometry drawn with stroke-width 1 and
+    145 icons, each a 24x24 geometry drawn with stroke-width 1 and
     round caps and joins. The geometry carries no colour: set Stroke from a
     token so the icon follows the theme.
 
@@ -23,6 +23,7 @@
 
     <!-- ── action ──────────────────────────────────────────────────────── -->
     <x:String x:Key="SrIconActionAdd">M 5 12 h 14 M 12 5 v 14</x:String>
+    <x:String x:Key="SrIconActionBackspace">M 10 5 a 2 2 0 0 0 -1.344 .519 l -6.328 5.74 a 1 1 0 0 0 0 1.481 l 6.328 5.741 A 2 2 0 0 0 10 19 h 10 a 2 2 0 0 0 2 -2 V 7 a 2 2 0 0 0 -2 -2 z M 12 9 l 6 6 M 18 9 l -6 6</x:String>
     <x:String x:Key="SrIconActionBookmarkOff">M 19 19 v 1 a 1 1 0 0 1 -1.496 .868 l -4.512 -2.578 a 2 2 0 0 0 -1.984 0 l -4.512 2.578 A 1 1 0 0 1 5 20 V 5 M 2 2 l 20 20 M 8.656 3 H 17 a 2 2 0 0 1 2 2 v 8.344</x:String>
     <x:String x:Key="SrIconActionBookmark">M 17 3 a 2 2 0 0 1 2 2 v 15 a 1 1 0 0 1 -1.496 .868 l -4.512 -2.578 a 2 2 0 0 0 -1.984 0 l -4.512 2.578 A 1 1 0 0 1 5 20 V 5 a 2 2 0 0 1 2 -2 z</x:String>
     <x:String x:Key="SrIconActionCheck">M 20 6 L 9 17 l -5 -5</x:String>
