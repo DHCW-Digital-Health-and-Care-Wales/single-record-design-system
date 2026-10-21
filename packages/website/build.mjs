@@ -510,7 +510,7 @@ const SITE_COMPONENT_CSS = [
   'breadcrumbs', 'switch', 'segmented-control', 'navigation', 'input',
   'tags', 'checkbox', 'radio', 'select', 'tabs', 'search', 'stat-card', 'link',
   'inset-text', 'avatar', 'badge', 'notification-banner', 'error-summary',
-  'status-indicator', 'progress-indicators',
+  'status-indicator', 'progress-indicators', 'modal',
 ];
 const COMPONENT_CSS_LINKS = (prefix) =>
   SITE_COMPONENT_CSS.map((c) => `<link rel="stylesheet" href="${prefix}assets/${c}.css">`).join('\n');
@@ -3259,12 +3259,12 @@ function errorSummaryBody() {
   ${summary}
   <div class="sr-input sr-input--error" style="margin-bottom:24px">
     <label class="sr-input__label" for="demo-nhs">NHS number</label>
-    <div class="sr-input__field"><input id="demo-nhs" aria-invalid="true" aria-describedby="demo-nhs-error"></div>
+    <div class="sr-input__field"><input class="sr-input__control" id="demo-nhs" aria-invalid="true" aria-describedby="demo-nhs-error"></div>
     <span class="sr-input__error" id="demo-nhs-error">Enter the patient's NHS number</span>
   </div>
   <div class="sr-input sr-input--error">
     <label class="sr-input__label" for="demo-dob">Date of birth</label>
-    <div class="sr-input__field"><input id="demo-dob" aria-invalid="true" aria-describedby="demo-dob-error"></div>
+    <div class="sr-input__field"><input class="sr-input__control" id="demo-dob" aria-invalid="true" aria-describedby="demo-dob-error"></div>
     <span class="sr-input__error" id="demo-dob-error">Date of birth must be a real date</span>
   </div>
 </div>`;
@@ -5643,25 +5643,183 @@ addPage({
   sectionId: 'patterns', activeHref: 'patterns/patient-banner.html', prefix: '../',
   body: patientBannerBody(),
 });
-function patternGuidelinesBody(title, lede, dir) {
+function patternGuidelinesBody(title, lede, dir, examples = '') {
   const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'patterns', dir, 'guidelines.md'), 'utf8')));
   return `
 <p class="breadcrumbs">Patterns</p>
 <h1>${title}</h1>
 <p class="lede">${lede}</p>
+${examples}
+<hr>
 ${renderMarkdown(md)}`;
+}
+
+// ─── Patterns: Dialogs ───────────────────────────────────────────────────────
+// Shown in place with <dialog open> and static positioning so the page can
+// display several at once. In a product the dialog is opened with showModal(),
+// which adds the backdrop, traps focus and returns it on close.
+const DLG_CLOSE = '<button type="button" class="sr-modal__close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>';
+function dlg({ id, title, body, actions, role = 'dialog', close = true }) {
+  return `<dialog open class="sr-modal sr-modal--small" role="${role}" aria-labelledby="${id}" style="position:static;margin:0">
+  <div class="sr-modal__header"><h2 class="sr-modal__title" id="${id}">${title}</h2>${close ? DLG_CLOSE : ''}</div>
+  <div class="sr-modal__body">${body}</div>
+  <div class="sr-modal__footer">${actions}</div>
+</dialog>`;
+}
+const BTN = (type, label, extra = '') => `<button type="button" class="sr-button sr-button--${type} sr-button--default"${extra}>${label}</button>`;
+function dialogsExamples() {
+  const snippets = (title, body, cancel, confirm, type, role) => ({
+    HTML: `<dialog class="sr-modal sr-modal--small"${role === 'alertdialog' ? ' role="alertdialog"' : ''} aria-labelledby="dlg-title">
+  <div class="sr-modal__header">
+    <h2 class="sr-modal__title" id="dlg-title">${title}</h2>
+    <button type="button" class="sr-modal__close" aria-label="Close"><!-- nav/close --></button>
+  </div>
+  <div class="sr-modal__body"><p>${body}</p></div>
+  <div class="sr-modal__footer">
+    <button type="button" class="sr-button sr-button--secondary sr-button--default">${cancel}</button>
+    <button type="button" class="sr-button sr-button--${type} sr-button--default">${confirm}</button>
+  </div>
+</dialog>
+<!-- Open with dialog.showModal(): backdrop, focus trap, Escape and focus return come with it. -->`,
+    React: `<Modal
+  open={open}
+  onClose={() => setOpen(false)}
+  title="${title}"
+  size="small"
+  footer={<>
+    <Button type="secondary" onClick={() => setOpen(false)}>${cancel}</Button>
+    <Button type="${type}" onClick={confirm}>${confirm}</Button>
+  </>}
+>
+  <p>${body}</p>
+</Modal>`,
+    Blazor: `@* Stylesheet only. Open the dialog with JS interop: dialog.showModal(). *@
+<dialog class="sr-modal sr-modal--small" aria-labelledby="dlg-title" @ref="Dialog">
+  <div class="sr-modal__header"><h2 class="sr-modal__title" id="dlg-title">${title}</h2></div>
+  <div class="sr-modal__body"><p>${body}</p></div>
+  <div class="sr-modal__footer">
+    <button type="button" class="sr-button sr-button--secondary" @onclick="Cancel">${cancel}</button>
+    <button type="button" class="sr-button sr-button--${type}" @onclick="Confirm">${confirm}</button>
+  </div>
+</dialog>`,
+  });
+  const stack = (html) => `<div style="display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start">${html}</div>`;
+  return `
+<h2>Confirmation: standard</h2>
+<p class="muted">A significant step the user can still view afterwards. The main button names the action.</p>
+${showcase(dlg({ id: 'd1', title: 'Mark assessment complete?', body: '<p>Once marked complete, this assessment will be locked for editing. You can still view it.</p>', actions: BTN('secondary', 'Cancel') + BTN('primary', 'Mark complete') }), 'dlg-standard', snippets('Mark assessment complete?', 'Once marked complete, this assessment will be locked for editing. You can still view it.', 'Cancel', 'Mark complete', 'primary', 'dialog'), { wide: true })}
+<h2>Confirmation: destructive</h2>
+<p class="muted">Permanent loss. The destructive style is kept for this case only.</p>
+${showcase(dlg({ id: 'd2', role: 'alertdialog', title: 'Delete this record?', body: '<p>This permanently deletes the attendance record and cannot be undone.</p>', actions: BTN('secondary', 'Cancel') + BTN('destructive', 'Delete record') }), 'dlg-destructive', snippets('Delete this record?', 'This permanently deletes the attendance record and cannot be undone.', 'Cancel', 'Delete record', 'destructive', 'alertdialog'), { wide: true })}
+<h2>Confirmation: unsaved changes and session expiring</h2>
+<div class="showcase showcase--wide"><div class="showcase__preview">${stack(
+    dlg({ id: 'd3', title: 'Leave without saving?', body: '<p>You have unsaved changes. If you leave now, they will be lost.</p>', actions: BTN('secondary', 'Leave anyway') + BTN('primary', 'Stay on page') })
+  + dlg({ id: 'd4', title: 'Session expiring soon', close: false, body: '<p>For security, you will be signed out in 2 minutes because there has been no activity.</p>', actions: BTN('primary', 'Stay signed in') }))}</div></div>
+<h2>Confirmation: high stakes</h2>
+<p class="muted">Clinical risk. The main button stays disabled until the user ticks the statement, and the override is recorded against their name.</p>
+<div class="showcase showcase--wide"><div class="showcase__preview">${dlg({ id: 'd5', role: 'alertdialog', title: 'Override clinical alert?', body: `<p>Overriding this allergy alert will be recorded against your name.</p>
+    <div class="sr-checkbox"><input class="sr-checkbox__input" type="checkbox" id="d5-ack"><label class="sr-checkbox__label" for="d5-ack">I understand the clinical risk and take responsibility for this override.</label></div>`, actions: BTN('secondary', 'Cancel') + BTN('destructive', 'Override alert', ' disabled') })}</div></div>
+<h2>Result: success and error</h2>
+<p class="muted">After the action. Success offers the next step; an error says the data is kept and offers a retry.</p>
+<div class="showcase showcase--wide"><div class="showcase__preview">${stack(
+    dlg({ id: 'd6', title: 'Referral submitted', body: '<p>Your referral has been sent to the receiving team.</p>', actions: BTN('secondary', 'Back to dashboard') + BTN('primary', 'View referral') })
+  + dlg({ id: 'd7', role: 'alertdialog', title: 'Submission failed', body: '<p>The referral could not be sent because of a connection problem. Your data has been kept.</p>', actions: BTN('secondary', 'Cancel') + BTN('primary', 'Try again') }))}</div></div>`;
+}
+
+// ─── Patterns: Patient search ────────────────────────────────────────────────
+const PS_ICON_SEARCH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.34-4.34"/></svg>';
+function psSegmented(advanced) {
+  return `<div class="sr-segmented" role="group" aria-label="Search type">
+  <button type="button" class="sr-segmented__option" aria-pressed="${!advanced}">Quick search</button>
+  <button type="button" class="sr-segmented__option" aria-pressed="${advanced}">Advanced</button>
+</div>`;
+}
+function psInput(id, label, { hint, value = '', error, placeholder = '' } = {}) {
+  const desc = error ? `${id}-error` : hint ? `${id}-hint` : '';
+  return `<div class="sr-input${error ? ' sr-input--error' : ''}">
+  <label class="sr-input__label" for="${id}">${label}</label>
+  ${hint ? `<span class="sr-input__hint" id="${id}-hint">${hint}</span>` : ''}
+  <div class="sr-input__field"><input class="sr-input__control" id="${id}" value="${value}" placeholder="${placeholder}"${desc ? ` aria-describedby="${desc}"` : ''}${error ? ' aria-invalid="true"' : ''}></div>
+  ${error ? `<span class="sr-input__error" id="${id}-error">${error}</span>` : ''}
+</div>`;
+}
+function psRadios(legend, name) {
+  const opt = (v, i) => `<div class="sr-radio"><input class="sr-radio__input" type="radio" id="${name}-${i}" name="${name}"${i === 0 ? ' checked' : ''}><label class="sr-radio__label" for="${name}-${i}">${v}</label></div>`;
+  return `<fieldset class="sr-radio-group">
+  <legend class="sr-radio-group__legend">${legend}</legend>
+  <div class="sr-radio-group__options">${['Containing', 'Exact match', 'Sounds like'].map(opt).join('')}</div>
+</fieldset>`;
+}
+function patientSearchExamples() {
+  const quick = `<div style="display:flex;flex-direction:column;gap:16px;max-width:560px">
+${psSegmented(false)}
+<div class="sr-search">
+  <label class="sr-visually-hidden" for="ps-q">NHS number or case number</label>
+  <div class="sr-search__row">
+    <div class="sr-search__control"><div class="sr-search__field">
+      <span class="sr-search__icon">${PS_ICON_SEARCH}</span>
+      <input type="search" class="sr-search__control-input" id="ps-q" placeholder="Search by NHS number or case number" autocomplete="off">
+    </div></div>
+    <button type="submit" class="sr-search__submit">Search</button>
+  </div>
+</div>
+</div>`;
+  const advanced = `<div style="display:flex;flex-direction:column;gap:16px;max-width:560px">
+${psSegmented(true)}
+${psInput('ps-nhs', 'NHS number or case number', { hint: 'Optional' })}
+${psInput('ps-sn', 'Surname')}
+${psRadios('How to match the surname', 'ps-snm')}
+${psInput('ps-fn', 'Forename')}
+${psRadios('How to match the forename', 'ps-fnm')}
+${psInput('ps-dob', 'Date of birth', { hint: 'For example, 15 06 1939' })}
+${psInput('ps-pc', 'Postcode', { hint: 'For example, CF10 1AA' })}
+<div style="display:flex;gap:12px">${BTN('primary', 'Search')}${BTN('secondary', 'Clear')}</div>
+</div>`;
+  const error = `<div style="max-width:560px">${psInput('ps-err', 'NHS number or case number', { value: '444 353 987', error: 'NHS number must be 10 digits. You have entered 9.' })}</div>`;
+  const snippets = {
+    HTML: `<div class="sr-segmented" role="group" aria-label="Search type">
+  <button type="button" class="sr-segmented__option" aria-pressed="true">Quick search</button>
+  <button type="button" class="sr-segmented__option" aria-pressed="false">Advanced</button>
+</div>
+<div class="sr-search">
+  <label class="sr-visually-hidden" for="q">NHS number or case number</label>
+  <div class="sr-search__row">
+    <div class="sr-search__control"><div class="sr-search__field">
+      <span class="sr-search__icon"><!-- nav/search --></span>
+      <input type="search" class="sr-search__control-input" id="q"
+             placeholder="Search by NHS number or case number" autocomplete="off">
+    </div></div>
+    <button type="submit" class="sr-search__submit">Search</button>
+  </div>
+</div>`,
+    Blazor: `@* Stylesheet only. Same markup; bind the input and the pressed state. *@
+<div class="sr-segmented" role="group" aria-label="Search type">
+  <button type="button" class="sr-segmented__option" aria-pressed="@(!Advanced)" @onclick="() => Advanced = false">Quick search</button>
+  <button type="button" class="sr-segmented__option" aria-pressed="@Advanced" @onclick="() => Advanced = true">Advanced</button>
+</div>`,
+  };
+  return `
+<h2>Quick search</h2>
+<p class="muted">The default. One field for an NHS number or a case number. On mobile a scan button sits beside it.</p>
+${showcase(quick, 'ps-quick', snippets, { wide: true })}
+<h2>Advanced search</h2>
+<p class="muted">When the number is not known. Every field is optional; surname or date of birth gives the best match.</p>
+<div class="showcase showcase--wide"><div class="showcase__preview">${advanced}</div></div>
+<h2>Error</h2>
+<p class="muted">Say exactly what is wrong and keep what the user typed.</p>
+<div class="showcase showcase--wide"><div class="showcase__preview">${error}</div></div>`;
 }
 addPage({
   file: 'patterns/dialogs.html', url: 'patterns/dialogs.html',
   title: 'Dialogs', section: 'Patterns',
   sectionId: 'patterns', activeHref: 'patterns/dialogs.html', prefix: '../',
-  body: patternGuidelinesBody('Dialogs', 'Confirmation dialogs stop the user before an action that matters. Result dialogs say how an action went and what to do next. Both are built on Modal.', 'dialogs'),
+  body: patternGuidelinesBody('Dialogs', 'Confirmation dialogs stop the user before an action that matters. Result dialogs say how an action went and what to do next. Both are built on Modal.', 'dialogs', dialogsExamples()),
 });
 addPage({
   file: 'patterns/patient-search.html', url: 'patterns/patient-search.html',
   title: 'Patient Search', section: 'Patterns',
   sectionId: 'patterns', activeHref: 'patterns/patient-search.html', prefix: '../',
-  body: patternGuidelinesBody('Patient Search', 'How staff find the right patient: by NHS number or case number, by name and date of birth, or by scanning the wristband. Every route ends with the user confirming who the patient is.', 'patient-search'),
+  body: patternGuidelinesBody('Patient Search', 'How staff find the right patient: by NHS number or case number, by name and date of birth, or by scanning the wristband. Every route ends with the user confirming who the patient is.', 'patient-search', patientSearchExamples()),
 });
 // ─── Prototypes ───────────────────────────────────────────────────────────────
 addPage({

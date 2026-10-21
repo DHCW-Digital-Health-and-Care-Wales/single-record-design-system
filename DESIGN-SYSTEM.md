@@ -504,12 +504,11 @@ Patterns live in `/patterns/`. Each pattern follows the template in `/docs/templ
 | Pattern | Guidelines | DS website page | Notes |
 |---|---|---|---|
 | Patient banner | ✅ `components/patient-banner/guidelines.md` | ✅ `patterns/patient-banner.html` | Two types (`Fill`, `Border`) and two states (`Expanded`, `Collapsed`) — **all four are live**. Fill vs Border has not been user-tested; keeping both is provisional. Its third action is now **View patient record** (was "Open WCP record"), which opens the patient's demographics from any screen showing the banner. |
-| Dialogs | ✅ `patterns/dialogs/guidelines.md` | ✅ `patterns/dialogs.html` | Confirmation (standard, destructive, unsaved changes, session expiring, high stakes, processing) and Result (success, summary, error), built on Modal. No live preview on the page yet. |
-| Patient search | ✅ `patterns/patient-search/guidelines.md` | ✅ `patterns/patient-search.html` | Quick and Advanced search, wristband scan and the confirm-the-patient step. No code component; composed from Search, Input, Date input, Radios. The web Advanced variant in Figma still has known content errors. |
+| Dialogs | ✅ `patterns/dialogs/guidelines.md` | ✅ `patterns/dialogs.html` | Confirmation (standard, destructive, unsaved changes, session expiring, high stakes, processing) and Result (success, summary, error), built on Modal. Live previews of every confirmation and result type. |
+| Patient search | ✅ `patterns/patient-search/guidelines.md` | ✅ `patterns/patient-search.html` | Quick and Advanced search, wristband scan and the confirm-the-patient step. No code component; composed from Search, Input, Date input, Radios. Live previews: quick, advanced, error. The web Advanced variant in Figma still has known content errors. |
 
 **Known gap:** forms and sign-off flows are named in the pattern intro but
-have no guidelines file and no website page. The Dialogs and Patient search
-pages have guidance but no live preview yet.
+have no guidelines file and no website page.
 
 ---
 

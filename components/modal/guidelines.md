@@ -55,6 +55,21 @@
 - **Actions are right-grouped, primary last** (DDR-018). Cancel is always
   present on a confirmation and is never the visually heavier button.
 
+## On mobile
+
+Yes, mobile uses the modal, but only for short, focused decisions. Pick by what the content is, not by habit.
+
+| Content | Use | Why |
+|---|---|---|
+| A question with two answers: confirm, delete, leave without saving, session expiring | **Modal**, centred, full width less 16px each side | It must interrupt. A centred card reads as "stop and decide". |
+| A short explanation the user asked for: what a hint, indicator or term means | **Bottom sheet** | It sits within thumb reach, keeps the screen behind visible, and closes with a swipe. |
+| Options or filters the user sets, then applies | **Bottom sheet** | Room for controls, with the apply button at the bottom. |
+| Read-only detail with more than a few lines: the user's profile, a full result | **Full-screen page** with a back button, not a modal | Long content in a modal scrolls inside a box. A page scrolls normally and can be returned to. |
+
+- On a phone the modal fills the width with a 16px margin each side. Small, Medium and Large collapse to the same width.
+- The footer wraps when the button labels do not fit on one line. Keep labels short ("Delete record", not "Yes, delete this record now") so they stay side by side.
+- Never put a form longer than one screen in a modal on mobile. Use a page.
+
 ## Accessibility
 
 - **`role="alertdialog"` for confirmations, `role="dialog"` for everything
