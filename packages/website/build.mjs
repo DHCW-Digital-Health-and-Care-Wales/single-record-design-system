@@ -3134,6 +3134,7 @@ document.querySelectorAll('.sr-search__row').forEach(function (row) {
 
 const SEARCH_ICON = iconMarkup('nav/search');
 const SEARCH_CLEAR = iconMarkup('nav/clear');
+const SEARCH_SCAN = iconMarkup('action/scan');
 const SEARCH_SPINNER = iconMarkup('status/loading');
 const SEARCH_ERROR_ICON = iconMarkup('status/error-circle');
 
@@ -3876,6 +3877,8 @@ function searchBody() {
       ? `<span class="sr-search__spinner">${SEARCH_SPINNER}</span>`
       : (value
         ? `<button type="button" class="sr-search__clear" aria-label="Clear search">${SEARCH_CLEAR}</button>`
+        : '') + (type === 'with-scan'
+        ? `<button type="button" class="sr-search__scan" aria-label="Scan wristband"${disabled ? ' disabled' : ''}>${SEARCH_SCAN}</button>`
         : '');
 
     const menu = typeahead && suggestions
@@ -3944,6 +3947,13 @@ ${showcase(field({ id: 's-btn', type: 'with-button', label: 'Search patients', p
 square to the field and comfortably over the 24×24 minimum in WCAG 2.2. Use it because space demands
 it, not by preference: the word "Search" is easier to read at a glance than a glyph.</p>
 ${showcase(field({ id: 's-icon', type: 'with-icon-button', label: 'Search patients', value: 'Smith' }), 'search-icon-button', snippets)}
+
+<h2>With scan</h2>
+<p>Mobile patient search. The scan button sits inside the field and opens the camera to read a
+wristband barcode; a typed NHS or case number is sent with Enter. The button is always there, because
+scanning replaces typing rather than following it. It is named "Scan wristband" for screen readers,
+and is 40×40.</p>
+${showcase(field({ id: 's-scan', type: 'with-scan', label: 'Search patients', placeholder: 'NHS or case number' }), 'search-scan', snippets)}
 
 <h2>Typeahead</h2>
 <p>Type to look something up, then pick a result. Focus the field below and use <kbd>↓</kbd>

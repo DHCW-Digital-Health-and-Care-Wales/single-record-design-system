@@ -14,6 +14,10 @@
  *   With Button      — submitted query; .sr-search__submit alongside the field.
  *   With Icon Button — same, but a 40x40 icon-only button where space is tight.
  *   Typeahead        — Basic plus the .sr-search__suggestions popover.
+ *   With Scan        — submitted on Enter; a scan button (.sr-search__scan)
+ *                      sits inside the field, after the clear button. Mobile
+ *                      patient search, where a wristband barcode is the
+ *                      fastest and least error-prone route.
  *
  * Anatomy (vertical stack, gap = space-1), mirroring Input and Select:
  *   .sr-search__label       — field label (+ required asterisk)
@@ -143,6 +147,38 @@
 .sr-search__clear:focus-visible {
   outline: none;
   box-shadow: 0 0 0 2px var(--sr-color-border-focus);
+}
+
+/* Scan — With Scan only. A 40x40 target inside the field: the negative right
+   margin takes back the field's 12px padding so the button runs to the border
+   rather than growing the field. It always shows (unlike Clear) because
+   scanning is the alternative to typing, not a step after it. The button must
+   carry a visible-equivalent name: aria-label="Scan wristband". */
+.sr-search__scan {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 38px; /* field is 40px including its 1px border */
+  margin-right: calc(-1 * var(--space-3));
+  padding: 0;
+  border: none;
+  border-left: 1px solid var(--sr-color-border-default);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: transparent;
+  color: var(--sr-color-interactive-link);
+  cursor: pointer;
+}
+.sr-search__scan svg { width: 24px; height: 24px; }
+.sr-search__scan:hover { background-color: var(--sr-color-surface-subtle); }
+.sr-search__scan:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--sr-color-border-focus);
+}
+.sr-search__scan:disabled {
+  color: var(--sr-color-text-secondary);
+  cursor: not-allowed;
 }
 
 /* Spinner — replaces the clear button while a query is in flight. */
