@@ -13,8 +13,11 @@ import Icon from '../icon/Icon.jsx';
  *
  * Props:
  *   type          'basic' | 'with-button' | 'with-icon-button' | 'typeahead'
+ *                 | 'with-scan'
  *   value/onChange   controlled query (uncontrolled if `value` omitted)
- *   onSubmit(query)  with-button / with-icon-button
+ *   onSubmit(query)  with-button / with-icon-button / with-scan (on Enter)
+ *   onScan()      with-scan: open the camera
+ *   scanLabel     with-scan: the scan button's name (default 'Scan wristband')
  *   suggestions   [{ label, value, meta }] — typeahead
  *   onSelect(option) typeahead: a suggestion was chosen
  *   filter        false to disable local filtering (server already filtered)
@@ -56,6 +59,8 @@ export default function Search({
   required = false,
   placeholder = 'Search',
   submitLabel = 'Search',
+  onScan,
+  scanLabel = 'Scan wristband',
   className,
   ...rest
 }) {
@@ -65,6 +70,7 @@ export default function Search({
   const query = isControlled ? value : internal;
   const isTypeahead = type === 'typeahead';
   const hasButton = type === 'with-button' || type === 'with-icon-button';
+  const hasScan = type === 'with-scan';
 
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
@@ -95,7 +101,7 @@ export default function Search({
   const onKeyDown = (e) => {
     if (!isTypeahead) {
       // A bare search field still submits on Enter when it has a button.
-      if (e.key === 'Enter' && hasButton && query) { e.preventDefault(); onSubmit?.(query); }
+      if (e.key === 'Enter' && (hasButton || hasScan) && query) { e.preventDefault(); onSubmit?.(query); }
       return;
     }
     switch (e.key) {
@@ -214,6 +220,17 @@ export default function Search({
                   <Icon name="nav/clear" size="sm" color="inherit" />
                 </button>
               )
+            )}
+            {hasScan && (
+              <button
+                type="button"
+                className="sr-search__scan"
+                aria-label={scanLabel}
+                disabled={disabled}
+                onClick={() => onScan?.()}
+              >
+                <Icon name="action/scan" size="md" color="inherit" />
+              </button>
             )}
           </div>
 

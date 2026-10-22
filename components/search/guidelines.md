@@ -19,6 +19,7 @@ or view that changes because of what they typed.
 | A query sent to a service — patient lookup, document search | Search, `Type=With Button` |
 | The same, where horizontal space is tight (mobile, toolbars) | Search, `Type=With Icon Button` |
 | Type to look up a person, place or coded term, then pick a result | Search, `Type=Typeahead` |
+| Find a patient on a phone, where a wristband can be scanned | Search, `Type=With Scan` |
 | Pick one value from a known set, typing to narrow it | **Autocomplete** |
 | Pick one value from a short fixed set | **Select** |
 | Free text that is not a query | **Input** |
@@ -42,6 +43,10 @@ instance — do not wrap an Input around it.
 - **With Icon Button** is the same control at 40×40. Use it where a text button
   will not fit, not as a general preference: an icon-only button is harder to
   read at a glance than the word "Search".
+- **With Scan** puts a scan button inside the field for mobile patient search.
+  It opens the camera straight away (see the Patient Search pattern). The
+  button is always shown, because scanning replaces typing. Name it "Scan
+  wristband", never leave it as a bare icon.
 - **Typeahead** pairs the field with the suggestions popover. Use it when the
   user is looking for a *thing* — a clinician, a ward, a coded term — rather
   than filtering something already on screen.

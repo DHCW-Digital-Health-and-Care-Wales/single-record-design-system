@@ -47,11 +47,11 @@ Stroke colour is recoloured per state via semantic variables (`Text/Secondary`, 
 
 Two related components.
 
-### `Search` (`1715:375`) — 4 types × 6 states = 24 variants
+### `Search` (`1715:375`) — 5 types × 6 states = 30 variants
 
 | Property | Values |
 |---|---|
-| Type | Basic, With Button, With Icon Button, Typeahead |
+| Type | Basic, With Button, With Icon Button, Typeahead, With Scan |
 | State | Default, Focus, Filled, Loading, Disabled, Error |
 
 | Type | Use |
@@ -59,6 +59,7 @@ Two related components.
 | Basic | Inline filter for tables, lists, dropdowns. Fires live as the user types. No submit step. |
 | With Button | Search is a submitted action hitting the backend — patient search, document lookup. The button is `Interactive/Disabled` until input is valid. |
 | With Icon Button | Same as With Button, but the trailing control is a 40×40 icon-only button, square to the field height. Use on mobile or any layout where horizontal space is tight. |
+| With Scan | Mobile patient search. A 40×40 scan button sits inside the field, after the clear button, and opens the camera to read a wristband barcode. A typed number is submitted with Enter. The button is always shown and is named "Scan wristband". |
 | Typeahead | Looks like Basic but pairs with the `Search Suggestions` popover. Used for clinician lookup, coded terms, location search, reference data. |
 
 ### `Search Suggestions` (`1716:238`) — 3 states

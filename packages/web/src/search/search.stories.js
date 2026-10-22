@@ -147,6 +147,16 @@ const render = ({
   field.append(lead, input);
   if (state === 'loading') field.append(spinner);
   else field.append(clear);
+  if (type === 'with-scan') {
+    // Always shown: scanning is the alternative to typing, not a step after it.
+    const scan = document.createElement('button');
+    scan.type = 'button';
+    scan.className = 'sr-search__scan';
+    scan.setAttribute('aria-label', 'Scan wristband');
+    scan.innerHTML = icon('action/scan');
+    scan.disabled = disabled;
+    field.append(scan);
+  }
   control.append(field);
   if (isTypeahead) control.append(menu);
   row.append(control);
@@ -334,7 +344,7 @@ export default {
   argTypes: {
     type: {
       control: 'inline-radio',
-      options: ['basic', 'with-button', 'with-icon-button', 'typeahead'],
+      options: ['basic', 'with-button', 'with-icon-button', 'typeahead', 'with-scan'],
     },
     state: {
       control: 'inline-radio',
@@ -359,6 +369,9 @@ export const WithButton = { args: { type: 'with-button', placeholder: 'Enter NHS
 
 /** Same behaviour, 40×40 icon button, for mobile and tight toolbars. */
 export const WithIconButton = { args: { type: 'with-icon-button' } };
+
+/** Mobile patient search: the scan button opens the camera; Enter submits a typed number. */
+export const WithScan = { args: { type: 'with-scan', label: 'Search patients', placeholder: 'NHS or case number' } };
 
 /**
  * Typeahead. Focus the field, then use ↓ ↑ Home End Enter Esc — the whole

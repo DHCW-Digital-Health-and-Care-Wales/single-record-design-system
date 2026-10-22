@@ -24,6 +24,7 @@ this file says so and tells you what to change.
 
 - **New icon `action/backspace`** (Lucide `delete`): the backspace key, for on-screen keypads such as PIN entry. Not a replacement for `action/delete`, which stays the bin.
 - **Patient banner:** the third action is now **View patient record** (was "Open WCP record"). It opens the patient's demographics from any screen showing the banner. Update the label if you copied the example markup.
+- **Search `with-scan` type** (web CSS `.sr-search__scan`, React `type="with-scan"` with `onScan` and `scanLabel`): a scan button inside the field for mobile patient search, named "Scan wristband". Matches the new Figma `Type=With Scan`. Blazor ships no Search component, so use the classes.
 - **Patterns:** new Dialogs and Patient search pages on the website, from new `guidelines.md` files.
 
 ---
