@@ -5430,6 +5430,32 @@ in the library is the name you type in code. Where they differ, the token JSON i
 <code>foundations/tokens/</code> wins and the Figma name is out of date.</p>`,
 });
 
+/**
+ * What's new: CHANGELOG.md as an accordion, one panel per `## ` section.
+ * The newest section is first in the file, so it is the one left open; older
+ * releases stay one click away. Native <details>/<summary>, so it works without
+ * script and every browser gives it the keyboard and screen reader behaviour.
+ */
+function changelogBody() {
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'CHANGELOG.md'), 'utf8')));
+  const [intro, ...sections] = md.split(/\n(?=## )/);
+  // The `---` rules between releases are redundant once each is its own panel.
+  const clean = (t) => t.replace(/^---\s*$/gm, '');
+  const panels = sections.map((sec, i) => {
+    const [title, ...rest] = sec.split('\n');
+    return `<details class="release"${i === 0 ? ' open' : ''}>
+  <summary class="release__summary">${title.replace(/^##\s+/, '')}</summary>
+  <div class="release__body">
+${renderMarkdown(clean(rest.join('\n')))}
+  </div>
+</details>`;
+  }).join('\n');
+  return `${renderMarkdown(clean(intro))}
+<div class="releases">
+${panels}
+</div>`;
+}
+
 addPage({
   file: 'changelog.html', url: 'changelog.html', title: "What's new", section: 'Get Started',
   sectionId: 'get-started', activeHref: 'changelog.html', prefix: '',
@@ -5437,7 +5463,7 @@ addPage({
 <p class="breadcrumbs">Get Started</p>
 <h1>What's new</h1>
 <p class="lede">What changed in each release, and whether you need to do anything about it.</p>
-${renderMarkdown(stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'CHANGELOG.md'), 'utf8'))))}`,
+${changelogBody()}`,
 });
 addPage({
   file: 'storybook.html', url: 'storybook.html', title: 'Using Storybook', section: 'Get Started',
