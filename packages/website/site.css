@@ -336,7 +336,10 @@ body {
 .content table:not(.sr-table) td { color: var(--sr-color-text-secondary); }
 
 /* ── cards ────────────────────────────────────────────────────────────────── */
-.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin: 0 0 32px; }
+/* Two columns by default, so a lone card takes half the width rather than
+   stretching across the page. One column on narrow screens. */
+.cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin: 0 0 32px; }
+@media (max-width: 640px) { .cards { grid-template-columns: minmax(0, 1fr); } }
 .card {
   display: block;
   text-decoration: none;
@@ -842,3 +845,39 @@ body.bare { margin: 0; }
 .tag-row + .tag-row { margin-top: 12px; }
 .tag-inuse p { margin: 0 0 8px; }
 .tag-inuse p:last-child { margin-bottom: 0; }
+
+/* What's new: one collapsible panel per release, newest open (changelogBody). */
+.releases { border-top: 1px solid var(--sr-color-border-default); margin-top: 24px; }
+.release { border-bottom: 1px solid var(--sr-color-border-default); }
+.release__summary {
+  display: flex; align-items: center; gap: 12px;
+  min-height: 48px; padding: 12px 0; cursor: pointer;
+  font-size: 20px; line-height: 28px; font-weight: 700;
+  color: var(--sr-color-text-primary); list-style: none;
+}
+.release__summary::-webkit-details-marker { display: none; }
+.release__summary::before {
+  content: ''; flex: 0 0 auto; width: 8px; height: 8px;
+  border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg); transition: transform 0.15s;
+}
+.release[open] > .release__summary::before { transform: rotate(45deg); }
+.release__summary:focus-visible { outline: 3px solid var(--sr-color-border-focus); outline-offset: 2px; }
+.release__body { padding: 0 0 24px 20px; }
+@media (prefers-reduced-motion: reduce) { .release__summary::before { transition: none; } }
+
+/* Usage samples: a short heading, one line on when, then the live example.
+   Started on Tabs (counts); the same shape suits any "which option when". */
+.usage-samples {
+  display: grid;
+  gap: 24px;
+  margin: 16px 0 24px;
+  padding: 24px;
+  border: 1px solid var(--sr-color-border-default);
+  border-radius: 8px;
+  background: var(--sr-color-surface-section-cards);
+}
+.usage-samples h3 { margin: 0 0 4px; }
+.usage-samples p { margin: 0 0 12px; color: var(--sr-color-text-secondary); }
+/* A link styled as an SR button: keep the button's own text colour and no underline. */
+.content a.download-button { color: var(--sr-color-text-on-fill); text-decoration: none; }

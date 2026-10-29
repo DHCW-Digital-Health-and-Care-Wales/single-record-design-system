@@ -1,6 +1,10 @@
 import React, { useId, useRef, useState } from 'react';
 import '@dhcw/sr-web/src/tabs/tabs.css';
-import { Badge } from '../badge/Badge.jsx';
+import { Badge, formatCount } from '../badge/Badge.jsx';
+
+/** The tab's accessible name: the label plus the real count, never the capped one. */
+const tabName = (t) => (t.count === undefined ? undefined
+  : t.countType === 'new' ? `${t.label}, ${t.count} new` : `${t.label}, ${t.count} items`);
 
 /**
  * Tabs — DHCW Single Record Design System
@@ -11,7 +15,12 @@ import { Badge } from '../badge/Badge.jsx';
  * SegmentedControl instead.
  *
  * Controlled (`value` + `onChange`) or uncontrolled (`defaultValue`).
- * `tabs`: [{ id, label, count, disabled, panel }].
+ * `tabs`: [{ id, label, count, countType, disabled, panel }].
+ *
+ * `count` is a total by default ("Results 20", named "Results, 20 items").
+ * `countType: 'new'` marks it as new items instead: the badge reads "3 new"
+ * and the name "Tests, 3 new", so it cannot be mistaken for a total. Over 99
+ * the badge shows "99+"; the name keeps the real number.
  *
  * `level="secondary"` renders the sub-tab pill (DDR-030). Put one inside a
  * primary tab's panel to get a two-level structure — that nesting is a
@@ -109,7 +118,7 @@ export default function Tabs({
               aria-controls={`${reactId}-panel-${i}`}
               aria-disabled={t.disabled || undefined}
               // The count is decorative in the badge, so fold it into the name.
-              aria-label={t.count !== undefined ? `${t.label}, ${t.count} items` : undefined}
+              aria-label={tabName(t)}
               disabled={t.disabled}
               tabIndex={isSelected ? 0 : -1}
               onClick={() => select(i)}
@@ -117,7 +126,7 @@ export default function Tabs({
             >
               {t.label}
               {t.count !== undefined && (
-                <Badge>{t.count}</Badge>
+                <Badge>{t.countType === 'new' ? `${formatCount(t.count)} new` : t.count}</Badge>
               )}
             </button>
           );

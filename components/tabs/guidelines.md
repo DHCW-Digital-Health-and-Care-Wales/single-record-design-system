@@ -100,6 +100,22 @@ does.
   and refuses to show it.
 - **Don't** use a count badge to convey urgency. It is a quantity, not a status.
 
+## Showing counts
+
+| Use | Badge | Name read out |
+|---|---|---|
+| Everything in the tab (default) | `20` | "Results, 20 items" |
+| Items new since last viewed | `3 new` | "Tests, 3 new" |
+| Over 99, either kind | `99+` or `99+ new` | The real number: "Tests, 120 new" |
+
+- Say "new" in the badge when the number is not a total. A bare "3" on Tests
+  reads as "3 tests".
+- Mark the new rows in the list as well, so the user can find what the badge
+  counted.
+- **A dot is not a count.** Use one only when there is no number to give
+  ("changed since you last looked"), and name it ("Tests, new results"). There
+  is no coded dot yet; Figma has a sample.
+
 ## Accessibility
 
 - Implements the **WAI-ARIA tabs pattern**: `role="tablist"` → `role="tab"` →
@@ -111,8 +127,10 @@ does.
 - The panel itself is focusable, so tabbing off the tablist lands in the content
   the tab controls rather than skipping past it.
 - **The count is in the tab's name, not only in the badge.** The badge is
-  hidden from assistive technology and the name reads "Results, 20 items" —
-  otherwise a screen reader announces the tab and never mentions the number.
+  hidden from assistive technology and the name reads "Results, 20 items" (or
+  "Tests, 3 new") — otherwise a screen reader announces the tab and never
+  mentions the number. The name carries the real count even when the badge
+  shows "99+".
 - Focus is a 2px ring that clears 3:1 in both light and dark (DDR-025). A
   focused tab that is also selected shows both the ring and the indicator.
 
@@ -127,7 +145,7 @@ does.
 | Framework | How |
 |---|---|
 | HTML / CSS | `.sr-tabs` with `role="tablist"`. **Port the keyboard behaviour** — see the Storybook reference |
-| React | `<Tabs tabs={[{ id, label, count, disabled, panel }]} />` from `@dhcw/sr-react`. Keyboard handling included |
+| React | `<Tabs tabs={[{ id, label, count, countType, disabled, panel }]} />` (`countType: 'new'` for new items) from `@dhcw/sr-react`. Keyboard handling included |
 | Blazor | Use the shipped CSS classes; mirror the ARIA wiring and keyboard handling |
 | .NET MAUI | No tab strip is provided by the design system layer. Use MAUI's own tabbed shell with the SR tokens |
 

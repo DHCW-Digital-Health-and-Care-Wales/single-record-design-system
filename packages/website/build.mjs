@@ -25,6 +25,15 @@ const ROOT = resolve(__dirname, '..', '..');
 const TOKENS = resolve(ROOT, 'packages', 'tokens', 'build');
 const DIST = resolve(__dirname, 'dist');
 
+// Every showcase preview, in build order. addPage() claims the ones rendered
+// since the previous page, so each page knows its own live examples. The AI
+// guide (buildAiGuide) uses them as the reference markup for each component.
+const SHOWCASE_LOG = [];
+
+// Where the site is published. Used for absolute links in files people take away
+// (the AI guide), where a relative link would point nowhere.
+const SITE_BASE = 'https://dhcw-digital-health-and-care-wales.github.io/single-record-design-system/';
+
 // ── Intake URLs ───────────────────────────────────────────────────────────────
 // One Microsoft Form, two conditional paths: its first question sends the person
 // down "report an issue" or "request a component or change". Both links below
@@ -525,6 +534,7 @@ const SECTIONS = [
       { href: 'figma.html', label: 'Using Figma' },
       { href: 'storybook.html', label: 'Using Storybook' },
       { href: 'changelog.html', label: "What's new" },
+      { href: 'working-with-ai.html', label: 'Working with AI' },
     ],
   },
   {
@@ -907,6 +917,7 @@ function codePanel(id, snippets) {
  * `.showcase--wide` in site.css.
  */
 function showcase(previewHtml, id, snippets, { wide = false } = {}) {
+  SHOWCASE_LOG.push(previewHtml);
   return `<section class="showcase${wide ? ' showcase--wide' : ''}">
   <div class="showcase__preview">${previewHtml}</div>
   ${codePanel(id, snippets)}
@@ -1408,7 +1419,8 @@ ${accessibilityTable([
 // ─── page registry (drives both the output files and the search index) ────────
 const pages = [];
 function addPage({ file, url, title, section, sectionId, activeHref, prefix, body, extraScript = '', bare = false }) {
-  pages.push({ file, url, title, section, sectionId, activeHref, prefix, body, extraScript, bare });
+  pages.push({ file, url, title, section, sectionId, activeHref, prefix, body, extraScript, bare,
+    examples: SHOWCASE_LOG.splice(0) });
 }
 
 // ─── Styles: Typography ───────────────────────────────────────────────────────
@@ -2941,8 +2953,11 @@ function tabsBody() {
     const list = `<div class="${cls}" role="tablist" aria-label="${label || (vertical ? 'Record sections' : 'Patient record')}"${vertical ? ' aria-orientation="vertical"' : ''}>
 ${items.map((it, i) => {
   const on = i === selected;
-  const name = it.count !== undefined ? ` aria-label="${it.label}, ${it.count} items"` : '';
-  return `  <button type="button" class="sr-tabs__tab" role="tab" id="${id}-tab-${i}" aria-selected="${on}" aria-controls="${id}-panel-${i}" tabindex="${on ? 0 : -1}"${it.disabled ? ' disabled aria-disabled="true"' : ''}${name}>${it.label}${it.count !== undefined ? `<span class="sr-badge" aria-hidden="true">${it.count}</span>` : ''}</button>`;
+  const isNew = it.countType === 'new';
+  // The badge caps at 99+; the accessible name keeps the real number.
+  const shown = it.count > 99 ? '99+' : it.count;
+  const name = it.count !== undefined ? ` aria-label="${it.label}, ${it.count} ${isNew ? 'new' : 'items'}"` : '';
+  return `  <button type="button" class="sr-tabs__tab" role="tab" id="${id}-tab-${i}" aria-selected="${on}" aria-controls="${id}-panel-${i}" tabindex="${on ? 0 : -1}"${it.disabled ? ' disabled aria-disabled="true"' : ''}${name}>${it.label}${it.count !== undefined ? `<span class="sr-badge" aria-hidden="true">${shown}${isNew ? ' new' : ''}</span>` : ''}</button>`;
 }).join('\n')}
 </div>`;
     const panels = items.map((it, i) => `<div class="sr-tabs__panel" role="tabpanel" id="${id}-panel-${i}" aria-labelledby="${id}-tab-${i}" tabindex="0"${i === selected ? '' : ' hidden'}>${it.panel || (it.label + ' content.')}</div>`).join('\n');
@@ -2964,6 +2979,18 @@ ${items.map((it, i) => {
     { label: 'Tasks', count: 3, panel: 'Three tasks.' },
     { label: 'Imaging', disabled: true, panel: 'No imaging on file.' },
   ] });
+
+  const counts = [
+    ['Total', 'The default. The badge counts everything in the tab. Named "Results, 20 items".',
+      strip({ id: 'demo-ct', selected: 1, items: [
+        { label: 'Summary' }, { label: 'Results', count: 20, panel: 'All 20 results.' }, { label: 'Documents', count: 12 }] })],
+    ['New items', 'The word "new" sits in the badge, so it cannot be read as a total. Named "Tests, 3 new". Mark the new rows in the list too.',
+      strip({ id: 'demo-cn', selected: 1, items: [
+        { label: 'Summary' }, { label: 'Tests', count: 3, countType: 'new', panel: 'The 3 new tests are marked at the top of the list.' }, { label: 'Documents' }] })],
+    ['Capped at 99+', 'Over 99 the badge shows "99+" and stops growing. The name still gives the real number: "Tests, 120 new".',
+      strip({ id: 'demo-cc', selected: 1, items: [
+        { label: 'Summary' }, { label: 'Tests', count: 120, countType: 'new', panel: '120 new tests, marked in the list.' }, { label: 'Documents', count: 340 }] })],
+  ].map(([h, p, demo]) => `<h3>${h}</h3>\n<p>${p}</p>\n${demo}`).join('\n');
 
   const vertical = strip({ id: 'demo-v', vertical: true, items: [
     { label: 'Summary', panel: 'Patient summary content.' },
@@ -3011,6 +3038,17 @@ ${showcase(basic, 'tabs-basic', snippets)}
 into the tab's name instead, so a screen reader announces "Results, 20 items" rather than just
 "Results". Arrow past the disabled tab — it is stepped over, never focused.</p>
 ${showcase(counted, 'tabs-counts', snippets)}
+
+<h2>Showing counts: usage</h2>
+<p>A badge is a quantity. These are the three ways a tab shows one. Pick by what the number means,
+not by how much room there is.</p>
+<div class="usage-samples">
+${counts}
+</div>
+<p><strong>A dot is not a count.</strong> Use one only where there is no number to give, such as
+"changed since you last looked", and give it a name ("Tests, new results"). A dot on its own relies on
+shape and colour, and drops the number clinicians act on. It is drawn in Figma as a sample; there is no
+coded dot yet.</p>
 
 <h2>Vertical</h2>
 <p>For a side rail against a long record, and for labels too long to sit comfortably in a row. The
@@ -4988,7 +5026,7 @@ is a real implementation of the system, rendered from the built design tokens an
 reference components, not a mockup.</p>
 <div class="cards">
   <a class="card" href="styles/typography.html">${cardIcon('action/edit')}<h3>Styles</h3><p>Typography, colour, spacing, and the token translator.</p></a>
-  <a class="card" href="components/button.html">${cardIcon('clinical/record')}<h3>Components</h3><p>Buttons and tables, with live previews and framework code.</p></a>
+  <a class="card" href="components/button.html">${cardIcon('clinical/record')}<h3>Components</h3><p>Every component, with live previews and framework code.</p></a>
   <a class="card" href="figma.html">${cardIcon('nav/dashboard')}<h3>Figma &amp; catalogue</h3><p>The Figma library and the component catalogue.</p></a>
   <a class="card" href="contributions.html">${cardIcon('action/send')}<h3>Contribute</h3><p>Report an issue or request a component or change.</p></a>
 </div>
@@ -5430,6 +5468,32 @@ in the library is the name you type in code. Where they differ, the token JSON i
 <code>foundations/tokens/</code> wins and the Figma name is out of date.</p>`,
 });
 
+/**
+ * What's new: CHANGELOG.md as an accordion, one panel per `## ` section.
+ * The newest section is first in the file, so it is the one left open; older
+ * releases stay one click away. Native <details>/<summary>, so it works without
+ * script and every browser gives it the keyboard and screen reader behaviour.
+ */
+function changelogBody() {
+  const md = stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'CHANGELOG.md'), 'utf8')));
+  const [intro, ...sections] = md.split(/\n(?=## )/);
+  // The `---` rules between releases are redundant once each is its own panel.
+  const clean = (t) => t.replace(/^---\s*$/gm, '');
+  const panels = sections.map((sec, i) => {
+    const [title, ...rest] = sec.split('\n');
+    return `<details class="release"${i === 0 ? ' open' : ''}>
+  <summary class="release__summary">${title.replace(/^##\s+/, '')}</summary>
+  <div class="release__body">
+${renderMarkdown(clean(rest.join('\n')))}
+  </div>
+</details>`;
+  }).join('\n');
+  return `${renderMarkdown(clean(intro))}
+<div class="releases">
+${panels}
+</div>`;
+}
+
 addPage({
   file: 'changelog.html', url: 'changelog.html', title: "What's new", section: 'Get Started',
   sectionId: 'get-started', activeHref: 'changelog.html', prefix: '',
@@ -5437,7 +5501,70 @@ addPage({
 <p class="breadcrumbs">Get Started</p>
 <h1>What's new</h1>
 <p class="lede">What changed in each release, and whether you need to do anything about it.</p>
-${renderMarkdown(stripLeadingH1(publicise(readFileSync(resolve(ROOT, 'CHANGELOG.md'), 'utf8'))))}`,
+${changelogBody()}`,
+});
+addPage({
+  file: 'working-with-ai.html', url: 'working-with-ai.html', title: 'Working with AI', section: 'Get Started',
+  sectionId: 'get-started', activeHref: 'working-with-ai.html', prefix: '',
+  body: `
+<p class="breadcrumbs">Get Started</p>
+<h1>Working with AI</h1>
+<p class="lede">Give Claude, Copilot or ChatGPT our guide, and the prototypes it makes will use Single
+Record colours, type and components from the first draft.</p>
+
+<p>AI tools are quick at turning an idea into a clickable prototype. Left alone, they invent their
+own styles, so the result looks nothing like Single Record and has to be redrawn. The guide below tells
+the tool which stylesheet to load, which classes and tokens to use, which icons exist, and how we
+write names, dates and NHS numbers.</p>
+
+<p><a class="sr-button sr-button--primary sr-button--default download-button" href="single-record-ai-guide.md" download>Download the AI guide (.md)</a></p>
+
+<h2>How to use it</h2>
+<ol>
+  <li><strong>Download the guide.</strong> Get a fresh copy each time you start. It is rebuilt with the
+  website, so it always matches what is published here.</li>
+  <li><strong>Give it to the tool.</strong> Attach the file to your conversation. In a Claude
+  Project, add it to the project knowledge so every chat uses it.</li>
+  <li><strong>Ask for what you need.</strong> Describe the screen, the user and the task. You do not
+  need to mention styles; the guide covers them.</li>
+  <li><strong>Check the result</strong> against the list below before you share it.</li>
+</ol>
+
+<h2>Example prompt</h2>
+<pre><code>Using the attached Single Record AI guide, build a single HTML page prototype of
+a ward nurse's patient list. Show 8 patients with name, NHS number, bed and a
+"View patient record" button. Add patient search at the top. Mobile width.</code></pre>
+
+<h2>What the guide covers</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Section</th><th>What it gives the tool</th></tr></thead>
+<tbody>
+<tr><td>Setup</td><td>The stylesheet and icon links to paste in, pinned to the current release</td></tr>
+<tr><td>Rules</td><td>Use our classes and tokens, never invent colours, and meet WCAG 2.2 AA</td></tr>
+<tr><td>Content</td><td>How to write names, dates, times, NHS numbers, empty fields and button labels</td></tr>
+<tr><td>Tokens</td><td>Every colour, spacing, radius and type token, with what each is for</td></tr>
+<tr><td>Components</td><td>Each component with its classes, React name and example markup taken from this site</td></tr>
+<tr><td>Icons and changes</td><td>Every icon name, and what changed in the latest releases</td></tr>
+</tbody></table></div>
+
+<h2>Check before you share</h2>
+<ul>
+  <li>Colours and type match this site. Nothing is a colour the tool made up.</li>
+  <li>Icons are from our set and drawn with a thin line.</li>
+  <li>Every field has a label, and you can use the whole screen with the keyboard.</li>
+  <li>Patient data is made up.</li>
+  <li>Anything the tool built that is not on this site is marked as new. Raise it with the design team
+  rather than treating it as part of the system.</li>
+</ul>
+
+<h2>Limits</h2>
+<ul>
+  <li>A prototype made this way is for ideas and testing. It is not production code and has not had
+  an accessibility review.</li>
+  <li>The tool loads the published packages. A change listed as "Unreleased" on
+  <a href="changelog.html">What's new</a> is described in the guide but is not in the stylesheet yet.</li>
+  <li>Never paste real patient information into an AI tool.</li>
+</ul>`,
 });
 addPage({
   file: 'storybook.html', url: 'storybook.html', title: 'Using Storybook', section: 'Get Started',
@@ -6191,6 +6318,9 @@ for (const p of pages) {
   writeFileSync(resolve(DIST, p.file), html);
 }
 
+// Written after the pages, because it reads their rendered examples.
+writeFileSync(resolve(DIST, 'single-record-ai-guide.md'), buildAiGuide());
+
 // ── Published pages must carry no internal references ────────────────────────
 // publicise() strips decision-record citations out of guidelines markdown, but
 // page content written directly in this file never passes through it — and that
@@ -6334,3 +6464,161 @@ for (const p of pages) {
 console.log('Website built to', DIST);
 console.log('Pages:', pages.length, '| search entries:', searchIndex.length);
 console.log('Tokens available:', colourEntries.length, 'colours,', spaceEntries.length, 'space,', radiusEntries.length, 'radius');
+
+/** The first element carrying `cls` in `html`, with its children (tags balanced). */
+function firstElement(html, cls) {
+  if (!cls) return '';
+  const at = html.search(new RegExp(`class="${cls}[ "]`));
+  if (at < 0) return '';
+  const start = html.lastIndexOf('<', at);
+  const tag = html.slice(start + 1).match(/^\w+/)[0];
+  const re = new RegExp(`<(/?)${tag}\\b[^>]*>`, 'g');
+  re.lastIndex = start;
+  let depth = 0;
+  for (let m; (m = re.exec(html));) {
+    depth += m[1] ? -1 : 1;
+    if (depth === 0) {
+      const out = html.slice(start, re.lastIndex);
+      return out.length < 4000 ? out : '';
+    }
+  }
+  return '';
+}
+
+// ── AI guide ─────────────────────────────────────────────────────────────────
+// single-record-ai-guide.md, the file the "Working with AI" page offers for
+// download. Hand-written rules (docs/ai/ai-guide-intro.md) plus sections
+// GENERATED here from the same sources as the site: the token CSS, the
+// component pages and their live examples, the icon set and the changelog.
+// Generated so it cannot drift: a component that ships on the site is in the
+// guide on the same build, with the markup the site itself renders.
+function buildAiGuide() {
+  const version = JSON.parse(readFileSync(resolve(ROOT, 'packages', 'web', 'package.json'), 'utf8')).version;
+  const today = new Date().toISOString().slice(0, 10);
+  const intro = readFileSync(resolve(ROOT, 'docs', 'ai', 'ai-guide-intro.md'), 'utf8').replaceAll('{{VERSION}}', version);
+
+  // Tokens: every custom property in the light token file, with its note.
+  const tokenLines = (file, test) => readFileSync(resolve(TOKENS, 'css', file), 'utf8').split('\n')
+    .map((l) => l.match(/^\s*(--[a-z0-9-]+):\s*([^;]+);\s*(?:\/\*\*\s*(.*?)\s*\*\/)?/))
+    .filter((m) => m && test(m[1]))
+    .map((m) => `| \`${m[1]}\` | \`${m[2]}\` | ${(m[3] || '').replace(/\s*\(?DDR-\d+[^)]*\)?/g, '').replace(/\|/g, '/').slice(0, 140)} |`);
+  const table = (rows) => `| Token | Light value | Use |\n|---|---|---|\n${rows.join('\n')}`;
+  const colour = tokenLines('tokens.css', (n) => n.startsWith('--sr-color-') && !n.includes('critical'));
+  const icon = tokenLines('tokens.css', (n) => n.startsWith('--sr-icon-'));
+  const space = tokenLines('tokens.css', (n) => /^--space-\d+$/.test(n));
+  const radius = tokenLines('tokens.css', (n) => /^--radius-(none|sm|md|lg|full)$/.test(n));
+  const typeClasses = [...new Set(readFileSync(resolve(TOKENS, 'css', 'typography.css'), 'utf8')
+    .match(/\.sr-type-[a-z0-9-]+/g))].map((c) => `\`${c.slice(1)}\``).join(', ');
+
+  // React exports, by source folder.
+  const reactIndex = readFileSync(resolve(ROOT, 'packages', 'react', 'src', 'index.js'), 'utf8');
+  const reactFor = (dir) => [...reactIndex.matchAll(/export \{ default as (\w+)(?:, ([\w, ]+))? \} from '\.\/([\w-]+)\//g)]
+    .filter((m) => m[3] === dir).flatMap((m) => [m[1], ...(m[2] ? m[2].split(/,\s*/) : [])]);
+
+  // Components: one entry per component page on the site.
+  const DIR_FOR = { button: 'button', table: 'table', toggles: 'switch', tags: 'tags' };
+  const components = pages.filter((p) => p.file.startsWith('components/')).map((p) => {
+    const slug = p.file.replace(/^components\/|\.html$/g, '');
+    const dir = DIR_FOR[slug] || slug;
+    const cssDir = resolve(ROOT, 'packages', 'web', 'src', dir);
+    const classes = existsSync(cssDir)
+      ? [...new Set(readdirSync(cssDir).filter((f) => f.endsWith('.css'))
+        .flatMap((f) => readFileSync(resolve(cssDir, f), 'utf8').match(/\.sr-[a-z0-9_-]+/g) || []))]
+        .map((c) => c.slice(1)).filter((c) => !c.startsWith('sr-type-') && c !== 'sr-visually-hidden')
+      : [];
+    const react = reactFor(dir);
+    const lede = (p.body.match(/<p class="lede">([\s\S]*?)<\/p>/) || [])[1] || '';
+    // The first live example small enough to read; long ones are left to the site.
+    // Pages built as a configurator have no showcase, so fall back to the first
+    // element in the page carrying the component's own block class.
+    const example = (p.examples || []).find((h) => h.length < 4000)
+      || firstElement(p.body, classes.find((c) => !c.includes('__') && !c.includes('--')));
+    return `### ${p.title}
+
+${stripTags(lede)}
+
+- Website: ${SITE_BASE}${p.url}
+${classes.length ? `- Classes: ${classes.slice(0, 40).map((c) => `\`${c}\``).join(', ')}\n` : ''}${react.length ? `- React: ${react.map((r) => `\`${r}\``).join(', ')}\n` : ''}${example ? `\nExample markup, as the website renders it:\n\n\`\`\`html\n${example.trim()}\n\`\`\`\n` : ''}`;
+  });
+
+  // Styled in the stylesheet but with no page of their own yet.
+  const paged = new Set(pages.filter((p) => p.file.startsWith('components/'))
+    .map((p) => DIR_FOR[p.file.replace(/^components\/|\.html$/g, '')] || p.file.replace(/^components\/|\.html$/g, '')));
+  const unpaged = readdirSync(resolve(ROOT, 'packages', 'web', 'src'), { withFileTypes: true })
+    .filter((d) => d.isDirectory() && !paged.has(d.name) && !['assets', 'foundations'].includes(d.name))
+    .map((d) => {
+      const block = `sr-${d.name}`;
+      const react = reactFor(d.name);
+      return `- \`${d.name}\`: block class \`${block}\`${react.length ? `, React ${react.map((r) => `\`${r}\``).join(', ')}` : ''}`;
+    });
+
+  const patterns = pages.filter((p) => p.file.startsWith('patterns/'))
+    .map((p) => `- **${p.title}**: ${stripTags((p.body.match(/<p class="lede">([\s\S]*?)<\/p>/) || [])[1] || '')} ${SITE_BASE}${p.url}`);
+
+  // What changed: the newest two sections of the changelog.
+  const changelog = publicise(readFileSync(resolve(ROOT, 'CHANGELOG.md'), 'utf8'))
+    .split(/\n(?=## )/).slice(1, 3).join('\n').replace(/^---\s*$/gm, '').replace(/^## /gm, '### ');
+
+  return `${intro.trim()}
+
+---
+
+<!-- Everything below is generated by packages/website/build.mjs. Do not edit by hand. -->
+
+## Version
+
+- Design system packages: **${version}** (the version in the CDN links above)
+- Guide generated: ${today}
+- Changes listed as "Unreleased" below are on the website but not yet in the ${version} packages.
+
+## Tokens
+
+Colours change in dark mode; always use the token, never the value.
+
+### Colour
+
+${table(colour)}
+
+### Spacing
+
+${table(space)}
+
+### Radius
+
+${table(radius)}
+
+### Icon size and colour
+
+${table(icon)}
+
+### Type
+
+Use the classes ${typeClasses}. Each also exists as \`var(--sr-type-{name}-font)\` and
+\`var(--sr-type-{name}-letter-spacing)\`. Body text is \`sr-type-body-m\` (16/24).
+
+## Components
+
+${components.join('\n')}
+
+### Also in the stylesheet
+
+These are styled and coded but have no website page yet. Check the class names
+in the stylesheet before using them.
+
+${unpaged.join('\n')}
+
+## Patterns
+
+${patterns.join('\n')}
+
+## Icons
+
+Use these names with \`iconMarkup(name)\`. Nothing else is in the set.
+
+${iconNames.map((n) => `\`${n}\``).join(', ')}
+
+## Recent changes
+
+${changelog}
+`;
+}

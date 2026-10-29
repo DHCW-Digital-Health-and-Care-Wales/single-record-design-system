@@ -55,12 +55,16 @@ const render = ({ tabs, selectedIndex = 0, orientation = 'horizontal', level = '
     if (tab.count !== undefined) {
       const badge = document.createElement('span');
       badge.className = 'sr-badge';
-      badge.textContent = String(tab.count);
+      // Over 99 the pill stops growing; the name below keeps the real number.
+      const shown = tab.count > 99 ? '99+' : String(tab.count);
+      badge.textContent = tab.countType === 'new' ? `${shown} new` : shown;
       // The badge is decorative; the count belongs in the accessible name too,
       // or a screen reader hears "Results" and never learns there are 20.
       badge.setAttribute('aria-hidden', 'true');
       btn.append(badge);
-      btn.setAttribute('aria-label', `${tab.label}, ${tab.count} items`);
+      btn.setAttribute('aria-label', tab.countType === 'new'
+        ? `${tab.label}, ${tab.count} new`
+        : `${tab.label}, ${tab.count} items`);
     }
 
     const panel = document.createElement('div');
@@ -157,6 +161,17 @@ export const WithCounts = {
       { label: 'Results', count: 20, panel: 'Twenty results.' },
       { label: 'Tasks', count: 3, panel: 'Three tasks.' },
       { label: 'Documents', panel: 'Documents content.' },
+    ],
+  },
+};
+
+/** New items, not a total: "3 new". Over 99 the badge caps at "99+". */
+export const WithNewCounts = {
+  args: {
+    tabs: [
+      { label: 'Summary', panel: 'Patient summary content.' },
+      { label: 'Tests', count: 3, countType: 'new', panel: 'Three new tests.' },
+      { label: 'Documents', count: 120, panel: 'A hundred and twenty documents.' },
     ],
   },
 };

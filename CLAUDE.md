@@ -88,6 +88,11 @@ This is a healthcare system. Decisions affect real clinical staff and patients. 
   there alone is lost — nobody reads back through two thousand dated lines
   before writing MAUI. Add an entry when something was non-obvious *and* would
   plausibly catch the next person. Use the existing Symptom / Why / Fix shape.
+- **The AI guide is generated.** `single-record-ai-guide.md` (website: Working
+  with AI) is built by `packages/website/build.mjs` from the tokens, component
+  pages and icons. To change its rules, edit `docs/ai/ai-guide-intro.md`. A new
+  content rule or pattern that an AI tool must follow goes there in the same
+  change that sets it.
 - **Prefer a build gate to a paragraph.** If a finding can be mechanised, write
   the check and record it with a **Prevented by** line naming that check. A
   paragraph can be forgotten; a failing build cannot. Where it genuinely cannot
