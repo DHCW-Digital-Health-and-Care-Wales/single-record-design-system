@@ -59,6 +59,17 @@ owns how it looks.
 
 Not interactive, so no touch target of its own — the host carries it.
 
+## Content
+
+| Rule | Example |
+|---|---|
+| A total is the bare number | `20` |
+| New items say so | `3 new` (Tabs: `countType: 'new'`) |
+| Cap at 99 | `99+`, `99+ new`. The pill stops at about 36px |
+| The host's name keeps the real number | "Tests, 120 new" |
+
+React: `<Badge max={99}>` (99 is the default) and `formatCount(n)`.
+
 ---
 
 ## The contrast correction
@@ -120,6 +131,8 @@ the CSS uses, which is why it never saw this.
   of its own. A `Badge` component should be created and both hosts pointed at
   it.
 - **No MAUI style.**
+- **No dot.** A dot (no number) is drawn as a sample on the Tabs page in Figma
+  ("Usage / Tab counts"). It is not built in code or as a component option.
 - **The header notification bell has no count, by decision** (2026-09-25).
 
 ---

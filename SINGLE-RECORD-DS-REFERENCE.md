@@ -5,6 +5,10 @@
 **Status:** Live — v1 foundations and first components  
 **Maintained by:** SR Design System team
 
+> **For AI tools, use the generated guide instead.** The website's "Working with
+> AI" page offers `single-record-ai-guide.md`, rebuilt from source on every site
+> build. This file is hand-maintained and covers only two components.
+
 This file is a single self-contained reference for the entire design system. It is intended to be used standalone — with any AI tool, in onboarding, or for offline reference — without needing to open any other file.
 
 ---

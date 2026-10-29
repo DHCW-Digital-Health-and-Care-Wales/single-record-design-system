@@ -59,6 +59,21 @@ The `paint.color` will then hold the correct Light-mode value, and the variable 
 
 
 
+### `getVariableByIdAsync('203:100')` returns null, and the binding fails silently
+
+**Symptom:** Text and frames built by a script come out solid black, and their fills show no variable in the Figma UI, although the script "bound" every colour.
+
+**Why:** The Plugin API wants the full id, `VariableID:203:100`. The short `203:100` that `use_figma` output and the handoff tables show returns `null`, and `setBoundVariableForPaint(paint, 'color', null)` throws nothing: it hands back the black base paint, unbound. Found 2026-10-29 on the demographics screen (`5962:341`) and the tab counts sample, a week after the first was built.
+
+**Fix:** Always prefix: `figma.variables.getVariableByIdAsync('VariableID:' + id)`, and fail loudly when the result is null:
+
+```js
+const v = await figma.variables.getVariableByIdAsync('VariableID:203:100');
+if (!v) throw new Error('No variable 203:100');
+```
+
+Check one bound node afterwards: `node.fills[0].boundVariables.color` should name the variable. This cannot be mechanised in the repo, because the scripts are run through the Figma MCP, not committed.
+
 ### Variable alias chains must be resolved manually in Plugin API code
 
 **Symptom:** Reading a variable value via `variable.valuesByMode[modeId]` returns an object `{ type: "VARIABLE_ALIAS", id: "..." }` instead of a number or colour.
@@ -91,6 +106,14 @@ function resolveVal(varName) {
 ---
 
 ## Components & Variants
+
+### `findOne` cannot see a layer that is hidden in the main component
+
+**Symptom:** On an instance, `findOne(n => n.name === 'Frame 959')` returns `null` for the Menu Tab count badge, even after turning the `Count Badge` property on, and `children` lists only the label.
+
+**Why:** The MCP runtime sets `figma.skipInvisibleInstanceChildren = true`, so layers hidden in the main component are left out of every traversal of an instance.
+
+**Fix:** Set `figma.skipInvisibleInstanceChildren = false` at the top of any script that edits layers inside instances.
 
 ### `figma.currentPage` cannot be set with direct assignment
 

@@ -16,13 +16,22 @@ import '@dhcw/sr-web/src/badge/badge.css';
  *
  * Props
  *   children  node     — the count. A number, as text ("20").
+ *   max       number   — a numeric count above this shows as "99+", so the pill
+ *                        stops growing. Default 99. The host's accessible name
+ *                        still carries the real number.
  *
  * Everything else spreads onto the element.
  */
-export function Badge({ children, className = '', ...rest }) {
+
+/** "99+" above `max`; anything that is not a number passes through unchanged. */
+export function formatCount(count, max = 99) {
+  return typeof count === 'number' && count > max ? `${max}+` : count;
+}
+
+export function Badge({ children, max = 99, className = '', ...rest }) {
   const classes = ['sr-badge', className].filter(Boolean).join(' ');
   return (
-    <span className={classes} aria-hidden="true" {...rest}>{children}</span>
+    <span className={classes} aria-hidden="true" {...rest}>{formatCount(children, max)}</span>
   );
 }
 
