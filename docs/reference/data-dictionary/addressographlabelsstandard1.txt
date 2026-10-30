@@ -1,0 +1,17 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/addressographlabelsstandard1.htm
+Title: Addressograph Labels Standard
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Addressograph Labels Standard Addressograph Labels Standard
+Change History
+|
+|
+DSCN 2018 / 09
+| Addressograph Labels Standard – To add the sex of the patient to the Addressograph Labels Standard
+|
+DSCN 2018 / 05
+| Addressograph Labels Standard
+|
+
+Scope
+Information Specification

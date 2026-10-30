@@ -535,7 +535,8 @@ System-wide rules that apply to every product, not just one component.
 | Rule | Detail |
 |---|---|
 | **Dates** | `10 Mar 2026` in tables and space-constrained UI. `10 March 2026` in prose and anywhere without a width constraint. **Never all-numeric** (`06/12/21`) — a named month is what removes day/month ambiguity, which is a clinical-safety requirement, not a style preference. Adapts UI Standards p.24; set 2026-07-28. |
-| **Casing** | Sentence case everywhere, including headings, labels and buttons. |
+| **Casing** | Sentence case everywhere, including headings, labels and buttons. Capitals only for acronyms, proper nouns and the patient's surname. Full rule and examples: `docs/content/data-standards.md`. |
+| **Patient data** | How names, NHS numbers, dates, sex and gender, addresses and GP details are displayed, and what demo data must look like, is in `docs/content/data-standards.md`, sourced from the NHS Wales Data Dictionary and DSCNs. |
 | **Names** | `SURNAME, Forename(s)` with any title in brackets. |
 | **Buttons** | Name the action and its subject — "Confirm patient", never "OK" or "Yes". |
 | **Abbreviations** | Avoid them. `No.` for "Number" in a tight table heading is a documented exception. |

@@ -1,0 +1,280 @@
+Source: https://dhcw.nhs.wales/information-services/information-standards/data-standards/data-standards-files/data-standard-change-notices-docs/dscns-2015/20151106-dscn-2015-06-nhs-number-standard-final-pdf/
+Retrieved: 2026-10-30 (text extracted with pdftotext -layout)
+
+                WELSH INFORMATION STANDARDS BOARD
+                                                    DSC Notice:      DSCN 2015 / 06
+                                                    Date of Issue:   6th November 2015
+
+Welsh Health Circular / Official Letter:            Subject: NHS Number Operational
+WHC (2015) 049                                      Standard
+
+Sponsor:
+Dr Sally Greenway
+Head of Information Standards
+Digital Health and Care
+Welsh Government
+
+Implementation Date:
+New Procurements – Immediate Effect
+National Applications and Patient Administration
+Systems by April 2018
+Remaining NHS Applicable Systems: April 2020
+
+
+
+
+                          DATA STANDARD CHANGE NOTICE
+
+   A Data Standard Change Notice (DSCN) is an information mandate for a new or revised
+                                  information standard.
+
+This DSCN was approved by the Welsh Information Standards Board (WISB) at its meeting on
+                                   20th August 2015
+
+WISB Reference: ISRN 2015 / 001
+
+Summary:
+
+This standard provides the specification for use of the NHS Number by NHS bodies and by
+other organisations providing health and care services in Wales.
+
+It defines how the NHS Number must be used in identifying people receiving health and care
+services, and in locating and communicating their health and care records and other
+information pertaining to the planning and provision of their care.
+
+The standard sets out how information systems must accept, store, process, display and
+transmit the NHS Number, and what organisations must do to ensure that they use the NHS
+Number correctly.
+
+
+
+
+   DSCN 2015 / 06                     Page 1 of 6
+Applies to:
+
+This standard applies to all bodies that commission or provides health and care services in
+Wales in partnership with the NHS including their relevant system suppliers.
+
+
+
+Please address enquiries about this Data Standard Change Notice to the Data Standards Team
+                              in NHS Wales Informatics Service
+
+                 E-mail: data.standards@wales.nhs.uk / Tel: 029 2050 2539
+
+
+
+ The Welsh Information Standards Board is responsible for appraising information standards.
+ Submission documents and WISB Outcomes relating to the approval of this standard can be
+                                        found at:
+
+              http://howis.wales.nhs.uk/sites3/page.cfm?orgid=742&pid=24632
+
+
+
+
+   DSCN 2015 / 06                     Page 2 of 6
+                          DATA STANDARD CHANGE NOTICE
+
+Introduction
+
+The NHS Number is the national unique identifier that makes it possible to share patient
+information across the whole of the NHS safely, efficiently and accurately.
+
+In Wales various Welsh Health Circulars have been issued that relate to the use of the NHS
+Number:
+    WHC (98) 60 mandated the use of NHS Number in all minimum datasets from April
+       2009
+    WHC (90) 80 set out the Caldicott requirement to use the NHS Number as the coded
+       identifier
+    WHC (2007) 074 provided a reminder of the vital role the NHS Number plays in
+       improved data quality and record linkage and that required that proposals relating to
+       its wider use should be taken through the Wales Information Standards Board.
+
+
+This DSCN introduces the NHS Number Operational Standard which aims to:
+
+       Ensure that there is a means to create and maintain an accurate and reliable link
+        between a patient/ service user and the records of their care.
+       Enable patient/ service user records to be safely transferred across organisational
+        boundaries.
+       Facilitate electronic referrals and prescription activity.
+       Facilitate requests and reports for tests and investigations.
+       Accurately and safely identify patient/service users in all communications with
+        tertiary, primary, secondary, community and social care teams.
+       Help to create a complete record, enabling the linkage of every episode of care across
+        organisations.
+       Encourage or ensure the use of the NHS Number (where appropriate) and contribute
+        to an improved service provider and receiver culture.
+
+
+Scope
+
+Implementation is in three phases:
+
+1. The first phase includes implementation of the NHS standard for all new NHS Wales
+   procurements.
+
+2. The second phase of the implementation includes the six major NHS Wales Informatics
+   Service Systems and Cardiff and Vale Patient Management System, namely:
+
+       Myrddin Patient Administration System
+       TrakCare Laboratory Information Management System (LIMS)
+       Radiology Management System (RadIS)
+       Hospital Pharmacy System
+       Welsh Clinical Portal (WCP)
+       Canisc
+       Cardiff & Vale PMS
+
+3. The third phase will cover all remaining applicable systems. These are defined as:
+
+       All information systems supporting the commissioning or provision of NHS services
+        that hold patient / service user demographic data
+
+
+
+
+DSCN 2015 / 06                       Page 3 of 6
+      All information systems supporting the commissioning or provision of health and care
+       services that are used to transfer or otherwise communicate patient / service user
+       information with other bodies that commission or provide health and care services in
+       Wales in partnership with the NHS
+      All new information systems procured after this standard comes into force
+
+Phase one has immediate effect.
+Phase two should be completed by April 2018.
+Phase three should be completed by April 2020.
+
+
+
+Actions for Information Systems and Communications
+
+   1. All new systems that support the delivery of NHS services or communications between
+      NHS and social care services and contain patient identifiable data / service user
+      information MUST comply with this standard.
+   2. Existing systems that support the delivery of NHS services or communications
+      between NHS and social care services and contain patient identifiable data / service
+      user information MUST comply with this standard; those that do not presently do so
+      MUST have plans for enhancement, replacement or deprecation.
+   3. The NHS Number MUST be used and referenced on all relevant patient and service
+      user records and communication documents between organisations supporting the
+      delivery of NHS and social care services.
+
+
+Actions for Organisational Processes and Behaviours
+
+   1. All relevant staff are aware of their responsibilities for recording, using and sharing the
+      NHS Number, as and when appropriate.
+   2. All patients and service users will be made aware of their NHS Number, encouraged to
+      reference it, understand the importance of it and how it contributes to the delivery of
+      their care.
+
+
+
+
+DSCN 2015 / 06                      Page 4 of 6
+SPECIFICATION
+Key Word Definitions
+
+         MUST - This word, or the terms "REQUIRED" or "SHALL", means that the definition
+          is an absolute requirement of the specification.
+         SHOULD - This word, or the adjective "RECOMMENDED", means that there may
+          exist valid reasons in particular circumstances to ignore a particular item, but the full
+          implications must be understood and carefully weighed before choosing a different
+          course.
+         MAY - This word, or the adjective "OPTIONAL", means that an item is truly optional.
+
+
+The following are APPLICABLE SYSTEMS:
+
+         All information systems supporting the commissioning or provision of NHS Services
+          that hold patient/service user demographic data.
+         All information systems supporting the commissioning or provision of health and care
+          services that are used to transfer or otherwise communicate patient/service user
+          information with other bodies that commission or provide health and care services in
+          Wales in partnership with the NHS.
+         All new information systems procured after this standard comes into force.
+
+
+
+
+Information Specification
+All access to patient or service user identifiable data including the NHS Number must comply
+with confidentiality and data protection requirements.
+
+Organisations using the NHS Number should conform to this standard Organisations using the
+NHS Number should conform to this standard
+
+Ref                 Requirement
+                    The following requirements apply to Applicable Systems (see key words for definition):
+
+01                  MUST be capable of storing the NHS Number as described in the NHS Data
+                    Dictionary2 on patient/service user records.
+
+02                  MAY indicate whether/when the currently stored NHS Number has been verified by
+                    checking against the Personal Demographics Service
+
+03                  MUST allow users to find a patient/service user record using the NHS Number as the
+                    only search criterion.
+
+04                  MAY allow users to find a patient/service user record using the NHS Number as part
+                    of the search criteria in conjunction with other demographic information.
+
+05                  MUST allow users to find a patient/service user record without using the NHS Number
+                    as part of the search criteria.
+
+
+
+DSCN 2015 / 06                           Page 5 of 6
+06               MUST include the NHS Number in any patient identifiable data/service user
+                 information sent electronically, with the following exceptions:
+                  The NHS Number is not available at time of transmission.
+                  The use of the NHS Number is in conflict with other requirements, standards,
+                      legislation, common law duty of confidentiality or policies.
+
+07               MUST display the NHS Number on every screen showing patient identifiable data/
+                 service user information (if available). The verification status of the NHS Number
+                 SHOULD also be displayed if maintained.
+
+08               MUST include the NHS Number on all hard-copy outputs containing patient
+                 identifiable data/service user information (if appropriate and available at time of
+                 output).
+
+09               MUST display and print the NHS Number for people to read in 3 3 4 format (e.g. 123
+                 456 7890).
+
+10               MUST allow the NHS Number to be input into the appropriate data input field on the
+                 screen as 10 digits with or without spaces.
+
+11               MUST validate (both format and check-digit) the NHS Number when input.
+
+12               MUST be capable of reporting where the same NHS Number (verified or not) is
+                 recorded on more than one patient/service user record.
+
+13               SHOULD be capable of reporting all patient/service user records without an NHS
+                 Number recorded.
+
+                 The following requirements apply to the use of Applicable Systems by commissioner
+                 and provider organisations, and to their communications, processes and behaviours
+
+14               When a system user uses the NHS Number to retrieve an electronic record other
+                 demographic information supplied MUST be used to confirm the patient’s/service
+                 user’s identity and that the record retrieved belongs to that patient/service user.
+
+15               When supplied, the NHS Number SHOULD be used instead of demographic data as
+                 the patient/service user identifier.
+
+16               Data quality processes SHOULD be in place to resolve electronic patient/service user
+                 records where the same NHS Number (verified or not) is recorded on more than one
+                 record.
+
+21               The patient’s/service user’s NHS Number SHOULD always be included as part of all
+                 communications, correspondence and filing systems involving patient/service user
+                 identifiable data/service user information. Additional patient/service user demographic
+                 information MUST also be included with the NHS Number.
+
+
+
+
+DSCN 2015 / 06                         Page 6 of 6
+

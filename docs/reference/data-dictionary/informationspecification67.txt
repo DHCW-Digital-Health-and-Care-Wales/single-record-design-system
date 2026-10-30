@@ -1,0 +1,137 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/informationspecification67.htm
+Title: Information Specification
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Information Specification Information Specification
+The table below defines the list of national informational outcomes for selection in the ADASTRA system. These describe the onward care or advice provided following the end of the contact, i.e. after the final telephone call, PCC attendance or home visit.
+
+Primary Outcome
+| Definition
+| Secondary Outcomes
+|
+Advised to contact General Practice
+| Following assessment by a clinician (telephone/face to face), a patient is advised to contact their own General Practice, is provided with worsening advice and details of how to re-contact the service, and/or is advised to contact their own General Practice for further follow up care or treatment. No formal referral is made to the GP by the GPOOH service
+| • Urgent - Next Day
+• Routine - 7 +/- days
+|
+Referred to Social Services
+| This outcome should be used when there is a formal handover of care to Social Services, who need to act on the referral. However, in some circumstances, the patient may be advised to contact Social Services directly if they are already in contact with them.
+| • Safeguarding Referral (Adult & Child)
+• Contact Emergency Duty Social worker
+• Mental health section assessment
+• Advised to contact usual professional
+• Mental Health Referral
+|
+Referral to Secondary Care
+| Patient is referred directly by a clinician to secondary care for further assessment with a handover of clinical information. This could include direct pathways into specialties (eg. ambulatory care) or through hospital bed management processes
+| • SC - General Medicine
+• SC - Paediatrics
+• SC - Gastroenterology
+• SC - Cardiology
+• SC - Palliative Medicine
+• SC - General Surgery
+• SC - Urology
+• SC - T&O
+• SC - ENT
+• SC - Ophthalmology
+• Mental health section assessment
+• SC - Oral Surgery
+• SC - A&E
+• SC - Obstetrics
+• SC - Gynae
+• Adult Mental Illness
+• Child & Adolescent Psychiatry
+• SC - Old Age Psychiatry
+|
+Advised to attend ED/MIU
+| Patient is advised to attend an Emergency Department or Minor Injury Unit using their own transport.
+| • Emergency Department
+• Minor Injury Unit
+|
+Referred to 999
+| The patient is directed to the 999 service including streamed calls at the call taking stage, and/or assessment by a clinician into the Emergency Medical Service either through a 999 call or via a health professional line.
+| • Immediately life threatening
+• Further assessment/assistance with conveyance
+|
+Advised to contact another Health Professional
+| Following prioritisation and/or assessment by a clinician (telephone/face to face) a patient is advised to contact another health professional for further follow up care or treatment and provided with worsening advice during the period when their usual service may be closed
+| • Physiotherapist
+• Optometrist (Opticians)
+• General Dental Practitioner
+• Health Visitor
+• Hospice Services
+• Community Pharmacist
+• Specialist Nursing Services
+• Community Nursing Services
+• Midwife
+• Public Health
+• Other
+
+|
+Self Care
+| Patient is provided with self care advice and advised to re-contact if necessary
+| • Prescription issued
+• No prescription issued
+|
+Death
+| Covers all reported deaths into the service.
+| • Expected - verified by GP
+• Expected - verified by other professional
+• Unexpected - verified GP - reported to police
+• Unexpected - verified HCP - reported to police
+• Unexpected - reported directly to the police
+|
+Dental
+| Patients who are directly booked, or referred into an Emergency Dental Clinic or referred to an in hours access sessions (this outcome will predominantly be used in 111 service to direct patients away from the GPOOH service)
+| • Referred/booked into emergency dental clinic
+• Advised to contact own/ a dentist
+• Triaged and referred to health board
+|
+Administration
+| Category used to close calls that do not require clinical intervention (for example, changes in demographic details, callers re-accessing the service)
+| • Duplicate Call
+• Other
+|
+Failed Contact
+| Unable to contact patient in line with local policy.
+| • No answer - no voice mail
+• No answer - voice mail left to call service again if required
+• Number unobtainable
+• Self referral to 999
+• Self referral to ED/ MIU
+• DNA PCC
+• HV - Not at address
+• Did not wait (PCC)
+• HV - Unable to gain access
+|
+Health Information/Quick Call
+| Patients who are provided with health information (either at the call taking stage or referral to the Health Information service) - this will predominantly be used in the 111 service
+|
+|
+Referral to Mental Health Team
+| This outcome should be used only when there is a formal handover of care to local mental health services, including urgent and routine care, who need to act on the referral
+| • Crisis Team (urgent referral)
+• Adult Mental Illness
+• Mental health section assessment
+• Child & Adolescent Psychiatry
+• SC - Old Age Psychiatry
+• CPN
+|
+Referred to a General Practitioner (handover of care)
+| This outcome should be used only when there is a formal handover of to a General Practitioner who needs to act on the referral
+|
+|
+Referred to another Health Professional
+| This outcome should be used only when there is a formal handover of care to another professional who needs to act on the referral.
+| • Physiotherapist
+• Optometrist (Opticians)
+• General Dental Practitioner
+• Health Visitor
+• Hospice Services
+• Community Pharmacist
+• Specialist Nursing Services
+• Community Nursing Services
+• Midwife
+• Public Health
+• Other
+|

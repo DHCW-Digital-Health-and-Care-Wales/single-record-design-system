@@ -656,6 +656,23 @@ catch the drift half of this.
 
 ## Web / CSS
 
+### A tiny stroked `<circle>` renders as a hollow ring
+
+**Symptom:** Icon dots redrawn as `<circle r="0.25">` (to get a 1.5px dot from a
+1px stroke) looked solid at 24px but showed as rings at 48px and above in Chromium.
+
+**Why:** When a circle's radius is less than half the stroke width, the stroke's
+inner edge has a negative radius. Chromium draws the outer edge and leaves the
+centre empty instead of filling it.
+
+**Fix:** `fetch-icons.mjs` draws each dot as four short crossing strokes with round
+caps, whose union is a solid 1.5px disc at every size. This uses geometry only, so
+the same artwork works in the sprite, React, Figma and MAUI. In Figma, the dot vectors
+on the nine dotted icons carry a 1.5 stroke instead.
+
+**Prevented by:** nothing automatic. The shape is generated in one place,
+`dot()` in `fetch-icons.mjs`. Render a dotted icon at 48px before changing it.
+
 ### A form control's rest border needs 3:1, and Border/Default does not reach it
 
 **Symptom:** An unchecked checkbox or radio looks faint, especially on a laptop

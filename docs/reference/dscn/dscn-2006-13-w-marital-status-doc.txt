@@ -1,0 +1,249 @@
+Source: https://dhcw.nhs.wales/information-services/information-standards/data-standards/data-standards-files/data-standard-change-notices-docs/dscns-2006/dscn-2006-13-w-marital-status-doc-pdf/
+Retrieved: 2026-10-30 (text extracted with pdftotext -layout)
+
+                                                                               DSC Notice: (2006) 13 (W)
+                                                                      English DSCN Equivalent: 16/2005
+                                                                                                 12/2006
+                                                                        Date of Issue: 10th October 2006
+                                                         Subject:
+                                                         Data Standards: ‘             .
+                                                                         Marital Status’
+               WIGSB
+    Welsh Information Governance
+        and Standards Board                              Implementation date:
+                                                         1st November 2006
+
+
+                        DATA SET CHANGE CONTROL PROCEDURE
+
+
+Summary of change:
+
+Changes to the da
+                tai
+                  tem‘
+                     Mar
+                       it
+                        alSt
+                           atus
+                              ’tobr
+                                  ingt
+                                     heWe
+                                        lshde
+                                            fini
+                                               ti
+                                                oni
+                                                  nli
+                                                    newi
+                                                       tht
+                                                         hede
+                                                            fini
+                                                               ti
+                                                                on
+in England:-
+
+DSCN 16/2005: To re-intr
+                       oduc  etheva lue‘ 9’NotKnown
+DSCN 12/2006: To allow for the recording of Civil Partnerships and amend current values to
+comply with the Government Data Standards Catalogue
+
+This change will be incorporated into version 2.13 of the NHS Wales Data Dictionary.
+
+                                                                     Change Proposal Reference No:
+                                                                         WIGSB 20060920/01
+
+
+
+
+Welsh Information Governance Standards Board (WIGSB) is responsible for approving information
+standards
+
+Please address enquiry's about this DSCN to the Data Standards and Information Quality Team, HSW, Brunel
+House, 2 Fitzalan Road, Cardiff CF24 0HA Tel: 029 20502539 or E-mail Data.Standards@hsw.wales.nhs.uk
+
+Data Set Change Notices are available via the Intranet Service HOWIS http://howis.wales.nhs.uk/ or by contacting the
+above address.
+
+DSCN numbering format =s
+                       eque
+                          ncenumbe
+                                 r/y
+                                   earo
+                                      fis
+                                        sue
+                                          ,(W)f
+                                              orWe
+                                                 lshDSCN’
+                                                        s.
+
+
+                        DSBC7F~1                                               Page 1 of 6
+                                                  October 2006
+Document Control
+
+
+Version: Created on: Owner      Details:
+   0.1     17/07/06 Jen Evans   Initial draft for review
+   0.2     02/08/06 Jen Evans   Amendments following first review:-
+                                  1. Align dates of Marital Status under Appendix A
+                                  2. Addnot  ea boutintroduc  ti
+                                                               onof‘ retir
+                                                                         ed’and
+                                     ‘c
+                                      omme   nce me nt
+                                                     ’da t es
+   1.0     10/10/06 Jen Evans   Welsh reference assigned following approval by WIGSB
+
+
+
+
+                   DSBC7F~1                                Page 2 of 6
+                                October 2006
+                         DATA SET CHANGE NOTICE (2006) AO (W)
+
+Reference:                  WIGSB 20060920/01
+
+Subject:                    Data Standards: Marital Status
+
+Effective Date:             1st November 2006
+
+Reason of Change:           To bring the Welsh definition in line with England
+
+
+Background:
+
+1) NHS England DSCN 16/2005 announced enhancements to the definition of data item
+‘Ma  r
+     italSt at
+             us’.Itwa  sdesigne dpr ima r
+                                        ilytoa  ll
+                                                 owf  orthema  nda t
+                                                                   or yr eportingofma rital
+status for England’sMe  nt
+                         a lHe  al
+                                 thMi nimum Da    taset
+                                                      .Itwa  snot i
+                                                                  c edt hat,althoug
+                                                                                  hNHS
+Wa  lesdoe snotha veaMe   ntalHe  alt
+                                    hMDS,c    urre ntNHSWa    l
+                                                              e sde f
+                                                                    initionsf or‘Ma r
+                                                                                    ital
+Sta t
+    us ’didn otc at
+                  erf orreportingt heda taitemwhe    r
+                                                     ethema  ritalstatusc ouldnotbe
+determined. For this reason, it was decided to introduce the value of “9 –Not Known”to the
+NHS Wales data item ‘  Marital Status’.I naddi tion,thisc hanger e-aligns the Welsh definition
+with that of England.
+
+2) In December 2005 the Civil Partnership Act 2004 came into force enabling same-sex couples
+to obtain legal recognition in their relationship, DSCN 12/2006 introduces a new value to
+identify civil partnerships.
+
+The e-Government Interoperability Framework (e-GIF) mandates the adoption of XML. A key
+element in the development of XML schemas is an agreed set of data standards. The Government
+Data Standards Catalogue (GDSC) sets data standards to be used in the schemas and other
+interchange processes Catalogue.
+
+From October 2006 the English Commissioning Data Sets will be submitted in XML format.
+This DSCN declares the new values for the data item Marital Status to comply with the GDSC.
+
+
+Impact within NHS Wales:
+
+In order for cross border information flows to remain compatible, these new values must be
+introduced for use by NHS Wales. These new values will be used by NHS England from October
+2006 and are already in place by NHS Scotland.
+
+Changes to the NHS Wales Data Dictionary:
+
+Appendix A details the changes to theda
+                                      tai
+                                        tem‘
+                                           Mar
+                                             it
+                                              alSt
+                                                 atus
+                                                    ’
+
+                    DSBC7F~1                                      Page 3 of 6
+                                          October 2006
+Please note, additional information concerning the start and end dates of values for a data item
+will be shown
+
+
+Contact:
+
+Please address enquiries about this DSCN to: -
+
+Data Standards and Information Quality Team
+Health Solutions Wales
+14th Floor - Brunel House
+2 Fitzalan Road
+Cardiff
+CF24 0HA
+
+Tel: 029 20502539
+Fax: 029 20502504
+
+E-mail: Datastandards@hsw.wales.nhs.uk
+
+
+
+
+                    DSBC7F~1                                       Page 4 of 6
+                                          October 2006
+Appendix A –Changes to Marital Status
+The shaded text is a copy of the definition for Marital Status as currently held in the NHS Wales
+Data Dictionary. Changes to the definition as a result of this DSCN are highlighted in red to
+denote an addition, with deletions marked with a strikethrough.
+
+Deleted values will remaining in the definition but will be marked with a strikethrough and with
+the date of deletion shown.
+
+
+Marital Status
+
+(APC ds99 –Mandatory for Psychiatric Patients Only)
+
+Only collected for patients under the care of a consultant in a psychiatric specialty. This is the
+legal status of a patient in respect of marriage. This is the legal marital or civil status of a
+patient.
+
+Format: 1 digit numeric character alpha-numeric
+
+Value           Meaning
+1               Single
+1               Single (Retired 01/11/2006)
+S               Single (Commenced 01/11/2006)
+2               Married/separated
+2               Married/separated (Retired 01/11/2006)
+M               Married/Civil Partner (Commenced
+                01/11/2006)
+3               Divorced
+3               Divorced (Retired 01/11/2006)
+D               Divorced/Person whose Civil Partnership
+                has been dissolved (Commenced
+                01/11/2006)
+4               Widowed
+4               Widowed (Retired 01/11/2006)
+W               Widowed/Surviving Civil Partner)
+                (Commenced 01/11/2006)
+
+
+                     DSBC7F~1                                        Page 5 of 6
+                                           October 2006
+P   Separated (Commenced 01/11/2006)
+N   Not disclosed (Commenced 01/11/2006)
+8   Not applicable (i.e. not a psychiatric
+    episode)
+9   Not Known (Commenced 01/11/2006)
+
+
+
+
+        DSBC7F~1                              Page 6 of 6
+                               October 2006
+

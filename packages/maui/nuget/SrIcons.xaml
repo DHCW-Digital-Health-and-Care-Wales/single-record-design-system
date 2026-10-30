@@ -55,9 +55,9 @@
 
     <!-- ── clinical ────────────────────────────────────────────────────── -->
     <x:String x:Key="SrIconClinicalAdmission">M 10 17 l 5 -5 l -5 -5 M 15 12 H 3 M 15 3 h 4 a 2 2 0 0 1 2 2 v 14 a 2 2 0 0 1 -2 2 h -4</x:String>
-    <x:String x:Key="SrIconClinicalAllergy">M 20 13 c 0 5 -3.5 7.5 -7.66 8.95 a 1 1 0 0 1 -.67 -.01 C 7.5 20.5 4 18 4 13 V 6 a 1 1 0 0 1 1 -1 c 2 0 4.5 -1.2 6.24 -2.72 a 1.17 1.17 0 0 1 1.52 0 C 14.51 3.81 17 5 19 5 a 1 1 0 0 1 1 1 z M 12 8 v 4 M 12 16 h .01</x:String>
+    <x:String x:Key="SrIconClinicalAllergy">M 20 13 c 0 5 -3.5 7.5 -7.66 8.95 a 1 1 0 0 1 -.67 -.01 C 7.5 20.5 4 18 4 13 V 6 a 1 1 0 0 1 1 -1 c 2 0 4.5 -1.2 6.24 -2.72 a 1.17 1.17 0 0 1 1.52 0 C 14.51 3.81 17 5 19 5 a 1 1 0 0 1 1 1 z M 12 8 v 4 M 11.75 16 h 0.5 M 12 15.75 v 0.5 M 11.823 15.823 l 0.354 0.354 M 12.177 15.823 l -0.354 0.354</x:String>
     <x:String x:Key="SrIconClinicalAssessment">M 16 4 h 2 a 2 2 0 0 1 2 2 v 2 M 21.34 15.664 a 1 1 0 1 0 -3.004 -3.004 l -5.01 5.012 a 2 2 0 0 0 -.506 .854 l -.837 2.87 a .5 .5 0 0 0 .62 .62 l 2.87 -.837 a 2 2 0 0 0 .854 -.506 z M 8 22 H 6 a 2 2 0 0 1 -2 -2 V 6 a 2 2 0 0 1 2 -2 h 2 M 9,2 H 15 A 1,1 0 0,1 16,3 V 5 A 1,1 0 0,1 15,6 H 9 A 1,1 0 0,1 8,5 V 3 A 1,1 0 0,1 9,2 Z</x:String>
-    <x:String x:Key="SrIconClinicalAttendance">M 10 21 H 2 M 10 4 a 2 2 0 0 1 2.36 -1.968 l 5.41 .992 A 1.5 1.5 0 0 1 19 4.5 V 21 l -7.876 .992 A 1 1 0 0 1 10 21 z M 10.268 3 H 7 a 2 2 0 0 0 -2 2 v 16 M 14 12 h .01 M 22 21 h -3</x:String>
+    <x:String x:Key="SrIconClinicalAttendance">M 10 21 H 2 M 10 4 a 2 2 0 0 1 2.36 -1.968 l 5.41 .992 A 1.5 1.5 0 0 1 19 4.5 V 21 l -7.876 .992 A 1 1 0 0 1 10 21 z M 10.268 3 H 7 a 2 2 0 0 0 -2 2 v 16 M 13.75 12 h 0.5 M 14 11.75 v 0.5 M 13.823 11.823 l 0.354 0.354 M 14.177 11.823 l -0.354 0.354 M 22 21 h -3</x:String>
     <x:String x:Key="SrIconClinicalBlood">M 12 22 a 7 7 0 0 0 7 -7 c 0 -2 -1 -3.9 -3 -5.5 s -3.5 -4 -4 -6.5 c -.5 2.5 -2 4.9 -4 6.5 C 6 11.1 5 13 5 15 a 7 7 0 0 0 7 7 z</x:String>
     <x:String x:Key="SrIconClinicalDischarge">M 3 5 v 14 M 21 12 H 7 M 15 18 l 6 -6 l -6 -6</x:String>
     <x:String x:Key="SrIconClinicalDna">M 10 16 l 1.5 1.5 M 14 8 l -1.5 -1.5 M 15 2 c -1.798 1.998 -2.518 3.995 -2.807 5.993 M 16.5 10.5 l 1 1 M 17 6 l -2.891 -2.891 M 2 15 c 6.667 -6 13.333 0 20 -6 M 20 9 l .891 .891 M 3.109 14.109 L 4 15 M 6.5 12.5 l 1 1 M 7 18 l 2.891 2.891 M 9 22 c 1.798 -1.998 2.518 -3.995 2.807 -5.993</x:String>
@@ -70,7 +70,7 @@
     <x:String x:Key="SrIconClinicalRecord">M 6 22 a 2 2 0 0 1 -2 -2 V 4 a 2 2 0 0 1 2 -2 h 8 a 2.4 2.4 0 0 1 1.704 .706 l 3.588 3.588 A 2.4 2.4 0 0 1 20 8 v 12 a 2 2 0 0 1 -2 2 z M 14 2 v 5 a 1 1 0 0 0 1 1 h 5 M 10 9 H 8 M 16 13 H 8 M 16 17 H 8</x:String>
     <x:String x:Key="SrIconClinicalReferral">M 4.226 20.925 A 2 2 0 0 0 6 22 h 12 a 2 2 0 0 0 2 -2 V 8 a 2.4 2.4 0 0 0 -.706 -1.706 l -3.588 -3.588 A 2.4 2.4 0 0 0 14 2 H 6 a 2 2 0 0 0 -2 2 v 3.127 M 14 2 v 5 a 1 1 0 0 0 1 1 h 5 M 5 11 l -3 3 M 5 17 l -3 -3 h 10</x:String>
     <x:String x:Key="SrIconClinicalRequest">M 6 22 a 2 2 0 0 1 -2 -2 V 4 a 2 2 0 0 1 2 -2 h 8 a 2.4 2.4 0 0 1 1.704 .706 l 3.588 3.588 A 2.4 2.4 0 0 1 20 8 v 12 a 2 2 0 0 1 -2 2 z M 14 2 v 5 a 1 1 0 0 0 1 1 h 5 M 9 15 h 6 M 12 18 v -6</x:String>
-    <x:String x:Key="SrIconClinicalResult">M 9,2 H 15 A 1,1 0 0,1 16,3 V 5 A 1,1 0 0,1 15,6 H 9 A 1,1 0 0,1 8,5 V 3 A 1,1 0 0,1 9,2 Z M 16 4 h 2 a 2 2 0 0 1 2 2 v 14 a 2 2 0 0 1 -2 2 H 6 a 2 2 0 0 1 -2 -2 V 6 a 2 2 0 0 1 2 -2 h 2 M 12 11 h 4 M 12 16 h 4 M 8 11 h .01 M 8 16 h .01</x:String>
+    <x:String x:Key="SrIconClinicalResult">M 9,2 H 15 A 1,1 0 0,1 16,3 V 5 A 1,1 0 0,1 15,6 H 9 A 1,1 0 0,1 8,5 V 3 A 1,1 0 0,1 9,2 Z M 16 4 h 2 a 2 2 0 0 1 2 2 v 14 a 2 2 0 0 1 -2 2 H 6 a 2 2 0 0 1 -2 -2 V 6 a 2 2 0 0 1 2 -2 h 2 M 12 11 h 4 M 12 16 h 4 M 7.75 11 h 0.5 M 8 10.75 v 0.5 M 7.823 10.823 l 0.354 0.354 M 8.177 10.823 l -0.354 0.354 M 7.75 16 h 0.5 M 8 15.75 v 0.5 M 7.823 15.823 l 0.354 0.354 M 8.177 15.823 l -0.354 0.354</x:String>
     <x:String x:Key="SrIconClinicalTest">M 14 2 v 6 a 2 2 0 0 0 .245 .96 l 5.51 10.08 A 2 2 0 0 1 18 22 H 6 a 2 2 0 0 1 -1.755 -2.96 l 5.51 -10.08 A 2 2 0 0 0 10 8 V 2 M 6.453 15 h 11.094 M 8.5 2 h 7</x:String>
     <x:String x:Key="SrIconClinicalTreatment">M 4 9 a 2 2 0 0 0 -2 2 v 2 a 2 2 0 0 0 2 2 h 4 a 1 1 0 0 1 1 1 v 4 a 2 2 0 0 0 2 2 h 2 a 2 2 0 0 0 2 -2 v -4 a 1 1 0 0 1 1 -1 h 4 a 2 2 0 0 0 2 -2 v -2 a 2 2 0 0 0 -2 -2 h -4 a 1 1 0 0 1 -1 -1 V 4 a 2 2 0 0 0 -2 -2 h -2 a 2 2 0 0 0 -2 2 v 4 a 1 1 0 0 1 -1 1 z</x:String>
     <x:String x:Key="SrIconClinicalVitals">M 2 9.5 a 5.5 5.5 0 0 1 9.591 -3.676 a .56 .56 0 0 0 .818 0 A 5.49 5.49 0 0 1 22 9.5 c 0 2.29 -1.5 4 -3 5.5 l -5.492 5.313 a 2 2 0 0 1 -3 .019 L 5 15 c -1.5 -1.5 -3 -3.2 -3 -5.5 M 3.22 13 H 9.5 l .5 -1 l 2 4.5 l 2 -7 l 1.5 3.5 h 5.27</x:String>
@@ -123,7 +123,7 @@
     <x:String x:Key="SrIconLocationMapPin">M 20 10 c 0 4.993 -5.539 10.193 -7.399 11.799 a 1 1 0 0 1 -1.202 0 C 9.539 20.193 4 14.993 4 10 a 8 8 0 0 1 16 0 M 9,10 a 3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0 Z</x:String>
     <x:String x:Key="SrIconLocationOrganisation">M 17,16 H 21 A 1,1 0 0,1 22,17 V 21 A 1,1 0 0,1 21,22 H 17 A 1,1 0 0,1 16,21 V 17 A 1,1 0 0,1 17,16 Z M 3,16 H 7 A 1,1 0 0,1 8,17 V 21 A 1,1 0 0,1 7,22 H 3 A 1,1 0 0,1 2,21 V 17 A 1,1 0 0,1 3,16 Z M 10,2 H 14 A 1,1 0 0,1 15,3 V 7 A 1,1 0 0,1 14,8 H 10 A 1,1 0 0,1 9,7 V 3 A 1,1 0 0,1 10,2 Z M 5 16 v -3 a 1 1 0 0 1 1 -1 h 12 a 1 1 0 0 1 1 1 v 3 M 12 12 V 8</x:String>
     <x:String x:Key="SrIconLocationRegion">M 14.106 5.553 a 2 2 0 0 0 1.788 0 l 3.659 -1.83 A 1 1 0 0 1 21 4.619 v 12.764 a 1 1 0 0 1 -.553 .894 l -4.553 2.277 a 2 2 0 0 1 -1.788 0 l -4.212 -2.106 a 2 2 0 0 0 -1.788 0 l -3.659 1.83 A 1 1 0 0 1 3 19.381 V 6.618 a 1 1 0 0 1 .553 -.894 l 4.553 -2.277 a 2 2 0 0 1 1.788 0 z M 15 5.764 v 15 M 9 3.236 v 15</x:String>
-    <x:String x:Key="SrIconLocationRoom">M 19 21 V 5 a 2 2 0 0 0 -2 -2 H 7 a 2 2 0 0 0 -2 2 v 16 M 2 21 h 20 M 9 12 h .01</x:String>
+    <x:String x:Key="SrIconLocationRoom">M 19 21 V 5 a 2 2 0 0 0 -2 -2 H 7 a 2 2 0 0 0 -2 2 v 16 M 2 21 h 20 M 8.75 12 h 0.5 M 9 11.75 v 0.5 M 8.823 11.823 l 0.354 0.354 M 9.177 11.823 l -0.354 0.354</x:String>
     <x:String x:Key="SrIconLocationWard">M 10 12 h 4 M 10 8 h 4 M 14 21 v -3 a 2 2 0 0 0 -4 0 v 3 M 6 10 H 4 a 2 2 0 0 0 -2 2 v 7 a 2 2 0 0 0 2 2 h 16 a 2 2 0 0 0 2 -2 V 9 a 2 2 0 0 0 -2 -2 h -2 M 6 21 V 5 a 2 2 0 0 1 2 -2 h 8 a 2 2 0 0 1 2 2 v 16</x:String>
 
     <!-- ── nav ─────────────────────────────────────────────────────────── -->
@@ -147,7 +147,7 @@
     <x:String x:Key="SrIconNavSearch">M 21 21 l -4.34 -4.34 M 3,11 a 8,8 0 1,0 16,0 a 8,8 0 1,0 -16,0 Z</x:String>
     <x:String x:Key="SrIconNavSettings">M 9.671 4.136 a 2.34 2.34 0 0 1 4.659 0 a 2.34 2.34 0 0 0 3.319 1.915 a 2.34 2.34 0 0 1 2.33 4.033 a 2.34 2.34 0 0 0 0 3.831 a 2.34 2.34 0 0 1 -2.33 4.033 a 2.34 2.34 0 0 0 -3.319 1.915 a 2.34 2.34 0 0 1 -4.659 0 a 2.34 2.34 0 0 0 -3.32 -1.915 a 2.34 2.34 0 0 1 -2.33 -4.033 a 2.34 2.34 0 0 0 0 -3.831 A 2.34 2.34 0 0 1 6.35 6.051 a 2.34 2.34 0 0 0 3.319 -1.915 M 9,12 a 3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0 Z</x:String>
     <x:String x:Key="SrIconNavSort">M 21 16 l -4 4 l -4 -4 M 17 20 V 4 M 3 8 l 4 -4 l 4 4 M 7 4 v 16</x:String>
-    <x:String x:Key="SrIconNavSupport">M 2,12 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0 Z M 9.09 9 a 3 3 0 0 1 5.83 1 c 0 2 -3 3 -3 3 M 12 17 h .01</x:String>
+    <x:String x:Key="SrIconNavSupport">M 2,12 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0 Z M 9.09 9 a 3 3 0 0 1 5.83 1 c 0 2 -3 3 -3 3 M 11.75 17 h 0.5 M 12 16.75 v 0.5 M 11.823 16.823 l 0.354 0.354 M 12.177 16.823 l -0.354 0.354</x:String>
 
     <!-- ── people ──────────────────────────────────────────────────────── -->
     <x:String x:Key="SrIconPeopleAdminStaff">M 10 15 H 6 a 4 4 0 0 0 -4 4 v 2 M 14.305 16.53 l .923 -.382 M 15.228 13.852 l -.923 -.383 M 16.852 12.228 l -.383 -.923 M 16.852 17.772 l -.383 .924 M 19.148 12.228 l .383 -.923 M 19.53 18.696 l -.382 -.924 M 20.772 13.852 l .924 -.383 M 20.772 16.148 l .924 .383 M 15,15 a 3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0 Z M 5,7 a 4,4 0 1,0 8,0 a 4,4 0 1,0 -8,0 Z</x:String>
@@ -169,7 +169,7 @@
     <x:String x:Key="SrIconScheduleCalendar">M 8 2 v 3 M 16 2 v 3 M 5,3 H 19 A 2,2 0 0,1 21,5 V 19 A 2,2 0 0,1 19,21 H 5 A 2,2 0 0,1 3,19 V 5 A 2,2 0 0,1 5,3 Z M 3 9 h 18</x:String>
     <x:String x:Key="SrIconScheduleCancelAppointment">M 8 2 v 3 M 16 2 v 3 M 5,3 H 19 A 2,2 0 0,1 21,5 V 19 A 2,2 0 0,1 19,21 H 5 A 2,2 0 0,1 3,19 V 5 A 2,2 0 0,1 5,3 Z M 3 9 h 18 M 14 13 l -4 4 M 10 13 l 4 4</x:String>
     <x:String x:Key="SrIconScheduleDuration">M 10,2 L 14,2 M 12,14 L 15,11 M 4,14 a 8,8 0 1,0 16,0 a 8,8 0 1,0 -16,0 Z</x:String>
-    <x:String x:Key="SrIconScheduleEvents">M 8 2 v 3 M 16 2 v 3 M 5,3 H 19 A 2,2 0 0,1 21,5 V 19 A 2,2 0 0,1 19,21 H 5 A 2,2 0 0,1 3,19 V 5 A 2,2 0 0,1 5,3 Z M 3 9 h 18 M 8 13 h .01 M 12 13 h .01 M 16 13 h .01 M 8 17 h .01 M 12 17 h .01 M 16 17 h .01</x:String>
+    <x:String x:Key="SrIconScheduleEvents">M 8 2 v 3 M 16 2 v 3 M 5,3 H 19 A 2,2 0 0,1 21,5 V 19 A 2,2 0 0,1 19,21 H 5 A 2,2 0 0,1 3,19 V 5 A 2,2 0 0,1 5,3 Z M 3 9 h 18 M 7.75 13 h 0.5 M 8 12.75 v 0.5 M 7.823 12.823 l 0.354 0.354 M 8.177 12.823 l -0.354 0.354 M 11.75 13 h 0.5 M 12 12.75 v 0.5 M 11.823 12.823 l 0.354 0.354 M 12.177 12.823 l -0.354 0.354 M 15.75 13 h 0.5 M 16 12.75 v 0.5 M 15.823 12.823 l 0.354 0.354 M 16.177 12.823 l -0.354 0.354 M 7.75 17 h 0.5 M 8 16.75 v 0.5 M 7.823 16.823 l 0.354 0.354 M 8.177 16.823 l -0.354 0.354 M 11.75 17 h 0.5 M 12 16.75 v 0.5 M 11.823 16.823 l 0.354 0.354 M 12.177 16.823 l -0.354 0.354 M 15.75 17 h 0.5 M 16 16.75 v 0.5 M 15.823 16.823 l 0.354 0.354 M 16.177 16.823 l -0.354 0.354</x:String>
     <x:String x:Key="SrIconScheduleRecurring">M 17 2 l 4 4 l -4 4 M 3 11 v -1 a 4 4 0 0 1 4 -4 h 14 M 7 22 l -4 -4 l 4 -4 M 21 13 v 1 a 4 4 0 0 1 -4 4 H 3</x:String>
     <x:String x:Key="SrIconScheduleTime">M 2,12 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0 Z M 12 6 v 6 h 4</x:String>
     <x:String x:Key="SrIconScheduleWaitingList">M 11 5 h 10 M 11 12 h 10 M 11 19 h 10 M 4 4 h 1 v 5 M 4 9 h 2 M 6.5 20 H 3.4 c 0 -1 2.6 -1.925 2.6 -3.5 a 1.5 1.5 0 0 0 -2.6 -1.02</x:String>
@@ -177,13 +177,13 @@
 
     <!-- ── status ──────────────────────────────────────────────────────── -->
     <x:String x:Key="SrIconStatusCritical">M 7 18 v -6 a 5 5 0 1 1 10 0 v 6 M 5 21 a 1 1 0 0 0 1 1 h 12 a 1 1 0 0 0 1 -1 v -1 a 2 2 0 0 0 -2 -2 H 7 a 2 2 0 0 0 -2 2 z M 21 12 h 1 M 18.5 4.5 L 18 5 M 2 12 h 1 M 12 2 v 1 M 4.929 4.929 l .707 .707 M 12 12 v 6</x:String>
-    <x:String x:Key="SrIconStatusErrorCircle">M 2,12 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0 Z M 12,8 L 12,12 M 12,16 L 12.01,16</x:String>
+    <x:String x:Key="SrIconStatusErrorCircle">M 2,12 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0 Z M 12,8 L 12,12 M 11.75 16 h 0.5 M 12 15.75 v 0.5 M 11.823 15.823 l 0.354 0.354 M 12.177 15.823 l -0.354 0.354</x:String>
     <x:String x:Key="SrIconStatusFlagged">M 4 22 V 4 a 1 1 0 0 1 .4 -.8 A 6 6 0 0 1 8 2 c 3 0 5 2 7.333 2 q 2 0 3.067 -.8 A 1 1 0 0 1 20 4 v 10 a 1 1 0 0 1 -.4 .8 A 6 6 0 0 1 16 16 c -3 0 -5 -2 -8 -2 a 6 6 0 0 0 -4 1.528</x:String>
-    <x:String x:Key="SrIconStatusInfo">M 2,12 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0 Z M 12 16 v -4 M 12 8 h .01</x:String>
+    <x:String x:Key="SrIconStatusInfo">M 2,12 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0 Z M 12 16 v -4 M 11.75 8 h 0.5 M 12 7.75 v 0.5 M 11.823 7.823 l 0.354 0.354 M 12.177 7.823 l -0.354 0.354</x:String>
     <x:String x:Key="SrIconStatusLoading">M 21 12 a 9 9 0 1 1 -6.219 -8.56</x:String>
     <x:String x:Key="SrIconStatusPending">M 2,12 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0 Z M 12 6 v 6 l 4 2</x:String>
     <x:String x:Key="SrIconStatusSuccess">M 2,12 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0 Z M 16 9 l -5.5 5.5 L 8 12</x:String>
-    <x:String x:Key="SrIconStatusWarning">M 21.73 18 l -8 -14 a 2 2 0 0 0 -3.48 0 l -8 14 A 2 2 0 0 0 4 21 h 16 a 2 2 0 0 0 1.73 -3 M 12 9 v 4 M 12 17 h .01</x:String>
+    <x:String x:Key="SrIconStatusWarning">M 21.73 18 l -8 -14 a 2 2 0 0 0 -3.48 0 l -8 14 A 2 2 0 0 0 4 21 h 16 a 2 2 0 0 0 1.73 -3 M 12 9 v 4 M 11.75 17 h 0.5 M 12 16.75 v 0.5 M 11.823 16.823 l 0.354 0.354 M 12.177 16.823 l -0.354 0.354</x:String>
 
     <!-- ── theme ───────────────────────────────────────────────────────── -->
     <x:String x:Key="SrIconThemeDark">M 20.985 12.486 a 9 9 0 1 1 -9.473 -9.472 c .405 -.022 .617 .46 .402 .803 a 6 6 0 0 0 8.268 8.268 c .344 -.215 .825 -.004 .803 .401</x:String>

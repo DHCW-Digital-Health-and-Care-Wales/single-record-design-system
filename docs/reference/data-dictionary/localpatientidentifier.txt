@@ -1,0 +1,112 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/localpatientidentifier.htm
+Title: Local Patient Identifier
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Local Patient Identifier Local Patient Identifier
+Change History
+|
+|
+DSCN 2025 / 07
+| Referral to Treatment (RTT) Weekly Patient Target List (PTL) Data Set
+|
+DSCN 2025 / 01
+| Audiology Wait Times Data Set
+|
+DSCN 2024 / 12
+| Welsh Emergency Care Data Set
+|
+DSCN 2022 / 06
+| Main Specialty (Consultant) (AMD)
+|
+DSCN 2021 / 01
+| Single Cancer Pathway – Adjustments Data Set – Retirement
+|
+DSCN 2020 / 31
+| National Cancer Data Standards for Wales – Systemic Anti-Cancer Therapy (SACT)
+|
+DSCN 2020 / 28
+| Suspected Cancer Pathway – Core (AMD)
+|
+DSCN 2020 / 22
+| Single Cancer Pathway - Adjustments
+|
+DSCN 2020 / 21
+| Single Cancer Pathway - Core
+|
+DSCN 2019 / 09
+| National Cancer Data Standards for Wales – Core
+|
+DSCN 2015 / 03
+| Radiotherapy Data Set
+|
+DDCN 2014 / 05
+| Cancelled Admitted Procedures (Postponed Admitted Procedures) Data Set
+|
+
+This data item is / was included in the following data sets / collections between the dates shown:
+Data Set / Collection
+| Valid From
+| Valid To
+|
+APC ds99
+| 1st April 1999
+|
+|
+EAL ds
+| 1st April 1999
+| 21st November 2012
+|
+OP ds
+| 1st April 1999
+|
+|
+OPR ds
+| 1st July 2008
+|
+|
+EDDS
+| 1st April 2009
+|
+|
+PAP ds
+| 1st April 2013
+|
+|
+RTDS
+| 1st April 2014
+|
+|
+SCPC ds
+| 1st January 2021
+|
+|
+SCPA ds
+| 1st January 2021
+| 3rd February 2021
+|
+National Cancer Ds – Core
+|
+|
+|
+National Cancer Ds - SACT
+|
+|
+|
+WECDS
+| 1st August 2024
+|
+|
+AUD WT ds
+| 1st April 2025
+|
+|
+RTT weekly PTL ds
+| 1st April 2025
+|
+|
+
+This is the case record number. It is a unique identifier for a patient within a health care provider.
+
+Format: 10 character alpha-numeric
+See CASE RECORD NUMBER
+Where care for NHS patients is sub-commissioned in the independent sector or overseas, the NHS commissioner local patient identifier should be used. If no NHS local patient identifier has been assigned the independent sector or overseas provider identifier should be used.

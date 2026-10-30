@@ -1,0 +1,6 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/dateofbirth.htm
+Title: Date of Birth
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Date of Birth Date of Birth
+Synonym of Birth Date

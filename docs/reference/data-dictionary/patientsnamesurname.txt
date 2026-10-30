@@ -1,0 +1,29 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/patientsnamesurname.htm
+Title: Patient's Name (Surname)
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Patient's Name (Surname) Patient’s Name (Surname)
+Change History
+|
+|
+DSCN 2020 / 28
+| Suspected Cancer Pathway – Core (AMD)
+|
+DSCN 2020 / 21
+| Single Cancer Pathway - Core
+|
+
+This data item is / was included in the following data sets / collections between the dates shown:
+
+Data Set / Collection
+| Valid From
+| Valid To
+|
+SCPC ds
+| 1st January 2021
+|
+|
+
+The patient’s surname used to describe family, clan or marital association.
+
+Format: 35 character alpha-numeric

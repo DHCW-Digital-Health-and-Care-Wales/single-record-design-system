@@ -1,0 +1,39 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/deathdate.htm
+Title: Death Date
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Death Date Death Date
+Change History
+|
+|
+DSCN 2022 / 06
+| Main Specialty (Consultant) (AMD)
+|
+DSCN 2020 / 28
+| Suspected Cancer Pathway – Core (AMD)
+|
+DSCN 2020 / 21
+| Single Cancer Pathway - Core
+|
+DSCN 2019 / 09
+| National Cancer Data Standards for Wales – Core
+|
+
+This data item is / was included in the following data sets / collections between the dates shown:
+
+Data Set / Collection
+| Valid From
+| Valid To
+|
+National Cancer Ds - Core
+|
+|
+|
+SCPC ds
+| 1st January 2021
+|
+|
+
+The date of the patient's death.
+
+Format: 8 digit numeric, CCYYMMDD

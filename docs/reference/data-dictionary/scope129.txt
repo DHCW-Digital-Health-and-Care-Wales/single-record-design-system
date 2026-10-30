@@ -1,0 +1,8 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/scope129.htm
+Title: Scope
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Scope Scope
+The scope of this Standard is to mandate a defined national list of informational outcomes for use in the ADASTRA system across all OOH services in NHS Wales. This list is defined in the Information Specification section below.
+
+Note – Only primary and secondary outcomes can be recorded, and these are what will be used in reporting. However, a free text field will be available on Adastra where additional information can be recorded for future reference.

@@ -1,0 +1,6 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/postcodes.htm
+Title: Postcodes
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Postcodes Postcodes
+The valid postcodes are found in the NHS Postcode Directory file.

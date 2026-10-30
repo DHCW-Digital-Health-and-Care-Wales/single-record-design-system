@@ -1,0 +1,18 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/interpreterlanguage.htm
+Title: Interpreter Language
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Interpreter Language Interpreter Language
+
+Data Set / Collection
+| Valid From
+| Valid To
+|
+WECDS
+| 1st August 2024
+|
+|
+
+This is the SNOMED CT concept ID which is used to record the language of the interpreter required by the person.
+Format: minimum 6 digit numeric maximum 18 digit numeric
+Refer to Interpreter Language Code List

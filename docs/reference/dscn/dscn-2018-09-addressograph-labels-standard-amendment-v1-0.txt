@@ -1,0 +1,170 @@
+Source: https://dhcw.nhs.wales/information-services/information-standards/data-standards/data-standards-files/data-standard-change-notices-docs/dscns-2018/20181112-dscn-2018-09-addressograph-labels-standard-amendment-v1-0-pdf/
+Retrieved: 2026-10-30 (text extracted with pdftotext -layout)
+
+               WELSH INFORMATION STANDARDS BOARD
+                                                  DSC Notice:       DSCN 2018 / 09
+                                                  Date of Issue:    12th November 2018
+
+Welsh Health Circular / Official Letter:          Subject: Addressograph Labels Standard
+
+
+Sponsor: Janet Davies, Head of Healthcare
+Quality, Health and Social Services Group,
+Welsh Government
+Implementation Date: Compliance must be
+achieved within 12 months of the Date of Issue.
+
+
+
+
+                         DATA STANDARD CHANGE NOTICE
+
+   A Data Standard Change Notice (DSCN) is an information mandate for a new or revised
+                                  information standard.
+
+This DSCN was approved by the Welsh Information Standards Board (WISB) at its meeting on
+                                   24th October 2018
+
+WISB Reference: ISRN 2017 / 013
+
+Summary:
+To add the sex of the patient to the Addressograph Labels Standard (DSCN 2018 / 05).
+
+Applies to:
+The standard applies to all organisations in NHS in Wales using NWIS national systems to
+print addressograph labels. The national systems currently in use are WPAS, WCP, WRIS and
+CaNISC.
+
+
+Please address enquiries about this Data Standard Change Notice to the Data Standards Team
+                              in NHS Wales Informatics Service
+
+                 E-mail: data.standards@wales.nhs.uk / Tel: 029 2050 2539
+
+
+
+ The Welsh Information Standards Board is responsible for appraising information standards.
+ Submission documents and WISB Outcomes relating to the approval of this standard can be
+                                        found at:
+
+              http://howis.wales.nhs.uk/sites3/page.cfm?orgid=742&pid=24632
+
+
+
+
+  DSCN 2018 / 09                    Page 1 of 5
+                          DATA STANDARD CHANGE NOTICE
+
+Introduction
+
+The Digital Health and Social Care Strategy for Wales emphasises the reduction of risk and
+the improvement of quality within health and social care settings. With the continual increase
+in movement of information and health professionals between hospital and community
+settings across multiple organisations, the need for clear identification of associated
+documentation has never been greater.
+
+A scoping exercise was conducted to assess the use of addressograph labels in the NHS in
+Wales. In addition, a literature review was carried out to identify if there were any studies
+relating to the use of standardised addressograph labels.
+
+The conclusion of the exercise was that an all-Wales standard addressograph label design
+should be developed to reduce variance across Wales and reduce the risk of patient harm
+through incorrect identification. This approach was endorsed by the Welsh Clinical Informatics
+Council.
+
+As a result of this activity, the Addressograph Labels Standard (DSCN 2018 / 05) was
+published in July 2018. On publication, it became evident that a vital piece of information, the
+sex of the patient, had been omitted. This addresses that omission by amending the recently
+published Standard to include sex of the patient, as illustrated in the Information
+Specification below.
+
+
+
+Scope
+
+The scope is limited to addressograph labels used on patient notes included INSIDE the
+casenotes.
+The Standard does not apply to the tracking label on the front cover of the casenotes, or
+other instances where patient labels may be used e.g. sample labels, tags, wristbands etc.
+
+The scope extends to all national systems supported by the NHS Wales Informatics Service
+(NWIS) that have the facility to print addressograph labels, as well as any local systems used
+for this purpose, namely:
+     Welsh Patient Administration System (WPAS)
+     Welsh Clinical Portal (WCP)
+     Welsh Radiology Information System (WRIS)
+     CaNISC and
+     All local systems within health boards that have the ability to print addressograph
+        labels.
+
+
+
+
+DSCN 2018 / 09                      Page 2 of 5
+Actions
+
+For NWIS:
+     For the aforementioned national systems, update system functionality to comply with
+      the standards set out in the Information Specification.
+
+For health boards and Velindre NHS Trust:
+     For applicable local systems, ensure that system functionality is updated to comply
+       with the standards set out in the Information Specification.
+
+
+
+
+DSCN 2018 / 09                     Page 3 of 5
+Information Specification
+The addressograph label MUST include all elements illustrated in the Standard Label (Label 2) and comply to the format specified in the Annotated Label. In
+addition, please note the following details:
+     Although the NHS Number should be used to uniquely identify a patient, where necessary, the patient’s hospital number may be incorporated in the top
+        right corner of the label (Label 5).
+     The patient’s surname should be printed in uppercase so as to easily distinguish this from the forename(s).
+     Where the patient’s name and date of birth combined are too long to fit on a single line, the text may continue to a second line providing that the left
+        and right justification is maintained, with the date of birth right-justified on the second line (Labels 3 and 4).
+
+There are two label sizes currently in use. This specification has been designed to be compatible with both sizes to ensure that no costs associated with
+changing the size of the label are incurred.
+
+
+Annotated Label
+
+
+
+
+Note – The following are for illustrative purposes and are not intended as an exhaustive list of scenarios
+
+DSCN 2018 / 09                                                                   Page 4 of 5
+Label 2 - Standard                                 Label 3 - Long name
+
+
+
+123 456 7890                                        123 456 7890
+DUCK, Donald             13-Feb-1986                DUCK, Donald has many many
+                                                    forenames            13-Feb-1986
+10 Heol Creigau       Sex not specified             10 Heol Creigau       Sex not specified
+Pontypridd                                          Pontypridd
+Cardiff                                             Cardiff
+Rhondda Cynon Taf, XX12 3XX                         Rhondda Cynon Taf, XX12 3XX
+
+
+
+
+Label 4 - Long name truncated at 44 characters     Label 5 - With CRN
+
+
+
+123 456 7890                                        123 456 7890           CRN A000001A
+DUCK, Donaldhasmanymanyfore                         DUCK, Donald            13-Feb-1986
+nameswhicharelon…   13-Feb-1986
+10 Heol Creigau       Sex not specified             10 Heol Creigau      Sex not specified
+Pontypridd                                          Pontypridd
+Cardiff                                             Cardiff
+Rhondda Cynon Taf, XX12 3XX                         Rhondda Cynon Taf, XX12 3XX
+
+
+
+
+DSCN 2018 / 09                                   Page 5 of 5
+

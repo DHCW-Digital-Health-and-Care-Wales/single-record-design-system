@@ -1,0 +1,7 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/age.htm
+Title: Age
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Age Age
+
+Where age is measured in years, this refers to whole years e.g. a patient or client aged 19 years and 11 months would be counted as 19 years old.

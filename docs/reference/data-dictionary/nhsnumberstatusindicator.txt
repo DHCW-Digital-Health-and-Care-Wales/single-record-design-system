@@ -1,0 +1,170 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/nhsnumberstatusindicator.htm
+Title: NHS Number Status Indicator
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+NHS Number Status Indicator NHS Number Status Indicator
+Change History
+|
+|
+DSCN 2025 / 08
+| NHS Number Status Indicator
+|
+DSCN 2024 / 12
+| Welsh Emergency Care Data Set
+|
+DSCN 2022 / 06
+| Main Specialty (Consultant) (AMD)
+|
+DSCN 2020 / 31
+| National Cancer Data Standards for Wales – Systemic Anti-Cancer Therapy (SACT)
+|
+DSCN 2020 / 28
+| Suspected Cancer Pathway – Core (AMD)
+|
+DSCN 2020 / 21
+| Single Cancer Pathway - Core
+|
+DSCN 2019 / 09
+| National Cancer Data Standards for Wales – Core
+|
+DSCN 2016 / 02
+| Maternity Indicators Data Set
+|
+DSCN 2012 / 11
+| Elective Admission List Data Set (EAL Ds)
+|
+DSCN (2009) 02 (W)
+| Emergency Department Data Set
+|
+DSCN (2008) 07 (W)
+| The Introduction of Valid Period Date Ranges for Data Items within the APC Data Set
+|
+
+This data item is / was included in the following data sets / collections between the dates shown:
+
+Data Set / Collection
+| Valid From
+| Valid To
+|
+APC ds99
+| 1st April 1999
+|
+|
+EAL ds
+| 1st April 1999
+| 21st November 2012
+|
+OP ds
+| 1st April 1999
+|
+|
+PCR ds
+| 1st July 2008
+|
+|
+EDDS
+| 1st April 2009
+|
+|
+MI ds
+| 1st April 2016
+|
+|
+SCPC ds
+| 1st January 2021
+|
+|
+National Cancer Ds – Core
+|
+|
+|
+National Cancer Ds - SACT
+|
+|
+|
+WECDS
+| 1st August 2024
+|
+|
+
+The status indicator provides information about the potential accuracy and reliability of the NHS number and hence the use to which the number can be put. The indicator can also be used to indicate the general standard of patient data quality within Trusts. This data item became mandatory in Wales in April 1999.
+
+Format: 2 digit numeric
+Value
+| Meaning
+| Interpretation
+| Valid From
+| Valid To
+|
+nn
+| Number present and traced using Welsh Patient Demographic Service
+| Welsh LHB's should look for high levels of NHS numbers which have an associated status indicator value of 'nn'.
+| 1st April 1999
+| 1st April 2025
+|
+01
+| Number present & traced
+| Providers should be striving to submit numbers that have been traced against an authoritative source (currently the Initial Tracing Service) and so are as reliable and accurate as possible. Therefore Local Health Boards should look for high levels of NHS numbers which have an associated status indicator value of "01".
+| 1st April 1999
+|
+|
+02
+| Number present but not traced
+| This value reveals that although a number is present, it has not been traced against an authoritative source i.e. it has most likely been manually input but not sent to the Initial Tracing Service for checking. An exception to this could be that the NHS number has entered the provider system electronically from a reliable and safe source other than the authoritative tracing service. Users of NHS numbers with a status indicator value of "02" should be cautious.
+| 1st April 1999
+|
+|
+03
+| Trace required
+| The provider should submit patient details for NHS number tracing before DS's are submitted. Therefore the proportion of missing numbers is indicated by the "03" value should be very small.
+| 1st April 1999
+|
+|
+04
+| Trace attempted – no match or multiple match found
+| A significant proportion of "04s" could indicate data quality problems at the provider. However, the LHB should take account of whether the provider has a high level of difficulty to trace patient’s e.g. ethnic names, mobile population.
+| 1st April 1999
+|
+|
+05
+| Trace needs to be resolved (NHS number or patient detail conflict)
+| High levels of "05s" imply that the NHS numbers sent by the provider for check tracking are incorrect for the patient. This indicates poor quality of data which could either be due to a poor original source e.g. wrong number given on a GP referral letter, or poor data input by the provider.
+| 1st April 1999
+|
+|
+06
+| Trace in progress
+| This value indicates that the NHS number has been submitted for tracing but a response is awaited. Local Health Boards should expect to see a small proportion of these as the time of DS submission may be before the response from the tracing service is received.
+| 1st April 1999
+|
+|
+07
+| Number not present and trace not required
+| Two circumstances are explained by this indicator:
+| 1st April 1999
+|
+|
+
+| 1.
+| NHS number is not required e.g. overseas visitor. This should be easy to identify from other DS data items
+|
+|
+|
+
+| 2.
+| There is insufficient patient data to enable a successful trace to be made. Local Health Boards need to be more cautious about this reason although they should take into account the type of population the provider serves e.g. itinerants and mental health patients who may not be willing or able to provide sufficient information.
+|
+|
+|
+
+|
+| Note: Local Health Boards should expect to see a small proportion of cases where there is no NHS number at all.
+|
+|
+|
+08
+| Trace postponed (baby under six weeks old)
+| This indicator should only be used for babies under six weeks old and Local Health Boards should check the date of birth details on the DS.
+| 1st April 1999
+|
+|

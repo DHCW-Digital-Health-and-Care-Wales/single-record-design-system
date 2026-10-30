@@ -1,0 +1,200 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/nhsnumber.htm
+Title: NHS Number
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+NHS Number NHS Number
+Change History
+|
+|
+DSCN 2025 / 07
+| Referral to Treatment (RTT) Weekly Patient Target List (PTL) Data Set
+|
+DSCN 2025 / 01
+| Audiology Wait Times Data Set
+|
+DSCN 2024 / 12
+| Welsh Emergency Care Data Set
+|
+DSCN 2022 / 06
+| Main Specialty (Consultant) (AMD)
+|
+DSCN 2021 / 01
+| Single Cancer Pathway – Adjustments Data Set – Retirement
+|
+DSCN 2020 / 31
+| National Cancer Data Standards for Wales – Systemic Anti-Cancer Therapy (SACT)
+|
+DSCN 2020 / 28
+| Suspected Cancer Pathway – Core (AMD)
+|
+DSCN 2020 / 22
+| Single Cancer Pathway - Adjustments
+|
+DSCN 2020 / 21
+| Single Cancer Pathway - Core
+|
+DSCN 2020 / 02
+| Maternity Indicators Data Set (AMD)
+|
+DSCN 2019 / 09
+| National Cancer Data Standards for Wales – Core
+|
+DSCN 2016 / 02
+| Maternity Indicators Data Set
+|
+DSCN 2015 / 06
+| NHS Number Operational Standard
+|
+DSCN 2015 / 03
+| Radiotherapy Data Set
+|
+DDCN 2014 / 05
+| Cancelled Admitted Procedures (Postponed Admitted Procedures) Data Set
+|
+DSCN 2014 / 02
+| Substance Misuse Data Set
+|
+DSCN 2013 / 03
+| Cancelled Admitted Procedures Data Set
+|
+DSCN 2012 / 11
+| Elective Admission List Data Set (EAL Ds)
+|
+DDCN 2012 / 06
+| To remove all references to 'Health Solutions Wales', 'Business Services Centre' and 'Information Products Unit' and replace with 'NHS Wales Informatics Service'
+|
+DSCN (2009) 02 (W)
+| Emergency Department Data Set
+|
+DSCN 10/03 (W)
+| NHS Numbers for Babies
+|
+
+This data item is / was included in the following data sets / collections between the dates shown:
+Data Set / Collection
+| Valid From
+| Valid To
+|
+APC ds99
+| 1st April 1999
+|
+|
+EAL ds
+| 1st April 1999
+| 21st November 2012
+|
+OP ds
+| 1st April 1999
+|
+|
+CC ds
+| 1st April 2007
+|
+|
+OPR ds
+| 1st July 2008
+|
+|
+EDDS
+| 1st April 2009
+|
+|
+PAP ds
+| 1st April 2013
+|
+|
+SM ds
+| 1st April 2014
+|
+|
+RTDS
+| 1st April 2014
+|
+|
+MI ds
+| 1st April 2016
+|
+|
+SCPC ds
+| 1st January 2021
+|
+|
+SCPA ds
+| 1st January 2021
+| 3rd February 2021
+|
+National Cancer Ds – Core
+|
+|
+|
+National Cancer Ds - SACT
+|
+|
+|
+WECDS
+| 1st August 2024
+|
+|
+AUD WT ds
+| 1st April 2025
+|
+|
+RTT weekly PTL ds
+| 1st April 2025
+|
+|
+
+The NHS number is the primary identifier of a person, and is a unique identifier for a patient within the NHS in Wales.
+It is mandatory to record the NHS Number
+• (in the MI ds) for each woman and baby
+• (in every other data set) for each patient registered with a GP practice in England and Wales.
+The NHS number is allocated to an individual, to enable unique identification for NHS health care purposes.
+The MI ds captures data relating to the woman at initial assessment and to mother and baby for all births. Each Health Board makes data available in relation to the events which they managed, and initial assessment and birth data will be linked nationally regardless of whether both events took place in the same or at different health boards. The NHS number is needed on each record to enable this data to be linked.
+This NHS Number format was mandated for use effective 1st November 1997. Prior to this, the NHS Number was an alphanumeric code which ranged in size from 10 – 17 characters.
+If known, the patient’s Health and Care Number should be used to populate this field for patients resident in Northern Ireland.
+If known, the patient’s Community Health Index (CHI) Number should be used to populate this field for patients resident in Scotland.
+
+Format: 10 digit numeric
+See Health and Care Number
+See Community Health Index (CHI) Number
+
+Check Digit Algorithm
+(This algorithm applies to the Welsh and English NHS Number and the Northern Ireland Health & Care Number. The check digit algorithm for the Scottish CHI Number is available on request from the NHS Wales Informatics Service.)
+Step 1 Multiply each of the first nine digits by a weighting factor as follows:
+Digit Position (starting from the left)
+| Factor
+|
+1
+| 10
+|
+2
+| 9
+|
+3
+| 8
+|
+4
+| 7
+|
+5
+| 6
+|
+6
+| 5
+|
+7
+| 4
+|
+8
+| 3
+|
+9
+| 2
+|
+
+Step 2 Add the results of each multiplication together
+Step 3 Divide the total by 11 and establish the remainder
+Step 4 Subtract the remainder from 11 to give the check digit
+Step 5 Check the remainder matches the check digit. If it does not, the number is invalid.
+If the result of Step 4 is 11 then a check digit of 0 is used
+If the result of Step 4 is 10 then the number is invalid and not used

@@ -1,0 +1,295 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/ethnicgroup.htm
+Title: Ethnic Group
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Ethnic Group Ethnic Group
+Change History
+|
+|
+DSCN 2025 / 07
+| Referral to Treatment (RTT) Weekly Patient Target List (PTL) Data Set
+|
+DSCN 2025 / 01
+| Audiology Wait Times Data Set
+|
+DSCN 2022 / 06
+| Main Specialty (Consultant) (AMD)
+|
+DSCN 2020 / 28
+| Single Cancer Pathway – Core (AMD)
+|
+DSCN 2020 / 21
+| Single Cancer Pathway - Core
+|
+DSCN 2019 / 09
+| National Cancer Data Standards for Wales – Core
+|
+DSCN 2017 / 06 v1.1
+| Ethnic Group
+|
+DSCN 2017 / 06
+| Ethnic Group
+|
+DSCN 2016 / 02
+| Maternity Indicators Data Set
+|
+DSCN 2014 / 02
+| Substance Misuse Data Set
+|
+DSCN 2013 / 01
+| Retirement of 'Medical & Dental Staff Census' (SBH50-59A) and 'Non-Medical Staffing' data collections
+|
+DSCN (2009) 02 (W)
+| Emergency Department Data Set
+|
+DSCN (2008) 07 (W)
+| The Introduction of Valid Period Date Ranges for Data Items within the APC Data Set
+|
+DSCN 12/01 (W)
+| Subject: Changes to Ethnic data codes
+|
+
+This data item is / was included in the following data sets / collections between the dates shown:
+
+Data Set / Collection
+| Valid From
+| Valid To
+|
+APC ds99
+| 1st April 1999
+|
+|
+NCCHD
+|
+|
+|
+CC ds
+| 1st April 2007
+|
+|
+OPR ds
+| 1st September 2008
+|
+|
+EDDS
+| 1st April 2009
+|
+|
+SM ds
+| 1st April 2014
+|
+|
+Non – Medical Staffing
+| -
+| 2nd January 2013
+|
+MI ds
+| 1st April 2016
+|
+|
+SCPC ds
+| 1st January 2021
+|
+|
+National Cancer Ds - Core
+|
+|
+|
+AUD WT ds
+| 1st April 2025
+|
+|
+RTT weekly PTL ds
+| 1st April 2025
+|
+|
+
+This is the ethnic group of the patient, as selected by the patient. The patient is the arbiter of the information. Classifications are based on the ethnic group data categories used in the 2011 Census and the information recorded about ethnic group must be obtained by asking the patient / client.
+
+Format: 2 character alpha- numeric – AB, where the first character (A) is a value taken from the list in the table below, and the second character (B) is a locally defined value to be used in conjunction with the nationally defined values. If no further local breakdown is required, the second character (B) should be filled with a ‘Z’. Note that for the Substance Misuse and Maternity Indicators data set, only the first character (A) is submitted.
+
+Value
+| Meaning
+| Valid From
+| Valid To
+|
+
+| WHITE
+|
+|
+|
+A
+| Any White Background, including Welsh, English, Scottish, Northern Irish, Irish, British
+| 1st April 2002
+|
+|
+Amended 1st April 2017
+|
+|
+B
+| Gypsy or Irish Traveller
+| 1st April 2017*
+|
+|
+
+| MIXED / MULTIPLE ETHNIC GROUP
+|
+|
+|
+D
+| White and Black Caribbean
+| 1st April 2002
+|
+|
+E
+| White and Black African
+| 1st April 2002
+|
+|
+F
+| White and Asian
+| 1st April 2002
+|
+|
+G
+| Any other mixed background / multiple ethnic background
+| 1st April 2002
+|
+|
+Amended 1st April 2017
+|
+|
+
+| ASIAN OR ASIAN BRITISH
+|
+|
+|
+H
+| Indian
+| 1st April 2002
+|
+|
+J
+| Pakistani
+| 1st April 2002
+|
+|
+K
+| Bangladeshi
+| 1st April 2002
+|
+|
+R
+| Chinese
+| 1st April 2002
+|
+|
+L
+| Any other Asian background
+| 1st April 2002
+|
+|
+
+| BLACK OR BLACK BRITISH
+|
+|
+|
+M
+| Caribbean
+| 1st April 2002
+|
+|
+N
+| African
+| 1st April 2002
+|
+|
+P
+| Any other Black background
+| 1st April 2002
+|
+|
+
+| OTHER ETHNIC GROUPS
+|
+|
+|
+T
+| Arab
+| 1st April 2017*
+|
+|
+S
+| Any other ethnic group
+| 1st April 2002
+|
+|
+
+| NOT STATED
+|
+|
+|
+Z
+| Not stated
+| 1st April 2002
+|
+|
+
+*Note that this code was included as a valid value in the Maternity Indicators data set from April 2016
+The codes below are for historical information only and were retired on the 1st April 2002.
+Format: 2 character alpha-numeric
+Value
+| Meaning
+| Valid From
+| Valid To
+|
+0
+| White
+| 1st July 1997
+| 31st March 2002
+|
+1
+| Black – Caribbean
+| 1st July 1997
+| 31st March 2002
+|
+2
+| Black – African
+| 1st July 1997
+| 31st March 2002
+|
+3
+| Black – Other
+| 1st July 1997
+| 31st March 2002
+|
+4
+| Indian
+| 1st July 1997
+| 31st March 2002
+|
+5
+| Pakistani
+| 1st July 1997
+| 31st March 2002
+|
+6
+| Bangladeshi
+| 1st July 1997
+| 31st March 2002
+|
+7
+| Chinese
+| 1st July 1997
+| 31st March 2002
+|
+8
+| Any other ethnic group
+| 1st July 1997
+| 31st March 2002
+|
+9
+| Not given
+| 1st July 1997
+| 31st March 2002
+|

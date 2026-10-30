@@ -1,0 +1,95 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/maritalstatus.htm
+Title: Marital Status
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Marital Status Marital Status
+Change History
+|
+|
+DSCN (2008) 07 (W)
+| The Introduction of Valid Period Date Ranges for Data Items within the APC Data Set
+|
+DSCN (2006) 13 (W)
+| Changes to the Data Item 'Marital Status' to bring the Welsh definition in line with the definition in England.
+|
+
+This data item is / was included in the following data sets / collections between the dates shown:
+
+Data Set / Collection
+| Valid From
+| Valid To
+|
+APC ds99 (Psychiatric Patients Only)
+| 1st April 1999
+|
+|
+
+This is only collected for patients under the care of a consultant in a psychiatric specialty. This is the legal marital or civil status of a patient.
+
+Format: 1 character alpha-numeric
+Value
+| Meaning
+| Valid From
+| Valid To
+|
+1
+| Single
+| Pre 28th December 1995
+| 31st October 2006
+|
+2
+| Married / Separated
+| Pre 28th December 1995
+| 31st October 2006
+|
+3
+| Divorced
+| Pre 28th December 1995
+| 31st October 2006
+|
+4
+| Widowed
+| Pre 28th December 1995
+| 31st October 2006
+|
+S
+| Single
+| 1st November 2006
+|
+|
+M
+| Married / Civil Partner
+| 1st November 2006
+|
+|
+D
+| Divorced / Person whose Civil Partnership has been dissolved
+| 1st November 2006
+|
+|
+W
+| Widowed / Surviving Civil Partner
+| 1st November 2006
+|
+|
+P
+| Separated
+| 1st November 2006
+|
+|
+N
+| Not disclosed
+| 1st November 2006
+|
+|
+8
+| Not applicable
+| 1st July 1997
+|
+|
+9
+| Not known
+| Pre 28th December 1995
+Reinstated 1st November 2006
+| 20th January 2002
+|

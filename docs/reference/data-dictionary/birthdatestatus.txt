@@ -1,0 +1,78 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/birthdatestatus.htm
+Title: Birth Date Status
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Birth Date Status Birth Date Status
+Change History
+|
+|
+DSCN 2024 / 12
+| Welsh Emergency Care Data Set
+|
+DSCN 2012 / 11
+| Elective Admission List Data Set (EAL Ds)
+|
+DSCN (2009) 02 (W)
+| Emergency Department Data Set
+|
+DSCN (2008) 07 (W)
+| The Introduction of Valid Period Date Ranges for Data Items within the APC Data Set
+|
+
+This data item is / was included in the following data sets / collections between the dates shown:
+
+Data Set / Collection
+| Valid From
+| Valid To
+|
+APC ds99
+| 1st April 1999
+|
+|
+EAL ds
+| 1st April 1999
+| 21st November 2012
+|
+OP ds
+| 1st April 1999
+|
+|
+CC ds
+| 1st April 2007
+|
+|
+OPR ds
+| 1st July 2008
+|
+|
+EDDS
+| 1st April 2009
+|
+|
+WECDS
+| 1st August 2024
+|
+|
+
+This allows the recording of date supplied or date not applicable for the patient’s date of birth.
+Format: 1 digit numeric
+Value
+| Meaning
+| Valid From
+| Valid To
+|
+1
+| Date supplied
+| 1st May 1998
+|
+|
+8
+| Date not applicable
+| 1st May 1998
+|
+|
+9
+| Date not known
+| 1st May 1998
+| 20th January 2002
+|

@@ -1,0 +1,114 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/postcode.htm
+Title: Postcode
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Postcode Postcode
+Change History
+|
+|
+DSCN 10/04 (W)
+| To amend the All Wales Data Dictionary entry for the data term 'Postcode'
+|
+
+For information
+Postcode of address
+Format: 8 character alpha-numeric with 5th character position being blank.
+Format Key – a = alpha character (A-Z); n = numeric character (0-9); a/n = alphanumeric character (A-Z or 0-9).
+Character Position
+| 1
+| 2
+| 3
+| 4
+| 5
+| 6
+| 7
+| 8
+|
+Format
+| a
+| a/n
+| a/n
+| a/n
+| space
+| n
+| a
+| a
+|
+Coding Frame
+| Outward Code
+| space
+| Inward Code
+|
+
+Examples:-
+Character Position
+| Notes
+|
+1
+| 2
+| 3
+| 4
+| 5
+| 6
+| 7
+| 8
+|
+|
+W
+| 9
+|
+|
+|
+| 3
+| X
+| X
+|
+|
+D
+| A
+| 1
+|
+|
+| 5
+| P
+| L
+|
+|
+C
+| F
+| 2
+| 4
+|
+| 0
+| H
+| A
+|
+|
+Z
+| Z
+| 9
+| 9
+|
+| 4
+| L
+| Z
+| Pseudo Postcodes, Defaults and Overseas
+|
+
+Pseudo codes
+There are occasions when the use of a 'pseudo code' is necessary, particularly when dealing with an overseas address. Full details of pseudo country codes and other codes may be obtained from the Office of National Statistics website. Some of the more common pseudo codes are:-
+ZZ99 3VZ
+| No fixed abode
+|
+ZZ99 3CZ
+| England/U.K not otherwise specified
+|
+ZZ99 3GZ
+| Wales not otherwise specified
+|
+ZZ99 1WZ
+| Scotland not otherwise specified
+|
+ZZ99 2WZ
+| Northern Ireland not otherwise specified
+|

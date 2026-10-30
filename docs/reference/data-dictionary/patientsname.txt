@@ -1,0 +1,87 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/patientsname.htm
+Title: Patient's Name
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Patient's Name Patient's Name
+Change History
+|
+|
+DSCN 2025 / 07
+| Referral to Treatment (RTT) Weekly Patient Target List (PTL) Data Set
+|
+DSCN 2025 / 01
+| Audiology Wait Times Data Set
+|
+DSCN 2024 / 12
+| Welsh Emergency Care Data Set
+|
+DSCN 2022 / 06
+| Main Specialty (Consultant) (AMD)
+|
+DSCN 2019 / 09
+| National Cancer Data Standards for Wales – Core
+|
+DSCN 2016 / 02
+| Maternity Indicators Data Set
+|
+DSCN 2015 / 03
+| Radiotherapy Data Set
+|
+
+This data item is / was included in the following data sets / collections between the dates shown:
+
+Data Set / Collection
+| Valid From
+| Valid To
+|
+APC ds99
+| 1st April 1999
+|
+|
+EAL ds
+| 1st April 1999
+| 21st November 2012
+|
+OP ds
+| 1st April 1999
+|
+|
+CC ds
+| 1st April 2007
+|
+|
+OPR ds
+| 1st July 2008
+|
+|
+EDDS
+| 1st April 2009
+|
+|
+RTDS
+| 1st April 2014
+|
+|
+MI ds
+| 1st April 2016
+|
+|
+National Cancer Ds - Core
+|
+|
+|
+WECDS
+| 1st August 2024
+|
+|
+AUD WT ds
+| 1st April 2025
+|
+|
+RTT weekly PTL ds
+| 1st April 2025
+|
+|
+
+This will be the patients preferred name. The patient is the arbiter of his/her/their name.
+Format: either structured with two 35 alpha character elements (forename followed by surname) or an unstructured string of 70 characters. Use block capitals, ignore apostrophes and insert space for hyphen. Enter surname first then as many letters of the first name as possible, leaving a blank box between each part of the name. Double-barrelled surnames should be coded in the same order as in the hospital records. Name Format Code indicates which format is being used.

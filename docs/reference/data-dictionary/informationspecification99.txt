@@ -1,0 +1,239 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/informationspecification99.htm
+Title: Information Specification
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Information Specification Information Specification
+Database Item
+| Definition
+| Database Value Set
+| Format
+| Requirement
+|
+Hospital Name
+| The organisation code for the site where the patient will be or is treated.
+
+For outpatients and MI ds:
+Activity may take place outside the hospital, such as in the patient’s home; in such cases, raising a site code is impractical. The following default codes should be used in the Outpatient ds when required:
+
+R9998 Not a hospital site
+89999 Not applicable: Non-NHS providers where no site code has been requested and issued
+89997 Not applicable: Non-UK provider
+
+Where treatment for an NHS patient is sub-commissioned to an overseas provider the default code 89997 is applicable
+| | 50 Character alpha-numeric
+| Organisation Code (Code of Provider) (wales.nhs.uk)
+
+|
+Ward Name
+| This is the name of the ward the person has been admitted/transferred.
+|
+| 70 character alpha numeric
+| National Mental Health Dataset
+|
+Ward Type
+| This identifies the ward type at start of consultant episode. This is the description of the characteristics of a ward which covers resources available to intended users. A ward is classified according to the characteristics of the majority of beds within it.
+| 06 - Acute
+| 7 Digit numeric
+| http://www.datadictionary.wales.nhs.uk/#!WordDocuments/wardtypeatstartofepisode.htm
+|
+07 - Community
+|
+08 - Mental Health
+|
+09 - Learning Disability
+|
+10 - Rehab
+|
+PAS/File Number
+| This is the case record number. It is a unique identifier for a patient within a health care provider.
+|
+| 10 character alpha-numeric
+| http://www.datadictionary.wales.nhs.uk/#!WordDocuments/localpatientidentifier.htm
+|
+NHS Number
+| It is mandatory to record the NHS Number for each patient registered with a GP practice in England and Wales. The NHS number is allocated to an individual, to enable unique identification for NHS health care purposes.
+This NHS Number format was mandated for use effective 1st November 1997. Prior to this, the NHS Number was an alphanumeric code which ranges in size from 10 – 17 characters.
+If known, the patient’s Health and Care Number should be used to populate this field for patients resident in Northern Ireland.
+If known, the patient’s Community Health Index (CHI) Number should be used to populate this field for patients resident in Scotland.
+|
+| 10 digit numeric
+| http://www.datadictionary.wales.nhs.uk/#!WordDocuments/nhsnumber.htm
+|
+Forename
+| This will be the patient's preferred name. The patient is the arbiter of his/her name.
+|
+| Format: either structured with two 35 alpha character elements (forename followed by surname) or an unstructured string of 70 characters. Use block capitals, ignore apostrophes and insert space for hyphen. Enter surname first then as many letters of the first name as possible, leaving a blank box between each part of the name. Double-barrelled surnames should be coded in the same order as in the hospital records. Name Format Code indicates which format is being used.
+| http://www.datadictionary.wales.nhs.uk/#!WordDocuments/patientsname.htm
+|
+Surname
+|
+Date of Birth
+| Date of birth of patient / client.
+|
+| CCYYMMDD
+| http://www.datadictionary.wales.nhs.uk/#!WordDocuments/birthdate.htm
+|
+Unitary Authority
+| The Local Authority of the client, based on the postcode of their usual place of residence at assessment.
+
+In the event that the client presents with no fixed abode, the code should be that of the local authority in which the agency is located.
+
+Where tier 4 treatment is being provided, the code for the local authority responsible for the referral should be used.
+|
+
+| 4 digit numeric.
+| http://www.datadictionary.wales.nhs.uk/#!WordDocuments/localauthority.htm
+|
+Postcode
+| The postcode applied to the usual address nominated by the patient at the time of admission or attendance.
+|
+| 8 character alpha-numeric.
+| http://www.datadictionary.wales.nhs.uk/#!WordDocuments/postcode.htm
+|
+Address
+| This is the usual address nominated by the patient at the time of admission or attendance. If patients usually reside elsewhere are staying in hotels, hostels or other residential establishments for a short term, say a week, they should be recorded as staying at their usual place of residence. However if long term, such as at boarding school, the school address must be recorded. University students may nominate either their home address or the address of their university accommodation. Where patients are not capable of supplying this information, because of age or mental illness, for example, then the person responsible for the patient, such as a parent or guardian, should nominate the usual address. Patients not able to provide an address should be asked for their most recent address. If this cannot be established then you should record the address as `No fixed abode' or `Address unknown'. These patients are regarded as resident in the local geographical district for contracting purposes. For birth episodes this should refer to the mother's usual place of residence.
+|
+| 175 character alpha-numeric. This is based on 5 lines of 35 characters. This relates to the physical layout of the address, not the logical layout and does not require intelligent intervention when splitting the text string into lines.
+Prior to April 1999 the PEDW Format: 100 character alpha-numeric. This is based on 4 lines of 25 characters. This relates to the physical layout of the address, not the logical layout.
+| http://www.datadictionary.wales.nhs.uk/#!WordDocuments/patientsusualaddress.htm
+|
+Registered GP
+| This is the Department of Health's code for the GP
+|
+| 8 Character alpha Numeric - GNNNNNNN
+| http://www.datadictionary.wales.nhs.uk/#!WordDocuments/gpcode.htm
+|
+Consultant
+| Nationally agreed form for consultant code or Independent Nurse. It is the General Medical Council (GMC) code for the Consultant or the GP acting as a Consultant or locum Consultant, which is the unique identifier. The nurse's Registration Number will be used to identify the Independent Nurse
+|
+| 8 Character alpha-numeric.
+| http://www.datadictionary.wales.nhs.uk/#!WordDocuments/consultantcode.htm
+|
+Admission Date
+| This is the beginning of a hospital provider spell, or the date of admission. The consultant has assumed responsibility for care following the decision to admit the patient. This may be before formal admission procedures have been completed and the patient is transferred to a ward
+|
+| 8 digit numeric, CCYYMMDD
+| http://www.datadictionary.wales.nhs.uk/#!WordDocuments/startdateofproviderspell.htm
+|
+Principal Reason for Delay
+|
+|
+|
+|
+|
+Category
+| The status of a patient on admission after clinical assessment.
+| 1 - Awaiting Transfer on to D2RA Or to Another pathway
+| Alpha Numeric
+| 6 Goals Programme
+|
+3 -Awaiting Discharge, Not Requiring D2RA Pathways
+|
+2- Awaiting Transfer out of D2RA Pathways
+|
+0 - None
+|
+Reason
+| Reference the different pathways within Discharge to Recover then Assess.
+| (See reason code list attached)
+| 7 Character Alpha-numeric
+| 6 Goals Programme
+|
+Local Authority Details
+|
+|
+|
+|
+|
+Does Delay Require Local Authority involvement
+| Decision regarding whether patient needs/requires LA input to aid discharge.
+| 01 -Yes
+| 3 Character
+| 6 Goals programme
+|
+02 - No
+|
+LA Reference Number
+| Locally Derived Local Authority Reference number.
+|
+| Alpha Numeric
+|
+|
+Referral Date
+| Date of Referral for Local Authority Involvement
+|
+| 8 digit numeric, CCYYMMDD
+| 6 Goals programme
+|
+Validated Date
+| Date information validated by Authorised person(s)
+|
+| 8 digit numeric, CCYYMMDD
+| 6 Goals programme
+|
+Validated by (Health Board)
+| Name of Authorised Person
+|
+| 35 Character
+|
+|
+Validated by (Social Services)
+| Name of Authorised Person
+|
+| 35 Character
+|
+|
+Reason for no Validation
+| Explanation of why no validation occurred.
+|
+| Free Text
+|
+|
+Discharge Details
+|
+|
+|
+|
+|
+Clinically Optimised date
+| The date a clinical decision has been made by the registered professional(s) that the patient is ready for transfer or discharge
+|
+| 8 character numeric CCYYMMDD
+| 6 Goals Programme
+|
+Current Speciality
+| Clinical Speciality that is providing the patient’s care.
+|
+| 3 Digit Numeric
+| http://www.datadictionary.wales.nhs.uk/#!WordDocuments/treatmentfunctioncode.htm
+|
+Likely Residence Post Discharge
+| The classification of where a patient is sent on completion of a hospital provider spell, or a note that the patient died or was a still birth.
+| | 2 Character numeric
+| http://www.datadictionary.wales.nhs.uk/#!WordDocuments/dischargedestination.htm
+|
+Actual Discharge Date
+| Date of discharge from the Hospital Provider Spell. The date on which a patient dies or is discharged from a continuous spell of care using the hospital bed(s) within a single hospital provider. Identical to the end date of the last consultant episode of care and ward stay within a hospital provider spell.
+Discharge Date Status is associated with this data item and should be used to indicate whether Discharge Date is supplied or is not applicable.
+|
+| 8 character numeric CCYYMMDD
+| http://www.datadictionary.wales.nhs.uk/#!WordDocuments/dischargedate.htm
+|
+Reason no longer Delayed
+| This is the reason why the patient is no longer a Pathway of Care Delay
+| 0 - Not Discharged - still a delay
+| 1 Alpha Numeric
+| 6 Goals Programme
+|
+1 -Discharge
+|
+2 - Death
+|
+3 - Transfer to another hospital within the Trust
+|
+4 - Transfer to another Trust
+|
+5 - Transfer - Other
+|
+6 - No longer clinically fit for discharge
+|

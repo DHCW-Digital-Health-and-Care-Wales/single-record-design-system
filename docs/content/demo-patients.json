@@ -1,0 +1,597 @@
+{
+  "asOf": "2026-10-30",
+  "source": "scripts/demo-patients.mjs",
+  "rules": "docs/content/data-standards.md",
+  "patients": [
+    {
+      "id": "ruby-adams",
+      "tests": "Child. The patient already used in the mobile designs.",
+      "stored": {
+        "nhsNumber": "9990000018",
+        "crn": "A000101A",
+        "title": "Miss",
+        "surname": "ADAMS",
+        "forenames": "Ruby",
+        "dateOfBirth": "2014-10-03",
+        "sex": "F",
+        "genderIdentity": "F",
+        "maritalStatus": null,
+        "ethnicGroup": "A",
+        "preferredLanguage": "English",
+        "interpreterRequired": false,
+        "address": [
+          "7 Pearse Close",
+          "Bullion Drive",
+          "Cardiff"
+        ],
+        "postcode": "CF14 2AB",
+        "phones": {
+          "mobile": "07700 900123",
+          "home": "029 2018 0001"
+        },
+        "email": null,
+        "gpPracticeCode": "W99001"
+      },
+      "display": {
+        "name": "ADAMS, Ruby (Miss)",
+        "nhsNumber": "999 000 0018",
+        "crn": "CRN A000101A",
+        "dateOfBirth": "3 Oct 2014 (12 years)",
+        "sex": "Female",
+        "genderIdentity": "Female",
+        "maritalStatus": "Not recorded",
+        "ethnicGroup": "White: Welsh, English, Scottish, Northern Irish, British or Irish",
+        "preferredLanguage": "English",
+        "interpreter": "Not required",
+        "address": [
+          "7 Pearse Close",
+          "Bullion Drive",
+          "Cardiff",
+          "CF14 2AB"
+        ],
+        "mobile": "07700 900123",
+        "homePhone": "029 2018 0001",
+        "email": "Not recorded",
+        "gp": {
+          "name": "Dr Sian JONES",
+          "practice": "Llandaff North Medical Centre (W99001)",
+          "phone": "029 2018 0100",
+          "address": [
+            "12 Station Road",
+            "Cardiff",
+            "CF14 2FB"
+          ]
+        }
+      }
+    },
+    {
+      "id": "llyr-ap-gruffudd",
+      "tests": "Welsh name with a lower-case particle and a circumflex. Welsh as preferred language. House name with no number.",
+      "stored": {
+        "nhsNumber": "9990000026",
+        "crn": "B000202B",
+        "title": "Mr",
+        "surname": "ap GRUFFUDD",
+        "forenames": "Llŷr Owain",
+        "dateOfBirth": "1958-02-14",
+        "sex": "M",
+        "genderIdentity": "M",
+        "maritalStatus": "21",
+        "ethnicGroup": "A",
+        "preferredLanguage": "Welsh",
+        "interpreterRequired": false,
+        "address": [
+          "Bryn Teg",
+          "Ffordd y Môr",
+          "Aberystwyth"
+        ],
+        "postcode": "SY23 1AB",
+        "phones": {
+          "mobile": "07700 900234",
+          "home": null
+        },
+        "email": null,
+        "gpPracticeCode": "W99002"
+      },
+      "display": {
+        "name": "ap GRUFFUDD, Llŷr Owain (Mr)",
+        "nhsNumber": "999 000 0026",
+        "crn": "CRN B000202B",
+        "dateOfBirth": "14 Feb 1958 (68 years)",
+        "sex": "Male",
+        "genderIdentity": "Male",
+        "maritalStatus": "Married",
+        "ethnicGroup": "White: Welsh, English, Scottish, Northern Irish, British or Irish",
+        "preferredLanguage": "Welsh",
+        "interpreter": "Not required",
+        "address": [
+          "Bryn Teg",
+          "Ffordd y Môr",
+          "Aberystwyth",
+          "SY23 1AB"
+        ],
+        "mobile": "07700 900234",
+        "homePhone": "Not recorded",
+        "email": "Not recorded",
+        "gp": {
+          "name": "Dr Rhodri LEWIS",
+          "practice": "Canolfan Iechyd Aberystwyth (W99002)",
+          "phone": "029 2018 0200",
+          "address": [
+            "Ffordd y Parc",
+            "Aberystwyth",
+            "SY23 2AB"
+          ]
+        }
+      }
+    },
+    {
+      "id": "sian-obrien",
+      "tests": "Apostrophe in the surname and an accent in the forename, both kept on screen.",
+      "stored": {
+        "nhsNumber": "9990000034",
+        "crn": "C000303C",
+        "title": "Mrs",
+        "surname": "O'BRIEN",
+        "forenames": "Siân",
+        "dateOfBirth": "1979-07-22",
+        "sex": "F",
+        "genderIdentity": "F",
+        "maritalStatus": "21",
+        "ethnicGroup": "A",
+        "preferredLanguage": "English",
+        "interpreterRequired": false,
+        "address": [
+          "14 Heol y Coed",
+          "Newport"
+        ],
+        "postcode": "NP20 4AB",
+        "phones": {
+          "mobile": "07700 900345",
+          "home": "029 2018 0003"
+        },
+        "email": "sian.obrien@example.com",
+        "gpPracticeCode": "W99003"
+      },
+      "display": {
+        "name": "O'BRIEN, Siân (Mrs)",
+        "nhsNumber": "999 000 0034",
+        "crn": "CRN C000303C",
+        "dateOfBirth": "22 Jul 1979 (47 years)",
+        "sex": "Female",
+        "genderIdentity": "Female",
+        "maritalStatus": "Married",
+        "ethnicGroup": "White: Welsh, English, Scottish, Northern Irish, British or Irish",
+        "preferredLanguage": "English",
+        "interpreter": "Not required",
+        "address": [
+          "14 Heol y Coed",
+          "Newport",
+          "NP20 4AB"
+        ],
+        "mobile": "07700 900345",
+        "homePhone": "029 2018 0003",
+        "email": "sian.obrien@example.com",
+        "gp": {
+          "name": "Dr Amira HASSAN",
+          "practice": "Malpas Road Surgery (W99003)",
+          "phone": "029 2018 0300",
+          "address": [
+            "80 Malpas Road",
+            "Newport",
+            "NP20 5AB"
+          ]
+        }
+      }
+    },
+    {
+      "id": "mari-jones-davies",
+      "tests": "Double-barrelled surname. Flat as the first address line.",
+      "stored": {
+        "nhsNumber": "9990000042",
+        "crn": "D000404D",
+        "title": "Ms",
+        "surname": "JONES-DAVIES",
+        "forenames": "Mari Elin",
+        "dateOfBirth": "1990-01-01",
+        "sex": "F",
+        "genderIdentity": "F",
+        "maritalStatus": "11",
+        "ethnicGroup": "A",
+        "preferredLanguage": "English",
+        "interpreterRequired": false,
+        "address": [
+          "Flat 3",
+          "22 Walter Road",
+          "Swansea"
+        ],
+        "postcode": "SA1 5AB",
+        "phones": {
+          "mobile": "07700 900456",
+          "home": null
+        },
+        "email": null,
+        "gpPracticeCode": "W99004"
+      },
+      "display": {
+        "name": "JONES-DAVIES, Mari Elin (Ms)",
+        "nhsNumber": "999 000 0042",
+        "crn": "CRN D000404D",
+        "dateOfBirth": "1 Jan 1990 (36 years)",
+        "sex": "Female",
+        "genderIdentity": "Female",
+        "maritalStatus": "Single",
+        "ethnicGroup": "White: Welsh, English, Scottish, Northern Irish, British or Irish",
+        "preferredLanguage": "English",
+        "interpreter": "Not required",
+        "address": [
+          "Flat 3",
+          "22 Walter Road",
+          "Swansea",
+          "SA1 5AB"
+        ],
+        "mobile": "07700 900456",
+        "homePhone": "Not recorded",
+        "email": "Not recorded",
+        "gp": {
+          "name": "Dr Tom WATKINS",
+          "practice": "Uplands Health Centre (W99004)",
+          "phone": "029 2018 0400",
+          "address": [
+            "3 Gwydr Square",
+            "Swansea",
+            "SA2 0AB"
+          ]
+        }
+      }
+    },
+    {
+      "id": "thi-lan-nguyen",
+      "tests": "Needs an interpreter. Widowed.",
+      "stored": {
+        "nhsNumber": "9990000050",
+        "crn": "A000505A",
+        "title": "Mrs",
+        "surname": "NGUYEN",
+        "forenames": "Thi Lan",
+        "dateOfBirth": "1966-09-09",
+        "sex": "F",
+        "genderIdentity": "F",
+        "maritalStatus": "41",
+        "ethnicGroup": "L",
+        "preferredLanguage": "Vietnamese",
+        "interpreterRequired": true,
+        "address": [
+          "31 Clifton Street",
+          "Cardiff"
+        ],
+        "postcode": "CF24 1AB",
+        "phones": {
+          "mobile": "07700 900567",
+          "home": null
+        },
+        "email": null,
+        "gpPracticeCode": "W99001"
+      },
+      "display": {
+        "name": "NGUYEN, Thi Lan (Mrs)",
+        "nhsNumber": "999 000 0050",
+        "crn": "CRN A000505A",
+        "dateOfBirth": "9 Sep 1966 (60 years)",
+        "sex": "Female",
+        "genderIdentity": "Female",
+        "maritalStatus": "Widowed",
+        "ethnicGroup": "Any other Asian background",
+        "preferredLanguage": "Vietnamese",
+        "interpreter": "Interpreter required",
+        "address": [
+          "31 Clifton Street",
+          "Cardiff",
+          "CF24 1AB"
+        ],
+        "mobile": "07700 900567",
+        "homePhone": "Not recorded",
+        "email": "Not recorded",
+        "gp": {
+          "name": "Dr Sian JONES",
+          "practice": "Llandaff North Medical Centre (W99001)",
+          "phone": "029 2018 0100",
+          "address": [
+            "12 Station Road",
+            "Cardiff",
+            "CF14 2FB"
+          ]
+        }
+      }
+    },
+    {
+      "id": "imran-khan",
+      "tests": "Short name, every field filled: the control case.",
+      "stored": {
+        "nhsNumber": "9990000069",
+        "crn": "A000606A",
+        "title": "Mr",
+        "surname": "KHAN",
+        "forenames": "Imran",
+        "dateOfBirth": "1984-11-30",
+        "sex": "M",
+        "genderIdentity": "M",
+        "maritalStatus": "21",
+        "ethnicGroup": "J",
+        "preferredLanguage": "English",
+        "interpreterRequired": false,
+        "address": [
+          "5 Queen Street",
+          "Cardiff"
+        ],
+        "postcode": "CF10 2AB",
+        "phones": {
+          "mobile": "07700 900678",
+          "home": "029 2018 0006"
+        },
+        "email": "imran.khan@example.com",
+        "gpPracticeCode": "W99001"
+      },
+      "display": {
+        "name": "KHAN, Imran (Mr)",
+        "nhsNumber": "999 000 0069",
+        "crn": "CRN A000606A",
+        "dateOfBirth": "30 Nov 1984 (41 years)",
+        "sex": "Male",
+        "genderIdentity": "Male",
+        "maritalStatus": "Married",
+        "ethnicGroup": "Pakistani",
+        "preferredLanguage": "English",
+        "interpreter": "Not required",
+        "address": [
+          "5 Queen Street",
+          "Cardiff",
+          "CF10 2AB"
+        ],
+        "mobile": "07700 900678",
+        "homePhone": "029 2018 0006",
+        "email": "imran.khan@example.com",
+        "gp": {
+          "name": "Dr Sian JONES",
+          "practice": "Llandaff North Medical Centre (W99001)",
+          "phone": "029 2018 0100",
+          "address": [
+            "12 Station Road",
+            "Cardiff",
+            "CF14 2FB"
+          ]
+        }
+      }
+    },
+    {
+      "id": "alex-morgan",
+      "tests": "Non-binary gender identity, title Mx. Sex is not held in the demographic record (Core Reference Data: stored separately).",
+      "stored": {
+        "nhsNumber": "9990000085",
+        "crn": "D000808D",
+        "title": "Mx",
+        "surname": "MORGAN",
+        "forenames": "Alex",
+        "dateOfBirth": "2001-05-17",
+        "sex": null,
+        "genderIdentity": "N",
+        "maritalStatus": "11",
+        "ethnicGroup": "D",
+        "preferredLanguage": "English",
+        "interpreterRequired": false,
+        "address": [
+          "9 High Street",
+          "Bridgend"
+        ],
+        "postcode": "CF31 1AB",
+        "phones": {
+          "mobile": "07700 900789",
+          "home": null
+        },
+        "email": null,
+        "gpPracticeCode": "W99004"
+      },
+      "display": {
+        "name": "MORGAN, Alex (Mx)",
+        "nhsNumber": "999 000 0085",
+        "crn": "CRN D000808D",
+        "dateOfBirth": "17 May 2001 (25 years)",
+        "sex": null,
+        "genderIdentity": "Non-binary",
+        "maritalStatus": "Single",
+        "ethnicGroup": "White and Black Caribbean",
+        "preferredLanguage": "English",
+        "interpreter": "Not required",
+        "address": [
+          "9 High Street",
+          "Bridgend",
+          "CF31 1AB"
+        ],
+        "mobile": "07700 900789",
+        "homePhone": "Not recorded",
+        "email": "Not recorded",
+        "gp": {
+          "name": "Dr Tom WATKINS",
+          "practice": "Uplands Health Centre (W99004)",
+          "phone": "029 2018 0400",
+          "address": [
+            "3 Gwydr Square",
+            "Swansea",
+            "SA2 0AB"
+          ]
+        }
+      }
+    },
+    {
+      "id": "gwyneth-price",
+      "tests": "Aged over 90. No mobile number.",
+      "stored": {
+        "nhsNumber": "9990000093",
+        "crn": "B000909B",
+        "title": "Mrs",
+        "surname": "PRICE",
+        "forenames": "Gwyneth",
+        "dateOfBirth": "1931-03-02",
+        "sex": "F",
+        "genderIdentity": "F",
+        "maritalStatus": "41",
+        "ethnicGroup": "A",
+        "preferredLanguage": "Welsh",
+        "interpreterRequired": false,
+        "address": [
+          "Ty Gwyn",
+          "Heol Llanfaes",
+          "Brecon"
+        ],
+        "postcode": "LD3 8AB",
+        "phones": {
+          "mobile": null,
+          "home": "029 2018 0009"
+        },
+        "email": null,
+        "gpPracticeCode": "W99002"
+      },
+      "display": {
+        "name": "PRICE, Gwyneth (Mrs)",
+        "nhsNumber": "999 000 0093",
+        "crn": "CRN B000909B",
+        "dateOfBirth": "2 Mar 1931 (95 years)",
+        "sex": "Female",
+        "genderIdentity": "Female",
+        "maritalStatus": "Widowed",
+        "ethnicGroup": "White: Welsh, English, Scottish, Northern Irish, British or Irish",
+        "preferredLanguage": "Welsh",
+        "interpreter": "Not required",
+        "address": [
+          "Ty Gwyn",
+          "Heol Llanfaes",
+          "Brecon",
+          "LD3 8AB"
+        ],
+        "mobile": "Not recorded",
+        "homePhone": "029 2018 0009",
+        "email": "Not recorded",
+        "gp": {
+          "name": "Dr Rhodri LEWIS",
+          "practice": "Canolfan Iechyd Aberystwyth (W99002)",
+          "phone": "029 2018 0200",
+          "address": [
+            "Ffordd y Parc",
+            "Aberystwyth",
+            "SY23 2AB"
+          ]
+        }
+      }
+    },
+    {
+      "id": "elizabeth-hughes-ap-rhys",
+      "tests": "Long name: tests wrapping and truncation (truncate forenames, never the surname). Five address lines, the maximum.",
+      "stored": {
+        "nhsNumber": "9990000107",
+        "crn": "C001010C",
+        "title": "Dr",
+        "surname": "HUGHES-AP RHYS",
+        "forenames": "Elizabeth Anne Gwenllian Margaret",
+        "dateOfBirth": "1962-12-12",
+        "sex": "F",
+        "genderIdentity": "F",
+        "maritalStatus": "31",
+        "ethnicGroup": "A",
+        "preferredLanguage": "English",
+        "interpreterRequired": false,
+        "address": [
+          "Apartment 12",
+          "Celestia",
+          "Mermaid Quay",
+          "Cardiff Bay",
+          "Cardiff"
+        ],
+        "postcode": "CF10 5AB",
+        "phones": {
+          "mobile": "07700 900890",
+          "home": null
+        },
+        "email": "e.hughes-aprhys@example.com",
+        "gpPracticeCode": "W99001"
+      },
+      "display": {
+        "name": "HUGHES-AP RHYS, Elizabeth Anne Gwenllian Margaret (Dr)",
+        "nhsNumber": "999 000 0107",
+        "crn": "CRN C001010C",
+        "dateOfBirth": "12 Dec 1962 (63 years)",
+        "sex": "Female",
+        "genderIdentity": "Female",
+        "maritalStatus": "Divorced",
+        "ethnicGroup": "White: Welsh, English, Scottish, Northern Irish, British or Irish",
+        "preferredLanguage": "English",
+        "interpreter": "Not required",
+        "address": [
+          "Apartment 12",
+          "Celestia",
+          "Mermaid Quay",
+          "Cardiff Bay",
+          "Cardiff",
+          "CF10 5AB"
+        ],
+        "mobile": "07700 900890",
+        "homePhone": "Not recorded",
+        "email": "e.hughes-aprhys@example.com",
+        "gp": {
+          "name": "Dr Sian JONES",
+          "practice": "Llandaff North Medical Centre (W99001)",
+          "phone": "029 2018 0100",
+          "address": [
+            "12 Station Road",
+            "Cardiff",
+            "CF14 2FB"
+          ]
+        }
+      }
+    },
+    {
+      "id": "daniel-evans",
+      "tests": "Unknowns: no fixed abode, date of birth not known, no GP, no title, nothing to contact. Every empty value must read \"Not known\" or \"Not recorded\", never a blank.",
+      "stored": {
+        "nhsNumber": "9990000115",
+        "crn": "A001111A",
+        "title": null,
+        "surname": "EVANS",
+        "forenames": "Daniel",
+        "dateOfBirth": null,
+        "sex": "M",
+        "genderIdentity": "Z",
+        "maritalStatus": "91",
+        "ethnicGroup": "Z",
+        "preferredLanguage": null,
+        "interpreterRequired": false,
+        "address": [],
+        "postcode": "ZZ99 3VZ",
+        "phones": {
+          "mobile": null,
+          "home": null
+        },
+        "email": null,
+        "gpPracticeCode": null
+      },
+      "display": {
+        "name": "EVANS, Daniel",
+        "nhsNumber": "999 000 0115",
+        "crn": "CRN A001111A",
+        "dateOfBirth": "Not known",
+        "sex": "Male",
+        "genderIdentity": "Not disclosed or unknown",
+        "maritalStatus": "Not disclosed or unknown",
+        "ethnicGroup": "Not stated",
+        "preferredLanguage": "Not known",
+        "interpreter": "Not required",
+        "address": [
+          "No fixed abode"
+        ],
+        "mobile": "Not recorded",
+        "homePhone": "Not recorded",
+        "email": "Not recorded",
+        "gp": "Not recorded"
+      }
+    }
+  ]
+}

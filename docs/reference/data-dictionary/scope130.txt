@@ -1,0 +1,14 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/scope130.htm
+Title: Scope
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Scope Scope
+The scope is limited to addressograph labels used on patient notes included INSIDE the casenotes.
+The Standard does not apply to the tracking label on the front cover of the casenotes, or other instances where patient labels may be used e.g. sample labels, tags, wristbands etc.
+
+The scope extends to all national systems supported by the NHS Wales Informatics Service (NWIS) that have the facility to print addressograph labels, as well as any local systems used for this purpose, namely:
+• Welsh Patient Administration System (WPAS)
+• Welsh Clinical Portal (WCP)
+• Welsh Radiology Information System (WRIS)
+• CaNISC and
+• All local systems within health boards that have the ability to print addressograph labels.

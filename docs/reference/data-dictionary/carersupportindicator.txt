@@ -1,0 +1,48 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/carersupportindicator.htm
+Title: Carer Support Indicator
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Carer Support Indicator Carer Support Indicator
+Change History
+|
+|
+DSCN 2012 / 11
+| Elective Admission List Data Set (EAL Ds)
+|
+DSCN 2010 / 06
+| Outpatient Activity Minimum Data Set (OP MDS) Data Validity Standards
+|
+
+This data item is / was included in the following data sets / collections between the dates shown:
+
+Data Set / Collection
+| Valid From
+| Valid To
+|
+EAL ds
+| 1st April 1999
+| 21st November 2012
+|
+OP ds
+| 1st April 1999
+|
+|
+
+An indication of whether or not care is available to the patient at their normal residence. This does not include any paid support or support from a voluntary organisation, unless the patient is normally resident in a Nursing Home, Group Home or Residential Care Home.
+
+Format: 2 character alpha-numeric
+Value
+| Meaning
+| Valid From
+| Valid To
+|
+01
+| Yes
+| 1st April 1999
+|
+|
+02
+| No
+| 1st April 1999
+|
+|

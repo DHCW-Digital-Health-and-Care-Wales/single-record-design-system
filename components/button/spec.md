@@ -21,7 +21,7 @@ Triggers an action. The most fundamental interactive component in the system.
 | Warning | Destructive or irreversible action — delete, override |
 | Destructive | Permanent data deletion — requires confirmation pattern |
 | Icon + label | Action with supporting icon for faster recognition |
-| Icon only | Toolbar or space-constrained actions — must have accessible name |
+| Icon only | Toolbar or space-constrained actions — must have accessible name. Icon 24px on desktop, 32px on mobile, in a 44 × 44 target: see `foundations/iconography.md`, Icons as buttons |
 
 ---
 

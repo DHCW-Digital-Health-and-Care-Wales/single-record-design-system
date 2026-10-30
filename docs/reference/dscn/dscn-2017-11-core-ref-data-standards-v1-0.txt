@@ -1,0 +1,1372 @@
+Source: https://dhcw.nhs.wales/information-services/information-standards/data-standards/data-standards-files/data-standard-change-notices-docs/dscns-2017/20171222-dscn-2017-11-core-ref-data-standards-v1-0-pdf/
+Retrieved: 2026-10-30 (text extracted with pdftotext -layout)
+
+               WELSH INFORMATION STANDARDS BOARD
+                                                    DSC Notice:       DSCN 2017/11
+                                                    Date of Issue:    22nd December 2017
+
+Welsh Health Circular / Official Letter:            Subject: Core Reference Data Standards
+
+
+Sponsor: Chris Newbrook, Digital Development
+Manager, Welsh Government
+
+Effective from: 22nd December 2017
+
+All systems in procurement, or for future
+procurement, MUST comply with this Standard
+with immediate effect.
+
+
+
+                          DATA STANDARD CHANGE NOTICE
+
+   A Data Standard Change Notice (DSCN) is an information mandate for a new or revised
+                                  information standard.
+
+This DSCN was approved by the Welsh Information Standards Board (WISB) out of committee
+                               on 22nd December 2017
+
+WISB Reference: ISRN 2017 / 012
+
+Summary:
+
+This Standard has been designed to provide national operational standards for the use of core
+demographics and reference data and was developed in recognition of the need to standardise
+the reference data associated with data items. It is a key enabler to ensure effective capture
+and communication of core reference data items.
+
+Applies to:
+
+This Standard applies to all bodies that commission or provide health and care services in
+Wales in partnership with the NHS including their relevant system suppliers.
+
+
+Please address enquiries about this Data Standard Change Notice to the Data Standards Team
+                              in NHS Wales Informatics Service
+
+                 E-mail: data.standards@wales.nhs.uk / Tel: 029 2050 2539
+
+
+
+
+  DSCN 2017 / 11                     Page 1 of 29
+The Welsh Information Standards Board is responsible for appraising information standards.
+Submission documents and WISB Outcomes relating to the approval of this standard can be
+                                       found at:
+
+            http://howis.wales.nhs.uk/sites3/page.cfm?orgid=742&pid=24632
+
+
+
+
+DSCN 2017 / 11                    Page 2 of 29
+                           DATA STANDARD CHANGE NOTICE
+
+Introduction
+
+This Standard has been designed to provide national operational standards for the use of core
+demographics and reference data and was developed in recognition of the need to
+standardise the reference data associated with data items describing:
+     a patient’s demographics, such as their sex, religion and ethnicity;
+     the organisations and individuals involved in their healthcare, such as the provider and
+       site details, the GP and their practice, and the consultant/nurse/AHP; and
+     the specialty of the consultant and treatment.
+
+Patient demographic information is held centrally using the Enterprise Master Patient Index
+(eMPI). This takes messages from a variety of electronic systems in order to maintain a
+current record of each patient’s demographics. This is then used to feed other systems to
+ensure that these systems contain the most up-to-date information.
+
+The eMPI contains mappings associated with each system to enable these messages to be
+understood in the context of each system’s local reference data. This consumes vast volumes
+of resources and storage space. Increased applications of the eMPI will cause exponential
+maintenance issues and will ultimately result in a level of performance which will restrict its
+use.
+
+Work has been undertaken in parallel to develop standards to enable the consistent recording
+of information across services and organisations in both health and social care. It was
+recognised that in developing standards for use in community care information through the
+Welsh Community Care Information System (WCCIS), there was an opportunity to develop
+national standards designed to apply to other national systems, and local systems that are
+linked to them.
+
+These core reference data items and their attributes are defined in the Information Specification
+section of this DSCN. This is held and maintained centrally by the NHS Wales Informatics
+Service    and    distributed   via   the     Welsh    Reference      Data    Service   (WRDS)
+(http://wrds.wales.nhs.uk/).
+
+
+Scope
+
+The Core Reference Data Standards are fundamental to the creation and maintenance of
+accurate patient information. They are used in both local and national systems, and will be
+present in any new systems procured and developed to manage patient records.
+
+It is recognised that that this is a small set of data items in relation to the number of items of
+data collected within a patient record, however, this should be viewed as the beginning of the
+process to develop national operational standards in other aspects of patient records.
+
+Whilst it is acknowledged that the implementation of this Standard will be a challenging
+undertaking, this mandate is designed to focus on the information aspect of this Standard as
+opposed to the challenges involved in its implementation
+
+All NHS Wales systems in procurement, or for future procurement must adhere to this
+Standard with immediate effect.
+
+All systems that currently support the data items outlined in this Standard will be managed
+via a separate proposal that will deal with implementation.
+
+
+
+
+DSCN 2017 / 11                      Page 3 of 29
+Description of Change
+
+To implement core reference data standards and set out how information for the data items
+outlined should be recorded in systems.
+
+
+Data Dictionary Version
+
+Where applicable, this DSCN reflects changes introduced by DSCN and/or DDCN since the
+release of version 4.9 of the NHS Wales Data Dictionary.
+
+The changes introduced by such DSCNs will be published in version 4.10 of the NHS Wales
+Data Dictionary.
+
+
+Actions Required
+
+Local Health Boards / Trust:
+
+Ensure that any new information system procured adheres to this Standard with immediate
+effect.
+
+
+NHS Wales Informatics Service:
+
+      Ensure that any NHS Wales systems in procurement, or for future procurement
+       adheres to this Standard with immediate effect.
+
+      Define requirements associated with the implementation of this Standard by any
+       system that currently supports the data items outlined within.
+
+      Develop WRDS to enable the maintenance and distribution of Core Reference Data
+       centrally.
+
+
+
+
+DSCN 2017 / 11                     Page 4 of 29
+Information Specification
+
+Person Demographics
+
+Religion
+
+The religious or other belief system affiliation of a person, as specified by the person.
+Where applicable, religious or other belief system affiliation code is aligned with descriptors
+for religious and other belief system affiliations in SNOMED CT® as follows:
+the SNOMED CT Subset:
+◦        original ID is 10791000000130 and
+◦        name is Religious or Other Belief System Affiliation.
+Note:
+Where the person has been asked for their religious or other belief system affiliation but
+they are unsure what it is: Agnostic should be used
+**       Where the person has been asked for their religious or other belief system affiliation
+and it is one that is not listed: Religion (Other Not Listed) should be used
+***      Where the person has not been asked for their religious or other belief system
+affiliation: Patient Religion Unknown should be used
+
+
+
+
+DSCN 2017 / 11                     Page 5 of 29
+                  Code   Description
+      Baha'i
+                  A1     Baha'i
+      Buddhist
+                  B1     Buddhist
+                  B2     Mahayana Buddhist
+                  B3     New Kadampa Tradition Buddhist
+                  B4     Nichiren Buddhist
+                  B5     Pure Land Buddhist
+                  B6     Theravada Buddhist
+                  B7     Tibetan Buddhist
+                  B8     Zen Buddhist
+      Christian
+                  C1     Christian
+                  C2     Amish
+                  C3     Anabaptist
+                  C4     Anglican
+                  C5     Apostolic Pentecostalist
+                  C6     Armenian Catholic
+                  C7     Armenian Orthodox
+                  C8     Baptist
+                  C9     Brethren
+                  C10    Bulgarian Orthodox
+                  C11    Calvinist
+                  C12    Catholic: Not Roman Catholic
+                  C13    Celtic Christian
+                  C14    Celtic Orthodox Christian
+                  C15    Chinese Evangelical Christian
+                  C16    Christadelphian
+                  C17    Christian Existentialist
+                  C18    Christian Humanist
+                  C19    Christian Scientists
+                  C20    Christian Spiritualist
+                  C21    Church in Wales
+                  C22    Church of England
+                  C23    Church of God of Prophecy
+                  C24    Church of Ireland
+                  C25    Church of Scotland
+                  C26    Congregationalist
+                  C27    Coptic Orthodox
+                  C28    Eastern Catholic
+                  C29    Eastern Orthodox
+                  C30    Elim Pentecostalist
+                  C31    Ethiopian Orthodox
+                  C32    Evangelical Christian
+                  C33    Exclusive Brethren
+                  C34    Free Church
+
+
+
+DSCN 2017 / 11            Page 6 of 29
+                 C35   Free Church of Scotland
+                 C36   Free Evangelical Presbyterian
+                 C37   Free Methodist
+                 C38   Free Presbyterian
+                 C39   French Protestant
+                 C40   Greek Catholic
+                 C41   Greek Orthodox
+                 C42   Independent Methodist
+                 C43   Indian Orthodox
+                 C44   Jehovah's Witness
+                 C45   Judaic Christian
+                 C46   Lutheran
+                 C47   Mennonite
+                 C48   Messianic Jew
+                 C49   Methodist
+                 C50   Moravian
+                 C51   Mormon
+                 C52   Nazarene Church, Synonym: Nazarene
+                 C53   New Testament Pentacostalist
+                 C54   Nonconformist
+                 C55   Old Catholic
+                 C56   Open Brethren
+                 C57   Orthodox Christian
+                 C58   Pentecostalist, Synonym: Pentacostal Christian
+                 C59   Presbyterian
+                 C60   Protestant
+                 C61   Plymouth Brethren
+                 C62   Quaker
+                 C63   Rastafari
+                 C64   Reformed Christian
+                 C65   Reformed Presbyterian
+                 C66   Reformed Protestant
+                 C67   Roman Catholic
+                 C68   Romanian Orthodox
+                 C69   Russian Orthodox
+                 C70   Salvation Army Member
+                 C71   Scottish Episcopalian
+                 C72   Serbian Orthodox
+                 C73   Seventh Day Adventist
+                 C74   Syrian Orthodox
+                 C75   Ukrainian Catholic
+                 C76   Ukrainian Orthodox
+                 C77   Uniate Catholic
+                 C78   Unitarian
+                 C79   United Reform
+                 C80   Zwinglian
+
+
+
+
+DSCN 2017 / 11          Page 7 of 29
+      Hindu
+                    D1   Hindu
+                    D2   Advaitin Hindu
+                    D3   Arya Samaj Hindu
+                    D4   Shakti Hindu
+                    D5   Shiva Hindu
+                    D6   Vaishnava Hindu, Synonym: Hare Krishna
+
+      Jain
+                    E1   Jain
+
+      Jewish
+                    F1   Jewish
+                    F2   Ashkenazi Jew
+                    F3   Haredi Jew
+                    F4   Hasidic Jew
+                    F5   Liberal Jew
+                    F6   Masorti Jew
+                    F7   Orthodox Jew
+                    F8   Reform Jew
+
+      Muslim
+                    G1   Muslim
+                    G2   Ahmadi
+                    G3   Druze
+                    G4   Ismaili Muslim
+                    G5   Shi'ite Muslim
+                    G6   Sunni Muslim
+
+      Pagan
+                    H1   Pagan
+                    H2   Asatruar
+                    H3   Celtic Pagan
+                    H4   Druid
+                    H5   Goddess
+                    H6   Heathen
+                    H7   Occultist
+                    H8   Shaman
+                    H9   Wiccan
+
+      Sikh
+                    I1   Sikh
+
+      Zoroastrian
+                    J1   Zoroastrian
+
+      Other
+
+
+
+DSCN 2017 / 11            Page 8 of 29
+                     K1      Agnostic *
+                     K2      Ancestral Worship
+                     K3      Animist
+                     K4      Anthroposophist
+                     K5      Black Magic
+                     K6      Brahma Kumari
+                     K7      British Israelite
+                     K8      Chondogyo
+                     K9      Confucianist
+                     K10     Deist
+                     K11     Humanist
+                     K12     Infinite Way
+                     K13     Kabbalist
+                     K14     Lightworker
+                     K15     New Age Practitioner
+                     K16     Native American Religion
+                     K17     Pantheist
+                     K18     Peyotist
+                     K19     Radha Soami, Synonym: Sant Mat
+                     K20     Religion (Other Not Listed) **
+                     K21     Santeri
+                     K22     Satanist
+                     K23     Scientologist
+                     K24     Secularist
+                     K25     Shumei
+                     K26     Shinto
+                     K27     Spiritualist
+                     K28     Swedenborgian, Synonym: Neo-Christian
+                     K29     Taoist
+                     K30     Unitarian-Universalist
+                     K31     Universalist
+                     K32     Vodun
+                     k33     Yoruba
+
+      None
+                     L1      Atheist
+                     L2      Not Religious
+
+      Declines to Disclose
+                      M1     Religion not given - PATIENT refused
+
+      Unknown
+                     N1      Patient Religion Unknown ***
+
+
+
+
+DSCN 2017 / 11                Page 9 of 29
+Marital Status
+An indicator to identify the legal marital status of a person
+
+        Code     Description
+        1        Single
+        2        Married
+        3        Civil Partner
+        4        Divorced
+        5        Person whose Civil Partnership has been dissolved
+        6        Widowed
+        7        Surviving Civil Partner
+        8        Separated
+        9        Not disclosed
+        0        Unknown
+
+
+
+
+Sex
+Sex at birth; determines how the individual would be treated clinically.
+A classification of the observed sex of a person, relating to the biological, physiological and
+physical characteristics that differentiate men and women, determined by endocrine
+influences.
+Person sex is observed by a care professional, and is not self-stated.
+
+        Code     Description
+        F        Female
+        M        Male
+                 Indeterminate (unable to be classified as either male
+        U        or female)
+        Z        Unborn*
+
+* Z – Unborn is only applicable for use in the Welsh Community Care Information System for
+an unborn baby record. Once the unborn baby flag is removed this value is no longer valid.
+
+
+
+
+Ethnicity
+The ethnicity of a person, as specified by the person, as per the Office of National Statistics
+(ONS) 2011 Census Categories
+
+
+
+
+DSCN 2017 / 11                     Page 10 of 29
+       Code      Description
+                 Any White Background, including Welsh, English,
+       A         Scottish, Northern Irish, British, Irish
+       B         Gypsy or Irish Traveller
+       D         White and Black Caribbean
+       E         White and Black African
+       F         White and Asian
+                 Any other mixed background / multiple ethnic
+       G         background
+       H         Indian
+       J         Pakistani
+       K         Bangladeshi
+       R         Chinese
+       L         Any other Asian background
+       M         Caribbean
+       N         African
+       P         Any other Black background
+       T         Arab
+       S         Any other ethnic group
+       Z         Not stated
+
+
+
+
+Language
+The language used by a person. (ISO 639-1 Standard)
+
+Code       Description
+ab         Abkhazian
+aa         Afar
+af         Afrikaans
+ak         Akan
+sq         Albanian
+am         Amharic
+ar         Arabic
+an         Aragonese
+hy         Armenian
+as         Assamese
+av         Avaric
+ae         Avestan
+ay         Aymara
+az         Azerbaijani
+bm         Bambara
+ba         Bashkir
+eu         Basque
+be         Belarusian
+bn         Bengali
+bh         Bihari languages
+
+
+
+
+DSCN 2017 / 11                   Page 11 of 29
+bi       Bislama
+nb       Bokmål, Norwegian
+bs       Bosnian
+br       Breton
+bg       Bulgarian
+my       Burmese
+es       Castilian
+ca       Catalan
+km       Central Khmer
+ch       Chamorro
+ce       Chechen
+ny       Chewa
+ny       Chichewa
+zh       Chinese
+za       Chuang
+cu       Church Slavic
+cu       Church Slavonic
+cv       Chuvash
+kw       Cornish
+co       Corsican
+cr       Cree
+hr       Croatian
+cs       Czech
+da       Danish
+dv       Dhivehi
+dv       Divehi
+nl       Dutch
+dz       Dzongkha
+en       English
+eo       Esperanto
+et       Estonian
+ee       Ewe
+fo       Faroese
+fj       Fijian
+fi       Finnish
+nl       Flemish
+fr       French
+ff       Fulah
+gd       Gaelic
+gl       Galician
+lg       Ganda
+ka       Georgian
+de       German
+ki       Gikuyu
+el       Greek, Modern (1453-)
+kl       Greenlandic
+gn       Guarani
+
+
+
+DSCN 2017 / 11                   Page 12 of 29
+gu       Gujarati
+ht       Haitian
+ht       Haitian Creole
+ha       Hausa
+he       Hebrew
+hz       Herero
+hi       Hindi
+ho       Hiri Motu
+hu       Hungarian
+is       Icelandic
+io       Ido
+ig       Igbo
+id       Indonesian
+         Interlingua (International Auxiliary Language
+ia       Association)
+ie       Interlingue
+iu       Inuktitut
+ik       Inupiaq
+ga       Irish
+it       Italian
+ja       Japanese
+jv       Javanese
+kl       Kalaallisut
+kn       Kannada
+kr       Kanuri
+ks       Kashmiri
+kk       Kazakh
+ki       Kikuyu
+rw       Kinyarwanda
+ky       Kirghiz
+kv       Komi
+kg       Kongo
+ko       Korean
+kj       Kuanyama
+ku       Kurdish
+kj       Kwanyama
+ky       Kyrgyz
+lo       Lao
+la       Latin
+lv       Latvian
+lb       Letzeburgesch
+li       Limburgan
+li       Limburger
+li       Limburgish
+ln       Lingala
+lt       Lithuanian
+lu       Luba-Katanga
+
+
+
+DSCN 2017 / 11                  Page 13 of 29
+lb       Luxembourgish
+mk       Macedonian
+mg       Malagasy
+ms       Malay
+ml       Malayalam
+dv       Maldivian
+mt       Maltese
+gv       Manx
+mi       Maori
+mr       Marathi
+mh       Marshallese
+ro       Moldavian
+ro       Moldovan
+mn       Mongolian
+na       Nauru
+nv       Navaho
+nv       Navajo
+nd       Ndebele, North
+nr       Ndebele, South
+ng       Ndonga
+ne       Nepali
+nd       North Ndebele
+se       Northern Sami
+no       Norwegian
+nb       Norwegian Bokmål
+nn       Norwegian Nynorsk
+ii       Nuosu
+ny       Nyanja
+nn       Nynorsk, Norwegian
+ie       Occidental
+oc       Occitan (post 1500)
+oj       Ojibwa
+cu       Old Bulgarian
+cu       Old Church Slavonic
+cu       Old Slavonic
+or       Oriya
+om       Oromo
+os       Ossetian
+os       Ossetic
+pi       Pali
+pa       Panjabi
+ps       Pashto
+fa       Persian
+pl       Polish
+pt       Portuguese
+pa       Punjabi
+ps       Pushto
+
+
+
+DSCN 2017 / 11                 Page 14 of 29
+qu       Quechua
+ro       Romanian
+rm       Romansh
+rn       Rundi
+ru       Russian
+sm       Samoan
+sg       Sango
+sa       Sanskrit
+sc       Sardinian
+gd       Scottish Gaelic
+sr       Serbian
+sn       Shona
+ii       Sichuan Yi
+sd       Sindhi
+si       Sinhala
+si       Sinhalese
+sk       Slovak
+sl       Slovenian
+so       Somali
+st       Sotho, Southern
+nr       South Ndebele
+es       Spanish
+su       Sundanese
+sw       Swahili
+ss       Swati
+sv       Swedish
+tl       Tagalog
+ty       Tahitian
+tg       Tajik
+ta       Tamil
+tt       Tatar
+te       Telugu
+th       Thai
+bo       Tibetan
+ti       Tigrinya
+to       Tonga (Tonga Islands)
+ts       Tsonga
+tn       Tswana
+tr       Turkish
+tk       Turkmen
+tw       Twi
+ug       Uighur
+uk       Ukrainian
+ur       Urdu
+ug       Uyghur
+uz       Uzbek
+ca       Valencian
+
+
+
+DSCN 2017 / 11                   Page 15 of 29
+ ve        Venda
+ vi        Vietnamese
+ vo        Volapük
+ wa        Walloon
+ cy        Welsh
+ fy        Western Frisian
+ wo        Wolof
+ xh        Xhosa
+ yi        Yiddish
+ yo        Yoruba
+ za        Zhuang
+ zu        Zulu
+ q1 *      Braille
+ q2 *      American Sign Language
+ q3 *      Australian Sign Language
+ q4 *      British Sign Language
+ q5 *      Makaton
+
+* These do not form part of ISO 639-1 Standard, but are codes adopted by HL72UK to
+support non spoken languages (www.hl7.org.uk. 2010. Standard for Use of HL7 Version 2 in
+the UK Vers A.3. [ONLINE] Available at:
+http://www.hl7.org.uk/repository/uploads/871/1/HL72UKA.3%20v2.pdf. [Accessed 2
+November 2017])
+
+
+
+
+Postcode
+The postcode applied to the usual address nominated by the person at the time of their
+contact with a health or social care provider (e.g. hospital admission, outpatient attendance
+or referral, social care home visit).
+
+Format: 8 character alpha-numeric.
+
+The specific code format as specified by the Office of National statistics (ONS) is:
+
+
+ Data            Range of codes/ Entity          Comments
+ description     code
+
+ Unit            AB1 Δ Δ 1AA - ZE99 Δ 9ZZ        2, 3 or 4-character outward code - left
+ postcode – 8    (maximum range)                 aligned;
+ character
+ version                                         3-character inward code - right aligned;
+
+                                                 5th character always blank and
+                                                 3rd and 4th characters may be blank (Δ)
+
+
+This allows a space to be inserted to differentiate between the inward and outward segments
+of the code, enabling full use to be made of the Royal Mail postcode functionality.
+UK Postcodes are available via the Welsh Reference Data Service (WRDS):
+http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+
+
+
+DSCN 2017 / 11                     Page 16 of 29
+Organisation
+An organisation code is an identifier that uniquely identifies an organisation or site within an
+organisation.
+
+
+(Local Health Board / Trust) Organisation Code
+ Such organisation and site codes are configured with consensus across the UK NHS home
+countries and published for use by the NHS Digital, Organisation Data Service.
+Code as listed by the Organisation Data Service (ODS) are configured to a set of specified
+coding frames, according to organisation type.
+Local Health Board/Trust Organisation Codes are listed according to ODS coding frames
+(http://www.datadictionary.nhs.uk/data_dictionary/attributes/o/org/organisation_code_de.as
+p?shownav=1)
+Local Health Boards (Wales) are bodies corporate established by the Welsh Ministers under
+s.11 of the National Health Service (Wales) Act 2006.
+Local Health Board / Trust Codes are made available via the Welsh Reference Data Service
+(WRDS): http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+Format: 3 character alpha-numeric
+
+
+
+ Character Position             1              2             3            4             5
+
+        Format                a/n             a/n          a/n
+
+ Local Health Board             7             A-9           A-9
+      (Wales)
+
+      NHS Trust                 R             A-9           A-9
+
+       B FRAME                Organisation Type Identifier
+
+
+
+
+(Local Health Board / Trust) Site Code
+This provides a unique identifier of each site for an organisation. Codes as listed by the
+Organisation Data Service (ODS) are configured to a set of specified coding frames, according
+to organisation type. Local Health Board/Trust Site Codes are listed according to ODS coding
+frame B
+
+ Format: 5 character alpha-numeric. Where it is necessary to report only a 3 character Local
+Health Board / Trust Code include two zeros in the 4th and 5th character positions.
+ Local Health Board / Trust Site Codes are made available via the Welsh Reference Data
+Service (WRDS): http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+
+ Character Position             1              2              3               4             5
+
+        Format                a/n             a/n           a/n            a/n              a/n
+
+ Local Health Board             7             A-9           A-9            A-9              A-9
+      (Wales)
+
+
+
+
+DSCN 2017 / 11                      Page 17 of 29
+      NHS Trust                R              A-9           A-9            A-9            A-9
+
+       B FRAME                Organisation Type Identifier              Organisation Identifier
+
+
+
+
+GP Practice Code
+ A code which uniquely identifies the GP Practice of the GP. Codes as listed by the
+Organisation Data Service (ODS) are configured to a set of specified coding frames, according
+to organisation type. GP Practices are listed according to coding frame G
+
+
+ Character Position             1               2       3         4          5       6          7
+
+       Format               A-H, J-N,          0-9    0-9         0-9       0-9     0-9         0-9
+                                P,
+                              W&Y
+
+      G FRAME              Organisation                     Practice Identifier
+                              Type
+                            Identifier
+
+
+ Code as listed for practices in the UK. These are updated monthly with information supplied
+by the Organisation Data Service (ODS) and can be viewed via the Welsh Reference Data
+Service (WRDS): http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+Format: 6 character alpha-numeric
+
+Default Codes:
+        Code         Description
+        V81997       No registered GP Practice
+        V81998       Practice not applicable. i.e. MOD or Prison GP
+        V81999       Practice code is unknown
+
+The use of default codes
+
+V81997 – should only be used where a patient presents who is not currently registered at a
+GP Practice.
+
+V81998 – should be used where a patient would not have a registered practice, for instance
+an overseas patient.
+
+V81999 – should only be used where it is not possible to determine a patients registered
+practice code, for instance the patient cannot communicate and is unidentifiable.
+ GP Practice Code Reference Data are made available via the Welsh Reference Data Service
+(WRDS): http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+
+
+
+DSCN 2017 / 11                       Page 18 of 29
+Dental Practice Code
+The code described by the Organisation Data Service (ODS) as a Dental Practice Code
+identifies an individual dental practice location. This code should be used as the 'Referring
+Organisation Code' for referrals made to the Trust. Codes as listed by the Organisation Data
+Service (ODS) are configured to a set of specified coding frames, according to organisation
+type. Dental Practices are listed according to coding frame G
+
+
+ Character Position                1              2          3          4         5      6     7
+
+        Format                     V             0-9        0-9        0-9      0-9      0-9
+
+       G FRAME              Organisation                          Practice Identifier
+                               Type
+                             Identifier
+
+
+Format: 6 character alpha-numeric
+
+The first character is set as a V
+Characters 2 to 6 are the last 5 digits of the Location ID taken from a Provider Dentist
+Contract number
+Dental Practice Code Reference Data are made available via the Welsh Reference Data
+Service (WRDS): http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+
+
+
+Care Professional
+A person who has a professional registration with a professional registration body.
+
+
+General Medical Practitioner Code
+A General Medical Practitioner, or GP, is a healthcare practitioner qualified for General
+Practice providing healthcare for a particular organisation.
+The General Medical Practitioner Code is the GP Code used as the GP Prescribing reference by
+the prescribing authority.
+General Medical Practitioners are also identifiable by validation against the General Medical
+Council (GMC) reference number, or the General Dental Council (GDC) registration number
+for General Dental Practitioners. The GMC and GDC identification are entirely separate codes
+to the General Medical Practitioner Code.
+Each General Medical Practitioner code begins with the prefix letter G.
+
+The 2nd to 7th characters are the Doctor Index Number (DIN) assigned by NHS Digital upon
+qualification. DIN and addresses are issued quarterly by the Prescription Pricing Authority
+(PPA). The eighth character is a check digit calculated thus:
+
+ 1     x    First numeric character
++3     x    second numeric character
++7     x    third numeric character
++1     x    fourth numeric character
++3     x    fifth numeric character
++7     x    sixth numeric character
+
+The check digit is then the unit digit (last digit) of the result of this calculation.
+e.g. PPA code 334512. Check digit is computed by:
+(1 x 3) + (3 x 3) + (7 x 4) + 5 + (3 x 1) + (7 x 2) = 62
+The check digit is 2 and the full code G3345122.
+
+
+DSCN 2017 / 11                         Page 19 of 29
+Format: 8 character alpha-numeric
+
+        Code               Description
+                           A code issued by NHS Digital for prescribing
+                           GP's in Wales and England. The codes can
+                           be viewed on the via the Welsh Reference
+        GNNNNNNN
+                           Data Service (WRDS):
+                           http://wrds.wales.nhs.uk/ (NHS Wales
+                           Users Only)
+
+
+
+Only doctors authorised to prescribe by the Local Health Board or Clinical Commissioning
+Group/equivalent organisation are allocated with the General Medical Practitioner Code
+comprised of the DIN plus the check digit. Unless a GP Partner/Contractor, while a doctor is
+employed as a salaried GP or locum GP, the DIN and check digit are not disclosed without
+that authorisation.
+
+NHS UK General Practitioners Reference Data are available via the Welsh Reference Data
+Service (WRDS): http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+
+
+
+Consultant Code
+A care professional contracted by a Health Care Provider who has been appointed by a
+consultant’s appointment committee.
+He or she must be a member of a Royal College or Faculty. This includes general medical
+practitioners in cases where a general medical practitioner is responsible for patient care and
+has an arrangement with the Health Care Provider.
+The Consultant Code is derived from either the General Medical Council reference number for
+general medical practitioners, or the General Dental Council registration number for general
+dental practitioners.
+
+
+       Practitioner    Character Position              Allocated Allocated        Known
+       Code Type       1 2     3   4   5   6   7   8   By        To               As
+                                                                  Hospital
+       Hospital            0- 0- 0- 0- 0- 0- 0- NHS               Consultants     Consultant
+                       C
+       Consultant*         9 9 9 9 9 9 9 Digital                  in England      Code
+                                                                  and Wales
+                                                                  Dental
+                                                                                  Dental
+       Dental                  0- 0- 0- 0- 0- 0- NHS              Consultants
+                       D D                                                        Consultant
+       Consultant**            9 9 9 9 9 9 Digital                in England
+                                                                                  Code
+                                                                  and Wales
+
+
+
+Notes:
+* Derived from General Medical Council Reference Number, prefixed with a C
+** Derived from General Dental Council Registration Number, prefixed with DD.
+Note that General Dental Council registration numbers vary in length from 5 to 6 characters.
+Filling zeros are used between the prefix and General Dental Council registration number,
+where required, to maintain total length of 8 characters.
+For further information, please refer to the Dental Consultants in England (PDF) guidance
+document issued by the Organisation Data Service.
+
+
+
+DSCN 2017 / 11                     Page 20 of 29
+NHS Wales Consultants and Private Consultants Reference Data are available via the Welsh
+Reference Data Service (WRDS): http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+
+
+
+Nurse Pin Number
+A nurse is a care professional whose name is registered by Nursing and Midwifery Council.
+A nurse pin number is a code that uniquely identifies a nurse on the Nursing and Midwifery
+Council Register.
+
+Format: 8 character alpha-numeric :
+
+NNANNNNA
+
+NHS Wales Nurses’ Reference Data are available via the Welsh Reference Data Service
+(WRDS): http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+
+
+
+Allied Health Professional Code
+An allied health professional is a care professional whose name is registered with the Health
+and Care Professions Council. An allied Health Practitioner Code is alpha numeric, with the
+first two to three alpha characters indicating the profession, followed by 5 to 6 numeric
+characters.
+The list of health professionals listed on the HCPC are with the type prefix are:
+
+ AS     Arts Therapist
+ BS     Biomedical Specialist
+ CH     Chiropodist / Podiatrist
+ CS     Clinical Scientist
+ DT     Dietician
+ HA     Hearing Aid Dispenser
+ OT     Occupational Therapist
+ ODP    Operating Department Practitioner
+ OR     Orthoptist
+ PA     Paramedic
+ PH     Physiotherapist
+ PYL    Practitioner Psychologist
+ PO     Prosthetist/Orthotist
+ RA     Radiographer
+ SW     Social Worker in England
+ SL     Speech and Language Therapist
+
+Format: 8 character alpha-numeric :
+
+AHP Registration numbers are in the format AANNNNN(N) or AAANNNNN
+
+NHS Wales Allied Health Professionals’ Reference Data are available via the Welsh Reference
+Data Service (WRDS): http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+
+
+
+Specialty
+
+
+
+
+DSCN 2017 / 11                    Page 21 of 29
+Treatment Specialty
+This is the specialty under which the patient will be or is treated. This may either be the same
+as the specialty function recorded as the consultant's main specialty or a different specialty
+function which will be the consultant's interest specialty function. Note that both the main
+specialty function and the interest specialty function should be based on one of the Royal
+College specialties.
+
+Format: 3 digit numeric
+
+
+
+
+DSCN 2017 / 11                    Page 22 of 29
+       Code      Description
+       100       General Surgery
+       101       Urology
+       102       Transplantation Surgery
+       103       Breast Surgery
+       104       Colorectal Surgery
+       105       Hepatobiliary & Pancreatic Surgery
+       106       Upper Gastrointestinal Surgery
+       107       Vascular Surgery
+       108       Spinal Surgery Service
+       110       Trauma & Orthopaedics
+       120       ENT
+       130       Ophthalmology
+       140       Oral Surgery
+       141       Restorative Dentistry
+       142       Paediatric Dentistry
+       143       Orthodontics
+       144       Maxillo-Facial Surgery
+       150       Neurosurgery
+       160       Plastic Surgery
+       161       Burns Care
+       170       Cardiothoracic Surgery
+       171       Paediatric Surgery
+       172       Cardiac Surgery
+       173       Thoracic Surgery
+       174       Cardiothoracic Transplantation
+       180       Accident & Emergency
+       190       Anaesthetics
+       191       Pain Management
+       192       Critical Care Medicine
+       211       Paediatric Urology
+       212       Paediatric Transplantation Surgery
+       213       Paediatric Gastrointestinal Surgery
+       214       Paediatric Trauma And Orthopaedics
+       215       Paediatric Ear Nose And Throat
+       216       Paediatric Ophthalmology
+       217       Paediatric Maxillo-Facial Surgery
+       218       Paediatric Neurosurgery
+       219       Paediatric Plastic Surgery
+       220       Paediatric Burns Care
+       221       Paediatric Cardiac Surgery
+       222       Paediatric Thoracic Surgery
+       223       Paediatric Epilepsy
+       241       Paediatric Pain Management
+
+
+
+DSCN 2017 / 11             Page 23 of 29
+       242       Paediatric Intensive Care
+       251       Paediatric Gastroenterology
+       252       Paediatric Endocrinology
+       253       Paediatric Clinical Haematology
+       254       Paediatric Audiological Medicine
+                 Paediatric Clinical Immunology And Allergy
+       255       Service
+       256       Paediatric Infectious Diseases
+       257       Paediatric Dermatology
+       258       Paediatric Respiratory Medicine
+       259       Paediatric Nephrology
+       260       Paediatric Medical Oncology
+       261       Paediatric Metabolic Disease
+       262       Paediatric Rheumatology
+       263       Paediatric Diabetic Medicine
+       264       Paediatric Cystic Fibrosis
+       280       Paediatric Interventional Radiology
+       290       Community Paediatrics
+       291       Paediatric Neuro-Disability
+       300       General Medicine
+       301       Gastroenterology
+       302       Endocrinology
+       303       Clinical Haematology
+       304       Clinical Physiology
+       305       Clinical Pharmacology
+       306       Hepatology
+       307       Diabetic Medicine
+       308       Blood And Marrow Transplantation
+       309       Haemophilia Service
+       310       Audiological Medicine
+       311       Clinical Genetics
+       313       Clinical Immunology and Allergy
+       314       Rehabilitation Service
+       315       Palliative Medicine
+       316       Clinical Immunology
+       317       Allergy Service
+       318       Intermediate Care
+       319       Respite Care
+       320       Cardiology
+       321       Paediatric Cardiology
+       322       Clinical Microbiology
+       323       Spinal Injuries
+       324       Anticoagulant Service
+       325       Sport And Exercise Medicine
+
+
+
+DSCN 2017 / 11           Page 24 of 29
+       327       Cardiac Rehabilitation
+       328       Stroke Medicine
+       329       Transient Ischaemic Attack
+       330       Dermatology
+       331       Congenital Heart Disease Service
+       340       Respiratory Medicine
+       341       Respiratory Physiology
+       342       Programmed Pulmonary Rehabilitation
+       343       Adult Cystic Fibrosis Service
+       344       Complex Specialised Rehabilitation Service
+       345       Specialist Rehabilitation Service
+       346       Local Specialist Rehabilitation Service
+       350       Infectious Diseases
+       352       Tropical Medicine
+       360       Genitourinary Medicine
+       361       Nephrology
+       370       Medical Oncology
+       371       Nuclear Medicine
+       400       Neurology
+       401       Clinical Neurophysiology
+       410       Rheumatology
+       420       Paediatrics
+       421       Paediatric Neurology
+       422       Neonatology
+       424       Well Babies
+       430       Geriatric Medicine
+       450       Dental Medicine Specialties
+       460       Medical Ophthalmology
+       501       Obstetrics
+       502       Gynaecology
+       503       Gynaecological Oncology
+       560       Midwifery Service
+       650       Physiotherapy
+       651       Occupational Therapy
+       652       Speech And Language Therapy
+       653       Podiatry
+       654       Dietetics
+       655       Orthoptics
+       656       Clinical Psychology
+       657       Prosthetics
+       658       Orthotics
+       659       Drama Therapy
+       660       Art Therapy
+       661       Music Therapy
+
+
+
+DSCN 2017 / 11              Page 25 of 29
+        662               Optometry
+        663               Podiatric Surgery
+        700               Learning Disability
+        710               Adult Mental Illness
+        711               Child & Adolescent Psychiatry
+        712               Forensic Psychiatry
+        713               Psychotherapy
+        715               Old Age Psychiatry
+        720               Eating Disorders
+        721               Addiction Services
+        722               Liaison Psychiatry
+        723               Psychiatric Intensive Care
+        724               Perinatal Psychiatry
+                          Mental Health Recovery And Rehabilitation
+        725               Service
+        726               Mental Health Dual Diagnosis Service
+        727               Dementia Assessment Service
+        800               Clinical Oncology (previously Radiotherapy)
+        811               Interventional Radiology
+        812               Diagnostic Imaging
+        822               Chemical Pathology
+        834               Medical Virology
+        840               Audiology
+        920               Diabetic Education Service
+        950               Nursing
+
+
+
+
+Consultant Specialty
+A unique code identifying each Main Specialty designated by Royal Colleges.
+
+Specialties are divisions of clinical work which may be defined by body systems
+(dermatology), age (paediatrics), clinical technology (nuclear medicine), clinical function
+(rheumatology), group of diseases (oncology) or combinations of these factors. Only
+Specialty titles recognised by the Royal Colleges and Faculties should be used. This list is
+maintained by the General and Specialist Medical Practice (Education, Training and
+Qualifications) Order 2003 and European Primary and Specialist Dental Qualifications
+Regulations 1998.
+
+Each consultant should be assigned a Main Specialty by the organisation to which the
+consultant is contracted. For physicians and surgeons with a generalist component to their
+work, the Main Specialty should be General Medicine or General Surgery. The Main Specialty
+is specific to a Health Care Provider. If, for example, a consultant physician working in two
+Health Care Providers has a generalist component to the work in one and not the other,
+General Medicine is only assigned as the Main Specialty in the former case. Consultants in
+general medicine or general surgery may also have specialist interests and these should be
+recorded as well as the Main Specialty.
+
+
+
+
+DSCN 2017 / 11                      Page 26 of 29
+The initial source of the information should be the designation on the consultant's contract.
+This should be checked periodically against the work a consultant is actually doing so that the
+statistics can relate to a consultant's current type of work.
+
+The Main Specialty should only be used for the purpose of generating Health Resource
+Groups (HRGs) for financial costing and for workforce statistics. Other specialist interests of
+consultants may be recorded for workforce planning purposes.
+
+The Main Specialty code for general practitioners is General Medical Practice or General
+Dental Practice.
+
+Joint Consultant Clinic activity should be recorded against the Main Specialty code of the
+consultant managing the clinic.
+
+Format: 3 digit numeric
+
+
+
+
+DSCN 2017 / 11                     Page 27 of 29
+       Code      Description
+       100       General Surgery
+       101       Urology
+       110       Trauma & Orthopaedic
+       120       ENT
+       130       Ophthalmology
+       140       Oral Surgery
+       141       Restorative Dentistry
+       142       Paediatric Dentistry
+       143       Orthodontics
+       145       Oral & Maxillo Facial Surgery
+       146       Endodontics
+       147       Periodontics
+       148       Prosthodontics
+       149       Surgical Dentistry
+       150       Neurosurgery
+       160       Plastic Surgery
+       170       Cardiothoracic Surgery
+       171       Paediatric Surgery
+       180       Accident & Emergency
+       190       Anaesthetics
+       192       Critical Care Medicine
+       300       General Medicine
+       301       Gastroenterology
+       302       Endocrinology
+       303       Clinical Haematology
+       304       Clinical Physiology
+       305       Clinical Pharmacology
+       310       Audiological Medicine
+       311       Clinical Genetics
+       313       Clinical Immunology and Allergy
+       314       Rehabilitation
+       315       Palliative Medicine
+       320       Cardiology
+       321       Paediatric Cardiology
+       325       Sport And Exercise Medicine
+       326       Acute Internal Medicine
+       330       Dermatology
+       340       Respiratory Medicine (also known as Thoracic Medicine)
+       350       Infectious Diseases
+       352       Tropical Medicine
+       360       Genitourinary Medicine
+       361       Nephrology
+       370       Medical Oncology
+
+
+
+DSCN 2017 / 11             Page 28 of 29
+       371       Nuclear Medicine
+       400       Neurology
+       401       Clinical Neuro-physiology
+       410       Rheumatology
+       420       Paediatrics
+       421       Paediatric Neurology
+       430       Geriatric Medicine
+       450       Dental Medicine Specialties
+       451       Special Care Dentistry
+       460       Medical Ophthalmology
+       500       Obstetrics And Gynaecology
+       501       Obstetrics
+       502       Gynaecology
+       504       Community Sexual And Reproductive Health
+       560       Midwife Episode
+       600       General Medical Practice
+       601       General Dental Practice
+       700       Learning Disability
+       710       Adult Mental Illness
+       711       Child & Adolescent Psychiatry
+       712       Forensic Psychiatry
+       713       Psychotherapy
+       715       Old Age Psychiatry
+       800       Clinical Oncology (Previously Radiotherapy)
+       810       Radiology
+       820       General Pathology
+       821       Blood Transfusion
+       822       Chemical Pathology
+       823       Haematology
+       824       Histopathology
+       830       Immunopathology
+       831       Medical Microbiology
+                 Medical Microbiology (also known as Microbiology and
+       833       Bacteriology)
+       834       Medical Virology
+       900       Community Medicine
+       901       Occupational Medicine
+       902       Community Health Services Dental
+       903       Public Health Medicine
+       904       Public Health Dental
+       950       Nursing Episode
+       960       Allied Health Professional Episode
+
+
+
+
+DSCN 2017 / 11           Page 29 of 29
+

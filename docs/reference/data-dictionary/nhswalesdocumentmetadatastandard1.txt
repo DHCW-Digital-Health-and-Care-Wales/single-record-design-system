@@ -1,0 +1,17 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/nhswalesdocumentmetadatastandard1.htm
+Title: NHS Wales Document Metadata Standard
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+NHS Wales Document Metadata Standard NHS Wales Document Metadata Standard
+Change History
+|
+|
+DSCN 2022 / 04
+| NHS Wales Document Metadata Standard - Retirement
+|
+DSCN 2020 / 20
+| NHS Wales Document Metadata Standard
+|
+
+Scope
+Information Specification

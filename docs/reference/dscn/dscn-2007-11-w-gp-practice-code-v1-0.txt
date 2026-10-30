@@ -1,0 +1,625 @@
+Source: https://dhcw.nhs.wales/information-services/information-standards/data-standards/data-standards-files/data-standard-change-notices-docs/dscns-2007/dscn-2007-11-w-gp-practice-code-v1-0-pdf/
+Retrieved: 2026-10-30 (text extracted with pdftotext -layout)
+
+                                                                       DSC Notice: DSCN (2007) 11 (W)
+                                                                      English DSCN Equivalent: 20/2004
+                                          Initiating Welsh Reference: WHC (2004) 008 / WHC (2005) 044
+                                                                              Date of Issue: 4th July 2007
+                                                                   Subject: To rename ‘Code of GP Practice
+               WIGSB                                               (Registered GMP)’
+    Welsh Information Governance
+        and Standards Board                                        Implementation date:
+                                                                   1st July 2007
+
+                           DATASET CHANGE CONTROL PROCEDURE
+
+
+
+
+Summary of change:
+
+To rename the data item ‘Code of GP Practice (Registered GMP)’ to ‘Code of Registered GP
+Practice’ and remove the data item ‘General Medical Practitioner (Registered)’ from Outpatients
+(OP mds) and Elective Admissions List (EAL mds).
+
+Changes associated with this DSCN will appear in version 2.17 of the NHS Wales Data
+Dictionary.
+
+
+                                                                                Change Proposal Reference No:
+                                                                                    WIGSB 2007061401
+
+
+Welsh Information Governance and Standards Board (WIGSB), is responsible for approving information standards.
+
+Please address enquiries about Dataset change proposals to the Data Standards and Information Quality Team, HSW, Brunel House, 2
+Fitzalan Road, Cardiff CF24 0HA Tel: 029 20502539 or E-mail Data.Standards@hsw.wales.nhs.uk
+
+Dataset Change Notices are available via the Intranet Service HOWIS http://howis.wales.nhs.uk/ or by contacting the above address.
+
+Draft DSCN numbering format = (year of draft) 2-alphacharacter sequence (W).
+
+Upon receiving approval for the change by WISGB, the draft DSCN number will be reformatted to:
+DSCN number format = (year of issue) sequence number, (W)
+
+In addition,
+Change Proposal Reference No. format = year/month/day/sequence number (relates to when WIGSB approved
+change)
+
+
+
+
+Document: DSCN (2006) 11 (W)                                                                      Author: Nicola Turner
+Status: Final                                                                                    Created on: 10/04/2007
+Version: 1.00                                                                                     Last Printed: 18/04/07
+                                                          Page 1
+                                   DSCN Distribution List
+Name                Job Title                                       Organisation
+Jan Kinsey          Data Quality Manager                            Bro Morgannwg NHS Trust
+Jim Plunkett        Head of Information                             Bro Morgannwg NHS Trust
+Rhodri Jones        Information Manager                             Bro Morgannwg NHS Trust
+Jim Puzey           Head of IM&T                                    Business Services Centre
+John Dicker         Regional IM&T Manager                           Business Services Centre
+Eluned Cousins      Regional Information Manager                    Business Services Centre
+Mark Piper          Information Services Business Manager           Business Services Centre
+Trevor Hughes       Regional Information Manager                    Business Services Centre
+Tim O’Sullivan      Regional Information Manager                    Business Services Centre
+Vince Lacey         Regional IM&T Manager                           Business Services Centre
+Alan Roderick       Acting Head of Performance & Information        Cardiff and Vale NHS Trust
+Kerry Ashmore       Information Modernisation & Development         Cardiff and Vale NHS Trust
+                    Manager
+Steven Thomson      Information Manager                             Cardiff and Vale NHS Trust
+Carl Davies         Deputy Software Development Manager             Carmarthen NHS Trust
+Debbie Croft        Information Manager                             Carmarthen NHS Trust
+Eric Lewis          Head of Information                             Carmarthen NHS Trust
+Richard Noyce       Senior Information Analyst                      Carmarthen NHS Trust
+Mark Bouchier       Head of IM&T                                    Ceredigion NHS Trust
+Nia Jones           Waiting List Co-ordinator                       Ceredigion NHS Trust
+Sharon Baker        Information & Health Records Manager            Ceredigion NHS Trust
+Dylan Williams      Head of IM&T                                    Conwy & Denbighshire
+Peter Burcham       Data Quality Manager                            Conwy & Denbighshire
+Richard Walker      Information Manager                             Conwy & Denbighshire
+Nicola Morgan       Head of Data Quality                            Gwent Healthcare NHS Trust
+Sonia Stevens       Head of Information                             Gwent Healthcare NHS Trust
+Christine Fisher    Head of Information                             North East Wales NHS Trust
+Janet Holmes        Information Analyst Community & Mental          North East Wales NHS Trust
+                    Health
+Richard Jones       Data Quality Manager                            North East Wales NHS Trust
+Gordon Craig        Head of Performance                             North Glamorgan NHS Trust
+Graham Crooks       Information Manager                             North Glamorgan NHS Trust
+Jeff Pye            Head of IM&T                                    North West Wales NHS Trust
+Vaughan Hughes      Information Manager                             North West Wales NHS Trust
+Michelle Campbell   Information Manager                             Pembrokeshire and Derwen
+Jack Attwood        Director of IM&T                                Pontypridd and Rhondda
+Lloyd Bishop        Information Manager                             Pontypridd and Rhondda
+Lynda James         Head of Information                             Powys LHB
+Mike Jones          Operational                                     Powys LHB
+Tracey Jones        Information Manager                             Powys LHB
+Gareth Lee          Head of Information Services                    Swansea NHS Trust
+Jan Macnamara       Data Quality Manager                            Swansea NHS Trust
+Deborah Usher       Information Manager                             Swansea NHS Trust
+Dr Giles Croft      Clinical Research Fellow & Projects Manager     University of Wales, Swansea
+Sally Greenway      Corporate & Clinical Information, Health        University of Wales, Swansea
+                    Informatics Unit
+Dave Morrey         Information Manager                             Velindre NHS Trust
+David Howells       Senior Analyst Programmer                       Velindre NHS Trust
+David Hawes         Corporate Health Information Programme          Welsh Assembly Government
+Anthony Tracey      Corporate Health Information Programme          Welsh Assembly Government
+Catherine Bridges   Information Services Division, Information      Welsh Assembly Government
+                    Analysis
+Claudia Blair       Health Statistics & Analysis Unit               Welsh Assembly Government
+Jackie Bracey       Information Services Division, Data Standards   Welsh Assembly Government
+Martyn Rees         Department of Health and Social Services        Welsh Assembly Government
+Document: DSCN (2006) 11 (W)                                           Author: Nicola Turner
+Status: Final                                                         Created on: 10/04/2007
+Version: 1.00                                                          Last Printed: 18/04/07
+                                            Page 2
+Pam Hall            Corporate Health Information Programme     Welsh Assembly Government
+Sue Leake           Health Statistics & Analysis Unit          Welsh Assembly Government
+Nigel Gaen          Department for Health & Social Services:   Welsh Assembly Government
+                    Resources Directorate
+Shelagh Reynolds    General Manager                            Welsh Cancer Intelligence &
+                                                               Surveillance Unit
+
+
+
+
+Document: DSCN (2006) 11 (W)                                      Author: Nicola Turner
+Status: Final                                                    Created on: 10/04/2007
+Version: 1.00                                                     Last Printed: 18/04/07
+                                          Page 3
+Document Control
+
+
+ Version:   Issued on: Owner             Details:
+   0.01      04/09/06 Jen Evans          Initial draft for review
+   0.02       10/04/07   Nicola Turner   Update format and additional changes
+   0.03       19/04/07   Nicola Turner   Version for DSCN sub-group submission
+   0.04       09/05/07   Nicola Turner   Updated following DSCN sub-group
+   0.05       25/05/07   Nicola Turner   Updated following external comments and
+                                         DSCN sub-group for WIGSB submission
+   1.00       04/07/07   Nicola Turner Approval gained from WIGSB 14/06/2007, this
+                                       DSCN was formally known as (2006) AT (W)
+
+
+
+
+Document: DSCN (2006) 11 (W)                                         Author: Nicola Turner
+Status: Final                                                       Created on: 10/04/2007
+Version: 1.00                                                        Last Printed: 18/04/07
+                                         Page 4
+                            DATASET CHANGE NOTICE (2006) 11 (W)
+
+Reference:                     WISGSB 2007061401
+
+Subject:                       To rename ‘Code of GP Practice (Registered GMP)’
+
+Reason for Change:             To comply with the GMS Contract
+
+Implementation Date:           This change should be applied from July for data submitted in
+                               August and beyond.
+
+Background:
+
+In England DSCN 20/2004 – GMS Contract Patient Registrations introduced the new
+arrangements regarding the registration of Patients with GP Practices, rather than with individual
+GPs.
+
+In Wales, WHC (2004) 008 - New GMS Project Implementation details the implementation of
+the GMS Contract across NHS Wales. Further guidance was provided within WHC (2005) 044 -
+New GMS Contract: Extended IM&T Guidance.
+
+The existing minimum datasets no longer reflect the new arrangement and must be changed. All
+the patient level datasets listed below should hold the Code of the practice to which the patient is
+registered, as opposed to the individual GP.
+
+This will require the following changes to the NHS Wales Data Dictionary: -
+        Rename the data item ‘Code of GP Practice (Registered GMP)’ to ‘Code of
+            Registered GP Practice’ and amend associated definition
+        Remove the linking text ‘General Medical Practitioner (code of registered GMP) from
+            Outpatients (OP mds) and Elective Admissions List (EAL mds)
+        Update the OP, EAL, and Critical Care (CC) dataset layouts with revised data item
+
+The Admitted Patient Care Dataset (APC mds) requires further work to enable the change and
+this issue will be addressed in a subsequent DSCN.
+
+The data item ‘General Medical Practitioner (Registered)’ is no longer required in the OP mds
+and VAS checks on this field will be switched off for attendance dates after and including 1 st
+July 2007. If there is any data submitted in this field after the changeover it will be ignored and
+loaded onto the database without errors being identified.
+
+
+
+
+Document: DSCN (2006) 11 (W)                                             Author: Nicola Turner
+Status: Final                                                           Created on: 10/04/2007
+Version: 1.00                                                            Last Printed: 18/04/07
+                                            Page 5
+Changes:
+
+
+A table showing the Data Items and Terms linked to this change can be found in Appendix A.
+
+Changes to the NHS Wales Data Dictionary are shown in the Appendix B.
+
+Appendix C shows how the Data Dictionary will appear when changes have been incorporated.
+
+
+
+
+Document: DSCN (2006) 11 (W)                                        Author: Nicola Turner
+Status: Final                                                      Created on: 10/04/2007
+Version: 1.00                                                       Last Printed: 18/04/07
+                                        Page 6
+Appendix A: Data Items and Terms Linked to Changes.
+
+The following table shows all Data Items and Terms that are linked with the changes documented
+within this DSCN.
+
+                        Data Items and Terms Linked to Change
+
+            Changed                                     Not affected
+  Code of GP Practice (Registered                        GP Code
+              GMP)
+                                                   GP Code (Referring)
+                                                      Referrer Code
+                                                    GP Practice Code
+                                          General Medical Practitioner (Registered)
+
+
+
+
+Document: DSCN (2006) 11 (W)                                        Author: Nicola Turner
+Status: Final                                                      Created on: 10/04/2007
+Version: 1.00                                                       Last Printed: 18/04/07
+                                        Page 7
+Appendix B: Proposed changes
+Changes to the NHS Wales Data Dictionary are detailed below, with existing text being
+highlighted in grey, new text being highlighted in blue and deletions are shown with a
+strikethrough.
+
+
+Under chapter ‘Data Items’: -
+
+
+Code of Registered GP Practice (Registered GMP)
+
+(EAL mds/ General/ OP mds/Cancer/CC mds/OPR mds)
+This is the code of the patient’s registered General Practitioner (GMP) Practice. This lets him or her
+allows the practice to be notified about treatment received by the patient. The registered GMP
+Practice may or may not be the same as the referring GMP Practice.
+
+Format: 6 character alpha-numeric
+
+
+
+See GP Practice Code
+
+
+
+
+Document: DSCN (2006) 11 (W)                                               Author: Nicola Turner
+Status: Final                                                             Created on: 10/04/2007
+Version: 1.00                                                              Last Printed: 18/04/07
+                                            Page 8
+Under Chapter ‘Data Items and Terms (Grouped by Dataset)
+
+(These are extracts of the Patient Details from the current datasets)
+
+
+OP MDS
+
+Layout of Outpatient Minimum Data Set :-
+
+Rating                                                                     Format/length
+    1=mandatory
+    2=optional
+
+                  PATIENT DETAILS
+
+1                 NHS Number                                               n10
+
+1                 NHS Number Status Indicator                              n2 - from April 1999
+
+1                 Patient's name                                           an70 or structured
+                                                                           name with 2 an35
+                                                                           elements
+
+1                 Name Format Code                                         n1
+
+1                 Patient's Usual Address                                  an175 (5 lines each
+                                                                           an35)
+
+1                 Postcode of Usual Address                                an8
+
+1                 Local Health Board of Residence                          an3
+
+1                 Sex                                                      n1
+
+2                 Carer Support Indicator                                  an2
+
+1                 Birth Date                                               ccyymmdd
+
+1                 Birth Date Status                                        n1
+
+1                 General Medical Practitioner (Code of Registered         an8
+                  GMP)
+2                 †
+
+21                Code of Registered GP Practice (Registered GMP)          an6
+
+1                                                                          an10
+                  Local Patient Identifier
+
+
+†     Where no data is present, the field must be populated with spaces due to the fixed field
+      length format of the submitted file. However, if necessary ‘General Medical Practitioner
+      (Code of Registered GMP)’ may still be included in the submitted file.
+
+Document: DSCN (2006) 11 (W)                                          Author: Nicola Turner
+Status: Final                                                        Created on: 10/04/2007
+Version: 1.00                                                         Last Printed: 18/04/07
+                                             Page 9
+      EAL MDS
+
+Layout of Elective Admission List Minimum Data Set :-
+
+Rating                                                 Format/length   End of Period      Event During
+                                                                       Census             Period (opt.
+    1=mandatory
+                                                                                          Flow)
+    2=optional
+
+                  PATIENT DETAILS
+
+1                 NHS Number                           n10             *                  *
+
+1                 NHS Number Status Indicator          n2 - from       *                  *
+                                                       April 1999
+
+1                 Patient's name                       an70 or         *                  *
+                                                       structured
+                                                       name with 2
+                                                       an35
+                                                       elements
+
+1                 Name Format Code                     n1              *                  *
+
+1                 Patient's Usual Address              an175 (5        *                  *
+                                                       lines each
+                                                       an35)
+
+1                 Postcode of Usual Address            an8             *                  *
+
+1                 Local Health Board of Residence      an3             *                  *
+
+1                 Sex                                  n1              *                  *
+
+2                 Carer Support Indicator              an2             *                  *
+
+1                 Birth Date                           ccyymmdd        *                  *
+
+1                 Birth Date Status                    n1              *                  *
+
+1                 General Medical Practitioner         an8             *                  *
+                  (Code of Registered GMP)
+2                 †
+
+21                Code of Registered GP Practice       an6             *                  *
+                  (Registered GMP)
+1                                                      an10            *                  *
+                  Local Patient Identifier
+
+†     Where no data is present, the field must be populated with spaces due to the fixed field
+      length format of the submitted file. However, if necessary ‘General Medical Practitioner
+      (Code of Registered GMP)’ may still be included in the submitted file.
+
+
+
+
+Document: DSCN (2006) 11 (W)                                                Author: Nicola Turner
+Status: Final                                                              Created on: 10/04/2007
+Version: 1.00                                                               Last Printed: 18/04/07
+                                             Page 10
+    CC MDS
+
+Layout of Critical Care Minimum Data Set: -
+
+Rating                                                                Format/length
+ 1=mandatory
+ 2=optional
+
+                 PATIENT DETAILS
+
+1                NHS Number                                           an10
+
+1                Case Record Number                                   an10
+
+1                Critical Care Local Identifier                       an8
+
+2                Patient's name                                       an70 or structured
+                                                                      name with 2 an35
+                                                                      elements
+
+2                Patient's Usual Address                              an175 (5 lines each
+                                                                      an35)
+
+1                Postcode of Usual Address                            an8
+
+1                Sex                                                  n1
+
+1                Date of Birth                                        ccyymmdd
+
+1                Code of Registered GP Practice (Registered GMP)      an6
+
+1                Ethnic Group                                         an2
+
+
+
+
+Document: DSCN (2006) 11 (W)                                        Author: Nicola Turner
+Status: Final                                                      Created on: 10/04/2007
+Version: 1.00                                                       Last Printed: 18/04/07
+                                           Page 11
+Appendix C: Data Items and Terms as they will appear in the Data Dictionary
+
+Under chapter ‘Data Items’: -
+
+
+
+Code of Registered GP Practice
+
+(EAL mds/ General/ OP mds/CC mds/OPR mds)
+This is the code of the patient’s registered General Practitioner (GP) Practice. This allows the
+practice to be notified about treatment received by the patient. The registered GP Practice may or
+may not be the same as the referring GP Practice.
+
+Format: 6 character alpha-numeric
+
+
+See GP Practice Code
+
+
+
+
+Document: DSCN (2006) 11 (W)                                             Author: Nicola Turner
+Status: Final                                                           Created on: 10/04/2007
+Version: 1.00                                                            Last Printed: 18/04/07
+                                          Page 12
+OP MDS
+
+Layout of Outpatient Minimum Data Set :-
+
+Rating                                                                     Format/length
+    1=mandatory
+    2=optional
+
+                  PATIENT DETAILS
+
+1                 NHS Number                                               n10
+
+1                 NHS Number Status Indicator                              n2 - from April 1999
+
+1                 Patient's name                                           an70 or structured
+                                                                           name with 2 an35
+                                                                           elements
+
+1                 Name Format Code                                         n1
+
+1                 Patient's Usual Address                                  an175 (5 lines each
+                                                                           an35)
+
+1                 Postcode of Usual Address                                an8
+
+1                 Local Health Board of Residence                          an3
+
+1                 Sex                                                      n1
+
+2                 Carer Support Indicator                                  an2
+
+1                 Birth Date                                               ccyymmdd
+
+1                 Birth Date Status                                        n1
+
+2                 †                                                        an8
+
+1                 Code of Registered GP Practice                           an6
+
+1                                                                          an10
+                  Local Patient Identifier
+
+
+†     Where no data is present, the field must be populated with spaces due to the fixed field
+      length format of the submitted file. However, if necessary ‘General Medical Practitioner
+      (Code of Registered GMP)’ may still be included in the submitted file.
+
+
+
+
+Document: DSCN (2006) 11 (W)                                          Author: Nicola Turner
+Status: Final                                                        Created on: 10/04/2007
+Version: 1.00                                                         Last Printed: 18/04/07
+                                             Page 13
+      EAL MDS
+
+Layout of Elective Admission List Minimum Data Set :-
+
+Rating                                                 Format/length   End of Period      Event During
+                                                                       Census             Period (opt.
+    1=mandatory
+                                                                                          Flow)
+    2=optional
+
+                  PATIENT DETAILS
+
+1                 NHS Number                           n10             *                  *
+
+1                 NHS Number Status Indicator          n2 - from       *                  *
+                                                       April 1999
+
+1                 Patient's name                       an70 or         *                  *
+                                                       structured
+                                                       name with 2
+                                                       an35
+                                                       elements
+
+1                 Name Format Code                     n1              *                  *
+
+1                 Patient's Usual Address              an175 (5        *                  *
+                                                       lines each
+                                                       an35)
+
+1                 Postcode of Usual Address            an8             *                  *
+
+1                 Local Health Board of Residence      an3             *                  *
+
+1                 Sex                                  n1              *                  *
+
+2                 Carer Support Indicator              an2             *                  *
+
+1                 Birth Date                           ccyymmdd        *                  *
+
+1                 Birth Date Status                    n1              *                  *
+
+2                 †                                    an8             *                  *
+
+1                 Code of Registered GP Practice       an6             *                  *
+
+1                                                      an10            *                  *
+                  Local Patient Identifier
+
+†     Where no data is present, the field must be populated with spaces due to the fixed field
+      length format of the submitted file. However, if necessary ‘General Medical Practitioner
+      (Code of Registered GMP)’ may still be included in the submitted file.
+
+
+
+
+Document: DSCN (2006) 11 (W)                                                Author: Nicola Turner
+Status: Final                                                              Created on: 10/04/2007
+Version: 1.00                                                               Last Printed: 18/04/07
+                                             Page 14
+    CC MDS
+
+Layout of Critical Care Minimum Data Set: -
+
+Rating                                                  Format/length
+ 1=mandatory
+ 2=optional
+
+                 PATIENT DETAILS
+
+1                NHS Number                             an10
+
+1                Case Record Number                     an10
+
+1                Critical Care Local Identifier         an8
+
+2                Patient's name                         an70 or structured
+                                                        name with 2 an35
+                                                        elements
+
+2                Patient's Usual Address                an175 (5 lines each
+                                                        an35)
+
+1                Postcode of Usual Address              an8
+
+1                Sex                                    n1
+
+1                Date of Birth                          ccyymmdd
+
+1                Code of Registered GP Practice         an6
+
+1                Ethnic Group                           an2
+
+
+
+
+Document: DSCN (2006) 11 (W)                          Author: Nicola Turner
+Status: Final                                        Created on: 10/04/2007
+Version: 1.00                                         Last Printed: 18/04/07
+                                           Page 15
+Additional Information:
+
+Please address enquiries about this DSCN to: -
+
+Data Standards and Information Quality Team
+Health Solutions Wales
+14th Floor - Brunel House
+2 Fitzalan Road
+Cardiff
+CF24 0HA
+
+Tel: 029 20502539
+Fax: 029 20502504
+
+E-mail: Datastandards@hsw.wales.nhs.uk
+
+
+
+
+Document: DSCN (2006) 11 (W)                       Author: Nicola Turner
+Status: Final                                     Created on: 10/04/2007
+Version: 1.00                                      Last Printed: 18/04/07
+                                        Page 16
+

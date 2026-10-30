@@ -1,0 +1,749 @@
+Source: https://dhcw.nhs.wales/information-services/information-standards/data-standards/data-standards-files/data-standard-change-notices-docs/dscns-2020/20200622-dscn-2020-06-core-reference-data-d2-3-pdf/
+Retrieved: 2026-10-30 (text extracted with pdftotext -layout)
+
+               WELSH INFORMATION STANDARDS BOARD
+                                                  DSC Notice:         DSCN 2020 / 06
+                                                  Date of Issue:      22nd June 2020
+
+Welsh Health Circular / Official Letter:          Subject: Core Reference Data Standards
+N/A
+Sponsor: Michael Prasad, Technology, Digital
+and Transformation, Welsh Government
+Effective from: Immediate effect with
+phased approach to implementation
+
+
+                          DATA STANDARD CHANGE NOTICE
+   A Data Standard Change Notice (DSCN) is an information mandate for a new or revised
+                                  information standard.
+  This DSCN was approved by the Welsh Information Standards Board (WISB) on 18th June
+                                         2020.
+                            WISB Reference: ISRN 2017 / 012
+
+Summary:
+This Standard has been designed to provide national operational standards for the use of core
+demographics and reference data and was developed in recognition of the need to standardise
+the reference data associated with key demographic and reference data items.
+
+Applies to:
+This Standard applies to all bodies that commission or provide health and care services in
+Wales in partnership with the NHS including their relevant system suppliers.
+
+Please address enquiries about this Data Standard Change Notice to the Data Standards Team
+                              in NHS Wales Informatics Service
+                 E-mail: data.standards@wales.nhs.uk / Tel: 029 2050 3593
+
+ The Welsh Information Standards Board is responsible for appraising information standards.
+ Submission documents and WISB Outcomes relating to the approval of this standard can be
+                                        found at:
+              http://howis.wales.nhs.uk/sites3/page.cfm?orgid=742&pid=24632
+
+
+
+
+  DSCN 2020 / 06                           Page 1 of 16
+                                DATA STANDARD CHANGE NOTICE
+
+Introduction
+
+This Standard has been designed to provide national operational standards for the use of core
+demographics and reference data. It was developed in recognition of the need to standardise
+the reference data associated with data items describing:
+    • a patient’s demographics, such as their sex, religion and ethnicity;
+    • the organisations and individuals involved in their healthcare, such as the provider and
+       site details, the GP and their practice, and the consultant/nurse/AHP; and
+    • the specialty of the consultant and treatment.
+
+Patient demographic information is held centrally using the Enterprise Master Patient Index
+(eMPI). This takes messages from a variety of electronic systems in order to maintain a
+current record of each patient’s demographics. This is then used to feed other systems to
+ensure that these systems contain the most up-to-date information.
+
+The eMPI contains mappings associated with each system to enable these messages to be
+understood in the context of each system’s local reference data. This consumes vast volumes
+of resources and storage space. Increased applications of the eMPI mean that the current
+process is unsustainable, with considerable maintenance issues ultimately resulting in an
+impact on performance which will restrict its use.
+
+Standards development work was undertaken in 2017 to produce standards to enable the
+consistent recording of information across services and organisations in both health and
+social care, culminating in DSCN 2017/111, which was published in December 2017. It was
+recognised that in developing standards for use in community care information through the
+Welsh Community Care Information System (WCCIS), there was an opportunity to develop
+national standards designed to apply to other national systems, and local systems that are
+linked to them.
+
+These core reference data items and their associated value sets are defined in the Information
+Specification section of this DSCN. These value sets are held and maintained centrally by the
+NHS Wales Informatics Service and distributed via the Welsh Reference Data Service (WRDS)
+(http://wrds.wales.nhs.uk/).
+
+
+Scope
+
+The Core Reference Data Standards are fundamental to the creation and maintenance of
+accurate patient information. They are used in both local and national systems, and will be
+present in any new systems procured and developed to manage patient records.
+
+It is recognised that this is a small set of data items in relation to the number of items of
+data collected within a patient record, however, this should be viewed as the beginning of the
+process to develop national operational standards in other aspects of patient records.
+
+All NHS Wales systems in procurement, or for future procurement must adhere to this
+Standard with immediate effect.
+
+
+
+
+1
+    http://www.nwisinformationstandards.wales.nhs.uk/opendoc/318336
+
+
+DSCN 2020 / 06                                   Page 2 of 16
+Systems that form part of the national architecture and any local systems which exchange
+data with these systems or with the eMPI are required to comply by 1st April 2022. These
+include (but are not limited to):
+    • GP systems;
+    • Welsh Clinical Communications Gateway (WCCG);
+    • enterprise Master Patient Index (eMPI);
+    • Welsh Demographics Service (WDS);
+    • Welsh Admin Portal (WAP);
+    • Welsh Patient Administration System (WPAS);
+    • Welsh Laboratory Information Management System (WLIMS);
+    • Welsh Radiology Information System (WRIS);
+    • Hospital Pharmacy System;
+    • Welsh Clinical Portal (WCP);
+    • Welsh Nursing Care Record (WNCR);
+    • Welsh Care Records Service (WCRS);
+    • Welsh Results Reporting Service (WRRS);
+    • Test Requesting and Results Reporting (TRRR);
+    • Medicines Transcribing and e-Discharge (MTeD);
+    • Welsh Community Care Information System (WCCIS);
+    • Welsh Emergency Department System (WEDS);
+    • Welsh Reference Data Service (WRDS); and
+    • Cardiff & Vale Patient Management System (PMS).
+
+The third stage applies to all remaining systems meeting the following criteria, which must
+comply by 1st April 2023:
+
+   •   Information systems supporting the commissioning or provision of NHS services that
+       hold patient / service user demographic data;
+   •   Information systems supporting the commissioning or provision of health and care
+       services that are used to transfer or otherwise communicate patient / service user
+       information with other bodies that commission or provide health and care services in
+       Wales in partnership with the NHS; and
+   •   New information systems procured after this standard comes into force.
+
+
+Description of Change
+
+To implement core reference data standards and set out how information for the data items
+outlined should be recorded in systems.
+
+
+Actions Required
+
+Local Health Boards / Trust:
+   • Ensure that any new information system procured adheres to this Standard with
+       immediate effect.
+   • Update existing systems in line with the criteria set out above.
+
+NHS Wales Informatics Service:
+  • Ensure that any NHS Wales systems in procurement, or for future procurement
+     adheres to this Standard with immediate effect.
+  • Define requirements associated with the implementation of this Standard by any
+     system that currently supports the data items outlined within.
+  • Update existing systems in line with the criteria set out above.
+  • Develop WRDS to enable the maintenance and distribution of Core Reference Data
+     centrally.
+
+
+
+
+DSCN 2020 / 06                          Page 3 of 16
+Information Specification
+Core Reference Data is reference data about the persons, organisations and services for use
+in NHS Wales.
+
+The data is distributed and uploaded to health IT systems. It supports user security, access
+control, messaging and is used as reference data for both operations and reporting.
+
+NHS Wales reference data is issued to users via the Welsh Reference Data Service. Reference
+data are made available via the Welsh Reference Data Service website at:
+
+http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+The following table shows where there are changes to the scope and/or definitions of
+applicable data sets, data items, terms and other associated areas that are linked with the
+changes documented within this DSCN.
+
+Each data definition type is shown in the sequence in which it appears in this DSCN.
+
+
+                                                                New/Retired/            Page
+ Data Definition Type                     Name
+                                                                  Changed              Number
+ Person Details            Religion                                   New                 5
+ Person Details            Marital Status                             New                 5
+ Person Details            Sex                                        New                 5
+ Person Details            Gender Identity                            New                 6
+ Person Details            Ethnicity                                  New                 6
+ Person Details            Language                                   New                 7
+ Person Details            Postcode                                   New                 8
+ Organisation              Organisation Code                          New                 9
+ Organisation              Organisation Site Code                     New                10
+ Organisation              GP Practice Code                           New                11
+ Organisation              Dental Practice Code                       New                12
+ Care Professional         General Medical Practitioner Code          New                13
+ Care Professional         Consultant Code                            New                14
+ Care Professional         Nurse Pin Number                           New                14
+ Care Professional         Allied Health Professional Code            New                15
+ Specialty                 Treatment Specialty                        New                16
+ Specialty                 Main or Consultant Specialty               New                16
+
+
+
+
+DSCN 2020 / 06                           Page 4 of 16
+Person Details
+
+Religion
+SNOMED CT Subset:
+◦    original ID is 10791000000130 and
+◦    name is Religious or Other Belief System Affiliation.
+
+A full list of SNOMED-CT religion concept IDs can be downloaded at:
+https://dd4c.digital.nhs.uk/dd4c/publishedmetadatas/intid/229
+
+Format: 18 character alphanumeric
+
+Marital Status
+
+Format: 2 character alphanumeric
+
+        Code     Description
+        11       Single
+        12       Cohabiting
+        21       Married
+        22       Civil Partner
+        31       Divorced
+        32       Person whose Civil Partnership has been dissolved
+        41       Widowed
+        42       Surviving Civil Partner
+        51       Separated
+        91       Not disclosed or unknown
+
+
+Sex†
+
+Format: 1 character alphabetic
+
+        Code     Description
+        F        Female
+        U        Indeterminate*
+        M        Male
+        Z        Not disclosed or unknown, e.g. for unborn baby
+
+*To be used only for recording the sex of a baby prior to the sex being determined as F or M.
+†Note that, in any system implementation of this value set, the context in which the
+ information is being collected must be clear to the user inputting the information, e.g. sex
+ at birth. By law, a person’s previous sex or gender identity must not be disclosed without
+ their explicit consent. Information which could be used to disclose a person’s sex must not
+ be captured alongside their gender information within the demographic record, and must be
+ stored separately, e.g. as part of their clinical record.
+
+
+
+
+DSCN 2020 / 06                          Page 5 of 16
+Gender Identity
+
+Format: 1 character alphabetic
+
+        Code    Description
+        F       Female
+        M       Male
+        N       Non-binary*
+        Z       Not disclosed or unknown, e.g. for unborn baby
+
+*For use in recording the gender of a person who does not identify as F or M.
+
+
+Ethnicity
+
+Format: 2 character alphanumeric – AB
+
+where the first character (A) is a value taken from the list in the table below, and the second
+character (B) is a locally defined value to be used in conjunction with the nationally defined
+values. If no further local breakdown is required, the second character (B) should be filled
+with a ‘Z’. Note that for the Substance Misuse and Maternity Indicators data set, only the first
+character (A) is submitted.
+
+        Code     Description
+                 WHITE
+                 Any White Background, including Welsh, English,
+        A
+                 Scottish, Northern Irish, British, Irish
+        B        Gypsy or Irish Traveller
+                 MIXED/MULTIPLE ETHNIC GROUP
+        D        White and Black Caribbean
+        E        White and Black African
+        F        White and Asian
+                 Any other mixed background / multiple ethnic
+        G
+                 background
+                 ASIAN OR ASIAN BRITISH
+        H        Indian
+        J        Pakistani
+        K        Bangladeshi
+        R        Chinese
+        L        Any other Asian background
+                 BLACK OR BLACK BRITISH
+        M        Caribbean
+        N        African
+        P        Any other Black background
+                 OTHER ETHNIC GROUPS
+        T        Arab
+        S        Any other ethnic group
+                 NOT STATED
+        Z        Not stated
+
+
+
+
+DSCN 2020 / 06                            Page 6 of 16
+Language
+The relevant list of languages is defined by ISO 639. Note that the recording of language
+information should support one of or both lists defined by ISO 639-1 and 639-3 standards.
+This is dependent on the requirement to record languages associated with macrolanguages,
+e.g. Mandarin (defined in 639-3) and Chinese (639-1), as well as sign languages (639-3).
+
+A full list is available to be downloaded at:
+https://iso639-3.sil.org/code_tables/download_tables
+
+Format: 3 character alphanumeric
+
+Note that this Standard should be used in conjunction with the associated Sensory Loss
+Communication Need Standard defined in DSCN 2018 / 012 in order to capture the method of
+communication, e.g. for non-spoken languages such as Braille and Makaton. Where a
+language is not known or if the patient has no spoken/written language, the following values
+can be used:
+
+         Code       Description
+         998        Not known
+         999        None
+
+
+
+
+2
+ www.nwisinformationstandards.wales.nhs.uk/sitesplus/documents/299/20180110-DSCN%202018%2001-
+Sensory%20Loss%20Communication%20Needs-v1-0.pdf
+
+
+DSCN 2020 / 06                              Page 7 of 16
+Postcode
+
+Format: 8 character alphanumeric
+
+The specific code format as specified by the Office of National statistics (ONS) is:
+
+
+ Data            Range of codes/ Entity          Comments
+ description     code
+
+ Unit            AB1 Δ Δ 1AA - ZE99 Δ 9ZZ        2, 3 or 4-character outward code - left
+ postcode – 8    (maximum range)                 aligned;
+ character
+ version                                         3-character inward code - right aligned;
+
+                                                 5th character always blank and
+                                                 3rd and 4th characters may be blank (Δ)
+
+
+This allows a space to be inserted to differentiate between the inward and outward segments
+of the code, enabling full use to be made of the Royal Mail postcode functionality.
+
+There are occasions when the use of a 'pseudo code' is necessary, particularly when dealing
+with an overseas address. Full details of pseudo country codes and other codes may be
+obtained from the Office of National Statistics website. Some of the more common pseudo
+codes are:
+
+   Code          Description
+   ZZ99 3VZ      No fixed abode
+   ZZ99 3CZ      England/UK not otherwise specified
+   ZZ99 3GZ      Wales not otherwise specified
+   ZZ99 1WZ      Scotland not otherwise specified
+   ZZ99 2WZ      Northern Ireland not otherwise specified
+
+UK Postcodes are available via the Welsh Reference Data Service (WRDS):
+http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+
+
+
+DSCN 2020 / 06                            Page 8 of 16
+Organisation
+
+Organisation Code
+Organisation and site codes are configured with consensus across the UK NHS home
+countries and published for use by NHS Digital via the Organisation Data Service (ODS).
+
+Codes as listed by the Organisation Data Service are configured to a set of specified coding
+frames3, according to organisation type. Welsh health board and trust organisation codes are
+defined by ODS coding frame B, as illustrated in the table below.
+
+Format: 5 character alphanumeric
+
+
+    Character Position                 1                 2               3              4               5
+
+            Format                    a/n              a/n             a/n
+
+    Local Health Board                 7                A-9             A-9
+         (Wales)
+
+          NHS Trust                    R                A-9             A-9
+
+           B FRAME                   Organisation Type Identifier
+
+
+
+Default codes:
+
+
+      Code          Description
+                    Non-UK provider where no organisation code
+      89997
+                    has been issued
+                    Non-NHS UK provider where no organisation
+      89999
+                    code has been requested and issued
+
+
+
+Codes for Welsh organisations are available via the Welsh Reference Data Service (WRDS):
+http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+
+
+
+3
+    https://www.datadictionary.nhs.uk/data_dictionary/attributes/o/org/organisation_code_de.asp?shownav=1
+
+
+DSCN 2020 / 06                                     Page 9 of 16
+Organisation Site Code
+Organisation and site codes are configured with consensus across the UK NHS home
+countries and published for use by NHS Digital via the Organisation Data Service (ODS).
+
+Codes as listed by the Organisation Data Service are configured to a set of specified coding
+frames, according to organisation type. Welsh health board and trust organisation site codes
+are defined by ODS coding frame B, as illustrated in the table below.
+
+Format: 5 character alphanumeric
+
+
+ Character Position             1             2               3          4             5
+
+       Format                  a/n          a/n           a/n          a/n           a/n
+
+ Local Health Board             7           A-9           A-9           A-9          A-9
+      (Wales)
+
+      NHS Trust                 R           A-9           A-9           A-9          A-9
+
+       B FRAME                 Organisation Type Identifier         Organisation Identifier
+
+
+
+Default codes:
+
+
+   Code          Description
+                 Non-UK provider where no organisation code
+   89997
+                 has been issued
+                 Non-NHS UK provider where no organisation
+   89999
+                 code has been requested and issued
+
+
+
+Codes for Welsh organisations are available via the Welsh Reference Data Service (WRDS):
+http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+
+
+
+DSCN 2020 / 06                          Page 10 of 16
+GP Practice Code
+GP practice codes are configured with consensus across the UK NHS home countries and
+published for use by NHS Digital via the Organisation Data Service (ODS).
+
+Codes as listed by the Organisation Data Service are configured to a set of specified coding
+frames, according to organisation type. GP practice codes are defined by ODS coding frame
+G, as illustrated in the table below.
+
+Format: 7 character alphanumeric
+
+
+ Character Position             1             2         3           4       5       6          7
+
+        Format           A-H, J-N, P, W      0-9        0-9        0-9     0-9      0-9    0-9
+                              &Y
+
+       G FRAME           Organisation                         Practice Identifier
+                            Type
+                          Identifier
+
+
+
+Default Codes:
+
+        Code         Description
+        V81997       No registered GP Practice*
+        V81998       Practice not applicable. i.e. MOD or Prison GP**
+        V81999       Practice code is unknown***
+
+*V81997 should only be used where a patient presents who is not currently registered at a
+GP Practice.
+
+**V81998 should be used where a patient would not have a registered practice, for instance
+an overseas patient.
+
+***V81999 should only be used where it is not possible to determine a patient’s registered
+practice code, for instance the patient cannot communicate and is unidentifiable.
+
+Codes for Welsh GP practices are available via the Welsh Reference Data Service (WRDS):
+http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+
+
+
+DSCN 2020 / 06                          Page 11 of 16
+Dental Practice Code
+Dental practice codes are configured with consensus across the UK NHS home countries and
+published for use by NHS Digital via the Organisation Data Service (ODS).
+
+Codes as listed by the Organisation Data Service are configured to a set of specified coding
+frames, according to organisation type. Dental practice codes are defined by ODS coding
+frame G, as illustrated in the table below.
+
+Format: 7 character alphanumeric
+
+
+ Character Position              1              2         3           4       5        6       7
+
+        Format                   V             0-9       0-9         0-9     0-9       0-9
+
+       G FRAME            Organisation                         Practice Identifier**
+                              Type
+                           Identifier*
+
+
+*The first character is set as a V for dental practice codes
+
+**Characters 2 to 6 are the last 5 digits of the Location ID taken from a Provider Dentist
+Contract number
+
+Codes for Welsh GP practices are available via the Welsh Reference Data Service (WRDS):
+http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+
+
+
+DSCN 2020 / 06                           Page 12 of 16
+Care Professional
+
+General Medical Practitioner Code
+The General Medical Practitioner Code is the GP Code used as the GP Prescribing reference by
+the prescribing authority.
+
+In England and Wales, General Medical Practitioner codes begin with the prefix letter G with
+the following format.
+
+Format: 8 character alphanumeric:
+
+Practitioner      Character Position
+Code Type
+                     1         2        3        4        5        6        7            8
+
+ General
+ Medical
+                     G       0-9       0-9      0-9      0-9      0-9      0-9       0-9
+ Practitioner
+ PPD code
+
+
+
+
+The 2nd to 7th characters are the Doctor Index Number (DIN) assigned by NHS Digital upon
+qualification. DINs and addresses are issued quarterly by the Prescription Pricing Authority
+(PPA). The eighth character is a check digit calculated as follows:
+
+ 1     x    First numeric character
++3     x    second numeric character
++7     x    third numeric character
++1     x    fourth numeric character
++3     x    fifth numeric character
++7     x    sixth numeric character
+
+The check digit is then the unit digit (last digit) of the result of this calculation.
+
+For example, for PPA code 334512, the check digit would be:
+(1 x 3) + (3 x 3) + (7 x 4) + 5 + (3 x 1) + (7 x 2) = 62
+The check digit is 2 and the full code G3345122.
+
+NHS UK General Practitioners Reference Data are available via the Welsh Reference Data
+Service (WRDS): http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+
+
+
+DSCN 2020 / 06                               Page 13 of 16
+Consultant Code
+A care professional contracted by a Health Care Provider who has been appointed by a
+consultant’s appointment committee.
+
+He or she must be a member of a Royal College or Faculty. This includes general medical
+practitioners in cases where a general medical practitioner is responsible for patient care and
+has an arrangement with the Health Care Provider.
+
+The Consultant Code is derived from either the General Medical Council reference number for
+general medical practitioners, or the General Dental Council registration number for general
+dental practitioners.
+
+Format: 8 character alphanumeric:
+
+
+Practitioner           Character Position
+Code Type                1       2       3      4        5      6      7       8
+Hospital Consultant*     C      0-9     0-9    0-9       0-9   0-9    0-9     0-9
+Dental Consultant**      D       D      0-9    0-9       0-9   0-9    0-9     0-9
+
+* Derived from General Medical Council Reference Number, prefixed with a C.
+** Derived from General Dental Council Registration Number, prefixed with DD.
+
+Note that General Dental Council registration numbers vary in length from 5 to 6 characters.
+Filling zeros are used between the prefix and General Dental Council registration number,
+where required, to maintain total length of 8 characters.
+
+For further information, please refer to the Dental Consultants in England (PDF) guidance
+document issued by the Organisation Data Service.
+
+NHS Wales Consultants and Private Consultants Reference Data are available via the Welsh
+Reference Data Service (WRDS): http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+
+Nurse Pin Number
+A nurse is a care professional whose name is registered by the Nursing and Midwifery
+Council.
+
+A nurse pin number is a code that uniquely identifies a nurse on the Nursing and Midwifery
+Council Register.
+
+Format: 8 character alphanumeric:
+
+NNANNNNA
+
+NHS Wales Nurses’ Reference Data are available via the Welsh Reference Data Service
+(WRDS): http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+
+
+
+DSCN 2020 / 06                           Page 14 of 16
+Allied Health Professional Code
+An allied health professional is a care professional whose name is registered with the Health
+and Care Professions Council (HCPC). An Allied Health Practitioner (AHP) Code is alpha
+numeric, with the first two to three alpha characters indicating the profession, followed by 5
+to 6 numeric characters.
+
+The list of health professionals listed on the HCPC with the type prefix are:
+
+ AS     Arts Therapist
+ BS     Biomedical Specialist
+ CH     Chiropodist / Podiatrist
+ CS     Clinical Scientist
+ DT     Dietician
+ HA     Hearing Aid Dispenser
+ OT     Occupational Therapist
+ ODP    Operating Department Practitioner
+ OR     Orthoptist
+ PA     Paramedic
+ PH     Physiotherapist
+ PYL    Practitioner Psychologist
+ PO     Prosthetist/Orthotist
+ RA     Radiographer
+ SL     Speech and Language Therapist
+
+Format: 8 character alphanumeric:
+
+AHP codes are in the format AANNNNN(N) or AAANNNNN
+
+NHS Wales Allied Health Professionals’ reference data are available via the Welsh Reference
+Data Service (WRDS): http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+
+
+
+DSCN 2020 / 06                           Page 15 of 16
+Specialty
+
+Treatment Specialty
+This is the specialty under which the patient will be or is treated and is based on the list of
+specialties defined by the Royal Colleges. This may or may not match the specialty recorded
+as a consultant's main specialty, and should be assigned irrespective of the type of care
+professional responsible.
+
+A full list of these codes can be found at:
+http://www.datadictionary.wales.nhs.uk/#!WordDocuments/treatmentfunctioncode.htm
+
+Format: 3 digit numeric
+
+
+Main or Consultant Specialty
+A unique code identifying each Main Specialty designated by Royal Colleges.
+
+Specialties are divisions of clinical work which may be defined by body systems
+(dermatology), age (paediatrics), clinical technology (nuclear medicine), clinical function
+(rheumatology), group of diseases (oncology) or combinations of these factors. Only
+Specialty titles recognised by the Royal Colleges and Faculties should be used. This list is
+maintained by the General and Specialist Medical Practice (Education, Training and
+Qualifications) Order 2003 and European Primary and Specialist Dental Qualifications
+Regulations 1998.
+
+Each consultant should be assigned a Main Specialty by the organisation to which the
+consultant is contracted. For physicians and surgeons with a generalist component to their
+work, the Main Specialty should be General Medicine or General Surgery. The Main Specialty
+is specific to a Health Care Provider. If, for example, a consultant physician working in two
+Health Care Providers has a generalist component to the work in one and not the other,
+General Medicine is only assigned as the Main Specialty in the former case. Consultants in
+general medicine or general surgery may also have specialist interests and these should be
+recorded as well as the Main Specialty.
+
+The source of this information should be the designation on the consultant's contract. This
+should be checked periodically against the work a consultant is actually doing so that the
+statistics can relate to a consultant's current type of work.
+
+The Main Specialty should only be used for the purpose of generating Health Resource
+Groups (HRGs) for financial costing and for workforce statistics. Other specialist interests of
+consultants may be recorded for workforce planning purposes.
+
+The Main Specialty code for general practitioners is General Medical Practice or General
+Dental Practice.
+
+Joint Consultant Clinic activity should be recorded against the Main Specialty code of the
+consultant managing the clinic.
+
+A full list of these codes can be found at:
+http://www.datadictionary.wales.nhs.uk/#!WordDocuments/mainspecialtyconsultant.htm
+
+Format: 3 digit numeric
+
+
+
+
+DSCN 2020 / 06                           Page 16 of 16
+
