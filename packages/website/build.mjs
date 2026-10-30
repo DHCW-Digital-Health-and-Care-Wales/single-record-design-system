@@ -526,7 +526,7 @@ const COMPONENT_CSS_LINKS = (prefix) =>
 
 const SECTIONS = [
   {
-    id: 'get-started', label: 'Get Started', href: 'index.html',
+    id: 'get-started', label: 'Get started', href: 'index.html',
     side: [
       { href: 'index.html', label: 'SR Design System' },
       { href: 'how-to-use.html', label: 'How to use' },
@@ -542,10 +542,10 @@ const SECTIONS = [
     side: [
       { href: 'styles/typography.html', label: 'Typography' },
       { href: 'styles/colour.html', label: 'Colour' },
-      { href: 'styles/spacing.html', label: 'Spacing & Elevation' },
+      { href: 'styles/spacing.html', label: 'Spacing and elevation' },
       { href: 'styles/icons.html', label: 'Icons' },
       { href: 'styles/grids.html', label: 'Grids' },
-      { href: 'styles/token-translator.html', label: 'Token Translator' },
+      { href: 'styles/token-translator.html', label: 'Token translator' },
     ],
   },
   {
@@ -584,8 +584,8 @@ const SECTIONS = [
     id: 'patterns', label: 'Patterns', href: 'patterns/patient-banner.html',
     side: [
       { href: 'patterns/dialogs.html', label: 'Dialogs' },
-      { href: 'patterns/patient-banner.html', label: 'Patient Banner' },
-      { href: 'patterns/patient-search.html', label: 'Patient Search' },
+      { href: 'patterns/patient-banner.html', label: 'Patient banner' },
+      { href: 'patterns/patient-search.html', label: 'Patient search' },
     ],
   },
   {
@@ -1316,26 +1316,26 @@ ${pbAlerts()}
     <div class="sr-patient-banner__name-row">
       <h2 class="sr-patient-banner__name">JOHN, Elvet George (Mr)</h2>
       <span class="sr-patient-banner__flag">Deceased</span>
-      <button type="button" class="sr-patient-banner__toggle" aria-expanded="true"><span>Hide Details</span>${PB_ICON_UP}</button>
+      <button type="button" class="sr-patient-banner__toggle" aria-expanded="true"><span>Hide details</span>${PB_ICON_UP}</button>
     </div>
     <dl class="sr-patient-banner__details">
       <div class="sr-patient-banner__col">
-        <div class="sr-patient-banner__field"><dt>NHS:</dt><dd>000 111 2222<button type="button" class="sr-patient-banner__copy" aria-label="Copy NHS number">${PB_ICON_COPY}</button></dd></div>
+        <div class="sr-patient-banner__field"><dt>NHS:</dt><dd>999 000 0204<button type="button" class="sr-patient-banner__copy" aria-label="Copy NHS number">${PB_ICON_COPY}</button></dd></div>
         <div class="sr-patient-banner__field"><dt>Address:</dt><dd>Penrhiw, Gwynfe Llangadog, Dyfed, SA19 9PU</dd></div>
         <div class="sr-patient-banner__field"><dt>Postcode:</dt><dd>SA19 9PU</dd></div>
       </div>
       <div class="sr-patient-banner__col">
         <div class="sr-patient-banner__field"><dt>CRN:</dt><dd>M8046459<button type="button" class="sr-patient-banner__copy" aria-label="Copy CRN">${PB_ICON_COPY}</button></dd></div>
-        <div class="sr-patient-banner__field"><dt>DOB:</dt><dd>15 Dec 1992 (33y)</dd></div>
+        <div class="sr-patient-banner__field"><dt>DOB:</dt><dd>15 Dec 1992 (33 years)</dd></div>
         <div class="sr-patient-banner__field sr-patient-banner__field--deceased"><dt>DOD:</dt><dd>23 Jun 2025</dd></div>
         <div class="sr-patient-banner__field"><dt>Sex:</dt><dd>Male</dd></div>
       </div>
     </dl>
   </div>
   <div class="sr-patient-banner__actions">
-    <button type="button" class="sr-button sr-button--primary sr-button--small">Change Patient</button>
+    <button type="button" class="sr-button sr-button--primary sr-button--small">Change patient</button>
     <button type="button" class="sr-button sr-button--secondary sr-button--small">View patient record</button>
-    <button type="button" class="sr-button sr-button--secondary sr-button--small">Print Patient label</button>
+    <button type="button" class="sr-button sr-button--secondary sr-button--small">Print patient label</button>
   </div>
 </section>`;
 }
@@ -1350,10 +1350,10 @@ function pbCollapsed(type) {
   <div class="sr-patient-banner__identity">
     <div class="sr-patient-banner__name-row"><h2 class="sr-patient-banner__name">JOHN, Elvet George (Mr)</h2></div>
     <dl class="sr-patient-banner__details">
-      <div class="sr-patient-banner__field"><dt>NHS:</dt><dd>000 111 2222<button type="button" class="sr-patient-banner__copy" aria-label="Copy NHS number">${PB_ICON_COPY}</button></dd></div>
-      <div class="sr-patient-banner__field"><dt>DOB:</dt><dd>15 Dec 1992 (33y)</dd></div>
+      <div class="sr-patient-banner__field"><dt>NHS:</dt><dd>999 000 0204<button type="button" class="sr-patient-banner__copy" aria-label="Copy NHS number">${PB_ICON_COPY}</button></dd></div>
+      <div class="sr-patient-banner__field"><dt>DOB:</dt><dd>15 Dec 1992 (33 years)</dd></div>
     </dl>
-    <button type="button" class="sr-patient-banner__toggle" aria-expanded="false"><span>Show Details</span>${PB_ICON_DOWN}</button>
+    <button type="button" class="sr-patient-banner__toggle" aria-expanded="false"><span>Show details</span>${PB_ICON_DOWN}</button>
   </div>
 </section>`;
 }
@@ -1386,7 +1386,7 @@ function patientBannerBody() {
   };
   return `
 <p class="breadcrumbs">Patterns</p>
-<h1>Patient Banner</h1>
+<h1>Patient banner</h1>
 <p class="lede">The persistent identity strip at the top of every patient-context screen: alerts
 first, then who the patient is, then the actions that can be taken on them. Two types, each with an
 expanded and a collapsed state.</p>
@@ -1409,7 +1409,7 @@ ${accessibilityTable([
     { req: 'Patient identity always available', sc: '3.2.3', how: 'Name, NHS number and DOB survive collapse; the banner is persistent and cannot be dismissed.', test: 'Collapse and re-read' },
     { req: 'Alerts precede demographics in reading order', sc: '1.3.2', how: 'The alerts block is first in the DOM, so it is reached before the identity block regardless of visual layout.', test: 'Screen reader, tab order' },
     { req: 'Alerts are not live regions', sc: '4.1.3', how: 'Alerts are present on load rather than announced changes; marking them live would interrupt every screen entry.', test: 'Screen reader announce' },
-    { req: 'Collapse control names its action', sc: '4.1.2', how: 'A real button with aria-expanded, labelled "Hide Details" / "Show Details" rather than "toggle".', test: 'Screen reader, keyboard' },
+    { req: 'Collapse control names its action', sc: '4.1.2', how: 'A real button with aria-expanded, labelled "Hide details" / "Show details" rather than "toggle".', test: 'Screen reader, keyboard' },
     { req: 'Icon-only actions name their subject', sc: '4.1.2', how: 'Collapsed actions read "Print label for JOHN, Elvet George", not "Print".', test: 'Screen reader announce' },
     { req: 'Deceased status not colour alone', sc: '1.4.1', how: 'A Deceased flag beside the name and a date-of-death field, two independent signals.', test: 'Greyscale review' },
     { req: 'Reaction severity not colour alone', sc: '1.4.1', how: 'Severity is stated in the text; the critical colour reinforces but never carries it.', test: 'Greyscale review' },
@@ -1461,9 +1461,9 @@ function typographyBody() {
 
   const labelSpecimen = `
 <div class="sr-type-label" style="margin:0 0 4px">NHS number</div>
-<div class="sr-type-body-m" style="margin:0 0 16px">485 777 3456</div>
+<div class="sr-type-body-m" style="margin:0 0 16px">999 000 0212</div>
 <div class="sr-type-label" style="margin:0 0 4px">Date of birth</div>
-<div class="sr-type-caption" style="margin:0">Use the format 06 Dec 1974</div>`;
+<div class="sr-type-caption" style="margin:0">Use the format 6 Dec 1974</div>`;
   const labelSnippets = {
     HTML: `<label class="sr-type-label" for="nhs-number">NHS number</label>
 <span class="sr-type-caption" id="nhs-number-hint">10 digits, spaced in groups of 3, 3 and 4</span>
@@ -1493,8 +1493,8 @@ function typographyBody() {
   <legend class="sr-type-heading-s">Contact preferences</legend>
 </fieldset>`,
     MAUI: `<Label StyleClass="FieldLabel" Text="NHS number" />
-<Label Text="485 777 3456" />
-<Label StyleClass="Caption" Text="Use the format 06 Dec 1974" />`,
+<Label Text="999 000 0212" />
+<Label StyleClass="Caption" Text="Use the format 6 Dec 1974" />`,
   };
 
   const bodySpecimen = `
@@ -2140,9 +2140,9 @@ function tableBody() {
       <th scope="col">No.</th><th scope="col">Patient</th><th scope="col">NHS number</th><th scope="col">DoB</th><th scope="col">Status</th>
     </tr></thead>
     <tbody>
-      <tr class="sr-table__row"><td class="sr-table__cell">1</td><td class="sr-table__cell">JONES, Alis</td><td class="sr-table__cell">123 456 7890</td><td class="sr-table__cell">06 Dec 1974</td><td class="sr-table__cell">Confirmed</td></tr>
-      <tr class="sr-table__row sr-table__row--selected"><td class="sr-table__cell">2</td><td class="sr-table__cell">OWEN, Rhys</td><td class="sr-table__cell">234 567 8901</td><td class="sr-table__cell">14 Mar 1988</td><td class="sr-table__cell">In review</td></tr>
-      <tr class="sr-table__row"><td class="sr-table__cell">3</td><td class="sr-table__cell">PATEL, Nia</td><td class="sr-table__cell">345 678 9012</td><td class="sr-table__cell">02 Jul 1991</td><td class="sr-table__cell">Draft</td></tr>
+      <tr class="sr-table__row"><td class="sr-table__cell">1</td><td class="sr-table__cell">JONES, Alis</td><td class="sr-table__cell">999 000 0220</td><td class="sr-table__cell">6 Dec 1974</td><td class="sr-table__cell">Confirmed</td></tr>
+      <tr class="sr-table__row sr-table__row--selected"><td class="sr-table__cell">2</td><td class="sr-table__cell">OWEN, Rhys</td><td class="sr-table__cell">999 000 0239</td><td class="sr-table__cell">14 Mar 1988</td><td class="sr-table__cell">In review</td></tr>
+      <tr class="sr-table__row"><td class="sr-table__cell">3</td><td class="sr-table__cell">PATEL, Nia</td><td class="sr-table__cell">999 000 0247</td><td class="sr-table__cell">2 Jul 1991</td><td class="sr-table__cell">Draft</td></tr>
     </tbody>
   </table>
 </div>`;
@@ -2740,7 +2740,7 @@ ${showcase(demo, 'radio', snippets)}
 cue telling a reader one is single-select — so it is never restyled.</p>
 ${showcase(states, 'radio-states', stateSnippets)}
 
-<h2>Type: Card Radio</h2>
+<h2>Type: <code>Card Radio</code></h2>
 <p class="muted">A bordered box so each option can carry a description. Selection is the border
 turning navy, and the ring keeps its dot — so selection is never the border colour alone.</p>
 ${showcase(cardRadio, 'radio-card', cardSnippets)}
@@ -2751,7 +2751,7 @@ all invert together, so the card reads as one selected object rather than a box 
 highlight.</p>
 ${showcase(cardFilled, 'radio-card-fill', cardFilledSnippets)}
 
-<h2>Type: Card Icon</h2>
+<h2>Type: <code>Card Icon</code></h2>
 <p class="muted">A 24px icon replaces the ring where the option has a recognisable mark. The icon
 is decorative — the label still carries the name, because an icon on its own does not identify a
 record type to someone who has not seen it before.</p>
@@ -3065,7 +3065,7 @@ parent's 40px — a child that outweighs its parent inverts the hierarchy. Arrow
 level independently.</p>
 ${showcase(twoLevel, 'tabs-two-level', snippets)}
 
-<h2>Sub-tabs and the Segmented control</h2>
+<h2>Sub-tabs and the segmented control</h2>
 <p>Both are single-select and both fill the chosen option in brand blue. One line separates them:</p>
 <p><strong>Track = filter. No track = navigate.</strong></p>
 <p>The Segmented control sits in a grey track and sets an option <em>within</em> the view you are
@@ -3512,7 +3512,7 @@ ${showcase(inTabs, 'badge-tabs', snippets)}
 
 <h2>The count is in the name</h2>
 <p>The badge is hidden from screen readers, so the tab or menu item has to say the number itself:
-"Referrals, 20 items". Until 2026-09-25 the navigation item's <code>aria-label</code> replaced its
+"Referrals, 20 items". Until 25 Sep 2026 the navigation item's <code>aria-label</code> replaced its
 content, so its count was never announced at all.</p>
 
 <h2>The contrast correction</h2>
@@ -3613,8 +3613,8 @@ ${steps.map((s, i) => {
   </li>`;
   const timeline = `<ol class="sr-timeline" aria-label="Referral history" style="max-width: 480px;">
 ${[
-    { state: 'complete', datetime: '2024-04-08T15:30', time: '08-Apr-2024\n15:30', title: 'Referral sent', description: 'Sent to cardiology, Cardiff and Vale UHB', tag: 'Complete', tagType: 'green' },
-    { state: 'alert', datetime: '2024-04-08T16:05', time: '08-Apr-2024\n16:05', title: 'Referral returned', description: 'NHS number did not match the record', tag: 'Action needed', tagType: 'red' },
+    { state: 'complete', datetime: '2024-04-08T15:30', time: '8 Apr 2024\n15:30', title: 'Referral sent', description: 'Sent to cardiology, Cardiff and Vale UHB', tag: 'Complete', tagType: 'green' },
+    { state: 'alert', datetime: '2024-04-08T16:05', time: '8 Apr 2024\n16:05', title: 'Referral returned', description: 'NHS number did not match the record', tag: 'Action needed', tagType: 'red' },
     { state: 'current', datetime: '2024-04-09T09:10', time: 'Now', title: 'Clinical assessment in progress', description: 'Under review by attending clinician', tag: 'In progress', tagType: 'blue' },
     { state: 'pending', datetime: '2024-04-09', time: '—', title: 'Discharge', description: 'Pending clinical outcome' },
   ].map(tlItem).join('\n')}
@@ -3646,8 +3646,8 @@ ${[
     Blazor: '<ol class="sr-stepper sr-stepper--compact" aria-label="Referral progress">\n  <li class="sr-stepper__step sr-stepper__step--current" aria-current="step">\n    <span class="sr-stepper__marker" aria-hidden="true"></span>\n    <span class="sr-stepper__label">Triage</span>\n  </li>\n</ol>',
   };
   const timelineSnippets = {
-    HTML: '<ol class="sr-timeline" aria-label="Referral history">\n  <li class="sr-timeline__item sr-timeline__item--complete">\n    <time class="sr-timeline__time" datetime="2024-04-08T15:30">08-Apr-2024\n15:30</time>\n    <span class="sr-timeline__dot" aria-hidden="true"></span>\n    <div class="sr-timeline__body">\n      <p class="sr-timeline__title">Referral sent</p>\n      <p class="sr-timeline__description">Sent to cardiology</p>\n      <span class="sr-tag sr-tag--status sr-tag--green sr-tag--small"><span>Complete</span></span>\n    </div>\n  </li>\n</ol>',
-    React: '<Timeline\n  ariaLabel="Referral history"\n  items={[\n    { state: \'complete\', time: \'08-Apr-2024\\n15:30\', datetime: \'2024-04-08T15:30\',\n      title: \'Referral sent\', description: \'Sent to cardiology\', tag: \'Complete\' },\n    { state: \'current\', time: \'Now\', datetime: \'2024-04-09T09:10\',\n      title: \'Clinical assessment in progress\', tag: \'In progress\' },\n  ]}\n/>',
+    HTML: '<ol class="sr-timeline" aria-label="Referral history">\n  <li class="sr-timeline__item sr-timeline__item--complete">\n    <time class="sr-timeline__time" datetime="2024-04-08T15:30">8 Apr 2024\n15:30</time>\n    <span class="sr-timeline__dot" aria-hidden="true"></span>\n    <div class="sr-timeline__body">\n      <p class="sr-timeline__title">Referral sent</p>\n      <p class="sr-timeline__description">Sent to cardiology</p>\n      <span class="sr-tag sr-tag--status sr-tag--green sr-tag--small"><span>Complete</span></span>\n    </div>\n  </li>\n</ol>',
+    React: '<Timeline\n  ariaLabel="Referral history"\n  items={[\n    { state: \'complete\', time: \'8 Apr 2024\\n15:30\', datetime: \'2024-04-08T15:30\',\n      title: \'Referral sent\', description: \'Sent to cardiology\', tag: \'Complete\' },\n    { state: \'current\', time: \'Now\', datetime: \'2024-04-09T09:10\',\n      title: \'Clinical assessment in progress\', tag: \'In progress\' },\n  ]}\n/>',
     Blazor: '<ol class="sr-timeline" aria-label="Referral history">\n  @foreach (var e in Events)\n  {\n    @* StateClass returns sr-timeline__item--complete | --current | --alert | --pending *@\n    <li class="sr-timeline__item @StateClass(e)">\n      <time class="sr-timeline__time" datetime="@e.At.ToString("s")">@e.At.ToString("dd-MMM-yyyy\'\\n\'HH:mm")</time>\n      <span class="sr-timeline__dot" aria-hidden="true"></span>\n      <div class="sr-timeline__body">\n        <p class="sr-timeline__title">@e.Title</p>\n        <p class="sr-timeline__description">@e.Description</p>\n      </div>\n    </li>\n  }\n</ol>',
   };
 
@@ -3752,7 +3752,7 @@ dismissed — and that is its own decision. A <code>Critical</code> severity tha
 by one shade was merged into it, because a shade is not a safety mechanism.</p>
 ${showcase(severities, 'banner-severity', snippets)}
 
-<h2>Inline and Global</h2>
+<h2>Inline and global</h2>
 <p>The distinction is <strong>what the banner is about</strong>, not how it looks. Inline is about
 one thing on the page — this form, this table, this record. Global is about the whole page or the
 whole system.</p>
@@ -4154,7 +4154,7 @@ const INPUT_TYPES = [
   { id: 'text',     label: 'Text',       field: 'Full name',        ph: 'Enter value',        hint: 'As it appears on the referral letter', err: 'Enter a full name',        html: 'text' },
   { id: 'password', label: 'Password',   field: 'Password',         ph: '',                   hint: 'Must be 8 or more characters',         err: 'Enter 8 or more characters', html: 'password' },
   { id: 'phone',    label: 'Phone',      field: 'Phone number',     ph: 'e.g. 07700 900000',  hint: 'Include the area code',                err: 'Enter a valid phone number', html: 'tel' },
-  { id: 'calendar', label: 'Date',       field: 'Date of birth',    ph: 'Add date',           hint: 'For example, 06 Dec 1974',             err: 'Enter a valid date',       html: 'text' },
+  { id: 'calendar', label: 'Date',       field: 'Date of birth',    ph: 'Add date',           hint: 'For example, 6 Dec 1974',             err: 'Enter a valid date',       html: 'text' },
   { id: 'time',     label: 'Time',       field: 'Appointment time', ph: 'Add time',           hint: 'Clinic hours are 08:00 to 18:00',      err: 'Enter a valid time',       html: 'text' },
   { id: 'textarea', label: 'Multi-line', field: 'Notes',            ph: 'Enter value',        hint: 'Keep this brief',                      err: 'Enter some detail',        html: 'text' },
 ];
@@ -4475,7 +4475,7 @@ function navigationBody() {
   const SECTIONS_NAV = [
     { label: 'Home', items: [{ icon: 'nav/dashboard', label: 'Dashboard', current: true }] },
     { label: 'Patients', items: [
-      { icon: 'nav/search', label: 'Patient Search' },
+      { icon: 'nav/search', label: 'Patient search' },
       { icon: 'nav/sort', label: 'Referrals', badge: '20', children: true },
       { icon: 'schedule/appointment', label: 'Appointments', badge: '20', children: true },
       { icon: 'schedule/waiting-list', label: 'Watchlists' },
@@ -4491,7 +4491,7 @@ function navigationBody() {
   ];
   const FOOTER_NAV = [
     { icon: 'nav/settings', label: 'Settings' },
-    { icon: 'nav/log-out', label: 'Log Out' },
+    { icon: 'nav/log-out', label: 'Log out' },
   ];
   const navItem = (it) => `<button type="button" class="sr-nav__item" aria-label="${it.badge ? `${it.label}, ${it.badge} items` : it.label}"${
     it.current ? ' aria-current="page"' : ''}${it.children ? ' aria-expanded="false"' : ''}>
@@ -4519,7 +4519,7 @@ ${SECTIONS_NAV.map((s) => `    <div class="sr-nav__section">
 </nav>`;
   const frame = (mod) => `<div class="nav-frame">${nav(mod)}</div>`;
   const snippets = {
-    HTML: '<nav class="sr-nav" aria-label="Primary">\n  <div class="sr-nav__header">…</div>\n  <div class="sr-nav__body">\n    <div class="sr-nav__section">\n      <span class="sr-nav__section-label">Patients</span>\n      <div class="sr-nav__list">\n        <button class="sr-nav__item" aria-label="Patient Search">…</button>\n      </div>\n    </div>\n  </div>\n  <div class="sr-nav__footer">…</div>\n</nav>\n\n<!-- Collapsed states -->\n<nav class="sr-nav sr-nav--rail">…</nav>       <!-- 108px, labels kept -->\n<nav class="sr-nav sr-nav--collapsed">…</nav>  <!-- 48px, icon only -->',
+    HTML: '<nav class="sr-nav" aria-label="Primary">\n  <div class="sr-nav__header">…</div>\n  <div class="sr-nav__body">\n    <div class="sr-nav__section">\n      <span class="sr-nav__section-label">Patients</span>\n      <div class="sr-nav__list">\n        <button class="sr-nav__item" aria-label="Patient search">…</button>\n      </div>\n    </div>\n  </div>\n  <div class="sr-nav__footer">…</div>\n</nav>\n\n<!-- Collapsed states -->\n<nav class="sr-nav sr-nav--rail">…</nav>       <!-- 108px, labels kept -->\n<nav class="sr-nav sr-nav--collapsed">…</nav>  <!-- 48px, icon only -->',
     React: '<Navigation\n  type="sectioned"          // "sectioned" | "linear"\n  collapsed={navState}      // false (220px) | "rail" (108px) | "icon" (48px)\n  sections={sections}\n  footerItems={footerItems}\n  current="Dashboard"\n  onCollapseToggle={cycleNavState}\n/>',
     Blazor: '@* Stylesheet only — no SrNavigation component ships. A parent with children\n   is a button with aria-expanded; a leaf is a link. *@\n<nav class="sr-nav" aria-label="Primary">\n  <div class="sr-nav__header">…</div>\n  <div class="sr-nav__body">\n    @foreach (var section in Sections)\n    {\n      <div class="sr-nav__section">\n        <span class="sr-nav__section-label">@section.Label</span>\n        <div class="sr-nav__list">\n          @foreach (var item in section.Items)\n          {\n            <a class="sr-nav__item" href="@item.Href"\n               aria-current="@(item.Label == Current ? "page" : null)">@item.Label</a>\n          }\n        </div>\n      </div>\n    }\n  </div>\n  <div class="sr-nav__footer">…</div>\n</nav>',
     MAUI: '<!-- No MAUI equivalent. A 248px persistent rail is a browser-width\n     pattern; MAUI is mobile only (phone, tablet). Mobile primary\n     navigation is BottomNav — see the Footer page, Type: Mobile. -->',
@@ -4543,7 +4543,7 @@ ${showcase(frame(''), 'navigation', snippets)}
 
 <h2>Collapsed — rail</h2>
 <p class="muted">108px. <strong>Not a truncated expanded row</strong>: the icon moves above the
-label, both centre, and the label drops to caption (12px) so "Patient Search" fits without
+label, both centre, and the label drops to caption (12px) so "Patient search" fits without
 truncating. Section labels, badges and chevrons are dropped — the rail is for recognition, not
 detail.</p>
 <div class="showcase"><div class="showcase__preview">${frame(' sr-nav--rail')}</div></div>
@@ -5016,7 +5016,7 @@ const spacingMd = publicise(readFileSync(resolve(ROOT, 'foundations', 'tokens', 
 
 // ─── register pages ───────────────────────────────────────────────────────────
 addPage({
-  file: 'index.html', url: 'index.html', title: 'Single Record Design System', section: 'Get Started',
+  file: 'index.html', url: 'index.html', title: 'Single Record Design System', section: 'Get started',
   sectionId: 'get-started', activeHref: 'index.html', prefix: '',
   body: `
 <h1>Single Record Design System</h1>
@@ -5044,10 +5044,10 @@ rationale, and how our components behave.</p>`,
 });
 
 addPage({
-  file: 'how-to-use.html', url: 'how-to-use.html', title: 'How to use', section: 'Get Started',
+  file: 'how-to-use.html', url: 'how-to-use.html', title: 'How to use', section: 'Get started',
   sectionId: 'get-started', activeHref: 'how-to-use.html', prefix: '',
   body: `
-<p class="breadcrumbs">Get Started</p>
+<p class="breadcrumbs">Get started</p>
 <h1>How to use</h1>
 <p class="lede">How to pick up the design system, whether you are designing a screen or building one.</p>
 
@@ -5125,9 +5125,9 @@ not exist yet.</p>`,
 
 addPage({
   file: 'get-the-files.html', url: 'get-the-files.html', title: 'Get the files',
-  section: 'Get Started', sectionId: 'get-started', activeHref: 'get-the-files.html', prefix: '',
+  section: 'Get started', sectionId: 'get-started', activeHref: 'get-the-files.html', prefix: '',
   body: `
-<p class="breadcrumbs">Get Started</p>
+<p class="breadcrumbs">Get started</p>
 <h1>Get the files</h1>
 <p class="lede">The actual stylesheet and script to put in an application. Reading a component's
 source on this site shows you what it is; these are the files that make it work.</p>
@@ -5448,15 +5448,15 @@ install command changes.</p></div>`,
 const FIGMA_LIBRARY_URL = 'https://www.figma.com/design/x5fwyefxxgD03csz8ld7SZ/SINGLE-RECORD-DESIGN-SYSTEM?node-id=1307-16983&t=eafR64jJMZD5ez6T-1';
 
 addPage({
-  file: 'figma.html', url: 'figma.html', title: 'Using Figma', section: 'Get Started',
+  file: 'figma.html', url: 'figma.html', title: 'Using Figma', section: 'Get started',
   sectionId: 'get-started', activeHref: 'figma.html', prefix: '',
   body: `
-<p class="breadcrumbs">Get Started</p>
+<p class="breadcrumbs">Get started</p>
 <h1>Using Figma</h1>
 <p class="lede">The Single Record Figma library is the canonical source for variables, components and
 usage notes. Its variables build to the same tokens this website consumes.</p>
 <div class="cards">
-  <a class="card" href="${FIGMA_LIBRARY_URL}" target="_blank" rel="noopener">${cardIcon('nav/dashboard')}<h3>Figma Design System file</h3><p>The canonical library: components, variables and usage notes, authored directly in Figma.</p></a>
+  <a class="card" href="${FIGMA_LIBRARY_URL}" target="_blank" rel="noopener">${cardIcon('nav/dashboard')}<h3>Figma design system file</h3><p>The canonical library: components, variables and usage notes, authored directly in Figma.</p></a>
 </div>
 <h2>Keeping design and code in step</h2>
 <p>Changes to variables in Figma flow into the published token artifact, and this site rebuilds from
@@ -5495,19 +5495,19 @@ ${panels}
 }
 
 addPage({
-  file: 'changelog.html', url: 'changelog.html', title: "What's new", section: 'Get Started',
+  file: 'changelog.html', url: 'changelog.html', title: "What's new", section: 'Get started',
   sectionId: 'get-started', activeHref: 'changelog.html', prefix: '',
   body: `
-<p class="breadcrumbs">Get Started</p>
+<p class="breadcrumbs">Get started</p>
 <h1>What's new</h1>
 <p class="lede">What changed in each release, and whether you need to do anything about it.</p>
 ${changelogBody()}`,
 });
 addPage({
-  file: 'working-with-ai.html', url: 'working-with-ai.html', title: 'Working with AI', section: 'Get Started',
+  file: 'working-with-ai.html', url: 'working-with-ai.html', title: 'Working with AI', section: 'Get started',
   sectionId: 'get-started', activeHref: 'working-with-ai.html', prefix: '',
   body: `
-<p class="breadcrumbs">Get Started</p>
+<p class="breadcrumbs">Get started</p>
 <h1>Working with AI</h1>
 <p class="lede">Give Claude, Copilot or ChatGPT our guide, and the prototypes it makes will use Single
 Record colours, type and components from the first draft.</p>
@@ -5567,10 +5567,10 @@ a ward nurse's patient list. Show 8 patients with name, NHS number, bed and a
 </ul>`,
 });
 addPage({
-  file: 'storybook.html', url: 'storybook.html', title: 'Using Storybook', section: 'Get Started',
+  file: 'storybook.html', url: 'storybook.html', title: 'Using Storybook', section: 'Get started',
   sectionId: 'get-started', activeHref: 'storybook.html', prefix: '',
   body: `
-<p class="breadcrumbs">Get Started</p>
+<p class="breadcrumbs">Get started</p>
 <h1>Using Storybook</h1>
 <p class="lede">The interactive playground. Every reference component rendered with all of its
 variants and controls, so you can try a component before you build with it.</p>
@@ -5615,7 +5615,7 @@ addPage({
   sectionId: 'styles', activeHref: 'styles/colour.html', prefix: '../', body: colourBody(),
 });
 addPage({
-  file: 'styles/spacing.html', url: 'styles/spacing.html', title: 'Spacing & Elevation', section: 'Styles',
+  file: 'styles/spacing.html', url: 'styles/spacing.html', title: 'Spacing and elevation', section: 'Styles',
   sectionId: 'styles', activeHref: 'styles/spacing.html', prefix: '../',
   body: `<p class="breadcrumbs">Styles</p>${renderMarkdown(spacingMd)}<hr>
     <h2>The spacing scale</h2>
@@ -5642,7 +5642,7 @@ addPage({
   body: gridsBody(flat),
 });
 addPage({
-  file: 'styles/token-translator.html', url: 'styles/token-translator.html', title: 'Token Translator', section: 'Styles',
+  file: 'styles/token-translator.html', url: 'styles/token-translator.html', title: 'Token translator', section: 'Styles',
   sectionId: 'styles', activeHref: 'styles/token-translator.html', prefix: '../',
   body: `
 <p class="breadcrumbs">Styles</p>
@@ -5776,7 +5776,7 @@ addPage({
 });
 addPage({
   file: 'patterns/patient-banner.html', url: 'patterns/patient-banner.html',
-  title: 'Patient Banner', section: 'Patterns',
+  title: 'Patient banner', section: 'Patterns',
   sectionId: 'patterns', activeHref: 'patterns/patient-banner.html', prefix: '../',
   body: patientBannerBody(),
 });
@@ -5954,9 +5954,9 @@ addPage({
 });
 addPage({
   file: 'patterns/patient-search.html', url: 'patterns/patient-search.html',
-  title: 'Patient Search', section: 'Patterns',
+  title: 'Patient search', section: 'Patterns',
   sectionId: 'patterns', activeHref: 'patterns/patient-search.html', prefix: '../',
-  body: patternGuidelinesBody('Patient Search', 'How staff find the right patient: by NHS number or case number, by name and date of birth, or by scanning the wristband. Every route ends with the user confirming who the patient is.', 'patient-search', patientSearchExamples()),
+  body: patternGuidelinesBody('Patient search', 'How staff find the right patient: by NHS number or case number, by name and date of birth, or by scanning the wristband. Every route ends with the user confirming who the patient is.', 'patient-search', patientSearchExamples()),
 });
 // ─── Prototypes ───────────────────────────────────────────────────────────────
 addPage({

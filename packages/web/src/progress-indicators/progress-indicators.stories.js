@@ -89,7 +89,7 @@ export const Timeline = {
   render: () => html(`
 <ol class="sr-timeline" aria-label="Referral history">
   <li class="sr-timeline__item sr-timeline__item--complete">
-    <time class="sr-timeline__time" datetime="2024-04-08T15:30">08-Apr-2024
+    <time class="sr-timeline__time" datetime="2024-04-08T15:30">8 Apr 2024
 15:30</time>
     <span class="sr-timeline__dot" aria-hidden="true"></span>
     <div class="sr-timeline__body"><p class="sr-timeline__title">Referral sent</p><p class="sr-timeline__description">Sent to cardiology</p><span class="sr-tag sr-tag--status sr-tag--green sr-tag--small"><span>Complete</span></span></div>

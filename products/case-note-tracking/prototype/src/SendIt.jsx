@@ -279,7 +279,7 @@ export default function SendIt() {
   // A scan is the same search a clinician would type, minus the typing — it
   // populates the field and runs, rather than jumping straight into a batch.
   const simulateScan = () => {
-    setQuery('000 111 2222');
+    setQuery('999 000 0204');
     setPicked(new Set());
     findNextGroup();
   };
@@ -596,7 +596,7 @@ export default function SendIt() {
 
           <section className="panel send-summary" aria-label="Batch summary">
             <div className="send-summary__head">
-              <h2 className="panel__title">Batch Summary</h2>
+              <h2 className="panel__title">Batch summary</h2>
               <div className="send-summary__controls">
                 <Checkbox
                   label="Hide sent case notes"

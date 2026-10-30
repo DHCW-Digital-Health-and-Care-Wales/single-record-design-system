@@ -29,11 +29,12 @@ this file says so and tells you what to change.
 - **Website:** new **Working with AI** page, with a downloadable guide that gives an AI tool our tokens, classes, icons and content rules. "What's new" is now an accordion with the newest release open. Card grids are two columns.
 - **Icon dots are 1.5px** (were 1px, the stroke width): `status/info`, `status/warning`, `status/error-circle`, `clinical/allergy`, `clinical/attendance`, `clinical/result`, `location/room`, `nav/support`, `schedule/events`. No names change.
 - **Icon-only buttons:** 32px icon on mobile, 24px on desktop, always in a 44 × 44 target (guidance, `foundations/iconography.md`).
+- **Content fixes across the website and the Case Note Tracking prototype**, found by the new content checker: sentence case for navigation, headings and buttons (Get started, Patient search, Show details, Log out, Batch summary and others); example NHS numbers replaced with test numbers that pass the check digit; ages written as "(33 years)"; no leading zero on days; release dates on What's new as `30 Sep 2026`. The Timeline component's examples now use `8 Apr 2024` instead of `08-Apr-2024`. **Optional:** if you copied example markup, these labels changed.
 - **Patterns:** new Dialogs and Patient search pages on the website, from new `guidelines.md` files.
 
 ---
 
-## v0.4.0 — 2026-09-30
+## v0.4.0 — 30 Sep 2026
 
 **Action needed** if you write the markup yourself (HTML, Blazor) and use a
 navigation or tab count badge, or if you use the `schedule/overnight` icon.
@@ -92,7 +93,7 @@ an overnight mark.
 **Search shipped.** The system's only search field — Basic, With Button, With
 Icon Button and Typeahead, with the full WAI-ARIA combobox keyboard model.
 `@dhcw/sr-react` → `Search`. The Input set's `Type=Search` variants were removed
-in Figma on 2026-06-04; use `Search` with its `label` / `hint` / `required`
+in Figma on 4 Jun 2026; use `Search` with its `label` / `hint` / `required`
 props rather than wrapping an Input around it. Autocomplete now composes the
 Search field and the Select listbox.
 
@@ -123,7 +124,7 @@ boundary anywhere, move to the token.
 
 ---
 
-## v0.3.0 — 2026-09-07
+## v0.3.0 — 7 Sep 2026
 
 **Action needed** if you use icons by name. This release renames, retires and
 adds icons, and corrects the icon token layer. It is the first stable release on
@@ -194,7 +195,7 @@ been drawn at 2px. `SrIconStroke` is now an `x:Double`, so MAUI can bind it to a
 
 ---
 
-## v0.2.1-rc.0 — 2026-09-03
+## v0.2.1-rc.0 — 3 Sep 2026
 
 **No action.** This is a **release candidate**, not a release. It exists to prove
 the npm publishing route end to end before a real version goes out.
@@ -236,7 +237,7 @@ contrast of text on status banners and tags.
 
 ---
 
-## v0.2.0 — 2026-08-13
+## v0.2.0 — 13 Aug 2026
 
 **Action needed** to upgrade — but only to change the version in four URLs. See
 "Upgrading" below for a one-liner that does it.
@@ -373,7 +374,7 @@ often the design system ships.
 
 ---
 
-## v0.1.1 — 2026-08-12
+## v0.1.1 — 12 Aug 2026
 
 **Optional.** v0.1.0 keeps working. Two of these are worth taking when you have
 a moment.
@@ -423,7 +424,7 @@ a moment.
 
 ---
 
-## v0.1.0 — 2026-08-11
+## v0.1.0 — 11 Aug 2026
 
 The first installable release. **Action needed if you followed an earlier
 guide** — see below.

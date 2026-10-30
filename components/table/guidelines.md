@@ -9,7 +9,7 @@
 | **Status** | In review |
 | **Reference** | [`spec.md`](./spec.md) (full contract) · `packages/web/src/table/table.css` |
 | **Figma** | Table component (`1363:22598`) |
-| **Related standards** | UI Standards #16 (tables), #8 (abbreviations), #25 (dates) · [GDS Table](https://design-system.service.gov.uk/components/table/) · [NHS England Table](https://service-manual.nhs.uk/design-system/components/table) |
+| **Related standards** | UI Standards #16 (tables), #8 (abbreviations), #25 (dates) · [GDS table](https://design-system.service.gov.uk/components/table/) · [NHS England table](https://service-manual.nhs.uk/design-system/components/table) |
 | **Last updated** | 2026-07 |
 
 ---
@@ -101,4 +101,4 @@ The legacy DHCW UI Standards define two table modes ([p.15–16](../../docs/refe
 - [`spec.md`](./spec.md) — full component contract and anatomy
 - [Select](../select/spec.md) · [Tags](../tags/spec.md) (status badges in cells) · [Button](../button/spec.md) (row actions)
 - [DDR-015](../../decisions/DDR-015-primary-content-min-14px.md) — 14px primary-content minimum · [DDR-006](../../decisions/DDR-006-focus-ring-cyan.md) — focus ring
-- [GDS Table](https://design-system.service.gov.uk/components/table/) · [NHS England Table](https://service-manual.nhs.uk/design-system/components/table)
+- [GDS table](https://design-system.service.gov.uk/components/table/) · [NHS England table](https://service-manual.nhs.uk/design-system/components/table)

@@ -11,7 +11,7 @@ const SECTIONS = [
   {
     label: 'Patients',
     items: [
-      { icon: 'nav/search', label: 'Patient Search' },
+      { icon: 'nav/search', label: 'Patient search' },
       {
         icon: 'nav/sort',
         label: 'Referrals',
@@ -61,7 +61,7 @@ const SECTIONS = [
 
 const FOOTER_ITEMS = [
   { icon: 'nav/settings', label: 'Settings' },
-  { icon: 'nav/log-out', label: 'Log Out' },
+  { icon: 'nav/log-out', label: 'Log out' },
 ];
 
 const Demo = ({ initialCollapsed, current, type }) => {
@@ -100,7 +100,7 @@ export default {
   args: {
     collapsed: false,
     type: 'sectioned',
-    current: 'Patient Search',
+    current: 'Patient search',
   },
 };
 

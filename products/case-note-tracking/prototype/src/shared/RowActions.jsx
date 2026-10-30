@@ -153,7 +153,7 @@ export function AdditionalInfoField() {
   return (
     <div className="modal-additional-info">
       <div className="modal-additional-info__header">
-        <span className="modal-additional-info__label">Additional Info</span>
+        <span className="modal-additional-info__label">Additional information</span>
         <button
           type="button"
           className="modal-additional-info__delete"
@@ -168,7 +168,7 @@ export function AdditionalInfoField() {
       </div>
       <Input
         type="textarea"
-        label="Additional Info"
+        label="Additional information"
         hideLabel
         placeholder="Enter value"
         value={value}

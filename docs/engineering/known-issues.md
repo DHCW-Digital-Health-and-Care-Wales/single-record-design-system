@@ -654,6 +654,25 @@ catch the drift half of this.
 
 ---
 
+## Content
+
+### Example data drifted into every surface
+
+**Symptom:** Clinicians spotted wrong demo content in design reviews. Example NHS numbers
+(`000 111 2222`, `123 456 7890`) failed the check digit. A demo patient's age went stale. Several
+patients shared one NHS number. Navigation and buttons used title case ("Get Started",
+"Show Details").
+
+**Why:** Example content was typed by hand in each place it appeared, with nothing to check it
+against.
+
+**Fix:** Take patients from `docs/content/demo-patients.md`. Follow the rules in
+`docs/content/data-standards.md`.
+
+**Prevented by:** `npm run check:demo-data` (the demo patients), and the content check in
+`npm run build:site` (website and prototype source), which fails on any content error. Figma is
+checked by the content-checker agent and cannot be gated.
+
 ## Web / CSS
 
 ### A tiny stroked `<circle>` renders as a hollow ring

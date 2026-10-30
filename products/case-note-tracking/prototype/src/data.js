@@ -8,11 +8,11 @@
 // statuses (e.g. discharged) are potential future work, not implemented here.
 export const PATIENT = {
   name: 'JOHN, Elvet George (Mr)',
-  nhsNumber: '000 111 2222',
+  nhsNumber: '999 000 0204',
   crn: 'M8046459',
   address: 'Penrhiw, Gwynfe Llangadog, Dyfed, SA19 9PU',
   postcode: 'SA19 9PU',
-  dob: '15 Dec 1992 (33y)',
+  dob: '15 Dec 1992 (33 years)',
   sex: 'Male',
 };
 
@@ -40,8 +40,8 @@ export const NAV_SECTIONS = [
     label: 'Primary',
     items: [
       { icon: 'nav/dashboard', label: 'Dashboard' },
-      { icon: 'nav/search', label: 'Patient Search' },
-      { icon: 'nav/sort', label: 'My Requests' },
+      { icon: 'nav/search', label: 'Patient search' },
+      { icon: 'nav/sort', label: 'My requests' },
       { icon: 'action/send', label: 'SendIT' },
       { icon: 'action/download', label: 'ReceiveIT' },
       { icon: 'file/attachment', label: 'TagIT' },
@@ -51,7 +51,7 @@ export const NAV_SECTIONS = [
 
 export const NAV_FOOTER = [
   { icon: 'nav/settings', label: 'Settings' },
-  { icon: 'nav/log-out', label: 'Log Out' },
+  { icon: 'nav/log-out', label: 'Log out' },
 ];
 
 export const STATS = [
@@ -64,7 +64,7 @@ export const STATS = [
 // Descriptions stay to a single short line — Figma draws these cards at 64px
 // with one line of supporting text, and a wrapped second line breaks the row.
 export const QUICK_ACTIONS = [
-  { icon: 'nav/search', label: 'Patient Search', description: 'Find a patient', view: 'patient-search' },
+  { icon: 'nav/search', label: 'Patient search', description: 'Find a patient', view: 'patient-search' },
   { icon: 'action/add', label: 'Create Case Note', description: 'Register a new volume' },
   { icon: 'action/send', label: 'Batch SendIT', description: 'Send a batch' },
   { icon: 'action/download', label: 'Batch ReceiveIT', description: 'Receive a batch' },
@@ -115,10 +115,10 @@ export const IN_TRANSIT = [
  */
 export const SEARCH_RESULTS = [
   { id: 1, caseNo: PATIENT.crn, nhs: PATIENT.nhsNumber, surname: 'JOHN', forenames: 'Elvet George', status: 'Active', statusType: 'green', dob: '15 Dec 1992', dod: '-', sex: 'Male', postcode: PATIENT.postcode },
-  { id: 2, caseNo: 'NN54242', nhs: '098 765 4321', surname: 'DAVIS',    forenames: 'JONATHAN PAUL', status: 'Active',   statusType: 'green', dob: '14 Jan 2000', dod: '-',           sex: 'Male',   postcode: 'M1 1AE' },
-  { id: 3, caseNo: 'NN24312', nhs: '098 765 4321', surname: 'NOAH',     forenames: 'DAVIS',         status: 'Active',   statusType: 'green', dob: '28 Jun 1988', dod: '-',           sex: 'Male',   postcode: 'G1 2FF' },
-  { id: 4, caseNo: 'CN032412', nhs: '098 765 4321', surname: 'MARTINEZ', forenames: 'AVA',          status: 'Active',   statusType: 'green', dob: '21 Sep 1969', dod: '-',           sex: 'Female', postcode: 'BT7 1NN' },
-  { id: 5, caseNo: 'CN723283', nhs: '098 765 4321', surname: 'DOE',      forenames: 'JANE',         status: 'Deceased', statusType: 'red',   dob: '30 Apr 1995', dod: '15 Nov 2025', sex: 'Female', postcode: 'W1A 0AX' },
+  { id: 2, caseNo: 'NN54242', nhs: '999 000 0220', surname: 'DAVIS',    forenames: 'Jonathan Paul', status: 'Active',   statusType: 'green', dob: '14 Jan 2000', dod: '-',           sex: 'Male',   postcode: 'M1 1AE' },
+  { id: 3, caseNo: 'NN24312', nhs: '999 000 0239', surname: 'NOAH',     forenames: 'Davis',         status: 'Active',   statusType: 'green', dob: '28 Jun 1988', dod: '-',           sex: 'Male',   postcode: 'G1 2FF' },
+  { id: 4, caseNo: 'CN032412', nhs: '999 000 0247', surname: 'MARTINEZ', forenames: 'Ava',          status: 'Active',   statusType: 'green', dob: '21 Sep 1969', dod: '-',           sex: 'Female', postcode: 'BT7 1NN' },
+  { id: 5, caseNo: 'CN723283', nhs: '999 000 0255', surname: 'DOE',      forenames: 'Jane',         status: 'Deceased', statusType: 'red',   dob: '30 Apr 1995', dod: '15 Nov 2025', sex: 'Female', postcode: 'W1A 0AX' },
 ];
 
 /**
@@ -134,11 +134,11 @@ export const MATCH_METHODS = [
 ];
 
 export const NOTES = [
-  { id: 1, siteId: 'ggh', volume: 'General notes vol 4', status: 'Registered', statusType: 'blue',  location: 'Madog Suite-GGH',   activity: 'Registered by Gadgil, AA(Mr)', moved: '09 Jun 2026 15:25', batch: '50381858' },
-  { id: 2, siteId: 'ggh', volume: 'General notes vol 3', status: 'Sent',       statusType: 'grey',  location: 'Teifi Ward-GGH',    activity: 'Sent by Gadgil, AA(Mr)',       moved: '05 Jun 2026 17:40', batch: '-' },
-  { id: 3, siteId: 'ggh', volume: 'General notes vol 2', status: 'Received',   statusType: 'green', location: 'Cleddau Ward-GGH',  activity: 'Received by Gadgil, AA(Mr)',   moved: '05 Jun 2026 17:40', batch: '-' },
-  { id: 4, siteId: 'wgh', volume: 'General notes vol 2', status: 'Tagged',     statusType: 'yellow',location: 'A&E Dept-GGH',      activity: 'Tagged by Gadgil, AA(Mr)',     moved: '05 Jun 2026 17:40', batch: '-' },
-  { id: 5, siteId: 'wgh', volume: 'General notes vol 1', status: 'Inactive',   statusType: 'red',   location: 'A&E Dept-GGH',      activity: 'Archived by Gadgil, AA(Mr)',   moved: '02 Jun 2026 09:10', batch: '-' },
+  { id: 1, siteId: 'ggh', volume: 'General notes vol 4', status: 'Registered', statusType: 'blue',  location: 'Madog Suite-GGH',   activity: 'Registered by Gadgil, AA(Mr)', moved: '9 Jun 2026 15:25', batch: '50381858' },
+  { id: 2, siteId: 'ggh', volume: 'General notes vol 3', status: 'Sent',       statusType: 'grey',  location: 'Teifi Ward-GGH',    activity: 'Sent by Gadgil, AA(Mr)',       moved: '5 Jun 2026 17:40', batch: '-' },
+  { id: 3, siteId: 'ggh', volume: 'General notes vol 2', status: 'Received',   statusType: 'green', location: 'Cleddau Ward-GGH',  activity: 'Received by Gadgil, AA(Mr)',   moved: '5 Jun 2026 17:40', batch: '-' },
+  { id: 4, siteId: 'wgh', volume: 'General notes vol 2', status: 'Tagged',     statusType: 'yellow',location: 'A&E Dept-GGH',      activity: 'Tagged by Gadgil, AA(Mr)',     moved: '5 Jun 2026 17:40', batch: '-' },
+  { id: 5, siteId: 'wgh', volume: 'General notes vol 1', status: 'Inactive',   statusType: 'red',   location: 'A&E Dept-GGH',      activity: 'Archived by Gadgil, AA(Mr)',   moved: '2 Jun 2026 09:10', batch: '-' },
 ];
 
 /**
@@ -150,11 +150,11 @@ export const NOTES = [
  * person.
  */
 export const MY_REQUESTS = [
-  { id: 1, volume: 'General notes vol 4', patient: 'GARETH, Evans James', status: 'Sent', statusType: 'grey', tab: 'sent', location: 'Madog Suite-GGH', activity: 'Sent to Tarnia Warlow at Madog Suite-GGH (Carmarthen Locality)', moved: '09 Jun 2026 15:25', clinicDate: '03 Jul 2026', batch: '50381858' },
-  { id: 2, volume: 'General notes vol 4', patient: 'ADE, Lolade', status: 'Sent', statusType: 'grey', tab: 'sent', location: 'Teifi Ward-GGH', activity: 'Sent to Tarnia Warlow at Teifi Ward-GGH (Carmarthen Locality)', moved: '05 Jun 2026 17:40', clinicDate: '03 Jul 2026', batch: '-' },
-  { id: 3, volume: 'General notes vol 4', patient: 'PRICE, Carys', status: 'Received', statusType: 'green', tab: 'received', location: 'Cleddau Ward-GGH', activity: 'Received by Gadgil, AA(Mr) at Cleddau Ward-GGH', moved: '05 Jun 2026 17:40', clinicDate: '03 Jul 2026', batch: '-' },
-  { id: 4, volume: 'General notes vol 4', patient: 'ADAMS, Amy Tina', status: 'Received', statusType: 'green', tab: 'received', location: 'A&E Dept-GGH', activity: 'Registered by Gadgil, AA(Mr) at A&E Dept-GGH', moved: '05 Jun 2026 17:40', clinicDate: '03 Jul 2026', batch: '-' },
-  { id: 5, volume: 'General notes vol 4', patient: 'OWEN, Rhys', status: 'Sent', statusType: 'grey', tab: 'sent', location: 'A&E Dept-GGH', activity: 'Registered by Gadgil, AA(Mr) at A&E Dept-GGH', moved: '05 Jun 2026 17:40', clinicDate: '03 Jul 2026', batch: '-' },
+  { id: 1, volume: 'General notes vol 4', patient: 'GARETH, Evans James', status: 'Sent', statusType: 'grey', tab: 'sent', location: 'Madog Suite-GGH', activity: 'Sent to Tarnia Warlow at Madog Suite-GGH (Carmarthen Locality)', moved: '9 Jun 2026 15:25', clinicDate: '3 Jul 2026', batch: '50381858' },
+  { id: 2, volume: 'General notes vol 4', patient: 'ADE, Lolade', status: 'Sent', statusType: 'grey', tab: 'sent', location: 'Teifi Ward-GGH', activity: 'Sent to Tarnia Warlow at Teifi Ward-GGH (Carmarthen Locality)', moved: '5 Jun 2026 17:40', clinicDate: '3 Jul 2026', batch: '-' },
+  { id: 3, volume: 'General notes vol 4', patient: 'PRICE, Carys', status: 'Received', statusType: 'green', tab: 'received', location: 'Cleddau Ward-GGH', activity: 'Received by Gadgil, AA(Mr) at Cleddau Ward-GGH', moved: '5 Jun 2026 17:40', clinicDate: '3 Jul 2026', batch: '-' },
+  { id: 4, volume: 'General notes vol 4', patient: 'ADAMS, Amy Tina', status: 'Received', statusType: 'green', tab: 'received', location: 'A&E Dept-GGH', activity: 'Registered by Gadgil, AA(Mr) at A&E Dept-GGH', moved: '5 Jun 2026 17:40', clinicDate: '3 Jul 2026', batch: '-' },
+  { id: 5, volume: 'General notes vol 4', patient: 'OWEN, Rhys', status: 'Sent', statusType: 'grey', tab: 'sent', location: 'A&E Dept-GGH', activity: 'Registered by Gadgil, AA(Mr) at A&E Dept-GGH', moved: '5 Jun 2026 17:40', clinicDate: '3 Jul 2026', batch: '-' },
 ];
 
 /**
@@ -306,7 +306,7 @@ export const SEND_SEARCH_GROUPS = [
       },
       {
         id: 'p1-v3', volume: 'General notes vol 3',
-        location: 'Madog Suite-GGH', moved: '06 Apr 2026 12:02',
+        location: 'Madog Suite-GGH', moved: '6 Apr 2026 12:02',
         status: 'Sent', statusType: 'grey', warnings: [],
       },
       {
@@ -316,7 +316,7 @@ export const SEND_SEARCH_GROUPS = [
       },
       {
         id: 'p1-v1', volume: 'General notes vol 1',
-        location: 'Teifi Ward-GGH', moved: '02 Jan 2026 12:02',
+        location: 'Teifi Ward-GGH', moved: '2 Jan 2026 12:02',
         status: 'Sent', statusType: 'grey', warnings: [],
       },
     ],
@@ -324,8 +324,8 @@ export const SEND_SEARCH_GROUPS = [
   {
     id: 'p2',
     patient: 'EVANS, Paul (Mr)',
-    nhs: '098 765 4321',
-    dob: '14 Jan 2000 (26y)',
+    nhs: '999 000 0263',
+    dob: '14 Jan 2000 (26 years)',
     crn: 'NN90212',
     volumes: [
       {
@@ -336,7 +336,7 @@ export const SEND_SEARCH_GROUPS = [
       },
       {
         id: 'p2-v1', volume: 'General notes vol 1',
-        location: 'Cleddau Ward-GGH', moved: '03 Feb 2026 14:15',
+        location: 'Cleddau Ward-GGH', moved: '3 Feb 2026 14:15',
         status: 'Sent', statusType: 'grey', warnings: [],
       },
     ],

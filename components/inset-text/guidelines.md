@@ -89,7 +89,7 @@ severity axis.
 - **No MAUI style.** The intended construction is a 4px `BoxView` beside the
   text in a two-column `Grid`, because MAUI has no single-edge stroke. Add it
   when a mobile screen needs one.
-- **The Figma component had no description until 2026-09-16**, which is part of
+- **The Figma component had no description until 16 Sep 2026**, which is part of
   why it was being used as a banner.
 
 ## Related

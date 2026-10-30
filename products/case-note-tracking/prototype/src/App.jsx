@@ -20,9 +20,9 @@ const BRAND_LOCKUP = <span className="app__brand">Single Record</span>;
 // Patient Search while it's open rather than claiming a destination it isn't.
 const VIEW_LABEL = {
   dashboard: 'Dashboard',
-  'patient-search': 'Patient Search',
-  'case-notes': 'Patient Search',
-  'my-requests': 'My Requests',
+  'patient-search': 'Patient search',
+  'case-notes': 'Patient search',
+  'my-requests': 'My requests',
   'send-it': 'SendIT',
   'receive-it': 'ReceiveIT',
 };
@@ -46,8 +46,8 @@ export default function App() {
 
   const handleSelect = (label) => {
     if (label === 'Dashboard') setView('dashboard');
-    else if (label === 'Patient Search') setView('patient-search');
-    else if (label === 'My Requests') setView('my-requests');
+    else if (label === 'Patient search') setView('patient-search');
+    else if (label === 'My requests') setView('my-requests');
     else if (label === 'SendIT') setView('send-it');
     else if (label === 'ReceiveIT') setView('receive-it');
     // TagIT, Settings and Log Out have no screen in this prototype yet —

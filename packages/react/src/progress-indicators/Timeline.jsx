@@ -12,7 +12,7 @@ import Tag from '../tags/Tag.jsx';
  *
  * Props
  *   items  [{ time, datetime, title, description, state, tag }]
- *          time:     the visible time ("08-Apr-2024 15:30", "Now"). Line
+ *          time:     the visible time ("8 Apr 2024 15:30", "Now"). Line
  *                    breaks in the string are kept.
  *          datetime: ISO value for <time datetime>. Give it even when the
  *                    visible time is "Now".
