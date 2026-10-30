@@ -94,7 +94,7 @@
 - Name stages as nouns: "Triage", not "Do triage".
 - Keep step labels short enough to fit on one line in a horizontal stepper.
 - Write error hints as the problem, in a few words: "2 fields missing".
-- Write dates as `08-Apr-2024` and times as `15:30`.
+- Write dates as `8 Apr 2024` (the system date rule, `docs/content/data-standards.md`) and times as `15:30`.
 
 ## Related
 

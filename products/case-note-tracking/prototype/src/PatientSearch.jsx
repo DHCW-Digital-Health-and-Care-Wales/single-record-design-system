@@ -68,7 +68,7 @@ export default function PatientSearch({ onOpenPatient }) {
    * it stands in for the hardware and is not the primary path.
    */
   const simulateScan = () => {
-    const scan = '098 765 4321';
+    const scan = '999 000 0220';
     setQuery(scan);
     setResults(SEARCH_RESULTS);
     setScanned(true);
@@ -140,7 +140,7 @@ export default function PatientSearch({ onOpenPatient }) {
       />
 
       <main className="app__main" id="main">
-        <h1 className="page__title">Patient Search</h1>
+        <h1 className="page__title">Patient search</h1>
 
         {banner && (
           <div className="info-banner" role="region" aria-label="Barcode scanning">
@@ -198,7 +198,7 @@ export default function PatientSearch({ onOpenPatient }) {
           {mode === 'advanced' && (
             <>
               <div className="search-fields">
-                <Input type="text" label="Date of Birth" placeholder="Enter dd-mm-yy" />
+                <Input type="text" label="Date of birth" placeholder="For example, 6 Dec 1974" />
                 <Input type="text" label="Surname" placeholder="Enter surname" />
                 <Input type="text" label="Forename" placeholder="Enter forename" />
                 <Input type="text" label="Postcode" placeholder="Enter postcode" />

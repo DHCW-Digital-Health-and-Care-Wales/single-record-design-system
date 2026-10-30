@@ -63,6 +63,7 @@ export const PROPER_PHRASES = [
   'Welsh Patient Administration System', 'Welsh Reference Data Service', 'Data Standards Change Notice',
   'Welsh Information Standards Board', 'NHS Wales Data Dictionary', 'Data Dictionary',
   'Digital Health and Care Wales', 'NHS Wales', 'Common User Interface',
+  'Case Note Tracking',   // the Welsh PAS module the prototype is for
 ];
 
 const CASING_ROLES = new Set(['heading', 'button', 'link', 'label', 'tab', 'column']);

@@ -117,7 +117,7 @@ export default function MyRequests() {
 
       <main className="app__main" id="main">
         <div className="page__heading">
-          <h1 className="page__title">My Requests</h1>
+          <h1 className="page__title">My requests</h1>
           <p className="page__subtitle">Search for a patient to view their casenotes</p>
         </div>
 

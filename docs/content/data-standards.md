@@ -260,7 +260,7 @@ Never a blank, a dash or `N/A`. A blank cannot be told apart from a loading erro
 
 | What | How |
 |---|---|
-| Website and prototypes | `npm run check:content` writes `content-report.md` (not committed). Report only, not yet a build gate |
+| Website and prototypes | **A build gate.** `npm run build:site` (run by CI) fails on any content error. Warnings are reported but do not fail it. `npm run check:content` writes the full report to `content-report.md` (not committed) |
 | A Figma page or frame | Ask Claude to use the **content-checker** agent (`.claude/agents/content-checker.md`) with the Figma link |
 | The demo patients | `npm run check:demo-data`, part of `npm run check` |
 

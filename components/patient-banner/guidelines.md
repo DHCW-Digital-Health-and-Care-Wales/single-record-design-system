@@ -34,7 +34,7 @@
 - **Deceased patients carry two independent signals** — a `Deceased` flag beside the name and a date of death in the demographics. Never colour alone.
 - **The banner is persistent, not dismissible.** Users may collapse it; they may not remove it.
 
-## Choosing between Fill and Border
+## Choosing between `Fill` and `Border`
 
 | | Use `Fill` when | Use `Border` when |
 |---|---|---|

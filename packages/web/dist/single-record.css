@@ -3930,7 +3930,7 @@ textarea.sr-input__control {
   letter-spacing: var(--sr-type-caption-letter-spacing);
   text-align: right;
   padding-top: var(--space-1);
-  white-space: pre-line; /* "08-Apr-2024\n15:30" sets date over time, as Figma does */
+  white-space: pre-line; /* "8 Apr 2024\n15:30" sets date over time, as Figma does */
 }
 
 .sr-timeline__dot {

@@ -32,7 +32,7 @@ function CreateNoteModal({ open, onClose }) {
     <Modal
       open={open}
       onClose={onClose}
-      title="Register New Notes"
+      title="Register new notes"
       size="medium"
       footer={
         <>

@@ -26,7 +26,7 @@ or view that changes because of what they typed.
 | Perform an action | **Button** |
 
 **Search is the only search field in the system.** The Input set's
-`Type=Search` variants were removed on 2026-06-04. To put a search inside a
+`Type=Search` variants were removed on 4 Jun 2026. To put a search inside a
 labelled form field, turn on `Label` / `Hint` / `Required` on a Search
 instance — do not wrap an Input around it.
 

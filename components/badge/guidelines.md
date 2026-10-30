@@ -26,7 +26,7 @@
   [tags](../tags/guidelines.md). A badge only ever holds a number.
 - **For urgency.** A bigger number is not a warning. If something needs
   attention now, that is a [notification banner](../notification-banner/guidelines.md).
-- **On the header notification bell.** Decided 2026-09-25: the bell has no count.
+- **On the header notification bell.** Decided 25 Sep 2026: the bell has no count.
 - **On its own**, away from a label. A number with nothing beside it means
   nothing.
 

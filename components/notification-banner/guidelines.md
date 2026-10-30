@@ -72,7 +72,7 @@ The test when placing one: *could the reader act on this without leaving the
 page?* "You have unsaved changes on this form" is Inline. "The record service is
 unavailable" is Global.
 
-### Title, Dismissible and Actions are optional
+### The title, dismiss button and actions are optional
 
 All three are off by default, and a banner with none of them — an icon and one
 line — is the common case. Every live banner in the Figma file is title-less.
