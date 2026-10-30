@@ -1,0 +1,112 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/patientsusualaddress.htm
+Title: Patient's Usual Address
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Patient's Usual Address Patient's Usual Address
+Change History
+|
+|
+DSCN 2025 / 07
+| Referral to Treatment (RTT) Weekly Patient Target List (PTL) Data Set
+|
+DSCN 2025 / 01
+| Audiology Wait Times Data Set
+|
+DSCN 2024 / 12
+| Welsh Emergency Care Data Set
+|
+DSCN 2022 / 06
+| Main Specialty (Consultant) (AMD)
+|
+DSCN 2020 / 28
+| Suspected Cancer Pathway – Core (AMD)
+|
+DSCN 2020 / 21
+| Single Cancer Pathway - Core
+|
+DSCN 2019 / 09
+| National Cancer Data Standards for Wales – Core
+|
+DSCN 2016 / 02
+| Maternity Indicators Data Set
+|
+DSCN 2015 / 03
+| Radiotherapy Data Set
+|
+DSCN 2012 / 11
+| Elective Admission List Data Set (EAL Ds)
+|
+DSCN (2009) 02 (W)
+| Emergency Department Data Set
+|
+DSCN (2008) 05 (W)
+| Outpatient Referral Data Set
+|
+DSCN (2007) 06 (W)
+| Amendments to Data Items; 'Patients Usual Address', 'Postcode of Usual Address' and 'Birth Date'.
+|
+
+This data item is / was included in the following data sets / collections between the dates shown:
+Data Set / Collection
+| Valid From
+| Valid To
+|
+APC ds99
+| 1st April 1999
+|
+|
+EAL ds
+| 1st April 1999
+| 21st November 2012
+|
+OP ds
+| 1st April 1999
+|
+|
+CC ds
+| 1st April 2007
+|
+|
+OPR ds
+| 1st July 2008
+|
+|
+EDDS
+| 1st April 2009
+|
+|
+RTDS
+| 1st April 2014
+|
+|
+MI ds
+| 1st April 2016
+|
+|
+SCPC ds
+| 1st January 2021
+|
+|
+National Cancer Ds - Core
+|
+|
+|
+WECDS
+| 1st August 2024
+|
+|
+AUD WT ds
+| 1st April 2025
+|
+|
+RTT weekly PTL ds
+| 1st April 2025
+|
+|
+
+This is the usual address:
+• (in the SCPC ds) for the patient at the Pathway Start Date (Point of Suspicion of Cancer)
+• (in every other data set listed above) nominated by the patient at the time of admission or attendance. If patients usually reside elsewhere are staying in hotels, hostels or other residential establishments for a short term, say a week, they should be recorded as staying at their usual place of residence. However if long term, such as at boarding school, the school address must be recorded. University students may nominate either their home address or the address of their university accommodation. Where patients are not capable of supplying this information, because of age or mental illness, for example, then the person responsible for the patient, such as a parent or guardian, should nominate the usual address. Patients not able to provide an address should be asked for their most recent address. If this cannot be established then you should record the address as `No fixed abode' or `Address unknown'. These patients are regarded as resident in the local geographical district for contracting purposes. For birth episodes this should refer to the mother's usual place of residence.
+• For RTT PTL data set: This relates to the patient’s current address at the time of reporting.
+Format: 175 character alpha-numeric. This is based on 5 lines of 35 characters. This relates to the physical layout of the address, not the logical layout and does not require intelligent intervention when splitting the text string into lines.
+Prior to April 1999 the PEDW Format: 100 character alpha-numeric. This is based on 4 lines of 25 characters. This relates to the physical layout of the address, not the logical layout.

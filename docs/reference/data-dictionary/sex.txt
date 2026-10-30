@@ -1,0 +1,115 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/sex.htm
+Title: Sex
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Sex Sex
+Change History
+|
+|
+DSCN 2025 / 07
+| Referral to Treatment (RTT) Weekly Patient Target List (PTL) Data Set
+|
+DSCN 2022 / 06
+| Main Specialty (Consultant) (AMD)
+|
+DSCN 2020 / 31
+| National Cancer Data Standards for Wales – Systemic Anti-Cancer Therapy (SACT)
+|
+DSCN 2020 / 28
+| Suspected Cancer Pathway – Core (AMD)
+|
+DSCN 2020 / 21
+| Single Cancer Pathway - Core
+|
+DSCN 2019 / 09
+| National Cancer Data Standards for Wales – Core
+|
+DSCN 2015 / 03
+| Radiotherapy Data Set
+|
+DSCN 2012 / 11
+| Elective Admission List Data Set (EAL Ds)
+|
+DSCN (2008) 07 (W)
+| The Introduction of Valid Period Date Ranges for Data Items within the APC Data Set
+|
+
+This data item is / was included in the following data sets / collections between the dates shown:
+Data Set / Collection
+| Valid From
+| Valid To
+|
+APC ds99
+| 1st April 2009
+|
+|
+OP ds
+| 1st April 1999
+|
+|
+CC ds
+| 1st April 2007
+|
+|
+OPR ds
+| 1st July 2008
+|
+|
+EDDS
+| 1st April 2009
+|
+|
+RTDS
+| 1st April 2014
+|
+|
+SCPC ds
+| 1st January 2021
+|
+|
+National Cancer Ds – Core
+|
+|
+|
+National Cancer Ds - SACT
+|
+|
+|
+RTT weekly PTL ds
+| 1st April 2025
+|
+|
+
+This is the sex of person, employee or patient.
+
+Format: 1 digit numeric
+Value
+| Meaning
+| Valid From
+| Valid To
+|
+0
+| Not known
+| 1st July 1997
+| 20th January 2002
+|
+1
+| Male
+| Pre 28th December 1995
+|
+|
+2
+| Female
+| Pre 28th December 1995
+|
+|
+3
+| Indeterminate or anticipated sex change
+| Pre 28th December 1995
+| 30th June 1997
+|
+9
+| Not Specified
+| 1st July 1997
+|
+|

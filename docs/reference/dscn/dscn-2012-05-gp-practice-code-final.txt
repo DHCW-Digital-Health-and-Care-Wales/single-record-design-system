@@ -1,0 +1,1215 @@
+Source: https://dhcw.nhs.wales/information-services/information-standards/data-standards/data-standards-files/data-standard-change-notices-docs/dscns-2012/20120621-dscn-2012-05-gp-practice-code-final-pdf/
+Retrieved: 2026-10-30 (text extracted with pdftotext -layout)
+
+                     W
+                     WELSH INFORMA
+                                 ATION STANDA
+                                       S    ARDS BO
+                                                  OARD
+
+                                                          DS
+                                                           SC Noticee:        DSC
+                                                                                CN 2012 / 05
+                                                                                          0
+                                                          Da
+                                                           ate of Iss
+                                                                    sue:      21st June 2012
+
+Ministeriial / Offic
+                   cial Letter: n/a                       Su
+                                                           ubject: GP
+                                                                    P Practice C
+                                                                               Code
+
+
+Sponsor::
+Lisa Dunsfford
+Deputy Dirrector – Primary Care
+Departmen nt for Healtth, Social Services &
+Children
+Welsh Govvernment
+
+Impleme
+      entation Date:
+               D     1st Septemberr 2012
+
+
+
+
+                                  D
+                                  DATA SET
+                                         T CHANGE
+                                                E NOTICE
+                                                       E
+
+A Data Set Change Notice
+                  N      (DSC
+                            CN) is an information mandate
+                                                  m       fo
+                                                           or a new orr revised infformation
+                                        standard.
+
+ This DSCN
+         N was apprroved by th
+                             he Welsh In
+                                       nformation Standards Board (WIG
+                                                                     GSB) at its meeting
+                                       e 19th April 2012
+                                  on the
+
+WIGSB Reference
+      R       e: n/a
+
+
+      y:
+Summary
+
+          ce GP Practtice Code in
+To introduc                     nto the Adm
+                                          mitted Patie
+                                                     ent Care (A
+                                                               APC) data set.
+
+
+        s / return
+Data sets        ns affecte
+                          ed:
+
+Admitted Patient
+         P       Care
+                    e Data Set (APC)
+
+
+Please address enquirie
+                      es about this Data Set Ch
+                                              hange Noticee to the Dataa Standards Team in NH
+                                                                                            HS Wales
+Informatics Service E-m
+                      mail: data.sta
+                                   andards@wa ales.nhs.uk        Tel: 029205025399/2540
+
+
+   The Wellsh Informattion Governa
+                                 ance and Staandards Boarrd is respons sible for app
+                                                                                   praising inforrmation
+standards. Submission documents and WIGSB Outcomes re     elating to the approval oof this standard can be
+             found at: http://howiis.wales.nhs.uk/sites3/p
+                                                         page.cfm?org gid=742&pid  d=24632
+
+
+
+
+   DSCN 20012 / 05                         Page 1 of 13
+                             DATA SE
+                                   ET CHAN
+                                         NGE NOTICE
+
+Introdu
+      uction
+
+In Englaand DSCN 20/2004 – GMS Contrract Patientt Registrations – introoduced the new
+arrangeements for patients beeing registe
+                                        ered with GP
+                                                  G Practices
+                                                            s rather tha
+                                                                       an with individual GPs.
+Furtherr DSCNs, DS SCN 03/2008 and DSC  CN 13/2008 provided clarificatio
+                                                                       on on the coontent and
+format of the inforrmationthat would be expected tot be submitted centraally by English Primarry
+Care Trrusts.
+
+In Walees, WHC (2004) 008 – New GMS Project Im mplementatiion – detailled the imp
+                                                                                plementatio
+                                                                                          on
+of the GMS
+       G    Contra
+                 act across NHS
+                            N   Wales.. Further guidance
+                                                g        wa
+                                                          as provided
+                                                                    d within WH HC (2005)
+044 – New
+       N    GMS Contract:
+                C         Exxtended IM&T Guidancce.
+
+DSCN (2007)11(W   W) renamedd the data item ‘Code of GP Practtice (Registtered GMP))’ to ‘GP
+Practicee Code’ and
+                  d where app
+                            plicable rem
+                                       moved GP Code
+                                                 C     from the
+                                                             t    followin
+                                                                         ng data setts:
+Outpatient Data Set
+                  S
+Critical Care Data Set
+EAL Datta Set
+
+Subsequently deve eloped natiional data sets
+                                        s    such as Outpatien
+                                                             nt Referrals
+                                                                        s have only
+                                                                                  y included
+      ctice Code.
+GP Prac
+
+In the case
+       c    of the Admitted Patient
+                            P       Care (APC) Daata Set, sincce 2007 GPP Practice Code
+                                                                                   C    has
+been deerived by th
+                  he NHS Waales Informaatics Servic
+                                                  ce for natio
+                                                             onal reporting using th
+                                                                                   he
+submittted GP Code.
+
+      SCN introdu
+This DS         uces GP Pra
+                          actice Code into the Ad
+                                                dmitted Pattient Care D
+                                                                      Data Set.
+
+
+
+
+Descrip
+      ption of Ch
+                hange
+
+To intro
+       oduce ‘GP Practice
+                 P        Cod          e APC data set, effective from 1stt Septembe
+                            de’ into the                                          er 2012.
+
+
+
+Data Dictionary
+     D          V
+                Version
+
+Where applicable,
+       a           this DSCN reflects ch          oduced by DSCN and//or DDCN since the
+                                       hanges intro
+release of version 4.0 of the NHS Waless Data Dictionary.
+
+      anges introduced by such
+The cha                   s        s will be published in version
+                               DSCNs                      v       4.1 of the NHS
+                                                                               S Wales
+Data Diictionary.
+
+
+
+
+DSCN 20012 / 05                      Page 2 of 13
+Actions
+      s Required
+               d
+
+Actions for Local Health
+                  H      Boarrds / Trusts
+                                        s: -
+
+        From 1st Se
+                   eptember ensure
+                              e       ‘GP Practice Coode’ is subm
+                                                                mitted in the APC dataa set in
+         a
+         accordancee with the instructions
+                                         s set out in this DSCN. This relatees to Septe
+                                                                                      ember data
+         s
+         submitted  in October..
+
+Actions for the NH
+                 HS Wales In
+                           nformatics Service
+                                      S       (NW
+                                                WIS): -
+
+        From 1st Se
+                   eptember 2012,
+                            2      ensurre that the NHS Wales s Data Swittching Serv
+                                                                                   vice
+         (NWDSS) is updated to
+                             t allow ‘GPP Practice Code’
+                                                   C     to be
+                                                             e submitted.
+
+        Switch of the derivatio
+                               on of GP Prractice Code and popu
+                                                              ulate the fie
+                                                                          eld with sub
+                                                                                     bmitted GP
+                                                                                              P
+                   ode.
+         Practice Co
+
+        From 1st Se
+                   eptember 2012,
+                             2      introd
+                                         duce a new
+                                                  w data validity check w
+                                                                        within the Validation
+                                                                                   V          at
+         Source Serrvice (VASS
+                             S) for ‘GP Practice Cod
+                                                   de’.
+
+        From 1st Seeptember 2012,
+                               2          mmission the VASS ch
+                                      decom                             eneral Medical
+                                                             heck for ‘Ge
+         Practitionerr (Registere
+                                ed) (501444).
+
+
+All curre  ent VASS checks
+                      c          can be accesse  ed via the fo    ollowing lin
+                                                                             nk:
+http://kryyten.hsw.waless.nhs.uk/ChecckLogic/chksttart.asp?servicce=apc
+
+
+
+
+DSCN 20012 / 05                               Page 3 of 13
+Appenndix A: Table
+             T     refflecting areas
+                               a     tha
+                                       at are im
+                                               mpacted as a result of
+this DSCN
+     D
+
+The following table
+                  e shows all Data Item
+                                      ms, Terms and associatted areas tthat are link
+                                                                                   ked with the
+changes documented within this DSCN.
+
+      D
+      Data                               Name                          New / Retired
+                                                                       N
+   Deffinition                                                                  ed
+                                                                         / Change
+      T
+      Type
+ Data Set
+      S            Admitted Patient Care                               C
+                                                                       Changed
+ Data Item         Code of Registered
+                           R          G Practice
+                                      GP         e                     C
+                                                                       Changed
+ Data Item         GP Practic
+                            ce Code                                    C
+                                                                       Changed
+ Data Item         GP Code                                             C
+                                                                       Changed
+ Data Item         General Medical
+                           M       Prac
+                                      ctitioner (R
+                                                 Registered)           C
+                                                                       Changed
+
+
+
+
+DSCN 20012 / 05                     Page 4 of 13
+Appenndix B: Highlight
+             H       ted changes to be
+                                    b made to the NHS Wale
+                                                         es Data
+Dictio
+     onary
+Change es to the NH
+                  HS Wales Data
+                             D     Diction
+                                         nary are detailed below
+                                                               w, with new
+                                                                         w text being
+highligh
+       hted in blue
+                  e and delettions are shhown with a strikethrrough. The text shad  ded in grey
+                                                                                              y
+shows existing
+       e        tex
+                  xt copied frrom the NHS Wales Da  ata Dictiona
+                                                               ary.
+
+
+
+
+Adm
+  mitted Patien
+         P     t Care
+                    e Data Set (A
+                                APC Ds)
+ Chang
+     ge History
+              y
+ DSCN 2009/09           NHS Reforms: NH
+                                      HS Wales Da
+                                                ata Definition
+                                                             n Update
+ DSCN (2006) 05 (W)     Rena
+                           ame Data Item 'Consu ultant Specialty
+                        Func
+                           ction Code' and 'Specialty Functio
+                                                            on Code'
+ DSCN 14/05 (W)         Subject: Additio
+                                       on of the Data
+                                                 D    Item ' Waiting Lis
+                                                                       st
+                        Date
+                           e'
+ DSCN 14/05 (W)         Subject: Revising the term
+                                                 minology to
+                                                           o reflect 'A
+                        Guide to Good Practice – Elective
+                                                 E        Services'
+
+THE AD
+     DMITTED PATIENT
+             P       C
+                     CARE DATAA SET (AP
+                                      PC DS99)
+FIRST INTRODUCED 1ST APRIL
+                     A     199
+                             99
+
+Layout of Admitted Patient Care
+                           C    Data Set:-
+                                     S
+  Rating
+       g                                               PEDW         Form
+                                                                       mat/length
+  1=ma andatory                                        data ite
+                                                              em
+  2=opttional
+  1               Record Id                                         an1
+                  CONTRACT
+                         T DETAILS
+  1               Organisatio
+                            on Code (Cod
+                                       de of           Yes          an5
+                  Provider)
+  1               Organisatio
+                            on Code (Cod
+                                       de of           Yes          an5
+                  Commission ner)
+  1               Commission
+                           ning Serial Number
+                                       N               Yes          an6
+  1               Commission
+                           ners Referen
+                                      nce Number                    an17
+                                                                       7
+                  PATIENT DETAILS
+                          D
+  1               NHS Numbe
+                          er                           Yes          n10
+  1               NHS Numbe
+                          er Status Ind
+                                      dicator          Yes          n2
+  1               Patient's na
+                             ame                       Yes          an700 or
+                                                                    structured name
+                                                                                  e
+                                                                    with
+                                                                       h 2 an35
+                                                                    elem
+                                                                       ments
+  1               Name Form
+                          mat Code                     Yes          n1
+  1               Patient's Us
+                             sual address              Yes          an17
+                                                                       75 (5 lines
+                                                                    each
+                                                                       h an35)
+  1               Postcode off Usual Address           Yes          an8
+  1               Organisatio
+                            on Code (LHB
+                                       B Area of                    an3
+                  Residence)
+  1               Sex                                  Yes          n1
+  1               Marital Stattus                      Yes          an1
+
+
+
+
+DSCN 20012 / 05                      Page 5 of 13
+                  (Mandatoryy for Psychiattric
+                  Patients)
+  1               Birth Date                            Yes   ccyy
+                                                                 ymmdd
+  1               Birth Date Status
+                             S                          Yes   n1
+  1               General Medical Practitiioner (code   Yes   an8
+                  of registere
+                             ed GMP) *
+  1               Local Patien
+                             nt Identifier              Yes   an10
+                                                                 0
+  1               Ethnic Grou
+                            up                          Yes   an2
+  1               Legal Status Classification           Yes   n2 - Legal Statu us
+                                                              Clas
+                                                                 ssification annd
+                                                              Admministrative
+                                                              Cate
+                                                                 egory replace  ed
+                                                              Cate
+                                                                 egory of
+                                                              Patie
+                                                                  ent in April
+                                                              19999
+                  REFERRAL
+                         L DETAILS
+  1               Referrer Co
+                            ode                         Yes   an8
+  1               Referring Organisation
+                            O            Code           Yes   an6
+                  PROVIDER
+                         R SPELL DET
+                                   TAILS
+  1               Hospital Pro
+                             ovider Spell Number        Yes   an12
+                                                                 2
+  1               Administrattive Category
+                                         y              Yes   n2 - Legal Statuus
+                                                              Clas
+                                                                 ssification an
+                                                                              nd
+  1               Decision to Admit Date                Yes   ccyy
+                                                                 ymmdd
+  1               Decision to Admit Date Status         Yes   n1
+  1               Start Date (Hospital
+                             (         Pro
+                                         ovider         Yes   ccyy
+                                                                 ymmdd
+                  Spell)
+  1               Admission Method
+                            M      (Hos
+                                      spital            Yes   n2
+                  Provider Sp
+                            pell)
+  1               Duration off Elective Wa
+                                         ait            Yes   n4
+  1               Intended Management                   Yes   n1
+  1               Source of Admission
+                            A         (H
+                                       Hospital         Yes   n2
+                  Provider Sp
+                            pell)
+  1               Discharge Date
+                            D    (Hospital Provider     Yes   ccyy
+                                                                 ymmdd
+                  Spell)
+  1               Discharge Date
+                            D    Status                 Yes   n1
+  1               Discharge Method
+                            M      (Hos
+                                      spital            Yes   n1
+                  Provider Sp
+                            pell)
+  1               Discharge Destination
+                            D           (
+                                        (Hospital       Yes   n2
+                  Provider Sp
+                            pell)
+  1               Patient Clas
+                             ssification                Yes   n1
+  1               Healthcare Resource Grroup            Yes   an3 –Health
+                                                              Reso
+                                                                 ource Group
+                                                              (HRG
+                                                                 G) replaced
+                                                              (DRG
+                                                                 G) in April
+                                                              2000
+                                                                 0
+                  CONSULTAANT EPISOD
+                                   DE
+                  DETAILS
+  1               Episode Number                        Yes   n2
+  1               Last Episode in Spell In
+                                         ndicator             n1
+  1               Site Code (of treatmentt)             Yes   an5
+
+
+
+
+DSCN 20012 / 05                        Page 6 of 13
+  1               Ward Type at Start of Episode
+                                        E              Yes          n7
+  1               Start Date (Consultant
+                             (           Episode)      Yes          ccyy
+                                                                       ymmdd
+  1               End date (C
+                            Consultant Episode)        Yes          ccyy
+                                                                       ymmdd
+  1               End Date Sttatus                     Yes          n1
+  1               Main Specia
+                            alty (consultant)                       n3
+  1               Treatment Function
+                            F        Cod
+                                       de              Yes          n3
+  1               Local Sub Specialty
+                            S                          Yes          an3
+  1               Consultant Code                      Yes          an8
+  1               First Regula
+                             ar Day or Nig
+                                         ght           Yes          n1
+                  Admission
+  1               Neonatal Le
+                            evel of Care               Yes          n1
+  1               Psychiatric Patient Status           Yes          n1
+                  Diagnostic
+                           c Codes
+                  Mandatory
+                          y ICD-10 diiagnostic
+                  coding
+  1               Primary (IC
+                            CD)                        Yes          an6
+  1               Subsidiary (if necessary
+                                         y) (ICD)      Yes          an6
+  1               1st Seconda
+                            ary (ICD)                  Yes          an6
+  1               2nd Second
+                           dary (ICD)                  Yes          an6
+  1               3rd Secondary (ICD)                  Yes          an6
+  1               4th Secondary (ICD)                  Yes          an6
+  1               5th Secondary (ICD)                               an6
+  1               6th Secondary (ICD)                               an6
+  1               7th Secondary (ICD)                               an6
+  1               8th Secondary (ICD)                               an6
+  1               9th Secondary (ICD)                               an6
+  1               10th Secondary (ICD)                              an6
+  1               11th Secondary (ICD)                              an6
+  1               12th Secondary (ICD)                              an6
+  1               Histological Diagnosis               Yes          an6
+  1               Source of Histological
+                            H            D
+                                         Diagnosis     Yes          n1
+                  Patient Pro
+                            ocedure Co
+                                     odes
+  1               Operation Status
+                            S                                       n1
+                  Mandatoryy OPCS proc cedure
+                  coding (up
+                           p to 12 Opeerative
+                  Procedurees per episo
+                                      ode)
+  1               Primary Pro
+                            ocedure (OPC
+                                       CS)             Yes          an4
+  1               Procedure Date
+                            D                          Yes          ccyy
+                                                                       ymmdd
+  1               Procedure Date
+                            D    Status                Yes          n1
+  1               2nd Procedure (OPCS) - 12th          Yes (upp     an4
+                  Procedure (OPCS)
+                            (      items as for        to 4th
+                  Primary Pro
+                            ocedure (OPC
+                                       CS)             proceduure
+                                                       for
+                                                       PEDW)
+  1               Record Type                          Yes          n2
+                  PREGNANCCY & DELIV
+                                   VERY
+                  DETAILS
+
+
+
+
+DSCN 20012 / 05                         Page 7 of 13
+  1                    General Medical Practitiioner (code          Yes               an8
+                       of GMP resp
+                                 ponsible for Antenatal
+                       care)
+  1                    First Antena
+                                  atal Assessm
+                                             ment Date              Yes               ccyy
+                                                                                         ymmdd
+  1                    First Antena
+                                  atal Assessm
+                                             ment Date              Yes               n1
+                       Status
+  1                    Pregnancy : Total Previous                   Yes               n2
+                       Pregnancies
+                                 s
+  1                    Delivery Pla
+                                  ace Type (ac
+                                             ctual)                 Yes               n1
+  1                    Delivery Da
+                                 ate                                                  ccyy
+                                                                                         ymmdd
+  1                    Delivery Pla
+                                  ace Type (inttended)              Yes               n1
+  1                    Delivery Pla
+                                  ace Change Reason                 Yes               n1
+  1                    Gestation Length
+                                 L                                  Yes               n2
+  1                    Labour / De
+                                 elivery Onsett Method              Yes               n1
+  1                    Delivery Me
+                                 ethod                              Yes               n1
+  1                    Status of Pe
+                                  erson Condu
+                                            ucting                  Yes               n1
+                       Delivery
+  1                    Anesthetic given
+                                  g     during
+                                             g                      Yes               n1
+                       labour/deliv
+                                  very
+  1                    Anesthetic given
+                                  g     post                        Yes               n1
+                       labour/deliv
+                                  very
+  1                    Number of Babies                             Yes               n1
+                       Birth detaiils (up to 6 births
+                       from one pregnancy)
+                                 p           )
+                       1st Baby
+  1                    Sex                                          Yes               n1
+  1                    Birth Order                                  Yes               n1
+  1                    Live or Still Birth                          Yes               n1
+  1                    Birth Weigh
+                                 ht                                 Yes               n4
+  1                    Resuscitatio
+                                  on Method                         Yes               n1
+  1                    Birth Date (baby)
+                                  (                                 Yes               ccyy
+                                                                                         ymmdd
+  1                    Birth Date (mother)
+                                  (                                                   ccyy
+                                                                                         ymmdd
+  1                    Birth Date Status
+                                  S      (moth
+                                             her)                                     n1
+                       2nd Baby, 3rd
+                                 3 Baby, 4tth Baby,
+                       5th Baby an
+                                 nd 6th Baby : Items as
+                       1st Baby
+                       Waiting List Details
+  1                    Waiting Listt Date                           Yes               ccyy
+                                                                                         ymmdd
+  1                    Waiting Listt Date Status                    Yes               n1
+                       GP Practic
+                                ce Details
+  1                    Code of Reg
+                                 gistered GP Practice               Yes               an6
+
+
+
+* Where no data is pre
+                     esent, the field
+                                    d must be pop
+                                                pulated with spaces
+                                                             s      due to the fixed field
+                                                                                         d length forma
+                                                                                                      at of the
+submitted
+        d file. Howeve
+                     er, if necessarry 'General Me
+                                                 edical Practitio
+                                                                oner (Code of Registered GMP)' may still be included in
+the subm
+       mitted file.
+
+
+
+
+DSCN 20012 / 05                               Page 8 of 13
+Code
+   e of Re
+         egisterred GP
+                     P Practtice
+ Chang
+     ge History
+ DSCN 2012 / 05          GP Prractice Code
+ DSCN (2007) 11 (W)      To rename 'Code of GP Practice (Registerred GMP)'
+
+
+This data item is / was includ
+                             ded in the following
+                                        f         da
+                                                   ata sets / collections
+                                                              c           b
+                                                                          between the dates
+shown:
+
+ Data Set
+      S / Collection      Valiid From             Valid To
+ APC ds                   1st September
+                              S
+                          2012
+ EAL ds                   1st April
+                              A     1999
+
+ General
+
+ OP ds                    1st April
+                              A     1999
+
+ CC ds                    1st April
+                              A     2007
+
+
+This is the
+        t   code off the patien
+                              nt's registerred General Practitioner (GP) Pra
+                                                                           actice. This
+                                                                                      s allows the
+                                                                                                 e
+practice
+       e to be notiified about treatment received by y the patient. The reggistered GPP Practice
+may or may not be the same    e as the refferring GP Practice.
+                                                     P
+
+Format: 6 character alpha-n
+                          numeric
+
+See GP Practice Co
+                 ode
+
+
+
+GP Practic
+   P     ce Code
+               e
+ Chang
+     ge History
+ DSCN 2012 / 05           GP Practice
+                             P        Cod
+                                        de
+ DSCN 2009/09             NHS
+                            S Reforms: NHS
+                                       N   Wales Data
+                                                 D    Definitio
+                                                              on
+                          Upd
+                            date
+ DSCN (2006) 04 (W)       Revised definitio
+                                          ons for Phas
+                                                     se 2 of the
+                          Outpatient Dataa Quality Pro
+                                                     oject
+ DSCN 02/05 (W)           Renaming of the
+                                        e Organisational Codes Service
+                                                                S
+                          (OC
+                            CS) to Nation
+                                        nal Administrrative Codes
+                                                                s Service
+
+
+See OR
+     RGANISATIO
+              ON CODE
+
+
+
+
+DSCN 20012 / 05                            Page 9 of 13
+Orga
+   anisatiion Code
+ Chang
+     ge History
+ DSCN 2012 / 05            GP Prractice Code
+ DSCN 2009/09              NHS Reforms: NH
+                                         HS Wales Da
+                                                   ata Definition
+                                                                n
+                           Update
+
+
+Unique identifier for each org
+                             ganisation or
+                                        o site with
+                                                  hin an organ
+                                                             nisation.
+
+(Local Health Bo
+               oard / Trust) Code
+
+Code ass listed by the
+                   t   Organis
+                             sation Data
+                                       a Service (O
+                                                  ODS). Engliish and We
+                                                                      elsh Local Health
+                                                                                 H      Board
+                                                                                            d
+/ Trust codes can be viewed on the Hea alth Referen
+                                                  nce Data Web
+                                                           W     Pages o
+                                                                       on HOWIS.
+
+Format: 3 charactter alpha-nu
+                            umeric
+
+(Local Health Bo
+               oard / Trust) Site Co
+                                   ode
+
+This pro
+       ovides a un
+                 nique identiifier of each
+                                         h site for an
+                                                     n organisattion. Codes as listed by
+                                                                                      b the
+Organissation Data Service (O
+                            ODS). English and Welsh Local Health Board     d / Trust Siite codes
+can be viewed on the Health Reference Data Web Pages on HOWIS. H
+
+Format: 5 charactter alpha-nu
+                            umeric. Wh
+                                     here it is ne
+                                                 ecessary to report onlyy a 3 charaacter Local
+Health Board / Tru
+                 ust Code include two zeros
+                                      z          e 4th and 5th
+                                            in the          t
+                                                               characterr positions.
+
+GP Pra
+     actice Code
+               e
+
+A code which uniq
+                quely identiffies the GP
+                                       P Practice off the GP.
+
+Code ass listed for Ppractices in the UKW
+                                        Wales. Thesse are upda
+                                                             ated monthly by the In
+                                                                                  nformation
+Productts Unit of HSW
+                  H     with in
+                              nformation supplied by
+                                                   y the Organ
+                                                             nisation Data Service (ODS) and
+can be viewed on the Health Reference Data Web Pages on HOWIS.
+                                                             H
+
+Codes for
+      f Ppractic
+               ces in Engla
+                          and are ava
+                                    ailable from
+                                               m the Inform
+                                                          mation Prod
+                                                                    ducts Unit of
+                                                                               o HSW
+
+Format: 6 charactter alpha-nu
+                            umeric
+
+Default Codes:
+
+ Value
+     e            Meeaning
+ V8199
+     97           No registered GP Practic ce
+ V8199
+     98           Pra
+                    actice not applicable.
+                               a            i
+                                            i.e. MOD orr Prison GP
+ V8199
+     99           Pra
+                    actice code is unknown  n
+
+The use
+      e of defaultt codes
+
+V819977 – should only
+                 o    be use
+                           ed where a patient pre
+                                                esents who is not currrently registered at a
+GP Prac
+      ctice.
+
+V819988 – should be
+                  b used wh
+                          here a patie
+                                     ent would not
+                                               n have a registered
+                                                        r          practice, fo
+                                                                              or instance
+an overrseas patien
+                  nt.
+
+V81999 9 – should only
+                  o     be use
+                             ed where it is not poss
+                                                   sible to determine a patients registered
+practice
+       e code, for instance th
+                             he patient cannot
+                                        c       com
+                                                  mmunicate and
+                                                              a   is unide
+                                                                         entifiable.
+
+
+
+
+DSCN 20012 / 05                         Pagee 10 of 13
+Where a 5 charactter code is used, it sho
+                                        ould be leftt justified and
+                                                                a   padded with a spa
+                                                                                    ace.
+
+Dental Practice Code
+                C
+
+The cod de described by the Organisation  n Data Servvice (ODS) as a Dental Practice Code
+                                                                                     C
+identifie
+        es an indiviidual dental practice lo
+                                           ocation. Th
+                                                     his code sho
+                                                                ould be use
+                                                                          ed as the 'R
+                                                                                     Referring
+Organis sation Codee' for referrrals made to
+                                           o the Trustt.
+
+Format: 6 charactter alpha-nu
+                            umeric
+
+The firs
+       st characterr is set as a V
+
+Charactters 2 to 6 are the last 5 digits of
+                                         o the Locattion ID take
+                                                               en from a P
+                                                                         Provider Dentist
+Contrac
+      ct number
+
+
+
+
+GP Code
+   C
+ Chang
+     ge History
+ DSCN 2012 / 05              GP Prractice Code
+ DSCN 2009/09                NHS Reforms: NH
+                                           HS Wales Da
+                                                     ata Definition
+                                                                  n Update
+ DSCN (2006) 04 (W)          Revis
+                                 sed definition
+                                              ns for Phase 2 of the Outpatient Datta
+                             Quality Project
+ DSCN 13/04 (W)              To am
+                                 mend the All Wales Data
+                                                       a Dictionary entry
+                                                                    e     for the
+                                                                                e
+                             data term 'GP Co
+                                            ode'
+
+
+For info
+       ormation
+
+This is the
+        t   Departm
+                  ment of He
+                           ealth code for
+                                      f the GP.
+
+Format: 8 character alpha-n
+                          numeric
+
+  Value
+      e                Meaning
+  GNNN
+     NNNNN             A code issued by the Department
+                                              D            of Health
+                       (DH) for practising
+                                p           GPP's in Wales and
+                                                           a   Englandd.
+                       The codes can be view  wed on the Health
+                                                          H
+                       Reference Data Web Pages
+                                              P      on are
+                                                          e available
+                       from the Information
+                                 I             Products Unit of HSW orr
+                       via the Inttranet servic
+                                              ce HOWIS.
+  G9999
+      9981             No registe
+                                ered GP
+
+Note 1: MOD
+        M     and priso
+                      on doctors are
+                                   e not GMPs an
+                                               nd should not be recorded as
+                                                                         a Registered GMPs. In this
+                                                                                                  s instance use
+the defau
+        ult code of G99
+                      999981' is to be used.
+
+Note 2: When
+        W    a locum refers, use th
+                                  he code of the
+                                               e GP for whom
+                                                           m the locum is
+                                                                        s acting.
+
+New GP P's: where a new GP hash joined a practice and
+                                                  a   no code
+                                                            e is availab
+                                                                       ble in the HS
+                                                                                   SW GP
+directorry the follow
+                    wing option
+                              ns are availlable:
+
+1. Contact the ap  ppropriate Local
+                               L     Healthh Board and d ask for a code.
+2. If th
+       his fails con
+                   ntact the Prrescription Pricing
+                                           P       Unitt of HSW foor a code. T
+                                                                             Tel (029) 2045
+                                                                                       2    6039
+
+
+
+DSCN 20012 / 05                            Pagee 11 of 13
+3. As a last resortt code the senior
+                              s      partner
+
+Structure
+
+Each GP
+      P code begins with the
+                           e letter G.
+
+The 2nd to 7th charracters are the DH Inddex Number. Index Nu   umbers andd addressess are issued
+                                                                                                d
+quarterrly by the Prescription
+                  P            Pricing Autthority (PPA
+                                                     A). The eighth character is a che
+                                                                                     eck digit
+calculatted thus:
+
+first numeric chara acter
++3      x   second d characterr
++7      x   third character
+                   c
++1      x   fourth character
++3      x   fifth ch
+                   haracter
++7      x   sixth character
+                   c
+
+The che
+      eck digit is then the un
+                             nit digit (last digit) of the result of this calc
+                                                                             culation.
+
+e.g.     P
+         PPA code 33
+                   34512. Che
+                            eck digit is computed by:
+
+3 + (3 x 3) + (7 x 4) + 5 + (3
+                            ( x 1) + (7 x 2) = 62
+                                                2
+
+The che
+      eck digit is 2 and the full
+                             f    code G3
+                                        3345122.
+
+
+
+Gene
+   eral Medical Practiitioner
+                            r (Regiistered
+                                         d)
+This data item is / was includ
+                             ded in the following
+                                        f         da
+                                                   ata sets / collections
+                                                              c           b
+                                                                          between the dates
+shown:
+
+ Data Set
+      S / Collection       Valiid From           Valid To
+                             st
+ APC ds9
+       99                  1 April
+                             A     1999
+ EAL ds                    1st April
+                               A     1999
+
+ OP ds                     1st April
+                               A     1999
+
+
+This is the
+        t   code off the GMP with
+                             w    whom the patientt is registerred.
+
+Format: 8 character alpha-n
+                          numeric
+
+  Value
+      e              Meaning
+  GNNN
+     NNNNN           A code issued by the Department
+                                            D            of Health
+                     (DH) for practising
+                              p           GPP's in Wales and
+                                                         a   Englandd.
+                     The codes can be view  wed on the Health
+                                                        H
+                     Reference Data Web Pages
+                                            P      on are
+                                                        e available
+                     from the Information
+                               I             Products Unit of HSW orr
+                     via the Inttranet servic
+                                            ce HOWIS.
+
+
+See GP Code
+
+See GP Code (Refe
+                erring)
+
+See GP Code (Reg
+               gistered)
+
+
+
+
+DSCN 20012 / 05                          Pagee 12 of 13
+See Refferrer Code
+                 e
+
+
+
+
+DSCN 20012 / 05      Pagee 13 of 13
+

@@ -1,0 +1,372 @@
+Source: https://dhcw.nhs.wales/information-services/information-standards/data-standards/data-standards-files/data-standard-change-notices-docs/dscns-2017/20190409-dscn-2017-06-ethnic-group-v1-1-pdf/
+Retrieved: 2026-10-30 (text extracted with pdftotext -layout)
+
+                WELSH INFORMATION STANDARDS BOARD
+                                                    DSC Notice:       2017 / 06 v1.1
+
+                                                    Date of Issue:    9th April 2019
+
+Ministerial / Official Letter: WHC (2016)           Subject: Ethnic Group (Revised)
+023
+Sponsor: Dr Elizabeth Davies, Mental Health
+and Vulnerable Groups Division
+Implementation Date: With immediate
+effect
+
+                          DATA STANDARDS CHANGE NOTICE
+
+   A Data Standards Change Notice (DSCN) is an information mandate for a new or revised
+                                  information standard.
+
+This DSCN was approved by the Welsh Information Standards Board (WISB) out of committee
+                                     3rd April 2019
+
+WISB Reference: ISRN 2016 / 001
+Summary:
+There are some discrepancies across data sets for the values listed for the ethnic group data
+item. This revised DSCN is to ensure that all values are aligned to those included in the 2011
+census.
+Data sets / returns affected:
+        Admitted Patient Care data set
+        National Community Child Health data set
+        Critical Care data set
+        Outpatient Referrals data set
+        Emergency Department data set
+        Substance Misuse data set
+        Maternity Indicators data set
+
+
+  Please address enquiries about this Data Standards Change Notice to the Data Standards
+                          Team in NHS Wales Informatics Service
+
+                  E-mail: data.standards@wales.nhs.uk / Tel: 029 2050 3593
+
+ The Welsh Information Standards Board is responsible for appraising information standards.
+ Submission documents and WISB Outcomes relating to the approval of this standard can be
+                                        found at:
+
+               http://howis.wales.nhs.uk/sites3/page.cfm?orgid=742&pid=24632
+
+
+
+
+  DSCN 2017 / 06 v1.1                      Page 1 of 7
+                              DATA STANDARDS CHANGE NOTICE
+
+Introduction
+
+The Welsh Government’s guidance for healthcare practitioners on working effectively with
+Gypsies and Travellers, entitled ‘Travelling to Better Health’ identifies the need to collect
+information relating to the health status of this ethnic category.
+
+The White Gypsy/Irish Traveller ethnic category was included for the first time in the Office
+for National Statistics 2011 Population Census.
+
+The adoption of the 2011 Census values for ethnic category is therefore key to achieving the
+requirement for “continued collection of data” and, in turn, ensuring compliance with the
+objectives set out within this guidance.
+
+Furthermore, the guidance states that “All LHBs and Trusts to have engaged with Welsh
+Government-led developments to introduce Census 2011 ethnic categories into appropriate
+local operational systems and central reporting.” This is a clear statement in support of the
+need for this change.
+
+In addition, this requirement formed a key element of the Welsh Government’s NHS Outcome
+Framework1 for 2016-17, where a number of performance measures are dependent on the
+collection of information that demonstrates a commitment to improving the health and
+wellbeing of vulnerable groups, which include Gypsies and Irish Travellers.
+
+Description of Change
+
+Adopt the Office for National Statistics 2011 Population Census list of ethnic categories.
+
+This amended DSCN is intended to provide clarity in relation to the value sets applicable to
+the associated national data sets, stating that the value set described in Appendix B below
+should be used in all relevant patient-level data sets.
+
+Data Dictionary Version
+
+Where applicable, this DSCN reflects changes introduced by DDCN and/or DSCN since the
+release of version 4.9 of the NHS Wales Data Dictionary.
+
+The changes introduced by such DSCNs will be published in version 4.10 of the NHS Wales
+Data Dictionary.
+
+Actions Required
+
+Local Health Boards / Trusts:
+
+         Health Boards update their systems and reporting processes to enable the collection
+          and submission of the 2011 Census ethnic categories with effect from April 2017.
+
+NHS Wales Informatics Service:
+
+         Update the relevant infrastructure to enable the collection, storage, onward
+          distribution and analysis of all affected data sets.
+         Ensure any affected national applications managed by The Informatics Service, are
+          updated.
+
+
+1
+    http://howis.wales.nhs.uk/doclib/WHC%202016%20(023)%20E.pdf
+
+
+DSCN 2017 / 06 v1.1                            Page 2 of 7
+Appendix A: Table reflecting areas that are impacted as a result of this
+DSCN
+
+The following table shows where there are changes to the scope and/or definitions of
+applicable data sets, data items, terms and other associated areas that are linked with the
+changes documented within this DSCN.
+
+Each data definition type is listed in alphabetical order and is shown in the sequence in which
+it appears in this DSCN.
+
+ Data Definition                                                 New/Retired/          Page
+                                      Name
+      Type                                                         Changed            Number
+ Data Item          Ethnic Group                                     Changed              5
+
+
+
+
+DSCN 2017 / 06 v1.1                       Page 3 of 7
+Appendix B: Highlighted changes to be made to the NHS Wales Data
+Dictionary
+Changes to the NHS Wales Data Dictionary are detailed below, with new text being
+highlighted in blue and deletions are shown with a strikethrough. The text shaded in grey
+shows existing text copied from the NHS Wales Data Dictionary.
+
+Changes to Data Items (A-Z)
+
+Ethnic Group
+This data item is / was included in the following data sets / collections between the dates
+shown:
+
+   Data Set / Collection      Valid From           Valid To
+   APC ds99                   1 April 1999
+                                  st
+
+
+   NCCHD
+
+   CC ds                      1st April 2007
+
+   OPR ds                     1st September 2008
+
+   EDDS                       1st April 2009
+
+   SM ds                      1st April 2014
+   Non – Medical Staffing     -                    2nd January 2013
+   MI ds                      1st April 2016
+
+
+This is the ethnic group of the patient, as selected by the patient. The patient is the arbiter of
+the information. Classifications are based on the 14+1 new ethnic group data categories used
+in the 20011 Census and the information recorded about ethnic group must be obtained by
+asking the patient / client.
+
+Format: 2 character alpha-numeric – AB, where the first character (A) is a value taken from
+the list in the table below, and the second character (B) is a locally defined value to be used
+in conjunction with the nationally defined values. If no further local breakdown is required,
+the second character (B) should be filled with a ‘Z’. Note that for the Substance Misuse and
+Maternity Indicators data set, only the first character (A) is submitted.
+
+   Value           Meaning                                    Valid From        Valid To
+                   WHITE
+
+                   Any White Background, including            1st April 2002
+   A               Welsh, English, Scottish, Northern         Amended 1st
+                   Irish, Irish, British                      April 2017
+
+   B               Gypsy or Irish Traveller                   1st April 2017*
+
+                   MIXED/MULTIPLE ETHNIC GROUP
+
+   D               White and Black Caribbean                  1st April 2002
+
+   E               White and Black African                    1st April 2002
+
+   F               White and Asian                            1st April 2002
+
+                                                              1st April 2002
+                   Any other mixed background / multiple
+   G
+                   ethnic background
+                                                              Amended 1st
+                                                              April 2017
+
+
+
+
+DSCN 2017 / 06 v1.1                            Page 4 of 7
+                  ASIAN OR ASIAN BRITISH
+
+   H              Indian                                   1st April 2002
+
+   J              Pakistani                                1st April 2002
+
+   K              Bangladeshi                              1st April 2002
+
+   R              Chinese                                  1st April 2002
+
+   L              Any other Asian background               1st April 2002
+
+                  BLACK OR BLACK BRITISH
+
+   M              Caribbean                                1st April 2002
+
+   N              African                                  1st April 2002
+
+   P              Any other Black background               1st April 2002
+
+                  OTHER ETHNIC GROUPS
+
+   R              Chinese                                  1st April 2002
+
+   T              Arab                                     1st April 2017*
+
+   S              Any other ethnic group                   1st April 2002
+
+                  NOT STATED
+
+   Z              Not stated                               1st April 2002
+
+*Note that this code was included as a valid value in the Maternity Indicators data set from
+April 2016
+
+FOR MI ds:
+
+This is the ethnic group of the patient, as selected by the patient. The patient is the arbiter of
+the information. Classifications are based on the 14+1 new ethnic group data categories used
+in the 2011 Census and the information recorded about ethnic group must be obtained by
+asking the patient / client.
+
+
+
+Format: 2 character alpha-numeric
+
+
+
+   Value          Meaning                                  Valid From          Valid To
+
+                  WHITE
+
+
+                  Any White Background, including Welsh
+   A              / English Scottish / Northern Irish /    1st April 2002
+                  British
+
+   B              Gypsy or Irish Traveller                 1st April 2016
+
+                  MIXED/MULTIPLE ETHNIC GROUP
+
+
+   D              White and Black Caribbean                1st April 2002
+
+   E              White and Black African                  1st April 2002
+
+   F              White and Asian                          1st April 2002
+
+
+
+
+DSCN 2017 / 06 v1.1                          Page 5 of 7
+                                                               1st April 2002
+                 Any other mixed background / multiple
+   G                                                           Amended 1st
+                 ethnic background
+                                                               April 2016
+
+                 ASIAN OR ASIAN BRITISH
+
+
+   H             Indian                                        1st April 2002
+
+   J             Pakistani                                     1st April 2002
+
+   K             Bangladeshi                                   1st April 2002
+
+   R             Chinese                                       1st April 2002
+
+   L             Any other Asian background                    1st April 2002
+                 BLACK OR BLACK BRITISH
+
+
+   M             Caribbean                                     1st April 2002
+
+   N             African                                       1st April 2002
+
+                                                               1st April 2002
+
+                 Any other Black / African / Caribbean /
+   P
+                 Black British background                      Amended 1st
+                                                               April 2016
+
+                 OTHER ETHNIC GROUPS
+
+   R             Chinese                                       1st April 2002
+
+
+   T             Arab                                          1st April 2016
+
+   S             Any other ethnic group                        1st April 2002
+                 NOT STATED
+
+                                                                                1st April
+   Z             Not stated                                    1st April 2002
+                                                                                2016
+
+
+
+
+The national code must be entered as the first character in the 2 character field. The second
+character is an optional field only required for use locally. It must, however, be able to be
+grouped consistently with the 14 main categories as above. If no further local breakdown is
+required, the second character must be filled with a 'Z'.
+
+The codes below are for historical information only and were retired on the 1 st April 2002.
+Format: 2 character alpha-numeric
+
+    Value     Meaning          Valid From         Valid To
+                                                  31st March
+    0         White            1st July 1997
+                                                  2002
+              Black –                             31st March
+    1                          1st July 1997
+              Caribbean                           2002
+              Black –                             31st March
+    2                          1st July 1997
+              African                             2002
+
+
+
+DSCN 2017 / 06 v1.1                         Page 6 of 7
+            Black –                         31st March
+   3                       1st July 1997
+            Other                           2002
+                                            31st March
+   4        Indian         1st July 1997
+                                            2002
+                                            31st March
+   5        Pakistani      1st July 1997
+                                            2002
+                                            31st March
+   6        Bangladeshi    1st July 1997
+                                            2002
+                                            31st March
+   7        Chinese        1st July 1997
+                                            2002
+            Any other                       31st March
+   8                       1st July 1997
+            ethnic group                    2002
+                                            31st March
+   9        Not given      1st July 1997
+                                            2002
+
+
+
+
+DSCN 2017 / 06 v1.1                    Page 7 of 7
+

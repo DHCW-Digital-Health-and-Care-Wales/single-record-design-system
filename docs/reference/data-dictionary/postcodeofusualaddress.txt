@@ -1,0 +1,127 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/postcodeofusualaddress.htm
+Title: Postcode of Usual Address
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Postcode of Usual Address Postcode of Usual Address
+Change History
+|
+|
+DSCN 2025 / 07
+| Referral to Treatment (RTT) Weekly Patient Target List (PTL) Data Set
+|
+DSCN 2025 / 01
+| Audiology Wait Times Data Set
+|
+DSCN 2024 / 12
+| Welsh Emergency Care Data Set
+|
+DSCN 2022 / 06
+| Main Specialty (Consultant) (AMD)
+|
+DSCN 2020 / 31
+| National Cancer Data Standards for Wales – Systemic Anti-Cancer Therapy (SACT)
+|
+DSCN 2020 / 28
+| Suspected Cancer Pathway – Core (AMD)
+|
+DSCN 2020 / 21
+| Single Cancer Pathway - Core
+|
+DSCN 2019 / 09
+| National Cancer Data Standards for Wales – Core
+|
+DSCN 2016 / 02
+| Maternity Indicators Data Set
+|
+DSCN 2015 / 03
+| Radiotherapy Data Set
+|
+DSCN 2012 / 11
+| Elective Admission List Data Set (EAL Ds)
+|
+DSCN 2009 / 09
+| NHS Reforms: NHS Wales Data Definition Update
+|
+DSCN (2009) 02 (W)
+| Emergency Department Data Set
+|
+DSCN (2007) 06 (W)
+| Amendments to Data Items; 'Patients Usual Address', 'Postcode of Usual Address' and 'Birth Date'.
+|
+
+This data item is / was included in the following data sets / collections between the dates shown:
+Data Set / Collection
+| Valid From
+| Valid To
+|
+APC ds99
+| 1st April 1999
+|
+|
+EAL ds
+| 1st April 1999
+| 21st November 2012
+|
+OP ds
+| 1st April 1999
+|
+|
+CC ds
+| 1st April 2007
+|
+|
+OPR ds
+| 1st July 2008
+|
+|
+EDDS
+| 1st April 2009
+|
+|
+RTDS
+| 1st April 2014
+|
+|
+MI ds
+| 1st April 2016
+|
+|
+SCPC ds
+| 1st January 2021
+|
+|
+National Cancer Ds – Core
+|
+|
+|
+National Cancer Ds - SACT
+|
+|
+|
+WECDS
+| 1st August 2024
+|
+|
+AUD WT ds
+| 1st April 2025
+|
+|
+RTT weekly PTL ds
+| 1st April 2025
+|
+|
+
+The code assigned by Royal Mail to identify postal delivery areas across the United Kingdom.
+This is the usual address
+• (in the SCPC ds) for the patient at the Pathway Start Date (Point of Suspicion of Cancer)
+• (in every other data set listed above) nominated by the patient at the time of admission or attendance
+• For RTT PTL data set: This relates to the patient’s current postcode at the time of reporting.
+Format: 8 character alpha-numeric. This allows a space to be inserted to differentiate between the inward and outward segments of the code, enabling full use to be made of the Royal Mail postcode functionality.
+Organisation Data Service rules apply.
+If a patient has no fixed abode, this should be recorded with the appropriate code (ZZ99 3VZ).
+For overseas visitors, the postcode field must show the relevant country pseudo postcode commencing ZZ99, plus spaces followed by a numeric, then an alpha character, then a Z. For example, ZZ99 6CZ is the pseudo-postcode for India. Pseudo-postcodes can be found in the NHS Postcode Directory.
+See Postcode
+(PEDW (Prior to April 1999), Psychiatric Census)
+The postcode applied to the usual address nominated by the patient at the time of admission or attendance, using rules supplied above and those in the NHS Postcode User Directory.
+Format: 8 character alpha-numeric. The 5th position is always blank (Δ) and possibly the 3rd and 4th characters may be blank also.
+See Postcode

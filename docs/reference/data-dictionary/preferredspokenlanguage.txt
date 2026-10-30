@@ -1,0 +1,17 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/preferredspokenlanguage.htm
+Title: Preferred Spoken Language
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Preferred Spoken Language Preferred Spoken Language
+Data Set / Collection
+| Valid From
+| Valid To
+|
+WECDS
+| 1st August 2024
+|
+|
+
+This is the SNOMED CT concept ID which is used to capture the preferred spoken language of the person.
+Format: minimum 6 digit numeric maximum 18 digit numeric
+Refer to Preferred Spoken Language Code List

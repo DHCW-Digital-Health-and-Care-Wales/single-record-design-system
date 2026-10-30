@@ -1,0 +1,143 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/scope127.htm
+Title: Scope
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Scope Scope
+The Core Reference Data Standards are fundamental to the creation and maintenance of accurate patient information. They are used in both local and national systems and will be present in any new systems procured and developed to manage patient records.
+
+It is recognised that that this is a small set of data items in relation to the number of items of data collected within a patient record, however, this should be viewed as the beginning of the process to develop national operational standards in other aspects of patient records.
+
+When systems should adhere to this standard depends on whether they are:
+
+[1] NHS Wales systems in procurement, or for future procurement.
+[2] Systems that form part of the national architecture and any local systems which exchange data with these systems or with the eMPI. These include (but are not limited to):
+• GP systems;
+• Welsh Clinical Communications Gateway (WCCG);
+• enterprise Master Patient Index (eMPI);
+• Welsh Demographics Service (WDS);
+• Welsh Admin Portal (WAP);
+• Welsh Patient Administration System (WPAS);
+• Welsh Laboratory Information Management System (WLIMS);
+• Welsh Radiology Information System (WRIS);
+• Hospital Pharmacy System;
+• Welsh Clinical Portal (WCP);
+• Welsh Nursing Care Record (WNCR);
+• Welsh Care Records Service (WCRS);
+• Welsh Results Reporting Service (WRRS);
+• Test Requesting and Results Reporting (TRRR);
+• Medicines Transcribing and e-Discharge (MTeD);
+• Welsh Community Care Information System (WCCIS);
+• Welsh Emergency Department System (WEDS);
+• Welsh Reference Data Service (WRDS); and
+• Cardiff & Vale Patient Management System (PMS).
+
+[3] Any other systems meeting the following criteria:
+• Information systems supporting the commissioning or provision of NHS services that hold patient / service user demographic data;
+• Information systems supporting the commissioning or provision of health and care services that are used to transfer or otherwise communicate patient / service user information with other bodies that commission or provide health and care services in Wales in partnership with the NHS; and
+• New information systems procured after this standard comes into force.
+
+The dates by which systems should adhere to this standard are:
+
+Data Item
+| Systems [1]
+| Systems [2]
+| Systems [3]
+|
+PERSON
+|
+Religion
+| 22nd Dec 2017
+| 1st Apr 2022
+| 1st Apr 2023
+|
+Marital Status
+| 22nd Dec 2017
+| 1st Apr 2022
+| 1st Apr 2023
+|
+Sex
+| 22nd Dec 2017
+| 1st Apr 2022
+| 1st Apr 2023
+|
+Gender Identity
+| 22nd June 2020
+| 1st Apr 2022
+| 1st Apr 2023
+|
+Ethnicity
+| 22nd Dec 2017
+| 1st Apr 2022
+| 1st Apr 2023
+|
+Language
+| 22nd Dec 2017
+| 1st Apr 2022
+| 1st Apr 2023
+|
+Postcode
+| 22nd Dec 2017
+| 1st Apr 2022
+| 1st Apr 2023
+|
+Title
+| 1st June 2022
+| 1st Dec 2022
+| 1st Apr 2023
+|
+Organisation
+|
+Organisation Code
+| 22nd Dec 2017
+| 1st Apr 2022
+| 1st Apr 2023
+|
+Organisation Site Code
+| 22nd Dec 2017
+| 1st Apr 2022
+| 1st Apr 2023
+|
+GP Practice Code
+| 22nd Dec 2017
+| 1st Apr 2022
+| 1st Apr 2023
+|
+Dental Practice Code
+| 22nd Dec 2017
+| 1st Apr 2022
+| 1st Apr 2023
+|
+Care Professional
+|
+General Medical Practitioner Code
+| 22nd Dec 2017
+| 1st Apr 2022
+| 1st Apr 2023
+|
+Consultant Code
+| 22nd Dec 2017
+| 1st Apr 2022
+| 1st Apr 2023
+|
+Nurse PIN
+| 22nd Dec 2017
+| 1st Apr 2022
+| 1st Apr 2023
+|
+Allied Health Professional Code
+| 22nd Dec 2017
+| 1st Apr 2022
+| 1st Apr 2023
+|
+Specialty
+|
+Treatment Specialty
+| 22nd Dec 2017
+| 1st Apr 2022
+| 1st Apr 2023
+|
+Main or Consultant Specialty
+| 22nd Dec 2017
+| 1st Apr 2022
+| 1st Apr 2023
+|

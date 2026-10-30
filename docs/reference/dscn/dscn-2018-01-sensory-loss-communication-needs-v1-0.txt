@@ -1,0 +1,371 @@
+Source: https://dhcw.nhs.wales/information-services/information-standards/data-standards/data-standards-files/data-standard-change-notices-docs/dscns-2018/20180110-dscn-2018-01-sensory-loss-communication-needs-v1-0-pdf/
+Retrieved: 2026-10-30 (text extracted with pdftotext -layout)
+
+               WELSH INFORMATION STANDARDS BOARD
+                                                   DSC Notice:        DSCN 2018 / 01
+                                                   Date of Issue:     12th February 2018
+
+Welsh Health Circular / Official Letter:           Subject: Sensory Loss Communication
+                                                   Needs
+
+Sponsor: Tracey Breheny, Deputy Director,
+Health & Social Services Group, Welsh
+Government
+
+Implementation Date:
+23rd November 2017
+
+All systems in procurement, or for future
+procurement, MUST comply with this Standard
+with immediate effect.
+
+
+
+
+                          DATA STANDARD CHANGE NOTICE
+
+   A Data Standard Change Notice (DSCN) is an information mandate for a new or revised
+                                  information standard.
+
+This DSCN was approved by the Welsh Information Standards Board (WISB) at its meeting on
+                                   10th January 2018
+
+WISB Reference: ISRN 2015 / 012
+
+Summary:
+This new data standard is required as a key enabler to ensure effective capture and
+communication of sensory loss communication needs (also referred to as ‘protected
+characteristics’) information between healthcare professionals in Wales.
+
+Applies to:
+This standard applies to all bodies that commission or provides health and care services in
+Wales in partnership with the NHS including their relevant system suppliers.
+
+
+
+Please address enquiries about this Data Standard Change Notice to the Data Standards Team
+                              in NHS Wales Informatics Service
+
+                 E-mail: data.standards@wales.nhs.uk / Tel: 029 2050 2539
+
+
+
+ The Welsh Information Standards Board is responsible for appraising information standards.
+ Submission documents and WISB Outcomes relating to the approval of this standard can be
+                                        found at:
+
+              http://howis.wales.nhs.uk/sites3/page.cfm?orgid=742&pid=24632
+
+
+  DSCN 2018 / 01                     Page 1 of 9
+                           DATA STANDARD CHANGE NOTICE
+
+Introduction
+
+The All Wales Standards for Accessible Communication and Information for People with
+Sensory Loss was launched by the Minister for Health & Social Services in December 2013.
+LHBs and Trusts were instructed by the Minister to put in place an implementation plan to
+ensure that the Standards are fully operational. This includes the requirement to capture and
+act on the communication requirements of patients with sensory loss.
+
+This DSCN mandates the standard for how information relating to individuals (patients and
+service users, and where appropriate the parents and carers of patients and service users)
+who have information and/or communication support needs which are related to or caused by
+sensory loss, should be recorded in systems.
+
+
+
+
+Scope
+
+The scope extends to:
+    Individuals (patients and service users, and where appropriate the parents and carers
+       of patients and service users) who have information and/or communication support
+       needs which are related to or caused by sensory loss. This includes:
+                  o Needs for information in ‘non-standard’, alternative or specific formats
+                  o Use of specific or alternative contact methods
+                  o Arrangement of support from a communication professional (for example
+                     a British Sign Language interpreter)
+                  o And support to communicate in a different or particular way/to use
+                     communication aids (for example to lip-read or use a hearing aid).
+
+The following aspects, which may be considered relevant to improving the accessibility of
+health are explicitly out of scope:
+
+       The needs or preferences of staff, employees or contractors of the organisation
+        (except where they are also patients or service users (or the carer or parent of a
+        patient or service user);
+
+       Individuals’ needs for being communicated with in a particular way, which do not
+        relate to sensory loss and as such would not be considered a ‘need’ or ‘requirement’
+        (for example, a need for communication via e-mail, but an ability to read and
+        understand a standard print letter);
+
+       Individuals who may have difficulty in reading or understanding information for
+        reasons other than having sensory loss, for example due to low literacy or a learning
+        difficulty (such as dyslexia);
+
+       Expected standards, including the level of accessibility, of health websites;
+
+       ‘Corporate’ communications produced/published by organisations which do not relate
+        to direct patient/service user care or services and do not directly affect individuals’
+        health or well-being;
+
+
+
+
+DSCN 2018 / 01                       Page 2 of 9
+      Implementation of the Equality Act 2010 more widely i.e. those sections that do not
+       relate to the provision of information or communication support. This exclusion
+       includes other forms of support which may be needed by an individual due to sensory
+       loss (for example ramps or accommodation of an assistance dog);
+
+      Foreign language needs/provision of information in foreign languages – i.e. people
+       who require information in a non-English or Welsh language for reasons other than
+       sensory loss.
+
+
+Where this information is recorded in any system, this should adhere to the standard outlined
+in this DSCN. All new NHS Wales procurements must also adhere to this Standard.
+
+The standard also applies to correspondence and messages used to transfer information from
+one system to another, where this functionality currently exists, for example in the referral
+letter to pass the information recorded in the GP system in primary care to the patient
+administration system in secondary care.
+
+
+Actions
+
+
+      All systems in procurement, or for future procurement, MUST comply with this
+       Standard with immediate effect.
+      Existing systems that support such information will be managed via a separate
+       implementation plan
+      All relevant staff are aware of their responsibilities for recording such information in
+       order to support individuals with information and/or communication needs, which are
+       related to or caused by sensory loss, where those individuals are within the scope
+       outlined in this document.
+
+
+
+
+DSCN 2018 / 01                      Page 3 of 9
+SPECIFICATION
+Information Specification
+The table below lists the four Data Items (bold text) and corresponding values (listed under each Data Item) that make up the information
+standard mandated by this DSCN.
+Any individual with information and/or communication needs which are related to or caused by sensory loss, where those individuals are
+within the scope outlined in this document, should be able to have that information/communication need recorded using the four Data
+Items listed.
+SNOMED CT is the preferred terminology for underpinning this information requirement, however additional terminologies have been
+provided as a temporary alternative where it is not currently possible to use the SNOMED CT terminology.
+
+
+Current SNOMED CT1, Read v2 and CTV3 codes associated with the standard are listed below, along with appropriate synonyms.
+Note that fully Specified Names (FSNs) and synonyms are not case-sensitive (although Read codes are).
+
+    SNOMED CT             FSN (Fully Specified Name) (also         READV2       CTV3       Synonyms
+                          known as ‘human readable definitions’ or
+                          ‘categories’)
+    58921000000137        Accessible Information - communication support
+    225833001             Uses a legal advocate (finding)        9NgzL          Ua2AI      Uses legal advocate.
+    225834007             Uses a citizen advocate (finding)      9NgzM          Ua2AJ      Uses citizen advocate.
+    285055002             Does use hearing aid (finding)         2DH1           Xa2yX      Does use hearing aids. Uses hearing aid.
+                                                                                           Uses hearing aids.
+    404903008             Uses sign language (finding)           13o8M          Xad28      Uses sign language. Sign language user.
+    415803005             Uses British sign language (finding)   13ZM           XaILE      Uses BSL. BSL user.
+    415805003             Uses Makaton sign language (finding)   13ZP           XaJPI      Uses Makaton. Makaton user.
+    441092009             Does lip read (finding)                13ZL           Xa4A6      Lipreads. Lipreader. Lip-reader. Uses
+                                                                                           lipreading.
+    445076009             Uses manual note taker (finding)       13o82          XaR7L      Uses manual notetaker. Uses manual note-
+                                                                                           taker.
+
+1
+ http://www.snomed.org/
+DSCN 2018 / 01                        Page 4 of 9
+445121000         Uses electronic note taker (finding)        13o81   XaR7I   Uses electronic notetaker. Uses electronic
+                                                                              note-taker.
+445123002         Uses speech to text reporter (finding)      13o83   XaR7M   Uses STTR.
+445129003         Uses cued speech transliterator (finding)   13o84   XaR7O
+445143008         Uses lipspeaker (finding)                   13o80   XaR7H   Uses lip-speaker. Uses lip speaker.
+445488003         Uses telecommunications device for the      13o86   XaR7Q
+                  deaf (finding)
+520491000000109   Preferred method of communication:          13o7    XaR7B   Prefers communication in writing. Prefers
+                  written (finding)                                           written communication.
+761541000000100   Uses alternative communication skill        Xad26   13o8L   Communicates in an alternative way.
+                  (finding)
+837341000000108   Uses Personal Communication Passport        13o8K   XaZL6   Uses Communication Passport. Uses Hospital
+                  (finding)                                                   Passport. Uses Communication Book.
+954831000000109   Uses communication device (finding)         13o8A   XacFO   Uses communications device. Uses device for
+                                                                              communication. Uses communication aid.
+                                                                              Uses communication tool.
+957031000000107   Uses deafblind intervener (finding)         13o8J   XacJE   Uses deafblind intervenor.
+981781000000107   Uses Deafblind Manual Alphabet              13o8N   Xad2A   Uses Deafblind Manual. Deafblind Manual
+                  (finding)                                                   Alphabet User. Deafblind Manual User.
+985091000000109   Uses personal audio recording device to     9Nfh    Xad9e   Personal Audio Recording Device User.
+                  record information (finding)
+
+58931000000135    Accessible Information - requires specific contact method
+795661000000104   Requires contact by telephone (finding)     9Nf4    XaYA0   Needs contact by telephone. Must be
+                                                                              contacted by telephone. Only to be contacted
+                                                                              by telephone. To be contacted by telephone.
+796081000000106   Requires contact by text relay (finding)    9Nf8    XaYAu   Needs contact by text relay. Must be
+                                                                              contacted by text relay. Only to be contacted
+                                                                              by text relay. To be contacted by text relay.
+936701000000103   Requires contact by short message           9NfP    Xabsc   Needs contact by short message service text
+                  service text message (finding)                              message. Needs contact by text message.
+                                                                              Needs contact by SMS text message. Must be
+                                                                              contacted by short message service text
+                                                                              message. Must be contacted by text
+                                                                              message. Must be contacted by SMS text
+                                                                              message. Only to be contacted by short
+DSCN 2018 / 01                Page 5 of 9
+                                                                                  message service text message. Only to be
+                                                                                  contacted by text message. Only to be
+                                                                                  contacted by SMS text message. To be
+                                                                                  contacted by short message service text
+                                                                                  message. To be contacted by text message.
+                                                                                  To be contacted by SMS text message.
+936721000000107   Requires contact by letter (finding)        9NfQ    Xabsd       Needs contact by letter. Must be contacted
+                                                                                  by letter. Only to be contacted by letter. To
+                                                                                  be contacted by letter.
+936741000000100   Requires contact by email (finding)         9NfR    Xabse       Needs contact by email. Must be contacted
+                                                                                  by email. Only to be contacted by email. To
+                                                                                  be contacted by email.
+945931000000101   Requires audible alert (finding)            9NfX    Xac5O       Needs audible alert.
+945951000000108   Requires visual alert (finding)             9NfY    Xac5P       Needs visual alert.
+945971000000104   Requires tactile alert (finding)            9NfZ    Xac5Q       Needs tactile alert.
+984211000000106   Requires contact via carer (finding)        9Nff    Xad6e       Needs contact via carer. Must be contacted
+                                                                                  via carer. Only to be contacted via carer. To
+                                                                                  be contacted via carer.
+58941000000130    Accessible Information - requires specific information format
+367741000000102   Requires information verbally (finding)     9Nf1    XaPSq       Needs information verbally.
+795691000000105   Requires information on digital versatile   9Nf5    XaYA2       Requires information on DVD. Needs
+                  disc (finding)                                                  information on DVD. Needs information on
+                                                                                  digital versatile disc.
+795731000000104   Requires information on compact disc        9Nf6    XaYA5       Requires information on CD. Needs
+                  (finding)                                                       information on compact disc. Needs
+                                                                                  information on CD.
+795801000000104   Requires information on audio cassette      9Nf7    XaYAB       Needs information on audio cassette tape.
+                  tape (finding)                                                  Requires information on cassette tape. Needs
+                                                                                  information on cassette tape.
+796161000000101   Requires information in Easyread            9NfA    XaYB0       Needs information in easyread. Requires
+                  (finding)                                                       information in easy read. Needs information
+                                                                                  in easy read.
+936581000000101   Requires information by email (finding)     9NfH    XabsW       Needs information by email.
+936601000000105   Requires information in electronic audio    9NfJ    XabsX       Needs information in electronic audio format.
+                  format (finding)
+
+DSCN 2018 / 01                 Page 6 of 9
+936621000000101   Requires information in Moon alphabet      9NfK    XabsY   Needs information in Moon alphabet.
+                  (finding)                                                  Requires information in Moon. Needs
+                                                                             information in Moon.
+936641000000108   Requires information in Makaton            9NfL    XabsZ   Needs information in Makaton.
+                  (finding)
+936661000000109   Requires information in contracted         9NfM    Xabsa   Needs information in contracted (Grade 2)
+                  (Grade 2) Braille (finding)                                Braille. Requires information in contracted
+                                                                             Braille. Requires information in Grade 2
+                                                                             Braille. Needs information in contracted
+                                                                             Braille. Needs information in Grade 2 Braille.
+936681000000100   Requires information in uncontracted       9NfN    Xabsb   Needs information in uncontracted (Grade 1)
+                  (Grade 1) Braille (finding)                                Braille. Requires information in uncontracted
+                                                                             Braille. Requires information in Grade 1
+                                                                             Braille. Needs information in uncontracted
+                                                                             Braille. Needs information in Grade 1 Braille.
+957331000000109   Requires written information in at least   9Nf00   XacJU   Needs written information in at least 20 point
+                  20 point sans serif font (finding)                         sans serif font. Requires printed information
+                                                                             in at least 20 point sans serif font. Needs
+                                                                             printed information in at least 20 point sans
+                                                                             serif font.
+957351000000102   Requires written information in at least   9Nf01   XacJV   Needs written information in at least 24 point
+                  24 point sans serif font (finding)                         sans serif font. Requires printed information
+                                                                             in at least 24 point sans serif font. Needs
+                                                                             printed information in at least 24 point sans
+                                                                             serif font.
+957371000000106   Requires written information in at least   9Nf02   XacJW   Needs written information in at least 28 point
+                  28 point sans serif font (finding)                         sans serif font. Requires printed information
+                                                                             in at least 28 point sans serif font. Needs
+                                                                             printed information in at least 28 point sans
+                                                                             serif font.
+945691000000105   Requires information on USB mass           9NfS    Xac4L   Requires information on USB stick. Needs
+                  storage device                                             information on USB mass storage device.
+                                                                             Needs information on USB stick
+945751000000106   Requires information in electronic         9NfT    Xac4f   Needs information in electronic downloadable
+                  downloadable format                                        format.
+
+
+
+DSCN 2018 / 01                Page 7 of 9
+984981000000107   Requires healthcare information          9Nfe      Xad9W     Needs healthcare information recording on
+                  recording on personal audio recording                        personal audio recording device.
+                  device (finding)
+985021000000106   Requires third party to read out written 9Nfg      Xad9Y     Needs third party to read out written
+                  information (finding)                                        information.
+58951000000133    Accessible Information - requires communication professional
+204331000000107   British Sign Language interpreter needed   9NUw      XaLTC     British Sign Language interpreter required.
+                  (finding)                                                      BSL interpreter required. BSL interpreter
+                                                                                 needed. Needs BSL interpreter. Requires BSL
+                                                                                 interpreter. Requires British Sign Language
+                                                                                 interpreter. Needs British Sign Language
+                                                                                 interpreter.
+204341000000103   Makaton Sign Language interpreter          9NUx      XaLTD     Makaton Sign Language interpreter required.
+                  needed (finding)                                               Requires Makaton Sign Language interpreter.
+                                                                                 Needs Makaton Sign Language interpreter.
+                                                                                 Makaton interpreter required. Makaton
+                                                                                 interpreter needed. Needs Makaton
+                                                                                 interpreter. Requires Makaton interpreter.
+225835008         Needs an advocate (finding)                9NgzN     Ua2AK     Requires an advocate. Advocate needed.
+                                                                                 Advocate required.
+796201000000109   Requires deafblind communicator guide      9NfB      XaYB3     Needs deafblind communicator guide.
+                  (finding)                                                      Deafblind communicator guide needed.
+                                                                                 Deafblind communicator guide required.
+936761000000104   Sign Supported English interpreter         9NnQ      Xabsf     Sign Supported English interpreter required.
+                  needed (finding)                                               SSE interpreter required. Needs Sign
+                                                                                 Supported English interpreter. Requires Sign
+                                                                                 Supported English interpreter. Needs SSE
+                                                                                 interpreter. Requires SSE interpreter.
+957051000000100   Requires deafblind manual alphabet         9Nfa      XacJF     Needs deafblind manual alphabet interpreter.
+                  interpreter (finding)                                          Deafblind manual alphabet interpreter
+                                                                                 required. Deafblind manual alphabet
+                                                                                 interpreter needed.
+957071000000109   Requires deafblind block alphabet          9Nfb      XacJG     Needs deafblind block alphabet interpreter.
+                  interpreter (finding)                                          Deafblind block alphabet interpreter required.
+                                                                                 Deafblind block alphabet interpreter needed.
+
+
+
+DSCN 2018 / 01                Page 8 of 9
+957111000000103   Requires deafblind haptic communication   9Nfc   XacJI   Needs deafblind haptic interpreter. Deafblind
+                  interpreter (finding)                                    haptic interpreter required. Deafblind haptic
+                                                                           interpreter needed.
+945891000000106   Requires manual notetaker                 9NfV   Xac5M   Needs manual notetaker. Needs manual
+                                                                           note-taker. Needs manual note taker. Manual
+                                                                           notetaker needed. Manual note-taker
+                                                                           needed. Manual note taker needed. Manual
+                                                                           notetaker required. Manual note-taker
+                                                                           required. Manual note taker required.
+945911000000109   Requires lipspeaker                       9NfW   Xac5N   Needs lipspeaker. Needs lip speaker. Needs
+                                                                           lip-speaker. Lipspeaker required. Lip speaker
+                                                                           required. Lip-speaker required. Lipspeaker
+                                                                           needed. Lip speaker needed. Lip-speaker
+                                                                           needed.
+945711000000107   Visual frame sign language interpreter    9NnR   Xac4M   Visual frame sign language interpreter
+                  needed (finding)                                         required. Requires visual frame sign
+                                                                           language interpreter. Needs visual frame
+                                                                           sign language interpreter.
+945731000000104   Hands-on signing interpreter needed       9NnS   Xac4N   Hands-on signing interpreter required.
+                  (finding)                                                Requires hands-on signing interpreter. Needs
+                                                                           hands-on signing interpreter.
+966401000000100   Requires speech to text reporter          9Nfd   XacYA   Needs speech to text reporter. Requires
+                  (finding)                                                STTR. Needs STTR. Needs speech-to-text-
+                                                                           reporter. Requires speech-to-text-reporter.
+                                                                           STTR needed. STTR required. Speech to text
+                                                                           reporter needed. Speech to text reporter
+                                                                           required.
+984691000000104   Requires sighted guide (finding)          1a01   Xad89   Needs sighted guide. Sighted guide needed.
+
+
+
+
+DSCN 2018 / 01                Page 9 of 9
+

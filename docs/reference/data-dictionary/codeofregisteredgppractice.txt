@@ -1,0 +1,81 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/codeofregisteredgppractice.htm
+Title: Code of Registered GP Practice
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Code of Registered GP Practice Code of Registered GP Practice
+Change History
+|
+|
+DSCN 2025 / 07
+| Referral to Treatment (RTT) Weekly Patient Target List (PTL) Data Set
+|
+DSCN 2020 / 28
+| Suspected Cancer Pathway – Core (AMD)
+|
+DSCN 2020 / 21
+| Single Cancer Pathway - Core
+|
+DSCN 2015 / 03
+| Radiotherapy Data Set
+|
+DSCN 2012 / 11
+| Elective Admission List Data Set (EAL Ds)
+|
+DSCN 2012 / 05
+| GP Practice Code
+|
+DSCN (2007) 11 (W)
+| To rename 'Code of GP Practice (Registered GMP)'
+|
+
+This data item is / was included in the following data sets / collections between the dates shown:
+
+Data Set / Collection
+| Valid From
+| Valid To
+|
+APC ds
+| 1st September 2012
+|
+|
+EAL ds
+| 1st April 1999
+| 21st November 2012
+|
+General
+|
+|
+|
+OP ds
+| 1st April 1999
+|
+|
+CC ds
+| 1st April 2007
+|
+|
+OPR ds
+| 1st July 2008
+|
+|
+EDDS
+| 1st April 2009
+|
+|
+RTDS
+| 1st April 2014
+|
+|
+SCPC ds
+| 1st January 2021
+|
+|
+RTT weekly PTL ds
+| 1st April 2025
+|
+|
+
+This is the code of the patient's registered General Practitioner (GP) Practice. This allows the practice to be notified about treatment received by the patient. The registered GP Practice may or may not be the same as the referring GP Practice.
+For RTT PTL data set: This relates to the patient’s current registered Welsh GP practice at the time of reporting.
+Format: 6 character alpha-numeric
+See Organisation Code

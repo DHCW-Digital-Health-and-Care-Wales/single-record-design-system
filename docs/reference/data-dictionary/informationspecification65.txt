@@ -1,0 +1,793 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/informationspecification65.htm
+Title: Information Specification
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Information Specification Information Specification
+Core Reference Data is reference data about the persons, organisations, and services for use in NHS Wales.
+The data is distributed and uploaded to health IT systems. It supports user security, access control, messaging and is used as reference data for both operations and reporting.
+NHS Wales reference data is issued to users via the Welsh Reference Data Service. Reference data are made available via the Welsh Reference Data Service website at:
+http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+Details
+| Data Item
+|
+Person
+| Religion
+|
+Marital Status
+|
+Sex
+|
+Gender Identity
+|
+Ethnicity
+|
+Language
+|
+Postcode
+|
+Title
+|
+Organisation
+| Organisation Code
+|
+Organisation Site Code
+|
+GP Practice Code
+|
+Dental Practice Code
+|
+Care Professional
+| General Medical Practitioner Code
+|
+Consultant Code
+|
+Nurse Pin Number
+|
+Allied Health Professional Code
+|
+Specialty
+| Treatment Specialty
+|
+Main or Consultant Specialty
+|
+
+Person Details
+
+Religion
+
+SNOMED CT Subset:
+◦ original ID is 10791000000130 and
+◦ name is Religious or Other Belief System Affiliation.
+
+A full list of SNOMED-CT religion concept IDs can be downloaded at:
+https://dd4c.digital.nhs.uk/dd4c/publishedmetadatas/intid/229
+
+Format: 18 character alphanumeric
+
+Marital Status
+
+Format: 2 character alphanumeric
+
+Code
+| Description
+|
+11
+| Single
+|
+12
+| Cohabiting
+|
+21
+| Married
+|
+22
+| Civil Partner
+|
+31
+| Divorced
+|
+32
+| Person whose Civil Partnership has been dissolved
+|
+41
+| Widowed
+|
+42
+| Surviving Civil Partner
+|
+51
+| Separated
+|
+91
+| Not disclosed or unknown
+|
+
+Sex†
+
+Format: 1 character alphabetic
+
+Code
+| Description
+|
+F
+| Female
+|
+U
+| Indeterminate*
+|
+M
+| Male
+|
+Z
+| Not disclosed or unknown, e.g. for unborn baby
+|
+
+*To be used only for recording the sex of a baby prior to the sex being determined as F or M.
+†Note that, in any system implementation of this value set, the context in which the information is being collected must be clear to the user inputting the information, e.g. sex at birth. By law, a person’s previous sex or gender identity must not be disclosed without their explicit consent. Information which could be used to disclose a person’s sex must not be captured alongside their gender information within the demographic record, and must be stored separately, e.g. as part of their clinical record.
+
+Gender Identity
+
+Format: 1 character alphabetic
+Code
+| Description
+|
+F
+| Female
+|
+M
+| Male
+|
+N
+| Non-binary*
+|
+Z
+| Not disclosed or unknown, e.g. for unborn baby
+|
+
+*For use in recording the gender of a person who does not identify as F or M.
+
+Ethnicity
+
+Format: 2 character alphanumeric – AB
+
+Where the first character (A) is a value taken from the list in the table below, and the second character (B) is a locally defined value to be used in conjunction with the nationally defined values. If no further local breakdown is required, the second character (B) should be filled with a ‘Z’. Note that for the Substance Misuse and Maternity Indicators data set, only the first character (A) is submitted.
+
+Code
+| Description
+|
+
+| WHITE
+|
+A
+| Any White Background, including Welsh, English, Scottish, Northern Irish, British, Irish
+|
+B
+| Gypsy or Irish Traveller
+|
+
+| MIXED/MULTIPLE ETHNIC GROUP
+|
+D
+| White and Black Caribbean
+|
+E
+| White and Black African
+|
+F
+| White and Asian
+|
+G
+| Any other mixed background / multiple ethnic background
+|
+
+| ASIAN OR ASIAN BRITISH
+|
+H
+| Indian
+|
+J
+| Pakistani
+|
+K
+| Bangladeshi
+|
+R
+| Chinese
+|
+L
+| Any other Asian background
+|
+
+| BLACK OR BLACK BRITISH
+|
+M
+| Caribbean
+|
+N
+| African
+|
+P
+| Any other Black background
+|
+
+| OTHER ETHNIC GROUPS
+|
+T
+| Arab
+|
+S
+| Any other ethnic group
+|
+
+| NOT STATED
+|
+Z
+| Not stated
+|
+
+Language
+
+The relevant list of languages is defined by ISO 639. Note that the recording of language information should support one of or both lists defined by ISO 639-1 and 639-3 standards. This is dependent on the requirement to record languages associated with macrolanguages, e.g. Mandarin (defined in 639-3) and Chinese (639-1), as well as sign languages (639-3).
+
+A full list is available to be downloaded at:
+https://iso639-3.sil.org/code_tables/download_tables
+
+Format: 3 character alphanumeric
+
+Note that this Standard should be used in conjunction with the associated Sensory Loss Communication Need Standard defined in DSCN 2018 / 01 in order to capture the method of communication, e.g. for non-spoken languages such as Braille and Makaton. Where a language is not known or if the patient has no spoken/written language, the following values can be used:
+
+Code
+| Description
+|
+998
+| Not known
+|
+999
+| None
+|
+
+Postcode
+
+Format: 8 character alphanumeric
+
+The specific code format as specified by the Office of National statistics (ONS) is:
+
+Data description
+| Range of codes/ Entity code
+| Comments
+|
+Unit postcode – 8 character version
+
+| AB1 Δ Δ 1AA - ZE99 Δ 9ZZ (maximum range)
+
+| 2, 3 or 4-character outward code - left aligned;
+
+3-character inward code - right aligned;
+
+5th character always blank and
+3rd and 4th characters may be blank (Δ)
+|
+
+This allows a space to be inserted to differentiate between the inward and outward segments of the code, enabling full use to be made of the Royal Mail postcode functionality.
+
+There are occasions when the use of a 'pseudo code' is necessary, particularly when dealing with an overseas address. Full details of pseudo country codes and other codes may be obtained from the Office of National Statistics website. Some of the more common pseudo codes are:
+
+Code
+| Description
+|
+ZZ99 3VZ
+| No fixed abode
+|
+ZZ99 3CZ
+| England/UK not otherwise specified
+|
+ZZ99 3GZ
+| Wales not otherwise specified
+|
+ZZ99 1WZ
+| Scotland not otherwise specified
+|
+ZZ99 2WZ
+| Northern Ireland not otherwise specified
+|
+
+UK Postcodes are available via the Welsh Reference Data Service (WRDS): http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+Title
+The title by which a person wishes to be known.
+For a person who does not wish to be known by any title or wishes to be known by a title that is not listed below, the field should be left blank.
+Format: 5 character alphabetic
+
+Code
+| Description
+|
+Admr
+| Admiral
+|
+Baron
+| Baron
+|
+Brig
+| Brigadier
+|
+Bshp
+| Bishop
+|
+Can
+| Canon
+|
+Capt
+| Captain
+|
+Col
+| Colonel
+|
+Dame
+| Dame
+|
+Dr
+| Doctor
+|
+Ftr
+| Father
+|
+Lady
+| Lady
+|
+Lord
+| Lord
+|
+Miss
+| Miss
+|
+Mjr
+| Major
+|
+Mr
+| Mr
+|
+Mrs
+| Mrs
+|
+Ms
+| Ms
+|
+Mstr
+| Master
+|
+Mx
+| Mx
+|
+Prof
+| Professor
+|
+Rev
+| Reverend
+|
+Sgt
+| Sergeant
+|
+Sir
+| Sir
+|
+Sstr
+| Sister
+|
+a blank value
+| < Unknown / None / Other >
+|
+
+Note: All the above titles should be available for anyone to choose. The choice of titles available should not be restricted by a person’s sex or gender.
+
+Organisation
+
+Organisation Code
+
+Organisation and site codes are configured with consensus across the UK NHS home countries and published for use by NHS Digital via the Organisation Data Service (ODS).
+
+Codes as listed by the Organisation Data Service are configured to a set of specified coding frames1, according to organisation type. Welsh health board and trust organisation codes are defined by ODS coding frame B, as illustrated in the table below.
+
+Format: 5 character alphanumeric
+
+Character Position
+| 1
+| 2
+| 3
+| 4
+| 5
+|
+Format
+| a/n
+| a/n
+| a/n
+|
+|
+|
+Local Health Board (Wales)
+| 7
+| A-9
+| A-9
+|
+|
+|
+NHS Trust
+| R
+| A-9
+| A-9
+|
+|
+|
+B FRAME
+| Organisation Type Identifier
+|
+|
+
+Default codes:
+
+Code
+| Description
+|
+89997
+| Non-UK provider where no organisation code has been issued
+|
+89999
+| Non-NHS UK provider where no organisation code has been requested and issued
+|
+
+Codes for Welsh organisations are available via the Welsh Reference Data Service (WRDS): http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+1 https://www.datadictionary.nhs.uk/data_dictionary/attributes/o/org/organisation_code_de.asp?shownav=1
+
+Organisation Site Code
+
+Organisation and site codes are configured with consensus across the UK NHS home countries and published for use by NHS Digital via the Organisation Data Service (ODS).
+
+Codes as listed by the Organisation Data Service are configured to a set of specified coding frames, according to organisation type. Welsh health board and trust organisation site codes are defined by ODS coding frame B, as illustrated in the table below.
+
+Format: 5 character alphanumeric
+
+Character Position
+| 1
+| 2
+| 3
+| 4
+| 5
+|
+Format
+| a/n
+| a/n
+| a/n
+| a/n
+| a/n
+|
+Local Health Board (Wales)
+| 7
+| A-9
+| A-9
+| A-9
+| A-9
+|
+NHS Trust
+| R
+| A-9
+| A-9
+| A-9
+| A-9
+|
+B FRAME
+| Organisation Type Identifier
+| Organisation Identifier
+|
+
+Default codes:
+
+Code
+| Description
+|
+89997
+| Non-UK provider where no organisation code has been issued
+|
+89999
+| Non-NHS UK provider where no organisation code has been requested and issued
+|
+
+Codes for Welsh organisations are available via the Welsh Reference Data Service (WRDS): http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+GP Practice Code
+
+GP practice codes are configured with consensus across the UK NHS home countries and published for use by NHS Digital via the Organisation Data Service (ODS).
+
+Codes as listed by the Organisation Data Service are configured to a set of specified coding frames, according to organisation type. GP practice codes are defined by ODS coding frame G, as illustrated in the table below.
+
+Format: 7 character alphanumeric
+
+Character Position
+| 1
+| 2
+| 3
+| 4
+| 5
+| 6
+| 7
+|
+Format
+| A-H, J-N, P, W & Y
+| 0-9
+| 0-9
+| 0-9
+| 0-9
+| 0-9
+| 0-9
+|
+G FRAME
+| Organisation Type Identifier
+| Practice Identifier
+|
+
+Default Codes:
+
+Code
+| Description
+|
+V81997
+| No registered GP Practice*
+|
+V81998
+| Practice not applicable. i.e. MOD or Prison GP**
+|
+V81999
+| Practice code is unknown***
+|
+
+*V81997 should only be used where a patient presents who is not currently registered at a GP Practice.
+
+**V81998 should be used where a patient would not have a registered practice, for instance an overseas patient.
+
+***V81999 should only be used where it is not possible to determine a patient’s registered practice code, for instance the patient cannot communicate and is unidentifiable.
+
+Codes for Welsh GP practices are available via the Welsh Reference Data Service (WRDS): http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+Dental Practice Code
+
+Dental practice codes are configured with consensus across the UK NHS home countries and published for use by NHS Digital via the Organisation Data Service (ODS).
+
+Codes as listed by the Organisation Data Service are configured to a set of specified coding frames, according to organisation type. Dental practice codes are defined by ODS coding frame G, as illustrated in the table below.
+
+Format: 7 character alphanumeric
+
+Character Position
+| 1
+| 2
+| 3
+| 4
+| 5
+| 6
+| 7
+|
+Format
+| V
+| 0-9
+| 0-9
+| 0-9
+| 0-9
+| 0-9
+|
+|
+G FRAME
+| Organisation Type Identifier*
+| Practice Identifier**
+|
+
+*The first character is set as a V for dental practice codes
+
+**Characters 2 to 6 are the last 5 digits of the Location ID taken from a Provider Dentist Contract number
+
+Codes for Welsh GP practices are available via the Welsh Reference Data Service (WRDS): http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+Care Professional
+
+General Medical Practitioner Code
+
+The General Medical Practitioner Code is the GP Code used as the GP Prescribing reference by the prescribing authority.
+
+In England and Wales, General Medical Practitioner codes begin with the prefix letter G with the following format.
+
+Format: 8 character alphanumeric:
+
+Practitioner
+Code Type
+| Character Position
+|
+1
+| 2
+| 3
+| 4
+| 5
+| 6
+| 7
+| 8
+|
+General
+Medical
+Practitioner PPD code
+| G
+| 0-9
+| 0-9
+| 0-9
+| 0-9
+| 0-9
+| 0-9
+| 0-9
+|
+
+The 2nd to 7th characters are the Doctor Index Number (DIN) assigned by NHS Digital upon qualification. DINs and addresses are issued quarterly by the Prescription Pricing Authority (PPA). The eighth character is a check digit calculated as follows:
+
+1 x First numeric character
++ 3 x second numeric character
++ 7 x third numeric character
++ 1 x fourth numeric character
++ 3 x fifth numeric character
++ 7 x sixth numeric character
+
+The check digit is then the unit digit (last digit) of the result of this calculation.
+
+For example, for PPA code 334512, the check digit would be:
+(1 x 3) + (3 x 3) + (7 x 4) + 5 + (3 x 1) + (7 x 2) = 62
+The check digit is 2 and the full code G3345122.
+
+NHS UK General Practitioners Reference Data are available via the Welsh Reference Data Service (WRDS): http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+Consultant Code
+
+A care professional contracted by a Health Care Provider who has been appointed by a consultant’s appointment committee.
+
+He or she must be a member of a Royal College or Faculty. This includes general medical practitioners in cases where a general medical practitioner is responsible for patient care and has an arrangement with the Health Care Provider.
+
+The Consultant Code is derived from either the General Medical Council reference number for general medical practitioners, or the General Dental Council registration number for general dental practitioners.
+
+Format: 8 character alphanumeric:
+
+Practitioner
+Code Type
+| Character Position
+|
+1
+| 2
+| 3
+| 4
+| 5
+| 6
+| 7
+| 8
+|
+Hospital Consultant*
+| C
+| 0-9
+| 0-9
+| 0-9
+| 0-9
+| 0-9
+| 0-9
+| 0-9
+|
+Dental Consultant**
+| D
+| D
+| 0-9
+| 0-9
+| 0-9
+| 0-9
+| 0-9
+| 0-9
+|
+
+* Derived from General Medical Council Reference Number, prefixed with a C.
+** Derived from General Dental Council Registration Number, prefixed with DD.
+
+Note that General Dental Council registration numbers vary in length from 5 to 6 characters.
+Filling zeros are used between the prefix and General Dental Council registration number, where required, to maintain total length of 8 characters.
+
+For further information, please refer to the Dental Consultants in England (PDF) guidance document issued by the Organisation Data Service.
+
+NHS Wales Consultants and Private Consultants Reference Data are available via the Welsh Reference Data Service (WRDS): http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+Nurse Pin Number
+
+A nurse is a care professional whose name is registered by the Nursing and Midwifery Council.
+
+A nurse pin number is a code that uniquely identifies a nurse on the Nursing and Midwifery Council Register.
+
+Format: 8 character alphanumeric:
+
+NNANNNNA
+
+NHS Wales Nurses’ Reference Data are available via the Welsh Reference Data Service (WRDS): http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+Allied Health Professional Code
+
+An allied health professional is a care professional whose name is registered with the Health and Care Professions Council (HCPC). An Allied Health Practitioner (AHP) Code is alpha numeric, with the first two to three alpha characters indicating the profession, followed by 5 to 6 numeric characters.
+
+The list of health professionals listed on the HCPC with the type prefix are:
+
+AS
+| Arts Therapist
+|
+BS
+| Biomedical Specialist
+|
+CH
+| Chiropodist / Podiatrist
+|
+CS
+| Clinical Scientist
+|
+DT
+| Dietician
+|
+HA
+| Hearing Aid Dispenser
+|
+OT
+| Occupational Therapist
+|
+ODP
+| Operating Department Practitioner
+|
+OR
+| Orthoptist
+|
+PA
+| Paramedic
+|
+PH
+| Physiotherapist
+|
+PYL
+| Practitioner Psychologist
+|
+PO
+| Prosthetist/Orthotist
+|
+RA
+| Radiographer
+|
+SL
+| Speech and Language Therapist
+|
+
+Format: 8 character alphanumeric:
+
+AHP codes are in the format AANNNNN(N) or AAANNNNN
+
+NHS Wales Allied Health Professionals’ reference data are available via the Welsh Reference Data Service (WRDS): http://wrds.wales.nhs.uk/ (NHS Wales Users Only)
+
+Specialty
+
+Treatment Specialty
+
+This is the specialty under which the patient will be or is treated and is based on the list of specialties defined by the Royal Colleges. This may or may not match the specialty recorded as a consultant's main specialty and should be assigned irrespective of the type of care professional responsible.
+
+A full list of these codes can be found at:
+http://www.datadictionary.wales.nhs.uk/#!WordDocuments/treatmentfunctioncode.htm
+
+Format: 3 digit numeric
+
+Main or Consultant Specialty
+A unique code identifying each Main Specialty designated by Royal Colleges.
+
+Specialties are divisions of clinical work which may be defined by body systems (dermatology), age (paediatrics), clinical technology (nuclear medicine), clinical function (rheumatology), group of diseases (oncology) or combinations of these factors. Only Specialty titles recognised by the Royal Colleges and Faculties should be used. This list is maintained by the General and Specialist Medical Practice (Education, Training and Qualifications) Order 2003 and European Primary and Specialist Dental Qualifications Regulations 1998.
+
+Each consultant should be assigned a Main Specialty by the organisation to which the consultant is contracted. For physicians and surgeons with a generalist component to their work, the Main Specialty should be General Medicine or General Surgery. The Main Specialty is specific to a Health Care Provider. If, for example, a consultant physician working in two Health Care Providers has a generalist component to the work in one and not the other, General Medicine is only assigned as the Main Specialty in the former case. Consultants in general medicine or general surgery may also have specialist interests and these should be recorded as well as the Main Specialty.
+
+The source of this information should be the designation on the consultant's contract. This should be checked periodically against the work a consultant is actually doing so that the statistics can relate to a consultant's current type of work.
+
+The Main Specialty should only be used for the purpose of generating Health Resource Groups (HRGs) for financial costing and for workforce statistics. Other specialist interests of consultants may be recorded for workforce planning purposes.
+
+The Main Specialty code for general practitioners is General Medical Practice or General Dental Practice.
+
+Joint Consultant Clinic activity should be recorded against the Main Specialty code of the consultant managing the clinic.
+
+A full list of these codes can be found at:
+http://www.datadictionary.wales.nhs.uk/#!WordDocuments/mainspecialtyconsultant.htm
+
+Format: 3 digit numeric

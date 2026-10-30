@@ -1,0 +1,28 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/caserecordnumber.htm
+Title: Case Record Number
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Case Record Number Case Record Number
+This data item is / was included in the following data sets / collections between the dates shown:
+
+Data Set / Collection
+| Valid From
+| Valid To
+|
+Psychiatric Census
+|
+|
+|
+CC ds
+| 1st April 2007
+|
+|
+MI ds
+| 1st April 2017
+|
+|
+
+This is the patient's case record number which is unique to that patient within a hospital or health care provider.
+
+Format: 10 character alpha-numeric. Do not leave blank spaces - lead with zeros if necessary
+See Local Patient Identifier

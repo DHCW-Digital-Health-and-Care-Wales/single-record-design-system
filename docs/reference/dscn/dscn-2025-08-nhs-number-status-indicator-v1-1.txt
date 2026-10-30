@@ -1,0 +1,282 @@
+Source: https://dhcw.nhs.wales/data/information-standards/data-standards/data-standards-files/20250320-dscn-2025-08-nhs-number-status-indicator-v1-1-pdf/
+Retrieved: 2026-10-30 (text extracted with pdftotext -layout)
+
+               WELSH INFORMATION STANDARDS BOARD
+                                                   DSC Notice:      DSCN 2025 / 08
+                                                   Date of Issue:   14th May 2025
+
+Welsh Health Circular/Official Letter:             Subject: NHS Number Status Indicator
+N/A
+Sponsor: N/A
+
+Implementation Date: 1st April 2025
+
+
+                          DATA STANDARDS CHANGE NOTICE
+
+   A Data Standards Change Notice (DSCN) is an information mandate for a new or revised
+                                  information standard.
+
+This DSCN was approved by the Welsh Information Standards Board (WISB) at its meeting on
+                                   20th March 2025.
+
+WISB Reference: ISRN 2024 / 006
+
+Summary: To retire a value from the data item ‘NHS Number Status Indicator’ due to a lack
+of use and to align with NHS Digital (England).
+
+Data sets / returns affected:
+
+   •   Admitted Patient Care Data Set (APC Ds)
+   •   Outpatient Data Set (OPA Ds)
+   •   Planned Care Referral Data Set (PCR Ds)
+   •   Emergency Department Data Set (EDDS)
+   •   Maternity Indicators Data Set (MI Ds)
+   •   Single Cancer Pathway Core Data Set (SCPC Ds)
+   •   National Cancer Data Set – Core
+   •   National Cancer Data Set – SACT
+
+
+  Please address enquiries about this Data Standards Change Notice to the Data Standards
+                          Team in NHS Wales Informatics Service
+
+                   E-mail: data.standards@wales.nhs.uk / Tel: 029 2050 2539
+
+ The Welsh Information Standards Board is responsible for appraising information standards.
+ Submission documents and WISB Outcomes relating to the approval of this standard can be
+                                         found at:
+             http://howis.wales.nhs.uk/sites3/page.cfm?orgid=742&pid=24632
+
+
+
+  DSCN 2025 / 08                     Page 1 of 6
+                         DATA STANDARDS CHANGE NOTICE
+
+Introduction
+
+The Digital Health and Care Wales Data Quality team reviewed the use of each value for NHS
+Number Status Indicator data item. The data demonstrated that no Local Health
+Boards/Trusts are using the code ‘nn’ and haven’t since October 2019.
+
+NHS England does not have the value ‘nn’ in their NHS Number Status Indicator data item. It
+is therefore proposed to retire the value ‘nn’ as it is no longer used, this will then support
+alignment with NHS England.
+
+
+Description of Change
+
+The following changes to the existing data item ‘NHS Number Status Indicator’ have been
+identified:
+
+   •   To retire value ‘nn - Number present and traced using Welsh Patient Demographic
+       Service’
+
+
+Data Dictionary Version
+
+Where applicable, this DSCN reflects changes introduced by DSCN and/or DDCN since the
+release of version 4.24 of the NHS Wales Data Dictionary.
+
+The changes introduced by such DSCNs will be published in version 4.25 of the NHS Wales
+Data Dictionary.
+
+Actions Required
+
+Local Health Boards:
+
+   •   Ensure that local processes and systems have been updated to comply with the
+       standard set out within this DSCN.
+
+Digital Health and Care Wales:
+
+   •   Ensure that all national systems have been updated to comply with the standard
+       set out within this DSCN.
+   •   Data Acquisition to update their processes to comply with the changes set out within
+       this DSCN.
+
+
+
+
+DSCN 2025 / 08                     Page 2 of 6
+Appendix A: Table reflecting areas that are impacted as a result of this
+DSCN
+
+The following table shows where there are changes to the scope and/or definitions of
+applicable data sets, data items, terms and other associated areas that are linked with the
+changes documented within this DSCN.
+
+Each data definition type is listed in alphabetical order and is shown in the sequence in which
+it appears in this DSCN.
+
+ Data Definition                                                 New/Retired/          Page
+                                      Name
+      Type                                                         Changed            Number
+   Data Item              NHS Number Status Indicator              Changed              5
+
+
+
+
+DSCN 2025 / 08                      Page 3 of 6
+Appendix B: Highlighted changes to be made to the NHS Wales Data
+Dictionary
+Changes to the NHS Wales Data Dictionary are detailed below, with new text being
+highlighted in blue and deletions are shown with a strikethrough. The text shaded in grey
+shows existing text copied from the NHS Wales Data Dictionary.
+
+
+
+NHS Number Status Indicator
+
+This data item is / was included in the following data sets / collections between the dates
+shown:
+
+   Data Set /
+                            Valid From            Valid To
+   Collection
+   APC ds99                 1st April 1999
+                                                  21st November
+   EAL ds                   1st April 1999
+                                                  2012
+   OP ds                    1st April 1999
+   PCR ds                   1st July 2008
+   EDDS                     1st April 2009
+   MI ds                    1st April 2016
+                            1st January
+   SCPC ds
+                            2021
+   National Cancer Ds
+   – Core
+   National Cancer Ds -
+   SACT
+
+The status indicator provides information about the potential accuracy and reliability of the
+NHS number and hence the use to which the number can be put. The indicator can also be
+used to indicate the general standard of patient data quality within Trusts. This data item
+became mandatory in Wales in April 1999.
+
+Format: 2 digit numeric
+   Value      Meaning             Interpretation                        Valid From     Valid To
+              Number present
+              and traced          Welsh LHB's should look for high
+              using Welsh         levels of NHS numbers which           1st April      1st April
+   nn
+              Patient             have an associated status             1999           2025
+              Demographic         indicator value of 'nn'.
+              Service
+                                  Providers should be striving to
+                                  submit numbers that have been
+                                  traced against an authoritative
+                                  source (currently the Initial
+              Number present                                            1st April
+   01                             Tracing Service) and so are as
+              & traced                                                  1999
+                                  reliable and accurate as possible.
+                                  Therefore Local Health Boards
+                                  should look for high levels of NHS
+                                  numbers which have an
+
+
+DSCN 2025 / 08                      Page 4 of 6
+                              associated status indicator value
+                              of "01".
+                              This value reveals that although a
+                              number is present, it has not
+                              been traced against an
+                              authoritative source i.e. it has
+                              most likely been manually input
+                              but not sent to the Initial Tracing
+                              Service for checking. An
+            Number present                                          1st April
+   02                         exception to this could be that the
+            but not traced                                          1999
+                              NHS number has entered the
+                              provider system electronically
+                              from a reliable and safe source
+                              other than the authoritative
+                              tracing service. Users of NHS
+                              numbers with a status indicator
+                              value of "02" should be cautious.
+                              The provider should submit
+                              patient details for NHS number
+                              tracing before DS's are
+                                                                    1st April
+   03       Trace required    submitted. Therefore the
+                                                                    1999
+                              proportion of missing numbers is
+                              indicated by the "03" value
+                              should be very small.
+                              A significant proportion of "04s"
+                              could indicate data quality
+            Trace attempted   problems at the provider.
+            – no match or     However, the LHB should take          1st April
+   04
+            multiple match    account of whether the provider       1999
+            found             has a high level of difficulty to
+                              trace patient’s e.g. ethnic names,
+                              mobile population.
+                              High levels of "05s" imply that the
+                              NHS numbers sent by the
+                              provider for check tracking are
+            Trace needs to
+                              incorrect for the patient. This
+            be resolved
+                              indicates poor quality of data        1st April
+   05       (NHS number or
+                              which could either be due to a        1999
+            patient detail
+                              poor original source e.g. wrong
+            conflict)
+                              number given on a GP referral
+                              letter, or poor data input by the
+                              provider.
+                              This value indicates that the NHS
+                              number has been submitted for
+                              tracing but a response is awaited.
+            Trace in          Local Health Boards should expect     1st April
+   06
+            progress          to see a small proportion of these    1999
+                              as the time of DS submission may
+                              be before the response from the
+                              tracing service is received.
+            Number not
+            present and       Two circumstances are explained       1st April
+   07
+            trace not         by this indicator:                    1999
+            required
+
+
+
+DSCN 2025 / 08                  Page 5 of 6
+                              NHS number is not required e.g.
+                              overseas visitor. This should be
+            1.
+                              easy to identify from other DS
+                              data items
+                              There is insufficient patient data
+                              to enable a successful trace to be
+                              made. Local Health Boards need
+                              to be more cautious about this
+                              reason although they should take
+            2.                into account the type of
+                              population the provider serves
+                              e.g. itinerants and mental health
+                              patients who may not be willing
+                              or able to provide sufficient
+                              information.
+                              Note: Local Health Boards should
+                              expect to see a small proportion
+                              of cases where there is no NHS
+                              number at all.
+                              This indicator should only be used
+            Trace postponed   for babies under six weeks old
+                                                                   1st April
+   08       (baby under six   and Local Health Boards should
+                                                                   1999
+            weeks old)        check the date of birth details on
+                              the DS.
+
+
+
+
+DSCN 2025 / 08                  Page 6 of 6
+

@@ -1,0 +1,53 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/gpcode.htm
+Title: GP Code
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+GP Code GP Code
+Change History
+|
+|
+DSCN 2022 / 06
+| Main Specialty (Consultant) (AMD)
+|
+DSCN 2019 / 09
+| National Cancer Data Standards for Wales – Core
+|
+DDCN 2013 / 10
+| Redundant Data Items
+|
+DSCN 2012 / 05
+| GP Practice Code
+|
+DSCN 2009 / 09
+| NHS Reforms: NHS Wales Data Definition Update
+|
+DSCN (2006) 04 (W)
+| Revised definitions for Phase 2 of the Outpatient Data Quality Project
+|
+DSCN 13/04 (W)
+| To amend the All Wales Data Dictionary entry for the data term 'GP Code'
+|
+
+For information
+This is the Department of Health code for the GP.
+Format: 8 character alpha-numeric
+Value
+| Meaning
+|
+GNNNNNNN
+| A code issued by the Department of Health (DH) for practising GP's in Wales and England. The codes can be viewed on the Health Reference Data Web Pages on HOWIS.
+|
+
+Structure
+Each GP code begins with the letter G.
+The 2nd to 7th characters are the DH Index Number. Index Numbers and addresses are issued quarterly by the Prescription Pricing Authority (PPA). The eighth character is a check digit calculated thus:
+First numeric character
++ 3 x second character
++ 7 x third character
++ 1 x fourth character
++ 3 x fifth character
++ 7 x sixth character
+The check digit is then the unit digit (last digit) of the result of this calculation.
+e.g. PPA code 334512. Check digit is computed by:
+3 + (3 x 3) + (7 x 4) + 5 + (3 x 1) + (7 x 2) = 62
+The check digit is 2 and the full code G3345122.

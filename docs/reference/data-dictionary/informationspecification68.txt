@@ -1,0 +1,172 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/informationspecification68.htm
+Title: Information Specification
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Information Specification Information Specification
+The addressograph label MUST include all elements illustrated in the Standard Label (Label 2) and comply to the format specified in the Annotated Label. In addition, please note the following details:
+• Although the NHS Number should be used to uniquely identify a patient, where necessary, the patient’s hospital number may be incorporated in the top right corner of the label (Label 5).
+• The patient’s surname should be printed in uppercase so as to easily distinguish this from the forename(s).
+• Where the patient’s name and date of birth combined are too long to fit on a single line, the text may continue to a second line providing that the left and right justification is maintained, with the date of birth right-justified on the second line (Labels 3 and 4).
+
+There are two label sizes currently in use. This specification has been designed to be compatible with both sizes to ensure that no costs associated with changing the size of the label are incurred.
+
+Annotated Label
+
+Note – The following are for illustrative purposes and are not intended as an exhaustive list of scenarios
+
+Label 2 - Standard
+
+|
+|
+|
+
+|
+|
+|
+
+| 123 456 7890
+|
+|
+|
+
+|
+|
+|
+
+| DUCK, Donald 13-Feb-1986
+|
+
+|
+
+|
+|
+|
+
+| 10 Heol Creigau Sex not specified
+Pontypridd
+Cardiff
+Rhondda Cynon Taf, XX12 3XX
+|
+|
+
+|
+|
+|
+
+Label 4 - Long name truncated at 44 characters
+
+|
+|
+|
+
+|
+|
+|
+
+| 123 456 7890
+|
+|
+|
+
+|
+|
+|
+
+| DUCK, Donaldhasmanymanyfore
+nameswhicharelon… 13-Feb-1986
+|
+
+|
+
+|
+|
+|
+
+| 10 Heol Creigau Sex not specified
+Pontypridd
+Cardiff
+Rhondda Cynon Taf, XX12 3XX
+|
+|
+
+|
+|
+|
+
+Label 3 - Long name
+
+|
+|
+|
+
+|
+|
+|
+
+| 123 456 7890
+|
+|
+|
+
+|
+|
+|
+
+| DUCK, Donald has many many forenames 13-Feb-1986
+|
+
+|
+
+|
+|
+|
+
+| 10 Heol Creigau Sex not specified
+Pontypridd
+Cardiff
+Rhondda Cynon Taf, XX12 3XX
+|
+|
+
+|
+|
+|
+
+Label 5 - With CRN
+
+|
+|
+|
+
+|
+|
+|
+
+| 123 456 7890
+| CRN A000001A
+|
+|
+
+|
+|
+|
+
+| DUCK, Donald 13-Feb-1986
+|
+
+|
+
+|
+|
+|
+
+| 10 Heol Creigau Sex not specified
+Pontypridd
+Cardiff
+Rhondda Cynon Taf, XX12 3XX
+|
+|
+
+|
+|
+|

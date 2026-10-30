@@ -1,0 +1,551 @@
+Source: https://dhcw.nhs.wales/information-services/information-standards/data-standards/data-standards-files/data-standard-change-notices-docs/dscns-2007/dscn-2007-06-w-dob-amp-address-v1-0-doc-pdf/
+Retrieved: 2026-10-30 (text extracted with pdftotext -layout)
+
+                                                                                       DSC Notice: DSCN (2007) 06 (W)
+                                                                                        English DSCN Equivalent: N/A
+                                                                                       Initiating Welsh Reference: RFC
+                                                                                           Date of Issue: February 2007
+                                                                   Subject: Amendments to Data Items;
+                                                                   ‘Pat
+                                                                      ientsUs ualAddress’,‘Postcodeof
+                WIGSB                                              UsualAddr  es
+                                                                               s’and‘Bi rthDat e’.
+     Welsh Information Governance
+         and Standards Board                                       Implementation date: Immediately
+
+
+                            DATASET CHANGE CONTROL PROCEDURE
+
+
+
+
+Summary of change:
+
+To include a new value for Unknown Date of Birth and an additional sentence to revise the
+definitions for Patients Usual Address and Postcode.
+
+
+
+
+                                                                                       WIGSB Reference No:
+                                                                                              20070315001
+
+
+Welsh Information Governance and Standards Board (WIGSB), is responsible for approving information standards.
+
+Please address enquiries about Dataset change proposals to the Data Standards and Information Quality Team, HSW, Brunel House, 2
+Fitzalan Road, Cardiff CF24 0HA Tel: 029 20502539 or E-mail Data.Standards@hsw.wales.nhs.uk
+
+Dataset Change Notices are available via the Intranet Service HOWIS http://howis.wales.nhs.uk/ or by contacting the above address.
+
+Draft DSCN numbering format = (year of draft) 2-alphacharacter sequence (W).
+
+Upon receiving approval for the change by WISGB, the draft DSCN number will be reformatted to:
+DSCN number format = (year of issue) sequence number (W)
+
+In addition,
+WIGSB Reference No. format = year/month/day/sequence number (relates to when WIGSB approved change)
+
+
+
+Document: DSCN (2007) 06 (W)                                                                     Author: Rebecca Wells
+Status: Final                                                                                   Created On: 08/03/2007
+Version: 1.0                                                                                  Date Printed: dd/mm/yyyy
+                                                          Page 1
+                                DSCN Distribution List
+Ian Baker           Information Analyst                     Bro Morgannwg NHS Trust
+Ian Phillips        Associate Director of IM&T              Bro Morgannwg NHS Trust
+Jan Kinsey          Data Quality Manager                    Bro Morgannwg NHS Trust
+Jim Plunkett        Head of Information                     Bro Morgannwg NHS Trust
+Rhodri Jones        Information Manager                     Bro Morgannwg NHS Trust
+Suzanne Holloway    Information Manager                     Bro Morgannwg NHS Trust
+Jim Puzey           Head of IM&T                            Business Services Centre
+John Dicker         Regional IM&T Manager                   Business Services Centre
+Eluned Cousins      Regional Information Manager            Business Services Centre
+Mark Piper          Information Services Business Manager   Business Services Centre
+Trevor Hughes       Regional Information Manager            Business Services Centre
+Tim O’ Sul livan    Regional Information Manager            Business Services Centre
+Vince Lacey         Regional IM&T Manager                   Business Services Centre
+Alan Roderick       Acting Head of Performance &            Cardiff and Vale NHS Trust
+                    Information
+Kerry Ashmore       Data Quality Manager                    Cardiff and Vale NHS Trust
+Steven Thomson      Information Manager                     Cardiff and Vale NHS Trust
+Carl Davies         Deputy Software Development Manager     Carmarthen NHS Trust
+Debbie Croft        Information Manager                     Carmarthen NHS Trust
+Eric Lewis          Head of Information                     Carmarthen NHS Trust
+Richard Noyce       Senior Information Analyst              Carmarthen NHS Trust
+Mark Bouchier       Head of IM&T                            Ceredigion NHS Trust
+Nia Jones           Information Manager                     Ceredigion NHS Trust
+Sharon Marshall     Information Manager                     Ceredigion NHS Trust
+David Hawes         Information Manager                     Ceredigion NHS Trust
+Dylan Williams      Head of IM&T                            Conwy & Denbighshire
+Peter Burcham       Data Quality Manager                    Conwy & Denbighshire
+Richard Walker      Information Manager                     Conwy & Denbighshire
+Jayne Griffiths     Associate Director of IM&T              Gwent Healthcare NHS Trust
+Nicola Morgan       Head of Data Quality                    Gwent Healthcare NHS Trust
+Sonia Stevens       Head of Information                     Gwent Healthcare NHS Trust
+Bernie Glyn-Smith   Information Manager                     North East Wales NHS Trust
+Christine Fisher    Head of Information                     North East Wales NHS Trust
+Claire Whitely      Assistant Information Manager           North East Wales NHS Trust
+Janet Holmes        Information Supervisor                  North East Wales NHS Trust
+Richard Jones       Data Quality Manager                    North East Wales NHS Trust
+Gordon Craig        Head of Information                     North Glamorgan NHS Trust
+Graham Crooks       Information Manager                     North Glamorgan NHS Trust
+Jeff Pye            Head of IM&T                            North West Wales NHS Trust
+Vaughan Hughes      Information Manager                     North West Wales NHS Trust
+Michelle Campbell   Information Manager                     Pembrokeshire and Derwen
+Jack Attwood        Director of IM&T                        Pontypridd and Rhondda
+Lloyd Bishop        Information Manager                     Pontypridd and Rhondda
+Lynda James         Head of Information                     Powys LHB
+Mike Jones          Operational                             Powys LHB
+Tracey Jones        Information Manager                     Powys LHB
+Gareth Lee          Head of Information Services            Swansea NHS Trust
+Jan Macnamara       Data Quality Manager                    Swansea NHS Trust
+Deborah Usher       Information Manager                     Swansea NHS Trust
+Dr Giles Croft      Clinical Research Fellow & Projects     University of Wales, Swansea
+                    Manager
+Sally Greenway      Corporate & Clinical Information,       University of Wales, Swansea
+                    Health Informatics Unit
+Dave Morrey         Information Manager                     Velindre NHS Trust
+Document: DSCN (2007) 06 (W)                                            Author: Rebecca Wells
+Status: Final                                                          Created On: 08/03/2007
+Version: 1.0                                                         Date Printed: dd/mm/yyyy
+                                          Page 2
+David Howells       Senior Analyst Programmer             Velindre NHS Trust
+Anthony Tracey      Corporate Health Information          Welsh Assembly Government
+                    Programme
+Catherine Bridges   Information Services Division,        Welsh Assembly Government
+                    Information Analysis
+Claudia Blair       Health Statistics & Analysis Unit     Welsh Assembly Government
+Jackie Bracey       Information Services Division, Data   Welsh Assembly Government
+                    Standards
+Martyn Rees         Department of Health and Social       Welsh Assembly Government
+                    Services
+Pam Hall            Corporate Health Information          Welsh Assembly Government
+                    Programme
+Sue Leake           Health Statistics & Analysis Unit     Welsh Assembly Government
+
+
+
+
+Document: DSCN (2007) 06 (W)                                         Author: Rebecca Wells
+Status: Final                                                       Created On: 08/03/2007
+Version: 1.0                                                      Date Printed: dd/mm/yyyy
+                                           Page 3
+Document Control
+
+
+Version: Issued on: Owner      Details:
+  0.01    26/02/2007 R Wells   First draft issued to DSCN Sub-Group
+  0.02    06/03/2007 R Wells   Updated following DSCN Sub-Group
+  0.03    15/03/2007 R Wells   To be reviewed in March WIGSB
+   1.0    16/03/2007 R Wells   Approved by WIGSB and Issued to Service
+
+
+
+
+Document: DSCN (2007) 06 (W)                                  Author: Rebecca Wells
+Status: Final                                                Created On: 08/03/2007
+Version: 1.0                                               Date Printed: dd/mm/yyyy
+                                   Page 4
+                            DATASET CHANGE NOTICE (2007) 06 (W)
+
+Reference:                     WIGSB 20070315001
+
+Subject:                       Amendme
+                                     nttoDataI
+                                             tems‘Pa
+                                                   tie
+                                                     ntsUs
+                                                         ualAddr
+                                                               ess
+                                                                 ’,‘
+                                                                   Pos
+                                                                     tcodeof
+                               Us
+                                ualAddr
+                                      ess’a
+                                          nd‘Bir
+                                               thDate
+                                                    ’
+
+Reason for Change:             To revise the definition of Patients Usual Address and Postcode and
+                               to introduce a new value for Unknown Date of Birth.
+
+Effective Date:                Immediately
+
+Background:
+
+The changes outlined in this DSCN are a result of the Secondary Care Information Steering
+Group (SCISG).
+
+Unknown Date of Birth
+The Secondary Care Information Steering Group questioned the recording of an unknown date of
+birth and how Health Solutions Wales (HSW) process this via Validation at Source (VAS) and
+how this date is held on the national databases.
+
+As part oftheOut pa ti
+                     e ntDa taQua  lityPr oject;theva lue‘00000000’wa    sadde dt otheNHS
+Wales Data Dictionary for an Unknown Date of Birth. This change was approved in DSCN
+(2006) 04 (W). Since implementation, there has been much discussion as to whether certain
+Trustsc anholdt hisont  heirPASa   ndha  ves tatedthe ywoul dpr efertos ubmi t‘ 11111111’ .
+However, this will be held as an invalid date on the National Databases. This is because dates in
+SQL have to be in a particular date range to be understood by the application. The year must be
+great
+    e rthan“ 1753”t  ober e cog nisedi nSQLa   sada  t
+                                                     eot herwi s
+                                                               et heda teiss ett onull.
+
+HSW subsequently proposed the value 11/11/1811 for an unknown date of birth. This was
+discussed with Trust representatives and other group members at SCISG. It was agreed that
+Trus t
+     swoul   dsubmi   tt
+                       hepropose dva lue‘11/11/ 1811’whent heydi dnotknowt   hea ctua lDa t
+                                                                                          eof
+Birth of the patient.
+
+It was also noted that the value of unknown date of birth is included in the definition for the data
+item‘ Da teFor ma t’.Thi swi llber e movedasitr elatest oada   t
+                                                               eva luea ndnotada    tefor ma t.
+
+Patients Usual Address & Postcode of Usual Address
+The second change included in this DSCN came from a paper also presented at SCISG that
+related to Demographical Changes. A query was raised asking whether the patients address is
+recorded at the time of admission or at the time of discharge. An additional sentence will be
+adde dt ot hede fini
+                   ti
+                    onof‘  Pa t
+                              ientsUs   ualAddr  ess’a nd‘Pos tcodeofUs  ualAddr  ess’tos t
+                                                                                          ate that
+the address recorded is the address at the time of admission or attendance. This is needed to
+facilitate demographic analysis for specific clinical conditions.
+
+
+Document: DSCN (2007) 06 (W)                                             Author: Rebecca Wells
+Status: Final                                                           Created On: 08/03/2007
+Version: 1.0                                                          Date Printed: dd/mm/yyyy
+                                             Page 5
+Changes:
+
+Data Items and Terms Linked to Change can be found in Appendix A
+
+Changes to the NHS Wales Data Dictionary are to be found in the Appendix B.
+
+Data Items and Terms as they will appear in the Data Dictionary can be found in Appendix C
+
+
+
+
+Document: DSCN (2007) 06 (W)                                        Author: Rebecca Wells
+Status: Final                                                      Created On: 08/03/2007
+Version: 1.0                                                     Date Printed: dd/mm/yyyy
+                                        Page 6
+Appendix A: Data Items and Terms Linked to Changes.
+
+The following table shows all Data Items and Terms that are linked with the changes documented
+within this DSCN.
+
+                           Data Items and Terms Linked to Change
+
+             New                           Changed                       Not affected
+                                Birth Date
+                                Postcode of Usual Address
+                                Patients Usual Address
+                                Date Format
+
+
+
+
+Document: DSCN (2007) 06 (W)                                        Author: Rebecca Wells
+Status: Final                                                      Created On: 08/03/2007
+Version: 1.0                                                     Date Printed: dd/mm/yyyy
+                                        Page 7
+Appendix B: Proposed changes
+Changes to the NHS Wales Data Dictionary are detailed below, with new text being highlighted
+in blue and deletions are shown with a strikethrough. The Shaded text identifies text which has
+been copied from the NHS Wales Data Dictionary.
+
+Birth Date
+
+See BIRTH DATE STATUS
+
+See DATE FORMAT
+(APC ds99/EAL mds/ OP mds/ CC mds)
+Date of birth of patient. Date Status is associated with this data item and should be used to
+indicate whether Birth Date is supplied or is not applicable .
+
+Format: 8 digit numeric, CCYYMMDD
+
+If the Date of Birth is unknown; use the date '00000000' ‘
+                                                         11/
+                                                           11/
+                                                             1811’(
+                                                                  thati
+                                                                      s18111111)
+
+Date Status is associated with this data item and should be used to indicate whether Birth
+Date is supplied or is not applicable .
+
+See BIRTH DATE STATUS
+See DATE FORMAT
+
+
+
+Date Format
+
+(General)
+
+For information
+
+Dates appear in a variety of different formats.
+
+Format: 4, 6 or 8 digit numeric: MMYY, DDMMYY, YYMMDD, DDMMCCYY or CCYYMMDD.
+
+Value             Meaning
+DD                Day of date, (01 - 31)
+MM                Month of date, (01 - 12)
+YY                Year of date, (00 - 99)
+CC                Century of date, (18, 19, 20)
+All zeros         Date of Birth Unknown
+Spaces*           Characters I and O should not be used - because of
+                  the confusion with 1 (one) and 0 (zero)
+
+
+Document: DSCN (2007) 06 (W)                                         Author: Rebecca Wells
+Status: Final                                                       Created On: 08/03/2007
+Version: 1.0                                                      Date Printed: dd/mm/yyyy
+                                            Page 8
+* These codes are not valid for all dates. Individual data items use different codes in
+particular circumstances. Check the following table for valid codes.
+
+
+
+Patient's Usual Address
+(APC ds99/ EAL mds/ OP mds/ CC mds)
+This is the usual address nominated by the patient at the time of admission or attendance. If
+patients usually resident elsewhere are staying in hotels, hostels or other residential
+establishments for a short term, say a week, they should be recorded as staying at their
+usual place of residence. However if long term, such as at boarding school, the school
+address must be recorded. University students may nominate either their home address or
+the address of their university accommodation. Where patients are not capable of supplying
+this information, because of age or mental illness, for example, then the person responsible
+for the patient, such as a parent or guardian, should nominate the usual address. Patients
+not able to provide an address should be asked for their most recent address. If this cannot
+be established then you should record the address as `No fixed abode' or `Address
+unknown'. These patients are regarded as resident in the local geographical district for
+contracting purposes. For birth episodes this should refer to the mother's usual place of
+residence.
+
+APC, EAL and OP mds Format: 175 character alpha-numeric. This is based on 5 lines of 35
+characters. This relates to the physical layout of the address, not the logical layout and does
+not require intelligent intervention when splitting the text string into lines.
+
+Prior to April 1999 the PEDW Format: 100 character alpha-numeric. This is based on 4 lines
+of 25 characters. This relates to the physical layout of the address, not the logical layout.
+
+
+
+
+Document: DSCN (2007) 06 (W)                                         Author: Rebecca Wells
+Status: Final                                                       Created On: 08/03/2007
+Version: 1.0                                                      Date Printed: dd/mm/yyyy
+                                         Page 9
+Postcode of Usual Address
+(APC ds99/ EAL mds/ OP mds/ CC mds)
+The postcode applied to the usual address nominated by the patient at the time of admission
+or attendance, using rules supplied under the data item POSTCODE and those in the NHS
+Postcode User Directory.
+
+Format: 8 character alpha-numeric. This allows a space to be inserted to differentiate
+between the inward and outward segments of the code, enabling full use to be made of the
+Royal Mail postcode functionality.
+
+NACS rules apply.
+
+If a patient has no fixed abode, this should be recorded with the appropriate code (ZZ99
+3VZ).
+
+For overseas visitors, the postcode field must show the relevant country pseudo postcode
+commencing ZZ99, plus spaces followed by a numeric, then an alpha character, then a Z.
+For example, ZZ99 6CZ is the pseudo-postcode for India. Pseudo-postcodes can be found in
+the NHS Postcode Directory. They can also be found in the Organisation Codes service
+Handbook, Appendix F. This is available on NHSnet.
+
+See Postcode
+
+
+
+(PEDW (Prior to April 1999), Psychiatric Census)
+The postcode applied to the usual address nominated by the patient at the time of admission
+or attendance, using rules supplied above and those in the NHS Postcode User Directory.
+
+Format: 8 character alpha-numeric. The 5th position is always blank (Ä) and possibly the 3rd and
+4th characters may be blank also.
+
+NACS rules apply.
+
+If a patient has no fixed abode, this should be recorded with the appropriate code (ZZ99
+3VZ).
+
+For overseas visitors, the postcode field must show the relevant country pseudo postcode
+commencing ZZ99, plus spaces followed by a numeric, then an alpha character, then a Z.
+For example, ZZ99 6CZ is the pseudo-postcode for India. Pseudo-postcodes can be found in
+the NHS Postcode Directory. They can also be found in the Organisation Codes service
+Handbook, Appendix F. This is available on NHSnet.
+
+See Postcode
+
+
+
+
+Document: DSCN (2007) 06 (W)                                           Author: Rebecca Wells
+Status: Final                                                         Created On: 08/03/2007
+Version: 1.0                                                        Date Printed: dd/mm/yyyy
+                                          Page 10
+Appendix C: Data Items and Terms as they will appear in the Data Dictionary.
+
+
+Birth Date
+
+(APC ds99/EAL mds/ OP mds/ CC mds)
+Date of birth of patient.
+
+Format: 8 digit numeric, CCYYMMDD
+
+If the Date of Birth is unknown; use the date ‘
+                                              11/
+                                                11/
+                                                  1811’(
+                                                       thati
+                                                           s18111111)
+
+Date Status is associated with this data item and should be used to indicate whether Birth
+Date is supplied or is not applicable.
+
+See BIRTH DATE STATUS
+See DATE FORMAT
+
+
+
+
+Date Format
+
+(General)
+
+For information
+
+Dates appear in a variety of different formats.
+
+Format: 4, 6 or 8 digit numeric: MMYY, DDMMYY, YYMMDD, DDMMCCYY or CCYYMMDD.
+
+Value             Meaning
+DD                Day of date, (01 - 31)
+MM                Month of date, (01 - 12)
+YY                Year of date, (00 - 99)
+CC                Century of date, (18, 19, 20)
+
+
+
+
+Patient's Usual Address
+(APC ds99/ EAL mds/ OP mds/ CC mds)
+This is the usual address nominated by the patient at the time of admission or attendance. If
+patients usually resident elsewhere are staying in hotels, hostels or other residential
+
+Document: DSCN (2007) 06 (W)                                       Author: Rebecca Wells
+Status: Final                                                     Created On: 08/03/2007
+Version: 1.0                                                    Date Printed: dd/mm/yyyy
+                                            Page 11
+establishments for a short term, say a week, they should be recorded as staying at their
+usual place of residence. However if long term, such as at boarding school, the school
+address must be recorded. University students may nominate either their home address or
+the address of their university accommodation. Where patients are not capable of supplying
+this information, because of age or mental illness, for example, then the person responsible
+for the patient, such as a parent or guardian, should nominate the usual address. Patients
+not able to provide an address should be asked for their most recent address. If this cannot
+be established then you should record the address as `No fixed abode' or `Address
+unknown'. These patients are regarded as resident in the local geographical district for
+contracting purposes. For birth episodes this should refer to the mother's usual place of
+residence.
+
+APC, EAL and OP mds Format: 175 character alpha-numeric. This is based on 5 lines of 35
+characters. This relates to the physical layout of the address, not the logical layout and does
+not require intelligent intervention when splitting the text string into lines.
+
+Prior to April 1999 the PEDW Format: 100 character alpha-numeric. This is based on 4 lines
+of 25 characters. This relates to the physical layout of the address, not the logical layout.
+
+
+
+
+Postcode of Usual Address
+(APC ds99/ EAL mds/ OP mds/ CC mds)
+The postcode applied to the usual address nominated by the patient at the time of admission
+or attendance, using rules supplied under the data item POSTCODE and those in the NHS
+Postcode User Directory.
+
+
+
+
+Document: DSCN (2007) 06 (W)                                         Author: Rebecca Wells
+Status: Final                                                       Created On: 08/03/2007
+Version: 1.0                                                      Date Printed: dd/mm/yyyy
+                                        Page 12
+Format: 8 character alpha-numeric. This allows a space to be inserted to differentiate
+between the inward and outward segments of the code, enabling full use to be made of the
+Royal Mail postcode functionality.
+
+NACS rules apply.
+
+If a patient has no fixed abode, this should be recorded with the appropriate code (ZZ99
+3VZ).
+
+For overseas visitors, the postcode field must show the relevant country pseudo postcode
+commencing ZZ99, plus spaces followed by a numeric, then an alpha character, then a Z.
+For example, ZZ99 6CZ is the pseudo-postcode for India. Pseudo-postcodes can be found in
+the NHS Postcode Directory. They can also be found in the Organisation Codes service
+Handbook, Appendix F. This is available on NHSnet.
+
+See Postcode
+
+
+
+(PEDW (Prior to April 1999), Psychiatric Census)
+The postcode applied to the usual address nominated by the patient at the time of admission
+or attendance, using rules supplied above and those in the NHS Postcode User Directory.
+
+Format: 8 character alpha-numeric. The 5th position is always blank (Ä) and possibly the 3rd and
+4th characters may be blank also.
+
+See Postcode
+
+
+
+
+Additional Information:
+
+Please address enquiries about this DSCN to: -
+Document: DSCN (2007) 06 (W)                                           Author: Rebecca Wells
+Status: Final                                                         Created On: 08/03/2007
+Version: 1.0                                                        Date Printed: dd/mm/yyyy
+                                          Page 13
+Data Standards and Information Quality Team
+Health Solutions Wales
+14th Floor - Brunel House
+2 Fitzalan Road
+Cardiff
+CF24 0HA
+
+Tel: 029 20502539
+Fax: 029 20502504
+
+E-mail: Datastandards@hsw.wales.nhs.uk
+
+
+
+
+Document: DSCN (2007) 06 (W)                      Author: Rebecca Wells
+Status: Final                                    Created On: 08/03/2007
+Version: 1.0                                   Date Printed: dd/mm/yyyy
+                                     Page 14
+

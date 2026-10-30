@@ -1,0 +1,66 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/gender.htm
+Title: Gender
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Gender Gender
+
+Change History
+|
+|
+DSCN 2025 / 01
+| Audiology Wait Times Data Set
+|
+DSCN 2022 / 06
+| Main Specialty (Consultant) (AMD)
+|
+DSCN 2020 / 31
+| National Cancer Data Standards for Wales – Systemic Anti-Cancer Therapy (SACT)
+|
+DSCN 2019 / 09
+| National Cancer Data Standards for Wales – Core
+|
+DSCN 2014 / 02
+| Substance Misuse Data Set
+|
+
+This data item is / was included in the following data sets / collections between the dates shown:
+
+Data Set / Collection
+| Valid From
+| Valid To
+|
+SM ds
+| 1st April 2014
+|
+|
+National Cancer Ds - Core
+|
+|
+|
+National Cancer Ds - SACT
+|
+|
+|
+AUD WT ds
+| 1st April 2025
+|
+|
+
+The gender of a client (as stated by the client).
+
+Gender identity is a person's sense of identification with either the male or female sex, as manifested in appearance, behaviour, and other aspects of a person's life.
+
+Format: 1 digit numeric
+
+Value
+| Meaning
+|
+1
+| Male
+|
+2
+| Female
+|
+9
+| Not Specified
+|

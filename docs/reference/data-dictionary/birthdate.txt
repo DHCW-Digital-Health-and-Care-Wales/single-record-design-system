@@ -1,0 +1,171 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/birthdate.htm
+Title: Birth Date
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+Birth Date Birth Date
+Change History
+|
+|
+DSCN 2025 / 07
+| Referral to Treatment (RTT) Weekly Patient Target List (PTL) Data Set
+|
+DSCN 2025 / 01
+| Audiology wait Times Data Set
+|
+DSCN 2024 / 12
+| Welsh Emergency Care Data Set
+|
+DSCN 2022 / 06
+| Main Specialty (Consultant) (AMD)
+|
+DSCN 2020 / 31
+| National Cancer Data Standards for Wales – Systemic Anti-Cancer Therapy (SACT)
+|
+DSCN 2020 / 28
+| Single Cancer Pathway – Core (AMD)
+|
+DSCN 2020 / 21
+| Single Cancer Pathway - Core
+|
+DSCN 2019 / 09
+| National Cancer Data Standards for Wales – Core
+|
+DSCN 2016 / 02
+| Maternity Indicators Data Set
+|
+DSCN 2015 / 03
+| Radiotherapy Data Set
+|
+DDCN 2014 / 05
+| Cancelled Admitted Procedures (Postponed Admitted Procedures) Data Set
+|
+DSCN 2014 / 02
+| Substance Misuse Data Set
+|
+DSCN 2013 / 03
+| Cancelled Admitted Procedures Data Set
+|
+DSCN 2013 / 01
+| Retirement of 'Medical & Dental Staff Census' (SBH50-59A) and 'Non-Medical Staffing' data collections
+|
+DSCN 2012 / 11
+| Elective Admission List Data Set (EAL Ds)
+|
+DSCN (2009) 02 (W)
+| Emergency Department Data Set
+|
+DSCN (2008) 07 (W)
+| The Introduction of Valid Period Date Ranges for Data Items within the APC Data Set
+|
+DSCN (2007) 06 (W)
+| Amendments to Data Items 'Patient's Usual Address', 'Postcode of Usual Address' and 'Birth Date'.
+|
+DSCN (2006) 04 (W)
+| Revised definitions for Phase 2 of the Outpatient Data Quality Project
+|
+
+This data item is / was included in the following data sets / collections between the dates shown:
+
+Data Set / Collection
+| Valid From
+| Valid To
+|
+APC ds99
+| 1st April 1999
+|
+|
+EAL ds
+| 1st April 1999
+| 21st November 2012
+|
+OP ds
+| 1st April 1999
+|
+|
+CC ds
+| 1st April 2007
+|
+|
+OPR ds
+| 1st July 2008
+|
+|
+EDDS
+| 1st April 2009
+|
+|
+SBH50-59a
+| -
+| 2nd January 2013
+|
+Non – Medical Staffing
+| -
+| 2nd January 2013
+|
+PAP ds
+| 1st April 2013
+|
+|
+SM ds
+| 1st April 2014
+|
+|
+RTDS
+| 1st April 2014
+|
+|
+MI ds
+| 1st April 2016
+|
+|
+SCPC ds
+| 1st January 2021
+|
+|
+National Cancer Ds - Core
+|
+|
+|
+National Cancer Ds - SACT
+|
+|
+|
+WECDS
+| 1st August 2024
+|
+|
+AUD WT ds
+| 1st April 2025
+|
+|
+RTT weekly PTL ds
+| 1st April 2025
+|
+|
+
+Date of birth of patient / client.
+Format: 8 digit numeric, CCYYMMDD
+For Radiotherapy Data Set and Welsh Emergency Care Data Set
+Format: CCYY-MM-DD
+If the Date of Birth is unknown; use the date '11/11/1811' (that is 18111111)
+Where Birth Date Status is associated with this data item it should be used to indicate whether Birth Date is supplied or is not applicable.
+
+Value
+| Meaning
+| Valid From
+| Valid To
+|
+00000000
+| Date of Birth Unknown
+| 1st March 2006
+| 31st January 2007
+|
+18111111
+| Date of Birth Unknown
+| 1st February 2007
+|
+|
+
+(Psychiatric Census)
+Date of birth of patient.
+Format: 8 digit numeric, DDMMCCYY

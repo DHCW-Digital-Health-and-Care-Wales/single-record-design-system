@@ -1,0 +1,15 @@
+Source: https://www.datadictionary.wales.nhs.uk/WordDocuments/gppractice.htm
+Title: GP Practice
+Retrieved: 2026-10-30 (NHS Wales Data Dictionary v4.25)
+
+GP Practice GP Practice
+Change History
+|
+|
+DSCN 2009 / 09
+| NHS Reforms: NHS Wales Data Definition Update
+|
+
+This is an organisation providing general medical services in contract with one or more Local Health Board.
+A GP practice may consist of a single General Practitioner practicing otherwise than in partnership, or two or more General Practitioners practicing in partnership.
+See Organisation Code
