@@ -89,7 +89,7 @@
   <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" /></symbol>
 <symbol id="icon-clinical-allergy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
   <path d="M12 8v4" />
-  <path d="M12 16h.01" /></symbol>
+  <path d="M11.75 16h0.5M12 15.75v0.5M11.823 15.823l0.354 0.354M12.177 15.823l-0.354 0.354" /></symbol>
 <symbol id="icon-clinical-assessment" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v2" />
   <path d="M21.34 15.664a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" />
   <path d="M8 22H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
@@ -97,7 +97,7 @@
 <symbol id="icon-clinical-attendance" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M10 21H2" />
   <path d="M10 4a2 2 0 012.36-1.968l5.41.992A1.5 1.5 0 0119 4.5V21l-7.876.992A1 1 0 0110 21z" />
   <path d="M10.268 3H7a2 2 0 00-2 2v16" />
-  <path d="M14 12h.01" />
+  <path d="M13.75 12h0.5M14 11.75v0.5M13.823 11.823l0.354 0.354M14.177 11.823l-0.354 0.354" />
   <path d="M22 21h-3" /></symbol>
 <symbol id="icon-clinical-blood" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z" /></symbol>
 <symbol id="icon-clinical-discharge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5v14" />
@@ -153,8 +153,8 @@
   <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
   <path d="M12 11h4" />
   <path d="M12 16h4" />
-  <path d="M8 11h.01" />
-  <path d="M8 16h.01" /></symbol>
+  <path d="M7.75 11h0.5M8 10.75v0.5M7.823 10.823l0.354 0.354M8.177 10.823l-0.354 0.354" />
+  <path d="M7.75 16h0.5M8 15.75v0.5M7.823 15.823l0.354 0.354M8.177 15.823l-0.354 0.354" /></symbol>
 <symbol id="icon-clinical-test" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2" />
   <path d="M6.453 15h11.094" />
   <path d="M8.5 2h7" /></symbol>
@@ -278,7 +278,7 @@
   <path d="M9 3.236v15" /></symbol>
 <symbol id="icon-location-room" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16" />
   <path d="M2 21h20" />
-  <path d="M9 12h.01" /></symbol>
+  <path d="M8.75 12h0.5M9 11.75v0.5M8.823 11.823l0.354 0.354M9.177 11.823l-0.354 0.354" /></symbol>
 <symbol id="icon-location-ward" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12h4" />
   <path d="M10 8h4" />
   <path d="M14 21v-3a2 2 0 0 0-4 0v3" />
@@ -335,7 +335,7 @@
   <path d="M7 4v16" /></symbol>
 <symbol id="icon-nav-support" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" />
   <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-  <path d="M12 17h.01" /></symbol>
+  <path d="M11.75 17h0.5M12 16.75v0.5M11.823 16.823l0.354 0.354M12.177 16.823l-0.354 0.354" /></symbol>
 <symbol id="icon-people-admin-staff" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15H6a4 4 0 0 0-4 4v2" />
   <path d="m14.305 16.53.923-.382" />
   <path d="m15.228 13.852-.923-.383" />
@@ -418,12 +418,12 @@
   <path d="M16 2v3" />
   <rect x="3" y="3" width="18" height="18" rx="2" />
   <path d="M3 9h18" />
-  <path d="M8 13h.01" />
-  <path d="M12 13h.01" />
-  <path d="M16 13h.01" />
-  <path d="M8 17h.01" />
-  <path d="M12 17h.01" />
-  <path d="M16 17h.01" /></symbol>
+  <path d="M7.75 13h0.5M8 12.75v0.5M7.823 12.823l0.354 0.354M8.177 12.823l-0.354 0.354" />
+  <path d="M11.75 13h0.5M12 12.75v0.5M11.823 12.823l0.354 0.354M12.177 12.823l-0.354 0.354" />
+  <path d="M15.75 13h0.5M16 12.75v0.5M15.823 12.823l0.354 0.354M16.177 12.823l-0.354 0.354" />
+  <path d="M7.75 17h0.5M8 16.75v0.5M7.823 16.823l0.354 0.354M8.177 16.823l-0.354 0.354" />
+  <path d="M11.75 17h0.5M12 16.75v0.5M11.823 16.823l0.354 0.354M12.177 16.823l-0.354 0.354" />
+  <path d="M15.75 17h0.5M16 16.75v0.5M15.823 16.823l0.354 0.354M16.177 16.823l-0.354 0.354" /></symbol>
 <symbol id="icon-schedule-recurring" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="m17 2 4 4-4 4" />
   <path d="M3 11v-1a4 4 0 0 1 4-4h14" />
   <path d="m7 22-4-4 4-4" />
@@ -449,11 +449,11 @@
   <path d="M12 12v6" /></symbol>
 <symbol id="icon-status-error-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" />
   <line x1="12" x2="12" y1="8" y2="12" />
-  <line x1="12" x2="12.01" y1="16" y2="16" /></symbol>
+  <path d="M11.75 16h0.5M12 15.75v0.5M11.823 15.823l0.354 0.354M12.177 15.823l-0.354 0.354" /></symbol>
 <symbol id="icon-status-flagged" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528" /></symbol>
 <symbol id="icon-status-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" />
   <path d="M12 16v-4" />
-  <path d="M12 8h.01" /></symbol>
+  <path d="M11.75 8h0.5M12 7.75v0.5M11.823 7.823l0.354 0.354M12.177 7.823l-0.354 0.354" /></symbol>
 <symbol id="icon-status-loading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56" /></symbol>
 <symbol id="icon-status-pending" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" />
   <path d="M12 6v6l4 2" /></symbol>
@@ -461,7 +461,7 @@
   <path d="m16 9-5.5 5.5L8 12" /></symbol>
 <symbol id="icon-status-warning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" />
   <path d="M12 9v4" />
-  <path d="M12 17h.01" /></symbol>
+  <path d="M11.75 17h0.5M12 16.75v0.5M11.823 16.823l0.354 0.354M12.177 16.823l-0.354 0.354" /></symbol>
 <symbol id="icon-theme-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" /></symbol>
 <symbol id="icon-theme-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4" />
   <path d="M12 2v2" />

@@ -23,6 +23,10 @@
  *   - stroke-linejoin → round
  *   - aria-hidden     → true
  *   - focusable       → false
+ *   - dots            → 1.5px, drawn as four crossing strokes (see dot() below). Lucide draws a dot as a
+ *                       zero-length line, so it is only as wide as the stroke:
+ *                       at 1px the dot in info, warning and error read as
+ *                       smaller than the lines around them.
  *
  * Removed:
  *   schedule/overnight — held Lucide `moon` and had no consumer: no component,
@@ -259,8 +263,33 @@ const ICONS = [
 ];
 
 // ── SVG normalisation ─────────────────────────────────────────────────────────
+// Lucide's dot is a zero-length stroke (`M12 8h.01`, or a <line> 0.01 long), so
+// its diameter is the stroke width: 1px here, which reads as smaller than the
+// lines around it. The dot is redrawn as four short strokes crossing at its
+// centre (horizontal, vertical, two diagonals), each 0.5 long with round caps.
+// Their union is a 1.5px disc. Geometry only, with no per-element stroke width,
+// so it survives every consumer: the web sprite, React, Figma, and MAUI path
+// geometry, which has one stroke thickness.
+//
+// Not a small <circle>: a circle whose radius is under half the stroke width
+// renders as a hollow ring in Chromium (checked 2026-10-30 at 48px).
+const DOT_ARM = 0.25;
+const dot = (x, y) => {
+  const [cx, cy, a, d] = [Number(x), Number(y), DOT_ARM, +(DOT_ARM * Math.SQRT1_2).toFixed(3)];
+  const f = (n) => +n.toFixed(3);
+  return `<path d="M${f(cx - a)} ${cy}h${2 * a}M${cx} ${f(cy - a)}v${2 * a}`
+    + `M${f(cx - d)} ${f(cy - d)}l${2 * d} ${2 * d}M${f(cx + d)} ${f(cy - d)}l${-2 * d} ${2 * d}" />`;
+};
+
+function enlargeDots(svg) {
+  return svg
+    .replace(/<path d="M([\d.]+) ([\d.]+)h\.01"\s*\/>/g, (_, x, y) => dot(x, y))
+    .replace(/<line x1="([\d.]+)" x2="([\d.]+)" y1="([\d.]+)" y2="\3"\s*\/>/g,
+      (m, x1, x2, y) => (Math.abs(x2 - x1) <= 0.011 ? dot(x1, y) : m));
+}
+
 function normaliseSvg(raw) {
-  return raw.replace(/<svg([^>]*)>/s, (_, attrs) => {
+  return enlargeDots(raw).replace(/<svg([^>]*)>/s, (_, attrs) => {
     const viewBoxMatch = attrs.match(/viewBox="([^"]*)"/);
     const viewBox = viewBoxMatch ? viewBoxMatch[1] : '0 0 24 24';
     return `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="${viewBox}" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">`;
