@@ -14,6 +14,24 @@ Ids are Figma node ids. Paste one into the Figma search, or ask Claude to select
 `I` are layers inside a component instance; fix those in the main component where the text is
 the component's default.
 
+## Fixed on 30 Oct 2026
+
+All of section 1, and the patient banner button labels, are fixed in Figma. A re-check of the
+three pages and the Patient banner page finds none of the old values.
+
+| Where | Changes |
+|---|---|
+| Main components: Patterns/Patient Banner, Products/Mobile/Patient card, Bottom sheet, Patient context header | 31 |
+| Screens and instance overrides: Single Record App 47, Adoption Mobile 37, Adoption UEC 41 | 125 |
+
+NHS numbers now come from the 999 test range: Ruby ADAMS `999 000 0018` (her demo-patient
+number); the patient banner example `999 000 0204`; the rest `999 000 0212` to `999 000 0328`,
+one per patient. Ages are corrected and written in full. The tracking-grid names are now
+`SURNAME, Forename`. The patient banner buttons are sentence case ("Change patient", "Show
+details"). No text now wraps where it did not before.
+
+**Not changed yet:** hyphenated dates (open question 1), and the capitalisation in section 2.
+
 ## 1. Patient data (fix first)
 
 These are the findings a clinician spots in a demo.
