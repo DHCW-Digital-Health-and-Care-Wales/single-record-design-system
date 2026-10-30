@@ -21,11 +21,12 @@ async function roleOf(n) {
   for (const a of ancestors(n)) {
     if (a.type !== 'INSTANCE') continue;
     const c = (await compName(a)).toLowerCase();
+    // Table before tab: "Table/Building blocks" contains "tab".
+    if (/table/.test(c)) return /head/.test(name) ? 'column' : 'value';
     if (/button|cta/.test(c)) return 'button';
-    if (/tab/.test(c)) return 'tab';
+    if (/\btabs?\b|menu tab/.test(c)) return 'tab';
     if (/link/.test(c)) return 'link';
     if (/input|select|search|checkbox|radio|date/.test(c) && /label|title/.test(name)) return 'label';
-    if (/table/.test(c) && /head/.test(name)) return 'column';
   }
   if (/^(label|field label|caption label)$/.test(name)) return 'label';
   if (/^value$|details|identifier/.test(name)) return 'value';
