@@ -256,6 +256,17 @@ Never a blank, a dash or `N/A`. A blank cannot be told apart from a loading erro
 
 ---
 
+## Checking content
+
+| What | How |
+|---|---|
+| Website and prototypes | `npm run check:content` writes `content-report.md` (not committed). Report only, not yet a build gate |
+| A Figma page or frame | Ask Claude to use the **content-checker** agent (`.claude/agents/content-checker.md`) with the Figma link |
+| The demo patients | `npm run check:demo-data`, part of `npm run check` |
+
+The rules are code in `scripts/content-rules.mjs`, with no dependencies, so a Figma plugin can
+reuse them unchanged. When a rule here changes, change it there in the same commit.
+
 ## Changing this file
 
 - A new rule needs a source in `docs/reference/` or a status of Adapted or Unverified with the

@@ -29,6 +29,7 @@
     "check:docs": "node scripts/sync-token-docs.mjs --check",
     "check:ds": "node scripts/check-design-system.mjs --baseline",
     "check:snippets": "node scripts/check-snippets.mjs",
+    "check:content": "npm run build:site && node scripts/check-content.mjs --site --prototype --out content-report.md",
     "check:demo-data": "node scripts/demo-patients.mjs --check",
     "check:icons": "node scripts/check-icons.mjs && node scripts/sync-icon-docs.mjs --check && node foundations/iconography/fetch-icons.mjs --check",
     "check:type": "node scripts/check-typography.mjs --baseline",

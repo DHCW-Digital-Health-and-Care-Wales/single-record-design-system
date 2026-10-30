@@ -9,3 +9,4 @@ packages/storybook/storybook-static/
 # .NET build output (packages/maui/testbed)
 [Bb]in/
 [Oo]bj/
+content-report.md
