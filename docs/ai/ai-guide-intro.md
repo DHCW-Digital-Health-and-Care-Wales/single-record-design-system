@@ -67,7 +67,11 @@ use the HTML markup.
 | Time | 24-hour: `14:05` |
 | NHS number | Groups of 3, 3 and 4: `496 806 8271` |
 | Empty field | `Not recorded`, never a blank or a dash |
-| Headings and buttons | Sentence case. Buttons say what happens: `Save referral`, not `OK` |
+| Capitalisation | Sentence case for every heading, label, tab, link and button: `Patient details`, `View patient record`, `NHS number`. Capitals only for acronyms (NHS, GP, CRN), proper nouns and the patient's surname |
+| Buttons | Say what happens: `Save referral`, not `OK` or `Submit` |
+| Sex and gender | Separate items. Label each correctly. Sex: Female, Male, Indeterminate, Not disclosed or unknown. Gender: Female, Male, Non-binary, Not disclosed or unknown. Do not show both together |
+| NHS number in demo data | Must pass the modulus 11 check digit |
+| Postcode | Capitals, one space: `CF14 2AB`. No fixed abode: `ZZ99 3VZ` |
 | Confirmations | Ask about the action: `Delete this record?`, never `Are you sure?` |
 
 Write for clinical and admin staff. Use plain words, not design-system terms.
