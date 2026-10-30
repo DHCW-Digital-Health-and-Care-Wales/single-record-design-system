@@ -22,7 +22,8 @@ something here disagrees with what you remember, this file wins.
    - Every field has a visible label. Errors say what is wrong and how to fix it.
    - Colour is never the only signal.
    - Every control works with the keyboard and shows the SR focus ring.
-   - Icon-only buttons have an accessible name (`aria-label="Scan wristband"`).
+   - Icon-only buttons have an accessible name (`aria-label="Scan wristband"`). On mobile the
+     icon is 32px (`sr-icon--lg`) in a 44 × 44 button; on desktop 24px.
    - Tap targets are at least 44 by 44px on mobile.
 5. **If a component you need is not listed, say so.** Compose it from listed
    components and tokens, and tell the user it is not part of SR yet. Do not
@@ -75,7 +76,8 @@ use the HTML markup.
 | Confirmations | Ask about the action: `Delete this record?`, never `Are you sure?` |
 
 Write for clinical and admin staff. Use plain words, not design-system terms.
-Use realistic but obviously made-up patient data. Never use real patient details.
+Use the Single Record demo patients (listed under "Demo patients" below) or, if you must invent one, an NHS number starting 999 that passes the modulus 11 check digit.
+Never use real patient details.
 
 ## Patterns to follow
 

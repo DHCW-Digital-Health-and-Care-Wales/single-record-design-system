@@ -7,6 +7,8 @@ copy. The content checker checks against this file, and the AI guide repeats its
 |---|---|
 | **Status** | Draft for review with WISB and the DHCW Data Standards Team |
 | **Primary source** | NHS Wales Data Dictionary v4.25 (3 June 2025) and the DSCNs behind it, copied in `docs/reference/` |
+| **Writing style source** | NHS digital service manual content guide, copied in `docs/reference/nhs-service-manual/` |
+| **Demo data** | [`demo-patients.md`](./demo-patients.md): ten fictional patients that pass these rules, checked by `npm run check:demo-data` |
 | **Last checked** | 2026-10-30. DSCNs up to 2026/23 checked: none since June 2025 changes an item in this file |
 | **Owner** | Design lead |
 
@@ -35,11 +37,14 @@ Capitalise the first word and proper nouns only. This applies to every piece of 
 page titles, headings, card titles, tab labels, buttons, links, field labels, table column
 headings, menu items, notifications and error messages.
 
-**Status:** Adapted. DHCW UI Standards v1.3 p.9 sets sentence case for all text
-(`docs/reference/dhcw-ui-standards-v1.3.md`, inventory item 5), and the design system adopted
-it (`DESIGN-SYSTEM.md`, Content rules). The NHS digital service manual and GOV.UK style guide
-take the same position; their pages could not be read from this session, so they are not
-quoted here.
+**Status:** Sourced. The NHS digital service manual: "We do not use block capitals as they're
+difficult for people to read. We always use sentence case, including for page titles. This
+means we only capitalise the first word and any proper nouns"
+(`reference/nhs-service-manual/punctuation.txt`). DHCW UI Standards v1.3 p.9 says the same, and
+the design system adopted it (`DESIGN-SYSTEM.md`, Content rules).
+
+Medicines and conditions follow the same manual: generic drug names and conditions are lower
+case (`paracetamol`, `type 1 diabetes`); brand names take a capital (`Nurofen Plus`).
 
 | Write | Not |
 |---|---|
@@ -63,8 +68,8 @@ quoted here.
 read, and they make a heading look like a surname.
 
 **"NHS number", not "NHS Number".** The dictionary names the data item "NHS Number", because data
-item names are written that way. In UI copy it is an ordinary noun: "NHS number". **Status:**
-Adapted.
+item names are written that way. In UI copy it is an ordinary noun: "NHS number", as the NHS
+service manual writes it. **Status:** Sourced (`reference/nhs-service-manual/a-to-z-of-nhs-health-writing.txt`).
 
 ### Buttons and links
 
@@ -85,16 +90,17 @@ Adapted.
 | Display | Three groups of 3, 3 and 4 digits with spaces: `496 806 8271` |
 | Valid value | 10 digits. The 10th is a check digit (modulus 11), see below |
 | Label | "NHS number" |
-| Source | `data-dictionary/nhsnumber.txt` (format, check digit). Display: `dscn/dscn-2018-09-...` labels show `123 456 7890`; DHCW UI Standards p.8 |
-| Status | Value: Sourced. Display: Sourced for labels; Adapted for screens |
+| Source | `data-dictionary/nhsnumber.txt` (format, check digit). Display: NHS service manual, "NHS number" (`nhs-service-manual/a-to-z-of-nhs-health-writing.txt`): 3 3 4, a single space as the only separator, never dashes or dots, and do not let it break over two lines. Also `dscn/dscn-2018-09-...` (labels) and DHCW UI Standards p.8 |
+| Status | Sourced |
 
 **Check digit** (`nhsnumber.txt`): multiply digits 1 to 9 by 10, 9, 8, 7, 6, 5, 4, 3, 2; add the
 results; divide by 11 and take the remainder; subtract it from 11. A result of 11 gives 0. A
 result of 10 means the number is invalid. The 10th digit must equal the result.
 
-**For demo data:** every NHS number must pass the check digit. A number that fails is an
-instant tell in a demo. Whether a reserved, never-issued range exists for test data in Wales is
-**Unverified**; ask the Data Standards Team.
+**For demo data:** use numbers starting 999 that pass the check digit. The NHS service manual:
+"do not use a real NHS number as an example – use 999 123 4567 or another number that starts with
+9 as these are test numbers and not given to real patients". **Status:** Sourced (NHS England).
+Whether NHS Wales follows the same reservation is worth confirming (Open question 3).
 
 ### Case record number (CRN) and local patient identifier
 
@@ -240,9 +246,10 @@ Never a blank, a dash or `N/A`. A blank cannot be told apart from a loading erro
 
 | # | Question | Why it matters |
 |---|---|---|
-| 1 | **Date format on screen.** UI Standards v1.3 and the addressograph standard use `13-Feb-1986`. The design system uses `13 Feb 1986`. The addressograph standard covers printed labels only (`dscn-2018-09`, Scope). Is there a standard for screens? | Every date in every design |
+| 1 | **Date format on screen.** UI Standards v1.3 and the addressograph standard use `13-Feb-1986`. The design system uses `13 Feb 1986`. The NHS service manual uses `6 August 2018` and asks for full month names where possible, because "screen readers read out shortened months (Jan, Feb and so on) in inconsistent and sometimes confusing ways" (`nhs-service-manual/numbers-measurements-dates-time.txt`). The addressograph standard covers printed labels only. Is there a standard for screens? | Every date in every design, and screen reader users |
+| 1a | **Time format.** The design system uses 24-hour time (`14:05`). The NHS service manual, written for the public, uses `5pm` and `5:30pm`. Clinical systems commonly use 24-hour. Confirm 24-hour for Single Record | Every timestamp |
 | 2 | **NHS number display on screen.** The NHS England Common User Interface standard (ISB 1504) covered input and display. Has Wales adopted it, or the NHS Number Operational Standard's display section (DSCN 2015/06), whose full text is not in the dictionary? | We follow 3 3 4 everywhere; the source for screens is unconfirmed |
-| 3 | **Test data ranges.** Is there a sanctioned range of NHS numbers, CRNs and postcodes for demo and test data in Wales? | Demo data must not identify a real person |
+| 3 | **Test data ranges.** NHS England reserves NHS numbers starting 9 for test use. Does NHS Wales follow this, and is there a sanctioned range of CRNs, GP practice codes and postcodes for demo data? | Demo data must not identify a real person |
 | 4 | **Name display.** Confirm `SURNAME, Forename (Title)` for screens, and how to show a preferred name that differs from the legal name | Patient identification |
 | 5 | **Sex and gender on the demographics screen.** Which one Single Record shows, and whether both may appear | Legal requirement on disclosure |
 | 6 | **New Data Dictionary platform.** v4.25 is the last version on the current site. When does the new platform launch, and at what address? | This file must follow it |

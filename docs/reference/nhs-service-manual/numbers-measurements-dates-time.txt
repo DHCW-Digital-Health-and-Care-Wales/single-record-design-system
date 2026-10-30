@@ -1,0 +1,134 @@
+Source: https://service-manual.nhs.uk/content/numbers-measurements-dates-time
+Retrieved: 2026-10-30
+
+Content guide – 
+ Numbers, measurements, dates and time
+ Content styles, including numerals, ordinals, dosage, temperature, fractions and percentages
+ Designing content for people who struggle with numbers
+ Half of working-age adults in the UK have low numeracy. Around 1 in 20 people have dyscalculia, which is a specific and persistent difficulty in understanding numbers.
+ People who struggle with numbers may have problems with:
+ entering numbers, like their NHS number
+ reference numbers and not knowing what to do with them
+ distinguishing the number 0 and letter O
+ numbers in tables and charts
+ Try putting numbers into context in sentences.
+ If you're communicating statistics or treatment risks and benefits, you could consider visual aids. However, we do not yet have enough research to recommend them. If you explore using visual aids, please feed back your user research findings on the GitHub issue for data visualisation (helping users understand data).
+ Find out more about presenting numbers clearly on:
+ the Accessible numbers website
+ the GOV.UK poster on designing for users with dyscalculia or low numeracy
+ Numbers
+ Numerals (1, 2, 3 and so on)
+ We use numerals for numbers (including 1 and 2), for example when we're talking about statistics, time, measurements, lists, points or steps. People find numerals easier to read and they scan for them.
+ For numbers over 999, use a comma for clarity – for example, 1,000.
+ Avoid decimal points. Round up numbers to the nearest whole number, except for:
+ money
+ medicines dosage, for example: 0.5mg
+ medical tests or measurements, for example: a BMI of 18.5
+ If you need to use numbers less than 1, use 0 before the decimal point – for example, 0.25.
+ Examples
+ Add 1 to 2 teaspoons of honey.
+ Do this for 1 or 2 minutes.
+ It takes 1 to 3 weeks from the time you were exposed to chickenpox for the spots to start appearing.
+ Depression affects about 1 in 10 people at some point during their life.
+ Using numerals at the start of a sentence
+ It is OK to use numerals at the start of a sentence but, if it looks confusing, consider rewording your sentence.
+ Example
+ 14 units is equivalent to 6 pints of average-strength beer or 10 small glasses of low-strength wine.
+ Using numerals in headings
+ It's also OK to use them in headings.
+ Examples
+ 8 tips for healthy eating
+ 6-in-1 vaccine
+ Using numerals in lists
+ You can use numerals in lists.
+ Examples
+ A portion is:
+ 80g of fresh, canned or frozen fruit and vegetables
+ 30g of dried fruit
+ 50ml glass of fruit juice or smoothie
+ Where we do not use numerals
+ One
+ We spell out "one" when it means "a" or to avoid repeating a word.
+ Example
+ Never take 2 doses at the same time to make up for a forgotten one.
+ We also use "one" in phrases like:
+ "one or the other"
+ "one of the most common"
+ "one at a time"
+ Dosage
+ We do not use numerals in some medicines information about dosage because we've found they can be confusing. Read more about numbers and dosage.
+ Ordinal numbers (1st, 2nd, 3rd and so on)
+ We use numerals with letter suffixes for ordinal numbers (including 1st and 2nd), for example, when we're talking about dates, quantities and things in a list or sequence.
+ The letters should be the same size as the numbers. Do not use superscript, for example 1st, as it does not always read out correctly on screen readers and could confuse people.
+ Examples
+ a 2nd dose of vaccine
+ 2nd half of pregnancy
+ 3rd month of pregnancy
+ the 5th day of the month
+ We do not use ordinal numbers in phrases like:
+ first aid
+ first time
+ first visit
+ secondhand smoke
+ second opinion
+ Measurements
+ Calories
+ We use "calorie" when talking about calories in general, for example "calorie information on menus". Where appropriate, we explain that calories are often written as "kcal".
+ We use "kcal" as the unit of measurement. We do not put a space between the number and the measurement.
+ Example
+ The average man needs around 2,500kcal.
+ Dosage
+ We do not use a space between amount and measurement.
+ Example
+ The usual dose is 250mg to 500mg.
+ Use your judgement when explaining medicines doses. Avoid having 2 sets of numerals next to each other.
+ We say:
+ We do not say:
+ The usual dose is one or two 200mg tablets 3 times a day.
+ The usual dose is 1 or 2 200mg tablets 3 times a day.
+ Temperature
+ We use Celsius for temperature, but only when talking about children under 6 months old. For adults or children over 6 months old, we do not give a specific temperature.
+ Example
+ If your child is under 3 months old and has a temperature of 38C or higher, or you think they have a high temperature
+ Read more about temperature in the A to Z of NHS health writing.
+ Metric and imperial
+ We generally use metric. If it's helpful, add imperial in brackets, for example, for advice on cutting back on alcohol.
+ Do not use imperial for medicines dosage or infant feeding.
+ Dates
+ We use this format: 6 August 2018. If it's helpful to include the day of the week, for example for users booking appointments, we write dates like this: Wednesday 6 August 2018.
+ As far as possible, spell out months in full. Screen readers read out shortened months (Jan, Feb and so on) in inconsistent and sometimes confusing ways.
+ Time
+ Time examples
+ We use:
+ We do not use:
+ 5pm
+ 5.00pm or 1700hrs
+ 5:30pm
+ 5.30pm or 1730hrs
+ midnight
+ 00:00, 12am
+ midday
+ 12 noon, 12pm
+ 6 hours 30 minutes
+ 6.5hrs
+ Ranges of numbers, dates and time
+ We use "to" for time, date and numerical ranges, not hyphens or dashes.
+ Examples
+ The surgery is open Monday to Friday, 2pm to 6pm.
+ A BMI of 18.5 to 24.9 means you're a healthy weight.
+ Fractions and percentages
+ Spell out common fractions like two-thirds.
+ For percentages, use the % symbol, for example, 50%. However, it's often better not to use a percentage. Instead of 50%, for example, you could say "1 in 2" or "half". 
+ Statistics
+ Use statistics sparingly. Consider the style of writing and your target audience. For example, health professionals may have different needs to members of the public who visit the NHS website.
+ Use the clearest, most meaningful format to explain what you're illustrating. For example, use "1 in 7 people" rather than "14.3% of people".
+ Avoid mixing different number formats. Use one or the other.
+ Example
+ Overall, around 7 in every 10 people live at least a year after diagnosis and around 5 in 10 people live at least 10 years.
+Help us improve this guidance
+Share insights or feedback and take part in the discussion. We use GitHub as a collaboration space. All the information on it is open to the public.
+ Feed back or share insights on GitHub
+Read more about how to feed back or share insights.
+If you have any questions, get in touch with the service manual team.
+ Updates to this page
+ Updated: August 2026

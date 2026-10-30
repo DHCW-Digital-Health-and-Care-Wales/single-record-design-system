@@ -1,0 +1,142 @@
+Source: https://service-manual.nhs.uk/content/punctuation
+Retrieved: 2026-10-30
+
+Content guide – 
+ Punctuation
+ Including capitalisation, contractions and hyphens.
+ Apostrophes
+ We use straight, not curly apostrophes. Take care when pasting in text.
+ Do not use
+ Use
+ you’ll
+ you'll
+ Read more about contractions like "you'll" and "can't" in the contractions section.
+ Brackets
+ You can use round brackets ( ) but do not overuse them.
+ Do not use brackets to refer to something that could either be singular or plural, like "lie down with your leg(s) on cushions". If in doubt, use the plural: legs.
+ Capitalisation
+ We do not use block capitals as they're difficult for people to read.
+ We always use sentence case, including for page titles. This means we only capitalise the first word and any proper nouns. (See examples below and examples in the GOV.UK style guide capitalisation list.)
+ Generic drug names start lower case. Brand names get an initial capital letter, except where the brand uses lower case itself.
+ Examples:
+ Codeine comes mixed with paracetamol (co-codamol) or with aspirin (co-codaprin) or with ibuprofen (Nurofen Plus).
+ Watch these healthtalk.org videos.
+ Conditions are lower case except where they start with a proper name. For example:
+ Alzheimer's disease
+ cancer of the colon
+ Down's syndrome
+ multiple sclerosis
+ Parkinson's disease
+ type 1 diabetes
+ But note: caesarean section.
+ Do not use capital letters in phrases that refer to a geographical area but are now part of everyday speech. For example:
+ cheddar cheese
+ french fries
+ rubella (german measles)
+ Also see the entries for "Black or black" and "White or white" in the A to Z of NHS health writing.
+ Contractions
+ We use contractions like you'll, we'll, you're and what's. Often contractions make content friendlier and easier to read.
+ Do not use negative contractions like can't and don't. When you're telling users not to do something, use "Do not" rather than "Don't".
+ Avoid should've, could've, would've and they've. They can be hard to read.
+ Information: 
+ Research insight
+ GDS research shows that many users find negative contractions harder to read and they sometimes misread them as the opposite of what they say.
+ The NHS.UK medicines team observed that, when we're telling people not to do something, they find "do not" clearer and more emphatic than "don't".
+ Contractions in URLs and page titles
+ Do not use contractions in URLs (web addresses). They can be unclear, hard to read, type and share. Some are ambiguous, like "shell" and "were" (for "she'll" and "we're"). 
+ If you can, avoid using contractions in page titles and h1s too. Ideally the page title and URL should be the same.
+ Full stops
+ Do not use full stops in headings, buttons or action links.
+ We do not use full stops in cards, where the card contains a single sentence and acts as a brief link to another page.
+ Hyphens and dashes
+ Hyphens
+ Hyphens can clutter content and make it more difficult to read.
+ Only use a hyphen if a word or sentence is confusing without it.
+ Ask yourself if there's a chance someone could misread what you've written and then add a hyphen if needed. Compare "recover" and "re-cover" (meaning "put on a new cover").
+ You can often write something simply and clearly without a hyphen. For example, "has no sugar" instead of "sugar-free".
+ We use a hyphen for:
+ non-alcoholic
+ non-drowsy
+ self-care, self-help, self-isolate, self-test
+ We do not use a hyphen for:
+ anticoagulant
+ beta blockers
+ breastfeeding
+ Whether or not we use a hyphen depends on the context.
+ Use "long term" in phrases like "in the long term". But use a hyphen for "long-term" as an adjective, for example in "long-term care". Do the same with "short term" and "short-term".
+ Use "follow up" as a verb, but "follow-up" with a hyphen in "follow-up appointment".
+ Breaking up long words
+ Long words, especially email addresses, can create problems in limited spaces such as mobile device screens and data tables. They can overflow the layout, making users scroll horizontally to view some of your content.
+ For guidance on breaking up long words, with or without a hyphen, at the end of lines or in tables, see breaking up long words in the typography section.
+ Dashes
+ Dashes can make content hard to read so we do not often use them.
+ If you use a dash, it should be an en dash (–).
+ You can use a dash, or a comma, in a bulleted list if you need to expand on an item. But follow our guidance on lists (on the Formatting page) and keep bullet points as short as possible.
+ Example
+ Do
+ use insect repellent on your skin and make sure it's 50% DEET-based
+ sleep under mosquito nets treated with insecticide
+ wear loose clothing that covers your arms and legs – the mosquitoes that carry Zika virus are most active during the day
+ Consider other ways of formatting your content without dashes, for example:
+ using a comma or brackets
+ writing shorter sentences
+ using subheadings
+ using a table
+ We use "to" instead of a dash for ranges of numbers, dates or time.
+ Information: 
+ Research insight
+ There are some accessibility concerns with dashes. Assistive technologies read them out in different ways. But GOV.UK research shows that commas are consistently read out with a pause.
+ People with poor literacy can find hyphens and dashes an obstacle to easy reading. They also find long sentences with lots of commas difficult.
+ Lists
+ Use lists to make text easier to read.​
+ Bulleted lists should be short and snappy. If possible, limit your list to no more than 6 items.​ Each item in the list should be roughly the same length.
+ We use bullet points in:
+ the pattern to help users decide when and where to get care (care cards)
+ Do and Don't lists
+ Lists with a lead-in line
+ This is our preferred list style.
+ Use a lead-in line with a colon. The bullets should make sense running on from the lead-in line. In effect, the list is 1 continuous sentence.
+ Example
+ A pharmacist can recommend:
+ creams to ease pain and irritation
+ antiviral creams to speed up healing time
+ cold sore patches to protect the skin while it heals
+ Each bullet point starts lower case and has no punctuation at the end, including after the last point.
+ Do not include more than 1 sentence at each bullet point.
+ Avoid ending a bullet point with "and" and "or". Use the lead-in to let people know the options.
+ Full sentence lists
+ If your user research shows that it helps your users, you can use full sentence bullet points. For example, our medicines information uses full sentence bullet points for key facts.
+ Example
+ Key facts
+ Paracetamol takes up to an hour to work.
+ The usual dose of paracetamol is one or two 500mg tablets at a time.
+ Do not take paracetamol with other medicines containing paracetamol.
+ Paracetamol is safe to take in pregnancy and while breastfeeding, at recommended doses.
+ Brand names include Disprol, Hedex, Medinol and Panadol.
+ Each bullet point should be distinct information, start with a capital letter and end with a full stop. There should be no lead in line.
+ Numbered lists
+ We use numbered lists instead of bulleted ones to guide people through a process. Each point starts with a capital letter and ends with a full stop, without a lead-in line.
+ Example
+ How to gargle with salt water
+ Dissolve half a teaspoon of salt in a glass of warm water.
+ Gargle with the solution then spit it out – do not swallow it.
+ Repeat as often as you like.
+ Quotation marks
+ Do not:
+ overdo quotation marks – they can be distracting and are often unnecessary
+ use them to tell users which element (for example, a text input or button) to select – instead use bold (on the Formatting page) in technical instructions
+ We generally use straight double quotes:
+ when quoting another source
+ for unusual or colloquial terms, for example: Diuretics are sometimes called "water pills" because they make you pee more.
+ Use single quotes for:
+ quotes within quotes, for example: "'Helicopter parenting' linked to behavioural problems in children," reports The Independent.
+ headlines
+ captions
+ large-type quotes
+Help us improve this guidance
+Share insights or feedback and take part in the discussion. We use GitHub as a collaboration space. All the information on it is open to the public.
+ Feed back or share insights on GitHub
+Read more about how to feed back or share insights.
+If you have any questions, get in touch with the service manual team.
+ Updates to this page
+ Updated: January 2026

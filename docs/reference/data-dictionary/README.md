@@ -18,5 +18,8 @@ Check for DSCNs issued after June 2025 before relying on a rule.
 `dscn-links.txt` lists every DSCN the fetched pages cite. Only the ones about identity,
 demographics, addresses and GP are copied as text into `../dscn/`.
 
+Pages from the NHS digital service manual content guide (writing style, NHS number, dates) are
+copied by hand into `../nhs-service-manual/`, each with its source address.
+
 These files are copies of DHCW publications for traceability. They are not ours to edit; if one
 is wrong, refresh it from the source.

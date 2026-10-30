@@ -6555,6 +6555,11 @@ ${classes.length ? `- Classes: ${classes.slice(0, 40).map((c) => `\`${c}\``).joi
   const patterns = pages.filter((p) => p.file.startsWith('patterns/'))
     .map((p) => `- **${p.title}**: ${stripTags((p.body.match(/<p class="lede">([\s\S]*?)<\/p>/) || [])[1] || '')} ${SITE_BASE}${p.url}`);
 
+  // Demo patients: generated and checked by scripts/demo-patients.mjs.
+  const demo = JSON.parse(readFileSync(resolve(ROOT, 'docs', 'content', 'demo-patients.json'), 'utf8'));
+  const demoRows = demo.patients.map(({ display: d, tests }) =>
+    `| ${d.name} | ${d.nhsNumber} | ${d.dateOfBirth} | ${d.genderIdentity} | ${d.address.join(', ')} | ${tests} |`);
+
   // What changed: the newest two sections of the changelog.
   const changelog = publicise(readFileSync(resolve(ROOT, 'CHANGELOG.md'), 'utf8'))
     .split(/\n(?=## )/).slice(1, 3).join('\n').replace(/^---\s*$/gm, '').replace(/^## /gm, '### ');
@@ -6610,6 +6615,15 @@ ${unpaged.join('\n')}
 ## Patterns
 
 ${patterns.join('\n')}
+
+## Demo patients
+
+Fictional patients that pass the content rules. Use them, by name, instead of inventing patients.
+Ages are as at ${demo.asOf}. NHS numbers start 999: test numbers never given to real patients.
+
+| Name | NHS number | Date of birth | Gender | Address | Use it to test |
+|---|---|---|---|---|---|
+${demoRows.join('\n')}
 
 ## Icons
 
