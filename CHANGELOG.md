@@ -18,9 +18,16 @@ this file says so and tells you what to change.
 
 ---
 
-## Unreleased
+## v0.5.0 — 2 Nov 2026
 
-**No action** for code, unless you copied the patient banner example.
+**No action** for code. **Optional:** if you copied example markup (the patient banner, navigation
+or tabs examples), some labels and example data changed; see below.
+
+```
+npm install @dhcw/sr-tokens@0.5.0 @dhcw/sr-icons@0.5.0 @dhcw/sr-web@0.5.0 @dhcw/sr-react@0.5.0
+```
+
+- **Content rules for patient data and copy** (`docs/content/data-standards.md`), sourced from the NHS Wales Data Dictionary, its DSCNs and the NHS digital service manual. **Demo patients** (`docs/content/demo-patients.md`): ten fictional patients with 999 test NHS numbers. Use them in examples and prototypes.
 
 - **New icon `action/backspace`** (Lucide `delete`): the backspace key, for on-screen keypads such as PIN entry. Not a replacement for `action/delete`, which stays the bin.
 - **Patient banner:** the third action is now **View patient record** (was "Open WCP record"). It opens the patient's demographics from any screen showing the banner. Update the label if you copied the example markup.

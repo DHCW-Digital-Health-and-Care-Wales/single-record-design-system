@@ -30,7 +30,7 @@ one per patient. Ages are corrected and written in full. The tracking-grid names
 `SURNAME, Forename`. The patient banner buttons are sentence case ("Change patient", "Show
 details"). No text now wraps where it did not before.
 
-**Not changed yet:** hyphenated dates (open question 1).
+**Not changed yet:** hyphenated dates. Settled 2 Nov 2026 (DDR-037): screens use spaces, so these are now errors to fix.
 
 **2 Nov 2026:** all of section 2 fixed in Figma: 197 changes across 50 distinct texts (headings,
 buttons, form labels). Section 3 confirmed by the design lead as proper names; left as written
@@ -49,7 +49,7 @@ These are the findings a clinician spots in a demo.
 | Mobile | `15 Jun 1939 (86 years)` | Is 87 | `(87 years)`, in the Patient card component `5769:1365` | 1 | `5769:1370` |
 | UEC | `15 Dec 1992 (33y)` | Age abbreviated | `(33 years)` | 10 | `I1753:14110;462:6196;1865:9008;1770:10716` |
 | UEC | `2026-08-18` | Stored date format on screen | `18 Aug 2026` | 3 | `4562:25633` |
-| All | `24-Jan-2024`, `24-Apr-2026`, `04-Jun-2026`, `25-Jun-2026`, `8-Jun-2026`, `25-Nov-2025` | Hyphenated label-style dates; screens use spaces | `24 Jan 2024` (open question 1) | 31 | `5801:42045`, `3555:15308` |
+| All | `24-Jan-2024`, `24-Apr-2026`, `04-Jun-2026`, `25-Jun-2026`, `8-Jun-2026`, `25-Nov-2025` | Hyphenated label-style dates; screens use spaces | `24 Jan 2024` (DDR-037) | 31 | `5801:42045`, `3555:15308` |
 | UEC | `Noah Davis`, `Ava Martinez`, `Ethan Wilson`, `Sophia Garcia` (tracking grid) | Patient names not as `SURNAME, Forename`, and not demo patients | `DAVIS, Noah`, or demo patients | 8 | `I2366:23711;462:6196;2366:23780;1122:14447` |
 | UEC | `NHS Number` (labels), `NHS No` (column) | Should be `NHS number` | `NHS number` | 5 | `I1753:14110;462:6196;1786:10984;840:14313` |
 

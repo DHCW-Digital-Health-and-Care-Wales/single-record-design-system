@@ -54,14 +54,9 @@ being followed, and so where the guide needs to be clearer.
 
 All but the hyphenated dates are now fixed, in code and in Figma.
 
-## Open questions to take to WISB and the DSCN team
+## How the open questions were settled
 
-1. Date format on screens (#25). Our rule (`10 Mar 2026`), v1.3 and the label standard
-   (`13-Feb-1986`), or the NHS service manual (full month)?
-2. Time format: 24-hour (`14:05`, our rule) for all clinical screens?
-3. Staff name display on screen (#6).
-4. Ampersand and abbreviations inside department names (#8, #9).
-5. Does NHS Wales follow NHS England's 999 test range, and is there a sanctioned range for CRNs,
-   GP practice codes and postcodes?
-6. Sex and gender identity on the demographics screen: which is shown, and may both appear?
-7. Where the Data Dictionary will live after v4.25.
+By research, not by asking a board: see **DDR-037** (published sources supersede v1.3) and the
+"Decided" table in [`../content/data-standards.md`](../content/data-standards.md). In short:
+dates `10 Mar 2026` (no hyphens), 24-hour time, "Accident and Emergency", 999 demo NHS numbers,
+staff names as v1.3 #6 until a newer source exists, and sex and gender identity as separate items.

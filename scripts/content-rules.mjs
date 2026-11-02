@@ -130,8 +130,8 @@ export function checkText(text, { role = 'body', today = new Date() } = {}) {
   }
   for (const m of s.matchAll(new RegExp(`\\b(\\d{1,2})-(${MONTH_RE})-(\\d{2}|\\d{4})\\b`, 'g'))) {
     const twoDigit = m[3].length === 2;
-    out.push(finding(twoDigit ? 'date-two-digit-year' : 'date-hyphens', twoDigit ? 'error' : 'warning', m[0],
-      twoDigit ? 'Two-digit year.' : 'Hyphenated date, the printed-label style. Screens use spaces (open question 1).',
+    out.push(finding(twoDigit ? 'date-two-digit-year' : 'date-hyphens', 'error', m[0],
+      twoDigit ? 'Two-digit year.' : 'Hyphenated date: the printed-label style. Screens use spaces (DDR-037).',
       `${Number(m[1])} ${m[2].slice(0, 3)} ${twoDigit ? `19${m[3]} or 20${m[3]}` : m[3]}`, src('2. Patient identity, Date of birth and age')));
   }
   for (const m of s.matchAll(new RegExp(`\\b0(\\d) (${MONTH_RE}) (\\d{4})\\b`, 'g'))) {
