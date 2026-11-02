@@ -30,7 +30,11 @@ one per patient. Ages are corrected and written in full. The tracking-grid names
 `SURNAME, Forename`. The patient banner buttons are sentence case ("Change patient", "Show
 details"). No text now wraps where it did not before.
 
-**Not changed yet:** hyphenated dates (open question 1), and the capitalisation in section 2.
+**Not changed yet:** hyphenated dates (open question 1).
+
+**2 Nov 2026:** all of section 2 fixed in Figma: 197 changes across 50 distinct texts (headings,
+buttons, form labels). Section 3 confirmed by the design lead as proper names; left as written
+and added to the checker's known names (`scripts/content-rules.mjs`).
 
 ## 1. Patient data (fix first)
 

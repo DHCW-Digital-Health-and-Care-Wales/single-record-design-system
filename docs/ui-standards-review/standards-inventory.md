@@ -17,6 +17,9 @@ Every standard in the guide, grouped by theme, with a source anchor and a
 | `DROP` | Desktop-eForm-specific or obsolete — not for the new system |
 
 > Disposition column starts blank — fill in during the review sessions.
+>
+> **Before deciding #3, #5, #6, #8–#11, #23, #25, #44 or #46, read `content-evidence.md`**:
+> those standards now have primary sources, and several conflict with them.
 
 ---
 
