@@ -37,7 +37,10 @@ node scripts/check-content.mjs --figma <export>.json --out <report>.md
 2. Take `scripts/figma/export-text.js`, replace `'__ROOT_IDS__'` with the page, section or frame
    ids to check (`'5962:341', '5958:12230'`), and run it with `use_figma`. It is read only.
 3. Save the returned array as JSON in your scratchpad and run the checker with `--figma`.
-4. For a large page, export one top-level frame at a time; `use_figma` output is limited.
+4. For a large page, run the rules inside Figma instead of exporting:
+   `node scripts/figma/build-check-in-figma.mjs <page id>` writes a `use_figma` script that
+   returns only the findings, grouped. Check a big page one top-level frame at a time if it is
+   slow. Keep the report in `docs/content/reports/<date>-figma-content-check.md`.
 
 The export guesses each layer's role (heading, button, label, value, name, tab) from its name,
 text style and the components around it. Look at the roles in the export: a heading exported as

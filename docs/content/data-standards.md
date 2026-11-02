@@ -5,7 +5,7 @@ copy. The content checker checks against this file, and the AI guide repeats its
 
 | | |
 |---|---|
-| **Status** | Draft for review with WISB and the DHCW Data Standards Team |
+| **Status** | In use. Rules follow published sources in the order set by DDR-037 |
 | **Primary source** | NHS Wales Data Dictionary v4.25 (3 June 2025) and the DSCNs behind it, copied in `docs/reference/` |
 | **Writing style source** | NHS digital service manual content guide, copied in `docs/reference/nhs-service-manual/` |
 | **Demo data** | [`demo-patients.md`](./demo-patients.md): ten fictional patients that pass these rules, checked by `npm run check:demo-data` |
@@ -21,7 +21,7 @@ Every rule has a **status**:
 | **Sourced** | Taken from the Data Dictionary or a DSCN. The source column names the file in `docs/reference/` |
 | **Adapted** | A design system decision built on a source, where the source does not cover screens. The reason is given |
 | **Unverified** | No source yet. Follow it, but do not quote it as a standard |
-| **Conflict** | Two sources disagree, or our rule differs from a source. Listed under "Open questions" |
+| **Conflict** | Two sources disagreed; settled under "Decided" by the order in DDR-037 |
 
 **Storage is not display.** Most dictionary entries define how a value is *stored or sent*
 (`CCYYMMDD`, `F`). They say what values are valid, not how a screen shows them. Display rules
@@ -100,7 +100,7 @@ result of 10 means the number is invalid. The 10th digit must equal the result.
 **For demo data:** use numbers starting 999 that pass the check digit. The NHS service manual:
 "do not use a real NHS number as an example – use 999 123 4567 or another number that starts with
 9 as these are test numbers and not given to real patients". **Status:** Sourced (NHS England).
-Whether NHS Wales follows the same reservation is worth confirming (Open question 3).
+No Welsh source was found, so the NHS England reservation is followed (DDR-037).
 
 ### Case record number (CRN) and local patient identifier
 
@@ -140,7 +140,7 @@ and apostrophes, so the design is tested against them: `ap GRUFFUDD`, `O'BRIEN`,
 | Age | Whole years: someone aged 19 years 11 months is 19 (`data-dictionary/age.txt`) |
 | Valid value | A real calendar date, not in the future. Unknown dates of birth are stored as `18111111`; never display that date. Show "Not known" |
 | Source | `data-dictionary/birthdate.txt`, `age.txt`. Display: DHCW UI Standards p.11, p.24 |
-| Status | Age: Sourced. Display: **Conflict**, see Open questions |
+| Status | Age: Sourced. Display: Adapted; settled under "Decided" (no hyphens, DDR-037) |
 
 ### Sex and gender identity
 
@@ -242,10 +242,28 @@ Never a blank, a dash or `N/A`. A blank cannot be told apart from a loading erro
 
 ---
 
-## Open questions for WISB and the Data Standards Team
+## Decided, and what to watch for
 
-| # | Question | Why it matters |
+There is no board to put questions to: WISB and DHCW publish their standards online. Questions
+are settled by research, in the order set by **DDR-037** (Data Dictionary and DSCNs, then the
+NHS service manual, then UI Standards v1.3, then a recorded design lead decision).
+
+| Question | Outcome | Basis |
 |---|---|---|
+| Date format on screens | `10 Mar 2026` in tables, `10 March 2026` in prose. No hyphens, no leading zero | Addressograph standard (hyphens) covers printed labels only; NHS service manual uses spaces and full months. UI Standards v1.3 `dd-Mmm-yyyy` superseded |
+| Time | 24-hour, `14:05` | Design lead decision (DDR-037). Revisit if a published clinical standard says otherwise |
+| NHS number on screen | 3 3 4, single spaces | NHS service manual. ISB 1504 (NHS England) says the same |
+| Demo NHS numbers | Start 999, pass the check digit | NHS service manual. No Welsh source found |
+| Accident and Emergency | "and", not "&" | Data Dictionary writes "Accident and Emergency" in all 19 items that name it. A site's official name may keep "&" |
+| Staff names | `SURNAME, First` (UI Standards v1.3 #6) | No higher source; v1.3 stands |
+| Sex and gender identity | Separate items; dictionary values; previous sex or gender not disclosed without consent | Core Reference Data. Which one the demographics screen shows is a design decision |
+
+**Watch for:** the Data Dictionary's new platform (v4.25 is the last on the current site) and new
+DSCNs on the yearly lists at dhcw.nhs.wales. Refresh with `node scripts/fetch-data-dictionary.mjs`.
+A sanctioned Welsh range for test CRNs, GP practice codes and postcodes has not been found; the
+demo values stay marked Unverified.
+
+---|---|---|
 | 1 | **Date format on screen.** UI Standards v1.3 and the addressograph standard use `13-Feb-1986`. The design system uses `13 Feb 1986`. The NHS service manual uses `6 August 2018` and asks for full month names where possible, because "screen readers read out shortened months (Jan, Feb and so on) in inconsistent and sometimes confusing ways" (`nhs-service-manual/numbers-measurements-dates-time.txt`). The addressograph standard covers printed labels only. Is there a standard for screens? | Every date in every design, and screen reader users |
 | 1a | **Time format.** The design system uses 24-hour time (`14:05`). The NHS service manual, written for the public, uses `5pm` and `5:30pm`. Clinical systems commonly use 24-hour. Confirm 24-hour for Single Record | Every timestamp |
 | 2 | **NHS number display on screen.** The NHS England Common User Interface standard (ISB 1504) covered input and display. Has Wales adopted it, or the NHS Number Operational Standard's display section (DSCN 2015/06), whose full text is not in the dictionary? | We follow 3 3 4 everywhere; the source for screens is unconfirmed |

@@ -26,6 +26,7 @@ component/pattern specs, or DDRs.
 | Extracted source (faithful, page-anchored) | `../reference/dhcw-ui-standards-v1.3.md` |
 | Curated standards inventory (triage worksheet) | `standards-inventory.md` |
 | Original PDF | supplied by the design lead (not committed — 20 MB) |
+| **Content evidence** (Data Dictionary, DSCNs, NHS service manual, design check findings) | `content-evidence.md` |
 
 ## How to use it
 

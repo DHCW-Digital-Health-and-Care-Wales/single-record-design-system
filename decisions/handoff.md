@@ -13,9 +13,17 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 ## Start here — next session
 
-> **State (2026-10-12):** `main` carries everything, including **v0.4.0**
-> (published to npm 2026-09-30: tokens, icons, web, react). Start a fresh
-> branch from `main`. `npm run check` and `build:site` were green.
+> **State (2026-11-02):** `main` carries everything, versioned **0.5.0**.
+> 0.5.0 is **not yet published**: run *Release packages* (tag `v0.5.0`, tick
+> `publish_npm`) and *Publish NuGet* in the DHCW org repo once the merge has
+> reached the mirror (hourly). Start a fresh branch from `main`.
+> `npm run check` and `build:site` were green.
+>
+> **Content work is now a system of its own.** Read `docs/content/data-standards.md`
+> (rules, each sourced), `docs/content/demo-patients.md` (use these in every
+> design) and **DDR-037** (published sources supersede UI Standards v1.3; no
+> board to ask, questions are settled by research). `build:site` fails on a
+> content error; the **content-checker** agent checks Figma.
 >
 > **Releasing:** merging updates the website by itself (the org mirror rebuilds
 > hourly). npm and NuGet do **not**: run *Release packages* (tick
@@ -29,6 +37,36 @@ before writing MAUI, so a finding filed only here is a finding lost.
 > Figma-to-code work happens in new sessions like this one.
 >
 > **Slide copy rule (design lead, 2026-10-09):** no em dashes in slide text.
+
+**Open from the content work (2026-11-02), in order:**
+
+A. **Hyphenated dates in Figma** (31 places: Adoption Mobile, Adoption UEC,
+   Single Record App, e.g. `24-Apr-2026`). DDR-037 settled screens on spaces
+   (`24 Apr 2026`). Ids in `docs/content/reports/2026-10-30-figma-content-check.md`.
+B. **Staff names in Figma** are `Rhys Fidler`; v1.3 #6 (`SURNAME, First`) stands
+   until a newer source (DDR-037). Change in the UEC "Last updated…" rows and
+   the header.
+C. **"Accident & Emergency"** in UEC tracking-grid site names: the Data
+   Dictionary writes "Accident and Emergency" (19 items). Keep "&" only if it
+   is the site's official name. Design lead to confirm.
+D. **Demographics screen** (`5962:341`): pick Sex or Gender for the demographic
+   record (Core Reference Data stores them separately); the screen currently
+   shows Sex.
+E. **Run the content checker on the other pages** (Adoption WISDM `5304:10523`,
+   Adoption WCP `2294:7825`, Website `4591:62574`, the Patterns pages). Use
+   `node scripts/figma/build-check-in-figma.mjs <page id>`; table cells now
+   read as values, not tabs.
+F. **UI standards review:** set dispositions from
+   `docs/ui-standards-review/content-evidence.md`; most content items can now be
+   decided without anyone else.
+G. **Content checker as a Figma plugin** (design lead's plan): reuse
+   `scripts/content-rules.mjs` unchanged; it has no dependencies.
+H. **Coded dot on tabs.** The Figma Menu Tab has a Dot option (2026-10-29);
+   code (CSS, React) does not.
+I. **Watch** for the Data Dictionary's new platform and new DSCNs; refresh with
+   `node scripts/fetch-data-dictionary.mjs`.
+
+**Older items, still open:**
 
 1. **The remaining stale "Menu Item" usage-notes frames.** Every component page
    that still has one is showing guidance for a Menu Item — state variants,
@@ -85,6 +123,29 @@ re-verified in the file by this session).
 **Before any destructive Figma edit, re-count instances yourself.** Twice this
 session a count from a previous step was wrong, and both times the guard in the
 delete script — not the plan — is what caught it.
+
+---
+
+## Checkpoint — 2026-11-02 (content rules, demo patients, content checker, v0.5.0)
+
+Shipped across PRs #138 to #142:
+- **Search `with-scan`** (web, React); **tab counts**: `countType: 'new'`,
+  Badge `99+`; Menu Tab in Figma gained Count text and Dot options.
+- **Working with AI** page and a generated `single-record-ai-guide.md`.
+- **Icon dots 1.5px**, drawn as four crossing strokes (a small stroked circle
+  renders hollow in Chromium; known-issues entry).
+- **Content rules** sourced from the NHS Wales Data Dictionary v4.25, DSCNs and
+  the NHS digital service manual (copies in `docs/reference/`); **demo
+  patients** with a build check; **content checker** (rules as dependency-free
+  code; site build gate; Figma agent; in-Figma runner for big pages).
+- Website and prototype content fixed (0 errors). Figma: patient data and
+  components fixed (156 changes), then 197 sentence-case fixes on Single
+  Record App, Adoption Mobile and Adoption UEC.
+- **DDR-037**: published sources supersede UI Standards v1.3.
+
+Lessons, also in `docs/figma-known-issues.md`: `getVariableByIdAsync` needs the
+full `VariableID:` id or the binding silently fails; the MCP runtime skips
+hidden instance children unless `figma.skipInvisibleInstanceChildren = false`.
 
 ---
 

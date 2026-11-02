@@ -48,6 +48,8 @@ export const PROPER_NOUNS = new Set([
   'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday',
   ...MONTHS, 'January', 'February', 'March', 'April', 'June', 'July', 'August', 'September', 'October', 'November', 'December',
   'Dr', 'Mr', 'Mrs', 'Miss', 'Ms', 'Mx', 'Prof', 'Rev',
+  // People's names in designs (staff), confirmed 2 Nov 2026.
+  'Chukwunonso', 'Nweke', 'Rhys', 'Fidler',
 ]);
 // Note: 'Health', 'Board', 'University', 'Single', 'Record', 'Clinical' are
 // allowed because they appear inside proper nouns ("Cardiff and Vale University
@@ -64,6 +66,10 @@ export const PROPER_PHRASES = [
   'Welsh Information Standards Board', 'NHS Wales Data Dictionary', 'Data Dictionary',
   'Digital Health and Care Wales', 'NHS Wales', 'Common User Interface',
   'Case Note Tracking',   // the Welsh PAS module the prototype is for
+  // Confirmed as names by the design lead, 2 Nov 2026 (Figma content check, section 3).
+  'NHS All Wales Record', 'Minor Injury Unit', 'Accident & Emergency', 'Major Emergency Care Dept',
+  'Manchester Triage', 'Glasgow Coma Score', 'Mental Health Act', 'News 2', 'SpO2 Scale',
+  'Injury of Wrist', 'Abdominal Pain',
 ];
 
 const CASING_ROLES = new Set(['heading', 'button', 'link', 'label', 'tab', 'column']);
@@ -124,8 +130,8 @@ export function checkText(text, { role = 'body', today = new Date() } = {}) {
   }
   for (const m of s.matchAll(new RegExp(`\\b(\\d{1,2})-(${MONTH_RE})-(\\d{2}|\\d{4})\\b`, 'g'))) {
     const twoDigit = m[3].length === 2;
-    out.push(finding(twoDigit ? 'date-two-digit-year' : 'date-hyphens', twoDigit ? 'error' : 'warning', m[0],
-      twoDigit ? 'Two-digit year.' : 'Hyphenated date, the printed-label style. Screens use spaces (open question 1).',
+    out.push(finding(twoDigit ? 'date-two-digit-year' : 'date-hyphens', 'error', m[0],
+      twoDigit ? 'Two-digit year.' : 'Hyphenated date: the printed-label style. Screens use spaces (DDR-037).',
       `${Number(m[1])} ${m[2].slice(0, 3)} ${twoDigit ? `19${m[3]} or 20${m[3]}` : m[3]}`, src('2. Patient identity, Date of birth and age')));
   }
   for (const m of s.matchAll(new RegExp(`\\b0(\\d) (${MONTH_RE}) (\\d{4})\\b`, 'g'))) {
