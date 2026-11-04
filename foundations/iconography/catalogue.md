@@ -78,7 +78,7 @@ Adding an SVG straight into `svg/` without a generator entry is what produced fo
 
 <!-- BEGIN GENERATED CATALOGUE — edit fetch-icons.mjs, then run npm run sync:icons -->
 
-**145 SR aliases across 12 domains.**
+**147 SR aliases across 12 domains.**
 
 Every row below is generated from the `ICONS` array in `fetch-icons.mjs`. Do not edit this section by hand — add the icon to the generator, run `npm run sync:icons`, and the table follows.
 
@@ -116,7 +116,7 @@ Every row below is generated from the `ICONS` array in `fetch-icons.mjs`. Do not
 | nav/support | circle-help | NavSupport |  |
 | nav/feedback | message-square-text | NavFeedback |  |
 
-### Actions & editing (30)
+### Actions & editing (31)
 
 | SR alias | Lucide glyph | Component name | Notes |
 |---|---|---|---|
@@ -150,6 +150,7 @@ Every row below is generated from the `ICONS` array in `fetch-icons.mjs`. Do not
 | action/collapse | minimize-2 | ActionCollapse |  |
 | action/unlock | lock-open | ActionUnlock | pairs with action/lock; a lock state with no unlock counterpart is incomplete |
 | action/watchlist | binoculars | ActionWatchlist | under active monitoring; distinct from bookmark (save) and star (personal attention) |
+| action/watchlist-off | custom (`custom/watchlist-off.svg`) | ActionWatchlistOff | not on the watch list / remove from it, in the eye/eye-off and torch-on/torch-off pattern. Lucide has no binoculars-off; drawn in foundations/iconography/custom/ from binoculars plus Lucide's off slash |
 
 ### Status & feedback (8)
 
@@ -181,7 +182,7 @@ Every row below is generated from the `ICONS` array in `fetch-icons.mjs`. Do not
 | people/demographics | id-card | PeopleDemographics |  |
 | people/patient-search | user-round-search | PeoplePatientSearch |  |
 
-### Clinical records & data (20)
+### Clinical records & data (21)
 
 | SR alias | Lucide glyph | Component name | Notes |
 |---|---|---|---|
@@ -190,6 +191,7 @@ Every row below is generated from the `ICONS` array in `fetch-icons.mjs`. Do not
 | clinical/vitals | heart-pulse | ClinicalVitals |  |
 | clinical/medication | pill | ClinicalMedication |  |
 | clinical/allergy | shield-alert | ClinicalAllergy |  |
+| clinical/safeguarding | shield-user | ClinicalSafeguarding | safeguarding concern or plan for a child or adult at risk. A person inside a shield: distinct from clinical/allergy (shield-alert) and data/audit (shield-check) |
 | clinical/test | flask-conical | ClinicalTest | renamed from clinical/lab-result — the flask is an ordered test, not the returned finding |
 | clinical/imaging | scan | ClinicalImaging |  |
 | clinical/procedure | syringe | ClinicalProcedure |  |

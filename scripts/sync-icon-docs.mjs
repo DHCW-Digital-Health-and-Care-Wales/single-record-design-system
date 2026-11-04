@@ -49,12 +49,13 @@ const DOMAIN_TITLES = {
 
 const src = readFileSync(GENERATOR, 'utf8');
 const entries = [...src.matchAll(
-  /\{\s*domain:\s*'([a-z-]+)',\s*name:\s*'([a-z0-9-]+)',\s*lucide:\s*'([a-z0-9-]+)'(?:[^}]*?note:\s*'((?:[^'\\]|\\.)*)')?/g,
+  /\{\s*domain:\s*'([a-z-]+)',\s*name:\s*'([a-z0-9-]+)',\s*(lucide|custom):\s*'([a-z0-9-]+)'(?:[^}]*?note:\s*'((?:[^'\\]|\\.)*)')?/g,
 )].map((m) => ({
   domain: m[1],
   name: m[2],
-  lucide: m[3],
-  note: m[4] ? m[4].replace(/\\'/g, "'") : '',
+  // A custom icon has no Lucide source; the catalogue says so.
+  lucide: m[3] === 'custom' ? `custom (\`custom/${m[4]}.svg\`)` : m[4],
+  note: m[5] ? m[5].replace(/\\'/g, "'") : '',
 }));
 
 if (entries.length === 0) {

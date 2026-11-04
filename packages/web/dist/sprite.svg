@@ -78,6 +78,16 @@
 <symbol id="icon-action-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12" />
   <path d="m17 8-5-5-5 5" />
   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /></symbol>
+<symbol id="icon-action-watchlist-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 10L14 10" />
+  <path d="M19 7L19 3.92L18.96 3.72L18.89 3.54L18.78 3.37L18.64 3.23L18.47 3.12L18.29 3.04L18.09 3L15.91 3L15.71 3.04L15.44 3.17L15.22 3.37L15.11 3.54L15.04 3.72L15 3.92L15 7" />
+  <path d="M21.95 19.44L22 19.14L22 15.04L21.95 14.75L21.86 14.46L21.7 14.09L21.51 13.74L21.15 13.15L20.99 12.89L20.68 12.38L20.48 12.03L20.31 11.67L20.2 11.39L20.11 11.1L20.04 10.81L20 10.41L20 7.91L19.93 7.62L19.83 7.45L19.71 7.29L19.46 7.11L19.28 7.04L19.08 7L14.98 7L14.79 7.02L14.51 7.13L14.42 7.18L14.27 7.31L14.15 7.47L14.06 7.65L14.01 7.85L14 11.44" />
+  <path d="M14 16.54L14 19.04L14.01 19.24L14.07 19.54L14.17 19.82L14.37 20.16L14.5 20.32L14.71 20.53L15.04 20.76L15.31 20.88L15.6 20.96L15.9 21L18.5 21" />
+  <path d="M22 16L18.5 16" />
+  <path d="M13.5 16L2 16" />
+  <path d="M4 21L3.7 20.98L3.31 20.88L3.04 20.76L2.71 20.53L2.5 20.32L2.37 20.16L2.17 19.82L2.07 19.54L2.01 19.24L2 15.04L2.05 14.75L2.14 14.46L2.3 14.09L2.49 13.74L2.85 13.15L3.01 12.89L3.32 12.38L3.52 12.03L3.69 11.67L3.8 11.39L3.89 11.1L3.96 10.81L4 10.41L4 7.91L4.07 7.62L4.17 7.45L4.29 7.29L4.54 7.11" />
+  <path d="M10 12.54L10 19.04L9.99 19.24L9.93 19.54L9.83 19.82L9.63 20.16L9.5 20.32L9.29 20.53L8.96 20.76L8.69 20.88L8.4 20.96L8.1 21L4 21" />
+  <path d="M9 6.5L9 3.92L8.96 3.72L8.89 3.54L8.78 3.37L8.64 3.23L8.47 3.12L8.29 3.04L8.09 3L5.91 3L5.71 3.04L5.62 3.08" />
+  <path d="m2 2 20 20" /></symbol>
 <symbol id="icon-action-watchlist" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M10 10h4" />
   <path d="M19 7V4a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v3" />
   <path d="M20 21a2 2 0 0 0 2-2v-3.851c0-1.39-2-2.962-2-4.829V8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v11a2 2 0 0 0 2 2z" />
@@ -155,6 +165,9 @@
   <path d="M12 16h4" />
   <path d="M7.75 11h0.5M8 10.75v0.5M7.823 10.823l0.354 0.354M8.177 10.823l-0.354 0.354" />
   <path d="M7.75 16h0.5M8 15.75v0.5M7.823 15.823l0.354 0.354M8.177 15.823l-0.354 0.354" /></symbol>
+<symbol id="icon-clinical-safeguarding" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+  <path d="M6.376 18.91a6 6 0 0 1 11.249.003" />
+  <circle cx="12" cy="11" r="4" /></symbol>
 <symbol id="icon-clinical-test" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2" />
   <path d="M6.453 15h11.094" />
   <path d="M8.5 2h7" /></symbol>
