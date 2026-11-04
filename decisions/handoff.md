@@ -13,10 +13,14 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 ## Start here — next session
 
-> **State (2026-11-02):** `main` carries everything, versioned **0.5.0**.
-> 0.5.0 is **not yet published**: run *Release packages* (tag `v0.5.0`, tick
-> `publish_npm`) and *Publish NuGet* in the DHCW org repo once the merge has
-> reached the mirror (hourly). Start a fresh branch from `main`.
+> **State (2026-11-04):** `main` carries everything, versioned **0.5.0**,
+> **published to npm** by the design lead. *Publish NuGet* for 0.5.0 not
+> confirmed; the MAUI NuGet (with Matt) is close to going up on GitHub.
+> Start a fresh branch from `main`.
+>
+> **Next up:** a Loop update for the engineers, alongside the group chat post
+> (drafted 2026-11-04: changes since v0.1, asks for Figma/website feedback and
+> how implementation in React, Blazor and MAUI is going).
 > `npm run check` and `build:site` were green.
 >
 > **Content work is now a system of its own.** Read `docs/content/data-standards.md`
@@ -40,9 +44,10 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 **Open from the content work (2026-11-02), in order:**
 
-A. **Hyphenated dates in Figma** (31 places: Adoption Mobile, Adoption UEC,
-   Single Record App, e.g. `24-Apr-2026`). DDR-037 settled screens on spaces
-   (`24 Apr 2026`). Ids in `docs/content/reports/2026-10-30-figma-content-check.md`.
+A. ~~Hyphenated dates in Figma~~ **Done 2026-11-04:** 73 dates on the three
+   pages now `24 Apr 2026`. New icons `clinical/safeguarding` and custom
+   `action/watchlist-off` shipped in 0.5.0 (custom icons live in
+   `foundations/iconography/custom/`).
 B. **Staff names in Figma** are `Rhys Fidler`; v1.3 #6 (`SURNAME, First`) stands
    until a newer source (DDR-037). Change in the UEC "Last updated…" rows and
    the header.
