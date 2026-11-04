@@ -18,6 +18,12 @@ this file says so and tells you what to change.
 
 ---
 
+## Unreleased
+
+- **New icons:** `clinical/safeguarding` (Lucide `shield-user`) and `action/watchlist-off` (the first custom icon: Lucide has no binoculars-off, so it is drawn in `foundations/iconography/custom/`).
+
+---
+
 ## v0.5.0 — 2 Nov 2026
 
 **No action** for code. **Optional:** if you copied example markup (the patient banner, navigation

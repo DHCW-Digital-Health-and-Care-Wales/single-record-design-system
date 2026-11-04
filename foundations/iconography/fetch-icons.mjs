@@ -132,6 +132,7 @@ const ICONS = [
   { domain: 'action', name: 'collapse',  lucide: 'minimize-2' },
   { domain: 'action', name: 'unlock',    lucide: 'lock-open', note: 'pairs with action/lock; a lock state with no unlock counterpart is incomplete' },
   { domain: 'action', name: 'watchlist', lucide: 'binoculars', note: 'under active monitoring; distinct from bookmark (save) and star (personal attention)' },
+  { domain: 'action', name: 'watchlist-off', custom: 'watchlist-off', note: 'not on the watch list / remove from it, in the eye/eye-off and torch-on/torch-off pattern. Lucide has no binoculars-off; drawn in foundations/iconography/custom/ from binoculars plus Lucide\'s off slash' },
 
   // Status & feedback (9)
   { domain: 'status', name: 'success',  lucide: 'circle-check' },
@@ -164,6 +165,7 @@ const ICONS = [
   { domain: 'clinical', name: 'vitals',      lucide: 'heart-pulse' },
   { domain: 'clinical', name: 'medication',  lucide: 'pill' },
   { domain: 'clinical', name: 'allergy',     lucide: 'shield-alert' },
+  { domain: 'clinical', name: 'safeguarding', lucide: 'shield-user', note: 'safeguarding concern or plan for a child or adult at risk. A person inside a shield: distinct from clinical/allergy (shield-alert) and data/audit (shield-check)' },
   { domain: 'clinical', name: 'test',        lucide: 'flask-conical', note: 'renamed from clinical/lab-result — the flask is an ordered test, not the returned finding' },
   { domain: 'clinical', name: 'imaging',     lucide: 'scan' },
   { domain: 'clinical', name: 'procedure',   lucide: 'syringe' },
@@ -310,7 +312,7 @@ const CHECK = process.argv.includes('--check');
 // Compare shape, not formatting: the drawing instructions only.
 const shapeOf = (svg) => (svg.match(/<(?:path|line|rect|circle|polyline|polygon|ellipse)\b[^>]*>/g) || []).join('');
 
-for (const { domain, name, lucide, note } of ICONS) {
+for (const { domain, name, lucide, custom, note } of ICONS) {
   const outDir  = join(SVG_DIR, domain);
   const outFile = join(outDir, `${name}.svg`);
 
@@ -320,7 +322,9 @@ for (const { domain, name, lucide, note } of ICONS) {
     // before the sanity check so the guard tests the markup, not the banner.
     // Attribution lives in foundations/iconography/LICENSE-lucide.txt and the
     // catalogue, not in 144 copies of a comment.
-    const raw = readFileSync(join(ICON_DIR, `${lucide}.svg`), 'utf8')
+    // A custom icon (no Lucide equivalent) is read from custom/, drawn on
+    // Lucide's 24px grid at Lucide's 2px stroke, and normalised like the rest.
+    const raw = readFileSync(custom ? join(HERE, 'custom', `${custom}.svg`) : join(ICON_DIR, `${lucide}.svg`), 'utf8')
       .replace(/^\s*(?:<!--[\s\S]*?-->\s*)+/, '');
     if (!raw.trim().startsWith('<svg') && !raw.trim().startsWith('<?xml')) {
       failed.push({ domain, name, lucide, reason: 'Unexpected content' });

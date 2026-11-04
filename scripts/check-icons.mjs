@@ -61,8 +61,10 @@ const warnings = [];
 // files when it runs).
 const src = readFileSync(GENERATOR, 'utf8');
 const entries = [...src.matchAll(
-  /\{\s*domain:\s*'([a-z-]+)',\s*name:\s*'([a-z0-9-]+)',\s*lucide:\s*'([a-z0-9-]+)'/g,
-)].map((m) => ({ domain: m[1], name: m[2], lucide: m[3] }));
+  /\{\s*domain:\s*'([a-z-]+)',\s*name:\s*'([a-z0-9-]+)',\s*(lucide|custom):\s*'([a-z0-9-]+)'/g,
+)].map((m) => ({ domain: m[1], name: m[2], lucide: m[3] === 'custom' ? `custom:${m[4]}` : m[4] }));
+// A `custom:` entry is drawn in foundations/iconography/custom/ because Lucide
+// has no equivalent; its provenance is that file.
 
 if (entries.length === 0) {
   console.error('check:icons — could not parse the ICONS array; has the generator changed shape?');
