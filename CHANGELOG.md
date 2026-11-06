@@ -18,6 +18,14 @@ this file says so and tells you what to change.
 
 ---
 
+## Unreleased
+
+**Action needed** if you show `clinical/safeguarding` to mean patient safety.
+
+- **`clinical/safeguarding` has a new glyph:** Lucide `user-shield` (a person with a shield beside them). The glyph it had in 0.5.0, Lucide `shield-user` (a person inside a shield), is now **`clinical/patient-safety`**. If you used `clinical/safeguarding` for a safeguarding concern or plan, no change. If you used it for patient safety (incidents, safety alerts), rename it to `clinical/patient-safety`.
+
+---
+
 ## v0.5.0 — 2 Nov 2026
 
 **No action** for code. **Optional:** if you copied example markup (the patient banner, navigation

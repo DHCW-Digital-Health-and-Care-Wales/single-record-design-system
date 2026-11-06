@@ -158,14 +158,15 @@ const ICONS = [
   { domain: 'people', name: 'demographics',   lucide: 'id-card' },
   { domain: 'people', name: 'patient-search', lucide: 'user-round-search' },
 
-  // Clinical records & data (18)
+  // Clinical records & data (22)
   // Note: clinical/record and file/pdf both map to file-text — distinct SR aliases, same Lucide source
   { domain: 'clinical', name: 'record',      lucide: 'file-text' },
   { domain: 'clinical', name: 'observation', lucide: 'activity' },
   { domain: 'clinical', name: 'vitals',      lucide: 'heart-pulse' },
   { domain: 'clinical', name: 'medication',  lucide: 'pill' },
   { domain: 'clinical', name: 'allergy',     lucide: 'shield-alert' },
-  { domain: 'clinical', name: 'safeguarding', lucide: 'shield-user', note: 'safeguarding concern or plan for a child or adult at risk. A person inside a shield: distinct from clinical/allergy (shield-alert) and data/audit (shield-check)' },
+  { domain: 'clinical', name: 'safeguarding', lucide: 'user-shield', note: 'safeguarding concern or plan for a child or adult at risk. A person with a shield beside them. Was shield-user until 0.6.0; that glyph is now clinical/patient-safety' },
+  { domain: 'clinical', name: 'patient-safety', lucide: 'shield-user', note: 'patient safety: incidents, alerts and risk to the patient in our care. A person inside a shield: distinct from clinical/safeguarding (user-shield), clinical/allergy (shield-alert) and data/audit (shield-check)' },
   { domain: 'clinical', name: 'test',        lucide: 'flask-conical', note: 'renamed from clinical/lab-result — the flask is an ordered test, not the returned finding' },
   { domain: 'clinical', name: 'imaging',     lucide: 'scan' },
   { domain: 'clinical', name: 'procedure',   lucide: 'syringe' },
