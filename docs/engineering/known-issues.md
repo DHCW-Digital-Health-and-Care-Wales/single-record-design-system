@@ -151,8 +151,8 @@ generated header and the NuGet README document. Below that, scale it with the
 size — `HeightRequest / 24` — rather than leaving it at 1.
 
 **Not verified on a device.** This follows from how MAUI Shapes are documented
-to render, and .NET cannot be run in the environment where the design system is
-built, so it has not been confirmed empirically. First engineer with a device:
+to render. It has not been confirmed on a device: a cloud session can compile
+MAUI (see "MAUI can be compile-checked without the Android SDK") but cannot run it. First engineer with a device:
 confirm it and replace this paragraph with what you actually see.
 
 ---
@@ -305,6 +305,81 @@ run that found this.
 list: the old one reproduces the exact three-error message against a good
 package; the new one passes it, still fails a genuinely Linux-only pack on ios
 and maccatalyst, and is not satisfied by a stray `.dll` outside `lib/`.
+
+---
+
+### A MAUI brush has no `Opacity`
+
+**Symptom:** `XamlC error XC0009: No property, BindableProperty, or event found
+for "Opacity"` on a `<SolidColorBrush … Opacity="0.1" />`. WPF and Figma both
+have brush opacity, so it reads like a typo somewhere else.
+
+**Why:** MAUI's `SolidColorBrush` has `Color` only. Transparency lives in the
+colour's alpha.
+
+**Fix:** derive the colour from the token in code and register it, then reference
+it as `DynamicResource` (a `StaticResource` would be looked up before the code
+runs):
+
+```csharp
+var inverse = (Color)Resources["SrColorTextInverse"];
+Resources["GlassFill"] = new SolidColorBrush(inverse.WithAlpha(0.1f));
+```
+
+Never a literal `#1AFFFFFF`: `verify-xaml.mjs` rejects literal colours, and the
+token is the point. See `products/wcp-mobile/prototype/App.xaml.cs`.
+
+**Prevented by:** XamlC, at build. It is an error, not a silent fallback.
+
+---
+
+### `builder.Logging.AddDebug()` only compiles in Release
+
+**Symptom:** a MAUI app builds in CI and fails the moment someone dispatches the
+workflow with `configuration: Debug`: `CS1061: 'ILoggingBuilder' does not contain
+a definition for 'AddDebug'`.
+
+**Why:** `AddDebug` comes from the `Microsoft.Extensions.Logging.Debug` package,
+which the stock MAUI template references and our projects do not. It sits inside
+`#if DEBUG`, so a Release build never compiles the line.
+
+**Fix:** removed from the testbed and not used in the prototype. If you want debug
+logging, add the package reference as well.
+
+**Prevented by:** nothing in CI, which builds Release. The compile check below
+builds Debug and is what found it.
+
+---
+
+### MAUI can be compile-checked without the Android SDK
+
+**Symptom:** a cloud session cannot build an APK: `dl.google.com` is blocked, so
+there is no Android SDK (`XA5300`). Earlier sessions concluded MAUI could not be
+compiled here at all, and shipped XAML checked only as text.
+
+**Why:** only the Android *packaging* needs the SDK. The .NET 10 SDK installs from
+Ubuntu's archive and the `maui-android` workload from nuget.org, and both are
+allowed. MAUI also supports a plain `net10.0` target, which compiles every XAML
+file through XamlC and all the C# with no platform at all.
+
+**Fix:** in a scratch folder, two projects targeting plain `net10.0` with
+`UseMaui` and `EnableDefaultItems=false`:
+
+1. a library named `DHCW.SingleRecord.Maui` that links `packages/maui/nuget/*.xaml`
+   and `*.xaml.cs` (so `assembly=DHCW.SingleRecord.Maui` in the app resolves);
+2. a project that references it and links the app's `.xaml` and `.cs`, excluding
+   `Platforms/`, with `MauiXamlInflator=XamlC`.
+
+```bash
+apt-get install -y dotnet-sdk-10.0
+dotnet workload install maui-android
+```
+
+It catches what `verify-xaml.mjs` cannot: wrong property names, wrong types,
+compiled-binding errors, C# errors. It found three faults in the WCP prototype
+before CI ever ran. It does not check layout, platform code or the APK.
+
+**Prevented by:** nothing mechanical yet; a recipe. CI still does the real build.
 
 ---
 
@@ -672,6 +747,24 @@ against.
 **Prevented by:** `npm run check:demo-data` (the demo patients), and the content check in
 `npm run build:site` (website and prototype source), which fails on any content error. Figma is
 checked by the content-checker agent and cannot be gated.
+
+### The content checker could not see a native prototype
+
+**Symptom:** a MAUI prototype passes `check-content.mjs --prototype` with Figma's
+"Get Started" and "Welcome Back" still in it.
+
+**Why:** the checker read `products/*/prototype/src` for JSX only. A MAUI app has
+no `src/` and its copy is in XAML attributes.
+
+**Fix:** it now also reads every `.xaml` under `products/*/prototype/`: `Text` and
+`Placeholder` attributes, with a `Button`'s text judged as a button and a `Label`
+styled `Heading*` as a heading. Strings built in C# (the home screen's attention
+rows) are still not read.
+
+**Prevented by:** `check-content.mjs --prototype`, part of `build:site`. Verified
+by planting "Get Started" in `CreatePinPage.xaml`: reported as an error.
+
+---
 
 ## Web / CSS
 

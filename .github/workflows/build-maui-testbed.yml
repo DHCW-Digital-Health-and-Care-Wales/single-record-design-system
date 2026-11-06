@@ -19,6 +19,7 @@ on:
       - 'packages/maui/**'
       - 'foundations/tokens/**'
       - 'foundations/iconography/**'
+      - 'products/wcp-mobile/prototype/**'
       - '.github/workflows/build-maui-testbed.yml'
   workflow_dispatch:
     inputs:
@@ -142,6 +143,23 @@ jobs:
           cp "$found" artifact/sr-testbed.apk
           ls -lh artifact/
 
+      # The WCP mobile onboarding/dashboard prototype: a product-shaped app that
+      # consumes the library by ProjectReference, as a product would by
+      # PackageReference. Building it here is also the only compile it gets.
+      - name: Publish the WCP mobile prototype APK
+        run: |
+          dotnet publish products/wcp-mobile/prototype/WcpPrototype.csproj \
+            -f net10.0-android \
+            -c "${{ inputs.configuration || 'Release' }}" \
+            -p:AndroidPackageFormat=apk
+          found=$(find products/wcp-mobile/prototype/bin -name '*-Signed.apk' -print -quit)
+          if [ -z "$found" ]; then
+            echo "::error::The prototype produced no signed APK."
+            exit 1
+          fi
+          cp "$found" artifact/wcp-prototype.apk
+          ls -lh artifact/
+
       # A green publish is not the same as a usable APK. The first APK this
       # workflow produced built, signed and uploaded cleanly, and App Live
       # rejected it: "Launcher activity was not found in AndroidManifest.xml".
@@ -163,15 +181,18 @@ jobs:
           fi
           echo "Using $aapt"
 
-          badging=$("$aapt" dump badging artifact/sr-testbed.apk)
-          echo "$badging" | grep -E "^(package|launchable-activity|application-label):" || true
+          for apk in artifact/*.apk; do
+            echo "── $apk"
+            badging=$("$aapt" dump badging "$apk")
+            echo "$badging" | grep -E "^(package|launchable-activity|application-label):" || true
 
-          if ! echo "$badging" | grep -q '^launchable-activity:'; then
-            echo "::error::The APK has no launchable activity, so BrowserStack will reject it."
-            echo "Check that Platforms/Android/MainActivity.cs exists and carries MainLauncher = true."
-            exit 1
-          fi
-          echo "Launcher activity present."
+            if ! echo "$badging" | grep -q '^launchable-activity:'; then
+              echo "::error::$apk has no launchable activity, so BrowserStack will reject it."
+              echo "Check that Platforms/Android/MainActivity.cs exists and carries MainLauncher = true."
+              exit 1
+            fi
+          done
+          echo "Launcher activity present in every APK."
 
       # The APK is 27 MB. Every step above this one — build, pack, aapt2 badging —
       # is the actual check, and it has already run by the time we get here; the
@@ -188,5 +209,14 @@ jobs:
         with:
           name: sr-testbed-apk
           path: artifact/sr-testbed.apk
+          if-no-files-found: error
+          retention-days: 3
+
+      - name: Upload WCP mobile prototype APK (dispatch only)
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: wcp-prototype-apk
+          path: artifact/wcp-prototype.apk
           if-no-files-found: error
           retention-days: 3

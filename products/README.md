@@ -19,6 +19,8 @@ Product-specific extensions and overrides. This directory exists for the cases w
 |---|---|---|
 | EPR (Electronic Patient Record) | `products/epr/` | Planned |
 | Patient Administration | `products/patient-admin/` | Planned |
+| Case Note Tracking | `products/case-note-tracking/` | Web prototype |
+| WCP mobile (Welsh Clinical Portal app) | `products/wcp-mobile/` | MAUI prototype: onboarding and home |
 
 ---
 

@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging;
-
 namespace SrTestbed;
 
 public static class MauiProgram
@@ -24,10 +22,6 @@ public static class MauiProgram
                 // Regular and Bold. Medium needs Roboto-Medium.ttf bundled and
                 // referenced as its own family. See the README.
             });
-
-#if DEBUG
-        builder.Logging.AddDebug();
-#endif
 
         return builder.Build();
     }

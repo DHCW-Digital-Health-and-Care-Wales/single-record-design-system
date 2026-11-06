@@ -13,15 +13,13 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 ## Start here — next session
 
-> **State (2026-11-04):** `main` carries everything, versioned **0.5.0**,
-> **published to npm** by the design lead. *Publish NuGet* for 0.5.0 not
-> confirmed; the MAUI NuGet (with Matt) is close to going up on GitHub.
-> Start a fresh branch from `main`.
+> **State (2026-11-06):** branch `claude/loving-mayer-bf3l4p` (not yet merged):
+> the safeguarding icon change and the **WCP mobile prototype** (below). `main`
+> is **0.5.0**, on npm. *Publish NuGet* for 0.5.0 not confirmed.
 >
-> **Next up:** a Loop update for the engineers, alongside the group chat post
-> (drafted 2026-11-04: changes since v0.1, asks for Figma/website feedback and
-> how implementation in React, Blazor and MAUI is going).
-> `npm run check` and `build:site` were green.
+> **Next up:** run *Build MAUI library and testbed APK* on the branch, put
+> `wcp-prototype.apk` on BrowserStack App Live, and look at it (first run on a
+> device). Then the Loop update for the engineers (drafted 2026-11-04).
 >
 > **Content work is now a system of its own.** Read `docs/content/data-standards.md`
 > (rules, each sourced), `docs/content/demo-patients.md` (use these in every
@@ -128,6 +126,40 @@ re-verified in the file by this session).
 **Before any destructive Figma edit, re-count instances yourself.** Twice this
 session a count from a previous step was wrong, and both times the guard in the
 delete script — not the plan — is what caught it.
+
+---
+
+## Checkpoint — 2026-11-06 (safeguarding icon; WCP mobile onboarding prototype)
+
+**Icons.** `clinical/safeguarding` is now Lucide `user-shield`; its old glyph
+(`shield-user`) is `clinical/patient-safety`. 148 icons. Figma: `6312:465`
+renamed to `Icon/clinical/patient-safety`; new `Icon/clinical/safeguarding`
+`6446:463`; both tiles on the Icon Preview grid. CHANGELOG *Unreleased* says who
+must rename. Only one Figma instance existed (the preview tile), so no design used
+the old meaning.
+
+**WCP mobile prototype** (`products/wcp-mobile/prototype/`, native MAUI): the
+ONBOARDING/DASHBOARD row of section `5443:23238` as a tap-through. Splash, login,
+simulated Microsoft sign-in, create PIN, unlock (shown on resume), home, profile,
+side menu. Consumes `DHCW.SingleRecord.Maui` by ProjectReference, merged by type:
+the first consumer of the library as a product would use it. The testbed workflow
+now also publishes `wcp-prototype.apk` (dispatch uploads it) and checks both APKs
+for a launcher activity.
+
+- **Compiled here, not on a device.** .NET 10 and the maui-android workload install
+  in a cloud session; the Android SDK does not. A plain `net10.0` compile check
+  (known-issues) found three faults before CI. The APK itself is CI only.
+- **Departures from Figma** (README table): no imitation Microsoft sign-in;
+  Log out not red (destructive is for deletion); sentence case; a fictional staff
+  member, `BEVAN, Alys`, instead of the designer's own details. The frames need
+  the same fixes.
+- **Gates widened:** `verify-xaml.mjs` covers the prototype (App.xaml keys count as
+  shipped); `check-content.mjs --prototype` reads XAML. Both verified by planting faults.
+- Testbed `AddDebug` removed: a Debug dispatch could not compile.
+
+**Open:** a surface token for the keypad keys (Figma binds `Border/Default` as a
+fill); specs for the PIN pad, quick-action circle, attention row and side menu;
+safe-area behaviour on Android 15 to check on App Live.
 
 ---
 

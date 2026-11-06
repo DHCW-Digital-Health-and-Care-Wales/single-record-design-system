@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WcpPrototype.Controls.AuthFooter">
+    <!--
+        The footer on every sign-in screen: three help links and the version.
+        The links lead nowhere in the prototype; tapping one says so.
+    -->
+    <VerticalStackLayout Spacing="16" Padding="16,0,16,24">
+        <FlexLayout Wrap="Wrap" JustifyContent="SpaceEvenly" AlignItems="Center">
+            <HorizontalStackLayout Spacing="6" Padding="4" MinimumHeightRequest="44"
+                                   SemanticProperties.Description="Infection control">
+                <HorizontalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnLink" CommandParameter="Infection control" />
+                </HorizontalStackLayout.GestureRecognizers>
+                <Path Style="{StaticResource IconSm}" Data="{StaticResource SrIconStatusInfo}"
+                      Stroke="{StaticResource ColorInfoBlue100}" />
+                <Label Text="Infection control" StyleClass="OnNavySoft" VerticalOptions="Center" />
+            </HorizontalStackLayout>
+            <HorizontalStackLayout Spacing="6" Padding="4" MinimumHeightRequest="44"
+                                   SemanticProperties.Description="Call support">
+                <HorizontalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnLink" CommandParameter="Call support" />
+                </HorizontalStackLayout.GestureRecognizers>
+                <Path Style="{StaticResource IconSm}" Data="{StaticResource SrIconCommsPhone}"
+                      Stroke="{StaticResource ColorInfoBlue100}" />
+                <Label Text="Call support" StyleClass="OnNavySoft" VerticalOptions="Center" />
+            </HorizontalStackLayout>
+            <HorizontalStackLayout Spacing="6" Padding="4" MinimumHeightRequest="44"
+                                   SemanticProperties.Description="Error log">
+                <HorizontalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnLink" CommandParameter="Error log" />
+                </HorizontalStackLayout.GestureRecognizers>
+                <Path Style="{StaticResource IconSm}" Data="{StaticResource SrIconStatusErrorCircle}"
+                      Stroke="{StaticResource ColorInfoBlue100}" />
+                <Label Text="Error log" StyleClass="OnNavySoft" VerticalOptions="Center" />
+            </HorizontalStackLayout>
+        </FlexLayout>
+        <Label Text="Version 0.1.0.1112" StyleClass="Caption,OnNavyVersion" />
+    </VerticalStackLayout>
+</ContentView>

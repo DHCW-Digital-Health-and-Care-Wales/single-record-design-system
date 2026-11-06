@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WcpPrototype.Views.ProfileView">
+    <!-- Figma 5880:30076 -> Screen content. A fictional member of staff. -->
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="16">
+            <HorizontalStackLayout Spacing="12" MinimumHeightRequest="44"
+                                   SemanticProperties.Description="Back to home">
+                <HorizontalStackLayout.GestureRecognizers><TapGestureRecognizer Tapped="OnBack" /></HorizontalStackLayout.GestureRecognizers>
+                <Path Style="{StaticResource IconSecondary}" Data="{StaticResource SrIconNavBack}" />
+                <Label Text="Profile information" StyleClass="HeadingM" VerticalOptions="Center"
+                       SemanticProperties.HeadingLevel="Level1" />
+            </HorizontalStackLayout>
+
+            <Border Style="{StaticResource ListCard}">
+                <VerticalStackLayout>
+                    <VerticalStackLayout Padding="16,12" Spacing="4">
+                        <Label Text="Name" StyleClass="Caption" />
+                        <Label Text="BEVAN, Alys" StyleClass="Bold" />
+                    </VerticalStackLayout>
+                    <BoxView StyleClass="Divider" />
+                    <VerticalStackLayout Padding="16,12" Spacing="4">
+                        <Label Text="Nadex ID" StyleClass="Caption" />
+                        <Label Text="be000001" StyleClass="Bold" />
+                    </VerticalStackLayout>
+                    <BoxView StyleClass="Divider" />
+                    <VerticalStackLayout Padding="16,12" Spacing="4">
+                        <Label Text="Department" StyleClass="Caption" />
+                        <Label Text="Emergency medicine" StyleClass="Bold" />
+                    </VerticalStackLayout>
+                    <BoxView StyleClass="Divider" />
+                    <VerticalStackLayout Padding="16,12" Spacing="4">
+                        <Label Text="Role" StyleClass="Caption" />
+                        <Label Text="Specialty doctor" StyleClass="Bold" />
+                    </VerticalStackLayout>
+                    <BoxView StyleClass="Divider" />
+                    <VerticalStackLayout Padding="16,12" Spacing="4">
+                        <Label Text="Email" StyleClass="Caption" />
+                        <Label Text="alys.bevan@example.nhs.wales" StyleClass="Bold" />
+                    </VerticalStackLayout>
+                    <BoxView StyleClass="Divider" />
+                    <VerticalStackLayout Padding="16,12" Spacing="4">
+                        <Label Text="GMC number" StyleClass="Caption" />
+                        <Label Text="7000001" StyleClass="Bold" />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentView>

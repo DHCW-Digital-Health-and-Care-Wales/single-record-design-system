@@ -66,6 +66,8 @@ export const PROPER_PHRASES = [
   'Welsh Information Standards Board', 'NHS Wales Data Dictionary', 'Data Dictionary',
   'Digital Health and Care Wales', 'NHS Wales', 'Common User Interface',
   'Case Note Tracking',   // the Welsh PAS module the prototype is for
+  'Porth Clinigol Cymru', // Welsh Clinical Portal, in Welsh: the app's own name
+  'Swansea Bay University Health Board', 'Microsoft',
   // Confirmed as names by the design lead, 2 Nov 2026 (Figma content check, section 3).
   'NHS All Wales Record', 'Minor Injury Unit', 'Accident & Emergency', 'Major Emergency Care Dept',
   'Manchester Triage', 'Glasgow Coma Score', 'Mental Health Act', 'News 2', 'SpO2 Scale',

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WcpPrototype.Views.SignInPage">
+    <!--
+        Stands in for Figma 5949:12194 (pick an account) and 5949:12197 (enter
+        password). Both frames are screenshots of Microsoft's own sign-in page,
+        which the real app shows in a system browser. A prototype should not
+        imitate another organisation's sign-in page or ask for a password, so
+        this screen says what would happen and lets the tester carry on.
+    -->
+    <ScrollView>
+        <VerticalStackLayout Padding="24,48" Spacing="24">
+            <Label Text="Microsoft sign-in" StyleClass="HeadingL" SemanticProperties.HeadingLevel="Level1" />
+
+            <Border StrokeThickness="0" Padding="16"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource SrColorStatusInfoSurface}, Dark={StaticResource SrColorSurfaceSectionCardsDark}}">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <Path Style="{StaticResource Icon}" Data="{StaticResource SrIconStatusInfo}"
+                          VerticalOptions="Start"
+                          Stroke="{AppThemeBinding Light={StaticResource SrColorStatusInfo}, Dark={StaticResource SrColorTextPrimaryDark}}" />
+                    <VerticalStackLayout Grid.Column="1" Spacing="8">
+                        <Label Text="This step is simulated" StyleClass="HeadingXs,Bold" />
+                        <Label Text="In the app, your NHS Wales Microsoft account page opens here. You pick your account and enter your password there, not in the app." />
+                        <Label Text="This prototype does not ask for a password." />
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <Button Text="Continue as signed in" Clicked="OnContinue" />
+            <Button Text="Back" Style="{StaticResource ButtonGhost}" Clicked="OnBack" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
