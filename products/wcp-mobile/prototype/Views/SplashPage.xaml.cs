@@ -13,6 +13,6 @@ public partial class SplashPage : ContentPage
         started = true;
 
         await Task.Delay(1200);
-        Flow.Go(Flow.HasPin ? new UnlockPage() : new LoginPage());
+        Flow.Go(() => Flow.HasPin ? new UnlockPage() : new LoginPage());
     }
 }

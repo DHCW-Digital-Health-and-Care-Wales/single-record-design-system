@@ -45,6 +45,6 @@ public partial class UnlockPage : ContentPage
     static void Unlock()
     {
         Flow.Unlocked();
-        Flow.Go(new ShellPage());
+        Flow.Go(() => new ShellPage());
     }
 }

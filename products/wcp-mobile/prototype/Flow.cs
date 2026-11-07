@@ -36,7 +36,7 @@ public static class Flow
         pin = null;
         SignedIn = false;
         Preferences.Default.Remove(PinSetKey);
-        Go(new Views.LoginPage());
+        Go(() => new Views.LoginPage());
     }
 
     /// <summary>
@@ -44,9 +44,11 @@ public static class Flow
     /// is no back stack to keep: Android's back button cannot return to a
     /// password or PIN step that has already been passed.
     /// </summary>
-    public static void Go(Page page)
+    public static void Go(Func<Page> make)
     {
         var window = Application.Current?.Windows.FirstOrDefault();
-        if (window is not null) window.Page = page;
+        if (window is null) return;
+        try { window.Page = make(); }
+        catch (Exception ex) { window.Page = ErrorPage.For(ex); }
     }
 }

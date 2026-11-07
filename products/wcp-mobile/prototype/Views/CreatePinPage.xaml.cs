@@ -44,7 +44,7 @@ public partial class CreatePinPage : ContentPage
         }
         Flow.SetPin(first);
         Flow.Unlocked();
-        Flow.Go(new ShellPage());
+        Flow.Go(() => new ShellPage());
     }
 
     void Reset(string? message)
@@ -68,7 +68,7 @@ public partial class CreatePinPage : ContentPage
 
     protected override bool OnBackButtonPressed()
     {
-        Flow.Go(new LoginPage());
+        Flow.Go(() => new LoginPage());
         return true;
     }
 }
