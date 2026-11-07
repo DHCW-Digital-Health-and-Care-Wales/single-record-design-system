@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sr="clr-namespace:DHCW.SingleRecord.Maui"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              xmlns:controls="clr-namespace:SrTestbed.Controls"
              xmlns:views="clr-namespace:SrTestbed.Views"
@@ -45,7 +46,7 @@
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="8" />
                     </Border.StrokeShape>
-                    <Path Data="{StaticResource SrIconNavSearch}"
+                    <Path Data="{sr:Icon NavSearch}"
                           Aspect="Uniform"
                           HeightRequest="20"
                           WidthRequest="20"
@@ -87,7 +88,7 @@
                 <!-- Utility cluster -->
                 <HorizontalStackLayout HorizontalOptions="End" VerticalOptions="Center" Spacing="12">
 
-                    <Path Data="{StaticResource SrIconCommsNotification}"
+                    <Path Data="{sr:Icon CommsNotification}"
                           Aspect="Uniform"
                           HeightRequest="24"
                           WidthRequest="24"

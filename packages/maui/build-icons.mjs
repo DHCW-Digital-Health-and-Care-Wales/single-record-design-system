@@ -8,7 +8,7 @@
 //   so a bitmap is the wrong container for them. As geometry on a Path, the
 //   stroke is a normal bindable property:
 //
-//       <Path Data="{StaticResource SrIconNavSearch}"
+//       <Path Data="{sr:Icon NavSearch}"
 //             Stroke="{AppThemeBinding Light={StaticResource SrColorTextPrimary},
 //                                      Dark={StaticResource SrColorTextPrimaryDark}}" />
 //
@@ -190,11 +190,14 @@ lines.push(`    ${icons.length} icons, each a 24x24 geometry drawn with stroke-w
 lines.push('    round caps and joins. The geometry carries no colour: set Stroke from a');
 lines.push('    token so the icon follows the theme.');
 lines.push('');
-lines.push('        <Path Data="{StaticResource SrIconNavSearch}"');
+lines.push('        <Path Data="{sr:Icon NavSearch}"');
 lines.push('              Stroke="{AppThemeBinding Light={StaticResource SrColorTextPrimary},');
 lines.push('                                       Dark={StaticResource SrColorTextPrimaryDark}}"');
 lines.push('              StrokeThickness="1" StrokeLineCap="Round" StrokeLineJoin="Round"');
 lines.push('              Aspect="Uniform" HeightRequest="16" WidthRequest="16" />');
+lines.push('');
+lines.push('    Use {sr:Icon …} (IconExtension.cs), never {StaticResource SrIcon…}: a');
+lines.push('    StaticResource string on Path.Data is silently not drawn.');
 lines.push('');
 lines.push('    Fill is deliberately unset. These are outline icons; filling them closes');
 lines.push('    shapes that are meant to read as strokes.');

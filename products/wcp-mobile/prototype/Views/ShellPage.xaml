@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sr="clr-namespace:DHCW.SingleRecord.Maui;assembly=DHCW.SingleRecord.Maui"
              xmlns:c="clr-namespace:WcpPrototype.Controls"
              xmlns:v="clr-namespace:WcpPrototype.Views"
              x:Class="WcpPrototype.Views.ShellPage"
@@ -20,7 +21,7 @@
                     <Grid Grid.Column="0" WidthRequest="44" HeightRequest="44"
                           SemanticProperties.Description="Open menu">
                         <Grid.GestureRecognizers><TapGestureRecognizer Tapped="OnOpenMenu" /></Grid.GestureRecognizers>
-                        <Path Style="{StaticResource Icon}" Data="{StaticResource SrIconNavMenu}" />
+                        <Path Style="{StaticResource Icon}" Data="{sr:Icon NavMenu}" />
                     </Grid>
 
                     <Image Grid.Column="1" Source="srsymwcpblue.png"
@@ -30,7 +31,7 @@
                     <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
                         <Grid WidthRequest="44" HeightRequest="44" SemanticProperties.Description="Notifications">
                             <Grid.GestureRecognizers><TapGestureRecognizer Tapped="OnNotInPrototype" CommandParameter="Notifications" /></Grid.GestureRecognizers>
-                            <Path Style="{StaticResource Icon}" Data="{StaticResource SrIconCommsNotification}" />
+                            <Path Style="{StaticResource Icon}" Data="{sr:Icon CommsNotification}" />
                         </Grid>
 
                         <!-- Avatar. Interactive/Primary with white initials (8.04:1).
@@ -83,7 +84,7 @@
                             SemanticProperties.Description="Search for a patient">
                         <Border.StrokeShape><RoundRectangle CornerRadius="28" /></Border.StrokeShape>
                         <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnSearch" /></Border.GestureRecognizers>
-                        <Path Style="{StaticResource Icon}" Data="{StaticResource SrIconNavSearch}"
+                        <Path Style="{StaticResource Icon}" Data="{sr:Icon NavSearch}"
                               WidthRequest="28" HeightRequest="28" StrokeThickness="1.5"
                               Stroke="{StaticResource SrColorTextInverse}" />
                     </Border>
@@ -118,7 +119,7 @@
                     <Grid Grid.Column="2" WidthRequest="44" HeightRequest="44"
                           SemanticProperties.Description="Close menu">
                         <Grid.GestureRecognizers><TapGestureRecognizer Tapped="OnCloseMenu" /></Grid.GestureRecognizers>
-                        <Path Style="{StaticResource IconSecondary}" Data="{StaticResource SrIconNavChevronLeft}" />
+                        <Path Style="{StaticResource IconSecondary}" Data="{sr:Icon NavChevronLeft}" />
                     </Grid>
                 </Grid>
                 <BoxView Grid.Row="1" StyleClass="Divider" />
@@ -143,7 +144,7 @@
                             SemanticProperties.Description="Home, current page">
                         <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnMenuHome" /></Border.GestureRecognizers>
                         <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
-                            <Path Style="{StaticResource IconSm}" Data="{StaticResource SrIconNavHome}"
+                            <Path Style="{StaticResource IconSm}" Data="{sr:Icon NavHome}"
                                   Stroke="{AppThemeBinding Light={StaticResource SrColorTextSelected}, Dark={StaticResource SrColorTextSelectedDark}}" />
                             <Label Text="Home" VerticalOptions="Center"
                                    TextColor="{AppThemeBinding Light={StaticResource SrColorTextSelected}, Dark={StaticResource SrColorTextSelectedDark}}" />
@@ -151,17 +152,17 @@
                     </Border>
                     <HorizontalStackLayout Spacing="12" Padding="12,0" MinimumHeightRequest="44">
                         <HorizontalStackLayout.GestureRecognizers><TapGestureRecognizer Tapped="OnNotInPrototype" CommandParameter="Infection control" /></HorizontalStackLayout.GestureRecognizers>
-                        <Path Style="{StaticResource IconSecondary}" Data="{StaticResource SrIconStatusInfo}" />
+                        <Path Style="{StaticResource IconSecondary}" Data="{sr:Icon StatusInfo}" />
                         <Label Text="Infection control" VerticalOptions="Center" />
                     </HorizontalStackLayout>
                     <HorizontalStackLayout Spacing="12" Padding="12,0" MinimumHeightRequest="44">
                         <HorizontalStackLayout.GestureRecognizers><TapGestureRecognizer Tapped="OnNotInPrototype" CommandParameter="Call support" /></HorizontalStackLayout.GestureRecognizers>
-                        <Path Style="{StaticResource IconSecondary}" Data="{StaticResource SrIconCommsPhone}" />
+                        <Path Style="{StaticResource IconSecondary}" Data="{sr:Icon CommsPhone}" />
                         <Label Text="Call support" VerticalOptions="Center" />
                     </HorizontalStackLayout>
                     <HorizontalStackLayout Spacing="12" Padding="12,0" MinimumHeightRequest="44">
                         <HorizontalStackLayout.GestureRecognizers><TapGestureRecognizer Tapped="OnNotInPrototype" CommandParameter="Settings" /></HorizontalStackLayout.GestureRecognizers>
-                        <Path Style="{StaticResource IconSecondary}" Data="{StaticResource SrIconNavSettings}" />
+                        <Path Style="{StaticResource IconSecondary}" Data="{sr:Icon NavSettings}" />
                         <Label Text="Settings" VerticalOptions="Center" />
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
@@ -171,7 +172,7 @@
                      (Styles.xaml), so it is plain text with its icon here. -->
                 <HorizontalStackLayout Grid.Row="8" Spacing="12" Padding="20,0" MinimumHeightRequest="52">
                     <HorizontalStackLayout.GestureRecognizers><TapGestureRecognizer Tapped="OnLogOut" /></HorizontalStackLayout.GestureRecognizers>
-                    <Path Style="{StaticResource IconSm}" Data="{StaticResource SrIconNavLogOut}" />
+                    <Path Style="{StaticResource IconSm}" Data="{sr:Icon NavLogOut}" />
                     <Label Text="Log out" VerticalOptions="Center" />
                 </HorizontalStackLayout>
                 <BoxView Grid.Row="9" StyleClass="Divider" />

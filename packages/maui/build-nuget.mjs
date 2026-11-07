@@ -113,6 +113,13 @@ public partial class ${cls} : ResourceDictionary
 `);
 }
 
+// The {sr:Icon …} markup extension, the only supported way to put an icon on a
+// Path (a StaticResource string is silently not drawn). Hand-written once in
+// packages/maui/ and copied in, like the dictionaries.
+writeFileSync(resolve(OUT, 'IconExtension.cs'),
+  '// AUTO-COPIED from packages/maui/IconExtension.cs by build-nuget.mjs — edit that file.\n'
+  + readFileSync(resolve(here, 'IconExtension.cs'), 'utf8'));
+
 // Brand marks, wired up as MauiImage by buildTransitive/*.targets. MAUI asset
 // names must be lowercase alphanumeric, so the hyphenated filenames are
 // flattened here rather than left to fail at the consumer's build.

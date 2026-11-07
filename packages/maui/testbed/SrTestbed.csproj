@@ -78,6 +78,8 @@
     <MauiXaml Include="../Colors.xaml" Link="Resources/Styles/Colors.xaml" />
     <MauiXaml Include="../Styles.xaml" Link="Resources/Styles/Styles.xaml" />
     <MauiXaml Include="../Icons.xaml"  Link="Resources/Styles/Icons.xaml" />
+    <!-- {sr:Icon …}: the only way an icon reaches Path.Data (see the file). -->
+    <Compile Include="../IconExtension.cs" Link="IconExtension.cs" />
   </ItemGroup>
 
   <ItemGroup>

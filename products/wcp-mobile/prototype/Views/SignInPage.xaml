@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sr="clr-namespace:DHCW.SingleRecord.Maui;assembly=DHCW.SingleRecord.Maui"
              x:Class="WcpPrototype.Views.SignInPage">
     <!--
         Stands in for Figma 5949:12194 (pick an account) and 5949:12197 (enter
@@ -16,7 +17,7 @@
             <Border StrokeThickness="0" Padding="16"
                     BackgroundColor="{AppThemeBinding Light={StaticResource SrColorStatusInfoSurface}, Dark={StaticResource SrColorSurfaceSectionCardsDark}}">
                 <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                    <Path Style="{StaticResource Icon}" Data="{StaticResource SrIconStatusInfo}"
+                    <Path Style="{StaticResource Icon}" Data="{sr:Icon StatusInfo}"
                           VerticalOptions="Start"
                           Stroke="{AppThemeBinding Light={StaticResource SrColorStatusInfo}, Dark={StaticResource SrColorTextPrimaryDark}}" />
                     <VerticalStackLayout Grid.Column="1" Spacing="8">

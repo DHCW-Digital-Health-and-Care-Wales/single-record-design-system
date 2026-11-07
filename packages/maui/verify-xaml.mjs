@@ -137,6 +137,24 @@ function checkFile(path, problems) {
     }
   }
 
+  // Path.Data="{StaticResource SrIcon…}" compiles, runs, and draws nothing:
+  // the resource is an x:String and MAUI does not convert it to Geometry.
+  // Every icon written this way was blank on BrowserStack (2026-11-07).
+  for (const m of src.matchAll(/\bData="\{StaticResource\s+(SrIcon\w+)\s*\}"/g)) {
+    problems.push(
+      `${label}:${lineOf(m.index)} — Data="{StaticResource ${m[1]}}" draws nothing; `
+      + `use Data="{sr:Icon ${m[1].replace(/^SrIcon/, '')}}"`
+    );
+  }
+
+  // {sr:Icon NavSearch} must name an icon that exists.
+  for (const m of src.matchAll(/\{\w+:Icon\s+(?:Key=)?(\w+)\s*\}/g)) {
+    const key = m[1].startsWith('SrIcon') ? m[1] : `SrIcon${m[1]}`;
+    if (!shipped.has(key)) {
+      problems.push(`${label}:${lineOf(m.index)} — icon "${m[1]}" does not exist (no ${key} in Icons.xaml)`);
+    }
+  }
+
   // StyleClass="A,B"
   for (const m of src.matchAll(/\bStyleClass="([^"]+)"/g)) {
     for (const raw of m[1].split(',')) {

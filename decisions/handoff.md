@@ -20,7 +20,10 @@ before writing MAUI, so a finding filed only here is a finding lost.
 > **2026-11-07:** the first prototype APK closed on launch. Cause was in the
 > **NuGet library**, not the prototype: `SrStyles` merged by type could not see
 > `SrColors` (known-issues). Fixed in `build-nuget.mjs`; CHANGELOG *Unreleased*.
-> New CI gate `packages/maui/smoke`. Any product already on the NuGet 0.5.0
+> Second device finding: XAML icons drew blank (`StaticResource` string on
+> `Path.Data`); new `{sr:Icon …}` extension, docs and website snippets updated.
+> Footer on the sign-in screens follows the design lead's redraw (text links
+> and dots, no icons). New CI gate `packages/maui/smoke`. Any product already on the NuGet 0.5.0
 > package has the same crash: ship this in the next NuGet.
 >
 > **Next up:** confirm the new APK opens on App Live and tap through it. Then

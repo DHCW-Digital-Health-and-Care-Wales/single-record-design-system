@@ -801,6 +801,15 @@ function checkMauiSnippet(panelId, code) {
       + `Add the token or style, or fix the snippet.`
     );
   }
+  // A StaticResource icon string on Path.Data is silently not drawn; the
+  // snippet must use {sr:Icon …} (packages/maui/IconExtension.cs).
+  for (const m of code.matchAll(/\bData="\{StaticResource\s+(SrIcon\w+)\s*\}"/g)) {
+    snippetProblems.push(`${panelId}: Data="{StaticResource ${m[1]}}" draws nothing in MAUI — use {sr:Icon ${m[1].replace(/^SrIcon/, '')}}.`);
+  }
+  for (const m of code.matchAll(/\{\w+:Icon\s+(\w+)\s*\}/g)) {
+    const key = m[1].startsWith('SrIcon') ? m[1] : `SrIcon${m[1]}`;
+    if (!MAUI_RESOURCES.has(key)) snippetProblems.push(`${panelId}: {sr:Icon ${m[1]}} — no such icon in @dhcw/sr-maui.`);
+  }
   // Same rule the MAUI package enforces on itself: no literal colours.
   for (const m of code.matchAll(/(?:Value|Color|BackgroundColor|TextColor|Stroke|Fill|BorderColor)\s*=\s*"(#[0-9A-Fa-f]{3,8}|Red|Blue|Green|Maroon|Black|White|Gray|Grey)"/g)) {
     snippetProblems.push(`${panelId}: literal colour "${m[1]}" in a MAUI snippet — use a token.`);
@@ -1005,7 +1014,7 @@ function headerBody() {
     MAUI: `<Grid BackgroundColor="{AppThemeBinding Light={StaticResource SrColorSurfaceSectionCards}, Dark={StaticResource SrColorSurfaceSectionCardsDark}}"
       ColumnDefinitions="Auto,*,Auto" Padding="16,12" MinimumHeightRequest="64">
 
-    <Path Data="{StaticResource SrIconNavMenu}"
+    <Path Data="{sr:Icon NavMenu}"
           Aspect="Uniform" HeightRequest="24" WidthRequest="24"
           StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
           Stroke="{AppThemeBinding Light={StaticResource SrColorTextPrimary}, Dark={StaticResource SrColorTextPrimaryDark}}"
@@ -1014,7 +1023,7 @@ function headerBody() {
     <Label Grid.Column="1" Text="Single Record" StyleClass="HeadingXs"
            HorizontalOptions="Center" VerticalOptions="Center" />
 
-    <Path Grid.Column="2" Data="{StaticResource SrIconNavSearch}"
+    <Path Grid.Column="2" Data="{sr:Icon NavSearch}"
           Aspect="Uniform" HeightRequest="24" WidthRequest="24"
           StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
           Stroke="{AppThemeBinding Light={StaticResource SrColorTextPrimary}, Dark={StaticResource SrColorTextPrimaryDark}}"
@@ -1106,7 +1115,7 @@ ${navItems.map((n) => `  <a class="sr-bottom-nav__item" href="#"${n.current ? ' 
       BackgroundColor="{AppThemeBinding Light={StaticResource SrColorSurfaceSectionCards}, Dark={StaticResource SrColorSurfaceSectionCardsDark}}">
 
     <VerticalStackLayout Grid.Column="0" Padding="4,8" Spacing="4" MinimumHeightRequest="60">
-        <Path Data="{StaticResource SrIconNavHome}"
+        <Path Data="{sr:Icon NavHome}"
               Aspect="Uniform" HeightRequest="24" WidthRequest="24" HorizontalOptions="Center"
               StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
               Stroke="{AppThemeBinding Light={StaticResource SrColorInteractivePrimary}, Dark={StaticResource SrColorInteractivePrimaryDark}}" />
@@ -2247,7 +2256,7 @@ ${trail.map((c, i) => (i === trail.length - 1
     Blazor: '@* Stylesheet only — no SrBreadcrumbs component ships. *@\n<nav aria-label="Breadcrumb">\n  <ol class="sr-breadcrumbs sr-breadcrumbs--back">\n    <li class="sr-breadcrumbs__item">\n      <span class="sr-breadcrumbs__back-icon">…</span>\n      <a class="sr-breadcrumbs__link" href="@Parent.Href">Back to @Parent.Label</a>\n    </li>\n  </ol>\n</nav>',
     MAUI: `<!-- The Back type is one destination, not a trail. 44px minimum target. -->
 <HorizontalStackLayout Spacing="8" MinimumHeightRequest="44">
-    <Path Data="{StaticResource SrIconNavBack}"
+    <Path Data="{sr:Icon NavBack}"
           Aspect="Uniform" HeightRequest="16" WidthRequest="16" VerticalOptions="Center"
           StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
           Stroke="{AppThemeBinding Light={StaticResource SrColorInteractiveLink}, Dark={StaticResource SrColorInteractiveLinkDark}}" />
@@ -2691,7 +2700,7 @@ function radioBody() {
     <RadioButton GroupName="Kind" IsChecked="True" MinimumHeightRequest="44">
         <RadioButton.Content>
             <HorizontalStackLayout Spacing="12">
-                <Path Data="{StaticResource SrIconClinicalResult}"
+                <Path Data="{sr:Icon ClinicalResult}"
                       Stroke="{AppThemeBinding Light={StaticResource SrColorInteractivePrimary}, Dark={StaticResource SrColorInteractivePrimaryDark}}"
                       StrokeThickness="1" HeightRequest="24" WidthRequest="24" />
                 <VerticalStackLayout Spacing="4">
@@ -4404,7 +4413,7 @@ function tagsBody() {
     HTML: '<span class="sr-tag sr-tag--filter sr-tag--blue sr-tag--default">\n  <span>Ward</span>\n  <button type="button" class="sr-tag__close" aria-label="Remove Ward: Aneurin Bevan">\n    <span class="sr-icon sr-icon--xs sr-icon--inherit">…</span>\n  </button>\n</span>',
     React: '<Tag\n  variant="filter"\n  type="blue"\n  closeLabel="Remove Ward: Aneurin Bevan"\n  onClose={() => clearFilter("ward")}\n>\n  Ward\n</Tag>',
     Blazor: '<!-- Not yet built for Blazor. -->',
-    MAUI: '<!-- No filter tag in the MAUI layer yet. A tag Border plus a tapped\n     close Path is the shape to build. -->\n<Border Style="{StaticResource TagInfo}">\n    <HorizontalStackLayout Spacing="8">\n        <Label Text="Ward" StyleClass="TagTextInfo" />\n        <Path Data="{StaticResource SrIconNavClose}"\n              Aspect="Uniform" HeightRequest="12" WidthRequest="12"\n              StrokeThickness="2" Stroke="{StaticResource SrColorStatusInfo}"\n              SemanticProperties.Description="Remove Ward" />\n    </HorizontalStackLayout>\n</Border>',
+    MAUI: '<!-- No filter tag in the MAUI layer yet. A tag Border plus a tapped\n     close Path is the shape to build. -->\n<Border Style="{StaticResource TagInfo}">\n    <HorizontalStackLayout Spacing="8">\n        <Label Text="Ward" StyleClass="TagTextInfo" />\n        <Path Data="{sr:Icon NavClose}"\n              Aspect="Uniform" HeightRequest="12" WidthRequest="12"\n              StrokeThickness="2" Stroke="{StaticResource SrColorStatusInfo}"\n              SemanticProperties.Description="Remove Ward" />\n    </HorizontalStackLayout>\n</Border>',
   };
 
   const countSnips = {
@@ -4725,7 +4734,7 @@ function iconsBody() {
     MAUI: `<!-- Icons ship as geometry in Icons.xaml, so the stroke is a token and
      follows the theme. Leave Fill unset: these are outlines, and filling them
      closes shapes meant to read as strokes. -->
-<Path Data="{StaticResource SrIconClinicalVitals}"
+<Path Data="{sr:Icon ClinicalVitals}"
       Aspect="Uniform" HeightRequest="24" WidthRequest="24"
       StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
       Stroke="{AppThemeBinding Light={StaticResource SrColorTextPrimary}, Dark={StaticResource SrColorTextPrimaryDark}}" />`,
@@ -4775,7 +4784,7 @@ function iconsBody() {
     MAUI: `<!-- Decorative: the visible label carries the meaning, so the icon is kept
      out of the accessibility tree. -->
 <HorizontalStackLayout Spacing="8">
-    <Path Data="{StaticResource SrIconActionPrint}"
+    <Path Data="{sr:Icon ActionPrint}"
           Aspect="Uniform" HeightRequest="16" WidthRequest="16" VerticalOptions="Center"
           StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
           Stroke="{AppThemeBinding Light={StaticResource SrColorTextPrimary}, Dark={StaticResource SrColorTextPrimaryDark}}"
@@ -4784,7 +4793,7 @@ function iconsBody() {
 </HorizontalStackLayout>
 
 <!-- Icon-only: it must carry its own accessible name. -->
-<Path Data="{StaticResource SrIconActionDelete}"
+<Path Data="{sr:Icon ActionDelete}"
       Aspect="Uniform" HeightRequest="24" WidthRequest="24"
       StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
       Stroke="{AppThemeBinding Light={StaticResource SrColorTextPrimary}, Dark={StaticResource SrColorTextPrimaryDark}}"
@@ -4817,7 +4826,7 @@ function iconsBody() {
     MAUI: `<!-- A status icon takes the status token and is always paired with text.
      Colour is never the only signal (WCAG 1.4.1). -->
 <HorizontalStackLayout Spacing="8">
-    <Path Data="{StaticResource SrIconStatusWarning}"
+    <Path Data="{sr:Icon StatusWarning}"
           Aspect="Uniform" HeightRequest="16" WidthRequest="16" VerticalOptions="Center"
           StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
           Stroke="{StaticResource SrColorStatusWarning}"
@@ -4909,7 +4918,7 @@ same size is the same number wherever you build. Reach for the token rather than
 <tbody>
 <tr><td>Web / Blazor</td><td><code>&lt;svg&gt;&lt;use href="sprite.svg#icon-nav-search"&gt;</code>, or the <code>sr-icon</code> wrapper</td><td><code>var(--sr-icon-size-md)</code>, <code>var(--sr-icon-color-subtle)</code></td></tr>
 <tr><td>React</td><td><code>&lt;Icon name="nav/search" /&gt;</code></td><td><code>size="md"</code>, <code>color="subtle"</code></td></tr>
-<tr><td>.NET MAUI</td><td><code>&lt;Path Data="{StaticResource SrIconNavSearch}" /&gt;</code></td><td><code>{StaticResource SrIconSizeMd}</code>, <code>{StaticResource SrIconStroke}</code>, <code>{StaticResource SrIconColorSubtle}</code></td></tr>
+<tr><td>.NET MAUI</td><td><code>&lt;Path Data="{sr:Icon NavSearch}" /&gt;</code></td><td><code>{StaticResource SrIconSizeMd}</code>, <code>{StaticResource SrIconStroke}</code>, <code>{StaticResource SrIconColorSubtle}</code></td></tr>
 <tr><td>Delphi</td><td>Rasterised PNG exported from the SVG</td><td>Export at 16, 20, 24 and 32px</td></tr>
 </tbody></table></div>
 <p>MAUI receives the icons as XAML path geometry rather than images, so an icon takes its colour
@@ -5183,7 +5192,7 @@ ${codePanel('get-files-icon', {
   React: 'import Icon from "@dhcw/sr-react/icon";\n\n<Icon name="nav/search" size="sm" />',
   Blazor: '@* Same sprite, served from the NuGet package\'s static web assets. *@\n<span class="sr-icon sr-icon--sm">\n  <svg aria-hidden="true" focusable="false">\n    <use href="_content/DHCW.SingleRecord.Blazor/css/sprite.svg#icon-nav-search"></use>\n  </svg>\n</span>',
   MAUI: `<!-- Icons.xaml is merged once in App.xaml; after that any icon is a key. -->
-<Path Data="{StaticResource SrIconNavSearch}"
+<Path Data="{sr:Icon NavSearch}"
       Aspect="Uniform" HeightRequest="16" WidthRequest="16"
       StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
       Stroke="{AppThemeBinding Light={StaticResource SrColorTextPrimary}, Dark={StaticResource SrColorTextPrimaryDark}}" />`,
@@ -5385,7 +5394,7 @@ ones so yours win where they overlap.</p>
 <p><strong>Icons are geometry, not images.</strong> MAUI rasterises an SVG at build time through
 <code>MauiImage</code> and bakes the colour into the PNG. These are outline icons that have to take
 their colour from a token and follow the theme, so they ship as <code>Path</code> data:</p>
-<div class="codepanel"><pre><code>&lt;Path Data="{StaticResource SrIconNavSearch}"
+<div class="codepanel"><pre><code>&lt;Path Data="{sr:Icon NavSearch}"
       Stroke="{AppThemeBinding Light={StaticResource SrColorTextPrimary},
                                Dark={StaticResource SrColorTextPrimaryDark}}"
       StrokeThickness="1" StrokeLineCap="Round" StrokeLineJoin="Round"

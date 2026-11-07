@@ -21,6 +21,6 @@
   </ItemGroup>
   <ItemGroup>
     <MauiXaml Include="../../nuget/*.xaml" Link="%(Filename)%(Extension)" />
-    <Compile Include="../../nuget/*.xaml.cs" Link="%(Filename)%(Extension)" />
+    <Compile Include="../../nuget/*.cs" Link="%(Filename)%(Extension)" />
   </ItemGroup>
 </Project>

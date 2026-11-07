@@ -22,6 +22,7 @@ this file says so and tells you what to change.
 
 **Action needed** if you show `clinical/safeguarding` to mean patient safety.
 
+- **MAUI: icons in XAML now draw. Action needed if you put an icon on a `Path` in XAML.** `Data="{StaticResource SrIconNavSearch}"` compiles and draws nothing. Write `Data="{sr:Icon NavSearch}"` instead (new `IconExtension.cs`; copied-file users copy it too). Icons set from C# were not affected.
 - **MAUI (NuGet): apps no longer close on launch.** Merging the package as its README showed (`<sr:SrColors />`, `<sr:SrIcons />`, `<sr:SrStyles />`) failed at startup with `StaticResource not found for key SrColorTextPrimary`, because a dictionary merged by type cannot see its siblings while it loads. `SrStyles` now carries `SrColors` inside it. **No action**: keep the same three lines. Copied-file (`Source=`) users were not affected.
 
 - **`clinical/safeguarding` has a new glyph:** Lucide `user-shield` (a person with a shield beside them). The glyph it had in 0.5.0, Lucide `shield-user` (a person inside a shield), is now **`clinical/patient-safety`**. If you used `clinical/safeguarding` for a safeguarding concern or plan, no change. If you used it for patient safety (incidents, safety alerts), rename it to `clinical/patient-safety`.

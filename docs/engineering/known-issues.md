@@ -165,6 +165,30 @@ reachable when it is needed. Constructing the thing is the only check of that.
 
 ---
 
+### `Data="{StaticResource SrIcon…}"` draws nothing
+
+**Symptom:** icons written in XAML are missing on the device: the header menu
+and bell, the quick-action circles, the search buttons, the footer icons. Icons
+set from C# appear. No error at build, at run, or in the device log. Seen on
+BrowserStack with the WCP prototype, 2026-11-07, after the launch crash above was
+fixed. Every MAUI snippet in our README, the website and the testbed used this form.
+
+**Why:** `Icons.xaml` stores each icon as an `x:String` of path data. A string
+resource assigned to `Path.Data` (type `Geometry`) through `StaticResource` is
+not passed through the geometry type converter, so `Data` stays empty. Code that
+runs `PathGeometryConverter` on the string, like the bottom bar, works.
+
+**Fix:** `packages/maui/IconExtension.cs`, shipped in the NuGet package and the npm
+files: `Data="{sr:Icon NavSearch}"` (prefix optional). It reads the string from
+the app's resources and converts it.
+
+**Prevented by:** `verify-xaml.mjs` and the website snippet check reject
+`Data="{StaticResource SrIcon…}"` and unknown `{sr:Icon …}` names;
+`packages/maui/smoke` fails if any `Path` on a prototype page has no `Data`.
+Verified by planting the old form: both fail.
+
+---
+
 ### `StrokeThickness` does not scale with `Aspect`, so icons thicken as they shrink
 
 **Symptom:** An icon set to `HeightRequest="16"` looks heavier, relative to its
