@@ -130,9 +130,38 @@ copies in `packages/maui/` are plain dictionaries with no `x:Class`:
 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
 ```
 
-**Either way, Styles goes last** — it resolves `{StaticResource SrColor…}` and
-`{StaticResource SrIcon…}` against the other two, and merging it first fails at
-runtime rather than at build.
+**Copied files: Styles goes after Colors.** It resolves `{StaticResource
+SrColor…}` against it, and merging it first fails at runtime. **NuGet:** order
+no longer matters, because `SrStyles` merges `SrColors` itself (next entry).
+
+---
+
+### A dictionary merged by type cannot see its siblings — every NuGet consumer crashed on launch
+
+**Symptom:** the app closes the moment it opens. The device log:
+`XamlParseException: Position 49:17. StaticResource not found for key
+SrColorTextPrimary`, thrown from `SrStyles.InitializeComponent` inside
+`App..ctor`. Build, pack, `verify-xaml.mjs` and `aapt2` were all green. First
+seen on BrowserStack with the WCP prototype, 2026-11-07, the first app ever to
+consume `DHCW.SingleRecord.Maui` the way its README said to.
+
+**Why:** `<sr:SrStyles />` calls `new SrStyles()`, and its `InitializeComponent`
+resolves every `{StaticResource}` there and then, against itself only. It is
+not yet in the app's merged list, so a `<sr:SrColors />` above it is invisible,
+whatever the order. The copied-file route (`Source=`) loads through the parent
+and works, which is why the testbed never showed it.
+
+**Fix:** `build-nuget.mjs` merges `SrColors` inside `SrStyles`, so it is
+self-sufficient. Consumers change nothing.
+
+**Prevented by:** `packages/maui/smoke` (*Launch smoke test* in the MAUI
+workflow), which constructs each dictionary alone, then the WCP prototype's
+`App` and pages, on plain `net10.0`. Verified by removing the fix: it fails
+with the same message as the device. `build-nuget.mjs` also fails if the merge
+is missing.
+
+**The lesson:** static checks prove a key exists somewhere, not that it is
+reachable when it is needed. Constructing the thing is the only check of that.
 
 ---
 

@@ -17,9 +17,14 @@ before writing MAUI, so a finding filed only here is a finding lost.
 > the safeguarding icon change and the **WCP mobile prototype** (below). `main`
 > is **0.5.0**, on npm. *Publish NuGet* for 0.5.0 not confirmed.
 >
-> **Next up:** run *Build MAUI library and testbed APK* on the branch, put
-> `wcp-prototype.apk` on BrowserStack App Live, and look at it (first run on a
-> device). Then the Loop update for the engineers (drafted 2026-11-04).
+> **2026-11-07:** the first prototype APK closed on launch. Cause was in the
+> **NuGet library**, not the prototype: `SrStyles` merged by type could not see
+> `SrColors` (known-issues). Fixed in `build-nuget.mjs`; CHANGELOG *Unreleased*.
+> New CI gate `packages/maui/smoke`. Any product already on the NuGet 0.5.0
+> package has the same crash: ship this in the next NuGet.
+>
+> **Next up:** confirm the new APK opens on App Live and tap through it. Then
+> the Loop update for the engineers (drafted 2026-11-04).
 >
 > **Content work is now a system of its own.** Read `docs/content/data-standards.md`
 > (rules, each sourced), `docs/content/demo-patients.md` (use these in every

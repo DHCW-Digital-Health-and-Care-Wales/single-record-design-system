@@ -93,8 +93,12 @@ file path — that is how a ResourceDictionary in a referenced assembly works.
 </Application>
 ```
 
-**Merge `SrStyles` last.** It references keys from the other two, so merging it
-first fails at runtime with a `StaticResource not found`, not at build.
+**`SrStyles` carries `SrColors` inside it** (from 0.6.0). A dictionary merged
+by type is built on its own before it joins your app, so it cannot see a
+`<sr:SrColors />` next to it. Up to 0.5.0 it relied on doing so, and an app
+following this README closed on launch with `StaticResource not found for key
+SrColorTextPrimary`. Keep all three lines as shown: your own XAML uses
+`SrColor…` keys too, and listing `SrColors` costs nothing.
 
 If your app already has its own `Colors.xaml` and `Styles.xaml`, merge those
 *after* the Single Record ones so yours win where they overlap, and work through

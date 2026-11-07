@@ -84,6 +84,14 @@ jobs:
         run: |
           dotnet build packages/maui/nuget/DHCW.SingleRecord.Maui.csproj -c Release
 
+      # Constructs each packaged dictionary alone (as <sr:SrStyles /> does in
+      # a product), then the WCP prototype's App and every page. The first
+      # prototype APK passed every static check and closed on launch with
+      # "StaticResource not found for key SrColorTextPrimary"; this reproduces
+      # that off-device. See packages/maui/smoke/README.md.
+      - name: Launch smoke test (dictionaries and prototype pages)
+        run: dotnet run --project packages/maui/smoke/Run/Run.csproj -c Release
+
       # A build proves it compiles; this proves it packs, that the buildTransitive
       # targets and brand marks are actually in the .nupkg, and that a consumer
       # would get them. NoBuild reuses what was just compiled.
