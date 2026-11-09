@@ -391,7 +391,7 @@ token is the point. See `products/wcp-mobile/prototype/App.xaml.cs`.
 **Symptom:** a fix is built and uploaded, and App Live still shows the old app:
 the same missing icons, the old footer.
 
-**Why:** until build 30, every `wcp-prototype.apk` had the same file name, app
+**Why:** until build 31, every `wcp-prototype.apk` had the same file name, app
 name, package and version code. App Live lists uploads by those, so a new upload
 was indistinguishable from the first, and testing went on against an old build.
 

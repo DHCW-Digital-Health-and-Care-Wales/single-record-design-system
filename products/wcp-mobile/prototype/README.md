@@ -19,7 +19,7 @@ BrowserStack App Live takes an `.apk`, not a project folder.
 
 The sign-in screens show **Prototype build `<n>`** under the version. If the
 number is not the run you meant to test, App Live is running an older upload:
-every build before 30 had the same name and version, so they look identical there.
+every build before 31 had the same name and version, so they look identical there.
 
 The same run also builds the testbed APK (`sr-testbed-apk`). The workflow fails
 rather than uploading an APK with no launchable activity.
