@@ -13,9 +13,13 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 ## Start here — next session
 
-> **State (2026-11-06):** branch `claude/loving-mayer-bf3l4p` (not yet merged):
-> the safeguarding icon change and the **WCP mobile prototype** (below). `main`
-> is **0.5.0**, on npm. *Publish NuGet* for 0.5.0 not confirmed.
+> **State (2026-11-09):** **0.6.0** merged to `main` from
+> `claude/loving-mayer-bf3l4p`: the safeguarding / patient-safety icons, two
+> MAUI library fixes, `{sr:Icon}`, the WCP mobile prototype and the smoke gate.
+> **Not yet on npm or NuGet:** run *Release packages* (tick `publish_npm`) and
+> *Publish NuGet* in the DHCW org repo with tag `v0.6.0`, after the merge has
+> reached the mirror. 0.5.0 NuGet consumers have the launch crash and blank
+> icons until then.
 >
 > **2026-11-07:** the first prototype APK closed on launch. Cause was in the
 > **NuGet library**, not the prototype: `SrStyles` merged by type could not see

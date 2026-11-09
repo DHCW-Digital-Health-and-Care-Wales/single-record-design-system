@@ -18,14 +18,24 @@ this file says so and tells you what to change.
 
 ---
 
-## Unreleased
+## v0.6.0 — 9 Nov 2026
 
-**Action needed** if you show `clinical/safeguarding` to mean patient safety.
+**Action needed** in two cases: you show `clinical/safeguarding` to mean patient
+safety, or you put an icon on a MAUI `Path` in XAML. Everyone else: **no action**.
 
-- **MAUI: icons in XAML now draw. Action needed if you put an icon on a `Path` in XAML.** `Data="{StaticResource SrIconNavSearch}"` compiles and draws nothing. Write `Data="{sr:Icon NavSearch}"` instead (new `IconExtension.cs`; copied-file users copy it too). Icons set from C# were not affected.
-- **MAUI (NuGet): apps no longer close on launch.** Merging the package as its README showed (`<sr:SrColors />`, `<sr:SrIcons />`, `<sr:SrStyles />`) failed at startup with `StaticResource not found for key SrColorTextPrimary`, because a dictionary merged by type cannot see its siblings while it loads. `SrStyles` now carries `SrColors` inside it. **No action**: keep the same three lines. Copied-file (`Source=`) users were not affected.
+```
+npm install @dhcw/sr-tokens@0.6.0 @dhcw/sr-icons@0.6.0 @dhcw/sr-web@0.6.0 @dhcw/sr-react@0.6.0
+```
 
-- **`clinical/safeguarding` has a new glyph:** Lucide `user-shield` (a person with a shield beside them). The glyph it had in 0.5.0, Lucide `shield-user` (a person inside a shield), is now **`clinical/patient-safety`**. If you used `clinical/safeguarding` for a safeguarding concern or plan, no change. If you used it for patient safety (incidents, safety alerts), rename it to `clinical/patient-safety`.
+### Action needed
+
+- **`clinical/safeguarding` has a new glyph:** Lucide `user-shield` (a person with a shield beside them). The glyph it had in 0.5.0, Lucide `shield-user` (a person inside a shield), is now **`clinical/patient-safety`**. If you used `clinical/safeguarding` for a safeguarding concern or plan, no change. If you used it for patient safety (incidents, safety alerts), rename it to `clinical/patient-safety`. 148 icons.
+- **MAUI: icons in XAML now draw.** `Data="{StaticResource SrIconNavSearch}"` compiles and draws nothing. Write `Data="{sr:Icon NavSearch}"` instead (new `IconExtension.cs`, in the NuGet package; copied-file users copy it too). Icons set from C# were not affected.
+
+### No action
+
+- **MAUI (NuGet): apps no longer close on launch.** Merging the package as its README showed (`<sr:SrColors />`, `<sr:SrIcons />`, `<sr:SrStyles />`) failed at startup with `StaticResource not found for key SrColorTextPrimary`, because a dictionary merged by type cannot see its siblings while it loads. `SrStyles` now carries `SrColors` inside it. Keep the same three lines. Copied-file (`Source=`) users were not affected.
+- **WCP mobile prototype** (`products/wcp-mobile/prototype/`): a native MAUI tap-through of onboarding and home, built for BrowserStack by the *Build MAUI library and testbed APK* workflow.
 
 ---
 
