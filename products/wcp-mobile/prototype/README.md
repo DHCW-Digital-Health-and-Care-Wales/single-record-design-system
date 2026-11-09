@@ -12,8 +12,14 @@ BrowserStack App Live takes an `.apk`, not a project folder.
 
 1. GitHub → **Actions** → **Build MAUI library and testbed APK** → **Run workflow**,
    on your branch.
-2. When it finishes, download the **`wcp-prototype-apk`** artifact (kept 3 days).
-3. Unzip it (GitHub always zips artifacts) and upload `wcp-prototype.apk` to App Live.
+2. When it finishes, download the **`wcp-prototype-build<n>`** artifact (kept 3
+   days), where `<n>` is the run number.
+3. Unzip it (GitHub always zips artifacts) and upload `wcp-prototype-build<n>.apk`
+   to App Live, then pick **that** upload in App Live's list.
+
+The sign-in screens show **Prototype build `<n>`** under the version. If the
+number is not the run you meant to test, App Live is running an older upload:
+every build before 30 had the same name and version, so they look identical there.
 
 The same run also builds the testbed APK (`sr-testbed-apk`). The workflow fails
 rather than uploading an APK with no launchable activity.

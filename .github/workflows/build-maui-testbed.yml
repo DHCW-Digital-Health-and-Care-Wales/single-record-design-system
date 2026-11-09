@@ -156,16 +156,22 @@ jobs:
       # PackageReference. Building it here is also the only compile it gets.
       - name: Publish the WCP mobile prototype APK
         run: |
+          # Each build gets its own version code (the run number) and file
+          # name. With a fixed version, BrowserStack App Live could not tell
+          # uploads apart and kept launching the first one. The sign-in screen
+          # shows "Prototype build <n>" from this number.
           dotnet publish products/wcp-mobile/prototype/WcpPrototype.csproj \
             -f net10.0-android \
             -c "${{ inputs.configuration || 'Release' }}" \
-            -p:AndroidPackageFormat=apk
+            -p:AndroidPackageFormat=apk \
+            -p:ApplicationVersion=${{ github.run_number }} \
+            -p:ApplicationDisplayVersion=0.1.${{ github.run_number }}
           found=$(find products/wcp-mobile/prototype/bin -name '*-Signed.apk' -print -quit)
           if [ -z "$found" ]; then
             echo "::error::The prototype produced no signed APK."
             exit 1
           fi
-          cp "$found" artifact/wcp-prototype.apk
+          cp "$found" "artifact/wcp-prototype-build${{ github.run_number }}.apk"
           ls -lh artifact/
 
       # A green publish is not the same as a usable APK. The first APK this
@@ -224,7 +230,7 @@ jobs:
         if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v4
         with:
-          name: wcp-prototype-apk
-          path: artifact/wcp-prototype.apk
+          name: wcp-prototype-build${{ github.run_number }}
+          path: artifact/wcp-prototype-build${{ github.run_number }}.apk
           if-no-files-found: error
           retention-days: 3

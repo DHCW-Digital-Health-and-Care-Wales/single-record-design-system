@@ -386,6 +386,24 @@ token is the point. See `products/wcp-mobile/prototype/App.xaml.cs`.
 
 ---
 
+### Every prototype APK looked the same to BrowserStack
+
+**Symptom:** a fix is built and uploaded, and App Live still shows the old app:
+the same missing icons, the old footer.
+
+**Why:** until build 30, every `wcp-prototype.apk` had the same file name, app
+name, package and version code. App Live lists uploads by those, so a new upload
+was indistinguishable from the first, and testing went on against an old build.
+
+**Fix:** the workflow sets the version code to the run number and names the file
+and artifact `wcp-prototype-build<n>`. The sign-in screens show **Prototype build
+`<n>`**, so a screenshot says which build it came from.
+
+**Prevented by:** the build number on screen. Not mechanical; it makes the mix-up
+visible rather than impossible.
+
+---
+
 ### `builder.Logging.AddDebug()` only compiles in Release
 
 **Symptom:** a MAUI app builds in CI and fails the moment someone dispatches the
