@@ -13,22 +13,25 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 ## Start here — next session
 
-> **State (2026-11-09):** **0.6.0** merged to `main` from
-> `claude/loving-mayer-bf3l4p`: the safeguarding / patient-safety icons, two
-> MAUI library fixes, `{sr:Icon}`, the WCP mobile prototype and the smoke gate.
-> **Not yet on npm or NuGet:** run *Release packages* (tick `publish_npm`) and
-> *Publish NuGet* in the DHCW org repo with tag `v0.6.0`, after the merge has
-> reached the mirror. 0.5.0 NuGet consumers have the launch crash and blank
-> icons until then.
+> **State (2026-11-09):** **0.6.0 is released.** Merged to `main` in #145: the
+> safeguarding / patient-safety icons, two MAUI library fixes, `{sr:Icon}`, the
+> WCP mobile prototype and the smoke gate.
+> - **npm:** `@dhcw/sr-tokens`, `sr-icons`, `sr-web`, `sr-react` are all `0.6.0`
+>   on `latest`, confirmed on the registry; the published `sr-icons` carries
+>   both `clinical/safeguarding` (`user-shield`) and `clinical/patient-safety`.
+> - **NuGet:** `DHCW.SingleRecord.Maui` and `DHCW.SingleRecord.Blazor` 0.6.0 —
+>   the design lead ran *Publish the .NET packages to GitHub Packages* with
+>   `v0.6.0`. Not verified from a session: the org feed needs org credentials.
+> Start a fresh branch from `main` for the next piece of work.
 >
 > **2026-11-07:** the first prototype APK closed on launch. Cause was in the
 > **NuGet library**, not the prototype: `SrStyles` merged by type could not see
-> `SrColors` (known-issues). Fixed in `build-nuget.mjs`; CHANGELOG *Unreleased*.
+> `SrColors` (known-issues). Fixed in `build-nuget.mjs`; shipped in 0.6.0.
 > Second device finding: XAML icons drew blank (`StaticResource` string on
 > `Path.Data`); new `{sr:Icon …}` extension, docs and website snippets updated.
 > Footer on the sign-in screens follows the design lead's redraw (text links
-> and dots, no icons). New CI gate `packages/maui/smoke`. Any product already on the NuGet 0.5.0
-> package has the same crash: ship this in the next NuGet.
+> and dots, no icons). New CI gate `packages/maui/smoke`. Products on NuGet
+> 0.5.0 have the crash and blank icons until they take 0.6.0.
 >
 > **2026-11-09 (build 31 on App Live):** launches, icons draw. Then, from the
 > design lead: no build label on screen; PIN dots and keypad fit small phones;
@@ -36,8 +39,9 @@ before writing MAUI, so a finding filed only here is a finding lost.
 > wrong PINs log the user out** (design lead's call); bell removed; logo truly centred; Android's Entry
 > underline removed (known-issues).
 >
-> **Next up:** check the next build on a small phone on App Live. Then
-> the Loop update for the engineers (drafted 2026-11-04).
+> **Next up:** design work (new session). Open from this session: check
+> prototype build 33 on a small phone on App Live; the Loop update for the
+> engineers (drafted 2026-11-04) can now announce 0.6.0.
 >
 > **Content work is now a system of its own.** Read `docs/content/data-standards.md`
 > (rules, each sourced), `docs/content/demo-patients.md` (use these in every
@@ -47,7 +51,10 @@ before writing MAUI, so a finding filed only here is a finding lost.
 >
 > **Releasing:** merging updates the website by itself (the org mirror rebuilds
 > hourly). npm and NuGet do **not**: run *Release packages* (tick
-> `publish_npm`) and *Publish NuGet* by hand in the DHCW org repo's Actions,
+> `publish_npm`), then *Publish the .NET packages to GitHub Packages* (that is
+> its name in the Actions list; it does **not** start by itself when *Release
+> packages* creates the tag, because a tag made by one workflow never triggers
+> another), by hand in the DHCW org repo's Actions,
 > with the tag, **after** the merge has reached the mirror. Bump versions and
 > the CHANGELOG first (see the 0.4.0 commit). NuGet 0.4.0 not confirmed run.
 >
