@@ -5,6 +5,8 @@ namespace WcpPrototype.Views;
 /// <summary>
 /// Unlock with the PIN. The sixth digit submits; there is no button for it,
 /// as drawn. Biometric login is simulated: it unlocks straight away.
+/// After five wrong PINs the user is logged out and must sign in again and
+/// create a new PIN (Flow.MaxPinAttempts).
 /// </summary>
 public partial class UnlockPage : ContentPage
 {
@@ -34,7 +36,16 @@ public partial class UnlockPage : ContentPage
         }
         entered = string.Empty;
         Dots.Show(0);
-        Error.Show("Incorrect PIN. Try again.");
+
+        var left = Flow.MaxPinAttempts - Flow.RecordPinFailure();
+        if (left <= 0)
+        {
+            Flow.LogOut("Too many incorrect PINs. Log in again and create a new PIN.");
+            return;
+        }
+        Error.Show(left == 1
+            ? "Incorrect PIN. You have 1 attempt left before you need to log in again."
+            : $"Incorrect PIN. You have {left} attempts left.");
     }
 
     void OnBiometric(object? sender, EventArgs e) => Unlock();

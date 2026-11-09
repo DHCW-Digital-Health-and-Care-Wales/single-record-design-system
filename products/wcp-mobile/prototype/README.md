@@ -47,7 +47,8 @@ and publish `products/wcp-mobile/prototype/WcpPrototype.csproj`.
 reopen the app. It locks on resume, as the real app does. Closing and relaunching
 also shows it.
 
-**PINs.** Create PIN checks the two entries match. Welcome back accepts the PIN set
+**PINs.** Create PIN checks the two entries match. On Welcome back, each wrong
+PIN says how many attempts are left; the fifth logs you out. Welcome back accepts the PIN set
 in this session; after a restart it accepts any six digits, because the real PIN
 is never written to the device. Only a "PIN has been set" flag is saved.
 
@@ -69,7 +70,7 @@ same changes.
 | "Message of the day, 01/12" | "Message of the day, 1 Dec" | Dates as `1 Dec`, no leading zero. |
 | Staff member is a real person (name, email, Nadex ID, GMC) | Fictional: BEVAN, Alys; `example.nhs.wales` email; `be000001`; GMC `7000001` | Demo data must not be a real person. `SURNAME, First` is UI Standards v1.3 #6. |
 | "Username" shows a full name | "Name" | It is a name, not a username. |
-| No feedback is drawn for PIN results | Set-up mismatch and wrong PIN: an inline error in the card (Status/Error on its surface, icon, vibration, announced), dots cleared. PIN set up: a dismissible success banner on Home. Right PIN: straight in, no message | Inline feedback rather than modals, as GOV.UK and the NHS service manual recommend. How many wrong attempts before sign-in again is a security decision still to make |
+| No feedback is drawn for PIN results | Set-up mismatch and wrong PIN: an inline error in the card (Status/Error on its surface, icon, vibration, announced), dots cleared. PIN set up: a dismissible success banner on Home. Right PIN: straight in, no message | Inline feedback rather than modals, as GOV.UK and the NHS service manual recommend. **Five wrong PINs** (design lead, 2026-11-09) log the user out; the login screen says why, and they sign in and create a new PIN. The count survives closing the app |
 | Notifications bell in the header | Removed | Design lead, 2026-11-09 |
 | PIN dots have no filled state | A filled `Interactive/Primary` dot, and "3 of 6 digits entered" for screen readers | The frame only draws the empty state. |
 | Keypad keys 40px high | 44px minimum | Touch target floor. |

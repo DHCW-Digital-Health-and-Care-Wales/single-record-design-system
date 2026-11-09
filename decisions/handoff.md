@@ -28,8 +28,8 @@ before writing MAUI, so a finding filed only here is a finding lost.
 >
 > **2026-11-09 (build 31 on App Live):** launches, icons draw. Then, from the
 > design lead: no build label on screen; PIN dots and keypad fit small phones;
-> inline PIN errors and a success banner on Home instead of modals (attempt
-> limit still to decide); bell removed; logo truly centred; Android's Entry
+> inline PIN errors and a success banner on Home instead of modals; **five
+> wrong PINs log the user out** (design lead's call); bell removed; logo truly centred; Android's Entry
 > underline removed (known-issues).
 >
 > **Next up:** check the next build on a small phone on App Live. Then

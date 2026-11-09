@@ -25,6 +25,9 @@
                 </VerticalStackLayout>
             </HorizontalStackLayout>
 
+            <!-- After a forced sign-out (too many wrong PINs). -->
+            <c:PinError x:Name="Error" />
+
             <Button Text="Log in with Microsoft"
                     Style="{StaticResource ButtonOnNavy}"
                     WidthRequest="240" HorizontalOptions="Center"

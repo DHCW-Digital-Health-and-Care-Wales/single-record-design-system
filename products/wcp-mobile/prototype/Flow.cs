@@ -32,13 +32,40 @@ public static class Flow
     /// restart, if it is any six digits (the real one is not kept).</summary>
     public static bool CheckPin(string value) => pin is null ? value.Length == 6 : value == pin;
 
-    public static void Unlocked() => SignedIn = true;
+    public static void Unlocked()
+    {
+        SignedIn = true;
+        ResetPinFailures();
+    }
 
-    public static void LogOut()
+    /// <summary>Wrong PINs allowed before the user must sign in again
+    /// (design lead, 2026-11-09).</summary>
+    public const int MaxPinAttempts = 5;
+
+    const string FailuresKey = "pin_failures";
+
+    /// <summary>Wrong PINs so far. Kept across restarts, so closing the app
+    /// does not reset the count.</summary>
+    public static int PinFailures
+    {
+        get => Preferences.Default.Get(FailuresKey, 0);
+        private set => Preferences.Default.Set(FailuresKey, value);
+    }
+
+    public static int RecordPinFailure() => ++PinFailures;
+
+    public static void ResetPinFailures() => Preferences.Default.Remove(FailuresKey);
+
+    /// <summary>Shown on the login screen after a forced sign-out, then cleared.</summary>
+    public static string? LoginMessage { get; set; }
+
+    public static void LogOut(string? reason = null)
     {
         pin = null;
         SignedIn = false;
         Preferences.Default.Remove(PinSetKey);
+        ResetPinFailures();
+        LoginMessage = reason;
         Go(() => new Views.LoginPage());
     }
 
