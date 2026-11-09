@@ -130,9 +130,62 @@ copies in `packages/maui/` are plain dictionaries with no `x:Class`:
 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
 ```
 
-**Either way, Styles goes last** — it resolves `{StaticResource SrColor…}` and
-`{StaticResource SrIcon…}` against the other two, and merging it first fails at
-runtime rather than at build.
+**Copied files: Styles goes after Colors.** It resolves `{StaticResource
+SrColor…}` against it, and merging it first fails at runtime. **NuGet:** order
+no longer matters, because `SrStyles` merges `SrColors` itself (next entry).
+
+---
+
+### A dictionary merged by type cannot see its siblings — every NuGet consumer crashed on launch
+
+**Symptom:** the app closes the moment it opens. The device log:
+`XamlParseException: Position 49:17. StaticResource not found for key
+SrColorTextPrimary`, thrown from `SrStyles.InitializeComponent` inside
+`App..ctor`. Build, pack, `verify-xaml.mjs` and `aapt2` were all green. First
+seen on BrowserStack with the WCP prototype, 2026-11-07, the first app ever to
+consume `DHCW.SingleRecord.Maui` the way its README said to.
+
+**Why:** `<sr:SrStyles />` calls `new SrStyles()`, and its `InitializeComponent`
+resolves every `{StaticResource}` there and then, against itself only. It is
+not yet in the app's merged list, so a `<sr:SrColors />` above it is invisible,
+whatever the order. The copied-file route (`Source=`) loads through the parent
+and works, which is why the testbed never showed it.
+
+**Fix:** `build-nuget.mjs` merges `SrColors` inside `SrStyles`, so it is
+self-sufficient. Consumers change nothing.
+
+**Prevented by:** `packages/maui/smoke` (*Launch smoke test* in the MAUI
+workflow), which constructs each dictionary alone, then the WCP prototype's
+`App` and pages, on plain `net10.0`. Verified by removing the fix: it fails
+with the same message as the device. `build-nuget.mjs` also fails if the merge
+is missing.
+
+**The lesson:** static checks prove a key exists somewhere, not that it is
+reachable when it is needed. Constructing the thing is the only check of that.
+
+---
+
+### `Data="{StaticResource SrIcon…}"` draws nothing
+
+**Symptom:** icons written in XAML are missing on the device: the header menu
+and bell, the quick-action circles, the search buttons, the footer icons. Icons
+set from C# appear. No error at build, at run, or in the device log. Seen on
+BrowserStack with the WCP prototype, 2026-11-07, after the launch crash above was
+fixed. Every MAUI snippet in our README, the website and the testbed used this form.
+
+**Why:** `Icons.xaml` stores each icon as an `x:String` of path data. A string
+resource assigned to `Path.Data` (type `Geometry`) through `StaticResource` is
+not passed through the geometry type converter, so `Data` stays empty. Code that
+runs `PathGeometryConverter` on the string, like the bottom bar, works.
+
+**Fix:** `packages/maui/IconExtension.cs`, shipped in the NuGet package and the npm
+files: `Data="{sr:Icon NavSearch}"` (prefix optional). It reads the string from
+the app's resources and converts it.
+
+**Prevented by:** `verify-xaml.mjs` and the website snippet check reject
+`Data="{StaticResource SrIcon…}"` and unknown `{sr:Icon …}` names;
+`packages/maui/smoke` fails if any `Path` on a prototype page has no `Data`.
+Verified by planting the old form: both fail.
 
 ---
 
@@ -151,8 +204,8 @@ generated header and the NuGet README document. Below that, scale it with the
 size — `HeightRequest / 24` — rather than leaving it at 1.
 
 **Not verified on a device.** This follows from how MAUI Shapes are documented
-to render, and .NET cannot be run in the environment where the design system is
-built, so it has not been confirmed empirically. First engineer with a device:
+to render. It has not been confirmed on a device: a cloud session can compile
+MAUI (see "MAUI can be compile-checked without the Android SDK") but cannot run it. First engineer with a device:
 confirm it and replace this paragraph with what you actually see.
 
 ---
@@ -305,6 +358,124 @@ run that found this.
 list: the old one reproduces the exact three-error message against a good
 package; the new one passes it, still fails a genuinely Linux-only pack on ios
 and maccatalyst, and is not satisfied by a stray `.dll` outside `lib/`.
+
+---
+
+### A MAUI brush has no `Opacity`
+
+**Symptom:** `XamlC error XC0009: No property, BindableProperty, or event found
+for "Opacity"` on a `<SolidColorBrush … Opacity="0.1" />`. WPF and Figma both
+have brush opacity, so it reads like a typo somewhere else.
+
+**Why:** MAUI's `SolidColorBrush` has `Color` only. Transparency lives in the
+colour's alpha.
+
+**Fix:** derive the colour from the token in code and register it, then reference
+it as `DynamicResource` (a `StaticResource` would be looked up before the code
+runs):
+
+```csharp
+var inverse = (Color)Resources["SrColorTextInverse"];
+Resources["GlassFill"] = new SolidColorBrush(inverse.WithAlpha(0.1f));
+```
+
+Never a literal `#1AFFFFFF`: `verify-xaml.mjs` rejects literal colours, and the
+token is the point. See `products/wcp-mobile/prototype/App.xaml.cs`.
+
+**Prevented by:** XamlC, at build. It is an error, not a silent fallback.
+
+---
+
+### Every prototype APK looked the same to BrowserStack
+
+**Symptom:** a fix is built and uploaded, and App Live still shows the old app:
+the same missing icons, the old footer.
+
+**Why:** until build 31, every `wcp-prototype.apk` had the same file name, app
+name, package and version code. App Live lists uploads by those, so a new upload
+was indistinguishable from the first, and testing went on against an old build.
+
+**Fix:** the workflow sets the version code to the run number and names the file
+and artifact `wcp-prototype-build<n>`. Delete old uploads in App Live and pick the
+one whose name matches the run. (A build label on screen was tried and taken out
+at the design lead's request: the file name is enough.)
+
+**Prevented by:** nothing mechanical; naming.
+
+---
+
+### Android draws a second line under every Entry
+
+**Symptom:** the NHS number field shows its SR border and, inside it, a grey
+underline (screenshot, 2026-11-09).
+
+**Why:** Android's native `EditText` has an underline from its background tint.
+MAUI's `Entry` keeps it, and no XAML style can reach it.
+
+**Fix:** a handler mapping in `MauiProgram`, once for the whole app:
+
+```csharp
+#if ANDROID
+EntryHandler.Mapper.AppendToMapping("SrNoUnderline", (h, _) =>
+    h.PlatformView.BackgroundTintList =
+        Android.Content.Res.ColorStateList.ValueOf(Android.Graphics.Color.Transparent));
+#endif
+```
+
+Any product using `FieldBox` needs the same. A candidate for the library (a
+`UseSingleRecord()` builder extension), not done yet.
+
+**Prevented by:** nothing; it only shows on a device.
+
+---
+
+### `builder.Logging.AddDebug()` only compiles in Release
+
+**Symptom:** a MAUI app builds in CI and fails the moment someone dispatches the
+workflow with `configuration: Debug`: `CS1061: 'ILoggingBuilder' does not contain
+a definition for 'AddDebug'`.
+
+**Why:** `AddDebug` comes from the `Microsoft.Extensions.Logging.Debug` package,
+which the stock MAUI template references and our projects do not. It sits inside
+`#if DEBUG`, so a Release build never compiles the line.
+
+**Fix:** removed from the testbed and not used in the prototype. If you want debug
+logging, add the package reference as well.
+
+**Prevented by:** nothing in CI, which builds Release. The compile check below
+builds Debug and is what found it.
+
+---
+
+### MAUI can be compile-checked without the Android SDK
+
+**Symptom:** a cloud session cannot build an APK: `dl.google.com` is blocked, so
+there is no Android SDK (`XA5300`). Earlier sessions concluded MAUI could not be
+compiled here at all, and shipped XAML checked only as text.
+
+**Why:** only the Android *packaging* needs the SDK. The .NET 10 SDK installs from
+Ubuntu's archive and the `maui-android` workload from nuget.org, and both are
+allowed. MAUI also supports a plain `net10.0` target, which compiles every XAML
+file through XamlC and all the C# with no platform at all.
+
+**Fix:** in a scratch folder, two projects targeting plain `net10.0` with
+`UseMaui` and `EnableDefaultItems=false`:
+
+1. a library named `DHCW.SingleRecord.Maui` that links `packages/maui/nuget/*.xaml`
+   and `*.xaml.cs` (so `assembly=DHCW.SingleRecord.Maui` in the app resolves);
+2. a project that references it and links the app's `.xaml` and `.cs`, excluding
+   `Platforms/`, with `MauiXamlInflator=XamlC`.
+
+```bash
+apt-get install -y dotnet-sdk-10.0
+dotnet workload install maui-android
+```
+
+It catches what `verify-xaml.mjs` cannot: wrong property names, wrong types,
+compiled-binding errors, C# errors. It found three faults in the WCP prototype
+before CI ever ran. It does not check layout, platform code or the APK.
+
+**Prevented by:** nothing mechanical yet; a recipe. CI still does the real build.
 
 ---
 
@@ -672,6 +843,24 @@ against.
 **Prevented by:** `npm run check:demo-data` (the demo patients), and the content check in
 `npm run build:site` (website and prototype source), which fails on any content error. Figma is
 checked by the content-checker agent and cannot be gated.
+
+### The content checker could not see a native prototype
+
+**Symptom:** a MAUI prototype passes `check-content.mjs --prototype` with Figma's
+"Get Started" and "Welcome Back" still in it.
+
+**Why:** the checker read `products/*/prototype/src` for JSX only. A MAUI app has
+no `src/` and its copy is in XAML attributes.
+
+**Fix:** it now also reads every `.xaml` under `products/*/prototype/`: `Text` and
+`Placeholder` attributes, with a `Button`'s text judged as a button and a `Label`
+styled `Heading*` as a heading. Strings built in C# (the home screen's attention
+rows) are still not read.
+
+**Prevented by:** `check-content.mjs --prototype`, part of `build:site`. Verified
+by planting "Get Started" in `CreatePinPage.xaml`: reported as an error.
+
+---
 
 ## Web / CSS
 

@@ -93,8 +93,12 @@ file path — that is how a ResourceDictionary in a referenced assembly works.
 </Application>
 ```
 
-**Merge `SrStyles` last.** It references keys from the other two, so merging it
-first fails at runtime with a `StaticResource not found`, not at build.
+**`SrStyles` carries `SrColors` inside it** (from 0.6.0). A dictionary merged
+by type is built on its own before it joins your app, so it cannot see a
+`<sr:SrColors />` next to it. Up to 0.5.0 it relied on doing so, and an app
+following this README closed on launch with `StaticResource not found for key
+SrColorTextPrimary`. Keep all three lines as shown: your own XAML uses
+`SrColor…` keys too, and listing `SrColors` costs nothing.
 
 If your app already has its own `Colors.xaml` and `Styles.xaml`, merge those
 *after* the Single Record ones so yours win where they overlap, and work through
@@ -123,12 +127,22 @@ icons that must take their colour from a token and follow the theme, so they are
 `Path` data instead:
 
 ```xml
-<Path Data="{StaticResource SrIconNavSearch}"
+<Path Data="{sr:Icon NavSearch}"
       Stroke="{AppThemeBinding Light={StaticResource SrColorTextPrimary},
                                Dark={StaticResource SrColorTextPrimaryDark}}"
       StrokeThickness="1" StrokeLineCap="Round" StrokeLineJoin="Round"
       Aspect="Uniform" HeightRequest="24" WidthRequest="24" />
 ```
+
+**Use `{sr:Icon …}`, never `{StaticResource SrIcon…}` on `Data`.** Each icon is
+stored as path data in an `x:String`, and MAUI does not turn a string resource
+into a `Geometry`: the icon is simply not drawn, with no error. `{sr:Icon}`
+(`IconExtension.cs`) does the conversion. The name may be written with or
+without the `SrIcon` prefix. In code, convert the string yourself:
+`new PathGeometryConverter().ConvertFromInvariantString(data)`.
+
+`sr` is `xmlns:sr="clr-namespace:DHCW.SingleRecord.Maui;assembly=DHCW.SingleRecord.Maui"`.
+
 
 `Fill` is deliberately unset — filling closes shapes meant to read as strokes.
 

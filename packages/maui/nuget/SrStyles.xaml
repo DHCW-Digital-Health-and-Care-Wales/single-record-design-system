@@ -32,7 +32,12 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:local="clr-namespace:DHCW.SingleRecord.Maui"
                     x:Class="DHCW.SingleRecord.Maui.SrStyles">
+    <ResourceDictionary.MergedDictionaries>
+        <local:SrColors />
+    </ResourceDictionary.MergedDictionaries>
+
 
     <!--#region Typography ===================================================-->
     <!--

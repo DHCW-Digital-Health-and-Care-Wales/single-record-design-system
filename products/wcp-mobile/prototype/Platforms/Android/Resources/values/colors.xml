@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Android chrome colours. Without this file MAUI's own defaults apply, and the
+  status bar comes out MAUI purple. Values are the SR tokens Navy/900 and
+  Interactive/Primary; Android resource files cannot reference XAML resources.
+-->
+<resources>
+    <color name="colorPrimary">#1b294a</color>
+    <color name="colorPrimaryDark">#1b294a</color>
+    <color name="colorAccent">#325083</color>
+</resources>

@@ -78,7 +78,7 @@ Adding an SVG straight into `svg/` without a generator entry is what produced fo
 
 <!-- BEGIN GENERATED CATALOGUE — edit fetch-icons.mjs, then run npm run sync:icons -->
 
-**147 SR aliases across 12 domains.**
+**148 SR aliases across 12 domains.**
 
 Every row below is generated from the `ICONS` array in `fetch-icons.mjs`. Do not edit this section by hand — add the icon to the generator, run `npm run sync:icons`, and the table follows.
 
@@ -182,7 +182,7 @@ Every row below is generated from the `ICONS` array in `fetch-icons.mjs`. Do not
 | people/demographics | id-card | PeopleDemographics |  |
 | people/patient-search | user-round-search | PeoplePatientSearch |  |
 
-### Clinical records & data (21)
+### Clinical records & data (22)
 
 | SR alias | Lucide glyph | Component name | Notes |
 |---|---|---|---|
@@ -191,7 +191,8 @@ Every row below is generated from the `ICONS` array in `fetch-icons.mjs`. Do not
 | clinical/vitals | heart-pulse | ClinicalVitals |  |
 | clinical/medication | pill | ClinicalMedication |  |
 | clinical/allergy | shield-alert | ClinicalAllergy |  |
-| clinical/safeguarding | shield-user | ClinicalSafeguarding | safeguarding concern or plan for a child or adult at risk. A person inside a shield: distinct from clinical/allergy (shield-alert) and data/audit (shield-check) |
+| clinical/safeguarding | user-shield | ClinicalSafeguarding | safeguarding concern or plan for a child or adult at risk. A person with a shield beside them. Was shield-user until 0.6.0; that glyph is now clinical/patient-safety |
+| clinical/patient-safety | shield-user | ClinicalPatientSafety | patient safety: incidents, alerts and risk to the patient in our care. A person inside a shield: distinct from clinical/safeguarding (user-shield), clinical/allergy (shield-alert) and data/audit (shield-check) |
 | clinical/test | flask-conical | ClinicalTest | renamed from clinical/lab-result — the flask is an ordered test, not the returned finding |
 | clinical/imaging | scan | ClinicalImaging |  |
 | clinical/procedure | syringe | ClinicalProcedure |  |

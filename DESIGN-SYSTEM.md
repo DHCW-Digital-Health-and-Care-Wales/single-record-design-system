@@ -4,7 +4,7 @@ The Single Record Design System provides the shared design language, component l
 
 This document is the primary reference for everyone working on Single Record — designers, engineers, and delivery leads.
 
-**Last reviewed:** 2026-10-29. Update this file whenever a component ships, a
+**Last reviewed:** 2026-11-06. Update this file whenever a component ships, a
 token is added, or a system-wide rule changes — not on a schedule. If it
 disagrees with `/foundations/tokens/` or `/components/`, those win and this file
 is out of date.
@@ -521,6 +521,7 @@ They live under `/products/{product}/prototype/` and consume the design-system p
 | Prototype | Location | State |
 |---|---|---|
 | Case Note Tracking | `products/case-note-tracking/prototype/` | Dashboard, Patient Search, the single-patient casenote view, My Requests and the SendIT batch flow are built. ReceiveIT, TagIT and Settings are nav entries only. |
+| WCP mobile (native MAUI) | `products/wcp-mobile/prototype/` | Onboarding and home: splash, log in, simulated Microsoft sign-in, create PIN, unlock, home, profile, side menu. Tap-through APK for BrowserStack from the *Build MAUI library and testbed APK* workflow. Not on the website: a MAUI app cannot run in Sandpack. Compiled in CI only, not yet run on a device. |
 
 **Prototypes are not shippable.** Mock data only, no API integration, no authentication, no error or loading handling, no tests, no security review.
 

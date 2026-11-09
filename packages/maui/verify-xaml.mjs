@@ -10,7 +10,7 @@
 //   * a hard-coded colour, which means the token layer was skipped
 //
 // Usage:  node verify-xaml.mjs <file-or-dir> [...]
-// Default target is testbed/ when no argument is given.
+// Default targets are testbed/ and the WCP mobile prototype when no argument is given.
 
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { resolve, join, relative } from 'node:path';
@@ -137,6 +137,24 @@ function checkFile(path, problems) {
     }
   }
 
+  // Path.Data="{StaticResource SrIcon…}" compiles, runs, and draws nothing:
+  // the resource is an x:String and MAUI does not convert it to Geometry.
+  // Every icon written this way was blank on BrowserStack (2026-11-07).
+  for (const m of src.matchAll(/\bData="\{StaticResource\s+(SrIcon\w+)\s*\}"/g)) {
+    problems.push(
+      `${label}:${lineOf(m.index)} — Data="{StaticResource ${m[1]}}" draws nothing; `
+      + `use Data="{sr:Icon ${m[1].replace(/^SrIcon/, '')}}"`
+    );
+  }
+
+  // {sr:Icon NavSearch} must name an icon that exists.
+  for (const m of src.matchAll(/\{\w+:Icon\s+(?:Key=)?(\w+)\s*\}/g)) {
+    const key = m[1].startsWith('SrIcon') ? m[1] : `SrIcon${m[1]}`;
+    if (!shipped.has(key)) {
+      problems.push(`${label}:${lineOf(m.index)} — icon "${m[1]}" does not exist (no ${key} in Icons.xaml)`);
+    }
+  }
+
   // StyleClass="A,B"
   for (const m of src.matchAll(/\bStyleClass="([^"]+)"/g)) {
     for (const raw of m[1].split(',')) {
@@ -183,12 +201,24 @@ function xamlUnder(target) {
 }
 
 const args = process.argv.slice(2);
-const targets = (args.length ? args : ['testbed']).map((a) => resolve(here, a));
+const targets = (args.length ? args : ['testbed', '../../products/wcp-mobile/prototype']).map((a) => resolve(here, a));
 
 const files = targets.flatMap(xamlUnder);
 if (!files.length) {
   console.error('verify-xaml: no XAML or project files found in the given target(s).');
   process.exit(1);
+}
+
+// An app's own App.xaml defines keys and classes that every page in that app
+// may use (the prototype keeps its sign-in styles there). They count as
+// shipped for the purpose of this check, the same as the dictionaries.
+for (const f of files) {
+  if (!f.endsWith('App.xaml')) continue;
+  const src = stripNonMarkup(readFileSync(f, 'utf8'));
+  for (const m of src.matchAll(/x:Key="([^"]+)"/g)) shipped.add(m[1]);
+  for (const m of src.matchAll(/<Style\b[^>]*\bClass="([^"]+)"/g)) {
+    for (const c of m[1].split(',')) shippedClasses.add(c.trim());
+  }
 }
 
 const problems = [];

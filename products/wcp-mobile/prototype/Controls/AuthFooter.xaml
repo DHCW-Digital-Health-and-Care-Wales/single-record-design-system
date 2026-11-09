@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WcpPrototype.Controls.AuthFooter">
+    <!--
+        The footer on every sign-in screen (Figma "Frame 47874", redrawn by the
+        design lead 2026-11-07): three underlined text links in one centred row,
+        separated by 4px dots, then the version. The links lead nowhere in the
+        prototype; tapping one says so.
+
+        Each link keeps a 44px tall tap area although the text is 20px.
+        The dots are Grey/200 (Figma draws an untokened #D9D9D9).
+    -->
+    <ContentView.Resources>
+        <Style x:Key="FooterDot" TargetType="BoxView">
+            <Setter Property="WidthRequest" Value="4" />
+            <Setter Property="HeightRequest" Value="4" />
+            <Setter Property="CornerRadius" Value="2" />
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="Color" Value="{StaticResource ColorGrey200}" />
+        </Style>
+        <Style TargetType="Label" Class="FooterLink">
+            <Setter Property="TextDecorations" Value="Underline" />
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="MinimumHeightRequest" Value="44" />
+            <Setter Property="VerticalTextAlignment" Value="Center" />
+        </Style>
+    </ContentView.Resources>
+
+    <VerticalStackLayout Spacing="12" Padding="16,0,16,24">
+        <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+            <Label Text="Infection control" StyleClass="OnNavySoft,FooterLink">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnLink" CommandParameter="Infection control" />
+                </Label.GestureRecognizers>
+            </Label>
+            <BoxView Style="{StaticResource FooterDot}" />
+            <Label Text="Call support" StyleClass="OnNavySoft,FooterLink">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnLink" CommandParameter="Call support" />
+                </Label.GestureRecognizers>
+            </Label>
+            <BoxView Style="{StaticResource FooterDot}" />
+            <Label Text="Error log" StyleClass="OnNavySoft,FooterLink">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnLink" CommandParameter="Error log" />
+                </Label.GestureRecognizers>
+            </Label>
+        </HorizontalStackLayout>
+        <Label Text="Version 0.1.0.1112" StyleClass="Caption,OnNavyVersion" />
+    </VerticalStackLayout>
+</ContentView>

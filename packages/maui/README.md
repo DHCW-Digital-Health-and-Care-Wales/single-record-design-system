@@ -101,12 +101,22 @@ it will not follow a token change.
 Icons carry no colour of their own:
 
 ```xml
-<Path Data="{StaticResource SrIconNavSearch}"
+<Path Data="{sr:Icon NavSearch}"
       Stroke="{AppThemeBinding Light={StaticResource SrColorTextPrimary},
                                Dark={StaticResource SrColorTextPrimaryDark}}"
       StrokeThickness="1" StrokeLineCap="Round" StrokeLineJoin="Round"
       Aspect="Uniform" HeightRequest="16" WidthRequest="16" />
 ```
+
+**Use `{sr:Icon …}`, never `{StaticResource SrIcon…}` on `Data`.** Each icon is
+stored as path data in an `x:String`, and MAUI does not turn a string resource
+into a `Geometry`: the icon is simply not drawn, with no error. `{sr:Icon}`
+(`IconExtension.cs`) does the conversion. The name may be written with or
+without the `SrIcon` prefix. In code, convert the string yourself:
+`new PathGeometryConverter().ConvertFromInvariantString(data)`.
+
+`sr` is `xmlns:sr="clr-namespace:DHCW.SingleRecord.Maui"`. Copy `IconExtension.cs` into your project along with the dictionaries.
+
 
 Leave `Fill` unset. These are outline icons, and filling them closes shapes that
 are meant to read as strokes.

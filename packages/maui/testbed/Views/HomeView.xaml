@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sr="clr-namespace:DHCW.SingleRecord.Maui"
              x:Class="SrTestbed.Views.HomeView">
     <!--
         Figma 554:6606 -> Screen Content.
@@ -127,7 +128,7 @@
                         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
                             <Label Grid.Column="0" Text="24" StyleClass="HeadingL" />
                             <Path Grid.Column="1" Style="{StaticResource StatIcon}"
-                                  Data="{StaticResource SrIconPeopleGp}" />
+                                  Data="{sr:Icon PeopleGp}" />
                         </Grid>
                         <Label Text="Appointments" StyleClass="BodyS,Muted" />
                     </VerticalStackLayout>
@@ -138,7 +139,7 @@
                         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
                             <Label Grid.Column="0" Text="8" StyleClass="HeadingL" />
                             <Path Grid.Column="1" Style="{StaticResource StatIcon}"
-                                  Data="{StaticResource SrIconPeopleGp}" />
+                                  Data="{sr:Icon PeopleGp}" />
                         </Grid>
                         <Label Text="Referrals" StyleClass="BodyS,Muted" />
                     </VerticalStackLayout>
@@ -149,7 +150,7 @@
                         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
                             <Label Grid.Column="0" Text="42" StyleClass="HeadingL" />
                             <Path Grid.Column="1" Style="{StaticResource StatIcon}"
-                                  Data="{StaticResource SrIconPeopleGp}" />
+                                  Data="{sr:Icon PeopleGp}" />
                         </Grid>
                         <Label Text="My Watchlist" StyleClass="BodyS,Muted" />
                     </VerticalStackLayout>
@@ -160,7 +161,7 @@
                         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
                             <Label Grid.Column="0" Text="24" StyleClass="HeadingL" />
                             <Path Grid.Column="1" Style="{StaticResource StatIcon}"
-                                  Data="{StaticResource SrIconPeopleGp}" />
+                                  Data="{sr:Icon PeopleGp}" />
                         </Grid>
                         <Label Text="Pending DALs" StyleClass="BodyS,Muted" />
                     </VerticalStackLayout>
@@ -185,7 +186,7 @@
                     <HorizontalStackLayout Grid.Column="0" Spacing="4" VerticalOptions="Center">
                         <Label Text="Today's Appointments" StyleClass="HeadingXs" VerticalOptions="Center" />
                         <Path Style="{StaticResource SmallIcon}"
-                              Data="{StaticResource SrIconStatusInfo}"
+                              Data="{sr:Icon StatusInfo}"
                               Stroke="{AppThemeBinding Light={StaticResource SrColorTextSecondary}, Dark={StaticResource SrColorTextSecondaryDark}}"
                               SemanticProperties.Description="About today's appointments" />
                     </HorizontalStackLayout>
@@ -195,7 +196,7 @@
                                            MinimumHeightRequest="44" VerticalOptions="Center">
                         <Label Text="View all" StyleClass="FieldLabel,Linked" VerticalOptions="Center" />
                         <Path Style="{StaticResource SmallIcon}"
-                              Data="{StaticResource SrIconNavForward}"
+                              Data="{sr:Icon NavForward}"
                               Stroke="{AppThemeBinding Light={StaticResource SrColorInteractiveLink}, Dark={StaticResource SrColorInteractiveLinkDark}}" />
                     </HorizontalStackLayout>
                 </Grid>

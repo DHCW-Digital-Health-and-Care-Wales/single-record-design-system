@@ -6,7 +6,8 @@
  * the rules in scripts/content-rules.mjs.
  *
  *   node scripts/check-content.mjs --site                 the built website (run build:site first)
- *   node scripts/check-content.mjs --prototype            products/[name]/prototype/src
+ *   node scripts/check-content.mjs --prototype            products/[name]/prototype/src, and the
+ *                                                        .xaml of a native (MAUI) prototype
  *   node scripts/check-content.mjs --figma texts.json     text exported from Figma by the content-checker agent
  *
  *   --out report.md   write the report to a file as well as a summary to the console
@@ -102,6 +103,23 @@ function jsxTexts(src) {
   return out;
 }
 
+// ── XAML: Text and Placeholder attributes on a native (MAUI) prototype ──────
+// A Button's Text is a button; a Label styled Heading* or carrying a heading
+// level is a heading; everything else is a label.
+function xamlTexts(src) {
+  const out = [];
+  const plain = src.replace(/<!--[\s\S]*?-->/g, '');
+  for (const m of plain.matchAll(/<([\w:.]+)\b([^>]*?)\/?>/g)) {
+    const [, tag, attrs] = m;
+    const heading = /StyleClass="[^"]*Heading/.test(attrs) || /HeadingLevel=/.test(attrs);
+    for (const a of attrs.matchAll(/\b(Text|Placeholder)="([^"{][^"]*)"/g)) {
+      const role = a[1] === 'Placeholder' ? 'label' : tag === 'Button' ? 'button' : heading ? 'heading' : 'label';
+      out.push({ text: decode(a[2]), role });
+    }
+  }
+  return out;
+}
+
 // ── Run ──────────────────────────────────────────────────────────────────────
 const items = [];   // { where, text, role }
 if (args.includes('--site')) {
@@ -113,6 +131,13 @@ if (args.includes('--site')) {
 if (args.includes('--prototype')) {
   const products = join(ROOT, 'products');
   for (const p of readdirSync(products)) {
+    const native = join(products, p, 'prototype');
+    try {
+      for (const f of walk(native, /\.xaml$/)) {
+        if (/[\\/](bin|obj|node_modules)[\\/]/.test(f)) continue;
+        for (const t of xamlTexts(readFileSync(f, 'utf8'))) items.push({ where: relative(ROOT, f), ...t });
+      }
+    } catch { /* no prototype folder */ }
     const dir = join(products, p, 'prototype', 'src');
     try { statSync(dir); } catch { continue; }
     for (const f of walk(dir, /\.(jsx?|tsx?)$/)) {

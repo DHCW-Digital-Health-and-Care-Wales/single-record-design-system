@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sr="clr-namespace:DHCW.SingleRecord.Maui;assembly=DHCW.SingleRecord.Maui"
+             x:Class="WcpPrototype.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- The NuGet route: merge by type, Styles last. -->
+                <sr:SrColors />
+                <sr:SrIcons />
+                <sr:SrStyles />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!--
+                Prototype composition only. Nothing here is design-system
+                vocabulary until it has a spec; the PIN pad, the quick-action
+                circle and the attention row are candidates (see README).
+
+                The sign-in screens sit on a fixed navy gradient that does not
+                change with the device theme, the same way a brand mark keeps
+                its colours. So their colours are single tokens, not
+                AppThemeBinding pairs. Everything after sign-in themes.
+            -->
+
+            <!--#region Sign-in screens ==========================================-->
+            <Style x:Key="AuthPage" TargetType="ContentPage">
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <RadialGradientBrush Center="0.5,0.1" Radius="1.1">
+                            <GradientStop Color="{StaticResource SrColorInteractivePrimary}" Offset="0.1" />
+                            <GradientStop Color="{StaticResource ColorNavy900}" Offset="1.0" />
+                        </RadialGradientBrush>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style TargetType="Label" Class="OnNavy">
+                <Setter Property="TextColor" Value="{StaticResource SrColorTextInverse}" />
+            </Style>
+            <!-- Info Blue/100 on Navy/900 to Blue/800: 9.2:1 at worst. -->
+            <Style TargetType="Label" Class="OnNavySoft">
+                <Setter Property="TextColor" Value="{StaticResource ColorInfoBlue100}" />
+            </Style>
+            <!-- Blue/300 on Navy/900: 6.9:1. Only ever at the foot of the screen. -->
+            <Style TargetType="Label" Class="OnNavyVersion">
+                <Setter Property="TextColor" Value="{StaticResource ColorBlue300}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+
+            <!-- Patterns/Sign in: white at 10% on the gradient. -->
+            <!-- GlassFill and GlassEdge are Text/Inverse at 10% and 30%, made
+                 in App.xaml.cs: a MAUI brush has no opacity of its own. -->
+            <Style x:Key="GlassCard" TargetType="Border">
+                <Setter Property="Padding" Value="24" />
+                <Setter Property="Background" Value="{DynamicResource GlassFill}" />
+                <Setter Property="Stroke" Value="{DynamicResource GlassEdge}" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeShape">
+                    <Setter.Value><RoundRectangle CornerRadius="8" /></Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Login with Microsoft. Info Blue/600 as drawn: white text 6.4:1. -->
+            <Style x:Key="ButtonOnNavy" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource ColorInfoBlue600}" />
+                <Setter Property="TextColor" Value="{StaticResource SrColorTextInverse}" />
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal" />
+                            <VisualState x:Name="Pressed">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{StaticResource ColorInfoBlue800}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Disabled">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{StaticResource SrColorInteractiveDisabled}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+
+            <!--
+                Log out on the unlock screen. Figma draws it red
+                (Interactive/Destructive). Styles.xaml reserves the destructive
+                fill for permanent deletion, and logging out deletes nothing,
+                so it is an outlined button here. See README.
+            -->
+            <Style x:Key="ButtonOutlineOnNavy" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="BorderColor" Value="{StaticResource SrColorTextInverse}" />
+                <Setter Property="TextColor" Value="{StaticResource SrColorTextInverse}" />
+            </Style>
+
+            <!-- Keypad key: 98 x 40 as drawn, 44 minimum for the touch target. -->
+            <Style x:Key="PinKey" TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="MinimumHeightRequest" Value="44" />
+                <Setter Property="BackgroundColor" Value="{StaticResource SrColorBorderDefault}" />
+                <Setter Property="StrokeShape">
+                    <Setter.Value><RoundRectangle CornerRadius="4" /></Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="PinKeyClear" TargetType="Border" BasedOn="{StaticResource PinKey}">
+                <Setter Property="BackgroundColor" Value="{StaticResource SrColorStatusErrorSurface}" />
+            </Style>
+            <Style TargetType="Label" Class="PinDigit">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource SrColorInteractivePrimary}" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+            </Style>
+            <!--#endregion-->
+
+            <!--#region Shared type modifiers ====================================-->
+            <Style TargetType="Label" Class="Muted">
+                <Setter Property="TextColor"
+                        Value="{AppThemeBinding Light={StaticResource SrColorTextSecondary}, Dark={StaticResource SrColorTextSecondaryDark}}" />
+            </Style>
+            <Style TargetType="Label" Class="Bold">
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+            <Style TargetType="Label" Class="Centred">
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+            </Style>
+            <!-- Underlined as well as coloured: colour is never the only cue (1.4.1). -->
+            <Style TargetType="Label" Class="Linked">
+                <Setter Property="TextDecorations" Value="Underline" />
+                <Setter Property="TextColor"
+                        Value="{AppThemeBinding Light={StaticResource SrColorInteractiveLink}, Dark={StaticResource SrColorInteractiveLinkDark}}" />
+            </Style>
+            <!--#endregion-->
+
+            <!--#region Icons ====================================================-->
+            <!--
+                Icons are 1px at 24 (DDR-023). StrokeThickness does not scale
+                with Aspect, so smaller icons get 24 / size to keep the same
+                visual weight (known-issues: StrokeThickness does not scale).
+            -->
+            <Style x:Key="Icon" TargetType="Path">
+                <Setter Property="Aspect" Value="Uniform" />
+                <Setter Property="HeightRequest" Value="24" />
+                <Setter Property="WidthRequest" Value="24" />
+                <Setter Property="StrokeThickness" Value="1" />
+                <Setter Property="StrokeLineCap" Value="Round" />
+                <Setter Property="StrokeLineJoin" Value="Round" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="Stroke"
+                        Value="{AppThemeBinding Light={StaticResource SrColorTextPrimary}, Dark={StaticResource SrColorTextPrimaryDark}}" />
+            </Style>
+            <Style x:Key="IconSm" TargetType="Path" BasedOn="{StaticResource Icon}">
+                <Setter Property="HeightRequest" Value="20" />
+                <Setter Property="WidthRequest" Value="20" />
+                <Setter Property="StrokeThickness" Value="1.2" />
+            </Style>
+            <Style x:Key="IconXs" TargetType="Path" BasedOn="{StaticResource Icon}">
+                <Setter Property="HeightRequest" Value="16" />
+                <Setter Property="WidthRequest" Value="16" />
+                <Setter Property="StrokeThickness" Value="1.5" />
+            </Style>
+            <Style x:Key="IconSecondary" TargetType="Path" BasedOn="{StaticResource IconSm}">
+                <Setter Property="Stroke"
+                        Value="{AppThemeBinding Light={StaticResource SrColorTextSecondary}, Dark={StaticResource SrColorTextSecondaryDark}}" />
+            </Style>
+            <!--#endregion-->
+
+            <!--#region Signed-in screens ========================================-->
+            <!-- Header and bottom bar: chrome, not cards. Section-cards stands in
+                 for the missing surface.header semantic (testbed README). -->
+            <Style x:Key="Chrome" TargetType="Grid">
+                <Setter Property="BackgroundColor"
+                        Value="{AppThemeBinding Light={StaticResource SrColorSurfaceSectionCards}, Dark={StaticResource SrColorSurfaceSectionCardsDark}}" />
+            </Style>
+
+            <!-- A list card whose rows carry their own dividers. -->
+            <Style x:Key="ListCard" TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+            </Style>
+
+            <Style x:Key="Row" TargetType="Grid">
+                <Setter Property="Padding" Value="16,12" />
+                <Setter Property="MinimumHeightRequest" Value="52" />
+                <Setter Property="ColumnSpacing" Value="12" />
+            </Style>
+
+            <!-- Quick action: a 64px Interactive/Primary circle, white glyph. -->
+            <Style x:Key="QuickActionCircle" TargetType="Border">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="WidthRequest" Value="64" />
+                <Setter Property="HeightRequest" Value="64" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="BackgroundColor"
+                        Value="{AppThemeBinding Light={StaticResource SrColorInteractivePrimary}, Dark={StaticResource SrColorInteractivePrimaryDark}}" />
+                <Setter Property="StrokeShape">
+                    <Setter.Value><RoundRectangle CornerRadius="32" /></Setter.Value>
+                </Setter>
+            </Style>
+            <!--#endregion-->
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

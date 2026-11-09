@@ -25,14 +25,12 @@ const ROOT = resolve(here, '../..');
 const OUT = resolve(here, 'nuget');
 const NS = 'DHCW.SingleRecord.Maui';
 
-// Order matters on merge: Styles references keys from both of the others, so a
-// consumer merging Styles first gets a StaticResource resolution failure at
-// runtime rather than at build. The README states the order; this comment
-// exists so nobody "tidies" the list here.
+// SrStyles references SrColors keys and gets them by merging SrColors itself
+// (see below), so merge order no longer decides whether an app starts.
 const DICTS = [
   ['Colors.xaml', 'SrColors', 'Colour and elevation tokens, with dark-mode twins.'],
   ['Icons.xaml', 'SrIcons', 'Icon path geometry, one x:String per icon.'],
-  ['Styles.xaml', 'SrStyles', 'Implicit and keyed control styles, and the type scale. Merge this LAST — it references keys from SrColors and SrIcons.'],
+  ['Styles.xaml', 'SrStyles', 'Implicit and keyed control styles, and the type scale. Carries SrColors inside it, because a dictionary merged by type cannot see its siblings while it loads.'],
 ];
 
 mkdirSync(OUT, { recursive: true });
@@ -75,9 +73,23 @@ for (const [file, cls, summary] of DICTS) {
   const end = start + tag[0].length;
   const rootTag = src.slice(start, end);
   if (/x:Class=/.test(rootTag)) throw new Error(`${file}: already carries an x:Class`);
+  // SrStyles merges SrColors INSIDE itself. A dictionary merged by type
+  // (<sr:SrStyles />) is constructed on its own, before it is attached to the
+  // app, so its {StaticResource SrColor…} lookups cannot see a sibling
+  // <sr:SrColors /> however the consumer orders them. Every product following
+  // the README crashed at launch with "StaticResource not found for key
+  // SrColorTextPrimary" (found on BrowserStack, 2026-11-07). Merging it here
+  // makes SrStyles self-sufficient; merging SrColors as well stays harmless.
+  const selfMerge = cls === 'SrStyles'
+    ? `\n    <ResourceDictionary.MergedDictionaries>\n        <local:SrColors />\n    </ResourceDictionary.MergedDictionaries>\n`
+    : '';
   const patched = src.slice(0, start)
-    + rootTag.replace(/>$/, `\n                    x:Class="${NS}.${cls}">`)
+    + rootTag.replace(/>$/, (cls === 'SrStyles' ? `\n                    xmlns:local="clr-namespace:${NS}"` : '') + `\n                    x:Class="${NS}.${cls}">`)
+    + selfMerge
     + src.slice(end);
+  if (cls === 'SrStyles' && !/<local:SrColors \/>/.test(patched.replace(/<!--[\s\S]*?-->/g, ''))) {
+    throw new Error('SrStyles.xaml: SrColors was not merged into it');
+  }
 
   // Gate rather than trust: re-read the result and confirm x:Class actually
   // landed on the root. The first version of this script silently produced a
@@ -100,6 +112,13 @@ public partial class ${cls} : ResourceDictionary
 }
 `);
 }
+
+// The {sr:Icon …} markup extension, the only supported way to put an icon on a
+// Path (a StaticResource string is silently not drawn). Hand-written once in
+// packages/maui/ and copied in, like the dictionaries.
+writeFileSync(resolve(OUT, 'IconExtension.cs'),
+  '// AUTO-COPIED from packages/maui/IconExtension.cs by build-nuget.mjs — edit that file.\n'
+  + readFileSync(resolve(here, 'IconExtension.cs'), 'utf8'));
 
 // Brand marks, wired up as MauiImage by buildTransitive/*.targets. MAUI asset
 // names must be lowercase alphanumeric, so the hyphenated filenames are

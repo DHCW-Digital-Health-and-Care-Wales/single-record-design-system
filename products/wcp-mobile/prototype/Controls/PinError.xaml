@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sr="clr-namespace:DHCW.SingleRecord.Maui;assembly=DHCW.SingleRecord.Maui"
+             x:Class="WcpPrototype.Controls.PinError"
+             IsVisible="False">
+    <!--
+        Inline error inside the PIN card. Status/Error on Status/Error Surface
+        (6.2:1): red text straight on the navy card would not be readable. The
+        icon means colour is not the only signal (1.4.1). Shown and announced
+        by Show(); hidden again on the next key press.
+    -->
+    <Border StrokeThickness="0" Padding="12,8"
+            BackgroundColor="{StaticResource SrColorStatusErrorSurface}">
+        <Border.StrokeShape><RoundRectangle CornerRadius="4" /></Border.StrokeShape>
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+            <Path Style="{StaticResource IconSm}" Data="{sr:Icon StatusErrorCircle}"
+                  Stroke="{StaticResource SrColorStatusError}" VerticalOptions="Start" />
+            <Label x:Name="Text" Grid.Column="1" StyleClass="Bold" VerticalOptions="Center"
+                   TextColor="{StaticResource SrColorStatusError}" />
+        </Grid>
+    </Border>
+</ContentView>

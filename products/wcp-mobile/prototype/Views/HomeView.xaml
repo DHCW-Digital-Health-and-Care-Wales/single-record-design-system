@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sr="clr-namespace:DHCW.SingleRecord.Maui;assembly=DHCW.SingleRecord.Maui"
+             x:Class="WcpPrototype.Views.HomeView">
+    <!-- Figma 5849:17493 -> Screen content. All numbers are fixed demo content. -->
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="20">
+
+            <!--#region Search =================================================-->
+            <VerticalStackLayout Spacing="12">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                    <Border Style="{StaticResource FieldBox}" Padding="12,0,4,0">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Entry x:Name="NhsNumber" Placeholder="Enter NHS number"
+                                   Keyboard="Numeric" MaxLength="12"
+                                   SemanticProperties.Description="NHS number"
+                                   Completed="OnSearch" />
+                            <HorizontalStackLayout Grid.Column="1" Spacing="6" Padding="8,0"
+                                                   MinimumHeightRequest="44"
+                                                   SemanticProperties.Description="Scan wristband">
+                                <HorizontalStackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnNotInPrototype" CommandParameter="Scan wristband" />
+                                </HorizontalStackLayout.GestureRecognizers>
+                                <Path Style="{StaticResource IconSm}" Data="{sr:Icon ActionScan}"
+                                      Stroke="{AppThemeBinding Light={StaticResource SrColorInteractiveLink}, Dark={StaticResource SrColorInteractiveLinkDark}}" />
+                                <Label Text="Scan" VerticalOptions="Center"
+                                       TextColor="{AppThemeBinding Light={StaticResource SrColorInteractiveLink}, Dark={StaticResource SrColorInteractiveLinkDark}}" />
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </Border>
+                    <Border Grid.Column="1" Padding="0" WidthRequest="44" HeightRequest="44" StrokeThickness="0"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource SrColorInteractivePrimary}, Dark={StaticResource SrColorInteractivePrimaryDark}}"
+                            SemanticProperties.Description="Search">
+                        <Border.StrokeShape><RoundRectangle CornerRadius="8" /></Border.StrokeShape>
+                        <Border.GestureRecognizers><TapGestureRecognizer Tapped="OnSearchTapped" /></Border.GestureRecognizers>
+                        <Path Style="{StaticResource Icon}" Data="{sr:Icon NavSearch}"
+                              Stroke="{StaticResource SrColorTextInverse}" />
+                    </Border>
+                </Grid>
+
+                <FlexLayout Wrap="Wrap" AlignItems="Center">
+                    <Label Text="GMC:" StyleClass="Caption" Margin="0,0,4,0"
+                           TextColor="{AppThemeBinding Light={StaticResource SrColorTextPrimary}, Dark={StaticResource SrColorTextPrimaryDark}}" />
+                    <Label Text="Swansea Bay University Health Board" StyleClass="Caption,Linked">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnNotInPrototype" CommandParameter="Change organisation" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </FlexLayout>
+            </VerticalStackLayout>
+            <!--#endregion-->
+
+            <!--#region PIN set up (success notification banner) =================-->
+            <!-- Shown once, straight after the PIN is saved: confirmation without
+                 a modal to dismiss. Same shape as the message of the day, in
+                 the Success status colours. -->
+            <Grid x:Name="PinSet" IsVisible="False" ColumnDefinitions="4,*"
+                  BackgroundColor="{AppThemeBinding Light={StaticResource SrColorStatusSuccessSurface}, Dark={StaticResource SrColorSurfaceSectionCardsDark}}">
+                <BoxView Grid.Column="0" Color="{StaticResource SrColorStatusSuccess}" />
+                <Grid Grid.Column="1" Padding="12,12,4,12" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                    <Path Style="{StaticResource IconSm}" Data="{sr:Icon StatusSuccess}" VerticalOptions="Start"
+                          Stroke="{AppThemeBinding Light={StaticResource SrColorStatusSuccess}, Dark={StaticResource SrColorTextPrimaryDark}}" />
+                    <VerticalStackLayout Grid.Column="1" Spacing="4">
+                        <Label Text="Your PIN is set up" StyleClass="HeadingXs,Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource SrColorStatusSuccess}, Dark={StaticResource SrColorTextPrimaryDark}}" />
+                        <Label Text="Use it to unlock WCP mobile each time you open it." />
+                    </VerticalStackLayout>
+                    <Grid Grid.Column="2" WidthRequest="44" HeightRequest="44" VerticalOptions="Start"
+                          SemanticProperties.Description="Dismiss">
+                        <Grid.GestureRecognizers><TapGestureRecognizer Tapped="OnDismissPinSet" /></Grid.GestureRecognizers>
+                        <Path Style="{StaticResource IconSecondary}" Data="{sr:Icon NavClose}" />
+                    </Grid>
+                </Grid>
+            </Grid>
+            <!--#endregion-->
+
+            <!--#region Message of the day ======================================-->
+            <!-- Information banner: a 4px Status/Info rule, then icon, title,
+                 message and a dismiss button. The rule is a column, because a
+                 MAUI Border stroke is the same on all four sides. -->
+            <Grid x:Name="Motd" ColumnDefinitions="4,*"
+                  BackgroundColor="{AppThemeBinding Light={StaticResource SrColorStatusInfoSurface}, Dark={StaticResource SrColorSurfaceSectionCardsDark}}">
+                <BoxView Grid.Column="0" Color="{AppThemeBinding Light={StaticResource SrColorStatusInfo}, Dark={StaticResource SrColorInteractiveLinkDark}}" />
+                <Grid Grid.Column="1" Padding="12,12,4,12" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                    <Path Style="{StaticResource IconSm}" Data="{sr:Icon StatusInfo}" VerticalOptions="Start"
+                          Stroke="{AppThemeBinding Light={StaticResource SrColorStatusInfo}, Dark={StaticResource SrColorInteractiveLinkDark}}" />
+                    <VerticalStackLayout Grid.Column="1" Spacing="4">
+                        <Label Text="Message of the day, 1 Dec" StyleClass="HeadingXs,Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource SrColorStatusInfo}, Dark={StaticResource SrColorInteractiveLinkDark}}" />
+                        <Label Text="Theatre 3 is closed for maintenance until Friday." />
+                    </VerticalStackLayout>
+                    <Grid Grid.Column="2" WidthRequest="44" HeightRequest="44" VerticalOptions="Start"
+                          SemanticProperties.Description="Dismiss message of the day">
+                        <Grid.GestureRecognizers><TapGestureRecognizer Tapped="OnDismiss" /></Grid.GestureRecognizers>
+                        <Path Style="{StaticResource IconSecondary}" Data="{sr:Icon NavClose}" />
+                    </Grid>
+                </Grid>
+            </Grid>
+            <!--#endregion-->
+
+            <!--#region Quick actions ===========================================-->
+            <VerticalStackLayout Spacing="12">
+                <Label Text="Quick actions" StyleClass="HeadingS" SemanticProperties.HeadingLevel="Level2" />
+                <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="4">
+                    <VerticalStackLayout Grid.Column="0" Spacing="8">
+                        <VerticalStackLayout.GestureRecognizers><TapGestureRecognizer Tapped="OnNotInPrototype" CommandParameter="My referrals" /></VerticalStackLayout.GestureRecognizers>
+                        <Border Style="{StaticResource QuickActionCircle}">
+                            <Path Style="{StaticResource Icon}" Data="{sr:Icon ActionSend}" Stroke="{StaticResource SrColorTextInverse}" />
+                        </Border>
+                        <Label Text="My referrals" StyleClass="Caption,Centred" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="1" Spacing="8">
+                        <VerticalStackLayout.GestureRecognizers><TapGestureRecognizer Tapped="OnNotInPrototype" CommandParameter="Patients viewed" /></VerticalStackLayout.GestureRecognizers>
+                        <Border Style="{StaticResource QuickActionCircle}">
+                            <Path Style="{StaticResource Icon}" Data="{sr:Icon ClinicalHistory}" Stroke="{StaticResource SrColorTextInverse}" />
+                        </Border>
+                        <Label Text="Patients viewed" StyleClass="Caption,Centred" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="2" Spacing="8">
+                        <VerticalStackLayout.GestureRecognizers><TapGestureRecognizer Tapped="OnNotInPrototype" CommandParameter="Change organisation" /></VerticalStackLayout.GestureRecognizers>
+                        <Border Style="{StaticResource QuickActionCircle}">
+                            <Path Style="{StaticResource Icon}" Data="{sr:Icon LocationOrganisation}" Stroke="{StaticResource SrColorTextInverse}" />
+                        </Border>
+                        <Label Text="Change organisation" StyleClass="Caption,Centred" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="3" Spacing="8">
+                        <VerticalStackLayout.GestureRecognizers><TapGestureRecognizer Tapped="OnNotInPrototype" CommandParameter="Help resources" /></VerticalStackLayout.GestureRecognizers>
+                        <Border Style="{StaticResource QuickActionCircle}">
+                            <Path Style="{StaticResource Icon}" Data="{sr:Icon NavSupport}" Stroke="{StaticResource SrColorTextInverse}" />
+                        </Border>
+                        <Label Text="Help resources" StyleClass="Caption,Centred" />
+                    </VerticalStackLayout>
+                </Grid>
+            </VerticalStackLayout>
+            <!--#endregion-->
+
+            <!--#region Needs your attention ====================================-->
+            <VerticalStackLayout Spacing="12">
+                <Label Text="Needs your attention" StyleClass="HeadingS" SemanticProperties.HeadingLevel="Level2" />
+                <Border Style="{StaticResource ListCard}">
+                    <VerticalStackLayout x:Name="Attention" />
+                </Border>
+            </VerticalStackLayout>
+            <!--#endregion-->
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentView>
