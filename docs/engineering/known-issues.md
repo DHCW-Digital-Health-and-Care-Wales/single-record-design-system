@@ -1554,6 +1554,25 @@ different question, and not the one that stops a burned version.
 
 ---
 
+### *Release packages* creates the tag, and NuGet still does not publish
+
+**Symptom:** after *Release packages*, the `v<version>` tag and npm packages
+exist, but no NuGet run happened, although `publish-nuget.yml` is set to run on
+`push: tags: ['v*']`. Looking for a "Publish NuGet" action finds nothing.
+
+**Why:** a tag created with the workflow's own `GITHUB_TOKEN` never triggers
+another workflow (GitHub blocks it to prevent loops). And the workflow's name in
+the Actions list is **Publish the .NET packages to GitHub Packages**, not
+"Publish NuGet", which is what the handoff called it until 0.6.0.
+
+**Fix:** run *Publish the .NET packages to GitHub Packages* by hand with the
+same tag, after *Release packages*. The handoff's Releasing note says so.
+
+**Prevented by:** nothing mechanical; the handoff note. Making it automatic would
+need the release workflow to dispatch it, or a token that is not `GITHUB_TOKEN`.
+
+---
+
 ### A release run can start on a mirror that has not received the version bump
 
 **Symptom:** on 2026-09-30 *Release packages* was dispatched with tag `v0.4.0`
