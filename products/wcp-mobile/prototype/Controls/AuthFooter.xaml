@@ -48,8 +48,5 @@
             </Label>
         </HorizontalStackLayout>
         <Label Text="Version 0.1.0.1112" StyleClass="Caption,OnNavyVersion" />
-        <!-- Not in the design: which prototype build this is, so a tester can
-             tell builds apart in BrowserStack. Set from the APK's version code. -->
-        <Label x:Name="Build" StyleClass="Caption,OnNavyVersion" IsVisible="False" />
     </VerticalStackLayout>
 </ContentView>

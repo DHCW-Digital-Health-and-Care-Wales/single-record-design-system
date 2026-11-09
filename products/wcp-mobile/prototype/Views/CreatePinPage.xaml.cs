@@ -15,6 +15,7 @@ public partial class CreatePinPage : ContentPage
     public CreatePinPage()
     {
         InitializeComponent();
+        AuthLayout.FillScreen(Scroller, Body);
         Pad.Digit += OnDigit;
         Pad.Backspaced += OnBackspace;
         Pad.Cleared += (_, _) => Reset(null);
@@ -39,11 +40,12 @@ public partial class CreatePinPage : ContentPage
     {
         if (first != second)
         {
-            Reset("The PINs do not match. Create your PIN again.");
+            Reset("The PINs do not match. Enter a new PIN twice.");
             return;
         }
         Flow.SetPin(first);
         Flow.Unlocked();
+        Flow.ShowPinSetConfirmation = true;
         Flow.Go(() => new ShellPage());
     }
 
@@ -52,12 +54,10 @@ public partial class CreatePinPage : ContentPage
         first = second = string.Empty;
         Render();
         if (message is null) { HideMessage(); return; }
-        Message.Text = message;
-        Message.IsVisible = true;
-        SemanticScreenReader.Announce(message);
+        Error.Show(message);
     }
 
-    void HideMessage() => Message.IsVisible = false;
+    void HideMessage() => Error.Hide();
 
     void Render()
     {

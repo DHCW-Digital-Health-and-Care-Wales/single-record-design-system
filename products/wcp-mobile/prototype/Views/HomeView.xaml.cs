@@ -18,6 +18,12 @@ public partial class HomeView : ContentView
     public HomeView()
     {
         InitializeComponent();
+        if (Flow.ShowPinSetConfirmation)
+        {
+            PinSet.IsVisible = true;
+            Flow.ShowPinSetConfirmation = false;
+            SemanticScreenReader.Announce("Your PIN is set up");
+        }
         for (var i = 0; i < Rows.Length; i++)
         {
             if (i > 0) Attention.Add(new BoxView { StyleClass = new[] { "Divider" } });
@@ -73,6 +79,8 @@ public partial class HomeView : ContentView
         grid.GestureRecognizers.Add(tap);
         return grid;
     }
+
+    void OnDismissPinSet(object? sender, TappedEventArgs e) => PinSet.IsVisible = false;
 
     void OnDismiss(object? sender, TappedEventArgs e)
     {

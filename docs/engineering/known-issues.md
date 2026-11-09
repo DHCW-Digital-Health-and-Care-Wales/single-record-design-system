@@ -396,11 +396,36 @@ name, package and version code. App Live lists uploads by those, so a new upload
 was indistinguishable from the first, and testing went on against an old build.
 
 **Fix:** the workflow sets the version code to the run number and names the file
-and artifact `wcp-prototype-build<n>`. The sign-in screens show **Prototype build
-`<n>`**, so a screenshot says which build it came from.
+and artifact `wcp-prototype-build<n>`. Delete old uploads in App Live and pick the
+one whose name matches the run. (A build label on screen was tried and taken out
+at the design lead's request: the file name is enough.)
 
-**Prevented by:** the build number on screen. Not mechanical; it makes the mix-up
-visible rather than impossible.
+**Prevented by:** nothing mechanical; naming.
+
+---
+
+### Android draws a second line under every Entry
+
+**Symptom:** the NHS number field shows its SR border and, inside it, a grey
+underline (screenshot, 2026-11-09).
+
+**Why:** Android's native `EditText` has an underline from its background tint.
+MAUI's `Entry` keeps it, and no XAML style can reach it.
+
+**Fix:** a handler mapping in `MauiProgram`, once for the whole app:
+
+```csharp
+#if ANDROID
+EntryHandler.Mapper.AppendToMapping("SrNoUnderline", (h, _) =>
+    h.PlatformView.BackgroundTintList =
+        Android.Content.Res.ColorStateList.ValueOf(Android.Graphics.Color.Transparent));
+#endif
+```
+
+Any product using `FieldBox` needs the same. A candidate for the library (a
+`UseSingleRecord()` builder extension), not done yet.
+
+**Prevented by:** nothing; it only shows on a device.
 
 ---
 

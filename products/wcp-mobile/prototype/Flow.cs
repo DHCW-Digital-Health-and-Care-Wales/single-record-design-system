@@ -17,6 +17,9 @@ public static class Flow
 
     public static bool SignedIn { get; private set; }
 
+    /// <summary>Set once a new PIN is saved; Home shows a success banner, then clears it.</summary>
+    public static bool ShowPinSetConfirmation { get; set; }
+
     public static bool HasPin => Preferences.Default.Get(PinSetKey, false);
 
     public static void SetPin(string value)

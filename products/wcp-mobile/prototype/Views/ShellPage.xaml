@@ -16,9 +16,11 @@
 
             <!--#region Header ===============================================-->
             <Grid Grid.Row="0" Style="{StaticResource Chrome}" RowDefinitions="Auto,Auto">
-                <Grid Padding="8,8,16,8" MinimumHeightRequest="56" ColumnDefinitions="Auto,*,Auto">
+                <!-- Equal fixed side columns, so the logo sits at the true centre of
+                     the screen on every width, not the centre of what is left. -->
+                <Grid Padding="8" MinimumHeightRequest="56" ColumnDefinitions="56,*,56">
 
-                    <Grid Grid.Column="0" WidthRequest="44" HeightRequest="44"
+                    <Grid Grid.Column="0" WidthRequest="44" HeightRequest="44" HorizontalOptions="Start"
                           SemanticProperties.Description="Open menu">
                         <Grid.GestureRecognizers><TapGestureRecognizer Tapped="OnOpenMenu" /></Grid.GestureRecognizers>
                         <Path Style="{StaticResource Icon}" Data="{sr:Icon NavMenu}" />
@@ -28,12 +30,7 @@
                            WidthRequest="40" HeightRequest="40" HorizontalOptions="Center"
                            SemanticProperties.Description="Welsh Clinical Portal" />
 
-                    <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
-                        <Grid WidthRequest="44" HeightRequest="44" SemanticProperties.Description="Notifications">
-                            <Grid.GestureRecognizers><TapGestureRecognizer Tapped="OnNotInPrototype" CommandParameter="Notifications" /></Grid.GestureRecognizers>
-                            <Path Style="{StaticResource Icon}" Data="{sr:Icon CommsNotification}" />
-                        </Grid>
-
+                    <Grid Grid.Column="2" HorizontalOptions="End" VerticalOptions="Center">
                         <!-- Avatar. Interactive/Primary with white initials (8.04:1).
                              Opens profile information. -->
                         <Grid WidthRequest="44" HeightRequest="44"
@@ -53,7 +50,7 @@
                                 <Border.StrokeShape><RoundRectangle CornerRadius="5" /></Border.StrokeShape>
                             </Border>
                         </Grid>
-                    </HorizontalStackLayout>
+                    </Grid>
                 </Grid>
                 <BoxView Grid.Row="1" StyleClass="Divider" />
             </Grid>

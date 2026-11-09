@@ -5,7 +5,8 @@
              x:Class="WcpPrototype.Views.LoginPage"
              Style="{StaticResource AuthPage}">
     <!-- Figma 6432:36606. -->
-    <Grid RowDefinitions="*,Auto">
+    <ScrollView x:Name="Scroller">
+    <Grid x:Name="Body" RowDefinitions="*,Auto">
         <VerticalStackLayout Grid.Row="0" Spacing="40" Padding="24"
                              VerticalOptions="Center">
 
@@ -32,4 +33,5 @@
 
         <c:AuthFooter Grid.Row="1" />
     </Grid>
+    </ScrollView>
 </ContentPage>

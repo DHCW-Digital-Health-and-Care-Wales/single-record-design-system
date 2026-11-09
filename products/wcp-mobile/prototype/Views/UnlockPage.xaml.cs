@@ -13,6 +13,7 @@ public partial class UnlockPage : ContentPage
     public UnlockPage()
     {
         InitializeComponent();
+        AuthLayout.FillScreen(Scroller, Body);
         Pad.Digit += OnDigit;
         Pad.Backspaced += (_, _) => { if (entered.Length > 0) entered = entered[..^1]; Dots.Show(entered.Length); };
         Pad.Cleared += (_, _) => { entered = string.Empty; Dots.Show(0); };
@@ -20,7 +21,7 @@ public partial class UnlockPage : ContentPage
 
     void OnDigit(object? sender, string d)
     {
-        Message.IsVisible = false;
+        Error.Hide();
         if (entered.Length >= PinDots.Length) return;
         entered += d;
         Dots.Show(entered.Length);
@@ -33,9 +34,7 @@ public partial class UnlockPage : ContentPage
         }
         entered = string.Empty;
         Dots.Show(0);
-        Message.Text = "That PIN is not right. Try again.";
-        Message.IsVisible = true;
-        SemanticScreenReader.Announce(Message.Text);
+        Error.Show("Incorrect PIN. Try again.");
     }
 
     void OnBiometric(object? sender, EventArgs e) => Unlock();

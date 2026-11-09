@@ -51,6 +51,30 @@
             </VerticalStackLayout>
             <!--#endregion-->
 
+            <!--#region PIN set up (success notification banner) =================-->
+            <!-- Shown once, straight after the PIN is saved: confirmation without
+                 a modal to dismiss. Same shape as the message of the day, in
+                 the Success status colours. -->
+            <Grid x:Name="PinSet" IsVisible="False" ColumnDefinitions="4,*"
+                  BackgroundColor="{AppThemeBinding Light={StaticResource SrColorStatusSuccessSurface}, Dark={StaticResource SrColorSurfaceSectionCardsDark}}">
+                <BoxView Grid.Column="0" Color="{StaticResource SrColorStatusSuccess}" />
+                <Grid Grid.Column="1" Padding="12,12,4,12" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                    <Path Style="{StaticResource IconSm}" Data="{sr:Icon StatusSuccess}" VerticalOptions="Start"
+                          Stroke="{AppThemeBinding Light={StaticResource SrColorStatusSuccess}, Dark={StaticResource SrColorTextPrimaryDark}}" />
+                    <VerticalStackLayout Grid.Column="1" Spacing="4">
+                        <Label Text="Your PIN is set up" StyleClass="HeadingXs,Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource SrColorStatusSuccess}, Dark={StaticResource SrColorTextPrimaryDark}}" />
+                        <Label Text="Use it to unlock WCP mobile each time you open it." />
+                    </VerticalStackLayout>
+                    <Grid Grid.Column="2" WidthRequest="44" HeightRequest="44" VerticalOptions="Start"
+                          SemanticProperties.Description="Dismiss">
+                        <Grid.GestureRecognizers><TapGestureRecognizer Tapped="OnDismissPinSet" /></Grid.GestureRecognizers>
+                        <Path Style="{StaticResource IconSecondary}" Data="{sr:Icon NavClose}" />
+                    </Grid>
+                </Grid>
+            </Grid>
+            <!--#endregion-->
+
             <!--#region Message of the day ======================================-->
             <!-- Information banner: a 4px Status/Info rule, then icon, title,
                  message and a dismiss button. The rule is a column, because a

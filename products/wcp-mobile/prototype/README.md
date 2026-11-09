@@ -17,9 +17,8 @@ BrowserStack App Live takes an `.apk`, not a project folder.
 3. Unzip it (GitHub always zips artifacts) and upload `wcp-prototype-build<n>.apk`
    to App Live, then pick **that** upload in App Live's list.
 
-The sign-in screens show **Prototype build `<n>`** under the version. If the
-number is not the run you meant to test, App Live is running an older upload:
-every build before 31 had the same name and version, so they look identical there.
+Delete older uploads in App Live first: every build before 31 had the same name
+and version, so they look identical there.
 
 The same run also builds the testbed APK (`sr-testbed-apk`). The workflow fails
 rather than uploading an APK with no launchable activity.
@@ -70,8 +69,11 @@ same changes.
 | "Message of the day, 01/12" | "Message of the day, 1 Dec" | Dates as `1 Dec`, no leading zero. |
 | Staff member is a real person (name, email, Nadex ID, GMC) | Fictional: BEVAN, Alys; `example.nhs.wales` email; `be000001`; GMC `7000001` | Demo data must not be a real person. `SURNAME, First` is UI Standards v1.3 #6. |
 | "Username" shows a full name | "Name" | It is a name, not a username. |
+| No feedback is drawn for PIN results | Set-up mismatch and wrong PIN: an inline error in the card (Status/Error on its surface, icon, vibration, announced), dots cleared. PIN set up: a dismissible success banner on Home. Right PIN: straight in, no message | Inline feedback rather than modals, as GOV.UK and the NHS service manual recommend. How many wrong attempts before sign-in again is a security decision still to make |
+| Notifications bell in the header | Removed | Design lead, 2026-11-09 |
 | PIN dots have no filled state | A filled `Interactive/Primary` dot, and "3 of 6 digits entered" for screen readers | The frame only draws the empty state. |
 | Keypad keys 40px high | 44px minimum | Touch target floor. |
+| PIN dots fixed at 40px; the card is a fixed height | Dots share the width and shrink to 28px at least; the whole screen, footer included, scrolls on short phones | Cut off on a small phone on App Live, 2026-11-09 |
 
 ## Known gaps
 

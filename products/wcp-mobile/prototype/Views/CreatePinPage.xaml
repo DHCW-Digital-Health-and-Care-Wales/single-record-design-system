@@ -5,28 +5,27 @@
              x:Class="WcpPrototype.Views.CreatePinPage"
              Style="{StaticResource AuthPage}">
     <!-- Figma 6432:36447. -->
-    <Grid RowDefinitions="*,Auto">
-        <ScrollView Grid.Row="0">
-            <VerticalStackLayout Padding="16,40,16,24" Spacing="24" VerticalOptions="Center">
+    <ScrollView x:Name="Scroller">
+    <Grid x:Name="Body" RowDefinitions="*,Auto">
+            <VerticalStackLayout Grid.Row="0" Padding="16,24,16,16" Spacing="16" VerticalOptions="Center">
                 <VerticalStackLayout Spacing="12">
-                    <Image Source="srsymwcpwhite.png" WidthRequest="64" HeightRequest="64"
+                    <Image Source="srsymwcpwhite.png" WidthRequest="56" HeightRequest="56"
                            HorizontalOptions="Center"
                            SemanticProperties.Description="Welsh Clinical Portal" />
                     <Label Text="Get started" StyleClass="HeadingM,OnNavy,Centred"
                            SemanticProperties.HeadingLevel="Level1" />
                 </VerticalStackLayout>
 
-                <Border Style="{StaticResource GlassCard}">
-                    <VerticalStackLayout Spacing="16">
+                <Border Style="{StaticResource GlassCard}" Padding="16">
+                    <VerticalStackLayout Spacing="12">
                         <Label Text="Create new PIN" StyleClass="OnNavy,Centred" />
                         <c:PinDots x:Name="FirstDots" />
                         <Label Text="Re-enter PIN" StyleClass="OnNavy,Centred" />
                         <c:PinDots x:Name="SecondDots" />
 
-                        <!-- Announced when shown (SemanticScreenReader). -->
-                        <Label x:Name="Message" IsVisible="False" StyleClass="OnNavy,Centred,Bold" />
+                        <c:PinError x:Name="Error" />
 
-                        <c:PinPad x:Name="Pad" Margin="0,8,0,0" />
+                        <c:PinPad x:Name="Pad" Margin="0,4,0,0" />
 
                         <Button x:Name="Save" Text="Save PIN" IsEnabled="False"
                                 BackgroundColor="{StaticResource SrColorInteractiveLink}"
@@ -35,8 +34,8 @@
                     </VerticalStackLayout>
                 </Border>
             </VerticalStackLayout>
-        </ScrollView>
 
         <c:AuthFooter Grid.Row="1" />
     </Grid>
+    </ScrollView>
 </ContentPage>
