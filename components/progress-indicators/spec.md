@@ -105,6 +105,15 @@ Tag surfaces:
 - Current → `Surface/Subtle` / `Interactive/Primary`
 - Alert → `Status/Error Surface` / `Status/Error`
 
+**Actions (optional, added 2026-11-11).** Booleans `Action 1` and `Action 2`, both off by
+default, show up to two `Link` (Small) instances in a row under the tag, 16px apart. The
+Links are exposed instances: change their text from the instance panel. The row's visibility
+follows `Action 1`, so `Action 2` only shows when `Action 1` is on: put the main action first. Use them for
+navigation or for opening a dialog on that one event, for example "View note" or "View
+comment" (WISDM contact history). Keep to two, and keep them links: a primary task such as
+"Continue note" is a Button and does not belong inside the item. Each link's accessible
+name must say which event it is for, e.g. "View comment, 23 Oct 2026, Consultant".
+
 ---
 
 ## Icons used
@@ -155,6 +164,11 @@ ring (now `Border/Strong`). What still differs:
 | `Position` property (First / Middle / Last) | none | The first and last steps drop their connector half by position (`:first-child` / `:last-child`) |
 
 ### Known gaps
+
+- **Timeline actions are Figma only.** The `Action 1` / `Action 2` links added to
+  `Progress/Timeline` on 2026-11-11 have no equivalent in `.sr-timeline` or the React
+  `Timeline` yet (`items` has no `actions`). Until they do, put the links after the
+  tag inside `.sr-timeline__body` by hand.
 
 - **Dark mode, bar fill against track:** **1.38:1**. The number beside the bar
   carries the value, so this is accepted (design lead, 2026-09-30) and recorded
