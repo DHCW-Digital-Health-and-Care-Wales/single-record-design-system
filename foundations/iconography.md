@@ -20,6 +20,28 @@ See [DDR-003](../decisions/DDR-003-lucide-icon-library.md) for the full decision
 | NuGet | `Lucide.Blazor`, `Lucide.Maui` |
 | Source SVGs | `foundations/iconography/svg/{domain}/{sr-name}.svg` |
 | Catalogue | `foundations/iconography/catalogue.md` |
+| Figma structure | Every `Icon/{group}/{name}` component holds **exactly one VECTOR layer named `Icon`**, stroke bound to `Text/Primary`, constraints Scale. See below |
+
+### Figma: one layer named `Icon` per icon (2026-11-12)
+
+Figma keeps a colour override across an instance swap only on layers whose **name and
+position match** in both icons. Lucide imports arrive as 2–11 vectors all called
+`Vector`, so recolouring a 2-vector icon and swapping it for a 6-vector one left four
+paths in the default colour. Every icon is now a single vector named `Icon`, so an
+override on one carries to every other.
+
+| Rule | Why |
+|---|---|
+| One `VECTOR` child, named `Icon`, directly under the component | Swaps match it by name and position |
+| Merge paths into one vector network; do not flatten into a new node, outline strokes, or boolean-union | A new node drops existing instance overrides; outlining turns the stroke into a fill, which breaks overrides set on stroke |
+| Stroke bound to `Text/Primary`; no fill | So the light/dark modes and the colour roles below work |
+| A 1.5px dot (a zero-length path) becomes a 0.25px-radius circle at 1px stroke | One vector can only have one stroke weight; the circle renders as the same 1.5px disc |
+
+**Exception:** `Icon/action/watchlist-off` keeps two layers: its slash has a white knockout
+stroke under it, which a single-colour layer cannot draw. Recolour it with care.
+
+When you import a new icon, merge its paths into the first one and rename it `Icon` before
+publishing (method in `docs/figma-known-issues.md`).
 
 ---
 
