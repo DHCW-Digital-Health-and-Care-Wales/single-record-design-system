@@ -37,8 +37,11 @@ override on one carries to every other.
 | Stroke bound to `Text/Primary`; no fill | So the light/dark modes and the colour roles below work |
 | A 1.5px dot (a zero-length path) becomes a 0.25px-radius circle at 1px stroke | One vector can only have one stroke weight; the circle renders as the same 1.5px disc |
 
-**Exception:** `Icon/action/watchlist-off` keeps two layers: its slash has a white knockout
-stroke under it, which a single-colour layer cannot draw. Recolour it with care.
+**"Off" icons** (`eye-off`, `watchlist-off`, `bookmark-off`) draw the gap where the slash
+crosses the shape as a break in the path, the way Lucide does, not with a white knockout
+stroke. A knockout needs a second colour and shows the background through on any surface
+that is not white. `watchlist-off` was rebuilt this way on 2026-11-12 from
+`foundations/iconography/custom/watchlist-off.svg`, the same drawing the code ships.
 
 When you import a new icon, merge its paths into the first one and rename it `Icon` before
 publishing (method in `docs/figma-known-issues.md`).

@@ -431,7 +431,7 @@ Lucide icons were imported as 2–11 layers all called `Vector`, so only as many
 the old icon had kept the override. Three theme icons also had a hard-coded black stroke
 instead of `Text/Primary`, so they ignored dark mode.
 
-**Fix:** Every `Icon/*` component is one `VECTOR` named `Icon` (146 of 147; see
+**Fix:** Every `Icon/*` component is one `VECTOR` named `Icon` (all 147; see
 `foundations/iconography.md`). Merge the paths **into the first existing vector**, keeping
 its id, so overrides already set on instances survive. Flattening (`figma.flatten`),
 outlining strokes, or a boolean union all make a new node and drop those overrides.
@@ -454,6 +454,9 @@ Use positions relative to the component when paths sit inside a frame or group, 
 replace a zero-length 1.5px dot with a 0.25px-radius circle first (one vector, one stroke
 weight). Verified: 6 recorded overrides on Adoption Mobile kept their variable; a red
 override survived swaps through all 146 icons.
+
+`watchlist-off` was a white knockout stroke under the slash, subtracted by a boolean; it
+was rebuilt from its repo SVG, which breaks the binocular outline at the slash instead.
 
 **Prevented by:** nothing mechanical; the repo has no build step that reads Figma. The
 check is the swap test above, run with `use_figma` after any icon import.
