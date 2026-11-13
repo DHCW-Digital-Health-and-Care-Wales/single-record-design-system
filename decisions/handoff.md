@@ -13,6 +13,17 @@ before writing MAUI, so a finding filed only here is a finding lost.
 
 ## Start here — next session
 
+> **2026-11-12 (WISDM design session; branch `claude/upbeat-ptolemy-snz2c5`):**
+> WISDM concepts live in the **DESIGN CONCEPTS — Diabetes view + DCN switch**
+> section (`6491:5137`) on *Adoption WISDM* (`5304:10523`); the design lead has
+> since edited and rearranged it, so read the canvas, not this note, for layout.
+> Two library changes came out of it: **`Progress/Timeline` has optional
+> `Action 1` / `Action 2` links** (Figma only — CSS/React gap recorded in the
+> progress-indicators spec), and **every `Icon/*` is one vector named `Icon`**
+> (fixes colour lost on swap; `foundations/iconography.md`, known-issues
+> "Icons"). Any icon imported from now on needs the same merge before publishing.
+> See the 2026-11-12 checkpoint below.
+>
 > **State (2026-11-09):** **0.6.0 is released.** Merged to `main` in #145: the
 > safeguarding / patient-safety icons, two MAUI library fixes, `{sr:Icon}`, the
 > WCP mobile prototype and the smoke gate.
@@ -151,6 +162,43 @@ re-verified in the file by this session).
 **Before any destructive Figma edit, re-count instances yourself.** Twice this
 session a count from a previous step was wrong, and both times the guard in the
 delete script — not the plan — is what caught it.
+
+---
+
+## Checkpoint — 2026-11-12 (WISDM concepts; timeline actions; icons as one vector)
+
+**WISDM (diabetes module, opens inside WCP).** Figma only, section `6491:5137`.
+Concepts agreed or explored with the design lead:
+
+| Topic | Where it landed |
+|---|---|
+| Two views, one switcher | "Diabetes view" (cards, was "web view") ↔ "Diabetes clinical note" (DCN, the full form). Segmented control under the WISDM header |
+| Cards filtered by encounter | Encounter = **diabetes service type** (Adult, Antenatal, Paediatric, Transition). Unused cards collapse to slim rows at the bottom, not hidden |
+| Quick edit vs full form | Card-level **Quick edit** (ghost button) edits in place. **Open full form** only on cards tied to one form section; Diabetes summary and Contact history have Quick edit only. No "In full form: …" location line |
+| Card building blocks | Local `WISDM/Card header` `6491:5146`, `WISDM/Card row` `6491:5138`, `WISDM/Card result row` `6491:5141` |
+| DCN entry point | Separate page before the form: **My appointments** (Continue note on own drafts, View note on final → Single Record document view `3197:15228`) and **Contact history** (View comment only; "None" in the table, link omitted in the timeline). Start-new-note panel option sits first, left-aligned |
+| New note | Opens on Admin details with **no patient details section** (WCP banner already shows them) |
+| Contact history card | Comment column with **View**; footer `57 contacts · ‹ Page 1 of 12 › · View all` |
+| View comment dialog | DS `Modal` Medium; comment shown as written, line breaks kept |
+| Recent observations | Waist circumference in **cm**; waist-to-height ratio (NICE) offered, not added |
+
+Open for the design lead: real encounter → card mapping; whether WCP passes the
+encounter on launch; who counts as "my" appointment (author assumed); whether a
+DDR is wanted for multi-column fields inside DCN sections (departs from the GOV.UK
+one-column rule).
+
+**`Progress/Timeline` actions.** Booleans `Action 1` / `Action 2` (off by default)
+show exposed `Link` instances under the tag; the Actions row follows `Action 1`.
+Code has no equivalent yet — gap recorded in `components/progress-indicators/spec.md`.
+
+**Icons are one vector named `Icon`.** Swapping an icon lost its colour on some
+paths because icons were 2–11 layers all named `Vector`. All 147 merged **into
+their first vector** (id kept, so existing overrides survived — verified on
+Adoption Mobile, plus a swap test through every icon). Dots drawn as 1.5px
+zero-length lines became 0.25px-radius circles at 1px. Theme icons were hard-coded
+black; now `Text/Primary`. `watchlist-off` rebuilt from its repo SVG (no knockout).
+Do **not** use flatten / outline stroke / union on icons: each creates a new node
+and drops instance overrides.
 
 ---
 
@@ -3476,6 +3524,10 @@ This week's accepted changes (now reflected in Figma, tokens, and docs):
 | Nav Item component set | 368:3682 | Use this. The old flat component 368:3681 is deprecated. |
 | Sidebar Navigation | 725:8903 | 140 Nav Item instances, all pointing to 368:3682 |
 | Stroke/icon colour variable | VariableID:203:100 | Text/Default — used for all icon strokes |
+| Icon structure | — | Every `Icon/*` component is one VECTOR named `Icon` (2026-11-12) |
+| Progress/Timeline | 1747:149 | `Action 1` / `Action 2` link slots (2026-11-12) |
+| WISDM concepts section | 6491:5137 | On Adoption WISDM `5304:10523` |
+| WISDM card header / row / result row | 6491:5146 / 6491:5138 / 6491:5141 | Local components for Diabetes view cards |
 | Border/Focus variable | VariableID:203:105 | Cyan/700 focus ring (DDR-006) |
 | Link component set | 1633:320 | On the Buttons page (1318:14904), below the Button frame |
 | Interactive/Destructive | VariableID:203:94 | Red/600 — error borders, destructive actions |

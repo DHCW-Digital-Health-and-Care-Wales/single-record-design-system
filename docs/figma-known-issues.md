@@ -418,6 +418,53 @@ against the live file. Worth knowing rather than worth automating.
 
 ---
 
+## Icons
+
+### An icon's colour override is partly lost when you swap it for another icon
+
+**Symptom:** Recolour an icon instance (or switch mode), swap it for a different icon, and
+some of its paths come back in the default colour. Reproduced 2026-11-12: `map-pin` (2
+vectors) set to red, swapped to `note` (6 vectors) → 2 red, 4 default.
+
+**Why:** Figma carries overrides across a swap by matching layer **name and position**.
+Lucide icons were imported as 2–11 layers all called `Vector`, so only as many layers as
+the old icon had kept the override. Three theme icons also had a hard-coded black stroke
+instead of `Text/Primary`, so they ignored dark mode.
+
+**Fix:** Every `Icon/*` component is one `VECTOR` named `Icon` (all 147; see
+`foundations/iconography.md`). Merge the paths **into the first existing vector**, keeping
+its id, so overrides already set on instances survive. Flattening (`figma.flatten`),
+outlining strokes, or a boolean union all make a new node and drop those overrides.
+
+```js
+const leaves = comp.findAll(n => n.type === 'VECTOR');
+const first = leaves[0], V = [], S = [], R = [];
+for (const v of leaves) {
+  const dx = v.x - first.x, dy = v.y - first.y, vo = V.length, so = S.length;
+  v.vectorNetwork.vertices.forEach(p => V.push({ ...p, x: p.x + dx, y: p.y + dy }));
+  v.vectorNetwork.segments.forEach(s => S.push({ ...s, start: s.start + vo, end: s.end + vo }));
+  (v.vectorNetwork.regions || []).forEach(r => R.push({ ...r, loops: r.loops.map(l => l.map(i => i + so)) }));
+}
+await first.setVectorNetworkAsync({ vertices: V, segments: S, regions: R });
+leaves.slice(1).forEach(v => v.remove());
+first.name = 'Icon';
+```
+
+Use positions relative to the component when paths sit inside a frame or group, and
+replace a zero-length 1.5px dot with a 0.25px-radius circle first (one vector, one stroke
+weight). Verified: 6 recorded overrides on Adoption Mobile kept their variable; a red
+override survived swaps through all 146 icons.
+
+`watchlist-off` was a white knockout stroke under the slash, subtracted by a boolean; it
+was rebuilt from its repo SVG, which breaks the binocular outline at the slash instead.
+
+**Prevented by:** nothing mechanical; the repo has no build step that reads Figma. The
+check is the swap test above, run with `use_figma` after any icon import.
+
+**Status:** Resolved 2026-11-12.
+
+---
+
 ## How to add an entry
 
 Copy this template and add it under the relevant section:

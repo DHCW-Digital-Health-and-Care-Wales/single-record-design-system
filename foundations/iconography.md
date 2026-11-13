@@ -20,6 +20,31 @@ See [DDR-003](../decisions/DDR-003-lucide-icon-library.md) for the full decision
 | NuGet | `Lucide.Blazor`, `Lucide.Maui` |
 | Source SVGs | `foundations/iconography/svg/{domain}/{sr-name}.svg` |
 | Catalogue | `foundations/iconography/catalogue.md` |
+| Figma structure | Every `Icon/{group}/{name}` component holds **exactly one VECTOR layer named `Icon`**, stroke bound to `Text/Primary`, constraints Scale. See below |
+
+### Figma: one layer named `Icon` per icon (2026-11-12)
+
+Figma keeps a colour override across an instance swap only on layers whose **name and
+position match** in both icons. Lucide imports arrive as 2–11 vectors all called
+`Vector`, so recolouring a 2-vector icon and swapping it for a 6-vector one left four
+paths in the default colour. Every icon is now a single vector named `Icon`, so an
+override on one carries to every other.
+
+| Rule | Why |
+|---|---|
+| One `VECTOR` child, named `Icon`, directly under the component | Swaps match it by name and position |
+| Merge paths into one vector network; do not flatten into a new node, outline strokes, or boolean-union | A new node drops existing instance overrides; outlining turns the stroke into a fill, which breaks overrides set on stroke |
+| Stroke bound to `Text/Primary`; no fill | So the light/dark modes and the colour roles below work |
+| A 1.5px dot (a zero-length path) becomes a 0.25px-radius circle at 1px stroke | One vector can only have one stroke weight; the circle renders as the same 1.5px disc |
+
+**"Off" icons** (`eye-off`, `watchlist-off`, `bookmark-off`) draw the gap where the slash
+crosses the shape as a break in the path, the way Lucide does, not with a white knockout
+stroke. A knockout needs a second colour and shows the background through on any surface
+that is not white. `watchlist-off` was rebuilt this way on 2026-11-12 from
+`foundations/iconography/custom/watchlist-off.svg`, the same drawing the code ships.
+
+When you import a new icon, merge its paths into the first one and rename it `Icon` before
+publishing (method in `docs/figma-known-issues.md`).
 
 ---
 
