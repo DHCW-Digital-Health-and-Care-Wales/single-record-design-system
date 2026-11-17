@@ -33,6 +33,15 @@ This replaced a hand copy under `packages/blazor/wwwroot/`, refreshed by command
 written in the csproj as a comment that nothing ran. It drifted, and it carried
 three stylesheets where a web consumer got twenty-one components.
 
+## Installing it in an app
+
+The package is on GitHub Packages, which needs a **classic** personal access
+token with `read:packages` (authorised for the organisation's single sign-on)
+even to read. A GitHub password gets a 401. The full steps, a `nuget.config`
+and a 401 checklist are in the package README (`nuget/README.md`, generated from
+`build-nuget.mjs`) and on the website's *Get the files* page, under *Get access
+to the .NET feed*.
+
 ## What a consumer gets
 
 | File | For |

@@ -128,16 +128,27 @@ It ships stylesheets, not Razor components. You write your own markup using the
 \`DHCW.SingleRecord.Maui\`, which ships resource dictionaries rather than
 controls.
 
-## Install
+## Get access to the feed
 
-\`\`\`
-dotnet add package ${PKG_ID}
-\`\`\`
+The package is on GitHub Packages, which asks for a token on every install,
+even for public packages. There is no special group to join. **Your GitHub
+password will not work: it gets a 401.** You need a token instead.
 
-The feed is GitHub Packages, which requires authentication even for public
-packages. You need a \`nuget.config\` and a token with \`read:packages\`:
+1. **Create a classic personal access token.** GitHub → Settings → Developer
+   settings → Personal access tokens → **Tokens (classic)** → Generate new
+   token. Tick **\`read:packages\`**. Fine-grained tokens do not work with the
+   GitHub Packages NuGet feed.
+2. **Authorise the token for the organisation.** If the
+   DHCW-Digital-Health-and-Care-Wales organisation uses single sign-on, click
+   **Configure SSO** next to the token and authorise it. A token that is not
+   authorised gets a 401 even with the right scope.
+3. **Give the token to NuGet.** Either add a \`nuget.config\` beside your
+   solution (below), or add the feed in Visual Studio (Tools → Options → NuGet
+   Package Manager → Package Sources) and, when it asks you to sign in, enter
+   your **GitHub username** and paste the **token as the password**.
 
 \`\`\`xml
+<?xml version="1.0" encoding="utf-8"?>
 <configuration>
   <packageSources>
     <add key="dhcw" value="https://nuget.pkg.github.com/DHCW-Digital-Health-and-Care-Wales/index.json" />
@@ -145,10 +156,30 @@ packages. You need a \`nuget.config\` and a token with \`read:packages\`:
   <packageSourceCredentials>
     <dhcw>
       <add key="Username" value="YOUR_GITHUB_USERNAME" />
-      <add key="ClearTextPassword" value="YOUR_TOKEN_WITH_read:packages" />
+      <add key="ClearTextPassword" value="%GITHUB_PACKAGES_TOKEN%" />
     </dhcw>
   </packageSourceCredentials>
 </configuration>
+\`\`\`
+
+\`%GITHUB_PACKAGES_TOKEN%\` reads an environment variable, so the file is safe
+to commit and the token is not in it. Set the variable locally, or from a
+secret in your pipeline. Never commit the token itself.
+
+### Still getting a 401?
+
+| Check | Fix |
+|---|---|
+| You typed your GitHub password | Use the token as the password |
+| The token is fine-grained | Make a **classic** token with \`read:packages\` |
+| The token is not authorised for the organisation | **Configure SSO** next to the token on GitHub |
+| Visual Studio saved an old login | Remove the \`nuget.pkg.github.com\` entry from Windows Credential Manager and sign in again |
+| Your account cannot see the package | Ask the design system team to check you are in the organisation, or have an organisation admin give you read access under the package's **Package settings → Manage access** |
+
+## Install
+
+\`\`\`
+dotnet add package ${PKG_ID}
 \`\`\`
 
 ## Use
