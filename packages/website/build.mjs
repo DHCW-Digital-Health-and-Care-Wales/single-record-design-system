@@ -5138,26 +5138,265 @@ addPage({
   body: `
 <p class="breadcrumbs">Get started</p>
 <h1>Get the files</h1>
-<p class="lede">The actual stylesheet and script to put in an application. Reading a component's
-source on this site shows you what it is; these are the files that make it work.</p>
+<p class="lede">How to add the design system to an application. Pick what you are building: each
+section has everything you need for that technology, from install to first use.</p>
 
-<h2>The short version</h2>
+<div class="cards">
+  <a class="card" href="#html"><h3>Plain HTML, Razor or ASP.NET</h3><p>No install and no build step. Download one stylesheet and link it.</p></a>
+  <a class="card" href="#react"><h3>React</h3><p>Install from npm. No account or token needed.</p></a>
+  <a class="card" href="#blazor"><h3>Blazor</h3><p>Install the NuGet package. Needs a GitHub token first.</p></a>
+  <a class="card" href="#maui"><h3>.NET MAUI</h3><p>Install the NuGet package. Needs a GitHub token first.</p></a>
+  <a class="card" href="#offline"><h3>No access to npmjs.org</h3><p>Install the npm packages from a release download instead.</p></a>
+  <a class="card" href="#files"><h3>Just the files</h3><p>Every stylesheet, the icon sprite and the icon script, to download.</p></a>
+</div>
+
+<h2 id="html">Plain HTML, Razor or ASP.NET</h2>
 <p>Download <a href="downloads/single-record.css" download>single-record.css</a>, put it in your
 project, and link it. That is the whole of the minimum.</p>
 <div class="codepanel"><pre><code>&lt;link rel="stylesheet" href="/css/single-record.css"&gt;</code></pre></div>
 <p>It contains the font, every design token, the typography utilities and all
 ${WEB_COMPONENT_COUNT} component stylesheets, so nothing else has to be fetched or configured. Now any
-markup you copy from a component page on this site will look right.</p>
+markup you copy from a component page on this site will look right. For icons, add
+<a href="downloads/sprite.svg" download>sprite.svg</a> too (see <a href="#icons">Using an icon</a>).</p>
 <div class="callout"><p><strong>No npm, no build step, no network.</strong> Roboto is embedded in the
 stylesheet itself, so there is no font request to be blocked by a firewall or proxy. If
-<code>npm install</code> is failing on your machine, this route works regardless &mdash; and it is
-worth knowing that the design system adds no third-party dependencies of its own, so whatever is
-failing is in the toolchain rather than in these packages.</p>
+<code>npm install</code> is failing on your machine, this route works regardless &mdash; and the
+design system adds no third-party dependencies of its own, so whatever is failing is in the
+toolchain rather than in these packages.</p>
 <p>One thing to watch: opening the page straight from disk with <code>file://</code> works for
 everything except the sprite icons, where a cross-file <code>&lt;use&gt;</code> is blocked and fails
 silently. Serve the folder over HTTP, or use <code>icons.js</code> instead.</p></div>
+<p>This also suits a React app where you write the markup yourself and only want the styling. What it
+does not give you is the React components &mdash; for those, see <a href="#react">React</a>.</p>
 
-<h2>The files</h2>
+<h2 id="react">React</h2>
+<p>The packages are on npmjs.org. No registry configuration, no <code>.npmrc</code>, no token
+&mdash; a plain <code>npm install</code> works on your machine and in CI alike.</p>
+${IS_PRERELEASE ? `<div class="callout callout--warning"><p><strong>${RELEASE_VERSION} is a release
+candidate, published under the <code>next</code> tag.</strong> It is not picked up by a version
+range and reaches nobody who does not ask for it by name, which is why the commands below carry
+<code>@next</code>. Take it if you have been asked to help test; otherwise wait for the stable
+release.</p></div>` : ''}
+<h3>1. Install</h3>
+<p>All four together &mdash; the React package depends on the other three, so installing it alone
+fails:</p>
+<div class="codepanel"><pre><code>${NPM_INSTALL}</code></pre></div>
+<h3>2. Import</h3>
+<p>These paths are verified against each package's exports on every release &mdash; a release that
+cannot be installed and imported does not publish.</p>
+<div class="codepanel"><pre><code>// REQUIRED, once, in your entry file: font, tokens and typography.
+// Not single-record.css — each component brings its own styles.
+import "@dhcw/sr-web/foundations";
+
+// Then whichever components this file uses. These four are only an example;
+// you never need to import a component you are not using.
+import { Button, Input, Navigation, PatientBanner } from "@dhcw/sr-react";
+
+// A single component can also be imported on its own.
+import Icon from "@dhcw/sr-react/icon";</code></pre></div>
+<div class="callout"><p><strong>Import <code>foundations</code>, not <code>single-record.css</code>,
+when you are using the React package.</strong> Every React component already imports its own
+stylesheet, so loading the complete file on top of that ships every component stylesheet plus a
+second copy of each one you actually use. On a screen using seven components that is 238KB rather
+than 131KB &mdash; the same styling, 45% less of it.</p></div>
+<h3>3. Update later</h3>
+<p>${IS_PRERELEASE
+  ? `While you are on a release candidate, re-run the install command to move to a newer one. Once a
+     stable release exists, install it without <code>@next</code> and updates arrive through
+     <code>npm update</code> from then on.`
+  : `Nothing to edit. Your <code>package.json</code> carries a version range, so:`}</p>
+${IS_PRERELEASE ? '' : `<div class="codepanel"><pre><code>npm update @dhcw/sr-tokens @dhcw/sr-icons @dhcw/sr-web @dhcw/sr-react</code></pre></div>`}
+<p>The <a href="changelog.html">changelog</a> says whether a release needs anything from you. Most
+do not.</p>
+<div class="callout callout--warning"><p><strong>Installing this repository from GitHub does not
+work, and any guide telling you to do so is out of date.</strong> This is a monorepo: the thing at
+the repository root is a private workspace container, not a package. Both of these fail, and they
+fail in a confusing way rather than with a clear error:</p>
+<div class="codepanel"><pre><code># Installs ONE package called @dhcw/sr-design-system.
+# @dhcw/sr-react is not in node_modules afterwards.
+npm install github:DHCW-Digital-Health-and-Care-Wales/single-record-design-system#main
+
+# Installs the same repository root under a different name. The package it
+# fetches is private, has no entry point, and importing from it throws
+# ERR_MODULE_NOT_FOUND.
+"@dhcw/sr-react": "github:DHCW-Digital-Health-and-Care-Wales/single-record-design-system#main"</code></pre></div>
+<p>npm has no way to install a single workspace out of a git repository. Use the install command
+above &mdash; and if you have <code>resolve.alias</code> entries in a Vite config pointing inside
+<code>node_modules/@dhcw</code> to work around this, you can delete them.</p></div>
+
+<h2 id="blazor">Blazor</h2>
+<p><code>DHCW.SingleRecord.Blazor</code> is a <strong>token and style layer, not a component
+library</strong>. It ships the stylesheets; you write the markup with the same <code>sr-</code>
+classes every other framework uses.</p>
+<h3>1. Get access to the feed</h3>
+<p>The package is on GitHub Packages, which needs a GitHub token even to read. Follow
+<a href="#nuget-access">Get access to the .NET feed</a> once; after that, installing is one
+command.</p>
+<h3>2. Install</h3>
+<div class="codepanel"><pre><code>dotnet add package DHCW.SingleRecord.Blazor</code></pre></div>
+<h3>3. Link the stylesheets</h3>
+<p>The package serves them as static web assets, so a Blazor host references them by URL rather than
+importing anything. Add these to <code>App.razor</code> or <code>_Host.cshtml</code>:</p>
+<div class="codepanel"><pre><code>&lt;link rel="stylesheet" href="_content/DHCW.SingleRecord.Blazor/css/single-record.css" /&gt;
+
+&lt;!-- Dark mode is opt-in and must load SECOND: it overrides the tokens above. --&gt;
+&lt;link rel="stylesheet" href="_content/DHCW.SingleRecord.Blazor/css/single-record-dark.css" /&gt;</code></pre></div>
+<p>Then set <code>data-theme="dark"</code> on <code>&lt;html&gt;</code> to switch.</p>
+<h3>4. Write markup</h3>
+<div class="codepanel"><pre><code>&lt;button class="sr-button sr-button--primary" @onclick="Confirm"&gt;Confirm patient&lt;/button&gt;</code></pre></div>
+<p>Every component page on this site has a Blazor tab with the markup to copy. The package carries the
+same files as the <a href="#files">downloads</a>, from the same build, so Blazor and web cannot
+drift:</p>
+<table>
+  <thead><tr><th>Path</th><th>Contents</th></tr></thead>
+  <tbody>
+    <tr><td><code>css/single-record.css</code></td><td>Everything: font, tokens, type utilities, all components</td></tr>
+    <tr><td><code>css/single-record-dark.css</code></td><td>Dark-mode overrides. Opt-in, loaded second</td></tr>
+    <tr><td><code>css/foundations.css</code></td><td>Tokens and type only, no components</td></tr>
+    <tr><td><code>css/sprite.svg</code></td><td>The icon set, for <code>&lt;use&gt;</code> references</td></tr>
+    <tr><td><code>css/components/*.css</code></td><td>One component at a time</td></tr>
+  </tbody>
+</table>
+<div class="callout"><p><strong>There are no Razor components in the package, and that is
+deliberate.</strong> It is a style layer, matching what the MAUI package does. Shipping one wrapped
+component out of ${WEB_COMPONENT_COUNT} would imply a set that does not exist &mdash; you would still
+be writing your own markup for the rest. Behaviour such as opening a modal is yours to bind with
+<code>@onclick</code> and friends.</p></div>
+<p><strong>Updating</strong> is <code>dotnet add package</code> again, or bumping the
+<code>Version</code> on the <code>PackageReference</code>.</p>
+
+<h2 id="maui">.NET MAUI</h2>
+<p><code>DHCW.SingleRecord.Maui</code> is a <strong>token and style layer, not a component
+library</strong>: three ResourceDictionaries and the brand marks. Your app keeps its own XAML.</p>
+<h3>1. Get access to the feed</h3>
+<p>The package is on GitHub Packages, which needs a GitHub token even to read. Follow
+<a href="#nuget-access">Get access to the .NET feed</a> once.</p>
+<h3>2. Install</h3>
+<div class="codepanel"><pre><code>dotnet add package DHCW.SingleRecord.Maui</code></pre></div>
+<p>Targets <code>net10.0-android</code>, <code>net10.0-ios</code> and
+<code>net10.0-maccatalyst</code>. <code>net10.0</code> matches what this repository builds with; if
+your app targets an earlier .NET it can be lowered.</p>
+<h3>3. Merge the dictionaries in <code>App.xaml</code></h3>
+<div class="codepanel"><pre><code>&lt;!-- Merged BY TYPE, which is the only form that works across an assembly
+     boundary. SrStyles goes last: it resolves against the other two. --&gt;
+&lt;Application xmlns:sr="clr-namespace:DHCW.SingleRecord.Maui;assembly=DHCW.SingleRecord.Maui"&gt;
+    &lt;Application.Resources&gt;
+        &lt;ResourceDictionary&gt;
+            &lt;ResourceDictionary.MergedDictionaries&gt;
+                &lt;sr:SrColors /&gt;
+                &lt;sr:SrIcons /&gt;
+                &lt;sr:SrStyles /&gt;
+            &lt;/ResourceDictionary.MergedDictionaries&gt;
+        &lt;/ResourceDictionary&gt;
+    &lt;/Application.Resources&gt;
+&lt;/Application&gt;</code></pre></div>
+<table>
+  <thead><tr><th>Dictionary</th><th>Contents</th></tr></thead>
+  <tbody>
+    <tr><td><code>SrColors</code></td><td>Every primitive and semantic colour token, the two elevation shadows, and a <code>&hellip;Dark</code> twin for the semantics that change with the theme</td></tr>
+    <tr><td><code>SrIcons</code></td><td>The icon set as XAML path geometry, one <code>x:String</code> per icon</td></tr>
+    <tr><td><code>SrStyles</code></td><td>Implicit and keyed control styles, the <code>StyleClass</code> type scale, and <code>VisualStateManager</code> states</td></tr>
+  </tbody>
+</table>
+<p><strong>Order matters:</strong> <code>SrStyles</code> references keys from the other two, so
+merging it first fails at runtime rather than at build. If your app already has its own
+<code>Colors.xaml</code>, merge yours <em>after</em> the Single Record ones so yours win where they
+overlap.</p>
+<h3>4. Use icons and brand marks</h3>
+<p><strong>Icons are geometry, not images.</strong> MAUI rasterises an SVG at build time through
+<code>MauiImage</code> and bakes the colour into the PNG. These are outline icons that have to take
+their colour from a token and follow the theme, so they ship as <code>Path</code> data:</p>
+<div class="codepanel"><pre><code>&lt;Path Data="{sr:Icon NavSearch}"
+      Stroke="{AppThemeBinding Light={StaticResource SrColorTextPrimary},
+                               Dark={StaticResource SrColorTextPrimaryDark}}"
+      StrokeThickness="1" StrokeLineCap="Round" StrokeLineJoin="Round"
+      Aspect="Uniform" HeightRequest="24" WidthRequest="24" /&gt;</code></pre></div>
+<p><code>Fill</code> is deliberately unset &mdash; filling closes shapes meant to read as strokes.
+<code>StrokeThickness="1"</code> is correct at a 24px render; MAUI's <code>StrokeThickness</code>
+does not scale with <code>Aspect</code> the way SVG <code>stroke-width</code> scales inside a
+viewBox, so scale it down proportionally at smaller sizes.</p>
+<p><strong>Brand marks come with it</strong>, registered as <code>MauiImage</code> in your app
+automatically. Reference the rasterised output, not the source:
+<code>&lt;Image Source="srsymwcpblue.png" /&gt;</code>. <code>sym</code> is the icon-only mark,
+<code>logo</code> the full lockup &mdash; different artwork, not a crop of one another. Each mark
+ships one file per ink because brand artwork must never be recoloured; pick the variant that suits
+the background. To opt out, add this to your app's project file:</p>
+<div class="codepanel"><pre><code>&lt;SrIncludeBrandImages&gt;false&lt;/SrIncludeBrandImages&gt;</code></pre></div>
+<div class="callout"><p><strong>Copying the XAML by hand still works.</strong> Take
+<code>Colors.xaml</code>, <code>Icons.xaml</code> and <code>Styles.xaml</code> from
+<code>packages/maui</code>, add them as <code>MauiXaml</code>, and merge them by
+<code>Source</code> instead of by type &mdash; the copies are plain dictionaries with no
+<code>x:Class</code>, so the <code>&lt;sr:SrColors /&gt;</code> form will not compile against them.
+Same order rule applies.</p></div>
+<p><strong>Updating</strong> is <code>dotnet add package</code> again. Blazor and MAUI move together,
+so take the same version for both if you use both.</p>
+
+<h2 id="nuget-access">Get access to the .NET feed (Blazor and MAUI)</h2>
+<p>Both .NET packages are on GitHub Packages, which asks for a token on every install, including
+public packages. There is no special group to join. <strong>Your GitHub password will not work: it
+gets a 401.</strong> You need a token instead.</p>
+<div class="callout"><p><strong>Why it needs a token.</strong> The MAUI package carries the NHS
+Wales and DHCW brand marks, which are trademarked artwork not covered by its MIT licence, so a feed
+that cannot be read anonymously is the right place for it. Reasoning in DDR&#8209;024. npm cannot
+serve a .NET app, so the npm packages are not an alternative.</p></div>
+<ol>
+  <li><strong>Create a classic personal access token.</strong> GitHub &rarr; Settings &rarr;
+  Developer settings &rarr; Personal access tokens &rarr; <strong>Tokens (classic)</strong> &rarr;
+  Generate new token. Tick <strong><code>read:packages</code></strong>. Fine-grained tokens do not
+  work with the GitHub Packages NuGet feed.</li>
+  <li><strong>Authorise the token for the organisation.</strong> If the
+  DHCW-Digital-Health-and-Care-Wales organisation uses single sign-on, click <strong>Configure
+  SSO</strong> next to the token and authorise it. A token that is not authorised gets a 401 even
+  with the right scope.</li>
+  <li><strong>Give the token to NuGet.</strong> Either add the <code>nuget.config</code> below beside
+  your solution, or add the feed in Visual Studio (Tools &rarr; Options &rarr; NuGet Package Manager
+  &rarr; Package Sources) and, when it asks you to sign in, enter your <strong>GitHub
+  username</strong> and paste the <strong>token as the password</strong>.</li>
+</ol>
+<div class="codepanel"><pre><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;configuration&gt;
+  &lt;packageSources&gt;
+    &lt;add key="dhcw" value="https://nuget.pkg.github.com/DHCW-Digital-Health-and-Care-Wales/index.json" /&gt;
+  &lt;/packageSources&gt;
+  &lt;packageSourceCredentials&gt;
+    &lt;dhcw&gt;
+      &lt;add key="Username" value="YOUR_GITHUB_USERNAME" /&gt;
+      &lt;add key="ClearTextPassword" value="%GITHUB_PACKAGES_TOKEN%" /&gt;
+    &lt;/dhcw&gt;
+  &lt;/packageSourceCredentials&gt;
+&lt;/configuration&gt;</code></pre></div>
+<p><code>%GITHUB_PACKAGES_TOKEN%</code> reads an environment variable, so this file is safe to commit
+and your token is not in it. Set the variable in your shell profile locally, or from a secret in
+Azure DevOps. Never commit the token itself.</p>
+<h3>Still getting a 401?</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Check</th><th>Fix</th></tr></thead>
+<tbody>
+<tr><td>You typed your GitHub password</td><td>Use the token as the password</td></tr>
+<tr><td>The token is fine-grained</td><td>Make a <strong>classic</strong> token with <code>read:packages</code></td></tr>
+<tr><td>The token is not authorised for the organisation</td><td><strong>Configure SSO</strong> next to the token on GitHub</td></tr>
+<tr><td>Visual Studio saved an old login</td><td>Remove the <code>nuget.pkg.github.com</code> entry from Windows Credential Manager and sign in again</td></tr>
+<tr><td>Your account cannot see the package</td><td>Ask the design system team to check you are in the organisation, or have an organisation admin give you read access under the package's <strong>Package settings &rarr; Manage access</strong></td></tr>
+</tbody></table></div>
+
+<h2 id="offline">No access to npmjs.org</h2>
+<p>Use this only if npmjs.org is unreachable from your build machine, or a policy pins you to
+artefacts fetched from a known URL. Otherwise <a href="#react">install from npm</a>, which is
+easier. Each release attaches the packages as tarballs, which plain npm installs directly from a
+GitHub release rather than from a registry.</p>
+<p>The cost is that a version is baked into eight URLs, so <strong>updating means editing all of
+them</strong> and re-running <code>npm install</code>. The one-liner in each release's notes does
+the rewrite for you; doing it by hand is where the 404s come from, because the version appears
+twice per dependency.</p>
+<p>Add all four to <code>package.json</code> and run <code>npm install</code>:</p>
+${RELEASE_DEPENDENCIES}
+<p><strong>All four are needed together.</strong> The React package depends on the other three, so
+installing it alone will fail. Take the tag from the
+<a href="https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/releases" target="_blank" rel="noopener">releases page</a>
+and keep it pinned; bump it deliberately rather than tracking a moving branch. Imports are the same
+as in <a href="#react">React</a>.</p>
+
+<h2 id="files">All the files</h2>
 <div class="table-wrap"><table>
 <thead><tr><th>File</th><th>What it is</th><th>Do you need it?</th></tr></thead>
 <tbody>
@@ -5184,7 +5423,7 @@ silently. Serve the folder over HTTP, or use <code>icons.js</code> instead.</p><
 time the site is built. There is no hand-maintained copy to fall out of date — but equally, they are
 a snapshot: re-download after a release rather than assuming what you have is current.</p></div>
 
-<h2>Using an icon</h2>
+<h2 id="icons">Using an icon</h2>
 <p>Icons are the only part of the HTML layer that is not plain markup, because the set is generated.
 Two ways to place one, and neither needs a build step:</p>
 ${codePanel('get-files-icon', {
@@ -5197,7 +5436,6 @@ ${codePanel('get-files-icon', {
       StrokeThickness="2" StrokeLineCap="Round" StrokeLineJoin="Round"
       Stroke="{AppThemeBinding Light={StaticResource SrColorTextPrimary}, Dark={StaticResource SrColorTextPrimaryDark}}" />`,
 })}
-
 <div class="callout"><p><strong>The sprite has to be served over HTTP from your own origin.</strong>
 Browsers refuse a cross-file <code>&lt;use&gt;</code> reference on a page opened straight from disk
 (<code>file://</code>) or from another domain, and it fails silently — the icon is simply absent. If
@@ -5212,247 +5450,24 @@ loose script you have to wire up:</p>
   <li><strong>React</strong> — the components in <code>packages/react</code>. JSX source, which any
   React setup compiles as part of its own build; there is no pre-built browser file, and one is only
   needed by a project with no build step at all.</li>
-  <li><strong>Blazor / .NET</strong> — nothing to wire up, because there are no Blazor components.
-  <code>DHCW.SingleRecord.Blazor</code> ships stylesheets; you write the markup with the
-  <code>sr-*</code> classes and bind your own handlers, exactly as the Blazor tab in every code
-  window on this site shows. MAUI does not render it either — MAUI is native XAML, with its own
-  token and style layer.</li>
+  <li><strong>Blazor</strong> — nothing to wire up, because there are no Blazor components. You
+  write the markup with the <code>sr-*</code> classes and bind your own handlers, exactly as the
+  Blazor tab in every code window on this site shows.</li>
+  <li><strong>MAUI</strong> — native XAML, with its own token and style layer. It does not use the
+  web layer at all.</li>
 </ul>
 
-<h2>How to install it</h2>
-<p>Four routes. Which one you want depends on what you are building, not on
-preference &mdash; a MAUI app cannot use npm at all, and a plain HTML page has no bundler to
-assemble packages.</p>
+<h2>If something is not working</h2>
+<p>Every component page has a code window with an HTML, React, Blazor and MAUI tab; the markup there
+is checked on every build. If a file or a package is wrong, missing or out of date, say so on
+<a href="contributions.html">Contributions</a>.</p>
 
-<table>
-  <thead><tr><th>You are building</th><th>Route</th><th>Needs credentials?</th></tr></thead>
-  <tbody>
-    <tr><td>React, or anything with a bundler</td><td><a href="#route-npm">1 &mdash; npm</a></td><td>No</td></tr>
-    <tr><td>Plain HTML, Razor, ASP.NET</td><td><a href="#route-download">2 &mdash; download the files</a></td><td>No</td></tr>
-    <tr><td>Any of the above, on a machine that cannot reach npmjs.org</td><td><a href="#route-tarball">3 &mdash; release tarballs</a></td><td>No</td></tr>
-    <tr><td>.NET MAUI, or Blazor</td><td><a href="#route-nuget">4 &mdash; NuGet</a></td><td><strong>Yes</strong></td></tr>
-  </tbody>
-</table>
-
-<div class="callout callout--warning"><p><strong>Installing this repository from GitHub does not
-work, and any guide telling you to do so is out of date.</strong> This is a monorepo: the thing at
-the repository root is a private workspace container, not a package. Both of these fail, and they
-fail in a confusing way rather than with a clear error:</p>
-<div class="codepanel"><pre><code># Installs ONE package called @dhcw/sr-design-system.
-# @dhcw/sr-react is not in node_modules afterwards.
-npm install github:DHCW-Digital-Health-and-Care-Wales/single-record-design-system#main
-
-# Installs the same repository root under a different name. The package it
-# fetches is private, has no entry point, and importing from it throws
-# ERR_MODULE_NOT_FOUND.
-"@dhcw/sr-react": "github:DHCW-Digital-Health-and-Care-Wales/single-record-design-system#main"</code></pre></div>
-<p>npm has no way to install a single workspace out of a git repository. Use Route 1 instead
-&mdash; and if you have <code>resolve.alias</code> entries in a Vite config pointing inside
-<code>node_modules/@dhcw</code> to work around this, you can delete them.</p></div>
-
-<h3 id="route-npm">Route 1 &mdash; npm</h3>
-<p>The packages are on npmjs.org. No registry configuration, no <code>.npmrc</code>, no token
-&mdash; a plain <code>npm install</code> works on your machine and in CI alike.</p>
-${IS_PRERELEASE ? `<div class="callout callout--warning"><p><strong>${RELEASE_VERSION} is a release
-candidate, published under the <code>next</code> tag.</strong> It is not picked up by a version
-range and reaches nobody who does not ask for it by name, which is why the commands below carry
-<code>@next</code>. Take it if you have been asked to help test; otherwise wait for the stable
-release.</p></div>` : ''}
-
-<p><strong>Installing for the first time.</strong> All four together &mdash; the React package
-depends on the other three, so installing it alone fails:</p>
-<div class="codepanel"><pre><code>${NPM_INSTALL}</code></pre></div>
-
-<p><strong>Updating later.</strong> ${IS_PRERELEASE
-  ? `While you are on a release candidate, re-run the command above to move to a newer one. Once a
-     stable release exists, install it without <code>@next</code> and updates arrive through
-     <code>npm update</code> from then on.`
-  : `Nothing to edit. Your <code>package.json</code> carries a version range, so:`}</p>
-${IS_PRERELEASE ? '' : `<div class="codepanel"><pre><code>npm update @dhcw/sr-tokens @dhcw/sr-icons @dhcw/sr-web @dhcw/sr-react</code></pre></div>
-<p>That is the whole difference between this route and the tarballs below: there, a new version
-means editing eight values by hand.</p>`}
-
-<p>The <a href="changelog.html">changelog</a> says whether a release needs anything from you. Most
-do not.</p>
-
-<h3 id="route-download">Route 2 &mdash; Download the files (no build step at all)</h3>
-<p>Take <a href="downloads/single-record.css" download>single-record.css</a> and
-<a href="downloads/sprite.svg" download>sprite.svg</a> from the table above and link them directly.
-This is the route for plain HTML, Razor, ASP.NET, or a React app where you write the markup and take
-the styling from the design system.</p>
-<p>Everything on this site's component pages is plain markup with <code>sr-</code> classes, so the
-stylesheet alone gets you a correct-looking component in any framework. What you do not get is the
-React component wrappers — those need Route 2.</p>
-
-<h3 id="route-tarball">Route 3 &mdash; npm, from a release tarball</h3>
-<p><strong>Route 1 is easier &mdash; use this one only if npmjs.org is unreachable</strong> from
-your build machine, or if a policy pins you to artefacts fetched from a known URL. Each release
-attaches the packages as tarballs, which plain npm installs directly from a GitHub release rather
-than from a registry.</p>
-<p>The cost is that a version is baked into eight URLs, so <strong>updating means editing all of
-them</strong> and re-running <code>npm install</code>. The one-liner in each release's notes does
-the rewrite for you; doing it by hand is where the 404s come from, because the version appears
-twice per dependency.</p>
-<p>Add all four to <code>package.json</code> and run <code>npm install</code>:</p>
-${RELEASE_DEPENDENCIES}
-<p><strong>All four are needed together.</strong> The React package depends on the other three, so
-installing it alone will fail. Take the tag from the
-<a href="https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system/releases" target="_blank" rel="noopener">releases page</a>
-and keep it pinned; bump it deliberately rather than tracking a moving branch.</p>
-<p>Then import what you need. These paths are verified against each package's exports on every
-release &mdash; a release that cannot be installed and imported does not publish:</p>
-<div class="callout"><p><strong>Import <code>foundations</code>, not <code>single-record.css</code>,
-when you are using the React package.</strong> Every React component already imports its own
-stylesheet, so loading the complete file on top of that ships all 21 component stylesheets plus a
-second copy of each one you actually use. On a screen using seven components that is 238KB rather
-than 131KB &mdash; the same styling, 45% less of it.</p>
-<p>You write the same one line either way; only the target changes. Plain HTML has no bundler to
-assemble the pieces, so it keeps using <code>single-record.css</code>.</p></div>
-${codePanel('get-files-npm-import', {
-  HTML: '<!-- Route 1 (download) is the equivalent for plain HTML — see above. -->',
-  React: '// REQUIRED, once, in your entry file: font, tokens and typography.\n// Not single-record.css — each component brings its own styles.\nimport "@dhcw/sr-web/foundations";\n\n// Then whichever components this file uses. Any component from the barrel\n// goes in the braces — these four are only an example, and you never need\n// to import a component you are not using.\nimport { Button, Input, Navigation, PatientBanner } from "@dhcw/sr-react";\n\n// A single component can also be imported on its own.\nimport Icon from "@dhcw/sr-react/icon";',
-  Blazor: '<!-- Blazor installs from NuGet, not npm. See Route 4 below.\n     dotnet add package DHCW.SingleRecord.Blazor\n\n     Then reference the stylesheet; there is nothing to import. -->\n<link rel="stylesheet" href="_content/DHCW.SingleRecord.Blazor/css/single-record.css" />',
-  MAUI: `<!-- MAUI installs from NuGet, not npm. See Route 4 below.
-     dotnet add package DHCW.SingleRecord.Maui
-
-     Merged BY TYPE, which is the only form that works across an assembly
-     boundary. SrStyles goes last: it resolves against the other two. -->
-<Application xmlns:sr="clr-namespace:DHCW.SingleRecord.Maui;assembly=DHCW.SingleRecord.Maui">
-    <Application.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <sr:SrColors />
-                <sr:SrIcons />
-                <sr:SrStyles />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Application.Resources>
-</Application>`,
-})}
-
-<h2 id="route-nuget">Route 4 &mdash; NuGet, for .NET</h2>
-<div class="callout"><p><strong>npm cannot serve a .NET app.</strong> npm is JavaScript-only and
-there is no npm in the .NET toolchain, so none of the packages above can be installed into a MAUI
-or Blazor project. .NET has its own two packages, versioned in lockstep with the npm ones so that
-one version number describes the whole design system:</p>
-<table>
-  <thead><tr><th>Package</th><th>For</th><th>Ships</th></tr></thead>
-  <tbody>
-    <tr><td><code>DHCW.SingleRecord.Maui</code></td><td>Native MAUI XAML</td><td>Three ResourceDictionaries and the brand marks</td></tr>
-    <tr><td><code>DHCW.SingleRecord.Blazor</code></td><td>Blazor</td><td>The stylesheets, as static web assets</td></tr>
-  </tbody>
-</table>
-<p>Both are a <strong>token and style layer, not a component library</strong>. You write your own
-markup or XAML and take the styling from the design system, the same way a plain HTML consumer
-does.</p></div>
-<div class="callout"><p><strong>This feed needs authentication, and that is deliberate.</strong>
-GitHub Packages requires a token for every install, including public packages. The MAUI package
-carries the NHS Wales and DHCW brand marks, which are trademarked artwork not covered by its MIT
-licence, so a feed that cannot be read anonymously is the right place for it. Reasoning in
-DDR&#8209;024.</p></div>
-<h3>Both packages: the feed</h3>
-<p><strong>1. Add a <code>nuget.config</code> beside your solution.</strong> A classic personal
-access token with <code>read:packages</code> is enough to install. The
-<code>%GITHUB_PACKAGES_TOKEN%</code> form reads an environment variable, so this file is safe to
-commit and your token is not in it &mdash; set the variable from a secret in Azure DevOps, or in
-your shell profile locally.</p>
-<div class="codepanel"><pre><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
-&lt;configuration&gt;
-  &lt;packageSources&gt;
-    &lt;add key="dhcw" value="https://nuget.pkg.github.com/OWNER/index.json" /&gt;
-  &lt;/packageSources&gt;
-  &lt;packageSourceCredentials&gt;
-    &lt;dhcw&gt;
-      &lt;add key="Username" value="YOUR_GITHUB_USERNAME" /&gt;
-      &lt;add key="ClearTextPassword" value="%GITHUB_PACKAGES_TOKEN%" /&gt;
-    &lt;/dhcw&gt;
-  &lt;/packageSourceCredentials&gt;
-&lt;/configuration&gt;</code></pre></div>
-<p><strong>2. Install whichever you need.</strong></p>
-<div class="codepanel"><pre><code>dotnet add package DHCW.SingleRecord.Maui
-dotnet add package DHCW.SingleRecord.Blazor</code></pre></div>
-<p><strong>Updating</strong> is <code>dotnet add package</code> again, or bumping the
-<code>Version</code> on the <code>PackageReference</code>. Both packages move together, so
-take the same version for both.</p>
-<h3>MAUI</h3>
-<p>Targets <code>net10.0-android</code>, <code>net10.0-ios</code> and
-<code>net10.0-maccatalyst</code>. <code>net10.0</code> matches what this repository builds with; if
-your app targets an earlier .NET it can be lowered. It ships three ResourceDictionaries and the
-brand marks:</p>
-<table>
-  <thead><tr><th>Dictionary</th><th>Contents</th></tr></thead>
-  <tbody>
-    <tr><td><code>SrColors</code></td><td>Every primitive and semantic colour token, the two elevation shadows, and a <code>&hellip;Dark</code> twin for the semantics that change with the theme</td></tr>
-    <tr><td><code>SrIcons</code></td><td>The icon set as XAML path geometry, one <code>x:String</code> per icon</td></tr>
-    <tr><td><code>SrStyles</code></td><td>Implicit and keyed control styles, the <code>StyleClass</code> type scale, and <code>VisualStateManager</code> states</td></tr>
-  </tbody>
-</table>
-<p>Merge them as shown in the MAUI tab above. <strong>Order matters:</strong> <code>SrStyles</code>
-references keys from the other two, so merging it first fails at runtime rather than at build. If
-your app already has its own <code>Colors.xaml</code>, merge yours <em>after</em> the Single Record
-ones so yours win where they overlap.</p>
-<p><strong>Icons are geometry, not images.</strong> MAUI rasterises an SVG at build time through
-<code>MauiImage</code> and bakes the colour into the PNG. These are outline icons that have to take
-their colour from a token and follow the theme, so they ship as <code>Path</code> data:</p>
-<div class="codepanel"><pre><code>&lt;Path Data="{sr:Icon NavSearch}"
-      Stroke="{AppThemeBinding Light={StaticResource SrColorTextPrimary},
-                               Dark={StaticResource SrColorTextPrimaryDark}}"
-      StrokeThickness="1" StrokeLineCap="Round" StrokeLineJoin="Round"
-      Aspect="Uniform" HeightRequest="24" WidthRequest="24" /&gt;</code></pre></div>
-<p><code>Fill</code> is deliberately unset &mdash; filling closes shapes meant to read as strokes.
-<code>StrokeThickness="1"</code> is correct at a 24px render; MAUI's <code>StrokeThickness</code>
-does not scale with <code>Aspect</code> the way SVG <code>stroke-width</code> scales inside a
-viewBox, so scale it down proportionally at smaller sizes.</p>
-<p><strong>Brand marks come with it</strong>, registered as <code>MauiImage</code> in your app
-automatically. Reference the rasterised output, not the source:
-<code>&lt;Image Source="srsymwcpblue.png" /&gt;</code>. <code>sym</code> is the icon-only mark,
-<code>logo</code> the full lockup &mdash; different artwork, not a crop of one another. Each mark
-ships one file per ink because brand artwork must never be recoloured; pick the variant that suits
-the background. Opt out with
-<code>&lt;SrIncludeBrandImages&gt;false&lt;/SrIncludeBrandImages&gt;</code>.</p>
-<div class="callout"><p><strong>Copying the XAML by hand still works.</strong> Take
-<code>Colors.xaml</code>, <code>Icons.xaml</code> and <code>Styles.xaml</code> from
-<code>packages/maui</code>, add them as <code>MauiXaml</code>, and merge them by
-<code>Source</code> instead of by type &mdash; the copies are plain dictionaries with no
-<code>x:Class</code>, so the <code>&lt;sr:SrColors /&gt;</code> form will not compile against them.
-Same order rule applies.</p></div>
-<h3>Blazor</h3>
-<p><code>DHCW.SingleRecord.Blazor</code> ships the stylesheets as static web assets, so a Blazor
-host references them by URL rather than importing anything. Add these to <code>App.razor</code> or
-<code>_Host.cshtml</code>:</p>
-<div class="codepanel"><pre><code>&lt;link rel="stylesheet" href="_content/DHCW.SingleRecord.Blazor/css/single-record.css" /&gt;
-
-&lt;!-- Dark mode is opt-in and must load SECOND: it overrides the tokens above. --&gt;
-&lt;link rel="stylesheet" href="_content/DHCW.SingleRecord.Blazor/css/single-record-dark.css" /&gt;</code></pre></div>
-<p>Then set <code>data-theme="dark"</code> on <code>&lt;html&gt;</code> to switch, and write markup
-with the same <code>sr-</code> classes every other framework uses:</p>
-<div class="codepanel"><pre><code>&lt;button class="sr-button sr-button--primary" @onclick="Confirm"&gt;Confirm patient&lt;/button&gt;</code></pre></div>
-<p>The package carries the same files as Route 2's download, from the same build, so Blazor and web
-cannot drift:</p>
-<table>
-  <thead><tr><th>Path</th><th>Contents</th></tr></thead>
-  <tbody>
-    <tr><td><code>css/single-record.css</code></td><td>Everything: font, tokens, type utilities, all components</td></tr>
-    <tr><td><code>css/single-record-dark.css</code></td><td>Dark-mode overrides. Opt-in, loaded second</td></tr>
-    <tr><td><code>css/foundations.css</code></td><td>Tokens and type only, no components</td></tr>
-    <tr><td><code>css/sprite.svg</code></td><td>The icon set, for <code>&lt;use&gt;</code> references</td></tr>
-    <tr><td><code>css/components/*.css</code></td><td>One component at a time</td></tr>
-  </tbody>
-</table>
-<div class="callout"><p><strong>There are no Razor components in the package, and that is
-deliberate.</strong> It is a style layer, matching what the MAUI package does. Shipping one wrapped
-component out of twenty-one would imply a set that does not exist &mdash; you would still be writing
-your own markup for the other twenty.</p></div>
-
-<p>Working in a checkout of the repository itself (rather than as a dependency)? Clone
+<p>Working in a checkout of the repository itself, rather than using it as a dependency? Clone
 <a href="https://github.com/DHCW-Digital-Health-and-Care-Wales/single-record-design-system" target="_blank" rel="noopener">the org repo</a>, then:</p>
 <div class="codepanel"><pre><code>npm install
-npm run build:web    # writes packages/web/dist/</code></pre></div>
-
-<div class="callout"><p>The package name and its contents are the same either way — installing from
-GitHub today and from npm once it is published are the same package at the same version. Only the
-install command changes.</p></div>`,
+npm run build:web    # writes packages/web/dist/</code></pre></div>`,
 });
+
 
 const FIGMA_LIBRARY_URL = 'https://www.figma.com/design/x5fwyefxxgD03csz8ld7SZ/SINGLE-RECORD-DESIGN-SYSTEM?node-id=1307-16983&t=eafR64jJMZD5ez6T-1';
 
